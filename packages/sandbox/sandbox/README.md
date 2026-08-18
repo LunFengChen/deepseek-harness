@@ -14,6 +14,10 @@ Implementations: [`@deepseek-ai/dsh-sandbox-local`](../sandbox-local/) (Linux: `
 
 ## Model Experience
 
+### Stale escalation arguments under full access
+
+When the effective standing mode is `danger-full-access`, the enforcing tool consumers treat either advertised target (`workspace-write` or `danger-full-access`) as already satisfied. They keep the full-access policy, skip approval, and do not call the strict-widening checker; malformed argument pairing and unknown targets still fail through the normal validation path.
+
 ### Confinement error, indirectly
 
 #### What the model sees
