@@ -216,6 +216,32 @@ describe('toPiContext', () => {
     })
   })
 
+  it('ignores replay metadata with an unknown kind and falls back to foreign content', () => {
+    const context = toPiContext({
+      provider: 'openai',
+      model: 'new-model',
+      messages: [createMessage({
+        role: 'assistant',
+        content: [{ type: 'text', text: 'done' }],
+        source: {
+          kind: 'model',
+          provider: 'deepseek',
+          model: 'old-model',
+          replayState: { ...validReplay, kind: 'other' },
+        },
+      })],
+    })
+    expect(context.messages[0]).toMatchObject({
+      role: 'assistant',
+      api: 'dsh-foreign',
+      provider: 'deepseek',
+      model: 'old-model',
+      content: [{ type: 'text', text: 'done' }],
+    })
+    expect(context.messages[0]).not.toHaveProperty('responseModel')
+    expect(context.messages[0]).not.toHaveProperty('responseId')
+  })
+
   it('parses malformed tool-call arguments to {}', () => {
     const context = toPiContext({
       provider: 'deepseek',
@@ -512,7 +538,6 @@ describe('toPiContext', () => {
     ['number state', 1, 'expected an object'],
     ['null state', null, 'expected an object'],
     ['array state', [], 'expected an object'],
-    ['unknown kind', { ...validReplay, kind: 'other' }, 'unknown state kind'],
     ['non-string api', { ...validReplay, api: 1 }, 'api must be a non-empty string'],
     ['empty provider', { ...validReplay, provider: '' }, 'provider must be a non-empty string'],
     ['missing model', { ...validReplay, model: undefined }, 'model must be a non-empty string'],

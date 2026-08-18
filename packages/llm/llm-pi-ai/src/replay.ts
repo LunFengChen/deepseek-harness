@@ -95,10 +95,12 @@ function invalidReplay(message: string): never {
 }
 
 /** Validate the adapter-private state before it reaches pi-ai. */
-function readReplayState(value: unknown): PiAiReplayState {
+function readReplayState(value: unknown): PiAiReplayState | undefined {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return invalidReplay('expected an object')
   const state = value as Record<string, unknown>
-  if (state['kind'] !== 'pi-ai') return invalidReplay('unknown state kind')
+  // Replay metadata is adapter-private: if another adapter's state reaches pi-ai,
+  // treat it as absent instead of crashing the whole chat replay path.
+  if (state['kind'] !== 'pi-ai') return undefined
   if (state['version'] !== 1) return invalidReplay(`unsupported version ${String(state['version'])}`)
   for (const key of ['api', 'provider', 'model'] as const) {
     if (typeof state[key] !== 'string' || state[key].length === 0) return invalidReplay(`${key} must be a non-empty string`)
@@ -159,6 +161,7 @@ function foreignAssistant(message: Message): AssistantMessage {
 /** Recombine durable Harness content with validated pi-ai replay metadata. */
 function replayedAssistant(message: Message, source: ModelMessageSource, rawState: unknown): AssistantMessage {
   const state = readReplayState(rawState)
+  if (state === undefined) return foreignAssistant(message)
   if (state.provider !== source.provider) return invalidReplay('provider does not match assistant source')
   if (state.model !== source.model) return invalidReplay('model does not match assistant source')
   if (state.blocks.length !== message.content.length) return invalidReplay('block count does not match assistant content')
