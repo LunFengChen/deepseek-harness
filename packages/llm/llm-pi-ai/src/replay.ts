@@ -30,6 +30,25 @@ export interface PiAiReplayState {
   blocks: PiAiReplayBlock[]
 }
 
+/** Earlier web sessions persisted pi-ai replay metadata with the response
+ *  identity under `response` and block metadata beside it. Keep accepting that
+ *  shape so important existing sessions can continue with the native Responses
+ *  response id/signatures instead of degrading to a foreign assistant message.
+ */
+interface WrappedPiAiReplayStateV2 {
+  response: {
+    kind: 'pi-ai'
+    version: 2
+    api: Api
+    provider: string
+    model: string
+    responseModel?: string
+    responseId?: string
+    stopReason: AssistantMessage['stopReason']
+  }
+  blocks: PiAiReplayBlock[]
+}
+
 /** Parse tool-call argument JSON; tolerate model malformations with {}. */
 function parseArguments(raw: string): Record<string, unknown> {
   try {
@@ -94,14 +113,11 @@ function invalidReplay(message: string): never {
   throw new LlmError(`invalid pi-ai replay state: ${message}`, 'INVALID_REPLAY_STATE')
 }
 
-/** Validate the adapter-private state before it reaches pi-ai. */
-function readReplayState(value: unknown): PiAiReplayState | undefined {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) return invalidReplay('expected an object')
-  const state = value as Record<string, unknown>
-  // Replay metadata is adapter-private: if another adapter's state reaches pi-ai,
-  // treat it as absent instead of crashing the whole chat replay path.
-  if (state['kind'] !== 'pi-ai') return undefined
-  if (state['version'] !== 1) return invalidReplay(`unsupported version ${String(state['version'])}`)
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function validateReplayCore(state: Record<string, unknown>): void {
   for (const key of ['api', 'provider', 'model'] as const) {
     if (typeof state[key] !== 'string' || state[key].length === 0) return invalidReplay(`${key} must be a non-empty string`)
   }
@@ -110,16 +126,57 @@ function readReplayState(value: unknown): PiAiReplayState | undefined {
   }
   if (state['responseModel'] !== undefined && typeof state['responseModel'] !== 'string') return invalidReplay('responseModel must be a string')
   if (state['responseId'] !== undefined && typeof state['responseId'] !== 'string') return invalidReplay('responseId must be a string')
-  if (!Array.isArray(state['blocks'])) return invalidReplay('blocks must be an array')
-  for (const [index, value] of state['blocks'].entries()) {
-    if (typeof value !== 'object' || value === null || Array.isArray(value)) return invalidReplay(`block ${index} must be an object`)
-    const block = value as Record<string, unknown>
+}
+
+function validateReplayBlocks(blocks: unknown): void {
+  if (!Array.isArray(blocks)) return invalidReplay('blocks must be an array')
+  for (const [index, value] of blocks.entries()) {
+    if (!isRecord(value)) return invalidReplay(`block ${index} must be an object`)
+    const block = value
     if (!['text', 'reasoning', 'tool-call'].includes(String(block['type']))) return invalidReplay(`block ${index} has an unknown type`)
     for (const signature of ['textSignature', 'thinkingSignature', 'thoughtSignature'] as const) {
       if (block[signature] !== undefined && typeof block[signature] !== 'string') return invalidReplay(`block ${index} ${signature} must be a string`)
     }
     if (block['redacted'] !== undefined && typeof block['redacted'] !== 'boolean') return invalidReplay(`block ${index} redacted must be boolean`)
   }
+}
+
+function normalizeWrappedReplayState(state: Record<string, unknown>): PiAiReplayState | undefined {
+  if (!isRecord(state['response'])) return undefined
+  const response = state['response']
+  // Replay metadata is adapter-private: if another adapter's wrapped state
+  // reaches pi-ai, treat it as absent instead of crashing the whole chat replay
+  // path.
+  if (response['kind'] !== 'pi-ai') return undefined
+  if (response['version'] !== 2) return invalidReplay(`unsupported wrapped version ${String(response['version'])}`)
+  validateReplayCore(response)
+  validateReplayBlocks(state['blocks'])
+  const wrapped = state as unknown as WrappedPiAiReplayStateV2
+  return {
+    kind: 'pi-ai',
+    version: 1,
+    api: wrapped.response.api,
+    provider: wrapped.response.provider,
+    model: wrapped.response.model,
+    ...wrapped.response.responseModel === undefined ? {} : { responseModel: wrapped.response.responseModel },
+    ...wrapped.response.responseId === undefined ? {} : { responseId: wrapped.response.responseId },
+    stopReason: wrapped.response.stopReason,
+    blocks: wrapped.blocks,
+  }
+}
+
+/** Validate the adapter-private state before it reaches pi-ai. */
+function readReplayState(value: unknown): PiAiReplayState | undefined {
+  if (!isRecord(value)) return invalidReplay('expected an object')
+  const state = value
+  // Replay metadata is adapter-private: if another adapter's state reaches pi-ai,
+  // treat it as absent instead of crashing the whole chat replay path.
+  const wrapped = normalizeWrappedReplayState(state)
+  if (wrapped !== undefined) return wrapped
+  if (state['kind'] !== 'pi-ai') return undefined
+  if (state['version'] !== 1) return invalidReplay(`unsupported version ${String(state['version'])}`)
+  validateReplayCore(state)
+  validateReplayBlocks(state['blocks'])
   return state as unknown as PiAiReplayState
 }
 

@@ -441,6 +441,54 @@ describe('toPiContext', () => {
     expect(context.messages[0]).not.toHaveProperty('responseId')
   })
 
+  it('replays wrapped pi-ai v2 metadata from existing web sessions', () => {
+    const state = {
+      response: {
+        kind: 'pi-ai',
+        version: 2,
+        api: 'openai-responses',
+        provider: 'orangecc',
+        model: 'gpt-5.6-luna',
+        responseModel: 'gpt-5.6-luna-2026-08-18',
+        responseId: 'resp_existing_session',
+        stopReason: 'toolUse',
+      },
+      blocks: [
+        { type: 'reasoning', thinkingSignature: 'think-sig' },
+        { type: 'tool-call', thoughtSignature: 'tool-sig' },
+      ],
+    }
+    const context = toPiContext({
+      provider: 'orangecc',
+      model: 'gpt-5.6-luna',
+      messages: [createMessage({
+        role: 'assistant',
+        content: [
+          { type: 'reasoning', text: '' },
+          { type: 'tool-call', id: CallId('c1'), name: 'glob', arguments: '{"pattern":"**/*"}' },
+        ],
+        source: {
+          kind: 'model',
+          ...{ provider: 'orangecc', model: 'gpt-5.6-luna', replayState: state },
+        },
+      })],
+    })
+
+    expect(context.messages[0]).toMatchObject({
+      role: 'assistant',
+      api: 'openai-responses',
+      provider: 'orangecc',
+      model: 'gpt-5.6-luna',
+      responseModel: 'gpt-5.6-luna-2026-08-18',
+      responseId: 'resp_existing_session',
+      stopReason: 'toolUse',
+      content: [
+        { type: 'thinking', thinking: '', thinkingSignature: 'think-sig' },
+        { type: 'toolCall', id: 'c1', name: 'glob', arguments: { pattern: '**/*' }, thoughtSignature: 'tool-sig' },
+      ],
+    })
+  })
+
   it('rejects unsupported replay-state versions with a stable error code', () => {
     try {
       toPiContext({
