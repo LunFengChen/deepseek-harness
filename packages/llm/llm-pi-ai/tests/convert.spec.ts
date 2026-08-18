@@ -6,7 +6,7 @@ import type { ContentBlock, StreamChunk } from '@deepseek-ai/dsh-llm'
 import type { AssistantMessage, AssistantMessageEvent, Usage } from '@earendil-works/pi-ai'
 import { toPiContext } from '../src/context.ts'
 import { toPiReplayState } from '../src/replay.ts'
-import { mapStopReason, mapUsage, toStreamChunks } from '../src/stream.ts'
+import { mapStopReason, mapUsage, toStreamChunks, type PiAiStreamDiagnostics } from '../src/stream.ts'
 
 function usage(input = 0, output = 0, cacheRead = 0, cacheWrite = 0): Usage {
   return {
@@ -743,6 +743,76 @@ describe('toStreamChunks', () => {
   })
 })
 
+describe('mapStopReason diagnostics', () => {
+  it('names the request facts on a bare protocol failure', () => {
+    const diagnostics: PiAiStreamDiagnostics = {
+      provider: 'ds1',
+      model: 'deepseek-v4-flash-0731',
+      api: 'openai-completions',
+      baseURL: 'https://aiswitch.cc',
+      status: 200,
+      requestId: 'req-123',
+      lastEventType: 'text_delta',
+      sawContent: true,
+      eventCounts: { start: 1, text_delta: 4 },
+    }
+    const failure = mapStopReason(assistant({
+      stopReason: 'error',
+      errorMessage: 'Stream ended without finish_reason',
+    }), undefined, diagnostics)
+    expect(failure).toMatchObject({ kind: 'error', failure: { code: 'PI_AI_ERROR', status: 200, requestId: 'req-123' } })
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('Stream ended without finish_reason')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('provider=ds1')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('model=deepseek-v4-flash-0731')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('api=openai-completions')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('baseURL=https://aiswitch.cc')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('status=200')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('requestId=req-123')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('sawContent=yes')
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('events=start:1|text_delta:4')
+  })
+
+  it('keeps the original message when diagnostics are absent', () => {
+    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'ECONNRESET socket closed' })))
+      .toEqual({ kind: 'error', failure: { message: 'ECONNRESET socket closed', code: 'TRANSPORT' } })
+  })
+
+  it('redacts credentials embedded in a baseURL', () => {
+    const diagnostics: PiAiStreamDiagnostics = {
+      provider: 'p',
+      model: 'm',
+      api: 'openai-completions',
+      baseURL: 'https://user:secret@aiswitch.cc/v1?key=abc#frag',
+    }
+    const failure = mapStopReason(assistant({ stopReason: 'error', errorMessage: 'Stream ended without finish_reason' }), undefined, diagnostics)
+    expect(failure.kind === 'error' ? failure.failure.message : '').toContain('baseURL=https://aiswitch.cc/v1')
+    expect(failure.kind === 'error' ? failure.failure.message : '').not.toContain('secret')
+    expect(failure.kind === 'error' ? failure.failure.message : '').not.toContain('key=abc')
+  })
+
+  it('carries status and request id through toStreamChunks error events', async () => {
+    const diagnostics: PiAiStreamDiagnostics = {
+      provider: 'ds1',
+      model: 'deepseek-v4-flash-0731',
+      api: 'openai-completions',
+      baseURL: 'https://aiswitch.cc',
+      status: 200,
+    }
+    const chunks = await collect(toStreamChunks(feed({
+      type: 'error',
+      reason: 'error',
+      error: assistant({ stopReason: 'error', errorMessage: 'Stream ended without finish_reason', usage: usage(1, 0) }),
+    }), undefined, diagnostics))
+    expect(chunks.at(-1)).toMatchObject({
+      type: 'finish',
+      reason: {
+        kind: 'error',
+        failure: { code: 'PI_AI_ERROR', status: 200 },
+      },
+    })
+  })
+})
+
 describe('mapStopReason / mapUsage', () => {
   it.each([
     ['stop', { kind: 'stop' }],
@@ -816,10 +886,18 @@ describe('mapStopReason / mapUsage', () => {
     'Anthropic stream ended before message_stop',
     'OpenAI Responses stream ended before a terminal response event',
     'openrouter stream ended without a terminal event',
-    'Stream ended without finish_reason',
   ])('maps pi-ai transport wording %j', (errorMessage) => {
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage })))
       .toMatchObject({ kind: 'error', failure: { code: 'TRANSPORT' } })
+  })
+
+  it('does not retry a chat-completions stream that ended without finish_reason', () => {
+    // pi-ai's OpenAI Chat Completions parser throws this after the SSE body
+    // ends without a protocol finish marker. A gateway that speaks this way is
+    // broken for this request shape; replaying it as a socket drop only
+    // multiplies the same failure.
+    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'Stream ended without finish_reason' })))
+      .toMatchObject({ kind: 'error', failure: { code: 'PI_AI_ERROR' } })
   })
 
   it('uses pi-ai provider-specific overflow classification without losing rate-limit exclusions', () => {
