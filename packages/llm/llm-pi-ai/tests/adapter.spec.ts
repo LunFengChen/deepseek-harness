@@ -343,6 +343,9 @@ describe('PiAiAdapter provider routing', () => {
     const result = await assemble(ctx, { model: 'deepseek-v4-flash', messages: [] })
     expect(result.finish).toEqual({ kind: 'stop' })
     expect(server.paths).toEqual(['/chat/completions'])
+    // The env block must reach pi-ai's provider-env reads: a long cache
+    // retention resolved from it changes the wire request.
+    expect(server.requests[0]).toMatchObject({ prompt_cache_retention: '24h' })
   })
 
   it('uses the resolved catalog context window for usage-based overflow detection', async () => {
