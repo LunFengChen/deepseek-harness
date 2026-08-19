@@ -443,7 +443,7 @@ describe('toPiContext', () => {
     expect(onDegrade).toHaveBeenCalledWith(expect.stringContaining('unsupported version 3'))
   })
 
-  it('degrades the flat pre-envelope replay state a legacy session log carries', () => {
+  it('replays the flat pre-envelope replay state a legacy session log carries', () => {
     const onDegrade = vi.fn()
     const context = toPiContext({
       provider: 'deepseek',
@@ -469,8 +469,14 @@ describe('toPiContext', () => {
         },
       })],
     }, undefined, onDegrade)
-    expect(context.messages[0]).toMatchObject({ role: 'assistant', api: 'dsh-foreign' })
-    expect(onDegrade).toHaveBeenCalledWith(expect.stringContaining('expected a response object'))
+    expect(context.messages[0]).toMatchObject({
+      role: 'assistant',
+      api: 'openai-completions',
+      provider: 'deepseek',
+      model: 'deepseek-v4-flash',
+      content: [{ type: 'text', text: 'done' }],
+    })
+    expect(onDegrade).not.toHaveBeenCalled()
   })
 
   it('degrades replay metadata whose blocks do not match the durable content', () => {
@@ -562,13 +568,38 @@ describe('toPiContext', () => {
     expectDegraded(replayState, `${field} does not match assistant source`)
   })
 
+  it('degrades foreign wrapped replay metadata without treating it as a pi-ai invariant failure', () => {
+    const onDegrade = vi.fn()
+    const context = toPiContext({
+      provider: 'deepseek',
+      model: 'next-model',
+      messages: [createMessage({
+        role: 'assistant',
+        content: [{ type: 'text', text: 'done' }],
+        source: {
+          kind: 'model',
+          ...{
+            provider: 'deepseek',
+            model: 'deepseek-v4-flash',
+            replayState: { ...validReplay, response: { ...validResponse, kind: 'other-adapter' } },
+          },
+        },
+      })],
+    }, undefined, onDegrade)
+    expect(context.messages[0]).toMatchObject({
+      role: 'assistant',
+      api: 'dsh-foreign',
+      content: [{ type: 'text', text: 'done' }],
+    })
+    expect(onDegrade).not.toHaveBeenCalled()
+  })
+
   it.each([
     ['number state', 1, 'expected a replay envelope'],
     ['null state', null, 'expected a replay envelope'],
     ['array state', [], 'expected a replay envelope'],
     ['missing response', { blocks: [] }, 'expected a response object'],
     ['array response', { ...validReplay, response: [] }, 'expected a response object'],
-    ['unknown kind', { ...validReplay, response: { ...validResponse, kind: 'other' } }, 'unknown state kind'],
     ['non-string api', { ...validReplay, response: { ...validResponse, api: 1 } }, 'api must be a non-empty string'],
     ['empty provider', { ...validReplay, response: { ...validResponse, provider: '' } }, 'provider must be a non-empty string'],
     ['missing model', { ...validReplay, response: { ...validResponse, model: undefined } }, 'model must be a non-empty string'],
@@ -793,10 +824,16 @@ describe('mapStopReason / mapUsage', () => {
     'Anthropic stream ended before message_stop',
     'OpenAI Responses stream ended before a terminal response event',
     'openrouter stream ended without a terminal event',
-    'Stream ended without finish_reason',
   ])('maps pi-ai transport wording %j', (errorMessage) => {
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage })))
       .toMatchObject({ kind: 'error', failure: { code: 'TRANSPORT' } })
+  })
+
+  it('classifies a chat-completions stream that ended without finish_reason as PI_AI_ERROR', () => {
+    // Keep this distinct from generic transport truncation so the failure can
+    // be diagnosed while the default retry policy still retries PI_AI_ERROR.
+    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'Stream ended without finish_reason' })))
+      .toMatchObject({ kind: 'error', failure: { code: 'PI_AI_ERROR' } })
   })
 
   it('uses pi-ai provider-specific overflow classification without losing rate-limit exclusions', () => {
