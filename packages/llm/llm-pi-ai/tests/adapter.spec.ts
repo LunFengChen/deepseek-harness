@@ -309,7 +309,7 @@ describe('PiAiAdapter provider routing', () => {
     expect(server.paths).toEqual(['/chat/completions'])
   })
 
-  it('classifies an SSE body that ends without finish_reason as a non-retryable protocol failure', async () => {
+  it('classifies an SSE body that ends without finish_reason as a protocol failure', async () => {
     const server = await mockServer([{
       status: 200,
       headers: { 'x-request-id': 'req-abc-123' },
@@ -430,7 +430,7 @@ describe('provider profile lifecycle', () => {
     })
     expect(ctx.llm.providerRetryPolicy('anthropic')).toMatchObject({
       mode: 'normal',
-      maxRetries: 2,
+      maxRetries: 5,
     })
     await fiber.dispose()
     expect(ctx.llm.listProviders()).toEqual([])

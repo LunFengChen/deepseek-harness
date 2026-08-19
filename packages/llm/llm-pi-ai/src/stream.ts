@@ -61,14 +61,18 @@ export function mapUsage(usage: PiUsage): TokenUsage {
 // us capture the cause ourselves), classify on `code`/`cause` instead of text.
 function classifyPiAiError(message: string): string {
   // This wording is thrown by pi-ai's OpenAI Chat Completions parser after the
-  // HTTP/SSE body ends without a protocol finish marker. Retrying it as a
-  // transport drop often just replays the same provider/gateway protocol bug.
+  // HTTP/SSE body ends without a protocol finish marker. It used to be treated
+  // as a terminal protocol bug; providers that truncate mid-stream under load
+  // also throw it, so the default retry policy now retries PI_AI_ERROR as well.
   if (/^Stream ended without finish_reason$/i.test(message.trim())) return 'PI_AI_ERROR'
   if (/\b(?:401|403)\b/.test(message)) return 'AUTH'
   if (isQuotaExceededError(message)) return QUOTA_EXCEEDED_CODE
   if (/\b429\b|rate.?limit/i.test(message)) return 'RATE_LIMIT'
   if (/\b400\b|invalid.?request/i.test(message)) return 'INVALID_REQUEST'
-  if (/\b5\d\d\b/.test(message)) return 'SERVER'
+  // Gateway 5xx failures surface either as a numeric status (`500`) or as
+  // OpenAI-style error codes (`internal_server_error`, `server_error`); both
+  // are transient server faults and belong to the retryable SERVER class.
+  if (/\b(?:internal_)?server_error\b|\b5\d\d\b/i.test(message)) return 'SERVER'
   if (/\btime(?:d)?\s*out\b|timeout/i.test(message)) return 'TIMEOUT'
   // A stream truncated before the provider's terminal event: most pi-ai providers
   // throw their own wording when the wire closes mid-response without a terminal

@@ -891,11 +891,11 @@ describe('mapStopReason / mapUsage', () => {
       .toMatchObject({ kind: 'error', failure: { code: 'TRANSPORT' } })
   })
 
-  it('does not retry a chat-completions stream that ended without finish_reason', () => {
+  it('classifies a chat-completions stream that ended without finish_reason as PI_AI_ERROR', () => {
     // pi-ai's OpenAI Chat Completions parser throws this after the SSE body
-    // ends without a protocol finish marker. A gateway that speaks this way is
-    // broken for this request shape; replaying it as a socket drop only
-    // multiplies the same failure.
+    // ends without a protocol finish marker. It stays distinct from the
+    // TRANSPORT wording so it can be counted and diagnosed, but the default
+    // retry policy retries it like other provider protocol failures.
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'Stream ended without finish_reason' })))
       .toMatchObject({ kind: 'error', failure: { code: 'PI_AI_ERROR' } })
   })
