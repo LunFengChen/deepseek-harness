@@ -24,6 +24,7 @@ const SQL_RESOURCES = [
   'select-application-id',
   'select-events',
   'select-events-from',
+  'select-events-head',
   'select-mmap-size',
   'select-packed-predecessors',
   'select-schema-objects',

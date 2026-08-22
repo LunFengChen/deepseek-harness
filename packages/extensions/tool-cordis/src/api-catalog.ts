@@ -1234,6 +1234,12 @@ export const SERVICE_API: readonly ServiceApiEntry[] = [
         returns: 'the header and the stored events with `seq >= fromSeq`.',
       },
       {
+        signature: 'readHead(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }>',
+        description: 'Read the first `maxEvents` stored events of a session — the read-head primitive for detached reads that only need the session\'s early prefix (e.g. resolving the selected agent preset from its first turns). Unlike inspect, it is a detached physical prefix read: no preparation cache, torn-tail truncation, synthetic closers, or coordinator-state publication, and it never touches the log tail. A `maxEvents` of zero returns an empty event list (never an error), and a `maxEvents` at or beyond the stored prefix returns every stored event. Backends whose medium makes the head cheap to address (JSONL\'s independently decodable first frames) read only the requested prefix; sequential fallbacks still parse the whole artifact and slice — the primitive bounds what is RETURNED and re-folded, not every backend\'s physical read.',
+        parameters: [{ name: 'id', description: 'the persisted session to read.' }, { name: 'maxEvents', description: 'number of oldest stored events to include; a non-negative safe integer.' }, { name: 'signal', description: 'optional cancellation for queued and backend read work.' }],
+        returns: 'the header and the first `maxEvents` stored events.',
+      },
+      {
         signature: 'abstract list(signal?: AbortSignal): Promise<SessionHeader[]>',
         description: 'Lightweight listing from metadata, without a full-log parse.',
         parameters: [{ name: 'signal', description: 'optional cancellation for backend listing work.' }],

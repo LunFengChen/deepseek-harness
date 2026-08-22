@@ -176,6 +176,24 @@ export interface PersistenceBackend<TornMarker = unknown> {
   loadStoredFrom?(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<StoredSuffix | undefined>
 
   /**
+   * Optional seek-capable head read behind the service's `readHead`: return
+   * the header plus the first `maxEvents` stored events without reading the
+   * whole log. A backend whose medium makes the log head cheap to address
+   * (JSONL's independently decodable first frames) implements this so
+   * `readHead` scales with the requested prefix; other backends omit it and
+   * the coordinator falls back to {@link loadStored} plus a forward slice.
+   * Non-mutating (no truncation, no closers). Validation follows the same
+   * head scope as the suffix read: only the returned events are checked, so
+   * an unknown required event after `maxEvents` does not refuse the read.
+   * @param id - persisted session id to resolve.
+   * @param maxEvents - number of oldest stored events to return (non-negative
+   *   safe integer, validated by the coordinator before this hook runs).
+   * @param signal - optional cancellation for backend read work.
+   */
+  loadStoredHead?(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<StoredSuffix | undefined>
+
+
+  /**
    * Durably append a CONTIGUOUS batch, lazily materializing the session first
    * when `!isMaterialized`. The materialize-write and the first event batch MUST
    * commit ATOMICALLY (a crash between them must not leave a materialized-but-
@@ -867,6 +885,56 @@ export class PersistenceCoordinator<TornMarker = unknown> {
     const whole = await this.readStoredPrefix(id, signal)
     // Sequential fallback: contiguous seqs from 0 make the suffix an index slice.
     return { meta: whole.meta, events: whole.events.slice(fromSeq) }
+  }
+
+
+  /**
+   * Read the first `maxEvents` stored events of a session, detached and
+   * non-mutating — the read-head primitive behind the service's `readHead`.
+   * Runs on the same per-id chain as every other operation; a backend with
+   * the seek-capable {@link PersistenceBackend.loadStoredHead} hook reads
+   * only the prefix it returns, every other backend reads its stored prefix
+   * and slices here.
+   * @param id - persisted session to read.
+   * @param maxEvents - number of oldest stored events to include; a
+   *   non-negative safe integer.
+   * @param signal - optional cancellation for queued and backend read work.
+   * @returns stored header and the first `maxEvents` stored events.
+   */
+  readHead(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
+    if (!Number.isSafeInteger(maxEvents) || maxEvents < 0) {
+      return Promise.reject(new TypeError(`readHead maxEvents must be a non-negative safe integer, got ${String(maxEvents)}`))
+    }
+    const retired = Promise.resolve(this.retirements.get(id))
+    const waited = signal === undefined ? retired : observeQueuedAbort(retired, signal, () => false)
+    return waited.then(() => this.serialize(id, () => this.readHeadCore(id, maxEvents, signal), signal))
+  }
+
+  private async readHeadCore(
+    id: SessionId,
+    maxEvents: number,
+    signal?: AbortSignal,
+  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
+    signal?.throwIfAborted()
+    if (this.backend.loadStoredHead !== undefined) {
+      let head: StoredSuffix | undefined
+      try {
+        head = await this.backend.loadStoredHead(id, maxEvents, signal)
+      } catch (error: unknown) {
+        if (signal?.aborted) signal.throwIfAborted()
+        throw error
+      }
+      signal?.throwIfAborted()
+      if (head === undefined) throw new Error(`session "${id}" not found`)
+      this.assertStoredId(id, head.meta)
+      this.assertVersion(head.meta)
+      const events = snapshotStoredEvents(head.events, id)
+      this.assertEventsSupported(head.meta, events)
+      return { meta: structuredClone(head.meta), events }
+    }
+    const whole = await this.readStoredPrefix(id, signal)
+    // Sequential fallback: contiguous seqs from 0 make the head an index slice.
+    return { meta: whole.meta, events: whole.events.slice(0, maxEvents) }
   }
 
   /** Read one detached physical prefix without logical recovery or caching. */

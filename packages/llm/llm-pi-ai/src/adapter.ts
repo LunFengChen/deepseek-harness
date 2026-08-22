@@ -41,6 +41,8 @@ import type {
 import {
   attributionHeaders,
   contentHasImage,
+  CONTEXT_WINDOW_EXCEEDED_CODE,
+  isContextWindowExceededError,
   LlmAdapter,
   LlmError,
   ReasoningEffortId,
@@ -217,6 +219,19 @@ function requestHeaders(headers: Readonly<Record<string, string>> | undefined): 
     ...Object.fromEntries(Object.entries(headers ?? {}).filter(([name]) => !reserved.has(name.toLowerCase()))),
     ...attribution,
   }
+}
+
+/**
+ * Normalize a pi-ai error thrown before its event stream starts.
+ * @param error - value thrown while creating or consuming the pi-ai stream.
+ * @returns a context-overflow LlmError when the provider names that condition, otherwise the original value.
+ */
+export function normalizePiAiError(error: unknown): unknown {
+  if (error instanceof LlmError) return error
+  const detail = error instanceof Error ? error.message : String(error)
+  return isContextWindowExceededError(detail)
+    ? new LlmError(detail, CONTEXT_WINDOW_EXCEEDED_CODE, { cause: error })
+    : error
 }
 
 /**
@@ -432,7 +447,7 @@ export class PiAiAdapter extends LlmAdapter {
       if (options.signal?.aborted) {
         throw new LlmError('pi-ai request aborted by caller', 'ABORTED', { cause: error })
       }
-      throw error
+      throw normalizePiAiError(error)
     } finally {
       consumer.abort('pi-ai stream consumer stopped')
     }

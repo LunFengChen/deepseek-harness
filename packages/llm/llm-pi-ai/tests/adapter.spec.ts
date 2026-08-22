@@ -12,6 +12,7 @@ import type {
 import LlmRuntime, { createUserMessage, CONTEXT_WINDOW_EXCEEDED_CODE, LlmError, ReasoningEffortId, userAgent } from '@deepseek-ai/dsh-llm'
 import * as LlmPiAi from '@deepseek-ai/dsh-llm-pi-ai'
 import { PiAiAdapter } from '@deepseek-ai/dsh-llm-pi-ai'
+import { normalizePiAiError } from '../src/adapter.ts'
 import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
 import { getBuiltinModels } from '@earendil-works/pi-ai/providers/all'
 import { DEFAULT_MAX_REQUEST_IMAGE_BYTES, resolveProfiles } from '../src/config.ts'
@@ -61,6 +62,20 @@ beforeEach(() => {
 })
 
 describe('PiAiAdapter provider routing', () => {
+  it('normalizes pre-stream context overflow throws for automatic recovery', () => {
+    const original = new Error('Your input exceeds the context window of this model')
+    const normalized = normalizePiAiError(original)
+    expect(normalized).toBeInstanceOf(LlmError)
+    expect(normalized).toMatchObject({
+      message: original.message,
+      code: CONTEXT_WINDOW_EXCEEDED_CODE,
+      cause: original,
+    })
+
+    const unrelated = new Error('provider unavailable')
+    expect(normalizePiAiError(unrelated)).toBe(unrelated)
+  })
+
   it('resolves a catalog model dynamically and uses a private endpoint', async () => {
     const server = await mockServer([{ events: textEvents }])
     const ctx = await harness(server.url)

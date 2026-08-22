@@ -246,7 +246,12 @@ function refuseForeignFormatVersion(parsed: unknown): void {
   )
 }
 
-function parseHeaderRecord(record: Buffer): SessionHeader {
+/**
+ * Parse and validate the header record from a JSONL session log.
+ * @param record - raw bytes containing the single header line.
+ * @returns the validated session header.
+ */
+export function parseHeaderRecord(record: Buffer): SessionHeader {
   if (record.length === 0 || record.at(-1) !== 0x0A || record.indexOf(0x0A) !== record.length - 1) {
     throw new Error('empty or header-less session log')
   }
@@ -263,6 +268,8 @@ function parseHeaderRecord(record: Buffer): SessionHeader {
   return fromHeaderLine(parsed)
 }
 
+const MAX_SCANNED_RECORD_BYTES = 64 * 1024 * 1024
+
 /**
  * Incrementally scan complete JSONL event records after an independently
  * supplied header record. Newline search and byte offsets stay on raw buffers;
@@ -271,11 +278,14 @@ function parseHeaderRecord(record: Buffer): SessionHeader {
  */
 export class SessionLogScanner {
   private readonly meta: SessionHeader
+  private readonly maxEvents: number
+  private readonly retainFromSeq: number
   private readonly events: SessionEvent[] = []
   private fragments: Buffer[] = []
   private fragmentBytes = 0
   private inputBytes: number
   private committedBytes: number
+  private nextSeq = 0
   private eventLine = 0
   private issue: Error | undefined
   private finished = false
@@ -283,9 +293,13 @@ export class SessionLogScanner {
   /**
    * Create an event scanner from exactly one newline-terminated header record.
    * @param headerRecord - the complete first JSONL record, including its newline.
+   * @param maxEvents - optional number of events to retain.
+   * @param retainFromSeq - first event sequence to retain; earlier events are validated then discarded.
    */
-  constructor(headerRecord: Buffer) {
+  constructor(headerRecord: Buffer, maxEvents = Number.POSITIVE_INFINITY, retainFromSeq = 0) {
     this.meta = parseHeaderRecord(headerRecord)
+    this.maxEvents = maxEvents
+    this.retainFromSeq = retainFromSeq
     this.inputBytes = headerRecord.length
     this.committedBytes = headerRecord.length
   }
@@ -319,6 +333,9 @@ export class SessionLogScanner {
       const fragment = Buffer.from(chunk.subarray(lineStart))
       this.fragments.push(fragment)
       this.fragmentBytes += fragment.length
+      if (this.fragmentBytes > MAX_SCANNED_RECORD_BYTES) {
+        throw new Error('session log record exceeds the bounded read limit')
+      }
     }
   }
 
@@ -345,6 +362,7 @@ export class SessionLogScanner {
 
   /** Decode one complete event row and update the contiguous prefix. */
   private consumeEventLine(line: Buffer, endByte: number): void {
+    if (this.events.length >= this.maxEvents) return
     this.eventLine += 1
     let decoded: SessionEvent[]
     try {
@@ -360,10 +378,12 @@ export class SessionLogScanner {
     }
 
     const rowStart = this.events.length
+    const nextSeqBefore = this.nextSeq
     for (const event of decoded) {
-      if (event.seq !== this.events.length) {
-        const expected = this.events.length
+      if (event.seq !== this.nextSeq) {
+        const expected = this.nextSeq
         this.events.length = rowStart
+        this.nextSeq = nextSeqBefore
         this.issue = new Error(
           `corrupt session log: seq gap in committed region at line ${this.eventLine} `
           + `(expected ${expected}, got ${event.seq})`,
@@ -371,7 +391,8 @@ export class SessionLogScanner {
         if (decoded.some(candidate => candidate.type === 'turn/end')) throw this.issue
         return
       }
-      this.events.push(event)
+      this.nextSeq += 1
+      if (event.seq >= this.retainFromSeq) this.events.push(event)
     }
     this.committedBytes = endByte
   }
