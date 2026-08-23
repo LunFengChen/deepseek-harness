@@ -221,6 +221,39 @@ export abstract class SessionPersistence extends Service {
   Promise<{ meta: SessionHeader; events: SessionEvent[] }>
 
   /**
+   * Read the first `maxEvents` stored events of a session — the read-head
+   * primitive for detached reads that only need the session's early prefix
+   * (e.g. resolving the selected agent preset from its first turns).
+   * Unlike {@link inspect}, it is a detached physical prefix read: no
+   * preparation cache, torn-tail truncation, synthetic closers, or
+   * coordinator-state publication, and it never touches the log tail. A
+   * `maxEvents` of zero returns an empty event list (never an error), and a
+   * `maxEvents` at or beyond the stored prefix returns every stored event.
+   * Backends whose medium makes the head cheap to address (JSONL's
+   * independently decodable first frames) read only the requested prefix;
+   * sequential fallbacks still parse the whole artifact and slice — the
+   * primitive bounds what is RETURNED and re-folded, not every backend's
+   * physical read.
+   * @param id - the persisted session to read.
+   * @param maxEvents - number of oldest stored events to include; a
+   *   non-negative safe integer.
+   * @param signal - optional cancellation for queued and backend read work.
+   * @returns the header and the first `maxEvents` stored events.
+   */
+  readHead(id: SessionId, maxEvents: number, signal?: AbortSignal):
+  Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
+    if (!Number.isSafeInteger(maxEvents) || maxEvents < 0) {
+      return Promise.reject(new TypeError(
+        `readHead maxEvents must be a non-negative safe integer, got ${String(maxEvents)}`,
+      ))
+    }
+    return this.readFrom(id, 0, signal).then(whole => ({
+      meta: whole.meta,
+      events: whole.events.slice(0, maxEvents),
+    }))
+  }
+
+  /**
    * Lightweight listing from metadata, without a full-log parse.
    * @param signal - optional cancellation for backend listing work.
    * @returns one header per materialized session.

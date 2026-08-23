@@ -241,7 +241,7 @@ All implement the same abstract `SessionPersistence` (locate/create/append/prepa
 
 ## Cordis API
 
-Generated from source by `scripts/gen-cordis-catalog.ts` (verified fresh by `pnpm run verify-cordis-catalog` in doc-sync; regenerate with `pnpm run gen-cordis-catalog`) — this section is byte-identical in both language sides of the page. Signature blocks use a `ts cordis-catalog` fence and keep the original source JSDoc; dispatch modes are defined in the [primer](../cordis-primer.md#dispatch-modes), and the framework-inherited `ctx` API lives in [cordis-api/inherited.md](../cordis-api/inherited.md).
+Generated from source by `scripts/gen-cordis-catalog.ts` (verified fresh by `pnpm run verify-cordis-catalog` in doc-sync; regenerate with `pnpm run gen-cordis-catalog`) — the language sides differ only in locale-specific paired document paths. Signature blocks use a `ts cordis-catalog` fence and keep the original source JSDoc; dispatch modes are defined in the [primer](../cordis-primer.md#dispatch-modes), and the framework-inherited `ctx` API lives in [cordis-api/inherited.md](../cordis-api/inherited.md).
 
 <a id="ctxsessionpersistence--sessionpersistence-abstract-seam"></a>
 
@@ -360,6 +360,28 @@ abstract inspect(id: SessionId, signal?: AbortSignal): Promise<SessionInspection
 abstract readFrom(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }>
 
 /**
+ * Read the first `maxEvents` stored events of a session — the read-head
+ * primitive for detached reads that only need the session's early prefix
+ * (e.g. resolving the selected agent preset from its first turns).
+ * Unlike {@link inspect}, it is a detached physical prefix read: no
+ * preparation cache, torn-tail truncation, synthetic closers, or
+ * coordinator-state publication, and it never touches the log tail. A
+ * `maxEvents` of zero returns an empty event list (never an error), and a
+ * `maxEvents` at or beyond the stored prefix returns every stored event.
+ * Backends whose medium makes the head cheap to address (JSONL's
+ * independently decodable first frames) read only the requested prefix;
+ * sequential fallbacks still parse the whole artifact and slice — the
+ * primitive bounds what is RETURNED and re-folded, not every backend's
+ * physical read.
+ * @param id - the persisted session to read.
+ * @param maxEvents - number of oldest stored events to include; a
+ *   non-negative safe integer.
+ * @param signal - optional cancellation for queued and backend read work.
+ * @returns the header and the first `maxEvents` stored events.
+ */
+readHead(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }>
+
+/**
  * Lightweight listing from metadata, without a full-log parse.
  * @param signal - optional cancellation for backend listing work.
  * @returns one header per materialized session.
@@ -381,5 +403,5 @@ abstract listSnapshots(signal?: AbortSignal): Promise<SessionPersistenceSnapshot
 
 Types: [SessionEvent](session.md) · [SessionId](core.md)
 
-Source: [`packages/session/session-persistence/src/index.ts:84`](../../packages/session/session-persistence/src/index.ts)
+Source: [`packages/session/session-persistence/src/index.ts`](../../packages/session/session-persistence/src/index.ts)
 <!-- END GENERATED cordis-surface -->

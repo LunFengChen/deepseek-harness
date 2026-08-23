@@ -7,9 +7,11 @@ import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
 import type { Session, SessionEvent, SessionHeader } from '@deepseek-ai/dsh-session'
 import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
+import type { StoredSuffix } from '@deepseek-ai/dsh-session-persistence'
 import {
   encodeSegment, eventLines, logPath, projectDir, projectKey, scanLog, sessionDir, SessionLogScanner, toHeaderLine,
 } from '../src/format.ts'
+import { compressZstdFrame } from '../src/zstd.ts'
 import { runPersistenceContract, meta, oneTurnLog, appendLog } from '../../session-persistence/tests/contract.ts'
 import { runCoordinatorContract, type CoordinatorFixture } from '../../session-persistence/tests/coordinator-contract.ts'
 
@@ -1618,4 +1620,177 @@ describe('JsonlSessionPersistence: edge cases', () => {
     expect(session.events.length).toBe(0)
   })
 
+})
+
+describe('JsonlSessionPersistence: seek-capable suffix reads (loadStoredFrom)', () => {
+  let ctx: Context
+  beforeEach(async () => {
+    root = await freshRoot()
+    ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(JsonlSessionPersistence, { root })
+  })
+  afterEach(async () => { await ctx.fiber.dispose() })
+
+  interface SeekReader {
+    loadStoredFrom(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<StoredSuffix | undefined>
+  }
+
+  /** The backend instance also implements the storage hooks; cast for direct hook coverage. */
+  const reader = (): SeekReader => ctx.sessionPersistence as unknown as SeekReader
+
+  /** A turn ending in a streamed delta run; chunk runs pack by default. */
+  function chunk(seq: number, text = `token-${seq}`): SessionEvent {
+    return {
+      type: 'assistant/chunk',
+      seq,
+      time: 1_000 + seq,
+      data: { turn: 1, step: 1, chunk: { type: 'text-delta', index: 0, text } },
+    }
+  }
+
+  function chunkLog(count: number): SessionEvent[] {
+    return [
+      { type: 'turn/start', seq: 0, time: 1, data: { turn: 1 } },
+      { type: 'step/start', seq: 1, time: 2, data: { turn: 1, step: 1 } },
+      ...Array.from({ length: count }, (_, index) => chunk(index + 2)),
+      { type: 'step/end', seq: count + 2, time: count + 3, data: { turn: 1, step: 1 } },
+      {
+        type: 'turn/end',
+        seq: count + 3,
+        time: count + 4,
+        data: { turn: 1, reason: { kind: 'completed' } },
+      },
+    ]
+  }
+
+  it.each(['none', 'zstd'] as const)(
+    'returns exactly the stored suffix from the requested seq (%s, packed rows)',
+    async (compression) => {
+      const packRoot = await freshRoot()
+      const packed = new Context()
+      await packed.plugin(SessionStore)
+      await packed.plugin(JsonlSessionPersistence, { root: packRoot, compression })
+      try {
+        const m = meta(`suffix-${compression}`, '/work')
+        const log = chunkLog(105)
+        await packed.sessionPersistence.create(m)
+        // Three separate appends produce three physical batches (frames for zstd).
+        await packed.sessionPersistence.append(m.id, log.slice(0, 40))
+        await packed.sessionPersistence.append(m.id, log.slice(40, 80))
+        await packed.sessionPersistence.append(m.id, log.slice(80))
+        const seek = packed.sessionPersistence as unknown as SeekReader
+
+        for (const fromSeq of [0, 2, 25, 101, 104, 106, 107, 108, 109, 300]) {
+          const suffix = await seek.loadStoredFrom(m.id, fromSeq)
+          expect(suffix?.meta).toMatchObject(m)
+          expect(suffix?.events).toEqual(log.filter(event => event.seq >= fromSeq))
+        }
+      } finally {
+        await packed.fiber.dispose()
+        await rm(packRoot, { recursive: true, force: true })
+      }
+    },
+  )
+
+  it('walks only the final frames for a tail read and keeps the window contiguous', async () => {
+    const m = meta('suffix-tail', '/work')
+    const log = chunkLog(105)
+    await ctx.sessionPersistence.create(m)
+    await ctx.sessionPersistence.append(m.id, log.slice(0, 40))
+    await ctx.sessionPersistence.append(m.id, log.slice(40, 80))
+    await ctx.sessionPersistence.append(m.id, log.slice(80))
+
+    // fromSeq lands in the final batch: only that batch (plus any covering
+    // predecessor) is decoded, and the returned window stays contiguous.
+    const suffix = await reader().loadStoredFrom(m.id, 100)
+    expect(suffix?.events.map(event => event.seq)).toEqual(
+      log.filter(event => event.seq >= 100).map(event => event.seq),
+    )
+  })
+
+  it('omits a torn final frame from suffix reads', async () => {
+    const m = meta('suffix-torn', '/work')
+    const log = chunkLog(10)
+    await ctx.sessionPersistence.create(m)
+    await ctx.sessionPersistence.append(m.id, log)
+    // Append a structurally complete-but-partial final frame (torn by EOF).
+    const path = logPath(root, '/work', m.id, 'zstd')
+    const line = JSON.stringify(chunk(11, 'torn')) + '\n'
+    const frame = await compressZstdFrame(line)
+    await appendFile(path, frame.subarray(0, Math.floor(frame.length * 0.6)))
+
+    const suffix = await reader().loadStoredFrom(m.id, 8)
+    expect(suffix?.events.map(event => event.seq)).toEqual([8, 9, 10, 11, 12, 13])
+  })
+
+  it('rejects a seq gap between appended batches in the returned window', async () => {
+    const m = meta('suffix-gap', '/work')
+    const path = logPath(root, '/work', m.id, 'zstd')
+    await mkdir(dirname(path), { recursive: true })
+    const header = toHeaderLine(m)
+    const first = await compressZstdFrame(`${JSON.stringify(header)}\n`)
+    const earlier = await compressZstdFrame(`${JSON.stringify(chunk(0))}\n${JSON.stringify(chunk(1))}\n`)
+    const later = await compressZstdFrame(`${JSON.stringify(chunk(3))}\n${JSON.stringify(chunk(4))}\n`)
+    await writeFile(path, Buffer.concat([first, earlier, later]))
+
+    await expect(reader().loadStoredFrom(m.id, 1)).rejects.toThrow(/seq gap between appended batches/)
+    // A gap strictly below fromSeq is outside the suffix's validation scope.
+    await expect(reader().loadStoredFrom(m.id, 3)).resolves.toMatchObject({
+      events: [chunk(3), chunk(4)],
+    })
+  })
+
+  it.each(['none', 'zstd'] as const)('reads only the requested head (%s)', async (compression) => {
+    const packRoot = await freshRoot()
+    const packed = new Context()
+    await packed.plugin(SessionStore)
+    await packed.plugin(JsonlSessionPersistence, { root: packRoot, compression })
+    try {
+      const m = meta(`head-${compression}`, '/work')
+      const log = chunkLog(2_000)
+      await packed.sessionPersistence.create(m)
+      await packed.sessionPersistence.append(m.id, log)
+      await expect(packed.sessionPersistence.readHead(m.id, 1)).resolves.toMatchObject({
+        meta: m,
+        events: [log[0]],
+      })
+      await expect(packed.sessionPersistence.readHead(m.id, 0)).resolves.toMatchObject({
+        meta: m,
+        events: [],
+      })
+    } finally {
+      await packed.fiber.dispose()
+      await rm(packRoot, { recursive: true, force: true })
+    }
+  })
+
+  it('reads a plain JSONL header that crosses the fixed read chunk', async () => {
+    const packRoot = await freshRoot()
+    const packed = new Context()
+    await packed.plugin(SessionStore)
+    await packed.plugin(JsonlSessionPersistence, { root: packRoot, compression: 'none' })
+    try {
+      const m = meta('head-long-header', 'x'.repeat(70_000))
+      await packed.sessionPersistence.create(m)
+      await packed.sessionPersistence.append(m.id, chunkLog(1))
+      await expect(packed.sessionPersistence.readHead(m.id, 1)).resolves.toMatchObject({
+        meta: m,
+        events: [chunkLog(1)[0]],
+      })
+    } finally {
+      await packed.fiber.dispose()
+      await rm(packRoot, { recursive: true, force: true })
+    }
+  })
+
+  it('returns undefined for an absent session and empty events past the log end', async () => {
+    expect(await reader().loadStoredFrom(SessionId('absent-suffix'), 0)).toBeUndefined()
+    const m = meta('suffix-empty', '/work')
+    await ctx.sessionPersistence.create(m)
+    await ctx.sessionPersistence.append(m.id, oneTurnLog())
+    const suffix = await reader().loadStoredFrom(m.id, oneTurnLog().length + 100)
+    expect(suffix?.meta).toMatchObject(m)
+    expect(suffix?.events).toEqual([])
+  })
 })

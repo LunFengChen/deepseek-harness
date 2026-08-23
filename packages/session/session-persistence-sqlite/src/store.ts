@@ -170,6 +170,22 @@ export class SqliteStore implements PersistenceBackend<number> {
     return { meta: rowToMeta(snapshot.row), events: preserved.filter(event => event.seq >= fromSeq) }
   }
 
+  async loadStoredHead(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<StoredSuffix | undefined> {
+    await this.observe(signal)
+    const snapshot = this.readTransaction(() => {
+      const row = this.rowFor(id)
+      if (row === undefined) return undefined
+      // Packed rows can cover several seqs, but every selected row decodes to
+      // at least one event, so a row LIMIT still yields >= maxEvents events.
+      const eventRows = this.db.prepare(sql('select-events-head')).all(id, 0, maxEvents).map(decodeEventRow)
+      return { row, eventRows }
+    })
+    signal?.throwIfAborted()
+    if (snapshot === undefined) return undefined
+    const { preserved } = scanRows(snapshot.eventRows, 0)
+    return { meta: rowToMeta(snapshot.row), events: preserved.slice(0, maxEvents) }
+  }
+
   async appendBatch(
     meta: SessionHeader,
     events: readonly SessionEvent[],
