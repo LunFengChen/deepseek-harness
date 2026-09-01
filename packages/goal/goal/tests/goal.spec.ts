@@ -379,7 +379,7 @@ describe('GoalService mutations', () => {
     expect(ctx.goals.complete(agent, goal).phase).toBe('complete')
   })
 
-  it('extends the round budget when explicitly resuming a round-limit blocker', async () => {
+  it('resumes a round-limit blocker without changing its informational budget', async () => {
     const { ctx, agent, session } = await harness()
     let goal = ctx.goals.create(agent, { objective: 'continue', maxGoalRounds: 2 })
     appendRound(session, goal, 1)
@@ -388,7 +388,7 @@ describe('GoalService mutations', () => {
 
     goal = ctx.goals.resume(agent, goal)
 
-    expect(goal).toMatchObject({ phase: 'active', maxGoalRounds: 4, roundsStarted: 2, activation: 'armed' })
+    expect(goal).toMatchObject({ phase: 'active', maxGoalRounds: 2, roundsStarted: 2, activation: 'armed' })
     expect(goal.blockedReason).toBeUndefined()
   })
 
@@ -667,7 +667,7 @@ describe('goal replay validation', () => {
     for (const change of invalid) expect(() => foldPair(base, change)).toThrow()
   })
 
-  it('rejects invalid replayed lifecycle phase transitions', () => {
+  it('accepts a resumed round beyond the informational budget', () => {
     const base = snapshotChange()
     const invalid: GoalSnapshotChangeMeta[] = [
       mutation(base, 'edit', 'paused'),
@@ -689,7 +689,7 @@ describe('goal replay validation', () => {
     appendRound(session, base.goal, 2)
     appendChange(session, { ...paused, roundsStarted: 2 })
     appendChange(session, exhausted)
-    expect(() => foldGoal(session.events)).toThrow('exhausted round budget')
+    expect(() => foldGoal(session.events)).not.toThrow()
   })
 
   it('rejects invalid clear continuity and goal id reuse', () => {
