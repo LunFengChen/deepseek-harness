@@ -229,8 +229,8 @@ function validateSnapshotTransition(
         'paused',
         'blocked',
       ])
-      if (!resumable.has(current.phase) || next.phase !== 'active' || state.roundsStarted >= next.maxGoalRounds) {
-        throw new Error('goal resume has an invalid phase transition or exhausted round budget')
+      if (!resumable.has(current.phase) || next.phase !== 'active') {
+        throw new Error('goal resume has an invalid phase transition')
       }
       break
     }
@@ -323,8 +323,7 @@ export function applyGoalEvent(state: GoalFoldState, event: SessionEvent): void 
     if (source === undefined) return
     const current = state.goal
     if (current === undefined || current.phase !== 'active' || source.goalId !== current.id
-      || source.revision !== current.revision || source.round !== state.roundsStarted + 1
-      || source.round > current.maxGoalRounds) {
+      || source.revision !== current.revision || source.round !== state.roundsStarted + 1) {
       throw new Error(`goal round at session event ${event.seq} is not the next admitted round of the active goal`)
     }
     state.roundsStarted = source.round
