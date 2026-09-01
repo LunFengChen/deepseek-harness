@@ -240,9 +240,12 @@ export class ConnectionController {
         resolveReady(host)
       }
 
+      let finishFailure: (() => void) | undefined
       const failed = new Promise<void>((resolve) => {
+        finishFailure = resolve
         const settle = (): void => {
           if (gen === this.generation && !ac.signal.aborted) ac.abort()
+          finishFailure?.()
           resolve()
         }
         void Promise.resolve()
@@ -278,7 +281,9 @@ export class ConnectionController {
           this.callSink(() => { this.sinks.onConnected?.(host) })
         }
       } catch {
-        // Source settlement and controller cancellation already abort the generation.
+        // Transport failure: treat as generation failure, fall through to the shared backoff.
+        if (!ac.signal.aborted) ac.abort()
+        finishFailure?.()
       }
 
       await failed
