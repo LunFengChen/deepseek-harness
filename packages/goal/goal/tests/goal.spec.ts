@@ -369,7 +369,6 @@ describe('GoalService mutations', () => {
       roundsStarted: 2,
       activation: 'disarmed',
     })
-    expect(() => ctx.goals.resume(agent, goal)).toThrow(expect.objectContaining({ code: 'GOAL_INVALID_TRANSITION' }))
     goal = ctx.goals.edit(agent, goal, { maxGoalRounds: 3 })
     expect(goal.blockedReason).toEqual({ code: 'round-limit', message: 'Goal round limit reached.' })
     goal = ctx.goals.resume(agent, goal)
@@ -378,6 +377,19 @@ describe('GoalService mutations', () => {
     appendRound(session, goal, 3)
     goal = ctx.goals.block(agent, goal, { code: 'round-limit', message: 'Goal round limit reached.' })
     expect(ctx.goals.complete(agent, goal).phase).toBe('complete')
+  })
+
+  it('extends the round budget when explicitly resuming a round-limit blocker', async () => {
+    const { ctx, agent, session } = await harness()
+    let goal = ctx.goals.create(agent, { objective: 'continue', maxGoalRounds: 2 })
+    appendRound(session, goal, 1)
+    appendRound(session, goal, 2)
+    goal = ctx.goals.block(agent, goal, { code: 'round-limit', message: 'Goal round limit reached.' })
+
+    goal = ctx.goals.resume(agent, goal)
+
+    expect(goal).toMatchObject({ phase: 'active', maxGoalRounds: 4, roundsStarted: 2, activation: 'armed' })
+    expect(goal.blockedReason).toBeUndefined()
   })
 
   it('clears through a revisioned tombstone and permits a fresh goal', async () => {
