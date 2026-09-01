@@ -90,7 +90,7 @@ export function resolveConfig(config: BasicCompactionConfig = {}): ResolvedConfi
     summarizationModel: config.summarizationModel ?? '',
     maxTokens: config.maxTokens ?? 8192,
     compactionRetries: config.compactionRetries ?? 1,
-    maxOverflowRetries: config.maxOverflowRetries ?? 1,
+    maxOverflowRetries: config.maxOverflowRetries ?? 3,
     modelPolicies,
     auto: config.auto ?? true,
   })
