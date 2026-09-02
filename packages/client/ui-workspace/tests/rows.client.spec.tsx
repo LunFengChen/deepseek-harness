@@ -448,6 +448,27 @@ describe('workspace browser rows', () => {
     }
   })
 
+  it('copies the session id from the row menu and keeps the menu open for feedback', async () => {
+    const writeText = vi.fn<(text: string) => Promise<void>>(() => Promise.resolve())
+    const restoreClipboard = installClipboard(writeText)
+    try {
+      const node: SessionNode = {
+        id: sid('session-copy-id'), title: 'Copy me', blank: false, running: false,
+        runningSubagentCount: 0, completed: false, hasActiveSchedule: false, updatedAt: 0,
+      }
+      render(<SessionNodeItem node={node} currentId={undefined} now={0} onOpen={vi.fn()}
+        onRename={vi.fn()} onFork={vi.fn()} onArchive={vi.fn()} t={t} />)
+      fireEvent.click(screen.getByRole('button', { name: '会话“Copy me”的操作' }))
+      fireEvent.click(screen.getByRole('menuitem', { name: '复制会话 ID' }))
+      await act(async () => { await Promise.resolve() })
+      expect(writeText).toHaveBeenCalledWith('session-copy-id')
+      expect(screen.getByRole('menuitem', { name: '已复制' })).toBeTruthy()
+      expect(screen.getByRole('menu')).toBeTruthy()
+    } finally {
+      restoreClipboard()
+    }
+  })
+
   it('session row menu opens without opening the session and dispatches rename, fork, and archive', () => {
     const onOpen = vi.fn()
     const onRename = vi.fn()
