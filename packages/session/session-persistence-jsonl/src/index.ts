@@ -9,7 +9,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { readdirSync } from 'node:fs'
-import { open, mkdir, readFile, readdir, realpath, link, rm, stat, truncate } from 'node:fs/promises'
+import { open, mkdir, readFile, readdir, realpath, link, rename, rm, stat, truncate } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { scheduler } from 'node:timers/promises'
@@ -210,6 +210,11 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
   override borrowSession(id: SessionId, signal?: AbortSignal): Promise<BorrowedSessionSource> {
     return this.coordinator.borrowSession(id, signal)
   }
+
+  override truncate(session: Session, length: SessionLogOffset): Promise<void> {
+    return this.coordinator.truncate(session, length)
+  }
+
 
   // JSONL is sequential media: no loadStoredFrom hook, so the coordinator
   // parses the stored prefix (both encodings) and skips forward to fromSeq.
@@ -466,6 +471,23 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
    * decoded from it, then append synthetic closers. Two fsync'd steps — the seam
    * does not require this to be atomic.
    */
+  /** Rewrite one existing session artifact with an earlier event prefix. */
+  async rewrite(storage: SessionStorageMetadata, events: readonly SessionEvent[]): Promise<void> {
+    await this.ensureRootEncoding()
+    await this.rejectOppositeArtifact(storage.meta.cwd, storage.meta.id)
+    const finalPath = logPath(this.root, storage.meta.cwd, storage.meta.id, this.compression)
+    const content = await this.encodeMaterialization(storage, events)
+    const tmp = await this.writeSyncedTempFile(finalPath, content)
+    let published = false
+    try {
+      await rename(tmp, finalPath)
+      published = true
+      if (process.platform !== 'win32') await this.syncDirPosix(dirname(finalPath))
+    } finally {
+      if (!published) await rm(tmp, { force: true })
+    }
+  }
+
   async commitRepair(
     storage: SessionStorageMetadata,
     tornMarker: JsonlTornMarker | undefined,

@@ -298,6 +298,17 @@ export interface SessionForkValue {
   readonly sessionId: SessionId
 }
 
+/** Request to destructively remove the turn containing one event and all later events. */
+export interface SessionDeleteFromRequest {
+  readonly sessionId: SessionId
+  readonly fromSeq: number
+}
+
+/** Confirmation that the requested session prefix was durably rewritten. */
+export interface SessionDeleteFromValue {
+  readonly accepted: true
+}
+
 /** Session prompt request. */
 export interface SessionPromptRequest {
   /** Client-minted identity persisted on the exact accepted user message. */

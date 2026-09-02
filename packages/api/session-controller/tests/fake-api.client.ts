@@ -222,6 +222,7 @@ export class FakeApiClient {
           this.onSelectModel(payload),
         ),
         rename: payload => this.record('session.rename', payload, this.onRename(payload)),
+        deleteFrom: payload => this.record('session.deleteFrom', payload, Promise.resolve(ok({ accepted: true as const }))),
         fork: payload => this.record('session.fork', payload, this.onFork(payload)),
         prompt: payload => this.record('session.prompt', payload, this.onPrompt(payload)),
         attachment: payload => this.record('session.attachment', payload, this.onAttachment(payload)),

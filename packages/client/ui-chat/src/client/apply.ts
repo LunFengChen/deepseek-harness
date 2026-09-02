@@ -4,7 +4,7 @@ import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
 import type { SessionBinding } from '@deepseek-ai/dsh-api-session-controller/client'
 import type { BoundActions, ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import { SessionSeq, type SessionId } from '@deepseek-ai/dsh-session/types'
 import { resolveWorkspacePath } from '@deepseek-ai/dsh-util-workspace-path'
 // Type-only service and declaration merges used by the apply world.
 import type {} from '@deepseek-ai/dsh-client-locale/client'
@@ -145,6 +145,9 @@ export function apply(ctx: Context): void {
               .catch(() => {
                 // Fork or child-title failure leaves the source view unchanged.
               })
+          },
+          deleteFrom: (seq) => {
+            void session.deleteFrom(SessionSeq(seq))
           },
         }
       },

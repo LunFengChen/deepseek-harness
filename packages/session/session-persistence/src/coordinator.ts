@@ -207,6 +207,16 @@ export interface PersistenceBackend<TornMarker = unknown> {
   ): Promise<void>
 
   /**
+   * Replace the durable event log with the supplied contiguous prefix. The
+   * replacement must be durable before the coordinator advances its cursor.
+   * Backends that cannot rewrite their medium omit this hook and reject the
+   * public destructive-truncate operation.
+   * @param storage - metadata identifying the existing artifact.
+   * @param events - complete retained event prefix, possibly empty.
+   */
+  rewrite?(storage: SessionStorageMetadata, events: readonly SessionEvent[]): Promise<void>
+
+  /**
    * Make a crash repair durable: truncate the torn tail (iff
    * `tornMarker !== undefined`) and append `closers` (iff any). NOT required to
    * be atomic — a file backend may truncate-then-append in two fsync'd steps.
@@ -798,6 +808,38 @@ export class PersistenceCoordinator<TornMarker = unknown> {
     state.materialized = true
     state.cursor = nextCursor
     this.preparations.invalidate(id)
+  }
+
+  /**
+   * Durably remove a live Session turn and every later event. The caller keeps
+   * the live Session unchanged until this method resolves, then applies the
+   * same prefix with {@link Session.truncate}.
+   * @param session - exact live Session owned by this coordinator.
+   * @param length - number of events to retain.
+   */
+  async truncate(session: Session, length: SessionLogOffsetType): Promise<void> {
+    SessionLogOffset(length)
+    await this.flush(session)
+    await this.serialize(session.id, async () => {
+      const state = this.states.get(session.id)
+      if (state === undefined || state.owner !== session) {
+        throw new Error(`session "${session.id}" is not owned by this persistence coordinator`)
+      }
+      const events = session.snapshotEvents()
+      if (events.length !== session.seq) {
+        throw new Error(`session "${session.id}" changed while destructive deletion was preparing`)
+      }
+      if (length > events.length || length < state.storage.inheritedEventCount) {
+        throw new RangeError(`session truncation length ${String(length)} is outside the writable log prefix`)
+      }
+      if (this.backend.rewrite === undefined) {
+        throw new Error(`${this.backend.name} does not support destructive session deletion`)
+      }
+      await this.backend.rewrite(state.storage, events.slice(0, length))
+      state.cursor = SessionLogOffset(length)
+      state.materialized = true
+      this.preparations.invalidate(session.id)
+    })
   }
 
   /**

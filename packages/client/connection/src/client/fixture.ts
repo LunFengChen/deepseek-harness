@@ -259,6 +259,7 @@ interface FixtureSessionApi {
     readonly agentPreset?: string
   }): Promise<ConnectionRpcResult<unknown>>
   rename(request: { readonly sessionId: SessionId; readonly title: string }): Promise<ConnectionRpcResult<unknown>>
+  deleteFrom(request: { readonly sessionId: SessionId; readonly fromSeq: number }): Promise<ConnectionRpcResult<unknown>>
   fork(request: { readonly sessionId: SessionId; readonly atSeq?: number }): Promise<ConnectionRpcResult<unknown>>
   history(request: {
     readonly sessionId: SessionId
@@ -2861,6 +2862,53 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
       const appended = logOf(sessionId).at(-1) as SessionEvent
       return sessionOk({ title: normalized, seq: appended.seq })
     },
+    deleteFrom: (request) => {
+      const missing = requireRemoteSession(request)
+      if (missing !== undefined) return missing
+      const summary = summaryOf(request.sessionId)
+      /* v8 ignore next -- requireRemoteSession establishes this invariant. */
+      if (summary === undefined) return sessionErr({
+        code: 'session/not-found',
+        message: `no session ${request.sessionId}`,
+        details: { sessionId: request.sessionId },
+      })
+      if (summary.running) {
+        return sessionErr({
+          code: 'session/agent-busy',
+          message: 'cannot delete conversation history while the session is running',
+          details: { reason: 'DELETE_ACTIVE_TURN' },
+        })
+      }
+      if (!Number.isSafeInteger(request.fromSeq) || request.fromSeq < 0) {
+        return sessionErr({
+          code: 'gateway/bad-request',
+          message: `invalid deletion sequence ${String(request.fromSeq)}`,
+          details: {},
+        })
+      }
+      const log = logOf(request.sessionId)
+      if (request.fromSeq >= log.length) {
+        return sessionErr({
+          code: 'gateway/bad-request',
+          message: `session deletion sequence ${String(request.fromSeq)} is outside the log`,
+          details: {},
+        })
+      }
+      let cut = request.fromSeq
+      while (cut >= 0 && log[cut]?.type !== 'turn/start') cut--
+      if (cut < 0) {
+        return sessionErr({
+          code: 'gateway/bad-request',
+          message: `session deletion sequence ${String(request.fromSeq)} is not inside a turn`,
+          details: {},
+        })
+      }
+      logs.set(request.sessionId, log.slice(0, cut))
+      summary.blank = logs.get(request.sessionId)?.some(event => event.type === 'turn/start') !== true
+      summary.updatedAt = Date.now()
+      emitRemote('api-session/status', [request.sessionId, false])
+      return sessionOk({ accepted: true })
+    },
     fork: (request) => {
       const { sessionId, atSeq } = request
       const source = summaryOf(sessionId)
@@ -3547,6 +3595,9 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
         )
         case 'session/rename': return sessionApi.rename(
           request as Parameters<FixtureSessionApi['rename']>[0],
+        )
+        case 'session/deleteFrom': return sessionApi.deleteFrom(
+          request as Parameters<FixtureSessionApi['deleteFrom']>[0],
         )
         case 'session/fork': return sessionApi.fork(
           request as Parameters<FixtureSessionApi['fork']>[0],

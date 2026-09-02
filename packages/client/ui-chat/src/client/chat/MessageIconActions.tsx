@@ -3,7 +3,8 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import {
-  IconBranchOutline16, IconCheckOutline16, IconCopyOutline16, Tooltip, writeClipboard,
+  IconBranchOutline16, IconCheckOutline16, IconCopyOutline16, IconTrashOutline16,
+  RiskConfirmation, Tooltip, writeClipboard,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ChatViewSlotProps } from '../contract/slots.ts'
 import { formatMessageClock } from './message-chrome.ts'
@@ -21,6 +22,8 @@ export interface MessageIconActionsProps {
   onBranch?: (() => void) | undefined
   /** The message is not a completed transcript tail, so branch stays visible but unavailable. */
   branchUnavailable?: boolean | undefined
+  /** Permanently remove this turn and all later history. */
+  onDelete?: (() => void) | undefined
   /** Parent layout class composed onto the actions row. */
   className?: string | undefined
   /**
@@ -43,7 +46,7 @@ export interface MessageIconActionsProps {
  * @returns The actions row element.
  */
 export function MessageIconActions({
-  text, time, clock, onBranch, branchUnavailable = false, className,
+  text, time, clock, onBranch, branchUnavailable = false, onDelete, className,
   extraActions, usageAction, t,
 }: MessageIconActionsProps) {
   const day = useCalendarDay()
@@ -51,6 +54,8 @@ export function MessageIconActions({
   // Same success chrome as CodeBlock: a short check swap after the write,
   // gated so re-clicks during the window neither re-copy nor stack timers.
   const [copied, setCopied] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleteAcknowledged, setDeleteAcknowledged] = useState(false)
   const copyPending = useRef(false)
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const copyEpoch = useRef(0)
@@ -74,6 +79,19 @@ export function MessageIconActions({
       }, 1000)
     })
   }, [copied, text])
+  const openDelete = useCallback(() => {
+    setDeleteAcknowledged(false)
+    setDeleteOpen(true)
+  }, [])
+  const cancelDelete = useCallback(() => {
+    setDeleteOpen(false)
+    setDeleteAcknowledged(false)
+  }, [])
+  const confirmDelete = useCallback(() => {
+    setDeleteOpen(false)
+    setDeleteAcknowledged(false)
+    onDelete?.()
+  }, [onDelete])
   const clockEl = time === undefined ? null : (
     <span className={clock === 'start' ? css.timeStart : css.timeEnd}>
       {formatMessageClock(time, t, day)}
@@ -88,6 +106,13 @@ export function MessageIconActions({
         </button>
       </Tooltip>
       {extraActions}
+      {onDelete !== undefined && (
+        <Tooltip label={t('message.delete')} side="bottom">
+          <button type="button" className={css.action} aria-label={t('message.delete')} onClick={openDelete}>
+            <IconTrashOutline16 />
+          </button>
+        </Tooltip>
+      )}
       {onBranch !== undefined && (
         <Tooltip label={branchUnavailable ? t('message.branchUnavailable') : t('message.branch')} side="bottom">
           {/* Native disabled buttons do not deliver the hover/focus events Tooltip needs. */}
@@ -109,6 +134,21 @@ export function MessageIconActions({
       )}
       {usageAction}
       {clock === 'end' ? clockEl : null}
+      {onDelete !== undefined && (
+        <RiskConfirmation
+          open={deleteOpen}
+          title={t('message.delete.title')}
+          description={t('message.delete.description')}
+          acknowledgeLabel={t('message.delete.acknowledge')}
+          cancelLabel={t('message.delete.cancel')}
+          closeLabel={t('message.delete.close')}
+          confirmLabel={t('message.delete.confirm')}
+          acknowledged={deleteAcknowledged}
+          onAcknowledgedChange={setDeleteAcknowledged}
+          onCancel={cancelDelete}
+          onConfirm={confirmDelete}
+        />
+      )}
     </div>
   )
 }

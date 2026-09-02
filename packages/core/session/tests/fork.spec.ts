@@ -231,6 +231,23 @@ describe('SessionStore.fork', () => {
       .toThrow(new SessionForkError('session "same-id" is not the live store instance', 'SESSION_NOT_LIVE'))
   })
 
+  it('destructively truncates at the containing turn boundary and rebuilds projections', async () => {
+    const { sessions } = await setup()
+    const source = sessions.create(SessionId('truncate-parent'), { meta: { cwd: '/workspace' } })
+    appendClosedTurn(source, 1, 'first')
+    appendClosedTurn(source, 2, 'second')
+
+    expect(source.deriveMessages().map(message => message.content)).toHaveLength(2)
+    const secondTurnStart = source.snapshotEvents()[3]!.seq
+    expect(source.deletionStart(SessionSeq(Number(secondTurnStart) + 1))).toBe(SessionLogOffset(3))
+
+    source.truncate(SessionLogOffset(3))
+
+    expect(source.snapshotEvents().map(event => event.type)).toEqual(['turn/start', 'user/message', 'turn/end'])
+    expect(source.deriveMessages()).toHaveLength(1)
+    expect(source.requestHeader()).toBeUndefined()
+  })
+
   it('rejects selected slices whose boundary is inside an open turn', async () => {
     const { ctx, sessions } = await setup()
     const cases: [string, (session: Session) => number][] = [

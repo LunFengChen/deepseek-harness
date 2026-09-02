@@ -195,6 +195,17 @@ export abstract class SessionPersistence extends Service {
   abstract append(id: SessionId, events: readonly SessionEvent[]): Promise<void>
 
   /**
+   * Physically replace a live session's durable log with an earlier prefix.
+   * The caller must apply the matching in-memory truncation only after this
+   * promise resolves. Backends without rewrite support fail loudly.
+   * @param session - exact live Session being changed.
+   * @param length - number of events to retain.
+   */
+  truncate(_session: Session, _length: SessionLogOffset): Promise<void> {
+    return Promise.reject(new Error('this session persistence backend does not support destructive session deletion'))
+  }
+
+  /**
    * Prepare the exact unpublished Session used by resume. Implementations may
    * reuse object graphs retained by an earlier {@link inspect} after confirming
    * their durable revision is still current; disposal releases an unpublished

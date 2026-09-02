@@ -631,6 +631,50 @@ export class Session {
   }
 
   /**
+   * Find the beginning of the logical turn containing one visible message.
+   * Deletion is turn-granular so the retained event prefix remains balanced and
+   * the next prompt cannot inherit half of a previous turn.
+   * @param seq - visible message event sequence.
+   * @returns the first event of the containing turn.
+   */
+  deletionStart(seq: SessionSeq): SessionLogOffset {
+    if (seq < 0 || seq >= this.log.length) {
+      throw new RangeError(`session deletion sequence ${String(seq)} is outside the log`)
+    }
+    for (let index = Number(seq); index >= 0; index -= 1) {
+      if (this.log[index]?.type === 'turn/start') return SessionLogOffset(index)
+    }
+    throw new Error(`session deletion sequence ${String(seq)} is not inside a turn`)
+  }
+
+  /**
+   * Physically remove the selected turn and every later event from the live log.
+   * Persistence must be rewritten before this method is called.
+   * @param length - retained event-prefix length.
+   */
+  truncate(length: SessionLogOffset): void {
+    if (length < this.inheritedEventCount) {
+      throw new RangeError(`session truncation length ${String(length)} would remove inherited events`)
+    }
+    if (length > this.log.length) {
+      throw new RangeError(`session truncation length ${String(length)} is outside the log`)
+    }
+    if (length === this.log.length) return
+    const entry = attachments.get(this)
+    if (entry?.appending) throw new Error('session cannot be truncated while an append is being published')
+    this.log.splice(length)
+    this.eventsSnapshot = undefined
+    this.surfaceManager.reset()
+    this.headerFold = undefined
+    this.headerFoldSeq = 0
+    this.contextFold = undefined
+    this.contextFoldSeq = 0
+    this.derived = []
+    this.derivedNodes = 0
+    this.derivedGeneration = this.surfaceManager.replaceGeneration
+  }
+
+  /**
    * Append one typed event to the log and synchronously notify observers via
    * the store-owned, module-private publication hooks. The hot path never blocks
    * on I/O — persistence plugins buffer asynchronously. Once the event enters

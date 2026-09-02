@@ -91,13 +91,13 @@ afterEach(async () => {
   for (const d of dirs.splice(0)) await rm(d, { recursive: true, force: true })
 })
 
-function appendClosedTurn(session: Session): void {
-  session.append('turn/start', { turn: 1 })
+function appendClosedTurn(session: Session, turn = 1, text = `hello ${turn}`): void {
+  session.append('turn/start', { turn })
   session.append('user/message', createUserMessage({
-    content: [{ type: 'text', text: 'hello' }],
+    content: [{ type: 'text', text }],
     source: { kind: 'user' },
   }), { surfaceOp: 'append' })
-  session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+  session.append('turn/end', { turn, reason: { kind: 'completed' } })
 }
 
 runPersistenceContract('jsonl-none', async () => {
@@ -364,6 +364,26 @@ describe('JsonlSessionPersistence: durability and crash semantics', () => {
       meta: session.header,
       inheritedEventCount: SessionLogOffset(0),
       events: [],
+    })
+  })
+
+  it('rewrites the durable artifact to the retained event prefix', async () => {
+    const session = ctx.sessions.create(SessionId('rewrite-tail'), { meta: { cwd: '/work' } })
+    appendClosedTurn(session, 1, 'keep')
+    appendClosedTurn(session, 2, 'remove')
+    await ctx.sessions.flush(session)
+
+    await ctx.sessionPersistence.truncate(session, SessionLogOffset(3))
+
+    const raw = await ctx.sessionPersistence.readRaw(session.id)
+    expect(raw).toBeDefined()
+    const scanned = scanLog(Buffer.from(raw!.content))
+    expect(scanned.events.map(event => event.seq)).toEqual([0, 1, 2])
+    expect(scanned.events.some(event => JSON.stringify(event.data).includes('remove'))).toBe(false)
+
+    session.truncate(SessionLogOffset(3))
+    await expect(ctx.sessionPersistence.load(session.id)).resolves.toMatchObject({
+      events: expect.arrayContaining([expect.objectContaining({ seq: SessionSeq(2) })]),
     })
   })
 

@@ -115,6 +115,12 @@ export interface ISession {
    */
   rename(title: string): Promise<RemoteResult<{ title: string; seq: SessionSeq }>>
   /**
+   * Permanently remove the turn containing `fromSeq` and every later event.
+   * @param fromSeq - visible event sequence in the turn to remove.
+   * @returns acceptance after the Host rewrites durable history, or an error.
+   */
+  deleteFrom(fromSeq: SessionSeq): Promise<RemoteResult<{ accepted: true }>>
+  /**
    * Extend the history window backwards (older messages pagination).
    * @returns completion; failures land in snapshot.openState/loadingOlder.
    */
