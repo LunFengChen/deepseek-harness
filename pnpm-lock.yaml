@@ -15,12 +15,6 @@ importers:
 
   .:
     devDependencies:
-      '@xfcodeai/dsh-tool-session-query':
-        specifier: workspace:^
-        version: link:packages/session-query/tool-session-query
-      '@xfcodeai/dsh-web-fetch-http':
-        specifier: workspace:^
-        version: link:packages/web/web-fetch-http
       '@stylistic/eslint-plugin':
         specifier: ^5.10.0
         version: 5.10.0(eslint@10.5.0(jiti@2.7.0))
@@ -48,6 +42,12 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.1.8
         version: 4.1.8(vitest@4.1.8)
+      '@xfcodeai/dsh-tool-session-query':
+        specifier: workspace:^
+        version: link:packages/session-query/tool-session-query
+      '@xfcodeai/dsh-web-fetch-http':
+        specifier: workspace:^
+        version: link:packages/web/web-fetch-http
       '@yarnpkg/cli-dist':
         specifier: 4.17.1
         version: 4.17.1
@@ -138,6 +138,9 @@ importers:
       '@deepseek-ai/cordis-plugin-timer':
         specifier: workspace:^
         version: link:../../vendor/timer
+      '@deepseek-ai/schemastery':
+        specifier: link:../../vendor/schemastery
+        version: link:../../vendor/schemastery
       '@xfcodeai/dsh-acp-app':
         specifier: workspace:^
         version: link:../../packages/bundle/acp-app
@@ -321,9 +324,6 @@ importers:
       '@xfcodeai/dsh-workflow-worker-thread':
         specifier: workspace:^
         version: link:../../packages/workflow/workflow-worker-thread
-      '@deepseek-ai/schemastery':
-        specifier: link:../../vendor/schemastery
-        version: link:../../vendor/schemastery
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -337,6 +337,12 @@ importers:
       '@agentclientprotocol/sdk':
         specifier: 1.4.0
         version: 1.4.0(zod@4.4.3)
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/ws':
+        specifier: 8.18.1
+        version: 8.18.1
       '@xfcodeai/dsh-acp':
         specifier: workspace:^
         version: link:../../packages/acp/acp
@@ -451,12 +457,6 @@ importers:
       '@xfcodeai/dsh-user-approval':
         specifier: workspace:^
         version: link:../../packages/interaction/user-approval
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
-      '@types/ws':
-        specifier: 8.18.1
-        version: 8.18.1
       execa:
         specifier: ^10.0.0
         version: 10.0.0
@@ -469,6 +469,21 @@ importers:
       '@deepseek-ai/cordis-plugin-group':
         specifier: workspace:^
         version: link:../../vendor/group
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.20.0
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
+      '@types/ws':
+        specifier: 8.18.1
+        version: 8.18.1
+      '@vitejs/plugin-react':
+        specifier: ^4.0.0
+        version: 4.7.0(vite@6.4.3(@types/node@22.20.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.22.4)(yaml@2.9.0))
       '@xfcodeai/dsh-client-modules':
         specifier: workspace:^
         version: link:../../packages/client/modules
@@ -496,21 +511,6 @@ importers:
       '@xfcodeai/dsh-pwsh-local':
         specifier: workspace:^
         version: link:../../packages/shell/pwsh-local
-      '@types/node':
-        specifier: ^22.0.0
-        version: 22.20.0
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
-      '@types/ws':
-        specifier: 8.18.1
-        version: 8.18.1
-      '@vitejs/plugin-react':
-        specifier: ^4.0.0
-        version: 4.7.0(vite@6.4.3(@types/node@22.20.0)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.22.4)(yaml@2.9.0))
       fflate:
         specifier: ^0.8.2
         version: 0.8.3
@@ -572,12 +572,12 @@ importers:
       '@agentclientprotocol/sdk':
         specifier: 1.4.0
         version: 1.4.0(zod@4.4.3)
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -624,6 +624,9 @@ importers:
 
   packages/api/gateway:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-deque':
         specifier: workspace:^
         version: link:../../util/deque
@@ -633,9 +636,6 @@ importers:
       '@xfcodeai/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       ws:
         specifier: ^8.21.0
         version: 8.21.0
@@ -643,6 +643,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
@@ -658,9 +661,6 @@ importers:
       '@xfcodeai/dsh-util-crypto':
         specifier: workspace:^
         version: link:../../util/crypto
-      '@types/ws':
-        specifier: ^8.18.1
-        version: 8.18.1
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -746,15 +746,15 @@ importers:
 
   packages/api/session-controller:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
       '@xfcodeai/dsh-deque':
         specifier: workspace:^
         version: link:../../util/deque
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -979,6 +979,9 @@ importers:
       '@deepseek-ai/cordis-plugin-timer':
         specifier: workspace:^
         version: link:../../../vendor/timer
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@xfcodeai/dsh-home-paths':
         specifier: workspace:^
         version: link:../../util/home-paths
@@ -988,9 +991,6 @@ importers:
       '@xfcodeai/dsh-system-prompt':
         specifier: workspace:^
         version: link:../../core/system-prompt
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
 
   packages/boot/cmdline:
     devDependencies:
@@ -1287,6 +1287,9 @@ importers:
 
   packages/bundle/headless:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
@@ -1299,9 +1302,6 @@ importers:
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -1327,15 +1327,15 @@ importers:
 
   packages/bundle/sdk-app:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-cmdline':
         specifier: workspace:^
         version: link:../../boot/cmdline
       '@xfcodeai/dsh-sdk-jsonrpc-server':
         specifier: workspace:^
         version: link:../../sdk/server
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -1443,6 +1443,9 @@ importers:
 
   packages/bundle/web-app:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-agent-presets':
         specifier: workspace:^
         version: link:../../preset/agent-presets
@@ -1650,9 +1653,6 @@ importers:
       '@xfcodeai/dsh-workspace':
         specifier: workspace:^
         version: link:../../workspace/workspace
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -1675,12 +1675,12 @@ importers:
 
   packages/client/connection:
     dependencies:
-      '@xfcodeai/dsh-credentials':
-        specifier: workspace:^
-        version: link:../../credentials/credentials
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-credentials':
+        specifier: workspace:^
+        version: link:../../credentials/credentials
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -1750,6 +1750,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -1777,9 +1780,6 @@ importers:
       '@xfcodeai/dsh-settings':
         specifier: workspace:^
         version: link:../../settings/settings
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -1817,6 +1817,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-agent-presets':
         specifier: workspace:^
         version: link:../../preset/agent-presets
@@ -1862,9 +1865,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -1874,6 +1874,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -1907,9 +1910,6 @@ importers:
       '@xfcodeai/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -1923,6 +1923,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-attachment':
         specifier: workspace:^
         version: link:../../attachment/attachment
@@ -1944,12 +1950,6 @@ importers:
       '@xfcodeai/dsh-client-ui-trajectory':
         specifier: workspace:^
         version: link:../ui-trajectory
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -1962,6 +1962,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-client-ui-primitives':
         specifier: workspace:^
         version: link:../ui-primitives
@@ -1971,12 +1977,6 @@ importers:
       '@xfcodeai/dsh-client-ui-sidebar':
         specifier: workspace:^
         version: link:../ui-sidebar
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -1993,6 +1993,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-agent':
         specifier: workspace:^
         version: link:../../core/agent
@@ -2074,12 +2080,6 @@ importers:
       '@xfcodeai/dsh-util-workspace-path':
         specifier: workspace:^
         version: link:../../util/workspace-path
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2096,6 +2096,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2138,9 +2141,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2172,6 +2172,15 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@lexical/headless':
+        specifier: ^0.49.0
+        version: 0.49.0(typescript@6.0.3)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2256,15 +2265,6 @@ importers:
       '@xfcodeai/dsh-workspace':
         specifier: workspace:^
         version: link:../../workspace/workspace
-      '@lexical/headless':
-        specifier: ^0.49.0
-        version: 0.49.0(typescript@6.0.3)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2280,6 +2280,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2316,9 +2319,6 @@ importers:
       '@xfcodeai/dsh-system-prompt':
         specifier: workspace:^
         version: link:../../core/system-prompt
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2332,6 +2332,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2353,12 +2359,6 @@ importers:
       '@xfcodeai/dsh-client-ui-workspace':
         specifier: workspace:^
         version: link:../ui-workspace
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2371,18 +2371,18 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
-      '@xfcodeai/dsh-client-ui-renderer':
-        specifier: workspace:^
-        version: link:../ui-renderer
-      '@xfcodeai/dsh-client-ui-workspace':
-        specifier: workspace:^
-        version: link:../ui-workspace
       '@testing-library/react':
         specifier: ^16.1.0
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
         specifier: ~18.3.1
         version: 18.3.31
+      '@xfcodeai/dsh-client-ui-renderer':
+        specifier: workspace:^
+        version: link:../ui-renderer
+      '@xfcodeai/dsh-client-ui-workspace':
+        specifier: workspace:^
+        version: link:../ui-workspace
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2395,6 +2395,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2437,12 +2443,6 @@ importers:
       '@xfcodeai/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2459,6 +2459,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -2492,9 +2495,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2504,6 +2504,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -2528,9 +2531,6 @@ importers:
       '@xfcodeai/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2540,6 +2540,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-client-locale':
         specifier: workspace:^
         version: link:../locale
@@ -2558,9 +2561,6 @@ importers:
       '@xfcodeai/dsh-client-ui-theme':
         specifier: workspace:^
         version: link:../ui-theme
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2570,6 +2570,15 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2609,15 +2618,6 @@ importers:
       '@xfcodeai/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2634,6 +2634,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2676,9 +2679,6 @@ importers:
       '@xfcodeai/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2688,6 +2688,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2727,9 +2730,6 @@ importers:
       '@xfcodeai/dsh-permission-presets':
         specifier: workspace:^
         version: link:../../interaction/permission-presets
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2739,6 +2739,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -2769,9 +2772,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2900,15 +2900,6 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
-      '@xfcodeai/dsh-client-test-runtime':
-        specifier: workspace:^
-        version: link:../../test-support/client-runtime
-      '@xfcodeai/dsh-client-ui-slots':
-        specifier: workspace:^
-        version: link:../ui-slots
-      '@xfcodeai/dsh-invariants':
-        specifier: workspace:^
-        version: link:../../runtime-diagnostics/invariants
       '@types/react':
         specifier: ~18.3.1
         version: 18.3.31
@@ -2918,6 +2909,15 @@ importers:
       '@types/use-sync-external-store':
         specifier: ^1.5.0
         version: 1.5.0
+      '@xfcodeai/dsh-client-test-runtime':
+        specifier: workspace:^
+        version: link:../../test-support/client-runtime
+      '@xfcodeai/dsh-client-ui-slots':
+        specifier: workspace:^
+        version: link:../ui-slots
+      '@xfcodeai/dsh-invariants':
+        specifier: workspace:^
+        version: link:../../runtime-diagnostics/invariants
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2930,6 +2930,15 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -2960,15 +2969,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -2981,6 +2981,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -2996,9 +2999,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3008,6 +3008,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3026,12 +3032,6 @@ importers:
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3048,6 +3048,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3084,9 +3087,6 @@ importers:
       '@xfcodeai/dsh-settings':
         specifier: workspace:^
         version: link:../../settings/settings
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3096,6 +3096,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3123,9 +3126,6 @@ importers:
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3135,6 +3135,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-agent-presets':
         specifier: workspace:^
         version: link:../../preset/agent-presets
@@ -3162,12 +3168,6 @@ importers:
       '@xfcodeai/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3184,6 +3184,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3208,9 +3211,6 @@ importers:
       '@xfcodeai/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3224,6 +3224,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-workspace-controller':
         specifier: workspace:^
         version: link:../../api/workspace-controller
@@ -3251,9 +3254,6 @@ importers:
       '@xfcodeai/dsh-client-ui-workspace':
         specifier: workspace:^
         version: link:../ui-workspace
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3263,6 +3263,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3296,12 +3302,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3314,18 +3314,24 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
-      '@xfcodeai/dsh-client-store':
-        specifier: workspace:^
-        version: link:../store
       '@types/react':
         specifier: ~18.3.1
         version: 18.3.31
+      '@xfcodeai/dsh-client-store':
+        specifier: workspace:^
+        version: link:../store
 
   packages/client/ui-subagent:
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -3365,12 +3371,6 @@ importers:
       '@xfcodeai/dsh-token-meter':
         specifier: workspace:^
         version: link:../../llm/token-meter
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3390,6 +3390,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3423,9 +3426,6 @@ importers:
       '@xfcodeai/dsh-settings':
         specifier: workspace:^
         version: link:../../settings/settings
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3439,6 +3439,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3475,12 +3481,6 @@ importers:
       '@xfcodeai/dsh-util-workspace-path':
         specifier: workspace:^
         version: link:../../util/workspace-path
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3500,6 +3500,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-agent':
         specifier: workspace:^
         version: link:../../core/agent
@@ -3548,12 +3554,6 @@ importers:
       '@xfcodeai/dsh-tools':
         specifier: workspace:^
         version: link:../../core/tools
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3570,6 +3570,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-agent':
         specifier: workspace:^
         version: link:../../core/agent
@@ -3618,9 +3621,6 @@ importers:
       '@xfcodeai/dsh-user-questions':
         specifier: workspace:^
         version: link:../../interaction/user-questions
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3630,6 +3630,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -3669,9 +3672,6 @@ importers:
       '@xfcodeai/dsh-workflow':
         specifier: workspace:^
         version: link:../../workflow/workflow
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3685,6 +3685,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -3736,9 +3739,6 @@ importers:
       '@xfcodeai/dsh-util-workspace-path':
         specifier: workspace:^
         version: link:../../util/workspace-path
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3751,6 +3751,12 @@ importers:
       '@deepseek-ai/cordis-plugin-loader':
         specifier: workspace:^
         version: link:../../../vendor/loader
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-client-modules':
         specifier: workspace:^
         version: link:../modules
@@ -3766,12 +3772,6 @@ importers:
       '@xfcodeai/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3790,12 +3790,12 @@ importers:
 
   packages/code-runtime/code-runtime-worker-thread:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -3860,12 +3860,12 @@ importers:
 
   packages/compaction/compaction-basic:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -3918,12 +3918,12 @@ importers:
 
   packages/compaction/compaction-tool-result-pruner:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -3955,12 +3955,12 @@ importers:
 
   packages/context/agent-instructions:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -4038,15 +4038,15 @@ importers:
 
   packages/context/session-reference:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -4087,12 +4087,12 @@ importers:
 
   packages/context/time-context:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -4228,15 +4228,15 @@ importers:
 
   packages/core/agent-loop:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -4364,15 +4364,15 @@ importers:
 
   packages/core/tools:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -4546,12 +4546,12 @@ importers:
 
   packages/experimental/agent-team:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -4646,6 +4646,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@testing-library/react':
+        specifier: ^16.1.0
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -4682,12 +4688,6 @@ importers:
       '@xfcodeai/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
-      '@testing-library/react':
-        specifier: ^16.1.0
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -4713,6 +4713,9 @@ importers:
 
   packages/experimental/inspector:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
@@ -4722,9 +4725,6 @@ importers:
       '@xfcodeai/dsh-util-crypto':
         specifier: workspace:^
         version: link:../../util/crypto
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       ws:
         specifier: ^8.21.0
         version: 8.21.0
@@ -4738,12 +4738,12 @@ importers:
       '@deepseek-ai/cordis-plugin-loader':
         specifier: workspace:^
         version: link:../../../vendor/loader
-      '@xfcodeai/dsh-host-webserver':
-        specifier: workspace:^
-        version: link:../../host/webserver
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
+      '@xfcodeai/dsh-host-webserver':
+        specifier: workspace:^
+        version: link:../../host/webserver
       playwright:
         specifier: ^1.49.0
         version: 1.61.1
@@ -4836,12 +4836,12 @@ importers:
 
   packages/experimental/webworker-runtime:
     dependencies:
-      '@xfcodeai/dsh-util-crypto':
-        specifier: workspace:^
-        version: link:../../util/crypto
       '@noble/hashes':
         specifier: ^2.3.0
         version: 2.3.0
+      '@xfcodeai/dsh-util-crypto':
+        specifier: workspace:^
+        version: link:../../util/crypto
       '@yarnpkg/parsers':
         specifier: ^3.1.0
         version: 3.1.0
@@ -4864,6 +4864,15 @@ importers:
       '@deepseek-ai/cordis-plugin-loader':
         specifier: workspace:^
         version: link:../../../vendor/loader
+      '@deepseek-ai/node-addon-landlock-run':
+        specifier: workspace:^
+        version: link:../../../native/landlock-run/packages/entry
+      '@types/picomatch':
+        specifier: ^3.0.2
+        version: 3.0.2
+      '@types/readable-stream':
+        specifier: ^4.0.24
+        version: 4.0.24
       '@xfcodeai/dsh-api-gateway':
         specifier: workspace:^
         version: link:../../api/gateway
@@ -4900,15 +4909,6 @@ importers:
       '@xfcodeai/dsh-subprocess-local':
         specifier: workspace:^
         version: link:../../subprocess/subprocess-local
-      '@deepseek-ai/node-addon-landlock-run':
-        specifier: workspace:^
-        version: link:../../../native/landlock-run/packages/entry
-      '@types/picomatch':
-        specifier: ^3.0.2
-        version: 3.0.2
-      '@types/readable-stream':
-        specifier: ^4.0.24
-        version: 4.0.24
       chokidar:
         specifier: ^5.0.0
         version: 5.0.0
@@ -4921,6 +4921,9 @@ importers:
       '@deepseek-ai/cordis-plugin-loader':
         specifier: workspace:^
         version: link:../../../vendor/loader
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -4936,21 +4939,18 @@ importers:
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
 
   packages/extensions/cordis-host-runner:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -5018,6 +5018,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-api-remotes':
         specifier: workspace:^
         version: link:../../api/remotes
@@ -5054,9 +5057,6 @@ importers:
       '@xfcodeai/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -5709,12 +5709,12 @@ importers:
 
   packages/host/directory-picker-browse:
     dependencies:
-      '@xfcodeai/dsh-host-directory-picker':
-        specifier: workspace:^
-        version: link:../directory-picker
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-host-directory-picker':
+        specifier: workspace:^
+        version: link:../directory-picker
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -6055,6 +6055,9 @@ importers:
 
   packages/llm/llm:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
@@ -6070,9 +6073,6 @@ importers:
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -6089,15 +6089,15 @@ importers:
 
   packages/llm/llm-deepseek:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       eventsource-parser:
         specifier: ^3.1.0
         version: 3.1.0
@@ -6153,18 +6153,18 @@ importers:
 
   packages/llm/llm-pi-ai:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       '@earendil-works/pi-ai':
         specifier: ^0.84.2
         version: 0.84.2(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -6260,12 +6260,12 @@ importers:
 
   packages/llm/plugin-package-inventory-deepseek:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -6297,12 +6297,12 @@ importers:
 
   packages/llm/token-meter:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -6340,12 +6340,12 @@ importers:
 
   packages/lsp/lsp-stdio:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -6383,12 +6383,12 @@ importers:
 
   packages/lsp/tool-lsp:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -6442,6 +6442,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@modelcontextprotocol/server-everything':
+        specifier: ^2026.7.4
+        version: 2026.7.4
+      '@modelcontextprotocol/server-filesystem':
+        specifier: ^2026.7.4
+        version: 2026.7.10(zod@4.4.3)
       '@xfcodeai/dsh-attachment':
         specifier: workspace:^
         version: link:../../attachment/attachment
@@ -6463,12 +6469,6 @@ importers:
       '@xfcodeai/dsh-tools':
         specifier: workspace:^
         version: link:../../core/tools
-      '@modelcontextprotocol/server-everything':
-        specifier: ^2026.7.4
-        version: 2026.7.4
-      '@modelcontextprotocol/server-filesystem':
-        specifier: ^2026.7.4
-        version: 2026.7.10(zod@4.4.3)
 
   packages/plan/plan-mode:
     dependencies:
@@ -6624,18 +6624,18 @@ importers:
 
   packages/sandbox/sandbox-local:
     dependencies:
-      '@xfcodeai/dsh-sandbox-windows-acl':
-        specifier: workspace:^
-        version: link:../sandbox-windows-acl
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/node-addon-landlock-run':
         specifier: workspace:^
         version: link:../../../native/landlock-run/packages/entry
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-sandbox-windows-acl':
+        specifier: workspace:^
+        version: link:../sandbox-windows-acl
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -6785,12 +6785,12 @@ importers:
 
   packages/sdk/server:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -6837,12 +6837,12 @@ importers:
 
   packages/session-query/session-log-export:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
       fflate:
         specifier: ^0.8.2
         version: 0.8.3
@@ -6853,6 +6853,9 @@ importers:
       '@deepseek-ai/cordis-plugin-loader':
         specifier: workspace:^
         version: link:../../../vendor/loader
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
       '@xfcodeai/dsh-agent':
         specifier: workspace:^
         version: link:../../core/agent
@@ -6898,9 +6901,6 @@ importers:
       '@xfcodeai/dsh-session-query':
         specifier: workspace:^
         version: link:../session-query
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -6965,12 +6965,12 @@ importers:
 
   packages/session-query/tool-session-query:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -7059,15 +7059,15 @@ importers:
 
   packages/session/session-log-deepseek:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -7138,12 +7138,12 @@ importers:
 
   packages/session/session-projection-cache:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -7273,12 +7273,12 @@ importers:
 
   packages/session/session-title:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -7378,12 +7378,12 @@ importers:
 
   packages/session/session-title-llm:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -7428,12 +7428,12 @@ importers:
 
   packages/settings/settings:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -7450,12 +7450,12 @@ importers:
 
   packages/settings/settings-file:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
       chokidar:
         specifier: ^4.0.3
         version: 4.0.3
@@ -7506,6 +7506,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@deepseek-ai/node-addon-landlock-run':
+        specifier: workspace:^
+        version: link:../../../native/landlock-run/packages/entry
       '@xfcodeai/dsh-bash-local':
         specifier: workspace:^
         version: link:../bash-local
@@ -7527,9 +7530,6 @@ importers:
       '@xfcodeai/dsh-subprocess-local':
         specifier: workspace:^
         version: link:../../subprocess/subprocess-local
-      '@deepseek-ai/node-addon-landlock-run':
-        specifier: workspace:^
-        version: link:../../../native/landlock-run/packages/entry
 
   packages/shell/pwsh-local:
     dependencies:
@@ -7866,12 +7866,12 @@ importers:
 
   packages/skill/skill:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -8160,12 +8160,12 @@ importers:
       '@agentclientprotocol/sdk':
         specifier: 1.4.0
         version: 1.4.0(zod@4.4.3)
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -8221,15 +8221,15 @@ importers:
       '@anthropic-ai/sdk':
         specifier: 0.93.0
         version: 0.93.0(zod@4.4.3)
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       '@modelcontextprotocol/sdk':
         specifier: ^1.29.0
         version: 1.29.0(zod@4.4.3)
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -8288,18 +8288,18 @@ importers:
 
   packages/subagent/subagent-codex:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
-      '@xfcodeai/dsh-sdk-protocol':
-        specifier: workspace:^
-        version: link:../../sdk/protocol
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       '@openai/codex':
         specifier: 0.149.1
         version: 0.149.1
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
+      '@xfcodeai/dsh-sdk-protocol':
+        specifier: workspace:^
+        version: link:../../sdk/protocol
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -8355,12 +8355,12 @@ importers:
 
   packages/subagent/subagent-dsh-sdk:
     dependencies:
-      '@xfcodeai/dsh-brand':
-        specifier: workspace:^
-        version: link:../../util/brand
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
+      '@xfcodeai/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -8750,15 +8750,15 @@ importers:
 
   packages/terminal/terminal-bash:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-pwsh-local':
         specifier: workspace:^
         version: link:../../shell/pwsh-local
       '@xfcodeai/dsh-session-projection':
         specifier: workspace:^
         version: link:../../session/session-projection
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
       '@xterm/headless':
         specifier: ^6.0.0
         version: 6.0.0
@@ -8888,6 +8888,12 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
       '@xfcodeai/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -8930,12 +8936,6 @@ importers:
       '@xfcodeai/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -9017,6 +9017,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@xfcodeai/dsh-agent':
         specifier: workspace:^
         version: link:../../core/agent
@@ -9047,9 +9050,6 @@ importers:
       '@xfcodeai/dsh-user-questions':
         specifier: workspace:^
         version: link:../../interaction/user-questions
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
 
   packages/todo/tool-todo:
     dependencies:
@@ -9234,15 +9234,15 @@ importers:
 
   packages/web/tool-web:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       '@joplin/turndown-plugin-gfm':
         specifier: ^1.0.67
         version: 1.0.67
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
       turndown:
         specifier: ^7.2.4
         version: 7.2.4
@@ -9250,6 +9250,9 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@types/turndown':
+        specifier: ^5.0.6
+        version: 5.0.6
       '@xfcodeai/dsh-agent':
         specifier: workspace:^
         version: link:../../core/agent
@@ -9283,9 +9286,6 @@ importers:
       '@xfcodeai/dsh-web-search-exa':
         specifier: workspace:^
         version: link:../web-search-exa
-      '@types/turndown':
-        specifier: ^5.0.6
-        version: 5.0.6
 
   packages/web/web:
     dependencies:
@@ -9433,15 +9433,15 @@ importers:
 
   packages/webhook/webhook-github:
     dependencies:
-      '@xfcodeai/dsh-util-values':
-        specifier: workspace:^
-        version: link:../../util/values
       '@deepseek-ai/schemastery':
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       '@octokit/webhooks':
         specifier: ^14.2.0
         version: 14.2.0
+      '@xfcodeai/dsh-util-values':
+        specifier: workspace:^
+        version: link:../../util/values
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -9580,15 +9580,15 @@ importers:
 
   packages/workflow/workflow-worker-thread:
     dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
       '@xfcodeai/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
       '@xfcodeai/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
     devDependencies:
       '@deepseek-ai/cordis':
         specifier: workspace:^
@@ -9684,6 +9684,9 @@ importers:
       '@deepseek-ai/cosmokit':
         specifier: link:../../vendor/cosmokit
         version: link:../../vendor/cosmokit
+      '@deepseek-ai/schemastery':
+        specifier: link:../../vendor/schemastery
+        version: link:../../vendor/schemastery
       '@xfcodeai/dsh':
         specifier: workspace:^
         version: link:../../apps/cli
@@ -10032,9 +10035,6 @@ importers:
       '@xfcodeai/dsh-workflow-worker-thread':
         specifier: workspace:^
         version: link:../../packages/workflow/workflow-worker-thread
-      '@deepseek-ai/schemastery':
-        specifier: link:../../vendor/schemastery
-        version: link:../../vendor/schemastery
 
   vendor/cordis:
     dependencies:

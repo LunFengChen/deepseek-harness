@@ -1,7 +1,7 @@
 {
   "name": "@xfcodeai/dsh-repeat-tool-reminder",
   "description": "Repeat-tool-call guard plugin: advisory reminders when an agent loops on identical tool calls",
-  "version": "0.1.2-alpha.4",
+  "version": "0.1.2-alpha.5",
   "publishConfig": {
     "access": "public"
   },
