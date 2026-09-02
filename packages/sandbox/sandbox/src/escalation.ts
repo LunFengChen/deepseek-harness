@@ -41,6 +41,18 @@ export const WIDER_MODES: Record<string, readonly SandboxMode[]> = {
 export const ESCALATION_TARGETS: readonly SandboxMode[] = ['workspace-write', 'danger-full-access']
 
 /**
+ * Return whether an advertised target is already covered by a full-access
+ * standing policy. Stale retry arguments must not trigger a second approval or
+ * a strict-widening failure after the session has reached full access.
+ * @param requestedMode - the raw `sandbox_permissions` target.
+ * @param effectiveMode - the call's effective standing mode.
+ * @returns `true` when the target is part of the closed escalation vocabulary and the standing mode is full access.
+ */
+export function isEscalationSatisfiedByStandingMode(requestedMode: string, effectiveMode: SandboxMode): boolean {
+  return effectiveMode === 'danger-full-access' && ESCALATION_TARGETS.includes(requestedMode as SandboxMode)
+}
+
+/**
  * Validate the escalation argument pairing a tool schema cannot express:
  * `sandbox_permissions` and `justification` travel together — an approval
  * prompt without a reason, or a reason driving nothing, is a malformed ask —
