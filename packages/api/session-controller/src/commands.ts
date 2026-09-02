@@ -486,7 +486,11 @@ export class SessionCommandController {
         {},
       )
     }
-    await this.ctx.sessionPersistence.truncate(agent.session, length)
+    const persistence = this.ctx.get('sessionPersistence')
+    if (persistence === undefined) {
+      throw new Error('session deletion requires a configured session persistence service')
+    }
+    await persistence.truncate(agent.session, length)
     agent.session.truncate(length)
     return { accepted: true }
   }

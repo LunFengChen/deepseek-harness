@@ -3,7 +3,7 @@ import AgentRegistry from '@deepseek-ai/dsh-agent'
 import type { Agent, AgentHandle, CreateAgentOptions } from '@deepseek-ai/dsh-agent'
 import type {} from '@deepseek-ai/dsh-agent-presets'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
+import SessionStore, { SessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
 import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
 import type { Workspace, WorkspaceId } from '@deepseek-ai/dsh-workspace'
 import { describe, expect, it, vi } from 'vitest'
@@ -39,6 +39,28 @@ async function baseContext(): Promise<Context> {
   } as never)
   return ctx
 }
+
+describe('Session deletion', () => {
+  it('uses the registered persistence service before truncating the live session', async () => {
+    const ctx = await baseContext()
+    const sessionId = SessionId('delete-tail')
+    const session = ctx.sessions.create(sessionId, { meta: { cwd: '/workspace' } })
+    session.append('turn/start', { turn: 1 })
+    const truncate = vi.fn(() => Promise.resolve())
+    ctx.provide('sessionPersistence', { truncate } as never)
+    const live = { id: sessionId, session, status: 'idle', ctx } as unknown as Agent
+    const controller = new SessionCommandController(
+      ctx,
+      controllerAgents({ resolveAgent: () => Promise.resolve({ agent: live }) }),
+      '/workspace',
+    )
+
+    await expect(controller.deleteFrom({ sessionId, fromSeq: 0 })).resolves.toEqual({ accepted: true })
+    expect(truncate).toHaveBeenCalledWith(session, SessionLogOffset(0))
+    expect(session.seq).toBe(0)
+    await ctx.fiber.dispose()
+  })
+})
 
 describe('Session creation failures', () => {
   it('mints an identity with the default cwd when no explicit target is supplied', async () => {
