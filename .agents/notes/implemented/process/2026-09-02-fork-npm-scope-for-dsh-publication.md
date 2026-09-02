@@ -12,7 +12,7 @@ Keeping the upstream scope in package names would make the fork's release instru
 
 ## Decision
 
-The first-party dsh release family uses the `@xfcodeai` scope: the launcher is `@xfcodeai/dsh`, the workspace root is `@xfcodeai/dsh-root`, and every publishable package under `packages/*/*` and `apps/*` uses `@xfcodeai/dsh-*` or an application package name under that scope.
+The first-party dsh release family uses the `@xfcodeai` scope: the launcher is `@xfcodeai/dsh`, the workspace root is `@xfcodeai/dsh-root`, and every publishable package under `packages/*/*` and `apps/*` uses `@xfcodeai/dsh-*` or an application package name under that scope. The published launcher executable is `xfdsh`, so it can coexist with the official `dsh` command.
 
 All current source imports, manifests, lockfile entries, Cordis configurations, tests, snapshots, generated catalogs, and active documentation use the `@xfcodeai` dsh names. The pre-release repository has no compatibility aliases for the former dsh names.
 

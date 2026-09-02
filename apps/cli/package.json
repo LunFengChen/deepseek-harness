@@ -12,7 +12,7 @@
   },
   "type": "module",
   "bin": {
-    "dsh": "lib/bin.js"
+    "xfdsh": "lib/bin.js"
   },
   "files": [
     "lib/*.js"

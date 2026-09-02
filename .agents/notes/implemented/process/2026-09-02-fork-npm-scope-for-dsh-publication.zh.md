@@ -12,7 +12,7 @@ Fork 无法在没有上游组织凭据的情况下，使用上游 `@deepseek-ai`
 
 ## Decision
 
-第一方 dsh 发布族使用 `@xfcodeai` scope：启动器是 `@xfcodeai/dsh`，workspace 根包是 `@xfcodeai/dsh-root`，`packages/*/*` 与 `apps/*` 下的每个可发布包都使用 `@xfcodeai/dsh-*` 或该 scope 下的应用包名。
+第一方 dsh 发布族使用 `@xfcodeai` scope：启动器是 `@xfcodeai/dsh`，workspace 根包是 `@xfcodeai/dsh-root`，`packages/*/*` 与 `apps/*` 下的每个可发布包都使用 `@xfcodeai/dsh-*` 或该 scope 下的应用包名。 发布后的启动命令是 `xfdsh`，因此可以和官方 `dsh` 命令共存。
 
 当前源码导入、manifest、lockfile、Cordis 配置、测试、快照、生成目录和当前文档都使用 `@xfcodeai` dsh 名称。这个预发布仓库不为原 dsh 名称保留兼容别名。
 

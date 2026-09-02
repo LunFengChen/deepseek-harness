@@ -8,26 +8,26 @@
 
 | 命令 | 用途 |
 |---|---|
-| `dsh --profile <name>` | 启动位于 `$DSH_HOME/profiles/<name>` 的指定 profile。 |
-| `dsh --profile acp` | 通过 ACP stdio 为自动化 client 提供服务，直至断开连接。 |
-| `dsh --profile headless "job"` | 运行一个全新的持久化会话，打印最终答案并退出。 |
-| `dsh --profile sdk` | 通过 JSON-RPC stdio 为 SDK client 提供服务，直至关闭或断开连接。 |
-| `dsh --profile sdk-minimal` | 以独立极简 agent 配置树为 SDK client 提供服务。 |
-| `dsh web` | `--profile web` 的别名。 |
-| `dsh plugin --profile <name> <pnpm args>` | 通过在 profile 目录中转发给 pnpm 来管理该 profile 的插件。 |
+| `xfdsh --profile <name>` | 启动位于 `$DSH_HOME/profiles/<name>` 的指定 profile。 |
+| `xfdsh --profile acp` | 通过 ACP stdio 为自动化 client 提供服务，直至断开连接。 |
+| `xfdsh --profile headless "job"` | 运行一个全新的持久化会话，打印最终答案并退出。 |
+| `xfdsh --profile sdk` | 通过 JSON-RPC stdio 为 SDK client 提供服务，直至关闭或断开连接。 |
+| `xfdsh --profile sdk-minimal` | 以独立极简 agent 配置树为 SDK client 提供服务。 |
+| `xfdsh web` | `--profile web` 的别名。 |
+| `xfdsh plugin --profile <name> <pnpm args>` | 通过在 profile 目录中转发给 pnpm 来管理该 profile 的插件。 |
 
-运行命令时所在的目录将作为默认 workspace 根目录。`web`、`headless`、`sdk`、`sdk-minimal` 和 `acp` profile 在首次使用时会从随附模板自动初始化；其他任何 profile 都必须通过 `dsh plugin` 创建。
+运行命令时所在的目录将作为默认 workspace 根目录。`web`、`headless`、`sdk`、`sdk-minimal` 和 `acp` profile 在首次使用时会从随附模板自动初始化；其他任何 profile 都必须通过 `xfdsh plugin` 创建。
 
 ## 应用参数
 
 启动器只解析自身的 flag，并将其后的所有内容交给已启动的 profile；注入该 profile 的任意应用插件都可以解析这份共享的不可变快照（[`dsh-cmdline`](../../packages/boot/cmdline/README.zh.md)）。启动器无法识别的第一个 token 标志着应用参数的开始：
 
 ```sh
-dsh --profile web --port 8080       # --port belongs to the web app
-dsh --profile tui --resume <id>     # example, assuming the tui profile is installed; --resume belongs to the terminal app
-dsh --profile headless "run the tests"
-dsh --profile web --help            # the web app's flags, not the launcher's
-dsh --help                          # the launcher's own help
+xfdsh --profile web --port 8080       # --port belongs to the web app
+xfdsh --profile tui --resume <id>     # example, assuming the tui profile is installed; --resume belongs to the terminal app
+xfdsh --profile headless "run the tests"
+xfdsh --profile web --help            # the web app's flags, not the launcher's
+xfdsh --help                          # the launcher's own help
 ```
 
 <a id="profiles"></a>
