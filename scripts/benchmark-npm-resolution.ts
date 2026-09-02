@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { parseArgs } from 'node:util'
 
-const TARGET_PACKAGE = '@deepseek-ai/dsh'
+const TARGET_PACKAGE = '@xfcodeai/dsh'
 const DEFAULT_TIMEOUT_MS = 300_000
 const TERMINATION_GRACE_MS = 1_000
 const FORCED_EXIT_TIMEOUT_MS = 5_000
@@ -489,7 +489,7 @@ export async function resolveNpmPackageLock(
 /**
  * Resolve the CLI install graph once without downloading package archives.
  * @param index - Package metadata exposed through the local registry.
- * @param targetVersion - Version of `@deepseek-ai/dsh` to install.
+ * @param targetVersion - Version of `@xfcodeai/dsh` to install.
  * @param timeoutMs - Hard wall-clock limit for the npm child process.
  * @returns Timing and registry-request observations.
  */

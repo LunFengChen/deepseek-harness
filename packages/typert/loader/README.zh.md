@@ -3,7 +3,7 @@ description: "生成的 Typert 产物所用的 Loader 集成：已挂载的包�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-typert-loader
+# @xfcodeai/dsh-typert-loader
 
 [English](README.md) | 中文
 
@@ -32,15 +32,15 @@ kind: "package-reference"
 加载注册表与 loader；loader 默认发现每一个 Loader 配置项：
 
 ```yaml
-- name: '@deepseek-ai/dsh-typert-registry'
-- name: '@deepseek-ai/dsh-typert-loader'
+- name: '@xfcodeai/dsh-typert-registry'
+- name: '@xfcodeai/dsh-typert-loader'
 ```
 
 | 字段 | 默认值 | 含义 |
 |---|---|---|
 | `packages` | `[]` | 为嵌套在另一 Loader 配置项下的插件额外注册的包产物；每个包都必须能从配置树解析，并导出 `./typert` |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-typert-loader)是每个受支持字段的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-typert-loader)是每个受支持字段的穷尽式真源。
 
 ### 注册什么
 
@@ -90,7 +90,7 @@ kind: "package-reference"
 
 - [Typert 注册表](../registry/README.zh.md)——本插件所供给的服务。
 - [Typert 生成器](../generator/README.zh.md)——产生 loader 所导入产物的包。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-typert-loader)——`packages` 字段声明及其 JSDoc。
+- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-typert-loader)——`packages` 字段声明及其 JSDoc。
 - [Typert 组地图](../README.zh.md)——完整的类型反射流水线。
 
 -----

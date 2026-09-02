@@ -2,7 +2,7 @@
  * Fiber-state projection vocabulary for the framework-free boot page. The
  * boot chain subscribes to `internal/status` and projects the owning loader
  * entry's current state.
- * @module @deepseek-ai/dsh-client-web/src/loader-status
+ * @module @xfcodeai/dsh-client-web/src/loader-status
  */
 import type { FiberState } from '@deepseek-ai/cordis'
 

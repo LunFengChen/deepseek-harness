@@ -3,7 +3,7 @@ description: "为必须限制返回上下文量的工具提供有界的面向模
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-output-retention
+# @xfcodeai/dsh-output-retention
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-library"
 ### 限制项列表
 
 ```ts
-import { ItemRetainer } from '@deepseek-ai/dsh-output-retention'
+import { ItemRetainer } from '@xfcodeai/dsh-output-retention'
 
 declare const globMaxResults: number
 declare const candidates: AsyncIterable<{ path: string }>
@@ -46,7 +46,7 @@ const { items, truncated, omitted } = retainer.finish()
 ### 限制文本流
 
 ```text
-import { TextRetainer } from '@deepseek-ai/dsh-output-retention'
+import { TextRetainer } from '@xfcodeai/dsh-output-retention'
 
 const out = new TextRetainer({ kind: 'headTail', headBytes: headCap, tailBytes: tailCap })
 child.stdout.on('data', (chunk: Buffer) => { out.push(chunk) })
@@ -58,11 +58,11 @@ const { text, omittedBytes } = out.finish()
 ### 构建省略页脚
 
 ```ts
-import { formatRetentionNotice } from '@deepseek-ai/dsh-output-retention'
+import { formatRetentionNotice } from '@xfcodeai/dsh-output-retention'
 
 declare const grepMaxMatches: number
 declare const items: { length: number }
-import type { Omitted } from '@deepseek-ai/dsh-output-retention'
+import type { Omitted } from '@xfcodeai/dsh-output-retention'
 
 declare const omitted: Omitted
 

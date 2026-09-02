@@ -2,14 +2,14 @@
 
 import { stat } from 'node:fs/promises'
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@deepseek-ai/dsh-agent-presets'
-import type { ImageAttachmentLimits } from '@deepseek-ai/dsh-attachment'
-import { SessionLogOffset } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
-import type {} from '@deepseek-ai/dsh-session-projection'
-import type {} from '@deepseek-ai/dsh-session-projection-cache'
-import { SessionQueryError, type SessionSearchCursor } from '@deepseek-ai/dsh-session-query'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
+import type {} from '@xfcodeai/dsh-agent-presets'
+import type { ImageAttachmentLimits } from '@xfcodeai/dsh-attachment'
+import { SessionLogOffset } from '@xfcodeai/dsh-session'
+import type { Session, SessionEvent, SessionHeader, SessionId } from '@xfcodeai/dsh-session'
+import type {} from '@xfcodeai/dsh-session-projection'
+import type {} from '@xfcodeai/dsh-session-projection-cache'
+import { SessionQueryError, type SessionSearchCursor } from '@xfcodeai/dsh-session-query'
+import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
 import { z } from 'zod'
 import {
   SESSION_SEARCH_RESULT_LIMIT,
@@ -229,7 +229,7 @@ export class ApiSessionList {
     if (provider === undefined) {
       throw new RemoteError(
         'gateway/internal',
-        'session search is unavailable: this deployment does not mount @deepseek-ai/dsh-session-query',
+        'session search is unavailable: this deployment does not mount @xfcodeai/dsh-session-query',
         {},
       )
     }

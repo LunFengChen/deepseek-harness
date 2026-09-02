@@ -3,7 +3,7 @@ description: "持久图片附件，供用户与维护者在提示词与命令中
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-attachment
+# @xfcodeai/dsh-attachment
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 在客户端 UI 中向用户提示词附加一张或多张图片。每个源图都会在你的消息被处理前接受检查、规范化为提供方无关的 8-bit sRGB/sRGBA 光栅并保存；如果任何一张图片被拒绝，整条消息都会失败且不会发布任何内容。支持的源格式为 PNG、JPEG、WebP 与 GIF；部署方分别控制源图限制、规范化存储限制与路由专用请求限制。下面这一个插件即可启用持久图片附件（随附的 base 组合已经挂载它）：
 
 ```yaml
-- name: '@deepseek-ai/dsh-attachment-local'
+- name: '@xfcodeai/dsh-attachment-local'
 ```
 
 ### 把图片传给命令

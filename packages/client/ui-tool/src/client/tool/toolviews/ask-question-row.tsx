@@ -1,6 +1,6 @@
-import { IconQuestionOutline14 } from '@deepseek-ai/dsh-client-ui-primitives'
+import { IconQuestionOutline14 } from '@xfcodeai/dsh-client-ui-primitives'
 import type { Context } from '@deepseek-ai/cordis'
-import type { PropsLocale } from '@deepseek-ai/dsh-client-ui-slots'
+import type { PropsLocale } from '@xfcodeai/dsh-client-ui-slots'
 import type { ToolCallViewProps } from '../../contract/slots.ts'
 import type { AskQuestionCardModel } from '../models/ask-question-card-model.ts'
 import { singleResultText } from '../models/raw-tool-call.ts'

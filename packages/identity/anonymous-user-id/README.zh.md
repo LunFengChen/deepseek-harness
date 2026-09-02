@@ -3,7 +3,7 @@ description: "面向用户与维护者的匿名按 harness home 身份说明，�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-anonymous-user-id
+# @xfcodeai/dsh-anonymous-user-id
 
 [English](README.md) | 中文
 
@@ -44,7 +44,7 @@ kind: "package-library"
 当你构建的功能需要共享该安装的匿名 id 时，导入该值并复用一次即可——遥测、反馈与 DeepSeek 已经在使用同一个 id，因此你的记录能与它们相互对应：
 
 ```ts
-import { getOrCreateAnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+import { getOrCreateAnonymousUserId } from '@xfcodeai/dsh-anonymous-user-id'
 
 const userId = getOrCreateAnonymousUserId() // stable for the process lifetime
 ```

@@ -8,7 +8,7 @@ import {
   type GenerateOptions,
   type LlmResolvedModelInfo,
   type StreamChunk,
-} from '@deepseek-ai/dsh-llm'
+} from '@xfcodeai/dsh-llm'
 
 /** Adapter whose deterministic tool turn proves model selection and MCP attachment. */
 class ControlSurfaceAdapter extends LlmAdapter {

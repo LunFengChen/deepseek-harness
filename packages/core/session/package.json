@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-session",
+  "name": "@xfcodeai/dsh-session",
   "description": "Event-sourced session store for the DeepSeek Harness",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -45,19 +45,19 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-scope": "workspace:^",
+    "@xfcodeai/dsh-scope": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-invariants": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-typert-registry": "workspace:^",
+    "@xfcodeai/dsh-invariants": "workspace:^",
+    "@xfcodeai/dsh-scope": "workspace:^",
+    "@xfcodeai/dsh-typert-protocol": "workspace:^",
+    "@xfcodeai/dsh-typert-registry": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^"
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-brand": "workspace:^",
+    "@xfcodeai/dsh-util-values": "workspace:^"
   }
 }

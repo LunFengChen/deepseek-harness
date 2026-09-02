@@ -5,16 +5,16 @@
  * the registry itself while plugins can register additional, enumerable facts
  * with effect-scoped disposal.
  *
- * @module @deepseek-ai/dsh-shell-env
+ * @module @xfcodeai/dsh-shell-env
  */
 
 import { Service, type Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { DSH_ENV_PREFIX } from '@deepseek-ai/dsh-shell'
-import type { DshEnvironment, DshEnvironmentKey } from '@deepseek-ai/dsh-shell'
-import { DSH_HOME_ENV, resolveDshHome } from '@deepseek-ai/dsh-home-paths'
-import type { ToolExecution } from '@deepseek-ai/dsh-tools'
-import type {} from '@deepseek-ai/dsh-session-persistence'
+import { DSH_ENV_PREFIX } from '@xfcodeai/dsh-shell'
+import type { DshEnvironment, DshEnvironmentKey } from '@xfcodeai/dsh-shell'
+import { DSH_HOME_ENV, resolveDshHome } from '@xfcodeai/dsh-home-paths'
+import type { ToolExecution } from '@xfcodeai/dsh-tools'
+import type {} from '@xfcodeai/dsh-session-persistence'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {

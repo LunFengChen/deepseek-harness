@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-session-reference",
+  "name": "@xfcodeai/dsh-session-reference",
   "description": "Cross-session snapshot references and durable untrusted model context (ctx.sessionReferenceResolver)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -44,40 +44,40 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^",
+    "@xfcodeai/dsh-brand": "workspace:^",
+    "@xfcodeai/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-compaction": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-output-retention": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^"
+    "@xfcodeai/dsh-agent": "workspace:^",
+    "@xfcodeai/dsh-compaction": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-output-retention": "workspace:^",
+    "@xfcodeai/dsh-session": "workspace:^",
+    "@xfcodeai/dsh-session-projection": "workspace:^",
+    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
+    "@xfcodeai/dsh-session-query": "workspace:^",
+    "@xfcodeai/dsh-session-title": "workspace:^",
+    "@xfcodeai/dsh-typert-protocol": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-session-projection-cache": {
+    "@xfcodeai/dsh-session-projection-cache": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-compaction": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-output-retention": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^"
+    "@xfcodeai/dsh-agent": "workspace:^",
+    "@xfcodeai/dsh-compaction": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-output-retention": "workspace:^",
+    "@xfcodeai/dsh-session": "workspace:^",
+    "@xfcodeai/dsh-session-projection": "workspace:^",
+    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
+    "@xfcodeai/dsh-session-query": "workspace:^",
+    "@xfcodeai/dsh-session-title": "workspace:^",
+    "@xfcodeai/dsh-typert-protocol": "workspace:^"
   }
 }

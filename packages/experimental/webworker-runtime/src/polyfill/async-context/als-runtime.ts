@@ -8,7 +8,7 @@
  * the `node:async_hooks` proxy — this module only moves it.
  *
  * The transform that inserts these calls lives in `transform.ts`.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/polyfill/async-context/als-runtime
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/polyfill/async-context/als-runtime
  */
 /** Snapshot of every ambient store, opaque to this module. */
 export type AlsSnapshot = unknown

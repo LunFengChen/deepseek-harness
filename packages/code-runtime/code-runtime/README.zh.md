@@ -3,7 +3,7 @@ description: "抽象代码执行 seam（`ctx.codeRuntime`），供用户与维�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-code-runtime
+# @xfcodeai/dsh-code-runtime
 
 [English](README.md) | 中文
 

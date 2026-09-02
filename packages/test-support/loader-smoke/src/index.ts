@@ -4,11 +4,11 @@
  *
  * It also owns the mode-aware launch resolver every example subprocess harness shares
  * ({@link resolveExampleLaunch}): booting an example bin from TypeScript source under `tsx` (the
- * zero-build dev path, resolving `@deepseek-ai/dsh-*` / `@cordisjs/*` through the tsconfig `paths`
+ * zero-build dev path, resolving `@xfcodeai/dsh-*` / `@cordisjs/*` through the tsconfig `paths`
  * map) or from built `lib/` under plain Node (resolving bare packages through real `exports`, as an
  * installed consumer does, while Node type-strips relative example-local TypeScript plugins).
  *
- * @module @deepseek-ai/dsh-loader-smoke
+ * @module @xfcodeai/dsh-loader-smoke
  */
 
 import { mkdtemp, rm } from 'node:fs/promises'

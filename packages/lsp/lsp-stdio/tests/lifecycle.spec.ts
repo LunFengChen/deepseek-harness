@@ -5,12 +5,12 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL, fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
-import Lsp, { type LspProvider, type LspQueryRequest, type LspQueryResult } from '@deepseek-ai/dsh-lsp'
-import { deadline } from '@deepseek-ai/dsh-timeout'
-import LocalSubprocessRuntime from '@deepseek-ai/dsh-subprocess-local'
-import LocalFileSystem from '@deepseek-ai/dsh-fs-local'
-import * as LspLocal from '@deepseek-ai/dsh-lsp-stdio'
-import type { LspLocalServerConfig } from '@deepseek-ai/dsh-lsp-stdio'
+import Lsp, { type LspProvider, type LspQueryRequest, type LspQueryResult } from '@xfcodeai/dsh-lsp'
+import { deadline } from '@xfcodeai/dsh-timeout'
+import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
+import LocalFileSystem from '@xfcodeai/dsh-fs-local'
+import * as LspLocal from '@xfcodeai/dsh-lsp-stdio'
+import type { LspLocalServerConfig } from '@xfcodeai/dsh-lsp-stdio'
 
 const fixtureServer = fileURLToPath(new URL('./fixture-server.ts', import.meta.url))
 

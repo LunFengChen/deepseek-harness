@@ -3,7 +3,7 @@ description: "面向插件作者与维护者的用户设置服务：注册可配
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-settings
+# @xfcodeai/dsh-settings
 
 [English](README.md) | 中文
 
@@ -36,12 +36,12 @@ kind: "package-reference"
 服务本身不存储任何内容；请挂载一个提供方，例如随附的文件型提供方：
 
 ```yaml
-- name: '@deepseek-ai/dsh-settings-file'
+- name: '@xfcodeai/dsh-settings-file'
   config:
     path: /absolute/path/to/settings.yaml
 ```
 
-提供方上线后 `ctx.settings` 即出现。完整配置面由提供方 README 负责；生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-settings-file)列出每个受支持字段。
+提供方上线后 `ctx.settings` 即出现。完整配置面由提供方 README 负责；生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-settings-file)列出每个受支持字段。
 
 ### 注册 namespace
 

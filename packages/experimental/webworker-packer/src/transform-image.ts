@@ -7,9 +7,9 @@
  * the contract version it was lowered against. Bodies emitted against a
  * different wrapper contract are refused at mount time rather than
  * half-working at run time.
- * @module @deepseek-ai/dsh-experimental-webworker-packer/src/transform-image
+ * @module @xfcodeai/dsh-experimental-webworker-packer/src/transform-image
  */
-import { LOWERING_VERSION } from '@deepseek-ai/dsh-experimental-webworker-runtime'
+import { LOWERING_VERSION } from '@xfcodeai/dsh-experimental-webworker-runtime'
 
 /** Image entries, keyed by their path relative to the virtual root. */
 export type ImageFiles = Record<string, Uint8Array>

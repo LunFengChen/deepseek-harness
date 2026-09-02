@@ -3,7 +3,7 @@ description: "The scoped-registration library for plugin authors and maintainers
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-scope
+# @xfcodeai/dsh-scope
 
 English | [中文](README.zh.md)
 

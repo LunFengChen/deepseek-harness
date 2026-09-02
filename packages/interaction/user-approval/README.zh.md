@@ -3,7 +3,7 @@ description: "与通道无关的一次性审批 seam；供组合应答者、设�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-user-approval
+# @xfcodeai/dsh-user-approval
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 有效策略取会话中已设置的策略，并回退到配置的默认值。`ask`（默认）委托给已组合的应答者；`never` 在交互式分发之前确定性地拒绝每个请求——这是 CI 与无人值守运行的严格无头姿态。
 
 ```yaml
-- name: '@deepseek-ai/dsh-user-approval'
+- name: '@xfcodeai/dsh-user-approval'
   config:
     policy: ask
 ```
@@ -45,7 +45,7 @@ kind: "package-reference"
 |---|---|---|
 | `policy` | `ask` | 没有 `approval/policy` 覆盖的会话的默认策略 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-user-approval)是每个受支持字段及其 JSDoc 的穷尽式真源。`setPolicy(agent, policy)` 切换存活 agent 的策略，并为它的下一个模型步骤排队一条「由用户更改」消息；`setApprovalPolicy(session, policy)` 是会话初始化使用的直接持久写入路径。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-user-approval)是每个受支持字段及其 JSDoc 的穷尽式真源。`setPolicy(agent, policy)` 切换存活 agent 的策略，并为它的下一个模型步骤排队一条「由用户更改」消息；`setApprovalPolicy(session, policy)` 是会话初始化使用的直接持久写入路径。
 
 ### 请求决定
 

@@ -1,10 +1,10 @@
 /**
  * Pure client-safe subagent projection vocabulary.
  *
- * @module @deepseek-ai/dsh-subagent/projection-types
+ * @module @xfcodeai/dsh-subagent/projection-types
  */
 
-import type { SessionSeq } from '@deepseek-ai/dsh-session/types'
+import type { SessionSeq } from '@xfcodeai/dsh-session/types'
 
 /** Durable active-turn timing for one descriptor-backed child session. */
 export interface SubagentTimingProjection {
@@ -48,7 +48,7 @@ export type SubagentIdentityProjection =
     seq: SessionSeq
   }
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@xfcodeai/dsh-session-projection/types' {
   interface SessionProjectionMap {
     /** Active-turn duration for a descriptor-backed subagent session. */
     subagentTiming: SubagentTimingProjection

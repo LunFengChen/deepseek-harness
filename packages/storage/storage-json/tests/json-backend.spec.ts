@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import Storage, { storageBackendServiceKey } from '@deepseek-ai/dsh-storage'
+import Storage, { storageBackendServiceKey } from '@xfcodeai/dsh-storage'
 import { runKvBackendContract } from '../../storage/tests/contract.ts'
 import { Config, JsonStorageBackend, apply } from '../src/index.ts'
 

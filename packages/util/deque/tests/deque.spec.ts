@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { Deque } from '@deepseek-ai/dsh-deque'
+import { Deque } from '@xfcodeai/dsh-deque'
 
 function backingStorage<T>(deque: Deque<T>): readonly (T | undefined)[] {
   // Storage retention is the behavior under test and has no public query API.

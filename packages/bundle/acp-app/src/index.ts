@@ -2,12 +2,12 @@
  * The ACP profile's command-line and stdin-lifetime provider. A successful
  * parse publishes {@link ACP_APP_STARTUP_SERVICE}; the ACP bridge waits for
  * that service, so help starts no transport.
- * @module @deepseek-ai/dsh-acp-app
+ * @module @xfcodeai/dsh-acp-app
  */
 
 import { Command } from 'commander'
 import type { Context } from '@deepseek-ai/cordis'
-import { exitOnStdinEnd, parseCmdline } from '@deepseek-ai/dsh-cmdline'
+import { exitOnStdinEnd, parseCmdline } from '@xfcodeai/dsh-cmdline'
 
 /** Stable Cordis plugin name. */
 export const name = 'acp-app-startup'

@@ -13,7 +13,7 @@ LLM 适配器是一个继承 `LlmAdapter` 并实现 `stream()` 方法的类，�
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
 import Schema from '@deepseek-ai/schemastery'
-import { LlmAdapter, type GenerateOptions, type StreamChunk } from '@deepseek-ai/dsh-llm'
+import { LlmAdapter, type GenerateOptions, type StreamChunk } from '@xfcodeai/dsh-llm'
 
 class MyAdapter extends LlmAdapter {
   private apiKey: string
@@ -54,8 +54,8 @@ export function apply(ctx: Context, config: Config) {
 `stream()` 必须按以下协议生成分片：
 
 ```ts
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { StreamChunk, ToolCallId } from '@deepseek-ai/dsh-llm'
+import { brandString } from '@xfcodeai/dsh-brand'
+import type { StreamChunk, ToolCallId } from '@xfcodeai/dsh-llm'
 
 async function* exampleChunks(): AsyncIterable<StreamChunk> {
   // 1. Start each content block with block-start.
@@ -111,7 +111,7 @@ async function* exampleChunks(): AsyncIterable<StreamChunk> {
 
 ## GenerateOptions
 
-`stream()` 接收仓库导出的 `GenerateOptions`。它包含模型、适配器拥有的推理强度 ID、对话历史、系统提示词、工具 schema、生成参数、停止序列和中止信号；完整字段以 `@deepseek-ai/dsh-llm` 导出的 TypeScript 类型为准。适配器必须将支持的字段映射到具体 API；如果无法支持某个字段，应抛出带稳定 code 的 `LlmError`，不得静默丢弃。
+`stream()` 接收仓库导出的 `GenerateOptions`。它包含模型、适配器拥有的推理强度 ID、对话历史、系统提示词、工具 schema、生成参数、停止序列和中止信号；完整字段以 `@xfcodeai/dsh-llm` 导出的 TypeScript 类型为准。适配器必须将支持的字段映射到具体 API；如果无法支持某个字段，应抛出带稳定 code 的 `LlmError`，不得静默丢弃。
 
 请覆写 `resolveModel(provider, model, signal?)`，在一次查询中返回确切的提供方／模型身份以及可选的 `context` 和 `reasoning` 元数据。推理元数据包含有序的不透明 ID、展示名称，以及可选的配置默认值；请保留适配器给出的权威可选列表，包括其上游能力 API 返回的 `off`，不要将这些值提升为核心枚举。异步查询必须响应该可选信号，使取消和资源释放过程完全停稳。服务会校验聚合结果，并在调用 `stream()` 前拒绝显式指定但不受支持的推理强度；省略 `reasoning` 表示该模型没有可选的推理强度能力。
 
@@ -134,7 +134,7 @@ ctx.llm.registerAdapter(['my-provider'], adapter)
       - my-provider
 
 - id: agent-loop
-  name: '@deepseek-ai/dsh-agent-loop'
+  name: '@xfcodeai/dsh-agent-loop'
   config:
     agents:
       - id: main
@@ -162,7 +162,7 @@ import {
   LlmError,
   type GenerateOptions,
   type StreamChunk,
-} from '@deepseek-ai/dsh-llm'
+} from '@xfcodeai/dsh-llm'
 
 class HttpAdapter extends LlmAdapter {
   constructor(private readonly endpoint: string) {

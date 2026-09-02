@@ -3,7 +3,7 @@ description: "The file-backed settings provider for users and maintainers choosi
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-settings-file
+# @xfcodeai/dsh-settings-file
 
 English | [中文](README.zh.md)
 
@@ -34,7 +34,7 @@ Choose it as the default user-settings store: one human-readable document that u
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-settings-file'
+- name: '@xfcodeai/dsh-settings-file'
   config:
     path: /absolute/path/to/settings.yaml
 ```
@@ -46,7 +46,7 @@ Choose it as the default user-settings store: one human-readable document that u
 | `watch` | `true` | Watch the document and hot-publish external edits |
 | `debounceMs` | `100` | Watcher write-settle window, in milliseconds |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-settings-file) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-settings-file) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Editing the document
 
@@ -90,7 +90,7 @@ This section explains the design decisions behind the provider and points at the
 | File | Role |
 |---|---|
 | [`src/index.ts`](src/index.ts) | Provider: spec resolution, load/parse, read-modify-write under the writer lock, watcher lifecycle, YAML/JSON rendering |
-| — | No runtime invariant companion is published; this provider's contracts are file round-trip, watcher timing, and atomic-write behavior — IO effects proven by package tests; the in-process commit relation is owned by `@deepseek-ai/dsh-settings`. |
+| — | No runtime invariant companion is published; this provider's contracts are file round-trip, watcher timing, and atomic-write behavior — IO effects proven by package tests; the in-process commit relation is owned by `@xfcodeai/dsh-settings`. |
 
 ### Document lifecycle
 
@@ -114,7 +114,7 @@ Read these pages when the provider-level contract is not enough. They move from 
 - [Settings package map](../README.md) — the two packages of the user-settings capability.
 - [Atomic write](../../util/atomic-write/README.md) — the writer lock and atomic replacement every write uses.
 - [Home paths](../../util/home-paths/README.md) — `$DSH_HOME` resolution and canonical watch paths.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-settings-file) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-settings-file) — every accepted config field and its source declaration.
 
 -----
 

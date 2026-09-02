@@ -3,7 +3,7 @@ description: "OpenTelemetry session-telemetry backend for deployments choosing a
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-telemetry-otel
+# @xfcodeai/dsh-session-telemetry-otel
 
 English | [中文](README.zh.md)
 
@@ -43,7 +43,7 @@ Uploading modes require an exporter URL and accept the SDK option blocks verbati
 
 ```yaml
 - id: sessionTelemetry-otel
-  name: '@deepseek-ai/dsh-session-telemetry-otel'
+  name: '@xfcodeai/dsh-session-telemetry-otel'
   config:
     mode: FULL                # explicit opt-in; default: DISABLED
     shutdownTimeoutMillis: 3000 # optional; defaults to 3000
@@ -61,7 +61,7 @@ Uploading modes require an exporter URL and accept the SDK option blocks verbati
 | `exporter`, `processor` | — | Passed verbatim to the SDK exporter and batch processor |
 | `shutdownTimeoutMillis` | `3,000` | Outer deadline for the SDK's complete shutdown sequence |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-session-telemetry-otel) is the exhaustive source for every accepted field. Upload authorization is positive and fail-closed: an unknown direct-construction mode fails before transport configuration is read, only `FULL` accepts direct `ctx.sessionTelemetry.emit()` calls, and `FEEDBACK_ONLY` treats only the exact `feedback/record` object already stored in the canonical log as consent.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-session-telemetry-otel) is the exhaustive source for every accepted field. Upload authorization is positive and fail-closed: an unknown direct-construction mode fails before transport configuration is read, only `FULL` accepts direct `ctx.sessionTelemetry.emit()` calls, and `FEEDBACK_ONLY` treats only the exact `feedback/record` object already stored in the canonical log as consent.
 
 ### What leaves the machine
 
@@ -83,7 +83,7 @@ This section explains the backend's composition; the observable behavior is full
 
 ### Design concept
 
-The backend is a thin adapter over the OTel JS SDK: it owns capture mode, resource identity, and an outer shutdown deadline, and passes everything else through verbatim. Two instrumentation scopes separate record channels — ledger records on `@deepseek-ai/dsh-session-telemetry-otel`, operational records on `@deepseek-ai/dsh-session-telemetry-otel/ops` — so receivers can alert on ops without summing them. Resource identity carries `service.name`/`service.version` from `dsh-llm`'s `APP_IDENTITY` plus the package's anonymous `user.id` (from `$DSH_HOME/.anonymous-user-id`), once per export batch rather than per record.
+The backend is a thin adapter over the OTel JS SDK: it owns capture mode, resource identity, and an outer shutdown deadline, and passes everything else through verbatim. Two instrumentation scopes separate record channels — ledger records on `@xfcodeai/dsh-session-telemetry-otel`, operational records on `@xfcodeai/dsh-session-telemetry-otel/ops` — so receivers can alert on ops without summing them. Resource identity carries `service.name`/`service.version` from `dsh-llm`'s `APP_IDENTITY` plus the package's anonymous `user.id` (from `$DSH_HOME/.anonymous-user-id`), once per export batch rather than per record.
 
 ### Source map
 
@@ -111,7 +111,7 @@ Read these pages when the backend contract is not enough. They move from the sea
 - [Session telemetry seam](../session-telemetry/README.md) — the capture contract, record vocabulary, and redaction waterfall.
 - [Session telemetry subsystem](../../../docs/subsystems/session-telemetry.md) — the capability split and type declarations.
 - [Anonymous user identity](../../identity/anonymous-user-id/README.md) — the id reported as the OTel Resource `user.id`.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-session-telemetry-otel) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-session-telemetry-otel) — every accepted config field and its source declaration.
 
 -----
 

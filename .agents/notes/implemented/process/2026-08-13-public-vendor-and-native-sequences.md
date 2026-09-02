@@ -18,7 +18,7 @@ Access is a property of each release sequence, not of the scope:
 |---|---|---|
 | vendored framework | the nine `vendor/*` packages | `public` |
 | native | the three `native/landlock-run/packages/*` packages | `public` |
-| dsh | `packages/*/*` + `apps/*` (221 members) | `restricted` |
+| dsh | `packages/*/*` + `apps/*` (242 members) | `public` |
 
 `check-workspace-constraints.ts` holds every manifest to its own sequence's level, which is what stops the scope from drifting: a new `vendor/*` package left at `restricted`, or a dsh member flipped to `public`, fails the workspace constraints.
 
@@ -26,7 +26,7 @@ Access is a property of each release sequence, not of the scope:
 
 Harness consumers reference the Landlock entry as `workspace:^` rather than `workspace:*`, so a published harness package accepts the entry's patch and minor releases instead of pinning one exact version. The entry keeps `workspace:*` for its two platform packages, where the binary must match the entry version exactly.
 
-Access is a property of the package, not of a version: the twelve packages already published as restricted — `landlock-run@0.0.1` and the vendored `*-rc.*` versions — become world-readable at their next publication.
+Access is a property of the package, not of a version. The dsh family is now public under `@xfcodeai`, while the vendored and native families remain public under `@deepseek-ai`; future versions keep the access level declared by their own manifests.
 
 ## Alternatives considered
 
@@ -39,7 +39,7 @@ Access is a property of the package, not of a version: the twelve packages alrea
 ## Consequences
 
 - **The twelve packages are public from their next publication onward, and that is not cleanly reversible.** Returning to a restricted scope requires a paid plan plus per-package `npm access set status=private`, and anything already downloaded or mirrored stays out.
-- **`@deepseek-ai/dsh` is still not installable from outside the organization.** Its manifests stay `restricted`; what changed is that its published dependencies no longer would be, so opening it later is a version decision rather than a dependency problem.
+- **`@xfcodeai/dsh` is installable by consumers outside the organization.** Its dsh manifests are public, and its vendored and native dependencies are public under their separate `@deepseek-ai` release sequences.
 - **What ships from the two public sequences is now world-readable, so their payload policy carries more weight.** `vendor/cordis` publishes `src` deliberately, because its export map declares `./src/*`; the Landlock entry publishes `src/main.c` as a documented audit surface.
 - **The private-packages plan is no longer required for these two sequences.** The `402 Payment Required` failure that blocked the first native publication cannot recur for a public package.
 - **An unauthenticated `npm view` becomes a usable check for the public sequences.** While every package was restricted, a machine without credentials received `E404` for a package that existed, which is indistinguishable from an absent version.

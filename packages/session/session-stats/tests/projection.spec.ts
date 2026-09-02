@@ -12,13 +12,13 @@
 
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createMessage } from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import * as SessionStatsPlugin from '@deepseek-ai/dsh-session-stats'
-import { sessionStatsProjectionDefinition } from '@deepseek-ai/dsh-session-stats/src/projection.ts'
-import type { SessionStatsProjection } from '@deepseek-ai/dsh-session-stats/types'
+import { createMessage } from '@xfcodeai/dsh-llm'
+import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
+import type { Session, SessionEvent } from '@xfcodeai/dsh-session'
+import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import * as SessionStatsPlugin from '@xfcodeai/dsh-session-stats'
+import { sessionStatsProjectionDefinition } from '@xfcodeai/dsh-session-stats/src/projection.ts'
+import type { SessionStatsProjection } from '@xfcodeai/dsh-session-stats/types'
 
 async function harness(withStatsPlugin: boolean): Promise<{ ctx: Context; session: Session }> {
   const ctx = new Context()

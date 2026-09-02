@@ -1,5 +1,5 @@
 /** Pure diff-card derivation from raw file-mutation calls and result metadata. @module */
-import type { DiffBlockProps, DiffHunk } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { DiffBlockProps, DiffHunk } from '@xfcodeai/dsh-client-ui-primitives'
 import type { ToolCallBlock } from './tool-call-model.ts'
 import { parsedToolCall, validEscalationFields } from './raw-tool-call.ts'
 

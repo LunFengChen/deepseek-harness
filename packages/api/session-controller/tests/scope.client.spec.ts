@@ -8,7 +8,7 @@
  */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
-import type { SessionId } from '@deepseek-ai/dsh-api-remotes/client'
+import type { SessionId } from '@xfcodeai/dsh-api-remotes/client'
 import { createScope, scopeOf } from '../src/client/scope.ts'
 
 const sid = (k: string): SessionId => k as SessionId

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { PerplexitySearchProvider, PERPLEXITY_DEFAULT_BASE_URL, PERPLEXITY_DEFAULT_MAX_TOKENS, PERPLEXITY_DEFAULT_MODEL } from '@deepseek-ai/dsh-web-search-perplexity'
+import { PerplexitySearchProvider, PERPLEXITY_DEFAULT_BASE_URL, PERPLEXITY_DEFAULT_MAX_TOKENS, PERPLEXITY_DEFAULT_MODEL } from '@xfcodeai/dsh-web-search-perplexity'
 
 /**
  * Real-API smoke for the Perplexity search provider. Self-skips without

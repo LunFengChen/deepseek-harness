@@ -13,7 +13,7 @@
  * expectations to make a change pass — agree the new text with the worker host first.
  */
 import { expect, test } from 'vitest'
-import { WorkerTunnel } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/client/client.ts'
+import { WorkerTunnel } from '@xfcodeai/dsh-experimental-webworker-runtime/src/client/client.ts'
 
 // Both sides are serialized here, at call time, rather than inside the case: the
 // blocks below reuse and clear the `warnings` array, so a captured reference

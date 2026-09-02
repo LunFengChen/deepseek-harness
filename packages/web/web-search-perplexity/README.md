@@ -3,7 +3,7 @@ description: "The Perplexity-backed search provider for ctx.web: how deployments
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-perplexity
+# @xfcodeai/dsh-web-search-perplexity
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose this backend when a deployment holds a Perplexity API key and wants a mod
 Load the web service and the provider; the API key falls back to `$PERPLEXITY_API_KEY` from the launch environment, and all other settings have safe defaults.
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-perplexity'
+- name: '@xfcodeai/dsh-web'
+- name: '@xfcodeai/dsh-web-search-perplexity'
   config:
     apiKey: !!js process.env.PERPLEXITY_API_KEY
 ```
@@ -50,7 +50,7 @@ Load the web service and the provider; the API key falls back to `$PERPLEXITY_AP
 | `maxTokens` | `1024` | Upper bound on generated answer tokens (`max_tokens`); must be a positive integer |
 | `searchRecency` | (unset) | Recency window sent as `search_recency_filter`: `day`, `week`, `month`, or `year`. Unset sends no filter |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web-search-perplexity) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-web-search-perplexity) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What a search returns
 
@@ -103,7 +103,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Web package map](../README.md) — the six-package family and each role.
 - [dsh-web](../web/README.md) — the web service this provider registers into.
 - [dsh-tool-web](../tool-web/README.md) — the model-facing `web_search` tool that renders this provider's sources.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web-search-perplexity) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-web-search-perplexity) — every accepted config field and its source declaration.
 - [Web capability seam decision](../../../.agents/notes/implemented/architecture/2026-06-24-web-capability-seam.md) — why search and fetch share one provider-selection service.
 
 -----

@@ -21,7 +21,14 @@ Review the [safety notice](SAFETY.md) before running the project.
 Install `Node.js`, then run:
 
 ```sh
-npx @deepseek-ai/dsh web
+npx @xfcodeai/dsh web
+```
+
+For repeated use, install the launcher globally:
+
+```sh
+npm install --global @xfcodeai/dsh
+dsh web
 ```
 
 The command starts the Web UI at `http://127.0.0.1:3080` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).

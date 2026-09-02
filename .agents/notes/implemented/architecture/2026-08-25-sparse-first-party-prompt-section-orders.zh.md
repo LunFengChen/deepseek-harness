@@ -14,7 +14,7 @@ Status: implemented
 
 ## 决策
 
-`@deepseek-ai/dsh-system-prompt` 持有仓库提示词段与 runtime context 的私有具名分配。每个仓库贡献方通过 `ctx.systemPrompt.getSectionOrder(name)` 或 `getContextOrder(name)` 向活跃服务查询经过类型约束的位置，而不再导入值或声明数字字面量。段的值是互不相同的整数，相邻已分配段值之差至少为十；context 值则在自己的独立序列中保持唯一整数。
+`@xfcodeai/dsh-system-prompt` 持有仓库提示词段与 runtime context 的私有具名分配。每个仓库贡献方通过 `ctx.systemPrompt.getSectionOrder(name)` 或 `getContextOrder(name)` 向活跃服务查询经过类型约束的位置，而不再导入值或声明数字字面量。段的值是互不相同的整数，相邻已分配段值之差至少为十；context 值则在自己的独立序列中保持唯一整数。
 
 除两项有意调整外，该分配保留既有 first-party 顺序：Bash，或 Windows 组合中的 PowerShell，位于逐工具指导的首位；原先共享 order 的段获得明确顺序。分组如下：
 

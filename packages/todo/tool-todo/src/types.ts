@@ -5,7 +5,7 @@
  * for host consumers, `./client/types` (the browser half-entry's re-export)
  * for client aggregates — with zero content duplication.
  *
- * @module @deepseek-ai/dsh-tool-todo/types
+ * @module @xfcodeai/dsh-tool-todo/types
  */
 
 /**
@@ -25,14 +25,14 @@ export interface TodoItem {
   status: 'pending' | 'in_progress' | 'completed'
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@xfcodeai/dsh-session/types' {
   interface SessionEventMap {
     /** Whole-list snapshot; latest write wins on replay. Log-only UI state; never derived history. */
     'todo/write': { todos: TodoItem[] }
   }
 }
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@xfcodeai/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     todos: TodoItem[] | null
   }

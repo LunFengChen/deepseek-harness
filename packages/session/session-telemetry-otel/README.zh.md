@@ -3,7 +3,7 @@ description: "面向部署方的 OpenTelemetry 会话遥测后端说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-telemetry-otel
+# @xfcodeai/dsh-session-telemetry-otel
 
 [English](README.md) | 中文
 
@@ -43,7 +43,7 @@ kind: "package-reference"
 
 ```yaml
 - id: sessionTelemetry-otel
-  name: '@deepseek-ai/dsh-session-telemetry-otel'
+  name: '@xfcodeai/dsh-session-telemetry-otel'
   config:
     mode: FULL                # explicit opt-in; default: DISABLED
     shutdownTimeoutMillis: 3000 # optional; defaults to 3000
@@ -61,7 +61,7 @@ kind: "package-reference"
 | `exporter`、`processor` | — | 原样传给 SDK 导出器与批处理器 |
 | `shutdownTimeoutMillis` | `3,000` | SDK 完整关闭序列的外层截止时间 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-session-telemetry-otel)是每个受支持字段的穷尽式真源。上传授权采用显式许可，且为 fail-closed：通过直接构造传入未知模式时会在读取传输配置前失败，只有 `FULL` 接受对 `ctx.sessionTelemetry.emit()` 的直接调用，`FEEDBACK_ONLY` 只把权威日志中已存储的精确 `feedback/record` 对象视为同意。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-session-telemetry-otel)是每个受支持字段的穷尽式真源。上传授权采用显式许可，且为 fail-closed：通过直接构造传入未知模式时会在读取传输配置前失败，只有 `FULL` 接受对 `ctx.sessionTelemetry.emit()` 的直接调用，`FEEDBACK_ONLY` 只把权威日志中已存储的精确 `feedback/record` 对象视为同意。
 
 ### 哪些数据会离开本机
 
@@ -83,7 +83,7 @@ kind: "package-reference"
 
 ### 设计理念
 
-后端是对 OTel JS SDK 的薄适配层：它拥有捕获模式、资源身份与一个外层关闭截止时间，其余全部原样透传。两个插桩作用域区分记录通道——ledger 记录挂在 `@deepseek-ai/dsh-session-telemetry-otel` 下，运维记录挂在 `@deepseek-ai/dsh-session-telemetry-otel/ops` 下——使接收端可以在不累加它们的情况下对运维记录告警。资源身份携带 `service.name`/`service.version`（来自 `dsh-llm` 的 `APP_IDENTITY`）以及本包的匿名 `user.id`（来自 `$DSH_HOME/.anonymous-user-id`），按导出批次携带一次，而非逐条记录。
+后端是对 OTel JS SDK 的薄适配层：它拥有捕获模式、资源身份与一个外层关闭截止时间，其余全部原样透传。两个插桩作用域区分记录通道——ledger 记录挂在 `@xfcodeai/dsh-session-telemetry-otel` 下，运维记录挂在 `@xfcodeai/dsh-session-telemetry-otel/ops` 下——使接收端可以在不累加它们的情况下对运维记录告警。资源身份携带 `service.name`/`service.version`（来自 `dsh-llm` 的 `APP_IDENTITY`）以及本包的匿名 `user.id`（来自 `$DSH_HOME/.anonymous-user-id`），按导出批次携带一次，而非逐条记录。
 
 ### 源码地图
 
@@ -111,7 +111,7 @@ kind: "package-reference"
 - [会话遥测 seam](../session-telemetry/README.zh.md)——捕获约定、记录词汇与脱敏 waterfall。
 - [会话遥测子系统](../../../docs/subsystems/session-telemetry.zh.md)——能力拆分与类型声明。
 - [匿名用户身份](../../identity/anonymous-user-id/README.zh.md)——作为 OTel Resource `user.id` 上报的 id。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-session-telemetry-otel)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-session-telemetry-otel)——每个受支持配置字段及其源声明。
 
 -----
 

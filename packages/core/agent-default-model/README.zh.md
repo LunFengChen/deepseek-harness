@@ -3,7 +3,7 @@ description: "面向用户与维护者的部署默认模型选择说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-default-model
+# @xfcodeai/dsh-agent-default-model
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 组合配置项是默认值的基础：它要求提供方与模型，并且不依赖任何设置提供方也能使用。
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-default-model'
+- name: '@xfcodeai/dsh-agent-default-model'
   config:
     provider: deepseek
     model: deepseek-chat
@@ -43,7 +43,7 @@ kind: "package-reference"
 | `provider` | 必填 | 新 agent 使用的已注册提供方路由 |
 | `model` | 必填 | 新 agent 使用的、由提供方持有的模型 id |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-agent-default-model)是每个受支持字段的穷尽式真源。`reasoningEffort` 刻意不是配置字段：它属于设置层，因此完整保存的选择可以在下一个选定的模型没有推理强度时清除旧值，而组合配置值会再次被继承。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-agent-default-model)是每个受支持字段的穷尽式真源。`reasoningEffort` 刻意不是配置字段：它属于设置层，因此完整保存的选择可以在下一个选定的模型没有推理强度时清除旧值，而组合配置值会再次被继承。
 
 ### 读取与更改默认值
 
@@ -92,7 +92,7 @@ await ctx.agentDefaultModel.saveSelection({ provider, model, reasoningEffort: 'h
 
 - [Core 子系统](../../../docs/subsystems/core.zh.md)——`Agent` 句柄与 `AgentOptions` 路由选择。
 - [agent-loop 包](../agent-loop/README.zh.md)——agent 在请求时如何解析提供方与模型。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-agent-default-model)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-agent-default-model)——每个受支持配置字段及其源声明。
 - [core 分组地图](../README.zh.md)——core 各包如何组合。
 
 -----

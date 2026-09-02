@@ -4,7 +4,7 @@ import {
   LlmAdapter,
   LlmError,
   resolveRetryPolicy,
-} from '@deepseek-ai/dsh-llm'
+} from '@xfcodeai/dsh-llm'
 
 class RetrySnapshotAdapter extends LlmAdapter {
   requests = 0

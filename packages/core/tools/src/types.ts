@@ -1,11 +1,11 @@
 /**
  * Durable Tool event vocabulary shared with type-only consumers.
  *
- * @module @deepseek-ai/dsh-tools/types
+ * @module @xfcodeai/dsh-tools/types
  */
 
-import type { ToolCallId } from '@deepseek-ai/dsh-llm/brand'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm/types'
+import type { ToolCallId } from '@xfcodeai/dsh-llm/brand'
+import type { ContentBlock } from '@xfcodeai/dsh-llm/types'
 
 /** Payload recorded when one nested PTC mode Tool dispatch starts. */
 export interface PtcDispatchStartEventData {
@@ -22,7 +22,7 @@ export interface PtcDispatchEventData extends PtcDispatchStartEventData {
   content: ContentBlock[]
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@xfcodeai/dsh-session/types' {
   interface SessionEventMap {
     /**
      * One sub-dispatch STARTING inside a `run_code` program: the parent

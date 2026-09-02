@@ -46,7 +46,7 @@ const repoRoot = fileURLToPath(new URL('..', import.meta.url))
 const CLIENT_TYPE_PROGRAM = 'tsconfig.client.json'
 
 /** Compile-shell workspace whose dist `dsh web` serves. */
-const SHELL_PACKAGE = '@deepseek-ai/dsh-web-frontend'
+const SHELL_PACKAGE = '@xfcodeai/dsh-web-frontend'
 
 /**
  * Test infrastructure builds through the client preset but never enters the

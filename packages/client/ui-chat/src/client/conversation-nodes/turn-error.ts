@@ -1,7 +1,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type {
   ConversationMatch, ConversationNodeContext, ConversationNodeDefinition,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@xfcodeai/dsh-client-ui-conversation/client'
 import type { TurnErrorNode } from '../contract/snapshot.ts'
 import { chatNode } from './common.ts'
 import { displayFailure } from './event-projection.ts'

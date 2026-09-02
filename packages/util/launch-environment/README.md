@@ -3,7 +3,7 @@ description: "An immutable snapshot of this run's environment that remembers whi
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-launch-environment
+# @xfcodeai/dsh-launch-environment
 
 English | [中文](README.zh.md)
 
@@ -29,7 +29,7 @@ Resolve user-facing values through the snapshot instead of `process.env` wheneve
 ### Resolving a value
 
 ```ts
-import { launchEnvironmentOf } from '@deepseek-ai/dsh-launch-environment'
+import { launchEnvironmentOf } from '@xfcodeai/dsh-launch-environment'
 
 declare const ctx: import('@deepseek-ai/cordis').Context
 const endpoint = launchEnvironmentOf(ctx).get('DEEPSEEK_BASE_URL')?.value

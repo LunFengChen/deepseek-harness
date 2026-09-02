@@ -3,7 +3,7 @@ description: "Durable workflow-run Conversation Node for the dsh web client: rec
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-workflow-run
+# @xfcodeai/dsh-client-ui-workflow-run
 
 English | [中文](README.zh.md)
 

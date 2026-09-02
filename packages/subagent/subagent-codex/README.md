@@ -3,7 +3,7 @@ description: "The one-shot Codex subagent provider for users and maintainers cho
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-subagent-codex
+# @xfcodeai/dsh-subagent-codex
 
 English | [中文](README.zh.md)
 
@@ -32,8 +32,8 @@ Mount this provider when a delegation should run as a real Codex session in the 
 Install the package into the target Profile, then restart that Profile. The installation brings the official wrapper and one compatible native platform payload into the Profile; the declared patch layer registers only the dormant provider and starts no Codex process.
 
 ```sh
-dsh plugin --profile <name> add @deepseek-ai/dsh-subagent-codex
-dsh plugin --profile <name> remove @deepseek-ai/dsh-subagent-codex
+dsh plugin --profile <name> add @xfcodeai/dsh-subagent-codex
+dsh plugin --profile <name> remove @xfcodeai/dsh-subagent-codex
 dsh --profile <name>
 ```
 
@@ -55,7 +55,7 @@ Removing the package withdraws the provider and its private runtime closure on t
 | `approve-for-me` | `approvalPolicy: on-request`, `approvalsReviewer: auto_review`, `sandbox: workspace-write` | Route permission requests through Codex automatic review without a human |
 | `dangerously-bypass-approvals-and-sandbox` | `approvalPolicy: never`, `sandbox: danger-full-access` | Skip approval and sandbox enforcement; this value must be selected explicitly |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-codex) is the exhaustive source for every accepted field and its JSDoc. A configured `model` passes unchanged on each ephemeral `thread/start`; omission leaves native model selection in force. The provider does not discover models, rewrite aliases, select `modelProvider` or `serviceTier`, or set a fallback. Credential-shaped ambient variables are removed before the explicit `env` overlay, so an API key intended for the child must be supplied there.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-codex) is the exhaustive source for every accepted field and its JSDoc. A configured `model` passes unchanged on each ephemeral `thread/start`; omission leaves native model selection in force. The provider does not discover models, rewrite aliases, select `modelProvider` or `serviceTier`, or set a fallback. Credential-shaped ambient variables are removed before the explicit `env` overlay, so an API key intended for the child must be supplied there.
 
 ### Exposing the tool
 
@@ -63,11 +63,11 @@ Each delegation tool row names one provider and needs its own `toolName`, so the
 
 ```yaml
 - id: jobs
-  name: '@deepseek-ai/dsh-jobs-local'
+  name: '@xfcodeai/dsh-jobs-local'
 - id: tool-jobs
-  name: '@deepseek-ai/dsh-tool-jobs'
+  name: '@xfcodeai/dsh-tool-jobs'
 - id: tool-subagent-codex
-  name: '@deepseek-ai/dsh-tool-subagent'
+  name: '@xfcodeai/dsh-tool-subagent'
   config:
     provider: codex
     toolName: subagent_codex
@@ -127,7 +127,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [dsh-subagent seam](../subagent/README.md) — the registry and start API this provider registers on.
 - [Claude Code subagent provider](../subagent-claude-code/README.md) — the sibling product backend over the official Agent SDK.
 - [Claude Code and Codex backends](../../../.agents/notes/implemented/feature/2026-08-04-claude-code-and-codex-subagent-backends.md) — the design record for the product providers.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-codex) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-codex) — every accepted config field and its source declaration.
 
 -----
 

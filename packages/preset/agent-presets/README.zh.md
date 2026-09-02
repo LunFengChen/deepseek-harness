@@ -3,7 +3,7 @@ description: "按 preset cordis.yml 文件进行按会话的 agent 组装，供�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-presets
+# @xfcodeai/dsh-agent-presets
 
 [English](README.md) | 中文
 
@@ -38,7 +38,7 @@ kind: "package-reference"
 插件需要一个 `default` preset id，并在 `roots` 中扫描 preset：
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-presets'
+- name: '@xfcodeai/dsh-agent-presets'
   config:
     default: standard
     roots:
@@ -53,7 +53,7 @@ kind: "package-reference"
 | `includeShippedRoot` | `true` | 在全部已配置根目录之前，前置本包随附的 preset 作为 `system` 根目录 |
 | `includeUserRoot` | `true` | 在全部已配置根目录之后追加 `<dshHome>/.agent-presets` 作为 `user` 根目录 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-agent-presets)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-agent-presets)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 随附根目录前置在全部已配置根目录之前，因此即使补丁替换 roster 配置，内置集合仍然可用并赢得重复 id。`includeShippedRoot: false` 会为完全自行提供 preset 的部署移除内置集合。`includeUserRoot: false` 会移除推导出的可写根目录；钉住确切 roster 的测试会同时关闭两个推导根目录。
 
@@ -147,7 +147,7 @@ agent-presets:
 - [Scope 子系统](../../../docs/subsystems/scope.zh.md)——scope key 与 agent 加入所经由的父链。
 - [系统提示词子系统](../../../docs/subsystems/system-prompt.zh.md)——preset 提示词段落如何注册与组装。
 - [会话包映射](../../session/README.zh.md)——preset 切换所追加的持久会话记录。
-- [生成的配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-agent-presets)——每个受支持配置字段及其源声明。
+- [生成的配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-agent-presets)——每个受支持配置字段及其源声明。
 - [按会话组装 agent preset 的 Agent Note](../../../.agents/notes/implemented/architecture/2026-08-03-per-session-agent-presets.zh.md)——设计理由与备选方案。
 - [按 preset 常驻挂载的 Agent Note](../../../.agents/notes/implemented/architecture/2026-08-08-per-preset-standing-mounts.zh.md)——挂载为何是常驻且共享的。
 

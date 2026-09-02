@@ -2,13 +2,13 @@
  * Wire-safe approval identifiers and outcome vocabulary, free of
  * cordis/service imports so browser type chains can
  * consume them without loading this package's Context augmentation.
- * @module @deepseek-ai/dsh-user-approval/types
+ * @module @xfcodeai/dsh-user-approval/types
  */
 
-import type { Branded } from '@deepseek-ai/dsh-brand'
-import type { Scoped } from '@deepseek-ai/dsh-scope'
-import type { Agent } from '@deepseek-ai/dsh-agent/types'
-import type { ToolCallId } from '@deepseek-ai/dsh-llm/brand'
+import type { Branded } from '@xfcodeai/dsh-brand'
+import type { Scoped } from '@xfcodeai/dsh-scope'
+import type { Agent } from '@xfcodeai/dsh-agent/types'
+import type { ToolCallId } from '@xfcodeai/dsh-llm/brand'
 
 /**
  * Pairs one `approval/asked` audit event with its `approval/decided`.
@@ -31,7 +31,7 @@ export function ApprovalRequestId(id: string): ApprovalRequestId {
  */
 export type ApprovalOutcome = 'allowed-once' | 'rejected' | 'cancelled' | 'unavailable'
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@xfcodeai/dsh-session/types' {
   interface SessionEventMap {
     /**
      * An approval question was put to the answerer chain — log-only audit
@@ -78,7 +78,7 @@ declare module '@deepseek-ai/cordis' {
     /**
      * Ask composed answerers for one decision. Return an outcome to claim the
      * request or call `next()` to delegate. Scope-filtered dispatch
-     * (`@deepseek-ai/dsh-scope`): agent-scoped listeners receive only that agent.
+     * (`@xfcodeai/dsh-scope`): agent-scoped listeners receive only that agent.
      * @param req - pending approval request.
      * @mode waterfall
      */

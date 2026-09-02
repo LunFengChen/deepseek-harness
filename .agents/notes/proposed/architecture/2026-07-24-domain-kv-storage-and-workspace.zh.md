@@ -21,11 +21,11 @@ host 侧唯一的持久化面是 session 事件日志（`packages/session/sessio
 
 | 包 | 路径 | ctx 面 | 本期 |
 | --- | --- | --- | --- |
-| `@deepseek-ai/dsh-storage` | `packages/storage/storage/` | `ctx.storage`（枢纽） | ✓ |
-| `@deepseek-ai/dsh-storage-json` | `packages/storage/storage-json/` | 注册后端 `json` | ✓ |
-| `@deepseek-ai/dsh-storage-sqlite` | `packages/storage/storage-sqlite/` | 注册后端 `sqlite` | ✓ |
-| `@deepseek-ai/dsh-storage-domain` | `packages/storage/storage-domain/` | 挂载 `ctx.storage.domain` | ✓ |
-| `@deepseek-ai/dsh-workspace` | `packages/workspace/workspace/` | `ctx.workspaceRegistry` | ✓ |
+| `@xfcodeai/dsh-storage` | `packages/storage/storage/` | `ctx.storage`（枢纽） | ✓ |
+| `@xfcodeai/dsh-storage-json` | `packages/storage/storage-json/` | 注册后端 `json` | ✓ |
+| `@xfcodeai/dsh-storage-sqlite` | `packages/storage/storage-sqlite/` | 注册后端 `sqlite` | ✓ |
+| `@xfcodeai/dsh-storage-domain` | `packages/storage/storage-domain/` | 挂载 `ctx.storage.domain` | ✓ |
+| `@xfcodeai/dsh-workspace` | `packages/workspace/workspace/` | `ctx.workspaceRegistry` | ✓ |
 | `SessionPersistence.delete` 扩面 + 级联删编排 | `packages/session/*` | 既有 seam 新方法 | ✗ future work（本期不动 session 侧） |
 | `workspace.*` / `session.delete` RPC、GUI 接线、boot 组装 | — | — | ✗ 下期 |
 

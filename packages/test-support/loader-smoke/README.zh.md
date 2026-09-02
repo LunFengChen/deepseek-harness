@@ -3,7 +3,7 @@ description: "面向无密钥示例冒烟测试的共享子进程与直接 agent
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-loader-smoke
+# @xfcodeai/dsh-loader-smoke
 
 [English](README.md) | 中文
 

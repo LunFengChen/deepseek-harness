@@ -3,7 +3,7 @@ description: "面向启动 JSON-RPC harness 运行时的用户与维护者，说
 kind: "package-bundle"
 ---
 
-# `@deepseek-ai/dsh-sdk-app`
+# `@xfcodeai/dsh-sdk-app`
 
 [English](README.md) | 中文
 

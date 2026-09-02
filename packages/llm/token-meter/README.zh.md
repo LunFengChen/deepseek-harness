@@ -3,13 +3,13 @@ description: "面向用户与维护者的具备回放感知的 token 与上下�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-token-meter
+# @xfcodeai/dsh-token-meter
 
 [English](README.md) | 中文
 
 ## 概述
 
-`@deepseek-ai/dsh-token-meter` 是具备回放感知的 token 计量服务：`ctx.tokenMeter` 从持久事件日志为每个会话推进一个隔离 fold，因此压缩（compaction）与其他压力敏感插件可以共享同一份计量，无需依赖压缩引擎。借助它，你可以测量当前请求与上下文压力、为单条消息计价，并且在挂载会话投影 seam 时读取 `tokenUsage`、`contextPressure` 与 `contextBreakdown` 投影。文本和未声明图片定价的路由使用固定启发式规则，存在时则应用适配器声明的视觉 token 定价；只有请求 envelope 完全匹配时才复用提供方报告的用量。它不添加任何自己的提示词、消息、schema 或工具，也绝不为 loop 做决定。
+`@xfcodeai/dsh-token-meter` 是具备回放感知的 token 计量服务：`ctx.tokenMeter` 从持久事件日志为每个会话推进一个隔离 fold，因此压缩（compaction）与其他压力敏感插件可以共享同一份计量，无需依赖压缩引擎。借助它，你可以测量当前请求与上下文压力、为单条消息计价，并且在挂载会话投影 seam 时读取 `tokenUsage`、`contextPressure` 与 `contextBreakdown` 投影。文本和未声明图片定价的路由使用固定启发式规则，存在时则应用适配器声明的视觉 token 定价；只有请求 envelope 完全匹配时才复用提供方报告的用量。它不添加任何自己的提示词、消息、schema 或工具，也绝不为 loop 做决定。
 
 ## 目录
 
@@ -53,8 +53,8 @@ const price = ctx.tokenMeter.estimateMessage(message)
 ### 组合
 
 ```yaml
-- name: '@deepseek-ai/dsh-token-meter'
-- name: '@deepseek-ai/dsh-compaction-basic'
+- name: '@xfcodeai/dsh-token-meter'
+- name: '@xfcodeai/dsh-compaction-basic'
 ```
 
 两个插件都有可用默认值。meter 只消费可选的 `llm` 服务，且仅用于解析路由声明的请求图片定价；压缩保持可选。部署会在 LLM（大语言模型）适配器上配置容量与图片定价，并在 `dsh-compaction-basic` 上配置压缩策略。

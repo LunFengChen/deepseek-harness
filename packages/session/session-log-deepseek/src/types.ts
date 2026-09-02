@@ -1,7 +1,7 @@
 /** Wire types for lossless incremental DeepSeek session-log upload. */
 
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import type { SessionEvent } from '@xfcodeai/dsh-session'
+import type { JsonValue } from '@xfcodeai/dsh-util-values'
 
 /** Version-0 Session header fields serialized on the external request wire. */
 export interface DeepSeekSessionLogWireHeader {
@@ -45,20 +45,20 @@ export interface DeepSeekSessionLogExtension {
   readonly events: readonly DeepSeekSessionLogWireEvent[]
 }
 
-declare module '@deepseek-ai/dsh-deepseek-llm-api-extensions/types' {
+declare module '@xfcodeai/dsh-deepseek-llm-api-extensions/types' {
   interface DeepSeekLlmApiExtensionMap {
     dsh_session_log: DeepSeekSessionLogExtension
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@xfcodeai/dsh-session/types' {
   interface SessionEventMap {
     /** Records that the configured endpoint accepted one delivery through `throughSeq`. */
     'session-log-deepseek/delivery-accepted': {
       /** Session identity the accepted delivery carried; inherited fork markers retain the parent's id. */
-      sessionId: import('@deepseek-ai/dsh-session/types').SessionId
+      sessionId: import('@xfcodeai/dsh-session/types').SessionId
       /** Last canonical event included in the accepted request. */
-      throughSeq: import('@deepseek-ai/dsh-session/types').SessionSeq
+      throughSeq: import('@xfcodeai/dsh-session/types').SessionSeq
     }
   }
 }

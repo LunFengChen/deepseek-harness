@@ -18,9 +18,9 @@ DeepSeek Harness 在 TUI 和 Headless coding agent 之外，还提供了两个�
 
 保留的应用角色均有明确归属：
 
-- `@deepseek-ai/dsh-tui` 负责终端交互式执行。它会在 Loader 启动前拒绝非 TTY 流；`apps/cli/config/base.cordis.yml` 与 `tui.cordis.yml` overlay 拥有完整 coding 组装，PTY 与终端快照覆盖则位于 `apps/cli/tests/`。
+- `@xfcodeai/dsh-tui` 负责终端交互式执行。它会在 Loader 启动前拒绝非 TTY 流；`apps/cli/config/base.cordis.yml` 与 `tui.cordis.yml` overlay 拥有完整 coding 组装，PTY 与终端快照覆盖则位于 `apps/cli/tests/`。
 - [`dsh --profile headless`](../../../../apps/cli/README.zh.md)负责非交互式执行。其 `headless` profile 是产品组装；录制会话位于 `snapshots/session/`，profile 集成测试位于 `apps/cli/tests/profiles/headless/`，共享 Loader driver 位于 `packages/test-support/loader-smoke/tests/fixtures/`。
-- [`dsh --profile acp`](../../../../apps/cli/README.zh.md) 和 `@deepseek-ai/dsh-sdk-jsonrpc-server` 负责各自的分帧协议集成。
+- [`dsh --profile acp`](../../../../apps/cli/README.zh.md) 和 `@xfcodeai/dsh-sdk-jsonrpc-server` 负责各自的分帧协议集成。
 
 承载 `stdio` 运行接口选项的 SDK 项目模型已由 [SDK 项目工具链移除决策](2026-08-11-remove-sdk-project-toolchain.zh.md)删除。仓库中的演示文档要求 DeepSeek API key，并优先引导到当前可运行的产品。
 

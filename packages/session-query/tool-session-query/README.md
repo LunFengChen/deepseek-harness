@@ -3,7 +3,7 @@ description: "Workspace-authorized model-facing session history tools for agent 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-session-query
+# @xfcodeai/dsh-tool-session-query
 
 English | [中文](README.zh.md)
 
@@ -38,7 +38,7 @@ Choose it when a deployment wants model-driven retrieval of prior work — for e
 | `maxSearchResults` | `100` | Maximum authorized hits returned by one search call |
 | `searchTimeoutMs` | `30000` | Cooperative deadline attached to both full-text search tools |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-tool-session-query) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-tool-session-query) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What the model can do
 
@@ -54,7 +54,7 @@ Workspace authority is conservative: cross-session access requires exact `cwd` e
 
 ### Failures and recovery
 
-Every trusted query-service call crosses one error sanitizer: caller cancellation is preserved exactly, corpus and provider diagnostics go to the internal log, and unsafe or unprintable failures fall back to the fixed `SESSION_QUERY_TOOL_FAILED` code and message. Local argument-validation and authorization errors keep their precise tool-owned messages (`SESSION_QUERY_TOOL_UNAUTHORIZED` for a target outside the caller workspace). The package performs no byte or character truncation and does not import a spill backend; deployments that need bounded inline output mount `@deepseek-ai/dsh-spill-policy`, which can replace oversized rendered text while retaining the complete result.
+Every trusted query-service call crosses one error sanitizer: caller cancellation is preserved exactly, corpus and provider diagnostics go to the internal log, and unsafe or unprintable failures fall back to the fixed `SESSION_QUERY_TOOL_FAILED` code and message. Local argument-validation and authorization errors keep their precise tool-owned messages (`SESSION_QUERY_TOOL_UNAUTHORIZED` for a target outside the caller workspace). The package performs no byte or character truncation and does not import a spill backend; deployments that need bounded inline output mount `@xfcodeai/dsh-spill-policy`, which can replace oversized rendered text while retaining the complete result.
 
 -----
 
@@ -101,7 +101,7 @@ Each executor derives the caller, normalizes the model's arguments into service 
 
 Read these pages when the package-level contract is not enough. They move from the tool surface to the underlying service, the schema catalog, and the design evidence.
 
-- [Generated tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-tool-session-query) — the five tool schemas as the model sees them.
+- [Generated tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-tool-session-query) — the five tool schemas as the model sees them.
 - [dsh-session-query](../session-query/README.md) — the service these tools call.
 - [dsh-session-query-sqlite](../session-query-sqlite/README.md) — the full-text backend behind the two search tools.
 - [Session Query subsystem reference](../../../docs/subsystems/session-query.md) — the type-level contract under the tools.
@@ -136,7 +136,7 @@ Prefix-stable while the plugin and guidance text are unchanged.
 
 #### What the model sees
 
-The model sees the generated [`session_search`, `session_event_search`, `session_trace`, `session_event_trace`, and `session_event_read` schemas](../../../docs/tool-catalog.md#deepseek-aidsh-tool-session-query). Search filters add fixed schema tokens, while cursors, workspace paths, output pagination, and model-controlled result limits remain absent.
+The model sees the generated [`session_search`, `session_event_search`, `session_trace`, `session_event_trace`, and `session_event_read` schemas](../../../docs/tool-catalog.md#xfcodeaidsh-tool-session-query). Search filters add fixed schema tokens, while cursors, workspace paths, output pagination, and model-controlled result limits remain absent.
 
 #### Token effect
 

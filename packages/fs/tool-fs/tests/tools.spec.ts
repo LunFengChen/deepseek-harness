@@ -8,11 +8,11 @@ import { Context } from '@deepseek-ai/cordis'
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve, sep } from 'node:path'
-import { turnBoundaryProjectionDefinition } from '@deepseek-ai/dsh-agent-loop'
-import { ToolCallId } from '@deepseek-ai/dsh-llm'
-import SystemPrompt, { renderPrompt } from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime, { type ToolResult } from '@deepseek-ai/dsh-tools'
-import { FileSystem, FsError, FsTargetKey, FsVersion } from '@deepseek-ai/dsh-fs'
+import { turnBoundaryProjectionDefinition } from '@xfcodeai/dsh-agent-loop'
+import { ToolCallId } from '@xfcodeai/dsh-llm'
+import SystemPrompt, { renderPrompt } from '@xfcodeai/dsh-system-prompt'
+import ToolRuntime, { type ToolResult } from '@xfcodeai/dsh-tools'
+import { FileSystem, FsError, FsTargetKey, FsVersion } from '@xfcodeai/dsh-fs'
 import type {
   FsDirEntry,
   FsEditOutcome,
@@ -22,18 +22,18 @@ import type {
   FsTarget,
   FsWriteIntent,
   FsWriteOutcome,
-} from '@deepseek-ai/dsh-fs'
-import * as FsPolicy from '@deepseek-ai/dsh-fs-observation-policy'
-import * as ToolFs from '@deepseek-ai/dsh-tool-fs'
+} from '@xfcodeai/dsh-fs'
+import * as FsPolicy from '@xfcodeai/dsh-fs-observation-policy'
+import * as ToolFs from '@xfcodeai/dsh-tool-fs'
 import { STREAM_MIN_SIZE } from '../src/read.ts'
 import { formatReadOutput } from '../src/read-render.ts'
 import type { FileReadOutcome } from '../src/read-render.ts'
 import { sessionCwd } from '../src/session-cwd.ts'
-import ApprovalService from '@deepseek-ai/dsh-user-approval'
-import type { SandboxExecutionPolicy, SandboxMode } from '@deepseek-ai/dsh-sandbox'
-import SandboxPolicyService from '@deepseek-ai/dsh-sandbox-policy'
-import { SessionId, SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
+import ApprovalService from '@xfcodeai/dsh-user-approval'
+import type { SandboxExecutionPolicy, SandboxMode } from '@xfcodeai/dsh-sandbox'
+import SandboxPolicyService from '@xfcodeai/dsh-sandbox-policy'
+import { SessionId, SessionLogOffset, SessionSeq } from '@xfcodeai/dsh-session'
+import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
 
 const testToolSignal = new AbortController().signal
 

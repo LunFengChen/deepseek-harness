@@ -3,13 +3,13 @@ description: "Add the experimental Agent Teams panel to a source-checkout Web pr
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-experimental-agent-team-web-profile
+# @xfcodeai/dsh-experimental-agent-team-web-profile
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-experimental-agent-team-web-profile` is the private Web layer for [Agent Teams](../agent-team/README.md). Add it after `@deepseek-ai/dsh-web-app` and [`@deepseek-ai/dsh-experimental-agent-team-profile`](../agent-team-profile/README.md) to show the Team roster, task board, and teammate navigation in the browser. Removing either experimental layer leaves the stable base and Web composition unchanged. Official releases exclude this package, so it is available only from a source checkout.
+`dsh-experimental-agent-team-web-profile` is the private Web layer for [Agent Teams](../agent-team/README.md). Add it after `@xfcodeai/dsh-web-app` and [`@xfcodeai/dsh-experimental-agent-team-profile`](../agent-team-profile/README.md) to show the Team roster, task board, and teammate navigation in the browser. Removing either experimental layer leaves the stable base and Web composition unchanged. Official releases exclude this package, so it is available only from a source checkout.
 
 ## Table of Contents
 
@@ -34,11 +34,11 @@ pnpm dsh plugin --profile web add ./packages/experimental/agent-team-profile
 pnpm dsh plugin --profile web add ./packages/experimental/agent-team-web-profile
 ```
 
-The first command supplies the Team domain, generated Remote methods, and model tools. The second command activates this package's declared patch and its browser presentation. Removing the package with `dsh plugin --profile web remove @deepseek-ai/dsh-experimental-agent-team-web-profile` removes the Web layer from the profile's ordered bundle list.
+The first command supplies the Team domain, generated Remote methods, and model tools. The second command activates this package's declared patch and its browser presentation. Removing the package with `dsh plugin --profile web remove @xfcodeai/dsh-experimental-agent-team-web-profile` removes the Web layer from the profile's ordered bundle list.
 
 ### What you get
 
-The conversation header gains the Team roster, shared task board, and teammate navigation. [`@deepseek-ai/dsh-experimental-client-ui-agent-team`](../client-ui-agent-team/README.md) owns those browser interactions and mounts the generated Client Remote namespace used to reach the Host Team service.
+The conversation header gains the Team roster, shared task board, and teammate navigation. [`@xfcodeai/dsh-experimental-client-ui-agent-team`](../client-ui-agent-team/README.md) owns those browser interactions and mounts the generated Client Remote namespace used to reach the Host Team service.
 
 -----
 
@@ -48,7 +48,7 @@ The conversation header gains the Team roster, shared task board, and teammate n
 <details>
 <summary>Implementation internals — click to expand</summary>
 
-The package's runtime content is [`cordis.patch.yml`](cordis.patch.yml). Applied after `dsh-web-app` and the Host Agent Teams layer, its single `insert` entry adds the `ui-agent-team` row for `@deepseek-ai/dsh-experimental-client-ui-agent-team`. The inserted Client plugin owns the generated Remote assembly and Team UI; this static bundle holds no mutable state and installs no runtime invariant.
+The package's runtime content is [`cordis.patch.yml`](cordis.patch.yml). Applied after `dsh-web-app` and the Host Agent Teams layer, its single `insert` entry adds the `ui-agent-team` row for `@xfcodeai/dsh-experimental-client-ui-agent-team`. The inserted Client plugin owns the generated Remote assembly and Team UI; this static bundle holds no mutable state and installs no runtime invariant.
 
 | File | Role |
 |---|---|

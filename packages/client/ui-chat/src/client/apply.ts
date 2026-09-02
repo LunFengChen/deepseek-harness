@@ -1,19 +1,19 @@
 /** Register the Chat Conversation target, renderers, stats, and details surface. */
 import type { Context } from '@deepseek-ai/cordis'
-import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import type {} from '@deepseek-ai/dsh-api-remotes/client'
-import type { SessionBinding } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { BoundActions, ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
-import { SessionSeq, type SessionId } from '@deepseek-ai/dsh-session/types'
-import { resolveWorkspacePath } from '@deepseek-ai/dsh-util-workspace-path'
+import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
+import type {} from '@xfcodeai/dsh-api-remotes/client'
+import type { SessionBinding } from '@xfcodeai/dsh-api-session-controller/client'
+import type { BoundActions, ObservableSnapshot } from '@xfcodeai/dsh-client-store'
+import { SessionSeq, type SessionId } from '@xfcodeai/dsh-session/types'
+import { resolveWorkspacePath } from '@xfcodeai/dsh-util-workspace-path'
 // Type-only service and declaration merges used by the apply world.
-import type {} from '@deepseek-ai/dsh-client-locale/client'
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
-import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
-import type {} from '@deepseek-ai/dsh-client-ui-session/client'
-import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
-import type {} from '@deepseek-ai/dsh-client-ui-workspace/client'
+import type {} from '@xfcodeai/dsh-client-locale/client'
+import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
+import type {} from '@xfcodeai/dsh-client-ui-layout/client'
+import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
+import type {} from '@xfcodeai/dsh-client-ui-session/client'
+import type {} from '@xfcodeai/dsh-client-ui-settings/client'
+import type {} from '@xfcodeai/dsh-client-ui-workspace/client'
 import type {
   ChatNodeTurnDataInjected, ChatScrollPosition, ChatViewInjected, DetailsInjected,
   TurnTailOwnerProps,

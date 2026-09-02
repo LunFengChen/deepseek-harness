@@ -3,7 +3,7 @@ description: "面向用户与维护者的运行时不变量检查说明：选择
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-invariants
+# @xfcodeai/dsh-invariants
 
 [English](README.md) | 中文
 
@@ -36,11 +36,11 @@ kind: "package-reference"
 注册表默认启用，并在没有过滤器的情况下检查每个已注册的包。用 `enabled` 作全局开关，用 `package_allowlist` 只接纳指定包，用 `package_blocklist` 在 allowlist 匹配之后排除包——blocklist 匹配优先于 allowlist 匹配。模式是区分大小写的 JavaScript 正则表达式源（除非自带 `^` 与 `$`，否则不锚定）；无效、空白或重复的条目会使服务启动失败，而不是被跳过。
 
 ```yaml
-- name: '@deepseek-ai/dsh-invariants'
+- name: '@xfcodeai/dsh-invariants'
   config:
     enabled: true
     package_allowlist:
-      - '^@deepseek-ai/dsh-'
+      - '^@xfcodeai/dsh-'
 ```
 
 | 字段 | 默认值 | 含义 |
@@ -49,7 +49,7 @@ kind: "package-reference"
 | `package_allowlist` | `[]` | 接纳包名的正则源；为空则全部接纳 |
 | `package_blocklist` | `[]` | 在 allowlist 匹配之后排除包名的正则源 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-invariants)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-invariants)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 运行哪些检查
 
@@ -76,8 +76,8 @@ kind: "package-reference"
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import InvariantRegistry from '@deepseek-ai/dsh-invariants'
-import * as SessionInvariant from '@deepseek-ai/dsh-session/invariant'
+import InvariantRegistry from '@xfcodeai/dsh-invariants'
+import * as SessionInvariant from '@xfcodeai/dsh-session/invariant'
 
 declare const ctx: Context
 
@@ -127,7 +127,7 @@ ctx.plugin(SessionInvariant)
 当包级约定不够用时阅读以下页面。它们从生成的服务参考逐步进入决策证据与组地图。
 
 - [运行时不变式子系统](../../../docs/subsystems/invariants.zh.md)——`Config`、installer、服务与配套入口约定的生成参考。
-- [生成的配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-invariants)——每个受支持配置字段及其源声明。
+- [生成的配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-invariants)——每个受支持配置字段及其源声明。
 - [包自有不变式服务 Agent Note](../../../.agents/notes/implemented/architecture/2026-07-19-package-owned-invariant-service.zh.md)——检查为何放在归属者旁边，以及注册表为何拥有选择与生命周期。
 - [不变式运行时约定 Agent Note](../../../.agents/notes/implemented/architecture/2026-07-19-package-invariant-runtime-contracts.zh.md)——运行时不变量可以断言什么，以及强制配套入口接线的机械门禁。
 - [runtime-diagnostics 组地图](../../README.zh.md)——相邻的诊断包。

@@ -10,9 +10,9 @@ Create `greet-tool.ts` in `tmp/cordis-tutorial`:
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import { defineTool } from '@deepseek-ai/dsh-tools'
-import type { ToolCallId } from '@deepseek-ai/dsh-llm'
+import { brandString } from '@xfcodeai/dsh-brand'
+import { defineTool } from '@xfcodeai/dsh-tools'
+import type { ToolCallId } from '@xfcodeai/dsh-llm'
 
 export const name = 'greet-tool'
 export const inject = ['tools']
@@ -55,7 +55,7 @@ Create `tool-logger.ts` — a separate plugin that watches every tool call in th
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@deepseek-ai/dsh-tools'
+import type {} from '@xfcodeai/dsh-tools'
 
 export const name = 'tool-logger'
 export const inject = ['tools']
@@ -70,18 +70,18 @@ export function apply(ctx: Context) {
 }
 ```
 
-The `import type {} from '@deepseek-ai/dsh-tools'` line pulls in the package's declaration merges so `'tools/result'` and its payload are typed — the same move as chapter 4's `stats.ts` import, at package scale.
+The `import type {} from '@xfcodeai/dsh-tools'` line pulls in the package's declaration merges so `'tools/result'` and its payload are typed — the same move as chapter 4's `stats.ts` import, at package scale.
 
 ## Compose and run
 
 ```yaml
-- name: '@deepseek-ai/dsh-system-prompt'
-- name: '@deepseek-ai/dsh-tools'
+- name: '@xfcodeai/dsh-system-prompt'
+- name: '@xfcodeai/dsh-tools'
 - name: './tool-logger.ts'
 - name: './greet-tool.ts'
 ```
 
-`@deepseek-ai/dsh-tools` injects the `systemPrompt` service because tools contribute schemas to the system prompt, so the composition lists its provider too. Without it, the tools plugin remains PENDING as described in [chapter 6](06-composition-and-hmr.md).
+`@xfcodeai/dsh-tools` injects the `systemPrompt` service because tools contribute schemas to the system prompt, so the composition lists its provider too. Without it, the tools plugin remains PENDING as described in [chapter 6](06-composition-and-hmr.md).
 
 ```sh
 node --import tsx ../../vendor/cordis/bin.js

@@ -3,7 +3,7 @@ description: "面向用户与维护者的事件溯源会话日志与内存存储
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session
+# @xfcodeai/dsh-session
 
 [English](README.md) | 中文
 

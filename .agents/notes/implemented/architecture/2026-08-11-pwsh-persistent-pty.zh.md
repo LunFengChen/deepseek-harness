@@ -6,7 +6,7 @@ Status: implemented
 
 ## 问题
 
-harness 在 Windows 上没有持久 shell。持久 `bash` 栈按构造就是 POSIX-only：`@deepseek-ai/dsh-subprocess-local` 在终端分配时直接抛错（`createProcessInspector()` 拒绝 win32），`@deepseek-ai/dsh-terminal-bash` 是 bash 形态（`/bin/bash` 默认值、`PS1`/`PROMPT_COMMAND` 环境标记），`@deepseek-ai/dsh-tool-bash-persistent` 用 bash 语法包装命令，pty 测试全部在 win32 上 skip。一次性 `pwsh` 工具（`@deepseek-ai/dsh-tool-pwsh` + `@deepseek-ai/dsh-pwsh-local`）已经能在 Windows 运行，但每次调用都是全新的 `pwsh -Command` 进程：cwd、`$env:` 变量、函数和交互式子进程都随调用结束，其 README 把 "No persistent shell or PTY" 记为 deferred work。
+harness 在 Windows 上没有持久 shell。持久 `bash` 栈按构造就是 POSIX-only：`@xfcodeai/dsh-subprocess-local` 在终端分配时直接抛错（`createProcessInspector()` 拒绝 win32），`@xfcodeai/dsh-terminal-bash` 是 bash 形态（`/bin/bash` 默认值、`PS1`/`PROMPT_COMMAND` 环境标记），`@xfcodeai/dsh-tool-bash-persistent` 用 bash 语法包装命令，pty 测试全部在 win32 上 skip。一次性 `pwsh` 工具（`@xfcodeai/dsh-tool-pwsh` + `@xfcodeai/dsh-pwsh-local`）已经能在 Windows 运行，但每次调用都是全新的 `pwsh -Command` 进程：cwd、`$env:` 变量、函数和交互式子进程都随调用结束，其 README 把 "No persistent shell or PTY" 记为 deferred work。
 
 这个缺口排除了状态驻留在终端里的 Windows 工作流：单步调试、在 Python 或 Node REPL 中探索、中断前台命令后回到原 shell —— 正是持久 bash pty 在 POSIX 上服务的同一类工作。
 
@@ -16,17 +16,17 @@ harness 在 Windows 上没有持久 shell。持久 `bash` 栈按构造就是 POS
 
 模型侧持久 `pwsh` 工具在 Windows 上交付，契约与 `tool-bash-persistent` 逐项对齐：每个 Agent 一个 owner 作用域的持久 shell、标记检测的命令完成、精确的原生退出码、有界输出，以及超时/取消/`exit` 时重置 shell 并告知模型的语义。三块交付：`subprocess-local` 的 Windows 基座、`terminal-bash` 的 shell 方言选项、新的 `tool-pwsh-persistent` 包加 minimal 预设组合行。
 
-### `@deepseek-ai/dsh-subprocess-local` 的 Windows 基座
+### `@xfcodeai/dsh-subprocess-local` 的 Windows 基座
 
 `createProcessInspector()` 在 win32 返回 `WindowsProcessInspector` 而不是抛错。基于 koffi 的检查器通过 Toolhelp32 枚举进程表，把 GetProcessTimes 创建身份与进程句柄零时等待结合起来（同时防止 PID 复用并识别已终止的进程对象），把 **shell pid 作为伪前台进程组**（Windows 没有 POSIX 进程组；这个稳定值让 prompt-marker 就绪快路径在一个轮询间隔内结算），不报告 stdin-wait 证据（就绪与 macOS 同档），信号走 `taskkill /T` 升级（仅 SIGKILL 加 `/F`）。koffi（`^3.1.0`，`sandbox-windows-acl` 已固定的版本）仅在 win32 惰性加载。
 
 `LocalTerminalHandle` 为 win32 分支，因为 node-pty 的 `kill(signal)` 会抛错（"Signals not supported on windows"），其无参 kill 委托的 console-list agent 在没有父控制台时失败。拆卸经 taskkill 升级并以 shell 的启动身份作栅栏；由于被外部 taskkill 的 shell 可能永远不会触发 node-pty 的退出通知，句柄从 inspector 验证的消失状态结算 `done`（`settleExitIfGone`）。`signalForeground` 把 SIGINT 映射为 `\x03` Ctrl-C 输入写入（conhost 转为控制台级 CTRL_C 事件的投递方式；实测可中断运行中的命令），SIGTERM/SIGKILL 路由到 taskkill，SIGTSTP/SIGHUP 以 Windows 不可用为由拒绝。公共 `PtySignal` 集合与 seam 类型不变；映射全部留在 backend。
 
-### `@deepseek-ai/dsh-terminal-bash` 的 shell 方言
+### `@xfcodeai/dsh-terminal-bash` 的 shell 方言
 
 一个 backend、两种方言：`shellDialect: 'bash' | 'pwsh'`（默认 `'bash'`；bash 的 argv 和环境默认值保持不变）。有效 `shellPath`/`shellArgs` 按方言解析（bash `/bin/bash --noprofile --norc -i`；pwsh 经共享的 `dsh-pwsh-local` 解析器取 `-NoLogo -NoProfile`，保留交互宿主供子 REPL）。子环境去掉 bash 专属 `PS1`/`PROMPT_COMMAND` 标记并为 pwsh 加 `NO_COLOR`。pwsh 无法从环境安装提示符，因此 backend 在启动时通过会话写入 prompt 函数，并且只接受 backend 的 `stdin_read` 结果；回显引导输入中的可打印提示符字面量不代表就绪。一条 `timeoutMs` 绝对超时计时器负责限制完整启动重试循环，因此 `inferred_idle` 后续 send 无法重新计时。一个不保留 scrollback 的 `@xterm/headless` 实例会消费原始 PTY 数据，并通过 `SubprocessTerminalHandle` 发出终端协议响应；backend 会在调用方输入前排空这些写入，并且只接受协议工作在整次检查期间保持静止时的前台状态，因此调用方输入不会被当作光标位置响应而消费。一个 parser 写入保持活跃，随后到达的原始 chunk 会合并为下一批，从而避免高输出量为每个 chunk 分别调度解析。现有 sanitizer 与有界缓冲区仍负责输出投影。两种方言发出相同的 BEL 终结 OSC `133;D;` 标记，因此 `PROMPT_MARKER_PREFIX`、`CONTROLLED_PROMPT` 与精确尾部就绪逻辑保持共享——标记仍是载荷不被消费的就绪信号，延后的 BEL 事件通道也继续保持延后。
 
-### `@deepseek-ai/dsh-tool-pwsh-persistent`
+### `@xfcodeai/dsh-tool-pwsh-persistent`
 
 新包镜像 `tool-bash-persistent`：同样的 `Config`（`backendType` 默认 `shell`、`timeoutMs`、`maxOutputChars`、`description`）、同样的 owner 作用域 shell 注册表与每 owner 串行队列、同样的超时/中止/退出/重置路径。工具名是 `pwsh`；它与一次性 `tool-pwsh` 永不共挂，因为预设行按平台互斥。
 

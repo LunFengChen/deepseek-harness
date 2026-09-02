@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-agent-loop",
+  "name": "@xfcodeai/dsh-agent-loop",
   "description": "The concrete agent loop plugin for the DeepSeek Harness",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -32,35 +32,35 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
-    "@deepseek-ai/dsh-tools": "workspace:^"
+    "@xfcodeai/dsh-agent": "workspace:^",
+    "@xfcodeai/dsh-invariants": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-scope": "workspace:^",
+    "@xfcodeai/dsh-session": "workspace:^",
+    "@xfcodeai/dsh-session-persistence": "workspace:^",
+    "@xfcodeai/dsh-session-projection": "workspace:^",
+    "@xfcodeai/dsh-settings": "workspace:^",
+    "@xfcodeai/dsh-system-prompt": "workspace:^",
+    "@xfcodeai/dsh-tools": "workspace:^"
   },
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^",
+    "@xfcodeai/dsh-brand": "workspace:^",
+    "@xfcodeai/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence-jsonl": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
-    "@deepseek-ai/dsh-tools": "workspace:^"
+    "@xfcodeai/dsh-agent": "workspace:^",
+    "@xfcodeai/dsh-invariants": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-scope": "workspace:^",
+    "@xfcodeai/dsh-session": "workspace:^",
+    "@xfcodeai/dsh-session-persistence": "workspace:^",
+    "@xfcodeai/dsh-session-persistence-jsonl": "workspace:^",
+    "@xfcodeai/dsh-session-projection": "workspace:^",
+    "@xfcodeai/dsh-settings": "workspace:^",
+    "@xfcodeai/dsh-system-prompt": "workspace:^",
+    "@xfcodeai/dsh-tools": "workspace:^"
   }
 }

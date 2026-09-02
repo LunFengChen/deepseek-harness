@@ -1,6 +1,6 @@
 /** Shared Team task DAG commands and runtime-enriched views. */
 
-import type { Agent } from '@deepseek-ai/dsh-agent'
+import type { Agent } from '@xfcodeai/dsh-agent'
 import type { TeamMembership } from './roster.ts'
 import { TeamError } from './error.ts'
 import type { TeamJournal } from './journal.ts'

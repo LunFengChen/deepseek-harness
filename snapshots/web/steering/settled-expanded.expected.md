@@ -19,10 +19,10 @@
 - button "1 tool call" [expanded]:
   - text: 1 tool call
   - img
-- button "Context injection @deepseek-ai/dsh-system-prompt":
+- button "Context injection @xfcodeai/dsh-system-prompt":
   - img
   - img
-  - text: Context injection @deepseek-ai/dsh-system-prompt
+  - text: Context injection @xfcodeai/dsh-system-prompt
 - button "Ask question 1/1 answered":
   - img
   - img

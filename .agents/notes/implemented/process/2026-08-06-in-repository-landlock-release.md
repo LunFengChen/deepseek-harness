@@ -28,7 +28,7 @@ The sandbox packed-install rehearsal does not permit the npm registry to supply 
 
 - **Keep the standalone repository as a release mirror** — rejected because it preserves the split lockfiles, source export, stale-registry test window, and cross-repository release sequence after the source of record has already moved here.
 - **Publish one npm package containing every platform binary** — rejected because users would download binaries they cannot run and npm could no longer use package-level `os`/`cpu` filtering. Repository ownership and npm package layout are separate choices.
-- **Give the launcher the root DeepSeek Harness version and publish the complete monorepo recursively** — rejected because this change owns one three-package public family, not the independent `@deepseek-ai/dsh-*` baseline. The [artifact-first npm baseline proposal](../../proposed/process/2026-08-04-artifact-first-npm-baseline-publication.md) explicitly keeps native workspaces outside its target set.
+- **Give the launcher the root DeepSeek Harness version and publish the complete monorepo recursively** — rejected because this change owns one three-package public family, not the independent `@xfcodeai/dsh-*` baseline. The [artifact-first npm baseline proposal](../../proposed/process/2026-08-04-artifact-first-npm-baseline-publication.md) explicitly keeps native workspaces outside its target set.
 - **Cross-compile both binaries in one release job** — rejected because the checked-in package matrix already assigns each architecture a native GitHub runner and avoids adding a cross-toolchain trust surface.
 
 ## Consequences

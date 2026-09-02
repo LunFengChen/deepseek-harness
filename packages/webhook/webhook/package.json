@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-webhook",
+  "name": "@xfcodeai/dsh-webhook",
   "description": "Fire-and-forget webhook rule runtime that creates Workspace-backed DeepSeek Harness Sessions",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -38,32 +38,32 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-agent-default-model": "workspace:^",
-    "@deepseek-ai/dsh-agent-presets": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-permission-presets": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-workspace": "workspace:^"
+    "@xfcodeai/dsh-agent": "workspace:^",
+    "@xfcodeai/dsh-agent-default-model": "workspace:^",
+    "@xfcodeai/dsh-agent-presets": "workspace:^",
+    "@xfcodeai/dsh-invariants": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-permission-presets": "workspace:^",
+    "@xfcodeai/dsh-session": "workspace:^",
+    "@xfcodeai/dsh-session-title": "workspace:^",
+    "@xfcodeai/dsh-workspace": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-agent-default-model": "workspace:^",
-    "@deepseek-ai/dsh-agent-presets": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-permission-presets": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-title": "workspace:^",
-    "@deepseek-ai/dsh-workspace": "workspace:^"
+    "@xfcodeai/dsh-agent": "workspace:^",
+    "@xfcodeai/dsh-agent-default-model": "workspace:^",
+    "@xfcodeai/dsh-agent-presets": "workspace:^",
+    "@xfcodeai/dsh-invariants": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-permission-presets": "workspace:^",
+    "@xfcodeai/dsh-session": "workspace:^",
+    "@xfcodeai/dsh-session-title": "workspace:^",
+    "@xfcodeai/dsh-workspace": "workspace:^"
   },
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^"
+    "@xfcodeai/dsh-brand": "workspace:^",
+    "@xfcodeai/dsh-util-values": "workspace:^"
   }
 }

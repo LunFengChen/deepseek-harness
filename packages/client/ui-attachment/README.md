@@ -3,7 +3,7 @@ description: "Attachment presentation for the conversation UI: draft-image rail,
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-attachment
+# @xfcodeai/dsh-client-ui-attachment
 
 English | [中文](README.zh.md)
 

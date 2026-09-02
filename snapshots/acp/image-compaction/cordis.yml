@@ -5,24 +5,24 @@
 # snapshot harness scopes per run, so the patch itself carries no attachment
 # path. The ACP row selects the shipped vision model.
 - id: acp
-  name: '@deepseek-ai/dsh-acp'
+  name: '@xfcodeai/dsh-acp'
   config:
     provider: deepseek-official
     model: deepseek-v4-flash-vision-exp
 
 - id: session-persistence-jsonl
-  name: '@deepseek-ai/dsh-session-persistence-jsonl'
+  name: '@xfcodeai/dsh-session-persistence-jsonl'
   config:
     root: !!js process.env.DSH_SNAPSHOT_SESSIONS_ROOT ?? './.sessions'
     compression: none
 
 - id: agent-instructions
-  name: '@deepseek-ai/dsh-agent-instructions'
+  name: '@xfcodeai/dsh-agent-instructions'
   config:
     maxBytes: 65536
 
 - id: system-prompt
-  name: '@deepseek-ai/dsh-system-prompt'
+  name: '@xfcodeai/dsh-system-prompt'
   config:
     persona: |
       You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}. Your bash tool runs under a file sandbox — a `[sandbox: file access denied …]` result is policy, not a command bug.
@@ -30,13 +30,13 @@
       Verify your work by running the code or tests. Keep answers brief and factual.
 
 - id: attachment-local
-  name: '@deepseek-ai/dsh-attachment-local'
+  name: '@xfcodeai/dsh-attachment-local'
 
 # Tight automatic compaction budget sized to the route-priced visual tokens of
 # the scenario's inline images: the text-only history stays under the
 # threshold, so a triggered compaction proves the routed model's image pricing
 # drove the pressure decision.
 - id: compaction-basic
-  name: '@deepseek-ai/dsh-compaction-basic'
+  name: '@xfcodeai/dsh-compaction-basic'
   config:
     retainTokens: 100

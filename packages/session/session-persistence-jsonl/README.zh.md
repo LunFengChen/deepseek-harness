@@ -3,7 +3,7 @@ description: "面向部署方与维护者的随产品交付 JSONL 会话持久�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-persistence-jsonl
+# @xfcodeai/dsh-session-persistence-jsonl
 
 [English](README.md) | 中文
 
@@ -34,8 +34,8 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-persistence-jsonl'
+- name: '@xfcodeai/dsh-session'
+- name: '@xfcodeai/dsh-session-persistence-jsonl'
   config:
     root: /absolute/path/to/session-logs
 ```
@@ -50,7 +50,7 @@ kind: "package-reference"
 | `preparedSessionCacheSize` | `5` | 为恢复复用而保留的冷会话准备结果数量 |
 | `writeBatchMaxDelayMs` | `200` | 实时事件的固定聚合窗口，单位为毫秒 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-session-persistence-jsonl)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-session-persistence-jsonl)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 磁盘布局
 

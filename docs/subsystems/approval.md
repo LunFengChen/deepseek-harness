@@ -151,13 +151,13 @@ Source: [`packages/interaction/user-approval/src/index.ts`](../../packages/inter
 
 #### `approval/request` — waterfall
 
-Ask composed answerers for one decision. Return an outcome to claim the request or call `next()` to delegate. Scope-filtered dispatch (`@deepseek-ai/dsh-scope`): agent-scoped listeners receive only that agent.
+Ask composed answerers for one decision. Return an outcome to claim the request or call `next()` to delegate. Scope-filtered dispatch (`@xfcodeai/dsh-scope`): agent-scoped listeners receive only that agent.
 
 ```ts cordis-catalog
 /**
  * Ask composed answerers for one decision. Return an outcome to claim the
  * request or call `next()` to delegate. Scope-filtered dispatch
- * (`@deepseek-ai/dsh-scope`): agent-scoped listeners receive only that agent.
+ * (`@xfcodeai/dsh-scope`): agent-scoped listeners receive only that agent.
  * @param req - pending approval request.
  * @mode waterfall
  */

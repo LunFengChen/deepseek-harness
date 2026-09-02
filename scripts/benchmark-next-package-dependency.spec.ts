@@ -95,8 +95,8 @@ describe('next package benchmark graph', () => {
 
   it('finds reachable unconfigured packages with non-Cordis peers', () => {
     const index = new Map([
-      ['@deepseek-ai/dsh', new Map([['1.0.0', {
-        name: '@deepseek-ai/dsh', version: '1.0.0', dependencies: { '@f/a': '^1.0.0', '@f/b': '^1.0.0' },
+      ['@xfcodeai/dsh', new Map([['1.0.0', {
+        name: '@xfcodeai/dsh', version: '1.0.0', dependencies: { '@f/a': '^1.0.0', '@f/b': '^1.0.0' },
       }]])],
       ['@f/a', new Map([['1.0.0', {
         name: '@f/a', version: '1.0.0', peerDependencies: { '@f/runtime': '^1.0.0' },
@@ -117,7 +117,7 @@ describe('next package benchmark graph', () => {
 
     expect(discoverBenchmarkCandidates(
       index,
-      new Map([['@deepseek-ai/dsh', '1.0.0'], ['@f/a', '1.0.0'], ['@f/b', '1.0.0']]),
+      new Map([['@xfcodeai/dsh', '1.0.0'], ['@f/a', '1.0.0'], ['@f/b', '1.0.0']]),
       release,
       new Set(),
     )).toEqual(['@f/a'])

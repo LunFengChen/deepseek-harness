@@ -5,7 +5,7 @@
  * and replay therefore exercise fetch and markdown rendering without external
  * network while retaining the recorded request URL.
  */
-import { HttpFetchProvider } from '@deepseek-ai/dsh-web-fetch-http'
+import { HttpFetchProvider } from '@xfcodeai/dsh-web-fetch-http'
 import { applyLoopbackServerEffect } from '../loopback-fixture-server.mjs'
 
 /** Model-visible URL retained by the recorded session. */

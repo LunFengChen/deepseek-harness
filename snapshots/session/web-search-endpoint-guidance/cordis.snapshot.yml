@@ -1,7 +1,7 @@
 # Keyless replay counterpart: the failed search remains real; only the
 # conversation model adapter is replaced by replay.
 - id: llm-deepseek
-  name: '@deepseek-ai/dsh-llm-deepseek'
+  name: '@xfcodeai/dsh-llm-deepseek'
   disabled: true
 
 - id: plugin-package-inventory-deepseek
@@ -9,7 +9,7 @@
 
 - insert:
     - id: llm-replay
-      name: '@deepseek-ai/dsh-llm-replay'
+      name: '@xfcodeai/dsh-llm-replay'
       config:
         providers:
           - id: deepseek-official
@@ -26,7 +26,7 @@
       name: './web-search-error-fixture.mjs'
 
 - id: web-search-deepseek
-  name: '@deepseek-ai/dsh-web-search-deepseek'
+  name: '@xfcodeai/dsh-web-search-deepseek'
   config:
     apiKey: snapshot-key
     # The fixture maps this recorded authority to its OS-assigned listener.

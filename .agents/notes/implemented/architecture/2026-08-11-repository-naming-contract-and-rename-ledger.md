@@ -24,7 +24,7 @@ No family exposes two public vocabularies.
 
 ### Use `SDK` for one thing
 
-`SDK` means the JSON-RPC-based client/server protocol used by the supported Python and TypeScript SDKs. The repository keeps `@deepseek-ai/dsh-sdk-client`, `@deepseek-ai/dsh-sdk-protocol`, and the wire identity `deepseek-harness-sdk-runtime`; the JSON-RPC server belongs to the same family. DeepSeek Harness itself is not an SDK, and the removed project generator, launcher, helper, and launcher telemetry packages stay absent.
+`SDK` means the JSON-RPC-based client/server protocol used by the supported Python and TypeScript SDKs. The repository keeps `@xfcodeai/dsh-sdk-client`, `@xfcodeai/dsh-sdk-protocol`, and the wire identity `deepseek-harness-sdk-runtime`; the JSON-RPC server belongs to the same family. DeepSeek Harness itself is not an SDK, and the removed project generator, launcher, helper, and launcher telemetry packages stay absent.
 
 This decision partially supersedes three active decisions. It replaces the retained `bash/`, `pty/`, and `self-modification/` group names and both deferred package targets in the [package-regrouping decision](2026-07-29-package-regrouping.md). It replaces only the repository-wide SDK claim in the [SDK project toolchain removal](../simplification/2026-08-11-remove-sdk-project-toolchain.md), which remains the owner of the deletion and the surviving runtime SDK. It replaces only the package-name rationale in the [tool-call timeout policy](2026-07-07-tool-call-timeout-policy.md); the timeout mechanism and its `guard/timeout-policy/` home remain unchanged.
 
@@ -86,26 +86,26 @@ The tables record public and repository-wide renames. The `Current` column holds
 
 | Former | Current | Reason |
 |---|---|---|
-| `@deepseek-ai/dsh-jsonrpc` | `@deepseek-ai/dsh-sdk-jsonrpc-server` | It is the server half of the SDK protocol. `jsonrpc` alone names an encoding; `sdk-jsonrpc-server` gives the family, mechanism, and role. |
+| `@xfcodeai/dsh-jsonrpc` | `@xfcodeai/dsh-sdk-jsonrpc-server` | It is the server half of the SDK protocol. `jsonrpc` alone names an encoding; `sdk-jsonrpc-server` gives the family, mechanism, and role. |
 | `HarnessSdkServer` | `HarnessSdkJsonRpcServer` | The class is one JSON-RPC server implementation, not every possible SDK server. |
 
-Keep `@deepseek-ai/dsh-sdk-client`, `@deepseek-ai/dsh-sdk-protocol`, and `deepseek-harness-sdk-runtime`. Exclude `@deepseek-ai/create-sdk`, `@deepseek-ai/dsh-scripts`, `@deepseek-ai/dsh-helper`, and `@deepseek-ai/dsh-telemetry`; the separate removal decision deletes them and their support graph.
+Keep `@xfcodeai/dsh-sdk-client`, `@xfcodeai/dsh-sdk-protocol`, and `deepseek-harness-sdk-runtime`. Exclude `@deepseek-ai/create-sdk`, `@xfcodeai/dsh-scripts`, `@xfcodeai/dsh-helper`, and `@xfcodeai/dsh-telemetry`; the separate removal decision deletes them and their support graph.
 
 ### Shell and terminal
 
 | Former | Current | Reason |
 |---|---|---|
 | `packages/bash/` | `packages/shell/` | The group contains the dialect-neutral executor seam, Bash and PowerShell implementations, environment support, and shell tools. |
-| `@deepseek-ai/dsh-bash`, `ctx.bash` | `@deepseek-ai/dsh-shell`, `ctx.shell` | PowerShell already implements this seam. The capability is shell execution, not Bash. |
+| `@xfcodeai/dsh-bash`, `ctx.bash` | `@xfcodeai/dsh-shell`, `ctx.shell` | PowerShell already implements this seam. The capability is shell execution, not Bash. |
 | Dialect-neutral `BashExecutor`, `BashExecRequest`, `BashExecSpec`, `BashProcess`, `BashRunResult`, `BashSandboxInfo`, `BashProcessRead`, and `BashProcessStatus` names | Corresponding `Shell*` names | These types cross both Bash and PowerShell implementations. Leaf types that describe Bash syntax or behavior keep `Bash`. |
 | `BASH_SETTINGS_NAMESPACE`, settings namespace `bash` | `SHELL_SETTINGS_NAMESPACE`, settings namespace `shell` | Both shell providers register this capability-owned settings section. The constant and durable namespace must use the capability name. |
-| `@deepseek-ai/dsh-bash-env`, `ctx.bashEnv`, `BashEnvRegistry` | `@deepseek-ai/dsh-shell-env`, `ctx.shellEnv`, `ShellEnvRegistry` | The environment registry is shared by Bash and PowerShell tools. |
+| `@xfcodeai/dsh-bash-env`, `ctx.bashEnv`, `BashEnvRegistry` | `@xfcodeai/dsh-shell-env`, `ctx.shellEnv`, `ShellEnvRegistry` | The environment registry is shared by Bash and PowerShell tools. |
 | `docs/subsystems/bash.md` | `docs/subsystems/shell.md` | The subsystem page documents the dialect-neutral capability. |
 | `packages/pty/` | `packages/terminal/` | The package family owns persistent terminal sessions. Raw PTY allocation remains in the subprocess layer. |
-| `@deepseek-ai/dsh-pty`, `ctx.pty`, `PtyService` | `@deepseek-ai/dsh-terminal`, `ctx.terminals`, `TerminalSessionService` | Callers manage multiple named terminal sessions. They do not allocate raw PTYs through this service. |
+| `@xfcodeai/dsh-pty`, `ctx.pty`, `PtyService` | `@xfcodeai/dsh-terminal`, `ctx.terminals`, `TerminalSessionService` | Callers manage multiple named terminal sessions. They do not allocate raw PTYs through this service. |
 | Public high-level `Pty*` session and backend names | `Terminal*` names | The public abstraction is a terminal session. Keep low-level `SubprocessTerminal*` names because they already name the substrate. |
-| `@deepseek-ai/dsh-pty-local`, `LocalPtyBackend` | `@deepseek-ai/dsh-terminal-bash`, `BashTerminalBackend` | The provider depends on Bash prompt and shell behavior. `local` hides the actual dialect. |
-| `@deepseek-ai/dsh-tool-pty` | `@deepseek-ai/dsh-tool-terminal` | The model-facing tools are already `terminal_*`; the package should use the same product noun. |
+| `@xfcodeai/dsh-pty-local`, `LocalPtyBackend` | `@xfcodeai/dsh-terminal-bash`, `BashTerminalBackend` | The provider depends on Bash prompt and shell behavior. `local` hides the actual dialect. |
+| `@xfcodeai/dsh-tool-pty` | `@xfcodeai/dsh-tool-terminal` | The model-facing tools are already `terminal_*`; the package should use the same product noun. |
 | `tool-bash-persistent` in the former PTY family | `shell/tool-bash-persistent/` | The tool is a Bash tool and belongs with shell tools. Keep its npm name: `persistent` distinguishes it from one-shot `bash`, while `bash-terminal` would blur the product tool with the terminal-session family. |
 | `docs/subsystems/pty.md` | `docs/subsystems/terminal.md` | The page documents terminal sessions, not raw PTY allocation. |
 
@@ -115,15 +115,15 @@ Keep the Bash- and PowerShell-specific leaf packages, plugin ids, types, and too
 
 | Former | Current | Reason |
 |---|---|---|
-| `@deepseek-ai/dsh-lsp-local` | `@deepseek-ai/dsh-lsp-stdio` | The provider speaks LSP over stdio through replaceable filesystem and subprocess services. It is not necessarily local. |
+| `@xfcodeai/dsh-lsp-local` | `@xfcodeai/dsh-lsp-stdio` | The provider speaks LSP over stdio through replaceable filesystem and subprocess services. It is not necessarily local. |
 | `packages/tasks/` | `packages/jobs/` | The family owns detached tool jobs. `jobs` is short and avoids collision with user task or todo concepts. |
-| `@deepseek-ai/dsh-tasks`, `ctx.tasks`, `TaskService` | `@deepseek-ai/dsh-jobs`, `ctx.jobs`, `JobRegistry` | The service registers, owns, observes, waits for, and cancels multiple background jobs. It is a registry, not a general task service. |
+| `@xfcodeai/dsh-tasks`, `ctx.tasks`, `TaskService` | `@xfcodeai/dsh-jobs`, `ctx.jobs`, `JobRegistry` | The service registers, owns, observes, waits for, and cancels multiple background jobs. It is a registry, not a general task service. |
 | Public `TaskId`, `TaskKindMap`, `TaskStart`, `TaskHooks`, `TaskOutcome`, `TaskSnapshot`, `TaskRead`, and `TaskDoneListener` names | Corresponding `Job*` names | These types belong to the renamed job domain. `JobId` is shorter and clearer than `BackgroundTaskId` or `BgTaskId`. |
-| `@deepseek-ai/dsh-tasks-local`, `LocalTaskService` | `@deepseek-ai/dsh-jobs-local`, `LocalJobRegistry` | This is the process-local provider of the job registry. Here `local` is meaningful because the jobs and callbacks live in one process. |
-| `@deepseek-ai/dsh-tool-tasks` | `@deepseek-ai/dsh-tool-jobs` | The consumer controls the job registry and should use the same domain noun. |
+| `@xfcodeai/dsh-tasks-local`, `LocalTaskService` | `@xfcodeai/dsh-jobs-local`, `LocalJobRegistry` | This is the process-local provider of the job registry. Here `local` is meaningful because the jobs and callbacks live in one process. |
+| `@xfcodeai/dsh-tool-tasks` | `@xfcodeai/dsh-tool-jobs` | The consumer controls the job registry and should use the same domain noun. |
 | `ToolTasks`, `toolTasks`, `ToolTasksConfigSchema`, `PublicTaskSnapshot`, `publicTask`, `validateTaskId` | Corresponding `*Jobs`, `*Job*`, and `validateJobId` names | Imports, forwarded config, public tool values, and helpers are part of the same job domain. Keeping `Task` after the package rename would create a second vocabulary for one feature. |
 | `task_output`, `task_list`, `task_kill` | `job_output`, `job_list`, `job_kill` | These model tools act on jobs, not user tasks. `run_in_background` returns a `JobId`. |
-| `@deepseek-ai/dsh-client-ui-task`, `client/ui-task/` | `@deepseek-ai/dsh-client-ui-jobs`, `client/ui-jobs/` | The client package presents the background-job collection. It is not one user task. |
+| `@xfcodeai/dsh-client-ui-task`, `client/ui-task/` | `@xfcodeai/dsh-client-ui-jobs`, `client/ui-jobs/` | The client package presents the background-job collection. It is not one user task. |
 | `TaskView`, wire frame `session/tasks`, `tasksBySession` | `JobView`, wire frame `session/jobs`, `jobsBySession` | The browser contract and its mirror expose the same job domain as the registry and tools. |
 | `docs/subsystems/tasks.md` | `docs/subsystems/jobs.md` | The subsystem page must use the public job vocabulary. |
 
@@ -133,15 +133,15 @@ Keep the base LSP package, `ctx.lsp`, LSP protocol types, and the LSP tool. The 
 
 | Former | Current | Reason |
 |---|---|---|
-| `@deepseek-ai/dsh-client-ui-slash`, `ui-slash/` | `@deepseek-ai/dsh-client-ui-input-trigger`, `ui-input-trigger/` | The client handles `/`, `@`, keyboard arbitration, candidate menus, and programmatic launch. It is not only slash commands. |
+| `@xfcodeai/dsh-client-ui-slash`, `ui-slash/` | `@xfcodeai/dsh-client-ui-input-trigger`, `ui-input-trigger/` | The client handles `/`, `@`, keyboard arbitration, candidate menus, and programmatic launch. It is not only slash commands. |
 | `ctx.slash`, `SlashService`, `SlashController`, `SlashSource` | `ctx.inputTriggers`, `InputTriggerService`, `InputTriggerController`, `InputTriggerSource` | The names cover every supported trigger and keep the existing service, controller, and source roles. Coupled locale and public type names follow `InputTrigger`. |
-| `@deepseek-ai/dsh-agent-tool-mode`, plugin `tool-mode` | `@deepseek-ai/dsh-agent-tool-presentation`, plugin `tool-presentation` | The plugin changes how tools are presented to the model. It does not change execution behavior. Keep local `Config.mode` and `ToolPresentationMode`. |
+| `@xfcodeai/dsh-agent-tool-mode`, plugin `tool-mode` | `@xfcodeai/dsh-agent-tool-presentation`, plugin `tool-presentation` | The plugin changes how tools are presented to the model. It does not change execution behavior. Keep local `Config.mode` and `ToolPresentationMode`. |
 | `packages/interaction/permission/` | `packages/interaction/permission-presets/` | The package owns named combinations of sandbox and approval settings, not permission enforcement. |
-| `@deepseek-ai/dsh-permission`, `ctx.permission`, `PermissionService` | `@deepseek-ai/dsh-permission-presets`, `ctx.permissionPresets`, `PermissionPresetService` | The service selects and persists presets. Sandbox and approval services enforce the result. |
-| `@deepseek-ai/dsh-client-ui-permission` | `@deepseek-ai/dsh-client-ui-permission-presets` | The UI edits and selects permission presets. |
+| `@xfcodeai/dsh-permission`, `ctx.permission`, `PermissionService` | `@xfcodeai/dsh-permission-presets`, `ctx.permissionPresets`, `PermissionPresetService` | The service selects and persists presets. Sandbox and approval services enforce the result. |
+| `@xfcodeai/dsh-client-ui-permission` | `@xfcodeai/dsh-client-ui-permission-presets` | The UI edits and selects permission presets. |
 | `docs/subsystems/permission.md` | `docs/subsystems/permission-presets.md` | The page documents preset selection, not permission enforcement. |
-| `@deepseek-ai/dsh-user-interaction`, `user-interaction/` | `@deepseek-ai/dsh-user-questions`, `user-questions/` | The seam supports question batches and answers only. Approval, commands, and directory picking are separate interaction seams. |
-| `ctx.userInteraction`, `UserInteractionService`, `UserInteractionProvider`, `UserInteractionError` | `ctx.userQuestions`, `UserQuestionService`, `UserQuestionProvider`, `UserQuestionError` | These names state the one supported interaction form. Keep `AskUserQuestion*`, the `ask_user_question` tool, and `@deepseek-ai/dsh-tool-ask-user`. |
+| `@xfcodeai/dsh-user-interaction`, `user-interaction/` | `@xfcodeai/dsh-user-questions`, `user-questions/` | The seam supports question batches and answers only. Approval, commands, and directory picking are separate interaction seams. |
+| `ctx.userInteraction`, `UserInteractionService`, `UserInteractionProvider`, `UserInteractionError` | `ctx.userQuestions`, `UserQuestionService`, `UserQuestionProvider`, `UserQuestionError` | These names state the one supported interaction form. Keep `AskUserQuestion*`, the `ask_user_question` tool, and `@xfcodeai/dsh-tool-ask-user`. |
 | `docs/subsystems/user-interaction.md` | `docs/subsystems/user-questions.md` | The page documents questions and answers only. |
 
 Keep `/permission`, the `permissions` projection, the `permission` settings namespace, and `permission/preset`; they are accurate product or durable vocabulary. Keep the full `PermissionPresetSettingsController` name. Dropping `Preset` would remove the word that limits its authority. Removal of the `both` tool-presentation mode remains deferred to a separate proposal; this rename does not remove behavior.
@@ -150,7 +150,7 @@ Keep `/permission`, the `permissions` projection, the `permission` settings name
 
 | Former | Current | Reason |
 |---|---|---|
-| `packages/typert/type-meta/`, `@deepseek-ai/dsh-type-meta` | `typert/protocol/`, `@deepseek-ai/dsh-typert-protocol` | The package owns the Typert Remote protocol, decorators, bindings, codecs, lookups, and context contracts. It is not generic type metadata. |
+| `packages/typert/type-meta/`, `@xfcodeai/dsh-type-meta` | `typert/protocol/`, `@xfcodeai/dsh-typert-protocol` | The package owns the Typert Remote protocol, decorators, bindings, codecs, lookups, and context contracts. It is not generic type metadata. |
 | `GatewayService` in the protocol package | `TypertRemoteService` | The base class marks a same-process service for Remote export. It is not the API gateway. |
 | `bindTypeRTGateway`, `typertGateway` binding | `bindTypertRemote`, `typertRemote` | These bindings expose Typert Remote services, not the concrete API gateway service. |
 | Public `TypeRT*` and camel-case `typeRT*` identifiers | `Typert*` and `typert*` | `Typert` is the one canonical product spelling. |
@@ -158,14 +158,14 @@ Keep `/permission`, the `permissions` projection, the `permission` settings name
 | `ToolRegistry` | `ToolRuntime` | The class owns presentation, approval and guard policy, dispatch, cancellation, validation, finalization, and observation. Registration is only one internal part. |
 | `ToolRegistryScheduler`, `TOOL_REGISTRY_SCHEDULER` | `ToolRuntimeScheduler`, `TOOL_RUNTIME_SCHEDULER` | The scheduler controls runtime dispatch, not registration. |
 
-Keep `@deepseek-ai/dsh-tools` and `ctx.tools`. Keep `@deepseek-ai/dsh-api-gateway`, its `gateway/` folder, `ctx.typertGateway`, and `TypertGatewayService`; that service is a real API gateway. Its internal `TypeRT*` identifiers still follow the `Typert*` spelling rule.
+Keep `@xfcodeai/dsh-tools` and `ctx.tools`. Keep `@xfcodeai/dsh-api-gateway`, its `gateway/` folder, `ctx.typertGateway`, and `TypertGatewayService`; that service is a real API gateway. Its internal `TypeRT*` identifiers still follow the `Typert*` spelling rule.
 
 ### Workspace instructions, telemetry, identity, and launch environment
 
 | Former | Current | Reason |
 |---|---|---|
-| Host `ctx.workspace` | Host `ctx.workspaceRegistry` | `WorkspaceRegistry` owns multiple workspaces, but Client `ctx.workspaces` already has an incompatible type. Both declarations merge into the same Cordis `Context` interface at compile time even though their runtime contexts are separate. The role suffix states the host service and avoids that collision. Keep `@deepseek-ai/dsh-workspace`, `WorkspaceRegistry`, `Workspace`, and `workspace.*` wire names. |
-| `@deepseek-ai/dsh-workspace-context`, `context/workspace-context/` | `@deepseek-ai/dsh-agent-instructions`, `context/agent-instructions/` | The package loads hierarchical `AGENTS.md` and `CLAUDE.md` files for the agent. It is not general workspace context. |
+| Host `ctx.workspace` | Host `ctx.workspaceRegistry` | `WorkspaceRegistry` owns multiple workspaces, but Client `ctx.workspaces` already has an incompatible type. Both declarations merge into the same Cordis `Context` interface at compile time even though their runtime contexts are separate. The role suffix states the host service and avoids that collision. Keep `@xfcodeai/dsh-workspace`, `WorkspaceRegistry`, `Workspace`, and `workspace.*` wire names. |
+| `@xfcodeai/dsh-workspace-context`, `context/workspace-context/` | `@xfcodeai/dsh-agent-instructions`, `context/agent-instructions/` | The package loads hierarchical `AGENTS.md` and `CLAUDE.md` files for the agent. It is not general workspace context. |
 | Plugin and durable source names `workspace-context` and `workspace-instructions` | `agent-instructions` | The recorded source is a specific class of agent instructions. `AgentInstruction*` replaces public `WorkspaceInstruction*` names. This term does not include system, developer, or user messages. |
 | `ctx.telemetry`, abstract `Telemetry` | `ctx.sessionTelemetry`, `SessionTelemetryBackend` | The service captures session-ledger telemetry and hands it to a reporting backend. It is not a repository-wide metrics or tracing service. |
 | `TelemetryBackend` | `SessionTelemetrySink` | This lower layer receives emitted records. `Sink` distinguishes it from the coordinating backend service. |
@@ -173,9 +173,9 @@ Keep `@deepseek-ai/dsh-tools` and `ctx.tools`. Keep `@deepseek-ai/dsh-api-gatewa
 | `telemetry/record` | `session-telemetry/record` | The event name must state its owning domain. |
 | `TelemetryOtel`, `TelemetryMode`, plugin `telemetry-otel` | `OpenTelemetrySessionBackend`, `SessionTelemetryMode`, plugin `session-telemetry-otel` | The provider name states both the OpenTelemetry mechanism and session scope. Keep the package names `dsh-session-telemetry` and `dsh-session-telemetry-otel`. |
 | `docs/subsystems/telemetry.md` | `docs/subsystems/session-telemetry.md` | The page documents session telemetry, not repository-wide observability. |
-| `session/user-id/`, `@deepseek-ai/dsh-user-id` | `identity/anonymous-user-id/`, `@deepseek-ai/dsh-anonymous-user-id` | The value is a random correlation id shared by telemetry, feedback, and DeepSeek requests. It is neither a Session concern nor an authenticated user identity. |
+| `session/user-id/`, `@xfcodeai/dsh-user-id` | `identity/anonymous-user-id/`, `@xfcodeai/dsh-anonymous-user-id` | The value is a random correlation id shared by telemetry, feedback, and DeepSeek requests. It is neither a Session concern nor an authenticated user identity. |
 | `USER_ID_FILE_NAME`, `.userid`, feedback label `User` | `ANONYMOUS_USER_ID_FILE_NAME`, `.anonymous-user-id`, feedback label `Anonymous user` | The file and UI must not imply account identity. Keep the existing `AnonymousUserId` functions and the standard OTel attribute `user.id`. |
-| `util/environment/`, `@deepseek-ai/dsh-environment` | `util/launch-environment/`, `@deepseek-ai/dsh-launch-environment` | The package captures one immutable layered snapshot at launch. It is not a general environment API. |
+| `util/environment/`, `@xfcodeai/dsh-environment` | `util/launch-environment/`, `@xfcodeai/dsh-launch-environment` | The package captures one immutable layered snapshot at launch. It is not a general environment API. |
 | Public `Environment*`, `createEnvironmentSnapshot`, `environmentOf`, `DSH_ENVIRONMENT_KEY` | `LaunchEnvironment*`, `createLaunchEnvironmentSnapshot`, `launchEnvironmentOf`, `DSH_LAUNCH_ENVIRONMENT_KEY` | The names state the snapshot's lifetime and purpose. |
 | `ctx.launcherEnvironment` | `ctx.launchEnvironment` | The value describes the application launch, not only a launcher component. Keep source labels `process`, `project-env`, and `user-env`. |
 
@@ -183,16 +183,16 @@ Keep `@deepseek-ai/dsh-tools` and `ctx.tools`. Keep `@deepseek-ai/dsh-api-gatewa
 
 | Former | Current | Reason |
 |---|---|---|
-| `@deepseek-ai/dsh-tool-schedule`, `schedule/tool-schedule/`, plugin `tool-schedule` | `@deepseek-ai/dsh-schedule`, `schedule/schedule/`, plugin `schedule` | The package owns the durable Schedule domain, persistence barriers, management tools, timers, follow-ups, and runtime lifecycle. `tool-` describes only one part. |
+| `@xfcodeai/dsh-tool-schedule`, `schedule/tool-schedule/`, plugin `tool-schedule` | `@xfcodeai/dsh-schedule`, `schedule/schedule/`, plugin `schedule` | The package owns the durable Schedule domain, persistence barriers, management tools, timers, follow-ups, and runtime lifecycle. `tool-` describes only one part. |
 | `ScheduleOwner` | `ScheduleRuntime` | The per-agent object runs live timers, durable projection, dispatch, idle waits, and disposal. `Owner` does not state that execution role. Coupled private `owner*` names follow `runtime*`. |
-| `WorkflowService`, `ctx.workflows` | `WorkflowEngine`, `ctx.workflowEngine` | One engine parses and executes workflow programs. The plural key wrongly suggests a registry. Keep `@deepseek-ai/dsh-workflow` and workflow events and tools. |
-| `@deepseek-ai/dsh-workflow-workerthread`, `WorkerWorkflowEngine` | `@deepseek-ai/dsh-workflow-worker-thread`, `WorkerThreadWorkflowEngine` | `worker thread` is the precise Node mechanism and the repository spelling uses the full words. |
-| `@deepseek-ai/dsh-goal-session`, `goal/goal-session/` | `@deepseek-ai/dsh-goal-round-driver`, `goal/goal-round-driver/` | The plugin drives same-session Goal Rounds. It neither stores goals nor defines sessions. Keep `GoalService`, goal source, events, and contracts. |
+| `WorkflowService`, `ctx.workflows` | `WorkflowEngine`, `ctx.workflowEngine` | One engine parses and executes workflow programs. The plural key wrongly suggests a registry. Keep `@xfcodeai/dsh-workflow` and workflow events and tools. |
+| `@xfcodeai/dsh-workflow-workerthread`, `WorkerWorkflowEngine` | `@xfcodeai/dsh-workflow-worker-thread`, `WorkerThreadWorkflowEngine` | `worker thread` is the precise Node mechanism and the repository spelling uses the full words. |
+| `@xfcodeai/dsh-goal-session`, `goal/goal-session/` | `@xfcodeai/dsh-goal-round-driver`, `goal/goal-round-driver/` | The plugin drives same-session Goal Rounds. It neither stores goals nor defines sessions. Keep `GoalService`, goal source, events, and contracts. |
 | `packages/compact/` | `packages/compaction/` | The group is a noun-domain family. `compact` remains the user command verb. |
-| `@deepseek-ai/dsh-compact`, `ctx.compact`, `CompactService` | `@deepseek-ai/dsh-compaction`, `ctx.compaction`, `CompactionEngine` | The object runs the compaction algorithm and lifecycle. It is an engine, not a generic service. |
+| `@xfcodeai/dsh-compact`, `ctx.compact`, `CompactService` | `@xfcodeai/dsh-compaction`, `ctx.compaction`, `CompactionEngine` | The object runs the compaction algorithm and lifecycle. It is an engine, not a generic service. |
 | `compact/*` events and public domain prefixes | `compaction/*` | Events and domain types use the noun. Keep verb-shaped operations such as `compactNow`, `compactRegion`, and `compactIfNeeded`. |
-| `@deepseek-ai/dsh-compact-basic`, `BasicCompactService`, public `BasicCompact*` | `@deepseek-ai/dsh-compaction-basic`, `BasicCompactionEngine`, corresponding `BasicCompaction*` | `basic` is plain but honest. `compaction-llm` adds no information because LLM use is already part of the current implementation family. |
-| `@deepseek-ai/dsh-compact-tool-result-prune`, `ToolResultPruneService`, `ctx.toolResultPrune` | `@deepseek-ai/dsh-compaction-tool-result-pruner`, `ToolResultPruner`, `ctx.toolResultPruner` | The plugin is an actor that prunes tool results. The noun `pruner` names that role. |
+| `@xfcodeai/dsh-compact-basic`, `BasicCompactService`, public `BasicCompact*` | `@xfcodeai/dsh-compaction-basic`, `BasicCompactionEngine`, corresponding `BasicCompaction*` | `basic` is plain but honest. `compaction-llm` adds no information because LLM use is already part of the current implementation family. |
+| `@xfcodeai/dsh-compact-tool-result-prune`, `ToolResultPruneService`, `ctx.toolResultPrune` | `@xfcodeai/dsh-compaction-tool-result-pruner`, `ToolResultPruner`, `ctx.toolResultPruner` | The plugin is an actor that prunes tool results. The noun `pruner` names that role. |
 
 Keep `/compact`, the command package, and the separate compaction definition and provider packages. Merging those packages remains rejected. The rename changes vocabulary, not that package boundary.
 
@@ -201,14 +201,14 @@ Keep `/compact`, the command package, and the separate compaction definition and
 | Former | Current | Reason |
 |---|---|---|
 | Abstract `Settings` | `SettingsProvider` | The class supplies settings through a replaceable capability. Keep the package, key, and events. |
-| `@deepseek-ai/dsh-settings-local`, `SettingsLocal` | `@deepseek-ai/dsh-settings-file`, `FileSettingsProvider` | The implementation is file-backed through the filesystem seam. `file` states the mechanism; `local` does not. |
+| `@xfcodeai/dsh-settings-local`, `SettingsLocal` | `@xfcodeai/dsh-settings-file`, `FileSettingsProvider` | The implementation is file-backed through the filesystem seam. `file` states the mechanism; `local` does not. |
 | Abstract `Credentials` | `CredentialProvider` | The class resolves credential references. Keep package names, keys, and events. |
 | `CredentialsLocal` | `LocalCredentialProvider` | This provider reads the host process and `.env` state, so local execution is part of its contract. |
 | `ClientModuleHostService`, `ctx.clientModuleHost` | `ClientModuleRegistry`, `ctx.clientModules` | The service owns multiple registered client modules. Keep the package and the browser `ClientModuleLoader`. |
 | `AgentDefaultModelService` | `AgentDefaultModelConfig` | The object stores one default model selection. It does not run a service or general registry. Keep its package, key, settings namespace, and type. |
 | `SessionReferenceService`, `ctx.sessionReferences` | `SessionReferenceResolver`, `ctx.sessionReferenceResolver` | It resolves one session reference from a URI or input. It does not own a reference collection. |
 | `SessionQueryService`, `SessionQuerySqlite` | `SessionQueryEngine`, `SqliteSessionQueryEngine` | The classes execute a query model and its SQLite implementation. Keep package names, key, and tool. |
-| `@deepseek-ai/dsh-session-export`, `session-export/`, Loader id `session-export`, `ctx.sessionExport` | `@deepseek-ai/dsh-session-log-export`, `session-log-export/`, Loader id `session-log-download`, `ctx.sessionLogDownload` | The npm package names the Session-log export because npm rejects `download` in package names. The Loader id and browser API retain `download` because they describe the browser side effect. |
+| `@xfcodeai/dsh-session-export`, `session-export/`, Loader id `session-export`, `ctx.sessionExport` | `@xfcodeai/dsh-session-log-export`, `session-log-export/`, Loader id `session-log-download`, `ctx.sessionLogDownload` | The npm package names the Session-log export because npm rejects `download` in package names. The Loader id and browser API retain `download` because they describe the browser side effect. |
 | `SessionExportDownloadController`, other `SessionExport*` browser types, `useSessionExport`, `SessionExportHeader` | `SessionLogDownloadController`, corresponding `SessionLogDownload*` types, `useSessionLogDownload`, `SessionLogDownloadHeaderAction` | The controller owns preflight, duplicate-request collapse, modal state, and browser save. `ExportDownload` repeats the action, and the component contributes one Header action rather than the Header. |
 | `CommandService` in the host command package | `CommandRuntime` | The object registers and executes host commands across live calls. Keep its package, key, types, and events. |
 | `TokenMeterService` | `TokenMeter` | The object measures token use. `Service` adds no scope. |
@@ -218,13 +218,13 @@ Keep `/compact`, the command package, and the separate compaction definition and
 
 | Former | Current | Reason |
 |---|---|---|
-| `HttpServerService`, `ctx.httpServer` | `WebServer`, `ctx.webServer` | The server owns HTTP routes and WebSocket upgrade routes. `Web` leaves room for both; `Http` is too narrow here. Keep `packages/host/webserver`, `@deepseek-ai/dsh-host-webserver`, `WebRoute`, and `WebUpgradeRoute`. |
+| `HttpServerService`, `ctx.httpServer` | `WebServer`, `ctx.webServer` | The server owns HTTP routes and WebSocket upgrade routes. `Web` leaves room for both; `Http` is too narrow here. Keep `packages/host/webserver`, `@xfcodeai/dsh-host-webserver`, `WebRoute`, and `WebUpgradeRoute`. |
 | Documentation subsystem label `http-server` | `web-server` | The subsystem must use the same scope as the service. |
 | `SessionPersistenceJsonl` | `JsonlSessionPersistence` | Put the implementation qualifier first and keep the capability role intact. |
 | `SessionPersistenceSqlite` | `SqliteSessionPersistence` | Use the same provider naming order as JSONL. |
-| `@deepseek-ai/dsh-session-title-first-message-llm`, cadence `first-message` | `@deepseek-ai/dsh-session-title-first-prompt-llm`, cadence `first-prompt` | The trigger is the first user prompt, not any message in the session log. |
-| `@deepseek-ai/dsh-session-title-all-messages-llm`, cadence `all-user-messages` | `@deepseek-ai/dsh-session-title-all-prompts-llm`, cadence `all-prompts` | The backend refreshes from user prompts. `all messages` wrongly includes assistant and tool events. |
-| `@deepseek-ai/dsh-code-runtime-worker`, `WorkerCodeRuntime` | `@deepseek-ai/dsh-code-runtime-worker-thread`, `WorkerThreadCodeRuntime` | The implementation uses a Node worker thread. `worker` alone is too broad. |
+| `@xfcodeai/dsh-session-title-first-message-llm`, cadence `first-message` | `@xfcodeai/dsh-session-title-first-prompt-llm`, cadence `first-prompt` | The trigger is the first user prompt, not any message in the session log. |
+| `@xfcodeai/dsh-session-title-all-messages-llm`, cadence `all-user-messages` | `@xfcodeai/dsh-session-title-all-prompts-llm`, cadence `all-prompts` | The backend refreshes from user prompts. `all messages` wrongly includes assistant and tool events. |
+| `@xfcodeai/dsh-code-runtime-worker`, `WorkerCodeRuntime` | `@xfcodeai/dsh-code-runtime-worker-thread`, `WorkerThreadCodeRuntime` | The implementation uses a Node worker thread. `worker` alone is too broad. |
 | `SubprocessService` | `SubprocessRuntime` | The service owns live child-process execution and lifecycle. Keep its package and key. |
 | `LocalSubprocessService` | `LocalSubprocessRuntime` | The provider runs same-host processes and process trees. |
 | `E2BSubprocessService` | `E2BSubprocessRuntime` | The provider runs subprocesses in the E2B runtime. |
@@ -235,32 +235,32 @@ Keep the complete session projection family and `SessionProjection*` vocabulary.
 
 | Former | Current | Reason |
 |---|---|---|
-| `@deepseek-ai/dsh-fs-policy` | `@deepseek-ai/dsh-fs-observation-policy` | The package defines which filesystem observations authorize later effects. It is not the complete filesystem or sandbox policy. |
+| `@xfcodeai/dsh-fs-policy` | `@xfcodeai/dsh-fs-observation-policy` | The package defines which filesystem observations authorize later effects. It is not the complete filesystem or sandbox policy. |
 | `FsPolicyExec` | `FsObservationActor` | The value names the actor whose observations and effects the policy relates. It does not execute the policy itself. |
 | `SkillService` | `SkillRegistry` | The service registers providers and resolves skills from their catalogs. |
-| `@deepseek-ai/dsh-skill-local`, `LocalSkillProvider`, provider id `local` | `@deepseek-ai/dsh-skill-filesystem`, `FileSystemSkillProvider`, provider id `filesystem` | The provider discovers skill files through `ctx.fs`, which can be local or remote. The mechanism is filesystem access, not locality. |
+| `@xfcodeai/dsh-skill-local`, `LocalSkillProvider`, provider id `local` | `@xfcodeai/dsh-skill-filesystem`, `FileSystemSkillProvider`, provider id `filesystem` | The provider discovers skill files through `ctx.fs`, which can be local or remote. The mechanism is filesystem access, not locality. |
 | `SubagentService` | `SubagentRuntime` | The service selects providers and owns live spawn, resume, follow-up, cancellation, and settlement behavior. |
-| `@deepseek-ai/dsh-subagent-spawn`, `SpawnProvider` | `@deepseek-ai/dsh-subagent-spawn-in-process`, `SpawnInProcessProvider` | This provider starts a child agent in the current process. The configured provider id remains `spawn`. |
-| `@deepseek-ai/dsh-subagent-fork`, `ForkProvider` | `@deepseek-ai/dsh-subagent-fork-in-process`, `ForkInProcessProvider` | This provider forks an agent in the current process. The configured provider id remains `fork`. |
-| `@deepseek-ai/dsh-subagent-inprocess`, `subagent-inprocess/` | `@deepseek-ai/dsh-subagent-in-process-driver`, `subagent-in-process-driver/` | The package contains common in-process driving logic, not a third provider. |
+| `@xfcodeai/dsh-subagent-spawn`, `SpawnProvider` | `@xfcodeai/dsh-subagent-spawn-in-process`, `SpawnInProcessProvider` | This provider starts a child agent in the current process. The configured provider id remains `spawn`. |
+| `@xfcodeai/dsh-subagent-fork`, `ForkProvider` | `@xfcodeai/dsh-subagent-fork-in-process`, `ForkInProcessProvider` | This provider forks an agent in the current process. The configured provider id remains `fork`. |
+| `@xfcodeai/dsh-subagent-inprocess`, `subagent-inprocess/` | `@xfcodeai/dsh-subagent-in-process-driver`, `subagent-in-process-driver/` | The package contains common in-process driving logic, not a third provider. |
 | Private `SdkProvider` in `dsh-subagent-dsh-sdk` | `SdkSubagentProvider` | The repeated package qualifier is intentional, and the class must say that it provides subagents through the SDK. |
 | `WebService`, `WebServiceConfig` | `WebRuntime`, `WebRuntimeConfig` | The object selects providers and runs live search and fetch operations. Keep the package, key, provider packages, and model tool. |
-| `@deepseek-ai/dsh-web-fetch-local`, `LocalFetchProvider`, `LocalFetchLimits`, provider id `local-http` | `@deepseek-ai/dsh-web-fetch-http`, `HttpFetchProvider`, `HttpFetchLimits`, provider id `http` | This provider performs direct HTTP fetches. `local` says where code happens to run, not which mechanism it provides. |
+| `@xfcodeai/dsh-web-fetch-local`, `LocalFetchProvider`, `LocalFetchLimits`, provider id `local-http` | `@xfcodeai/dsh-web-fetch-http`, `HttpFetchProvider`, `HttpFetchLimits`, provider id `http` | This provider performs direct HTTP fetches. `local` says where code happens to run, not which mechanism it provides. |
 
-Keep `@deepseek-ai/dsh-subagent-dsh-sdk`, its provider id `dsh-sdk`, external ACP, Codex, and Claude Code provider families, the subagent tool package names, the main filesystem package and backends, filesystem tools and events, and the skill badge and tool packages.
+Keep `@xfcodeai/dsh-subagent-dsh-sdk`, its provider id `dsh-sdk`, external ACP, Codex, and Claude Code provider families, the subagent tool package names, the main filesystem package and backends, filesystem tools and events, and the skill badge and tool packages.
 
 ### Hooks, guards, plan mode, extensions, and diagnostics
 
 | Former | Current | Reason |
 |---|---|---|
-| `@deepseek-ai/dsh-hooks-claude`, `ClaudeHookConfig`, `parseClaudeConfig`, dialect `claude` | `@deepseek-ai/dsh-hooks-claude-code`, `ClaudeCodeHookConfig`, `parseClaudeCodeConfig`, dialect `claude-code` | The hook bridge targets Claude Code, not every Anthropic or Claude product. |
-| `@deepseek-ai/dsh-repeat-tool-guard`, plugin/source `repeat-tool-guard` | `@deepseek-ai/dsh-repeat-tool-reminder`, plugin/source `repeat-tool-reminder` | The plugin adds a model reminder. It does not block or enforce a guard decision. |
-| `@deepseek-ai/dsh-timeout-policy` | `@deepseek-ai/dsh-tool-call-timeout-policy` | The full `tool-call` qualifier names what the policy limits without calling the plugin a model-facing tool. Keep its `guard/timeout-policy/` directory and plugin id `timeout-policy`; the `packages/*/tool-*` catalog convention still applies only to packages that register tools. |
+| `@xfcodeai/dsh-hooks-claude`, `ClaudeHookConfig`, `parseClaudeConfig`, dialect `claude` | `@xfcodeai/dsh-hooks-claude-code`, `ClaudeCodeHookConfig`, `parseClaudeCodeConfig`, dialect `claude-code` | The hook bridge targets Claude Code, not every Anthropic or Claude product. |
+| `@xfcodeai/dsh-repeat-tool-guard`, plugin/source `repeat-tool-guard` | `@xfcodeai/dsh-repeat-tool-reminder`, plugin/source `repeat-tool-reminder` | The plugin adds a model reminder. It does not block or enforce a guard decision. |
+| `@xfcodeai/dsh-timeout-policy` | `@xfcodeai/dsh-tool-call-timeout-policy` | The full `tool-call` qualifier names what the policy limits without calling the plugin a model-facing tool. Keep its `guard/timeout-policy/` directory and plugin id `timeout-policy`; the `packages/*/tool-*` catalog convention still applies only to packages that register tools. |
 | `PlanModeService` | `PlanModeController` | The object controls transitions into and out of plan mode. It is not a general execution runtime. |
 | `packages/self-modification/` | `packages/extensions/` | The group contains repository plugin inspection and mounting tools. `extensions` states the stable package role without asserting that the agent modifies itself. Keep the package names `tool-cordis` and repository-plugin names. |
 | `packages/support/` | `packages/test-support/` | The group is test-only infrastructure. Its path must say so. |
 | `invariants/` in the former support family | `runtime-diagnostics/invariants/` | Invariants can run in production diagnostics even though shipped presets omit them. They are not test support. |
-| `InvariantService` | `InvariantRegistry` | The object owns registered invariant checks. Keep `@deepseek-ai/dsh-invariants` and `ctx.invariants`. |
+| `InvariantService` | `InvariantRegistry` | The object owns registered invariant checks. Keep `@xfcodeai/dsh-invariants` and `ctx.invariants`. |
 | `packages/client/test-runtime/` | `packages/test-support/client-runtime/` | The package is client test infrastructure. Keep its npm name if it already states that contract. |
 
 Keep MCP, Todo, and the Plan Mode package, key, events, and tool names. This decision renames the controller class, not the product feature.
@@ -269,17 +269,17 @@ Keep MCP, Todo, and the Plan Mode package, key, events, and tool names. This dec
 
 | Former | Current | Reason |
 |---|---|---|
-| `util/paths/`, `@deepseek-ai/dsh-paths` | `util/home-paths/`, `@deepseek-ai/dsh-home-paths` | The helpers resolve paths under the Harness home. They are not a general path library. Keep the individual function names when they already state the returned path. |
-| `util/retention/`, `@deepseek-ai/dsh-retention` | `util/output-retention/`, `@deepseek-ai/dsh-output-retention` | The policy retains command and tool output. It is not a general data-retention framework. |
-| `E2BSandboxService` | `E2BRuntime` | The class creates, reuses, and disposes the E2B execution environment used by filesystem and subprocess adapters. It is broader than one sandbox handle and narrower than a generic owner. Keep `@deepseek-ai/dsh-e2b`, `ctx.e2b`, and the `e2b/` group. |
-| `@deepseek-ai/dsh-frontend-static` | `@deepseek-ai/dsh-host-frontend-static` | The package is the Host plugin that serves the frontend assets. The prefix distinguishes it from frontend application code. |
+| `util/paths/`, `@xfcodeai/dsh-paths` | `util/home-paths/`, `@xfcodeai/dsh-home-paths` | The helpers resolve paths under the Harness home. They are not a general path library. Keep the individual function names when they already state the returned path. |
+| `util/retention/`, `@xfcodeai/dsh-retention` | `util/output-retention/`, `@xfcodeai/dsh-output-retention` | The policy retains command and tool output. It is not a general data-retention framework. |
+| `E2BSandboxService` | `E2BRuntime` | The class creates, reuses, and disposes the E2B execution environment used by filesystem and subprocess adapters. It is broader than one sandbox handle and narrower than a generic owner. Keep `@xfcodeai/dsh-e2b`, `ctx.e2b`, and the `e2b/` group. |
+| `@xfcodeai/dsh-frontend-static` | `@xfcodeai/dsh-host-frontend-static` | The package is the Host plugin that serves the frontend assets. The prefix distinguishes it from frontend application code. |
 | `PluginInventoryService` | `PluginInventoryGateway` | The class is a Remote-only adapter from the live Loader tree to the `pluginInventory/list` RPC. It owns no same-process service, cache, history, or mutation path. `Gateway` states the role that exists. |
-| `@deepseek-ai/dsh-jsonrpc-demo`, `@deepseek-ai/dsh-sdk-jsonrpc-demo`, `@deepseek-ai/dsh-sdk-python-runtime` | removed | The Python runtime packages the existing `@deepseek-ai/dsh` CLI and its `sdk` profile; a private application package would recreate a second launcher. |
+| `@xfcodeai/dsh-jsonrpc-demo`, `@xfcodeai/dsh-sdk-jsonrpc-demo`, `@xfcodeai/dsh-sdk-python-runtime` | removed | The Python runtime packages the existing `@xfcodeai/dsh` CLI and its `sdk` profile; a private application package would recreate a second launcher. |
 | `packages/examples/jsonrpc-demo/`, `packages/sdk/python-runtime/` | removed | The Python runtime wheel's closure manifest owns packaging without a separate application package. |
 | `examples/jsonrpc-agent/` | `python/sdk/examples/` | The example demonstrates Python use of the `sdk` profile and ordered patches. |
-| `@deepseek-ai/dsh-acp-demo` | `@deepseek-ai/dsh-acp-app` | The package is the ACP profile's application bundle, not a standalone demo bin. |
+| `@xfcodeai/dsh-acp-demo` | `@xfcodeai/dsh-acp-app` | The package is the ACP profile's application bundle, not a standalone demo bin. |
 | Deploy-root manifests `dsh-jsonrpc-agent-pkg`, `dsh-sdk-python-runtime-closure` | `dsh-python-runtime-closure` | The zero-code manifest defines the Python runtime wheel's complete `dsh` dependency closure without naming a separate SDK application. |
-| `@deepseek-ai/dsh-frontend` | `@deepseek-ai/dsh-web-frontend` | The application is the web frontend. Keep its physical `apps/web/` folder. |
+| `@xfcodeai/dsh-frontend` | `@xfcodeai/dsh-web-frontend` | The application is the web frontend. Keep its physical `apps/web/` folder. |
 
 Keep atomic-write, brand, native-command, timeout utility, directory-picker, `dsh-base`, `dsh-web-app`, `dsh-sdk-app`, `dsh-acp-app`, app boot, CLI names, and the `headless` package, bundle, and example identity. `headless` is the intended product essence and may later support more than one-shot execution.
 
@@ -294,21 +294,21 @@ Keep atomic-write, brand, native-command, timeout utility, directory-picker, `ds
 | `LocaleService` | `LocaleRuntime` | The object coordinates locale definitions, selection, persistence, and change publication. |
 | `ThemeService` | `ThemeRuntime` | The object coordinates themes, preference resolution, system sensing, and change publication. |
 | `LayoutService` | `LayoutController` | The object controls the current UI layout state. |
-| `@deepseek-ai/dsh-client-ui-model` | `@deepseek-ai/dsh-client-ui-model-selection` | The package controls the model selection for a session. The singular `model` name is too broad. |
+| `@xfcodeai/dsh-client-ui-model` | `@xfcodeai/dsh-client-ui-model-selection` | The package controls the model selection for a session. The singular `model` name is too broad. |
 | `ModelService`, `ctx.models` | `ModelDirectoryResolver`, `ctx.modelDirectories` | Its only public operation, `directoryFor(sessionId)`, resolves and retains one directory per live session. It has no registration API, so `Registry` would be false. Each `ModelDirectory` remains the consumer-facing catalog of selectable models. |
 | `SettingsScopeService` | `SettingsScopeBinder` | Its sole operation binds one namespace specification to the caller's transport and lifecycle and returns a `SettingsScopeController`. Keep `ctx.settingsScope`; it names the singular binding capability, not a collection of scopes. |
-| `@deepseek-ai/dsh-client-ui-models` | `@deepseek-ai/dsh-client-ui-settings-models` | This package owns the Models settings panel. Keep `ModelsSettingsStore`; it holds one settings view model with data operations and subscriptions and is a real store. |
-| `@deepseek-ai/dsh-client-ui-plugin-config`, `client/ui-plugin-config/` | `@deepseek-ai/dsh-client-ui-settings-plugins`, `client/ui-settings-plugins/` | This package owns the Plugins settings section, not a general plugin-configuration system. The target joins the `ui-settings-*` family and uses the section's plural product name. |
+| `@xfcodeai/dsh-client-ui-models` | `@xfcodeai/dsh-client-ui-settings-models` | This package owns the Models settings panel. Keep `ModelsSettingsStore`; it holds one settings view model with data operations and subscriptions and is a real store. |
+| `@xfcodeai/dsh-client-ui-plugin-config`, `client/ui-plugin-config/` | `@xfcodeai/dsh-client-ui-settings-plugins`, `client/ui-settings-plugins/` | This package owns the Plugins settings section, not a general plugin-configuration system. The target joins the `ui-settings-*` family and uses the section's plural product name. |
 | `PluginConfigSection`, `PluginConfigSectionProps`, `PluginConfigSectionInjected`, `PluginSettingsTabRow`, `PluginConfigKey`, `settings.pluginConfig` | `PluginsSettingsSection`, `PluginsSettingsSectionProps`, `PluginsSettingsSectionInjected`, `PluginsSettingsTabEntry`, `PluginsSettingsLocaleKey`, `settings.plugins` | The section owns the Plugins settings presentation and tab ledger. The metadata value is one slot entry, not a rendered row. Each card still edits one plugin's configuration. |
-| `@deepseek-ai/dsh-client-ui-plugins`, `client/ui-plugins/`, Loader id `ui-plugins`, `client-ui-plugins-invariant` | `@deepseek-ai/dsh-client-ui-settings-plugin-inventory`, `client/ui-settings-plugin-inventory/`, Loader id `ui-settings-plugin-inventory`, `client-ui-settings-plugin-inventory-invariant` | This later package owns the read-only Plugin Inventory tab in the Plugins settings section. `ui-plugins` is too broad and does not distinguish the inventory from editable plugin settings. |
+| `@xfcodeai/dsh-client-ui-plugins`, `client/ui-plugins/`, Loader id `ui-plugins`, `client-ui-plugins-invariant` | `@xfcodeai/dsh-client-ui-settings-plugin-inventory`, `client/ui-settings-plugin-inventory/`, Loader id `ui-settings-plugin-inventory`, `client-ui-settings-plugin-inventory-invariant` | This later package owns the read-only Plugin Inventory tab in the Plugins settings section. `ui-plugins` is too broad and does not distinguish the inventory from editable plugin settings. |
 | `PluginSettingsSection`, `PluginSettingsSectionProps`, `PluginSettingsSectionInjected`, `PluginsKey`, `settings.plugins` in the former `ui-plugins` package | `PluginInventorySettingsTab`, `PluginInventorySettingsTabProps`, `PluginInventorySettingsTabInjected`, `PluginInventoryLocaleKey`, `settings.pluginInventory` | The component is now a tab contribution, not a settings section. The other names state the inventory subject and avoid colliding with `PluginsSettingsSection` and its `settings.plugins` locale namespace. Keep the shared `settings.plugins.tab` slot name; both tabs contribute to the Plugins section through that slot. |
-| `@deepseek-ai/dsh-client-ui-feedback`, `client/ui-feedback/`, Loader id `ui-feedback`, `client-ui-feedback-invariant` | `@deepseek-ai/dsh-client-ui-message-feedback`, `client/ui-message-feedback/`, Loader id `ui-message-feedback`, `client-ui-message-feedback-invariant` | This package presents ratings and notes for assistant messages through the `messageFeedback` Remote. The old name also appears to cover command feedback and any later feedback UI. It does not. |
+| `@xfcodeai/dsh-client-ui-feedback`, `client/ui-feedback/`, Loader id `ui-feedback`, `client-ui-feedback-invariant` | `@xfcodeai/dsh-client-ui-message-feedback`, `client/ui-message-feedback/`, Loader id `ui-message-feedback`, `client-ui-message-feedback-invariant` | This package presents ratings and notes for assistant messages through the `messageFeedback` Remote. The old name also appears to cover command feedback and any later feedback UI. It does not. |
 | `FeedbackController`, `FeedbackStatus`, `FeedbackView`, `FeedbackActionResult`, `FeedbackInjected`, `FeedbackActionProps`, `FeedbackActions`, `FeedbackKey` in the former `ui-feedback` package | `MessageFeedbackController`, `MessageFeedbackStatus`, `MessageFeedbackView`, `MessageFeedbackActionResult`, `MessageFeedbackInjected`, `MessageFeedbackActionProps`, `MessageFeedbackActions`, `MessageFeedbackKey` | These are exported Client names. The `Message` qualifier prevents them from claiming every feedback domain. Keep `Controller`: the object accepts rating and note actions and coordinates one Session's load, mutation, conflict, reconnect, and disposal state. |
 | `agent-loop-store.ts`, `bash-store.ts`, `web-search-store.ts` | `agent-loop-card-controller.ts`, `bash-card-controller.ts`, `web-search-card-controller.ts` | Each module exports a card controller. A private `SnapshotStore` field does not make the module a store. |
 | `card-store.ts` | `card-form.ts` | The module owns the staged form, field conversion, and form actions. The snapshot stores it returns are presentation adapters, not the module's main role. |
-| `@deepseek-ai/dsh-client-ui-question` | `@deepseek-ai/dsh-client-ui-user-questions` | The UI presents the user-question seam, not an arbitrary question domain. |
-| `@deepseek-ai/dsh-client-ui-command`, `ui-command/` | `@deepseek-ai/dsh-client-ui-commands`, `ui-commands/` | The package presents and runs a collection of commands. |
-| `@deepseek-ai/dsh-client-ui-directory-picker`, `client/ui-directory-picker/`, Loader id `ui-directory-picker`, `client-ui-directory-picker-invariant` | `@deepseek-ai/dsh-client-ui-directory-picker-browse`, `client/ui-directory-picker-browse/`, Loader id `ui-directory-picker-browse`, `client-ui-directory-picker-browse-invariant` | The Client packages now contain separate `browse` and `native` directory-picker presentations. The unqualified package is the browse implementation, not their shared definition. The target matches the Host backend family and changes no boundary. |
+| `@xfcodeai/dsh-client-ui-question` | `@xfcodeai/dsh-client-ui-user-questions` | The UI presents the user-question seam, not an arbitrary question domain. |
+| `@xfcodeai/dsh-client-ui-command`, `ui-command/` | `@xfcodeai/dsh-client-ui-commands`, `ui-commands/` | The package presents and runs a collection of commands. |
+| `@xfcodeai/dsh-client-ui-directory-picker`, `client/ui-directory-picker/`, Loader id `ui-directory-picker`, `client-ui-directory-picker-invariant` | `@xfcodeai/dsh-client-ui-directory-picker-browse`, `client/ui-directory-picker-browse/`, Loader id `ui-directory-picker-browse`, `client-ui-directory-picker-browse-invariant` | The Client packages now contain separate `browse` and `native` directory-picker presentations. The unqualified package is the browse implementation, not their shared definition. The target matches the Host backend family and changes no boundary. |
 | Client `ctx.command`, `CommandService`, `CommandServiceContract` | `ctx.commandUi`, `CommandUiRuntime`, `CommandUiContract` | The host already owns `ctx.commands`. The client service is the UI runtime for command discovery and execution. Existing `CommandUiSpec` fixes the `Ui` casing. |
 | `ConversationService` | `ConversationController` | The object controls the active conversation state and user actions. |
 | `InputService` | `SessionInputResolver` | The interface resolves the input facade for one session scope. It is neither a global input registry nor an execution service. Keep `InputHub` as the concrete hub and `ctx.conversation.input` as the published face. |
@@ -320,9 +320,9 @@ Use `Ui`, not `UI`, inside PascalCase identifiers. Keep the remaining client pac
 The following debated names stay unchanged because the current scope is accurate or a rename would create a false concept:
 
 - Keep the complete sandbox family and `ctx.sandbox`. Do not introduce `processSandbox`.
-- Keep `@deepseek-ai/dsh-api-gateway`, `ctx.typertGateway`, and `TypertGatewayService`.
+- Keep `@xfcodeai/dsh-api-gateway`, `ctx.typertGateway`, and `TypertGatewayService`.
 - Keep session projection names. A projection is not only a reducer function.
-- Keep `@deepseek-ai/dsh-session-stats`, `sessionStats`, and `SessionStatsProjection`. They accurately name whole-session statistics and the maintained read model that carries them.
+- Keep `@xfcodeai/dsh-session-stats`, `sessionStats`, and `SessionStatsProjection`. They accurately name whole-session statistics and the maintained read model that carries them.
 - Keep `GoalService`; it owns the goal state machine, authority, compare-and-set behavior, events, and remote operations. It is not just a store.
 - Keep `SessionTitleService`; its role is a domain service shared by title providers.
 - Keep `PermissionPresetSettingsController` even though it is long. Every word limits the role.
@@ -334,11 +334,11 @@ The following debated names stay unchanged because the current scope is accurate
 - Keep `Web` for the Host server and the provider-neutral web capability. Use `HTTP` only for the direct fetch provider.
 - Keep `E2B`, not `E2B sandbox`, as the package and context name.
 - Keep MCP, Todo, app boot, base bundle, web-app bundle, and CLI names. Keep the directory-picker capability and Host backend names; only the unqualified Client `browse` presentation is renamed.
-- Keep `@deepseek-ai/dsh-client-ui-directory-picker-native`; its suffix names the native-chooser presentation beside the renamed `-browse` variant. Keep `SURFACE_PACKAGES`; within the directory-picker auto selector it is the package map for the Client presentation half, contrasted with `BACKEND_PACKAGES`.
-- Keep `@deepseek-ai/dsh-host-plugin-inventory`, `ctx.pluginInventory`, the `pluginInventory/list` Remote, and the `PluginInventory*` payload types. They accurately name the Host-owned read-only inventory; only the adapter class and the overly broad Client presentation names change.
+- Keep `@xfcodeai/dsh-client-ui-directory-picker-native`; its suffix names the native-chooser presentation beside the renamed `-browse` variant. Keep `SURFACE_PACKAGES`; within the directory-picker auto selector it is the package map for the Client presentation half, contrasted with `BACKEND_PACKAGES`.
+- Keep `@xfcodeai/dsh-host-plugin-inventory`, `ctx.pluginInventory`, the `pluginInventory/list` Remote, and the `PluginInventory*` payload types. They accurately name the Host-owned read-only inventory; only the adapter class and the overly broad Client presentation names change.
 - Keep `ConfigurablePluginsTab`. It is the tab that renders plugins with editable configuration; it does not own the complete Plugins settings section.
 - Keep the shared `settings.plugins.tab` slot. It belongs to the Plugins settings section. The inventory package changes its own locale namespace to `settings.pluginInventory`; it does not create a separate tab slot.
-- Keep the `@deepseek-ai/dsh-message-feedback` capability, `messageFeedback` Remote, assistant-action entry id `feedback`, hook key `feedback`, and locale namespace `feedback`. Their surrounding interfaces already limit them to message feedback or to the local assistant-message slot. Only the broad Client package and exported UI names change.
+- Keep the `@xfcodeai/dsh-message-feedback` capability, `messageFeedback` Remote, assistant-action entry id `feedback`, hook key `feedback`, and locale namespace `feedback`. Their surrounding interfaces already limit them to message feedback or to the local assistant-message slot. Only the broad Client package and exported UI names change.
 - Keep `RemoteFailure`, `RemoteResult`, and `SessionRemotes`. The first two are Typert carrier-result values, while the last is the set of Remote namespaces used by the Client Session cluster. None is a store, controller, registry, or runtime.
 - Keep the `/export` human command, `/api/session.export` Host route, `DownloadsApi`, and its `sessionLog` operation. The command names the user action, the Host route exports the archive, and the API groups direct HTTP downloads. The renamed Client controller owns the separate browser-download step.
 - Keep `.client` and `.host` in test filenames. They identify the compiler face each test enters and do not claim a product role.

@@ -3,7 +3,7 @@ description: "JSON 存储后端：面向在配置根目录下选择、配置或�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-storage-json
+# @xfcodeai/dsh-storage-json
 
 [English](README.md) | 中文
 
@@ -36,11 +36,11 @@ kind: "package-reference"
 唯一的插件字段是 `root`，用于保存单元文件与目录。它是必填项，因为本后端不回退到 `process.cwd()`。后端按需以 `0o700` 模式创建根目录。领域规范选择其布局；本插件不提供布局覆盖项。
 
 ```yaml
-- name: '@deepseek-ai/dsh-storage'
-- name: '@deepseek-ai/dsh-storage-json'
+- name: '@xfcodeai/dsh-storage'
+- name: '@xfcodeai/dsh-storage-json'
   config:
     root: /var/lib/dsh/data
-- name: '@deepseek-ai/dsh-storage-domain'
+- name: '@xfcodeai/dsh-storage-domain'
   config:
     backend: json
 ```
@@ -49,7 +49,7 @@ kind: "package-reference"
 |---|---|---|
 | `root` | 必填 | 保存 `<unit>.json` 文件与 `<unit>/` 目录树的目录；按需以 `0o700` 创建 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-storage-json)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-storage-json)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 可观察行为
 

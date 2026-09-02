@@ -2,9 +2,9 @@
 /** Snapshot-only Loader driver: stream one fixture turn as canonical JSONL. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { installFailLoud, loadEnv, resolveConfigPath } from '@deepseek-ai/dsh-app-boot'
-import { runFixtureTurn } from '@deepseek-ai/dsh-loader-smoke'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import { installFailLoud, loadEnv, resolveConfigPath } from '@xfcodeai/dsh-app-boot'
+import { runFixtureTurn } from '@xfcodeai/dsh-loader-smoke'
+import type { SessionEvent } from '@xfcodeai/dsh-session'
 import { bootProductionProfile } from './production-profile.ts'
 
 const NAME = 'headless-test-driver'

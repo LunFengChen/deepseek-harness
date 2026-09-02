@@ -2,21 +2,21 @@
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { Agent, ModelSelection as AgentModelSelection } from '@deepseek-ai/dsh-agent'
-import { AttachmentError, admitPromptContent } from '@deepseek-ai/dsh-attachment'
-import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+import { brandString } from '@xfcodeai/dsh-brand'
+import type { Agent, ModelSelection as AgentModelSelection } from '@xfcodeai/dsh-agent'
+import { AttachmentError, admitPromptContent } from '@xfcodeai/dsh-attachment'
+import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
 import {
   ReasoningEffortId, createUserMessage, freezeMessage,
-} from '@deepseek-ai/dsh-llm'
-import type { MessageSource } from '@deepseek-ai/dsh-llm'
-import { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@deepseek-ai/dsh-session'
-import { SessionQueryError, type SessionObservation } from '@deepseek-ai/dsh-session-query'
-import { SessionTitleInvalidError } from '@deepseek-ai/dsh-session-title'
-import { canonicalClientTimeZone } from '@deepseek-ai/dsh-util-time'
-import { RemoteError, remoteErrorOf } from '@deepseek-ai/dsh-typert-protocol'
-import type { Workspace } from '@deepseek-ai/dsh-workspace'
+} from '@xfcodeai/dsh-llm'
+import type { MessageSource } from '@xfcodeai/dsh-llm'
+import { SessionLogOffset, SessionSeq } from '@xfcodeai/dsh-session'
+import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@xfcodeai/dsh-session'
+import { SessionQueryError, type SessionObservation } from '@xfcodeai/dsh-session-query'
+import { SessionTitleInvalidError } from '@xfcodeai/dsh-session-title'
+import { canonicalClientTimeZone } from '@xfcodeai/dsh-util-time'
+import { RemoteError, remoteErrorOf } from '@xfcodeai/dsh-typert-protocol'
+import type { Workspace } from '@xfcodeai/dsh-workspace'
 import {
   ApiSessionAgentController,
   ApiSessionCwdConflict,

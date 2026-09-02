@@ -3,7 +3,7 @@ description: "面向用户与维护者的进程内 spawn subagent 后端说明�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-spawn-in-process
+# @xfcodeai/dsh-subagent-spawn-in-process
 
 [English](README.md) | 中文
 
@@ -36,9 +36,9 @@ kind: "package-reference"
 先加载 subagent 服务与本后端，再为每个目标配置一个委派工具。这是暴露由 spawn 支撑的 `subagent` 工具的最小组合：
 
 ```yaml
-- name: '@deepseek-ai/dsh-subagent'
-- name: '@deepseek-ai/dsh-subagent-spawn-in-process'
-- name: '@deepseek-ai/dsh-tool-subagent'
+- name: '@xfcodeai/dsh-subagent'
+- name: '@xfcodeai/dsh-subagent-spawn-in-process'
+- name: '@xfcodeai/dsh-tool-subagent'
   config:
     provider: spawn
 ```
@@ -47,7 +47,7 @@ kind: "package-reference"
 |---|---|---|
 | `providerName` | `spawn` | 注册到 `ctx.subagents` 的提供方名称 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-subagent-spawn-in-process)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-subagent-spawn-in-process)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 一次委派会做什么
 
@@ -95,7 +95,7 @@ kind: "package-reference"
 - [dsh-subagent-in-process-driver](../subagent-in-process-driver/README.zh.md)——本后端调用的共享运行驱动器。
 - [dsh-subagent-fork-in-process](../subagent-fork-in-process/README.zh.md)——以已完成父级轮次作初始内容的兄弟后端。
 - [dsh-tool-subagent](../tool-subagent/README.zh.md)——指向该提供方的面向模型委派工具。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-subagent-spawn-in-process)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-subagent-spawn-in-process)——每个受支持配置字段及其源声明。
 
 -----
 

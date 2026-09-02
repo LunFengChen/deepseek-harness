@@ -3,7 +3,7 @@ description: "Shell layout for the Web GUI: the three-column AppFrame with drag 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-layout
+# @xfcodeai/dsh-client-ui-layout
 
 English | [中文](README.zh.md)
 

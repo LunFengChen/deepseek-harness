@@ -3,7 +3,7 @@ description: "The workflow orchestration capability: run a model-written script 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-workflow
+# @xfcodeai/dsh-workflow
 
 English | [中文](README.zh.md)
 

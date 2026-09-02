@@ -3,7 +3,7 @@ description: "First-message LLM session-title provider for users and maintainers
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-title-first-prompt-llm
+# @xfcodeai/dsh-session-title-first-prompt-llm
 
 English | [中文](README.zh.md)
 
@@ -33,7 +33,7 @@ Automatic generation runs only for a fresh session with no parent and no prior t
 
 ### Configuration
 
-The plugin accepts the complete required [shared LLM configuration](../session-title-llm/README.md#configuration): `targetWords`, `targetCjkCharacters`, `maxInputBytes`, `maxOutputTokens`, `timeoutMs`, and the optional paired `provider`/`model` route. Omit both to inherit the exact route from the current logged main request, or set both to route title generation independently. The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-session-title-first-prompt-llm) is the exhaustive source for every accepted field.
+The plugin accepts the complete required [shared LLM configuration](../session-title-llm/README.md#configuration): `targetWords`, `targetCjkCharacters`, `maxInputBytes`, `maxOutputTokens`, `timeoutMs`, and the optional paired `provider`/`model` route. Omit both to inherit the exact route from the current logged main request, or set both to route title generation independently. The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-session-title-first-prompt-llm) is the exhaustive source for every accepted field.
 
 ### Failures and recovery
 

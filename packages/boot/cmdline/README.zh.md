@@ -3,7 +3,7 @@ description: "dsh app bin 的应用自有命令行：应用从启动器剩余参
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-cmdline
+# @xfcodeai/dsh-cmdline
 
 [English](README.md) | 中文
 
@@ -45,14 +45,14 @@ kind: "package-library"
 
 ```yaml
 - id: web-startup
-  name: '@deepseek-ai/dsh-web-app/startup'
+  name: '@xfcodeai/dsh-web-app/startup'
 ```
 
 由解析值配置的行注入发布的服务，并在其配置中直接读取它：
 
 ```yaml
 - id: webserver
-  name: '@deepseek-ai/dsh-host-webserver'
+  name: '@xfcodeai/dsh-host-webserver'
   inject: [webStartup]
   config:
     host: !!js ctx.webStartup.host ?? '127.0.0.1'

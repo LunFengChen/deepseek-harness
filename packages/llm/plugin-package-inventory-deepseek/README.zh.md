@@ -3,7 +3,7 @@ description: "面向发送官方 DeepSeek 请求的部署，说明活跃 Loader 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-plugin-package-inventory-deepseek
+# @xfcodeai/dsh-plugin-package-inventory-deepseek
 
 [English](README.md) | 中文
 

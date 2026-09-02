@@ -35,8 +35,8 @@ extensions 组让运行中的 agent 修改它自己所在的运行时：模型�
 ## 相关文档
 
 - [extensions 子系统](../../docs/subsystems/extensions.zh.md)——生成的 `ctx.cordisInspect` 与 `ctx.dynamicCordisRunner` 服务 API。
-- [生成的工具目录](../../docs/tool-catalog.zh.md#deepseek-aidsh-tool-cordis)——七个模型侧工具 schema。
-- [生成的配置目录](../../docs/config-catalog.zh.md#deepseek-aidsh-cordis-host-runner)——runner 的受支持配置字段。
+- [生成的工具目录](../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-cordis)——七个模型侧工具 schema。
+- [生成的配置目录](../../docs/config-catalog.zh.md#xfcodeaidsh-cordis-host-runner)——runner 的受支持配置字段。
 - [自引用 Cordis 工具集 Agent Note](../../.agents/notes/implemented/feature/2026-07-08-self-referential-cordis-toolset.zh.md)——沙箱语义、生命周期与组合的设计居所。
 - [客户端外壳与动态包 Agent Note](../../.agents/notes/implemented/architecture/2026-08-15-client-shells-and-dynamic-packages.zh.md)——浏览器半的包归属与构建面。
 

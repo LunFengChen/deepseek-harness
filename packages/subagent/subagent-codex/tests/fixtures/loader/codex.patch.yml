@@ -11,19 +11,19 @@
       name: './fixture.ts'
 
     - id: subagent-codex-primary
-      name: '@deepseek-ai/dsh-subagent-codex'
+      name: '@xfcodeai/dsh-subagent-codex'
       config:
         providerName: codex-primary
         model: codex-primary-model
 
     - id: subagent-codex-secondary
-      name: '@deepseek-ai/dsh-subagent-codex'
+      name: '@xfcodeai/dsh-subagent-codex'
       config:
         providerName: codex-secondary
         model: codex-secondary-model
 
     - id: tool-subagent-codex
-      name: '@deepseek-ai/dsh-tool-subagent'
+      name: '@xfcodeai/dsh-tool-subagent'
       config:
         provider: codex
         toolName: subagent_codex
@@ -31,7 +31,7 @@
         maxDepth: 'provider-managed'
 
     - id: tool-subagent-codex-primary
-      name: '@deepseek-ai/dsh-tool-subagent'
+      name: '@xfcodeai/dsh-tool-subagent'
       config:
         provider: codex-primary
         toolName: subagent_codex_primary
@@ -39,7 +39,7 @@
         maxDepth: 'provider-managed'
 
     - id: tool-subagent-codex-secondary
-      name: '@deepseek-ai/dsh-tool-subagent'
+      name: '@xfcodeai/dsh-tool-subagent'
       config:
         provider: codex-secondary
         toolName: subagent_codex_secondary

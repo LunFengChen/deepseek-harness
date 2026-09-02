@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 
 import { Context } from '@deepseek-ai/cordis'
-import { stubSettingsScope } from '@deepseek-ai/dsh-client-test-runtime'
+import { stubSettingsScope } from '@xfcodeai/dsh-client-test-runtime'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
-import { apply as themeApply, inject as themeInject, ThemeRuntime } from '@deepseek-ai/dsh-client-ui-theme/client'
-import { apply, inject, LayoutController } from '@deepseek-ai/dsh-client-ui-layout/client'
-import { apply as nodeApply } from '@deepseek-ai/dsh-client-ui-layout'
+import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
+import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
+import { apply as themeApply, inject as themeInject, ThemeRuntime } from '@xfcodeai/dsh-client-ui-theme/client'
+import { apply, inject, LayoutController } from '@xfcodeai/dsh-client-ui-layout/client'
+import { apply as nodeApply } from '@xfcodeai/dsh-client-ui-layout'
 
 beforeEach(() => {
   document.head.querySelectorAll('meta[name="theme-color"]').forEach((node) => { node.remove() })

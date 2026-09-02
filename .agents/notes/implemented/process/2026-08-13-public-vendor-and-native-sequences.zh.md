@@ -18,7 +18,7 @@ access 是每条发布序列的属性,不是整个 scope 的属性:
 |---|---|---|
 | vendored 框架 | `vendor/*` 九包 | `public` |
 | native | `native/landlock-run/packages/*` 三包 | `public` |
-| dsh | `packages/*/*` + `apps/*`(221 个成员) | `restricted` |
+| dsh | `packages/*/*` + `apps/*`（242 个成员） | `public` |
 
 `check-workspace-constraints.ts` 按各自序列的级别校验每个 manifest,这是阻止 scope 漂移的那道闸:新增的 `vendor/*` 包留在 `restricted`、或某个 dsh 成员被改成 `public`,都会让 workspace 约束失败。
 
@@ -39,7 +39,7 @@ access 是包的属性、不是版本的属性:已经以 restricted 发布的这
 ## Consequences
 
 - **这十二个包从下一次发布起就是公开的,而且不能干净地回退。** 回到受限 scope 需要付费套餐加逐包 `npm access set status=private`,且已经被下载或镜像的内容收不回来。
-- **`@deepseek-ai/dsh` 仍然装不了(组织外)。** 它的 manifest 保持 `restricted`;变化的是它已发布的依赖不再受限,所以将来公开它是一个版本决定,而不再是依赖问题。
+- **组织外的消费方可以安装 `@xfcodeai/dsh`。** dsh manifest 已设置为公开发布，它的 vendored 和 native 依赖也通过各自的 `@deepseek-ai` 发布序列公开。
 - **两条公开序列交付的内容成为全网可读,它们的 payload 策略分量因此变重。** `vendor/cordis` 有意发布 `src`,因为其导出映射声明了 `./src/*`;Landlock 入口按既有约定发布 `src/main.c` 作为审计面。
 - **这两条序列不再需要私有包套餐。** 阻塞过首次 native 发布的 `402 Payment Required` 失败形态对公开包不会再出现。
 - **对公开序列,无凭据的 `npm view` 成为一个可用的检查手段。** 在所有包都受限的时期,没有凭据的机器对一个确实存在的包会收到 `E404`,与「版本不存在」无法区分。

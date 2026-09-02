@@ -3,26 +3,26 @@ import { PassThrough } from 'node:stream'
 import { resolve } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import SessionStore, { Session, SessionId } from '@deepseek-ai/dsh-session'
-import AgentRegistry, { Inbox, type Agent } from '@deepseek-ai/dsh-agent'
-import SandboxProvider from '@deepseek-ai/dsh-sandbox'
-import type { ConfinedArgv, SandboxPolicy } from '@deepseek-ai/dsh-sandbox'
-import SandboxPolicyService, { setSandboxMode } from '@deepseek-ai/dsh-sandbox-policy'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import TerminalSessionService, { TerminalBackendCleanupError, TerminalSessionId } from '@deepseek-ai/dsh-terminal'
-import type { TerminalSendRequest, TerminalWaitReason } from '@deepseek-ai/dsh-terminal'
-import { BashTerminalBackend, PWSH_PROMPT_SETUP } from '@deepseek-ai/dsh-terminal-bash'
-import { ENCODING_PREAMBLE } from '@deepseek-ai/dsh-pwsh-local'
-import * as ptyLocal from '@deepseek-ai/dsh-terminal-bash'
-import type { ResolvedConfig } from '@deepseek-ai/dsh-terminal-bash/src/config.ts'
-import type { LocalPtySession } from '@deepseek-ai/dsh-terminal-bash/src/session.ts'
-import { SubprocessRuntime } from '@deepseek-ai/dsh-subprocess'
+import SessionStore, { Session, SessionId } from '@xfcodeai/dsh-session'
+import AgentRegistry, { Inbox, type Agent } from '@xfcodeai/dsh-agent'
+import SandboxProvider from '@xfcodeai/dsh-sandbox'
+import type { ConfinedArgv, SandboxPolicy } from '@xfcodeai/dsh-sandbox'
+import SandboxPolicyService, { setSandboxMode } from '@xfcodeai/dsh-sandbox-policy'
+import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import TerminalSessionService, { TerminalBackendCleanupError, TerminalSessionId } from '@xfcodeai/dsh-terminal'
+import type { TerminalSendRequest, TerminalWaitReason } from '@xfcodeai/dsh-terminal'
+import { BashTerminalBackend, PWSH_PROMPT_SETUP } from '@xfcodeai/dsh-terminal-bash'
+import { ENCODING_PREAMBLE } from '@xfcodeai/dsh-pwsh-local'
+import * as ptyLocal from '@xfcodeai/dsh-terminal-bash'
+import type { ResolvedConfig } from '@xfcodeai/dsh-terminal-bash/src/config.ts'
+import type { LocalPtySession } from '@xfcodeai/dsh-terminal-bash/src/session.ts'
+import { SubprocessRuntime } from '@xfcodeai/dsh-subprocess'
 import type {
   SubprocessHandle,
   SubprocessSpawnSpec,
   SubprocessTerminalHandle,
   SubprocessTerminalSpawnSpec,
-} from '@deepseek-ai/dsh-subprocess'
+} from '@xfcodeai/dsh-subprocess'
 
 class EmptySandbox extends SandboxProvider {
   confine(_argv: readonly string[], _policy: SandboxPolicy): ConfinedArgv {

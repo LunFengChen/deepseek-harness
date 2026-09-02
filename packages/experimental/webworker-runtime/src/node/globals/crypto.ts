@@ -5,7 +5,7 @@
  * alike) reaches the global directly, Node-style. The worker patches the one
  * `crypto` instance instead of teaching every caller.
  */
-import { randomUUID } from '@deepseek-ai/dsh-util-crypto'
+import { randomUUID } from '@xfcodeai/dsh-util-crypto'
 
 /** Install `crypto.randomUUID` when the context withholds it. */
 export function installCryptoGlobals(): void {

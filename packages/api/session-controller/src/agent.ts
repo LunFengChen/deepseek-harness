@@ -2,18 +2,18 @@
 
 import { mkdir } from 'node:fs/promises'
 import type { Context } from '@deepseek-ai/cordis'
-import { installModelSelection } from '@deepseek-ai/dsh-agent'
+import { installModelSelection } from '@xfcodeai/dsh-agent'
 import type {
   Agent, AgentOptions, AgentSetup, ModelSelection as AgentModelSelection, ModelSelectionRef,
-} from '@deepseek-ai/dsh-agent'
-import type {} from '@deepseek-ai/dsh-agent-default-model'
-import type {} from '@deepseek-ai/dsh-agent-presets'
-import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type { Session, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionInspection } from '@deepseek-ai/dsh-session-persistence'
-import { SessionQueryError, type SessionObservation } from '@deepseek-ai/dsh-session-query'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
-import type {} from '@deepseek-ai/dsh-typert-registry'
+} from '@xfcodeai/dsh-agent'
+import type {} from '@xfcodeai/dsh-agent-default-model'
+import type {} from '@xfcodeai/dsh-agent-presets'
+import { ReasoningEffortId } from '@xfcodeai/dsh-llm'
+import type { Session, SessionId } from '@xfcodeai/dsh-session'
+import type { SessionInspection } from '@xfcodeai/dsh-session-persistence'
+import { SessionQueryError, type SessionObservation } from '@xfcodeai/dsh-session-query'
+import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
+import type {} from '@xfcodeai/dsh-typert-registry'
 import type { ModelSelection } from './types.ts'
 
 /** Cold Session identity absent from persistence. */

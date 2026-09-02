@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-web-fetch-http",
+  "name": "@xfcodeai/dsh-web-fetch-http",
   "description": "Anonymous public HTTP(S) fetch provider for the DeepSeek Harness web capability seam (ctx.web)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -28,8 +28,8 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
-    "@deepseek-ai/dsh-web": "workspace:^"
+    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@xfcodeai/dsh-web": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
-    "@deepseek-ai/dsh-web": "workspace:^"
+    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@xfcodeai/dsh-web": "workspace:^"
   }
 }

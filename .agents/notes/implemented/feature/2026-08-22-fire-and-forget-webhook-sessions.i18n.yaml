@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-08-22-fire-and-forget-webhook-sessions.md
-2026-08-22-fire-and-forget-webhook-sessions.md: 976bccd8b460de7cb696ee45ea8963710cc4c738
-2026-08-22-fire-and-forget-webhook-sessions.zh.md: f015d993e61864bbc21d9d55fc331c25118fbde3
+2026-08-22-fire-and-forget-webhook-sessions.md: ede657532efb68cb0210c803ccc244aa9f49fdaf
+2026-08-22-fire-and-forget-webhook-sessions.zh.md: fb553edee4cf8b8efdf65a47b7ee55bb040f9799

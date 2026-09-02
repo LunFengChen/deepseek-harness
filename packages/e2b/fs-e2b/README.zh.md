@@ -3,7 +3,7 @@ description: "共享远程沙箱内的文件操作：agent 可以在那里对文
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-fs-e2b
+# @xfcodeai/dsh-fs-e2b
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 先加载沙箱所有者，再加载本包；之后文件功能就会作用于沙箱：
 
 ```yaml
-- name: '@deepseek-ai/dsh-e2b'
-- name: '@deepseek-ai/dsh-fs-e2b'
+- name: '@xfcodeai/dsh-e2b'
+- name: '@xfcodeai/dsh-fs-e2b'
 ```
 
 挂载它不会复制或镜像你的本地文件——沙箱的工作目录从空开始，并随 agent 的工作逐渐被填充。

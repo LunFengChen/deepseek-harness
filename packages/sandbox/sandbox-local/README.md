@@ -3,7 +3,7 @@ description: "Local per-platform sandbox backends for users and maintainers choo
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-sandbox-local
+# @xfcodeai/dsh-sandbox-local
 
 English | [中文](README.zh.md)
 
@@ -37,7 +37,7 @@ Load the sandbox service and mount the provider; the defaults below are the sele
 
 ```yaml
 - id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'
+  name: '@xfcodeai/dsh-sandbox-local'
 ```
 
 | Field | Default | Meaning |
@@ -46,7 +46,7 @@ Load the sandbox service and mount the provider; the defaults below are the sele
 | `runnerFailureSignatures` | `[]` | Case-insensitive stderr substrings identifying the custom runner's own failure dialect; required with `runnerCommand` |
 | `probeTimeoutMs` | `5,000` | Timeout for each functional probe of a competing runner candidate |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-sandbox-local) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-sandbox-local) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Confined execution and enforcement
 

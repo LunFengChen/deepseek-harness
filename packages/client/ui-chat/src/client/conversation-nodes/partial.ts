@@ -1,4 +1,4 @@
-import type { StreamChunk } from '@deepseek-ai/dsh-llm/types'
+import type { StreamChunk } from '@xfcodeai/dsh-llm/types'
 import type { AssistantBlock, PartialAssistant } from '../contract/snapshot.ts'
 import { emptyAssistantBlock, toAssistantBlock } from './event-projection.ts'
 

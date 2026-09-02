@@ -14,11 +14,11 @@ Status: implemented
 
 ### 启动与所有权
 
-`dsh --profile sdk-minimal` 是随附的仅启动时 profile。其 manifest 只列出 `@deepseek-ai/dsh-sdk-minimal`，不列出 `@deepseek-ai/dsh-base`。该组合包在 launcher 的空 profile 根之上插入完整 Cordis 配置树，而 profile patch、home patch 与有序调用 patch 仍在其上保持普通优先级。
+`dsh --profile sdk-minimal` 是随附的仅启动时 profile。其 manifest 只列出 `@xfcodeai/dsh-sdk-minimal`，不列出 `@xfcodeai/dsh-base`。该组合包在 launcher 的空 profile 根之上插入完整 Cordis 配置树，而 profile patch、home patch 与有序调用 patch 仍在其上保持普通优先级。
 
 `dsh` CLI 仍是唯一应用 launcher。Python 示例通过公开 `profile` 字段与显式 Harness home 选择 `sdk-minimal`。Python 不暴露完整配置或任意 argv 路径。完整 Python 与 TypeScript SDK 的默认值仍是 `sdk`。
 
-该组合包复用 `@deepseek-ai/dsh-sdk-app` 提供命令 help、stdin EOF 与有界关闭。启动提供方接受 profile 名称配置，因此两个 SDK profile 都能呈现自己的实际命令，且无需复制进程生命周期代码。
+该组合包复用 `@xfcodeai/dsh-sdk-app` 提供命令 help、stdin EOF 与有界关闭。启动提供方接受 profile 名称配置，因此两个 SDK profile 都能呈现自己的实际命令，且无需复制进程生命周期代码。
 
 ### 显式组合
 

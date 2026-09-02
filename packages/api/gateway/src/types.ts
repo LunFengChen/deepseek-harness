@@ -1,6 +1,6 @@
 /**
  * Carrier-independent Typert Gateway request, service, and error contracts.
- * @module @deepseek-ai/dsh-api-gateway/types
+ * @module @xfcodeai/dsh-api-gateway/types
  */
 
 import type { Context } from '@deepseek-ai/cordis'

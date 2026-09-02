@@ -3,7 +3,7 @@ description: "Browser-worker VFS image packaging for maintainers building or deb
 kind: "package-library"
 ---
 
-# `@deepseek-ai/dsh-experimental-webworker-packer`
+# `@xfcodeai/dsh-experimental-webworker-packer`
 
 English | [中文](README.zh.md)
 

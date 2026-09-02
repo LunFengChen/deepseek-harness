@@ -7,7 +7,7 @@
  * Synthesized members are exactly the ones the route handlers read; anything
  * else is absent on purpose so a new consumer
  * fails loud instead of silently reading a stub.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/transport/synthetic-http
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/transport/synthetic-http
  */
 import type { TunnelRequestFrame } from './frames.ts'
 

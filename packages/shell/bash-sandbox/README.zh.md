@@ -3,7 +3,7 @@ description: "面向部署方与维护者的沙箱 Bash 执行器说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-bash-sandbox
+# @xfcodeai/dsh-bash-sandbox
 
 [English](README.md) | 中文
 
@@ -41,18 +41,18 @@ kind: "package-reference"
 
 ### 最小配置
 
-本执行器自身不携带任何沙箱配置：默认模式与工作区根目录来自 `ctx.sandboxPolicy`，runner 选择属于 `ctx.sandbox` 提供方。它自己的配置就是本地执行器的旋钮，逐字继承；生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-bash-sandbox)是穷尽式真源。
+本执行器自身不携带任何沙箱配置：默认模式与工作区根目录来自 `ctx.sandboxPolicy`，runner 选择属于 `ctx.sandbox` 提供方。它自己的配置就是本地执行器的旋钮，逐字继承；生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-bash-sandbox)是穷尽式真源。
 
 ```yaml
 - id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'
+  name: '@xfcodeai/dsh-sandbox-local'
 - id: sandbox-policy
-  name: '@deepseek-ai/dsh-sandbox-policy'
+  name: '@xfcodeai/dsh-sandbox-policy'
   config:
     mode: read-only
     workspaceRoot: !!js process.cwd() # fallback for calls without a session cwd
 - id: bash
-  name: '@deepseek-ai/dsh-bash-sandbox'
+  name: '@xfcodeai/dsh-bash-sandbox'
 ```
 
 ### 拒绝是结果事实
@@ -123,7 +123,7 @@ kind: "package-reference"
 
 #### 模型看到的内容
 
-基线是生成的 [`dsh-tool-bash` schema](../../../docs/tool-catalog.zh.md#deepseek-aidsh-tool-bash)。通过公布表明启用隔离的 `sandboxMode` 能力，此后端会为 `bash` 增加 `sandbox_permissions`（enum 为 `workspace-write` | `danger-full-access`）与 `justification`。策略归属方会另行贡献当前且不区分具体能力的 `sandbox:policy` 上下文。
+基线是生成的 [`dsh-tool-bash` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-bash)。通过公布表明启用隔离的 `sandboxMode` 能力，此后端会为 `bash` 增加 `sandbox_permissions`（enum 为 `workspace-write` | `danger-full-access`）与 `justification`。策略归属方会另行贡献当前且不区分具体能力的 `sandbox:policy` 上下文。
 
 #### Token 影响
 

@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-bash-sandbox",
+  "name": "@xfcodeai/dsh-bash-sandbox",
   "description": "Sandbox-consuming implementation of the DeepSeek Harness bash executor seam (confines every command via ctx.sandbox, reports denial/enforcement result facts)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -27,21 +27,21 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-shell": "workspace:^",
-    "@deepseek-ai/dsh-bash-local": "workspace:^",
-    "@deepseek-ai/dsh-sandbox": "workspace:^",
-    "@deepseek-ai/dsh-sandbox-policy": "workspace:^",
+    "@xfcodeai/dsh-shell": "workspace:^",
+    "@xfcodeai/dsh-bash-local": "workspace:^",
+    "@xfcodeai/dsh-sandbox": "workspace:^",
+    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-shell": "workspace:^",
-    "@deepseek-ai/dsh-bash-local": "workspace:^",
-    "@deepseek-ai/dsh-subprocess-local": "workspace:^",
-    "@deepseek-ai/dsh-sandbox": "workspace:^",
-    "@deepseek-ai/dsh-sandbox-local": "workspace:^",
-    "@deepseek-ai/dsh-sandbox-policy": "workspace:^",
+    "@xfcodeai/dsh-shell": "workspace:^",
+    "@xfcodeai/dsh-bash-local": "workspace:^",
+    "@xfcodeai/dsh-subprocess-local": "workspace:^",
+    "@xfcodeai/dsh-sandbox": "workspace:^",
+    "@xfcodeai/dsh-sandbox-local": "workspace:^",
+    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/node-addon-landlock-run": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^"
+    "@xfcodeai/dsh-session-projection": "workspace:^"
   }
 }

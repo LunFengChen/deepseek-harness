@@ -3,7 +3,7 @@ description: "对话 UI 的附件呈现：草稿图片栏、文档拖放目标�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-attachment
+# @xfcodeai/dsh-client-ui-attachment
 
 [English](README.md) | 中文
 

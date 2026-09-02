@@ -2,9 +2,9 @@
 # runtime-owned child must be rejected by the seam before any UI wait begins.
 - insert:
     - id: tool-ask-user
-      name: '@deepseek-ai/dsh-tool-ask-user'
+      name: '@xfcodeai/dsh-tool-ask-user'
     - id: child-question-tripwire
       name: '../../../packages/test-support/session-snapshot/tests/fixtures/child-question-tripwire.ts'
 
 - id: user-questions
-  name: '@deepseek-ai/dsh-user-questions'
+  name: '@xfcodeai/dsh-user-questions'

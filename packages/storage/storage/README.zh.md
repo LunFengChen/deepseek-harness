@@ -3,7 +3,7 @@ description: "存储枢纽（ctx.storage）：面向选择、挂载或排查具�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-storage
+# @xfcodeai/dsh-storage
 
 [English](README.md) | 中文
 
@@ -34,11 +34,11 @@ kind: "package-reference"
 ### 最小组合
 
 ```yaml
-- name: '@deepseek-ai/dsh-storage'
-- name: '@deepseek-ai/dsh-storage-json'
+- name: '@xfcodeai/dsh-storage'
+- name: '@xfcodeai/dsh-storage-json'
   config:
     root: /var/lib/dsh/data
-- name: '@deepseek-ai/dsh-storage-domain'
+- name: '@xfcodeai/dsh-storage-domain'
   config:
     backend: json
 ```

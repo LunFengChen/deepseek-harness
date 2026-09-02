@@ -26,7 +26,7 @@ sibling、自身目标、超过一条边的 ancestor、陈旧 Agent 对象、未
 两个方向使用同一种持久来源。服务从已授权 Agent 推导 `senderSessionId`，并把模型可见内容组装为 `Agent <sender-id> sent a message:`，因此来源信息不会偏离权限。
 
 ```ts
-import type { SessionId } from '@deepseek-ai/dsh-session'
+import type { SessionId } from '@xfcodeai/dsh-session'
 
 interface AgentMessageSource {
   readonly kind: 'agent-message'
@@ -54,7 +54,7 @@ parent 与 child 以相同注册表顺序继承相同定义。标准定义携带
 
 ### 完整移除与重新引入条件
 
-独立的 `@deepseek-ai/dsh-tool-subagent-report` 包、`report` schema、`tool:report` 提示词 section、`reportDelivery` 配置、report 专属消息来源、目录项、组合行和受支持行为快照均已不存在。统一工具放弃了无需接收方的 child 快捷方式，也放弃了让结构性返回工具绕过显式 child allow-list 的旧能力。只有具体用例需要相邻 `agent_id` 与固定 Steer 无法表达的语义时，这些能力才会重新出现；重新引入需要独立的模型操作与前缀成本证据，而非 `sendMessage()` 之上的别名。
+独立的 `@xfcodeai/dsh-tool-subagent-report` 包、`report` schema、`tool:report` 提示词 section、`reportDelivery` 配置、report 专属消息来源、目录项、组合行和受支持行为快照均已不存在。统一工具放弃了无需接收方的 child 快捷方式，也放弃了让结构性返回工具绕过显式 child allow-list 的旧能力。只有具体用例需要相邻 `agent_id` 与固定 Steer 无法表达的语义时，这些能力才会重新出现；重新引入需要独立的模型操作与前缀成本证据，而非 `sendMessage()` 之上的别名。
 
 ## 考虑过的替代方案
 

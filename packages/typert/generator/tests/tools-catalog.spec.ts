@@ -3,9 +3,9 @@ import { join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import TypertRegistry from '@deepseek-ai/dsh-typert-registry'
-import type { TypertContribution } from '@deepseek-ai/dsh-typert-registry/types'
-import { EVENT_API, SERVICE_API, TYPE_API } from '@deepseek-ai/dsh-tool-cordis/src/api-catalog.ts'
+import TypertRegistry from '@xfcodeai/dsh-typert-registry'
+import type { TypertContribution } from '@xfcodeai/dsh-typert-registry/types'
+import { EVENT_API, SERVICE_API, TYPE_API } from '@xfcodeai/dsh-tool-cordis/src/api-catalog.ts'
 import { WorkspaceAnalyzer } from '../src/analyzer.ts'
 import { FaceModelEmitter } from '../src/emitter.ts'
 
@@ -21,11 +21,11 @@ describe('model-driven dsh-tools generation', () => {
     const workspace = new WorkspaceAnalyzer({
       root: workspaceRoot,
       faces: ['host'],
-      packages: ['@deepseek-ai/dsh-tools'],
+      packages: ['@xfcodeai/dsh-tools'],
     }).analyze()
     const host = workspace.faces.find(candidate => candidate.face === 'host')
     if (host === undefined) throw new Error('dsh-tools has no analyzed host face')
-    const artifact = new FaceModelEmitter(host).emit('@deepseek-ai/dsh-tools')
+    const artifact = new FaceModelEmitter(host).emit('@xfcodeai/dsh-tools')
 
     const root = mkdtempSync(join(import.meta.dirname, '.generated-tools-'))
     temporaryRoots.push(root)
@@ -38,7 +38,7 @@ describe('model-driven dsh-tools generation', () => {
     const ctx = new Context()
     await ctx.plugin(TypertRegistry)
     const dispose = ctx.typert.register(generated.TYPERT)
-    const record = ctx.typert.getPackage('@deepseek-ai/dsh-tools', 'host')
+    const record = ctx.typert.getPackage('@xfcodeai/dsh-tools', 'host')
     const service = record?.model.services.find(candidate => candidate.key === 'tools')
     expect(service).toBeDefined()
     expect({
@@ -71,6 +71,6 @@ describe('model-driven dsh-tools generation', () => {
     )
 
     await dispose()
-    expect(ctx.typert.getPackage('@deepseek-ai/dsh-tools', 'host')).toBeUndefined()
+    expect(ctx.typert.getPackage('@xfcodeai/dsh-tools', 'host')).toBeUndefined()
   })
 })

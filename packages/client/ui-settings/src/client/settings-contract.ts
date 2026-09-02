@@ -2,7 +2,7 @@
  * Settings-namespace scope contracts owned beside the settings transport.
  */
 
-import type { SettingsPathOpView } from '@deepseek-ai/dsh-api-remotes/client'
+import type { SettingsPathOpView } from '@xfcodeai/dsh-api-remotes/client'
 
 /** Client-side sync state of one settings namespace. */
 export interface SettingsScopeSnapshot<T> {

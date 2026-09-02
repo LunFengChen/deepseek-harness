@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 /** Exercises Chat selection through the real SlotRegistry store axis. */
 import { describe, expect, it } from 'vitest'
-import { SlotTestRuntime } from '@deepseek-ai/dsh-client-test-runtime'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { PropsRenderSlots } from '@deepseek-ai/dsh-client-ui-slots'
+import { SlotTestRuntime } from '@xfcodeai/dsh-client-test-runtime'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { PropsRenderSlots } from '@xfcodeai/dsh-client-ui-slots'
 import { createChatStore } from '../src/client/stores.ts'
 
 const sid = (value: string): SessionId => value as SessionId

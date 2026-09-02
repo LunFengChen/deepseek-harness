@@ -21,7 +21,7 @@
       name: './tests/fixtures/subagent-diagnostic-query.ts'
 
     - id: replay
-      name: '@deepseek-ai/dsh-llm-replay'
+      name: '@xfcodeai/dsh-llm-replay'
 
     # Publish the persisted agent before the driver selects the single root.
     - id: resumed-agent

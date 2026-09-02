@@ -3,7 +3,7 @@ import { createServer, request as httpRequest, type IncomingMessage, type Server
 import type { AddressInfo } from 'node:net'
 import type { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { credentialRef } from '@deepseek-ai/dsh-credentials'
+import { credentialRef } from '@xfcodeai/dsh-credentials'
 import { createGitHubWebhookHandler } from '../src/handler.ts'
 
 const servers: Server[] = []

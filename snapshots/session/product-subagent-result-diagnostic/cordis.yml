@@ -4,7 +4,7 @@
     - id: subagent-result-diagnostic
       name: '../../../packages/test-support/session-snapshot/tests/fixtures/subagent-result-diagnostic.ts'
     - id: tool-subagent-codex
-      name: '@deepseek-ai/dsh-tool-subagent'
+      name: '@xfcodeai/dsh-tool-subagent'
       config:
         provider: snapshot-diagnostic
         toolName: subagent_codex

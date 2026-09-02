@@ -26,9 +26,9 @@
 import { expect, test } from 'vitest'
 import {
   AsyncLocalStorage, __restoreAll, __snapshotAll, alsCausality, runAtAsyncContextRoot,
-} from '@deepseek-ai/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/async_hooks.ts'
-import { installAsyncContextHooks } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/polyfill/async-context/async-context-hooks.ts'
-import { installTimerGlobals } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/node/globals/timers.ts'
+} from '@xfcodeai/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/async_hooks.ts'
+import { installAsyncContextHooks } from '@xfcodeai/dsh-experimental-webworker-runtime/src/polyfill/async-context/async-context-hooks.ts'
+import { installTimerGlobals } from '@xfcodeai/dsh-experimental-webworker-runtime/src/node/globals/timers.ts'
 
 // Same order the worker entry uses: patch the platform, then wrap the timers over
 // the patched platform. The folding cases below must hold with both in place.

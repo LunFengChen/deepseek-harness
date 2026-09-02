@@ -9,14 +9,14 @@
  * No caller supplies composition text: the inputs are ids the host resolves
  * against its own roots plus an optional display name, so authoring grants no
  * capability the copied preset did not already carry.
- * @module @deepseek-ai/dsh-agent-presets/authoring
+ * @module @xfcodeai/dsh-agent-presets/authoring
  */
 
 import { chmod, cp, readdir, readFile, rm, stat } from 'node:fs/promises'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
-import { writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
-import { expandHomePath } from '@deepseek-ai/dsh-home-paths'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
+import { writeFileAtomic } from '@xfcodeai/dsh-atomic-write'
+import { expandHomePath } from '@xfcodeai/dsh-home-paths'
+import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
 import { METADATA_FILE, renderPresetMetadata } from './metadata.ts'
 import { PRESET_ID, type AgentPreset, type PresetRoot } from './preset.ts'
 

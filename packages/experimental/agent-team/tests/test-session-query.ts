@@ -1,6 +1,6 @@
 /** Minimal concrete Session query for Agent Team continuation tests. */
 
-import SessionQueryEngine from '@deepseek-ai/dsh-session-query'
+import SessionQueryEngine from '@xfcodeai/dsh-session-query'
 
 /** Session query implementation whose search faces are outside these tests. */
 export class TestSessionQuery extends SessionQueryEngine {

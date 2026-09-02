@@ -1,7 +1,7 @@
 /**
  * Client-namespace projection of token-meter's browser-safe contracts and folds.
  *
- * @module @deepseek-ai/dsh-token-meter/client
+ * @module @xfcodeai/dsh-token-meter/client
  */
 
 export type * from './projection.ts'

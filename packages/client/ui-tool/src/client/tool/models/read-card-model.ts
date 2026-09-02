@@ -1,6 +1,6 @@
 /** Pure read-card derivation from raw result content and metadata. @module */
-import type { ReadBlockLine, ReadBlockProps } from '@deepseek-ai/dsh-client-ui-primitives'
-import { abbreviateHomePath } from '@deepseek-ai/dsh-util-workspace-path'
+import type { ReadBlockLine, ReadBlockProps } from '@xfcodeai/dsh-client-ui-primitives'
+import { abbreviateHomePath } from '@xfcodeai/dsh-util-workspace-path'
 import { relativizeToCwd, type ToolCallBlock } from './tool-call-model.ts'
 import { parsedToolCall, singleResultText } from './raw-tool-call.ts'
 

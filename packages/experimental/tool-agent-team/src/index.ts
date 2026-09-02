@@ -2,11 +2,11 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { TeamTaskId } from '@deepseek-ai/dsh-experimental-agent-team'
-import type { TeamMemberView } from '@deepseek-ai/dsh-experimental-agent-team'
-import { defineTool } from '@deepseek-ai/dsh-tools'
-import type { InferValue, ValueSchemaSpec } from '@deepseek-ai/dsh-tools'
+import type { Agent } from '@xfcodeai/dsh-agent'
+import { TeamTaskId } from '@xfcodeai/dsh-experimental-agent-team'
+import type { TeamMemberView } from '@xfcodeai/dsh-experimental-agent-team'
+import { defineTool } from '@xfcodeai/dsh-tools'
+import type { InferValue, ValueSchemaSpec } from '@xfcodeai/dsh-tools'
 
 /** Cordis plugin name. */
 export const name = 'tool-agent-team'

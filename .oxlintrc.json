@@ -62,7 +62,7 @@
           {
             "object": "crypto",
             "property": "randomUUID",
-            "message": "browsers withhold crypto.randomUUID outside secure contexts (plain-HTTP LAN pages); mint through @deepseek-ai/dsh-util-crypto instead"
+            "message": "browsers withhold crypto.randomUUID outside secure contexts (plain-HTTP LAN pages); mint through @xfcodeai/dsh-util-crypto instead"
           }
         ],
         "typescript/await-thenable": "error",

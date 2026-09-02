@@ -3,7 +3,7 @@ description: "Target-neutral 对话装配与浏览器 shell：事件和视图注
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-conversation
+# @xfcodeai/dsh-client-ui-conversation
 
 [English](README.md) | 中文
 
@@ -68,9 +68,9 @@ interface ComposerChainProps {
 业务 package 可仅在一个 Remote waterfall request pending 期间安装 entry：
 
 ```tsx
-import type { ComposerChainProps } from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type { ChainSelect, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { ComposerChainProps } from '@xfcodeai/dsh-client-ui-conversation/client'
+import type { ChainSelect, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
 
 interface Request {
   readonly sessionId: SessionId

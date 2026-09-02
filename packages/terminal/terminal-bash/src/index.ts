@@ -1,19 +1,19 @@
 /**
  * Persistent shell PTY backend over the subprocess terminal primitive, shared
  * sandbox policy, bounded output, and provider-owned session cleanup.
- * @module @deepseek-ai/dsh-terminal-bash
+ * @module @xfcodeai/dsh-terminal-bash
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
-import { TerminalBackendCleanupError } from '@deepseek-ai/dsh-terminal'
-import type { TerminalBackend, TerminalBackendSpawnSpec, TerminalSendOperation } from '@deepseek-ai/dsh-terminal'
-import type { SubprocessTerminalHandle, SubprocessTerminalSpawnSpec } from '@deepseek-ai/dsh-subprocess'
-import type { SandboxExecutionPolicy } from '@deepseek-ai/dsh-sandbox'
-import type {} from '@deepseek-ai/dsh-sandbox-policy'
-import type {} from '@deepseek-ai/dsh-session-projection'
-import { ENCODING_PREAMBLE } from '@deepseek-ai/dsh-pwsh-local'
+import type { Agent } from '@xfcodeai/dsh-agent'
+import type { Session, SessionEvent } from '@xfcodeai/dsh-session'
+import { TerminalBackendCleanupError } from '@xfcodeai/dsh-terminal'
+import type { TerminalBackend, TerminalBackendSpawnSpec, TerminalSendOperation } from '@xfcodeai/dsh-terminal'
+import type { SubprocessTerminalHandle, SubprocessTerminalSpawnSpec } from '@xfcodeai/dsh-subprocess'
+import type { SandboxExecutionPolicy } from '@xfcodeai/dsh-sandbox'
+import type {} from '@xfcodeai/dsh-sandbox-policy'
+import type {} from '@xfcodeai/dsh-session-projection'
+import { ENCODING_PREAMBLE } from '@xfcodeai/dsh-pwsh-local'
 import { type Config, type ResolvedConfig, resolveConfig, type ShellDialect, validateConfig } from './config.ts'
 import { LocalPtySession } from './session.ts'
 import { CONTROLLED_PROMPT } from './sanitize.ts'

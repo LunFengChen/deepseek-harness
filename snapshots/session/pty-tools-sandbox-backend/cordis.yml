@@ -2,9 +2,9 @@
 # deployment already owns the shared sandbox provider and policy.
 - insert:
     - id: pty
-      name: '@deepseek-ai/dsh-terminal'
+      name: '@xfcodeai/dsh-terminal'
     - id: terminal-bash
-      name: '@deepseek-ai/dsh-terminal-bash'
+      name: '@xfcodeai/dsh-terminal-bash'
       config:
         pollIntervalMs: 10
         exactProbeAfterMs: 20
@@ -13,4 +13,4 @@
         timeoutMs: 2000
         disposeGraceMs: 500
     - id: tool-terminal
-      name: '@deepseek-ai/dsh-tool-terminal'
+      name: '@xfcodeai/dsh-tool-terminal'

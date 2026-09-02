@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-08-23-cross-realm-cdp-inspector.md
-2026-08-23-cross-realm-cdp-inspector.md: e6e1d48da4f7b2dfab2772e24cb49711e3e50f5a
-2026-08-23-cross-realm-cdp-inspector.zh.md: 9d67868caf9b4e5e0eb06583facd608b71468b22
+2026-08-23-cross-realm-cdp-inspector.md: c5b61d6fc2d2ad17b2daa29ca69ac9b84160f97b
+2026-08-23-cross-realm-cdp-inspector.zh.md: 0cac9c267898ed1eb3a0e44be0f61bd67fa8cde4

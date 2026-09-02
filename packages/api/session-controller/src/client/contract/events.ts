@@ -1,6 +1,6 @@
 /** Observable contiguous Session event window consumed by domain assemblers. */
-import { notifySubscribers, type ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
-import type { SessionEvent } from '@deepseek-ai/dsh-session/types'
+import { notifySubscribers, type ObservableSnapshot } from '@xfcodeai/dsh-client-store'
+import type { SessionEvent } from '@xfcodeai/dsh-session/types'
 import type { ChunkRowEvent } from '../../types.ts'
 
 /** Standard Session event or compact historical Assistant run. */

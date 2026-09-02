@@ -3,13 +3,13 @@
  * {@link agentEvents} couples the agent subject to its scope carrier, so the
  * scope key and the payload's `agent` cannot diverge; repeat dispatchers (the
  * loop driver) build it once in the agent's constructor and reuse it.
- * @module @deepseek-ai/dsh-agent/dispatch
+ * @module @xfcodeai/dsh-agent/dispatch
  */
 
 import type { Context, Events } from '@deepseek-ai/cordis'
-import { scopeTarget } from '@deepseek-ai/dsh-scope'
-import type { Scoped } from '@deepseek-ai/dsh-scope'
-import type { AssembleContext } from '@deepseek-ai/dsh-system-prompt'
+import { scopeTarget } from '@xfcodeai/dsh-scope'
+import type { Scoped } from '@xfcodeai/dsh-scope'
+import type { AssembleContext } from '@xfcodeai/dsh-system-prompt'
 import type { Agent } from './types.ts'
 
 /** Extract the parameter tuple from an event handler type (its `this` is not part of the tuple). */

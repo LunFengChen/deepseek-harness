@@ -3,7 +3,7 @@ description: "In-process spawn subagent backend for users and maintainers choosi
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-spawn-in-process
+# @xfcodeai/dsh-subagent-spawn-in-process
 
 English | [中文](README.zh.md)
 
@@ -36,9 +36,9 @@ Choose the spawn backend when the child needs no parent conversation and running
 Load the subagent service and this backend, then configure one delegation tool per target. This is the smallest composition that exposes a `subagent` tool backed by spawn:
 
 ```yaml
-- name: '@deepseek-ai/dsh-subagent'
-- name: '@deepseek-ai/dsh-subagent-spawn-in-process'
-- name: '@deepseek-ai/dsh-tool-subagent'
+- name: '@xfcodeai/dsh-subagent'
+- name: '@xfcodeai/dsh-subagent-spawn-in-process'
+- name: '@xfcodeai/dsh-tool-subagent'
   config:
     provider: spawn
 ```
@@ -47,7 +47,7 @@ Load the subagent service and this backend, then configure one delegation tool p
 |---|---|---|
 | `providerName` | `spawn` | Provider name registered on `ctx.subagents` |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-spawn-in-process) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-spawn-in-process) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What a delegation does
 
@@ -95,7 +95,7 @@ Read these pages when the package-level contract is not enough; they move from t
 - [dsh-subagent-in-process-driver](../subagent-in-process-driver/README.md) — the shared run driver this backend calls.
 - [dsh-subagent-fork-in-process](../subagent-fork-in-process/README.md) — the sibling backend that seeds completed parent turns.
 - [dsh-tool-subagent](../tool-subagent/README.md) — the model-facing delegation tool that reaches this provider.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-spawn-in-process) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-spawn-in-process) — every accepted config field and its source declaration.
 
 -----
 

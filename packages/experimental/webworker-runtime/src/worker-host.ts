@@ -19,11 +19,11 @@
  * image, so entry mounting, the activation audit, and its diagnostics are the
  * same code the Node deployment runs. Only the module seam and the command line
  * are supplied from here.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/worker-host
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/worker-host
  */
 import { setActiveModuleLoader, WorkerModuleLoader, type StaticModuleFactory } from './module-system/module-loader.ts'
-import type { TypertGateway } from '@deepseek-ai/dsh-api-gateway'
-import type { HostConnectionHandle } from '@deepseek-ai/dsh-client-connection'
+import type { TypertGateway } from '@xfcodeai/dsh-api-gateway'
+import type { HostConnectionHandle } from '@xfcodeai/dsh-client-connection'
 import type { AlsCausality } from './polyfill/async-context/als-runtime.ts'
 import { dirname, join } from './module-system/posix-path.ts'
 import { installProcessGlobal } from './node/globals/process.ts'
@@ -218,7 +218,7 @@ export function createWorkerHost(options: WorkerHostOptions): WorkerHost {
       modules = loader
 
       const require = loader.requireFrom(dirname(configPath))
-      const appBoot = require('@deepseek-ai/dsh-app-boot') as {
+      const appBoot = require('@xfcodeai/dsh-app-boot') as {
         boot(
           binName: string,
           configPath: string,
@@ -226,7 +226,7 @@ export function createWorkerHost(options: WorkerHostOptions): WorkerHost {
           prepare: (ctx: HostContext) => void,
         ): Promise<HostContext>
       }
-      const cmdline = require('@deepseek-ai/dsh-cmdline') as {
+      const cmdline = require('@xfcodeai/dsh-cmdline') as {
         provideCmdline(ctx: unknown, host: { args: readonly string[]; exit: (code: number) => void }): void
       }
 

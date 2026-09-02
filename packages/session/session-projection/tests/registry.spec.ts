@@ -15,12 +15,12 @@ import SessionStore, {
   SessionId,
   SessionLogOffset,
   SessionSeq,
-} from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
+} from '@xfcodeai/dsh-session'
+import type { SessionEvent, SessionHeader } from '@xfcodeai/dsh-session'
+import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@xfcodeai/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     'test/marks': MarksState
     'test/count': number
@@ -34,7 +34,7 @@ declare module '@deepseek-ai/dsh-session-projection/types' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@xfcodeai/dsh-session/types' {
   interface SessionEventMap {
     'test/mark': { marks: string[] }
   }

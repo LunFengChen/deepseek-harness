@@ -1,7 +1,7 @@
 /** Shared teardown for ACP example tests. */
 
 import { rm } from 'node:fs/promises'
-import type { LaunchedAcpTestAgent } from '@deepseek-ai/dsh-session-snapshot'
+import type { LaunchedAcpTestAgent } from '@xfcodeai/dsh-session-snapshot'
 
 /**
  * Close the test agent, then remove its workspace, attempting both operations

@@ -3,7 +3,7 @@ description: "Shared Loader boot support for dsh profiles and the temporary Pyth
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-app-boot
+# @xfcodeai/dsh-app-boot
 
 English | [中文](README.zh.md)
 

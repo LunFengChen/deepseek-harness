@@ -1,7 +1,7 @@
 /** Reconnecting lifecycle for one single-consumer Remote stream. */
 
-import { RemoteError, remoteErrorOf } from '@deepseek-ai/dsh-typert-protocol'
-import type { ConnectionHandle } from '@deepseek-ai/dsh-client-connection/client'
+import { RemoteError, remoteErrorOf } from '@xfcodeai/dsh-typert-protocol'
+import type { ConnectionHandle } from '@xfcodeai/dsh-client-connection/client'
 import { RemoteStreamCarrierError } from './stream-client.ts'
 
 /** One item annotated with the physical Remote-stream generation that delivered it. */

@@ -1,16 +1,16 @@
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import LlmRuntime, { createUserMessage, markAgentLoopRequest } from '@deepseek-ai/dsh-llm'
-import { deepFreeze } from '@deepseek-ai/dsh-util-values'
-import SessionStore, { SessionId, SessionSeq } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { turnBoundaryProjectionDefinition } from '@deepseek-ai/dsh-agent-loop'
+import LlmRuntime, { createUserMessage, markAgentLoopRequest } from '@xfcodeai/dsh-llm'
+import { deepFreeze } from '@xfcodeai/dsh-util-values'
+import SessionStore, { SessionId, SessionSeq } from '@xfcodeai/dsh-session'
+import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import { turnBoundaryProjectionDefinition } from '@xfcodeai/dsh-agent-loop'
 import SessionTitleService, {
   SessionTitleProviderId,
   type SessionTitleProvider,
   type SessionTitleProviderRequest,
   type SessionTitleProviderResult,
-} from '@deepseek-ai/dsh-session-title'
+} from '@xfcodeai/dsh-session-title'
 
 const CONFIG = {
   fallbackMaxWords: 5,

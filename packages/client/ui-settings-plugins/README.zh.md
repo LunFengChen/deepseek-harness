@@ -3,7 +3,7 @@ description: "dsh Web 客户端的「插件」设置分区：功能拥有的标�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-settings-plugins
+# @xfcodeai/dsh-client-ui-settings-plugins
 
 [English](README.md) | 中文
 

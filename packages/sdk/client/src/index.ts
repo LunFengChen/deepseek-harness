@@ -6,7 +6,7 @@
  * registers nothing on a Cordis context; named profiles and ordered patch
  * files customize the runtime process it spawns.
  *
- * @module @deepseek-ai/dsh-sdk-client
+ * @module @xfcodeai/dsh-sdk-client
  */
 
 export { DeepSeekHarness, HarnessSession } from './api.ts'
@@ -18,7 +18,7 @@ export {
   TransportClosedError,
 } from './client.ts'
 export type { NotificationSubscription } from './client.ts'
-export { JsonRpcResponseError } from '@deepseek-ai/dsh-sdk-protocol'
+export { JsonRpcResponseError } from '@xfcodeai/dsh-sdk-protocol'
 export type {
   ContentBlock,
   SdkPromptContentBlock,

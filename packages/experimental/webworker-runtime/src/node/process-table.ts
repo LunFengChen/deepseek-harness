@@ -6,7 +6,7 @@
  *
  * Kept apart from both consumers because they need it from opposite sides —
  * the shim registers entries, the `process` global signals them.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/node/process-table
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/node/process-table
  */
 
 import type { RunningProcess } from '../shell/process/host.ts'

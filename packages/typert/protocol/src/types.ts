@@ -1,7 +1,7 @@
 /**
  * Compiler-independent Typert protocol shared by business packages, generated
  * Remote artifacts, the Host Gateway, and Client API implementations.
- * @module @deepseek-ai/dsh-typert-protocol/types
+ * @module @xfcodeai/dsh-typert-protocol/types
  */
 
 import type { Context, Events } from '@deepseek-ai/cordis'

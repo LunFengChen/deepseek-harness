@@ -3,14 +3,14 @@ import type { Fiber } from '@deepseek-ai/cordis'
 import type {
   ConnectionGeneration,
   ConnectionHandle,
-} from '@deepseek-ai/dsh-client-connection/client'
+} from '@xfcodeai/dsh-client-connection/client'
 import {
   RemoteStreamCarrierError,
   RemoteStream,
   type RemoteStreamOptions,
-} from '@deepseek-ai/dsh-api-gateway/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import TypertRegistry from '@deepseek-ai/dsh-typert-registry'
+} from '@xfcodeai/dsh-api-gateway/client'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
+import TypertRegistry from '@xfcodeai/dsh-typert-registry'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as SessionClient from '../src/client/index.ts'
 import { ClientSessions } from '../src/client/sessions/service.ts'

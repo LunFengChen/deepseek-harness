@@ -2,27 +2,27 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render } from '@testing-library/react'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
+import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
 import type {
   ChatSnapshot, ConversationNode, RunningToolCall, SelectionTarget, ToolResultNode,
-} from '@deepseek-ai/dsh-client-ui-chat/client'
-import type { SessionListState } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+} from '@xfcodeai/dsh-client-ui-chat/client'
+import type { SessionListState } from '@xfcodeai/dsh-api-session-controller/client'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
 import {
   bindSnapshotSelector, conversationSnapshot, sessionSnapshot, workspaceSnapshot,
-} from '@deepseek-ai/dsh-client-test-runtime'
-import type { ToolCallOwnerProps } from '@deepseek-ai/dsh-client-ui-tool/client'
-import { IconGlobeOutline14 } from '@deepseek-ai/dsh-client-ui-primitives'
+} from '@xfcodeai/dsh-client-test-runtime'
+import type { ToolCallOwnerProps } from '@xfcodeai/dsh-client-ui-tool/client'
+import { IconGlobeOutline14 } from '@xfcodeai/dsh-client-ui-primitives'
 import { webCardModel } from '../src/client/tool/models/web-card-model.ts'
-import { createChatStore } from '@deepseek-ai/dsh-client-ui-chat/src/client/stores.ts'
+import { createChatStore } from '@xfcodeai/dsh-client-ui-chat/src/client/stores.ts'
 import { GenericToolCard } from '../src/client/tool/toolviews/GenericToolCard.tsx'
-import { DetailsPanel } from '@deepseek-ai/dsh-client-ui-chat/src/client/details/DetailsPanel.tsx'
+import { DetailsPanel } from '@xfcodeai/dsh-client-ui-chat/src/client/details/DetailsPanel.tsx'
 import { WebRow, webToolview } from '../src/client/tool/toolviews/web-row.tsx'
 import { renderToolDetails, toolChatSnapshot, useEmptyTrajectory } from './tool-details-render.client.tsx'
-import { makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
-import { zh as commonZh } from '@deepseek-ai/dsh-client-locale/src/locales/zh.ts'
-import { zh } from '@deepseek-ai/dsh-client-ui-conversation/src/client/locales.ts'
-import { zh as chatZh } from '@deepseek-ai/dsh-client-ui-chat/src/client/locale.ts'
+import { makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
+import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+import { zh } from '@xfcodeai/dsh-client-ui-conversation/src/client/locales.ts'
+import { zh as chatZh } from '@xfcodeai/dsh-client-ui-chat/src/client/locale.ts'
 
 afterEach(cleanup)
 

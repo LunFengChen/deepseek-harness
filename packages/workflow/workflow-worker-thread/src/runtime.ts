@@ -9,22 +9,22 @@
  * per-item nulls. Every returned promise has a rejection consumer so dropped script promises cannot
  * kill the worker. A cancelled script that never settles emits nothing; the host force-settles the
  * run within grace and terminates the thread.
- * @module @deepseek-ai/dsh-workflow-worker-thread/runtime
+ * @module @xfcodeai/dsh-workflow-worker-thread/runtime
  */
 
 import * as vm from 'node:vm'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import type { SessionId } from '@deepseek-ai/dsh-session'
-import { assertObjectJsonSchema, JsonSchemaError } from '@deepseek-ai/dsh-tools'
-import type { ObjectJsonSchema } from '@deepseek-ai/dsh-tools'
-import { isFatalWorkflowError, WorkflowError } from '@deepseek-ai/dsh-workflow'
+import { brandString } from '@xfcodeai/dsh-brand'
+import type { ContentBlock } from '@xfcodeai/dsh-llm'
+import type { SessionId } from '@xfcodeai/dsh-session'
+import { assertObjectJsonSchema, JsonSchemaError } from '@xfcodeai/dsh-tools'
+import type { ObjectJsonSchema } from '@xfcodeai/dsh-tools'
+import { isFatalWorkflowError, WorkflowError } from '@xfcodeai/dsh-workflow'
 import type {
   WorkflowAgentEndInfo,
   WorkflowAgentInfo,
   WorkflowMeta,
   WorkflowResult,
-} from '@deepseek-ai/dsh-workflow'
+} from '@xfcodeai/dsh-workflow'
 import { materializeFromRealm, MaterializeError, renderThrown } from './realm.ts'
 import type { ChildHandle, ChildPort, WorkerLimits } from './types.ts'
 

@@ -3,7 +3,7 @@ description: "App-owned command lines for dsh app bins: your app parses its own 
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-cmdline
+# @xfcodeai/dsh-cmdline
 
 English | [中文](README.zh.md)
 
@@ -45,14 +45,14 @@ You bring your own commander program: declare your flags and your actions, and t
 
 ```yaml
 - id: web-startup
-  name: '@deepseek-ai/dsh-web-app/startup'
+  name: '@xfcodeai/dsh-web-app/startup'
 ```
 
 Rows configured from the parsed values inject the published service and read it directly in their config:
 
 ```yaml
 - id: webserver
-  name: '@deepseek-ai/dsh-host-webserver'
+  name: '@xfcodeai/dsh-host-webserver'
   inject: [webStartup]
   config:
     host: !!js ctx.webStartup.host ?? '127.0.0.1'

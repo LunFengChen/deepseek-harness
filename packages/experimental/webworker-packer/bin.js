@@ -7,7 +7,7 @@
  * at install time. `lib/bin.js` is a build product and is absent on a clean
  * checkout, so this committed file is the link target; it forwards to the build
  * product when the command runs.
- * @module @deepseek-ai/dsh-experimental-webworker-packer/bin
+ * @module @xfcodeai/dsh-experimental-webworker-packer/bin
  */
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'

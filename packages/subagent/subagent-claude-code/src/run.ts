@@ -3,7 +3,7 @@
  * real CLI process under the shared subprocess owner, map only strict SDK
  * success to completion, and dispose to whole-tree quiescence.
  *
- * @module @deepseek-ai/dsh-subagent-claude-code/run
+ * @module @xfcodeai/dsh-subagent-claude-code/run
  */
 
 import { randomUUID } from 'node:crypto'
@@ -15,9 +15,9 @@ import {
   type SDKResultMessage,
   type SpawnOptions,
 } from '@anthropic-ai/claude-agent-sdk'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { SessionId } from '@deepseek-ai/dsh-session'
+import type { ContentBlock } from '@xfcodeai/dsh-llm'
+import { brandString } from '@xfcodeai/dsh-brand'
+import type { SessionId } from '@xfcodeai/dsh-session'
 import {
   settleRunResult,
   subprocessRunHandle,
@@ -25,13 +25,13 @@ import {
   type SubagentRun,
   type SubagentStartRequest,
   type SubagentStopReason,
-} from '@deepseek-ai/dsh-subagent'
+} from '@xfcodeai/dsh-subagent'
 import {
   scrubbedParentEnv,
   type SubprocessHandle,
   type SubprocessOutcome,
   type SubprocessSpawnSpec,
-} from '@deepseek-ai/dsh-subprocess'
+} from '@xfcodeai/dsh-subprocess'
 import {
   claudeSpawnSpec,
   ManagedClaudeCodeProcess,

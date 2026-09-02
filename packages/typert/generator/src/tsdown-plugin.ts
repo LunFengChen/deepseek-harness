@@ -3,7 +3,7 @@
  * standard decorators in TypeScript dependencies before bundling, then emits
  * model-driven face artifacts at the package output root. Packages without a
  * Typert or Remote export are skipped.
- * @module @deepseek-ai/dsh-typert-generator/tsdown
+ * @module @xfcodeai/dsh-typert-generator/tsdown
  */
 
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'

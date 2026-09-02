@@ -3,7 +3,7 @@ description: "The default POSIX Bash executor for deployments and maintainers ch
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-bash-local
+# @xfcodeai/dsh-bash-local
 
 English | [中文](README.zh.md)
 
@@ -33,7 +33,7 @@ Load the executor with the budgets you want; every field has a default, so the s
 
 ```yaml
 - id: bash
-  name: '@deepseek-ai/dsh-bash-local'
+  name: '@xfcodeai/dsh-bash-local'
   config:
     cwd: /path/to/workspace
     timeoutMs: 120000
@@ -48,7 +48,7 @@ Load the executor with the budgets you want; every field has a default, so the s
 | `maxSpillBytes` | `67,108,864` | Per-stream full-output spill cap |
 | `graceMs` | `3,000` | Grace period for kill escalation and post-exit pipe draining |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-bash-local) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-bash-local) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Running commands
 

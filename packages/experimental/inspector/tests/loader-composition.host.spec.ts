@@ -7,7 +7,7 @@ import { pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import WebServer from '@deepseek-ai/dsh-host-webserver'
+import WebServer from '@xfcodeai/dsh-host-webserver'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as Inspector from '../src/index.ts'
 
@@ -26,11 +26,11 @@ describe('experimental Inspector through a real Loader composition', () => {
     root = await mkdtemp(join(tmpdir(), 'dsh-inspector-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@deepseek-ai/dsh-host-webserver'",
+      "- name: '@xfcodeai/dsh-host-webserver'",
       '  config:',
       "    host: '127.0.0.1'",
       '    port: 0',
-      "- name: '@deepseek-ai/dsh-experimental-inspector'",
+      "- name: '@xfcodeai/dsh-experimental-inspector'",
       '  config:',
       '    port: 0',
       '    captureFetch: false',
@@ -50,8 +50,8 @@ describe('experimental Inspector through a real Loader composition', () => {
     })
     context.loader.builtins.include = Include
     const modules = new Map<string, unknown>([
-      ['@deepseek-ai/dsh-host-webserver', WebServer],
-      ['@deepseek-ai/dsh-experimental-inspector', Inspector],
+      ['@xfcodeai/dsh-host-webserver', WebServer],
+      ['@xfcodeai/dsh-experimental-inspector', Inspector],
     ])
     context.loader.internal = {
       version: 'v2',
@@ -74,7 +74,7 @@ describe('experimental Inspector through a real Loader composition', () => {
     })
 
     const inspectorEntry = [...context.loader.entries()]
-      .find(entry => entry.options.name === '@deepseek-ai/dsh-experimental-inspector')
+      .find(entry => entry.options.name === '@xfcodeai/dsh-experimental-inspector')
     expect(inspectorEntry?.fiber).toBeDefined()
     await inspectorEntry!.fiber!.dispose()
     expect(context.get('inspector')).toBeUndefined()

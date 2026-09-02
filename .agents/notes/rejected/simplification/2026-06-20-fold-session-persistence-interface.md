@@ -18,7 +18,7 @@ The implementing PR should update the [capability seams](../../implemented/archi
 
 ## Acceptance criteria
 
-- `@deepseek-ai/dsh-session-persistence` is removed as a package.
+- `@xfcodeai/dsh-session-persistence` is removed as a package.
 - `dsh-session` exports the persistence service type, coordinator, and contract helpers.
 - JSONL and SQLite backend packages depend on `dsh-session` directly.
 - `agent-loop` resume uses the session-owned service key.

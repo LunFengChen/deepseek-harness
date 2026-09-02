@@ -11,16 +11,16 @@
  * between this module and one in-package caller, not something a plugin may
  * depend on.
  *
- * @module @deepseek-ai/dsh-subagent/lifecycle
+ * @module @xfcodeai/dsh-subagent/lifecycle
  */
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import { foldConsumedWork } from '@deepseek-ai/dsh-agent'
-import { SessionLogOffset } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionId, SessionLogOffset as SessionLogOffsetType } from '@deepseek-ai/dsh-session'
+import type { Agent } from '@xfcodeai/dsh-agent'
+import type { ContentBlock } from '@xfcodeai/dsh-llm'
+import { foldConsumedWork } from '@xfcodeai/dsh-agent'
+import { SessionLogOffset } from '@xfcodeai/dsh-session'
+import type { SessionEvent, SessionId, SessionLogOffset as SessionLogOffsetType } from '@xfcodeai/dsh-session'
 import { finalAssistantOutput } from './assistant-output.ts'
 import { SubagentRunId } from './types.ts'
 import type { SubagentResult, SubagentRun, SubagentRunEndInfo, SubagentRunInfo } from './types.ts'

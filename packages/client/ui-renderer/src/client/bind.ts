@@ -8,7 +8,7 @@
 // bundler and NodeNext resolution accept this form, while `@types/…` exposes
 // only the extensionless subpath under its exports.
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector'
-import type { HostObservable, SnapshotSelectorHook } from '@deepseek-ai/dsh-client-ui-slots'
+import type { HostObservable, SnapshotSelectorHook } from '@xfcodeai/dsh-client-ui-slots'
 
 /**
  * Bind a bare observable source to a typed uSES selector hook.

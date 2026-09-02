@@ -1,8 +1,8 @@
 /** One Host-generation model catalog shared by every Session selector. */
 
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { ModelCatalog } from '@deepseek-ai/dsh-api-remotes/client'
-import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-store'
+import type { ModelCatalog } from '@xfcodeai/dsh-api-remotes/client'
+import { createSnapshotStore, type SnapshotStore } from '@xfcodeai/dsh-client-store'
 
 /** Observable lifecycle of the shared model catalog. */
 export interface ModelCatalogState {

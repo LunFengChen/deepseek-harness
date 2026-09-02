@@ -26,12 +26,12 @@ function workspaceFixture(options: {
   mkdirSync(split, { recursive: true })
   writeJson(join(root, 'tsconfig.base.json'), {})
   writeJson(join(root, 'tsconfig.base.client.json'), { extends: './tsconfig.base.json' })
-  writeJson(join(shared, 'package.json'), { name: '@deepseek-ai/dsh-shared' })
+  writeJson(join(shared, 'package.json'), { name: '@xfcodeai/dsh-shared' })
   writeJson(join(shared, 'tsconfig.json'), {
     extends: '../../../tsconfig.base.json',
     references: [],
   })
-  writeJson(join(split, 'package.json'), { name: '@deepseek-ai/dsh-split' })
+  writeJson(join(split, 'package.json'), { name: '@xfcodeai/dsh-split' })
   writeJson(join(split, 'tsconfig.json'), {
     files: [],
     references: [{ path: './tsconfig.host.json' }, { path: './tsconfig.client.json' }],
@@ -79,14 +79,14 @@ describe('Project Reference compiler faces', () => {
     })
     const hostConsumer = join(root, 'packages/core/host-consumer')
     mkdirSync(hostConsumer, { recursive: true })
-    writeJson(join(hostConsumer, 'package.json'), { name: '@deepseek-ai/dsh-host-consumer' })
+    writeJson(join(hostConsumer, 'package.json'), { name: '@xfcodeai/dsh-host-consumer' })
     writeJson(join(hostConsumer, 'tsconfig.json'), {
       extends: '../../../tsconfig.base.json',
       references: [{ path: '../../api/split/tsconfig.client.json' }],
     })
     const clientConsumer = join(root, 'packages/core/client-consumer')
     mkdirSync(clientConsumer, { recursive: true })
-    writeJson(join(clientConsumer, 'package.json'), { name: '@deepseek-ai/dsh-client-consumer' })
+    writeJson(join(clientConsumer, 'package.json'), { name: '@xfcodeai/dsh-client-consumer' })
     writeJson(join(clientConsumer, 'tsconfig.json'), {
       extends: '../../../tsconfig.base.client.json',
       references: [{ path: '../../api/split/tsconfig.host.json' }],

@@ -3,7 +3,7 @@ description: "SDK stdio application profile for users and maintainers launching 
 kind: "package-bundle"
 ---
 
-# `@deepseek-ai/dsh-sdk-app`
+# `@xfcodeai/dsh-sdk-app`
 
 English | [中文](README.zh.md)
 

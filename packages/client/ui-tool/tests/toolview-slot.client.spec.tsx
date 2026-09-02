@@ -2,17 +2,17 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup } from '@testing-library/react'
-import type { ISession } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { ISession } from '@xfcodeai/dsh-api-session-controller/client'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
 import {
   apply as applyChat, inject as injectChat, type ToolResultNode,
-} from '@deepseek-ai/dsh-client-ui-chat/client'
-import type { PropsRenderSlots } from '@deepseek-ai/dsh-client-ui-slots'
-import { SlotTestRuntime, TestRemote, stubSettingsScope } from '@deepseek-ai/dsh-client-test-runtime'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
-import { apply as applyConversation, inject as injectConversation } from '@deepseek-ai/dsh-client-ui-conversation/client'
-import { apply as applyTool, inject as injectTool } from '@deepseek-ai/dsh-client-ui-tool/client'
-import type { ToolCallViewProps } from '@deepseek-ai/dsh-client-ui-tool/client'
+} from '@xfcodeai/dsh-client-ui-chat/client'
+import type { PropsRenderSlots } from '@xfcodeai/dsh-client-ui-slots'
+import { SlotTestRuntime, TestRemote, stubSettingsScope } from '@xfcodeai/dsh-client-test-runtime'
+import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
+import { apply as applyConversation, inject as injectConversation } from '@xfcodeai/dsh-client-ui-conversation/client'
+import { apply as applyTool, inject as injectTool } from '@xfcodeai/dsh-client-ui-tool/client'
+import type { ToolCallViewProps } from '@xfcodeai/dsh-client-ui-tool/client'
 import { toolSessionEvents } from './tool-details-render.client.tsx'
 
 const SID = 's1' as SessionId

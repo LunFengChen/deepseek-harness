@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/simplification/2026-08-30-jsonl-only-session-persistence.md
-2026-08-30-jsonl-only-session-persistence.md: f21fb89e3747dffd043d42ace2c05bbe521f3069
-2026-08-30-jsonl-only-session-persistence.zh.md: 4100e576ccdcd46443e12a22cfec6dd3d3495317
+2026-08-30-jsonl-only-session-persistence.md: a4237c170faca5a9ed96632fed6980574dcb22b1
+2026-08-30-jsonl-only-session-persistence.zh.md: 21643bdeadbf12e624daaa5f3a974da86530b1f0

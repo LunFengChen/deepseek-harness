@@ -56,7 +56,7 @@ PR（Pull Request） CI 不会调用 pack 命令；安装态入口探测属于�
 
 测试至少覆盖以下执行面：
 
-- `@deepseek-ai/dsh` 安装后的 `dsh --version` 与 `dsh --dump-default-config` 在普通 Node 下成功，分别覆盖静态 CLI 入口和一个动态模式入口。
+- `@xfcodeai/dsh` 安装后的 `dsh --version` 与 `dsh --dump-default-config` 在普通 Node 下成功，分别覆盖静态 CLI 入口和一个动态模式入口。
 - 安装后的默认 `dsh` 在 PTY 中完成一次无密钥 TUI 启动，到达既定 ready 信号后由测试受控退出。这条路径必须加载真实 TUI 动态 chunk，因此缺少类似 `lib/tui-*.js` 的发布文件会使门禁失败。
 - 每个其他已发布 `bin` 都定义一个不会访问真实服务或修改用户状态的包级冒烟命令。不同 CLI 不强制共用 `--help`；测试必须运行其真实安装入口并检查约定的退出或 ready 信号。
 - Node 兼容的公开运行时入口从安装目录加载；浏览器、worker 或必须由宿主协议驱动的入口使用对应的隔离 fixture（测试前置数据），但输入仍只能是本次 tarball。
@@ -107,7 +107,7 @@ PR 与普通 push 可以运行无凭据的 pack-and-test 信号，从而在合�
 
 全量 pack、安装和启动会增加 CI 时间与工作流产物体积。实现应缓存外部依赖和 pnpm store，但不得缓存或复用目标包的已安装 workspace 输出；并行执行安全的消费方 probe 可以降低时延。
 
-把所有 tarball 都安装为临时项目的顶层依赖可能掩盖未声明的内部依赖。测试生成器应按被测应用的声明式递归闭包安装，并结合现有依赖门禁；对依赖面接近全集的 `@deepseek-ai/dsh`，仍需依靠 package manifest 与静态图检查发现未声明边。
+把所有 tarball 都安装为临时项目的顶层依赖可能掩盖未声明的内部依赖。测试生成器应按被测应用的声明式递归闭包安装，并结合现有依赖门禁；对依赖面接近全集的 `@xfcodeai/dsh`，仍需依靠 package manifest 与静态图检查发现未声明边。
 
 不同平台的 optional dependency、native addon、PTY 与浏览器入口可能需要平台专属 probe。第一阶段至少在发布所用 Linux runner 和一个本地 macOS 路径上覆盖主 `dsh` 启动，后续矩阵按实际发布平台扩展；不能用跳过不稳定 probe 的方式把生产路径移出门禁。
 

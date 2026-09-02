@@ -4,10 +4,10 @@
  * reaches a Host-only symbol, so a Client compilation face reads the same
  * `commands/change` signature the Host emits.
  *
- * @module @deepseek-ai/dsh-commands/types
+ * @module @xfcodeai/dsh-commands/types
  */
 
-import type { SessionSeq } from '@deepseek-ai/dsh-session/types'
+import type { SessionSeq } from '@xfcodeai/dsh-session/types'
 import type { CommandId } from './brand.ts'
 
 /** Immutable metadata for a command's optional unstructured input. */
@@ -82,7 +82,7 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@xfcodeai/dsh-session/types' {
   interface SessionEventMap {
     /**
      * A resolved slash command entered its handler. Log-only (never model
@@ -105,7 +105,7 @@ declare module '@deepseek-ai/dsh-session/types' {
       commandId: CommandId
       kind: 'success' | 'error'
       text?: string
-      sourceEventSeq?: import('@deepseek-ai/dsh-session/types').SessionSeq
+      sourceEventSeq?: import('@xfcodeai/dsh-session/types').SessionSeq
     }
   }
 }

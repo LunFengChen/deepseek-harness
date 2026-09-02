@@ -9,14 +9,14 @@
  */
 import type {
   PickOutcome, TokenSpan,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+} from '@xfcodeai/dsh-client-ui-conversation/client'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
 
 export type {
   ArbitrateKey, ArbitrateOutcome, BeginCommandRequest, CommandClaim, ConsumeTokenRequest,
   InsertReferenceRequest, InsertTextRequest, PickOutcome, ReferenceInsert, SubmitImageAttachment,
   SubmitOutcome, TokenSpan,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@xfcodeai/dsh-client-ui-conversation/client'
 
 /**
  * The provider-facing projection of one client session. It carries stable

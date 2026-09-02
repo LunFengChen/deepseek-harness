@@ -29,7 +29,7 @@ One frame in the Session Controller control stream:
 `SessionJob` is browser-safe and owned beside the other Session Remote contracts in [`packages/api/session-controller/src/types.ts`](../../../../packages/api/session-controller/src/types.ts):
 
 ```ts
-import type { JobId } from '@deepseek-ai/dsh-jobs/brand'
+import type { JobId } from '@xfcodeai/dsh-jobs/brand'
 
 export interface SessionJob {
   id: JobId
@@ -42,7 +42,7 @@ export interface SessionJob {
 }
 ```
 
-`JobId` comes from the cordis-free [`@deepseek-ai/dsh-jobs/brand`](../../../../packages/jobs/jobs/src/brand.ts) leaf — the same arrangement as the `@deepseek-ai/dsh-llm/brand` import `api/subagents.ts` already uses, because the `dsh-jobs` root reaches `dsh-agent` and is unreachable from a client program even as a type. Like every other non-root subpath in this workspace, it carries an explicit `tsconfig.base.json` `paths` entry; without one the Typert analyzer resolves the specifier to `lib/types/` and rejects the reference as unexported.
+`JobId` comes from the cordis-free [`@xfcodeai/dsh-jobs/brand`](../../../../packages/jobs/jobs/src/brand.ts) leaf — the same arrangement as the `@xfcodeai/dsh-llm/brand` import `api/subagents.ts` already uses, because the `dsh-jobs` root reaches `dsh-agent` and is unreachable from a client program even as a type. Like every other non-root subpath in this workspace, it carries an explicit `tsconfig.base.json` `paths` entry; without one the Typert analyzer resolves the specifier to `lib/types/` and rejects the reference as unexported.
 
 `kind` is `string` on the wire rather than `JobKind`. The kind map is merge-extensible by producer plugins, so a client build cannot enumerate the closed set; presentation falls through a documented default for an unrecognized kind.
 
@@ -87,7 +87,7 @@ Two replacement points keep it honest. Each control-stream generation clears the
 
 ### The header action
 
-[`@deepseek-ai/dsh-client-ui-jobs`](../../../../packages/client/ui-jobs/README.md) registers one entry in `conversation.session.header.actions`, ordered after the subagent catalog. Its own README owns the presentation contract; the decisions worth recording here are that the control does not render at all until the session has a task, that the live badge is omitted at zero so a history-only session keeps a quiet entry point, and that settled rows stay visible because a failed task's `detail` is the only place its failure is legible.
+[`@xfcodeai/dsh-client-ui-jobs`](../../../../packages/client/ui-jobs/README.md) registers one entry in `conversation.session.header.actions`, ordered after the subagent catalog. Its own README owns the presentation contract; the decisions worth recording here are that the control does not render at all until the session has a task, that the live badge is omitted at zero so a history-only session keeps a quiet entry point, and that settled rows stay visible because a failed task's `detail` is the only place its failure is legible.
 
 A running one-shot background subagent therefore appears both there and in the subagent catalog. The two answer different questions — the catalog navigates into the child's transcript, this list is the only handle a cancellation can ever attach to — and suppressing `kind: 'subagent'` here would leave the cancellation phase with no entry point for exactly those tasks.
 
@@ -133,4 +133,4 @@ Below it, [`jobs-local`](../../../../packages/jobs/jobs-local/tests/jobs.spec.ts
 
 **Two entry points for one running subagent.** Accepted deliberately, and bounded to one-shot background delegations. If it reads as noise in practice, the fix is presentational — the catalog row can cite the task rather than the task list hiding the kind.
 
-**A new non-root subpath needs its `paths` entry.** `@deepseek-ai/dsh-jobs/brand` had to be registered in `tsconfig.base.json` before the Typert analyzer would accept the reference. The failure mode is a confusing "not exported by" error from a generator far from the edit, so the entry is part of adding a subpath, not an optimization.
+**A new non-root subpath needs its `paths` entry.** `@xfcodeai/dsh-jobs/brand` had to be registered in `tsconfig.base.json` before the Typert analyzer would accept the reference. The failure mode is a confusing "not exported by" error from a generator far from the edit, so the entry is part of adding a subpath, not an optimization.

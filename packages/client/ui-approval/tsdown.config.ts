@@ -1,3 +1,3 @@
 import { clientBundle } from '../tsdown.client.ts'
 
-export default clientBundle('@deepseek-ai/dsh-client-ui-approval', ['lib/types/index.js'])
+export default clientBundle('@xfcodeai/dsh-client-ui-approval', ['lib/types/index.js'])

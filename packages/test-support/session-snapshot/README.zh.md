@@ -3,7 +3,7 @@ description: "面向无密钥 profile 测试的 session-log 快照支持：manif
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-session-snapshot
+# @xfcodeai/dsh-session-snapshot
 
 [English](README.md) | 中文
 
@@ -38,7 +38,7 @@ import {
   defineAcpSnapshotSuite,
   type Scenario,
   type SnapshotSuiteOptions,
-} from '@deepseek-ai/dsh-session-snapshot'
+} from '@xfcodeai/dsh-session-snapshot'
 
 function snapshotMode(value: string | undefined): SnapshotSuiteOptions['mode'] {
   switch (value) {

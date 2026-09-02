@@ -3,7 +3,7 @@ description: "用于在无提供方密钥的情况下测试 LLM 适配器与恢�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-llm-mock-server
+# @xfcodeai/dsh-llm-mock-server
 
 [English](README.md) | 中文
 

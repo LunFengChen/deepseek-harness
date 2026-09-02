@@ -6,10 +6,10 @@ import { randomBytes } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import LlmRuntime, { createUserMessage, ToolCallId, ReasoningEffortId, createMessage } from '@deepseek-ai/dsh-llm'
-import type { Message, ToolSchema } from '@deepseek-ai/dsh-llm'
-import AttachmentStore, { AttachmentId, ImageVariantId } from '@deepseek-ai/dsh-attachment'
+import AgentRegistry from '@xfcodeai/dsh-agent'
+import LlmRuntime, { createUserMessage, ToolCallId, ReasoningEffortId, createMessage } from '@xfcodeai/dsh-llm'
+import type { Message, ToolSchema } from '@xfcodeai/dsh-llm'
+import AttachmentStore, { AttachmentId, ImageVariantId } from '@xfcodeai/dsh-attachment'
 import type {
   ImageAttachmentLimits,
   ImageAttachmentRef,
@@ -17,14 +17,14 @@ import type {
   RequestImageAttachment,
   SaveImageAttachment,
   StoredImageAttachment,
-} from '@deepseek-ai/dsh-attachment'
-import { LocalCredentialProvider } from '@deepseek-ai/dsh-credentials-local'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
-import * as PluginPackageInventoryDeepSeek from '@deepseek-ai/dsh-plugin-package-inventory-deepseek'
-import * as SessionLogDeepSeek from '@deepseek-ai/dsh-session-log-deepseek'
-import * as LlmDeepSeek from '@deepseek-ai/dsh-llm-deepseek'
-import type { Config } from '@deepseek-ai/dsh-llm-deepseek'
+} from '@xfcodeai/dsh-attachment'
+import { LocalCredentialProvider } from '@xfcodeai/dsh-credentials-local'
+import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
+import DeepSeekLlmApiExtensionRegistry from '@xfcodeai/dsh-deepseek-llm-api-extensions'
+import * as PluginPackageInventoryDeepSeek from '@xfcodeai/dsh-plugin-package-inventory-deepseek'
+import * as SessionLogDeepSeek from '@xfcodeai/dsh-session-log-deepseek'
+import * as LlmDeepSeek from '@xfcodeai/dsh-llm-deepseek'
+import type { Config } from '@xfcodeai/dsh-llm-deepseek'
 import { assemble, type AssembledResult } from './assemble.ts'
 
 /**

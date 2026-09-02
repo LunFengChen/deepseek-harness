@@ -1,3 +1,3 @@
 import { clientBundle } from '../../client/tsdown.client.ts'
 
-export default clientBundle('@deepseek-ai/dsh-typert-registry', ['lib/types/index.js'])
+export default clientBundle('@xfcodeai/dsh-typert-registry', ['lib/types/index.js'])

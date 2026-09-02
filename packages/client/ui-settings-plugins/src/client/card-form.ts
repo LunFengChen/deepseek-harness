@@ -13,8 +13,8 @@
  * override equal to the composition default is still an override.
  */
 
-import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { SettingsScope, SettingsScopeSnapshot } from '@deepseek-ai/dsh-client-ui-settings/client'
+import { createSnapshotStore, type SnapshotStore } from '@xfcodeai/dsh-client-store'
+import type { SettingsScope, SettingsScopeSnapshot } from '@xfcodeai/dsh-client-ui-settings/client'
 
 /** The write one field's staged text performs when the card is saved. */
 export type FieldWrite =

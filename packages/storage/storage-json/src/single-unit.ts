@@ -6,13 +6,13 @@
  * caller (the domain layer's write chain); this unit only guarantees that
  * each single call publishes a complete, durable file. The `per-record`
  * layout is a separate unit class in `per-record-unit.ts`.
- * @module @deepseek-ai/dsh-storage-json/src/single-unit
+ * @module @xfcodeai/dsh-storage-json/src/single-unit
  */
 
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { StorageError } from '@deepseek-ai/dsh-storage'
-import type { KvUnit, KvUnitDescriptor } from '@deepseek-ai/dsh-storage'
+import { StorageError } from '@xfcodeai/dsh-storage'
+import type { KvUnit, KvUnitDescriptor } from '@xfcodeai/dsh-storage'
 import { writeAtomic } from './atomic.ts'
 import { parse, serialize } from './format.ts'
 import type { UnitState } from './format.ts'

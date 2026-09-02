@@ -102,7 +102,7 @@ export const API_REMOTE_FORWARDED_EVENTS = [
 // types.ts — the type face, derived
 export type ApiRemoteForwardedEvent = typeof API_REMOTE_FORWARDED_EVENTS[number]['event']
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@xfcodeai/dsh-typert-protocol' {
   interface TypertRemoteEventSelection extends Record<ApiRemoteForwardedEvent, true> {}
 }
 ```
@@ -140,7 +140,7 @@ Client 要求首项是带非空 `clientId` 与 `host.home` 的 `ready`；后续 
 
 `apps/web/tests/**` 那批 e2e 在**根 `tsconfig.host.json`** 做类型检查：它们在进程内起真 harness、直接访问 `ctx.connection`、Host `SessionStore.get/create/flush` 与 `ctx.sessionProjectionCache`。**运行时用浏览器 ≠ 类型上属于 Client 程序**——把它们搬进 Client 聚合会报错，因为一个 program 装不下两个 face 对同一个 Context key 的合并。
 
-由此得到一条对本设计要紧的连带纪律：**这些测试从客户端包 import 值或类型，会把该包的整个 project——以及它引用的每个 project——拖进 Host 构建图**。`ui-settings-general`/`ui-settings-models`/`ui-permission`/`ui-commands` 四个消费者 references `api/remotes` 的 client face，而该 face 必须等 host tsdown 生成 `@deepseek-ai/dsh-goal/remote` 才能编译，于是形成构建期死锁：host tsc → api/remotes client face → `goal/remote` → host tsdown → 排在 host tsc 之后。
+由此得到一条对本设计要紧的连带纪律：**这些测试从客户端包 import 值或类型，会把该包的整个 project——以及它引用的每个 project——拖进 Host 构建图**。`ui-settings-general`/`ui-settings-models`/`ui-permission`/`ui-commands` 四个消费者 references `api/remotes` 的 client face，而该 face 必须等 host tsdown 生成 `@xfcodeai/dsh-goal/remote` 才能编译，于是形成构建期死锁：host tsc → api/remotes client face → `goal/remote` → host tsdown → 排在 host tsc 之后。
 
 所需的客户端符号在测试侧**镜像**了一份（`scaffold.ts` 导出镜像后的 welcome-notice 常量，两个 chat e2e 直接引 `dsh-client-runtime/client` 因为 `runtime` 工程本来就在 host 图里），从而让那 4 个消费者离开了 host 图；`apps/cli/tsconfig.json` 里 15 条 client 工程引用随之失去 owner-map 职责，已一并删除。镜像值与源逐字一致，漂移的表现是选择器失配或通知未被抑制，都是响亮失败。
 

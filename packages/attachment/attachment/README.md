@@ -3,7 +3,7 @@ description: "Durable image attachments for users and maintainers attaching, reu
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-attachment
+# @xfcodeai/dsh-attachment
 
 English | [中文](README.zh.md)
 
@@ -32,7 +32,7 @@ Image attachments work end to end: attach an image to a prompt or a command, and
 Attach one or more images to a user prompt in the client UI. Each source is checked, normalized to a provider-independent 8-bit sRGB/sRGBA raster, and saved before your message is processed; if any image is refused, the whole message fails and nothing is published. Supported source formats are PNG, JPEG, WebP, and GIF; a deployment controls source limits separately from normalized-storage and route-specific request limits. The one plugin below enables durable image attachments (the shipped base composition already mounts it):
 
 ```yaml
-- name: '@deepseek-ai/dsh-attachment-local'
+- name: '@xfcodeai/dsh-attachment-local'
 ```
 
 ### Pass images to commands

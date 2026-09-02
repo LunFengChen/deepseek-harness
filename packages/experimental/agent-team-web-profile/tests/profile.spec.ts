@@ -20,7 +20,7 @@ describe('Agent Teams Web profile bundle', () => {
     expect(manifest.publishConfig).toBeUndefined()
     expect(manifest.dsh?.bundle?.patch).toBe('./cordis.patch.yml')
     expect(manifest.dependencies).toEqual({
-      '@deepseek-ai/dsh-experimental-client-ui-agent-team': 'workspace:^',
+      '@xfcodeai/dsh-experimental-client-ui-agent-team': 'workspace:^',
     })
 
     const parsed = yaml.load(
@@ -28,7 +28,7 @@ describe('Agent Teams Web profile bundle', () => {
       { schema: entryListSchema },
     ) as { insert?: { id?: string; name?: string }[] }[]
     expect(parsed.flatMap(patch => patch.insert ?? [])).toEqual([
-      { id: 'ui-agent-team', name: '@deepseek-ai/dsh-experimental-client-ui-agent-team' },
+      { id: 'ui-agent-team', name: '@xfcodeai/dsh-experimental-client-ui-agent-team' },
     ])
   })
 })

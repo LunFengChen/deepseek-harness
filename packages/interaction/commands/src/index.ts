@@ -1,19 +1,19 @@
 /**
  * Plugin-owned human-command registry shared by interactive UI adapters.
- * @module @deepseek-ai/dsh-commands
+ * @module @xfcodeai/dsh-commands
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import { randomUUID } from '@deepseek-ai/dsh-util-crypto'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { AttachmentError, admitEncodedImages } from '@deepseek-ai/dsh-attachment'
-import type { EncodedImageAttachment } from '@deepseek-ai/dsh-attachment/types'
-import type { ImageBlock } from '@deepseek-ai/dsh-llm'
-import { NamedEntries, ScopedLayers } from '@deepseek-ai/dsh-scope'
-import type { ScopeKey, ScopeLayer } from '@deepseek-ai/dsh-scope'
-import { SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionEventMap } from '@deepseek-ai/dsh-session'
-import { TypertRemoteService, Remote } from '@deepseek-ai/dsh-typert-protocol'
+import { randomUUID } from '@xfcodeai/dsh-util-crypto'
+import type { Agent } from '@xfcodeai/dsh-agent'
+import { AttachmentError, admitEncodedImages } from '@xfcodeai/dsh-attachment'
+import type { EncodedImageAttachment } from '@xfcodeai/dsh-attachment/types'
+import type { ImageBlock } from '@xfcodeai/dsh-llm'
+import { NamedEntries, ScopedLayers } from '@xfcodeai/dsh-scope'
+import type { ScopeKey, ScopeLayer } from '@xfcodeai/dsh-scope'
+import { SessionSeq } from '@xfcodeai/dsh-session'
+import type { Session, SessionEvent, SessionEventMap } from '@xfcodeai/dsh-session'
+import { TypertRemoteService, Remote } from '@xfcodeai/dsh-typert-protocol'
 import { CommandId } from './brand.ts'
 import type {
   CommandDescriptor,

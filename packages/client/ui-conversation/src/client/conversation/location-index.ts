@@ -1,8 +1,8 @@
 import {
   type SessionEventLike, type SessionEventLikeEntry,
-} from '@deepseek-ai/dsh-api-session-controller/client'
-import { notifySubscribers } from '@deepseek-ai/dsh-client-store'
-import type { SessionEvent } from '@deepseek-ai/dsh-session/types'
+} from '@xfcodeai/dsh-api-session-controller/client'
+import { notifySubscribers } from '@xfcodeai/dsh-client-store'
+import type { SessionEvent } from '@xfcodeai/dsh-session/types'
 import type {
   ConversationLocation, ConversationLocationData,
   ConversationLocationDataSource, ConversationLocationDataStore, ConversationStepDataMap,

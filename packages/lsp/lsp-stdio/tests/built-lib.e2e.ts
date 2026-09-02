@@ -7,8 +7,8 @@ import { execa } from 'execa'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 /**
- * Keyless built-artifact smoke: plain Node imports `@deepseek-ai/dsh-lsp` and
- * `@deepseek-ai/dsh-lsp-stdio` by name through their exports maps, spawns the fixture server, runs
+ * Keyless built-artifact smoke: plain Node imports `@xfcodeai/dsh-lsp` and
+ * `@xfcodeai/dsh-lsp-stdio` by name through their exports maps, spawns the fixture server, runs
  * one query (exercising real `Content-Length` framing over `lib/index.js`), and disposes (exercising
  * subprocess cleanup). Unit tests use `src/`; this pins the downstream `lib/` path. Skips when `lib/`
  * is absent; CI runs it after the build.
@@ -41,10 +41,10 @@ describe.skipIf(!built)('built lib real load path (plain node)', () => {
     const location = JSON.stringify({ uri: pathToFileURL(join(ws, 'a.ts')).href, range: { start: { line: 0, character: 0 }, end: { line: 0, character: 3 } } })
     const script = `
       const { Context } = await import('@deepseek-ai/cordis')
-      const { default: Lsp } = await import('@deepseek-ai/dsh-lsp')
-      const LspLocal = await import('@deepseek-ai/dsh-lsp-stdio')
-      const { default: LocalFileSystem } = await import('@deepseek-ai/dsh-fs-local')
-      const { default: LocalSubprocessRuntime } = await import('@deepseek-ai/dsh-subprocess-local')
+      const { default: Lsp } = await import('@xfcodeai/dsh-lsp')
+      const LspLocal = await import('@xfcodeai/dsh-lsp-stdio')
+      const { default: LocalFileSystem } = await import('@xfcodeai/dsh-fs-local')
+      const { default: LocalSubprocessRuntime } = await import('@xfcodeai/dsh-subprocess-local')
       const ctx = new Context()
       await ctx.plugin(Lsp)
       await ctx.plugin(LocalSubprocessRuntime)

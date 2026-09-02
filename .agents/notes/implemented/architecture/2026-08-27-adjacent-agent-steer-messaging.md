@@ -26,7 +26,7 @@ Every accepted message uses `Agent.steer()`. A running target receives it at the
 Every direction uses one durable source. The service derives `senderSessionId` from the authorized Agent and frames the model-visible content as `Agent <sender-id> sent a message:`, so attribution cannot diverge from authority.
 
 ```ts
-import type { SessionId } from '@deepseek-ai/dsh-session'
+import type { SessionId } from '@xfcodeai/dsh-session'
 
 interface AgentMessageSource {
   readonly kind: 'agent-message'
@@ -54,7 +54,7 @@ Human browser prompts are not model-authored Agent messages. The remote prompt p
 
 ### Complete removal and reintroduction condition
 
-The standalone `@deepseek-ai/dsh-tool-subagent-report` package, `report` schema, `tool:report` prompt section, `reportDelivery` configuration, report-specific message source, catalog entries, composition rows, and supported-behavior snapshots are absent. The unified tool gives up the recipient-free child shortcut and the old ability for a structural return tool to survive an explicit child allow-list. Those capabilities return only if a concrete use case requires semantics that an adjacent `agent_id` and fixed Steer cannot express; reintroducing them requires a distinct model operation and prefix-cost evidence, not an alias over `sendMessage()`.
+The standalone `@xfcodeai/dsh-tool-subagent-report` package, `report` schema, `tool:report` prompt section, `reportDelivery` configuration, report-specific message source, catalog entries, composition rows, and supported-behavior snapshots are absent. The unified tool gives up the recipient-free child shortcut and the old ability for a structural return tool to survive an explicit child allow-list. Those capabilities return only if a concrete use case requires semantics that an adjacent `agent_id` and fixed Steer cannot express; reintroducing them requires a distinct model operation and prefix-cost evidence, not an alias over `sendMessage()`.
 
 ## Alternatives considered
 

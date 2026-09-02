@@ -6,7 +6,7 @@ Status: implemented
 
 ## 问题
 
-`@deepseek-ai/dsh-attachment-local` 的图片规范化和请求版本编码此前按 5-bit 色数采样选择编码器：128×128 最近邻采样量化后不超过 256 色的图片先走 palette PNG（libimagequant）再退 WebP，其他透明图片走 WebP，其他不透明图片走 JPEG。高频摄影类 JPEG 的量化采样经常落在阈值以下，issue #2885 的 8000×8000 复现图片采样色数为 175 和 184，实际色数为 2145 和 4077，而 palette PNG 是管线里最慢的编码器，在这类内容上产物还比 JPEG 大约 4 倍（2048px master 尺寸实测 2657ms/3.95MiB 对 26ms/0.95MiB）。采样本身因 `fastShrinkOnLoad: false` 必须全尺寸解码，64MP 源图上每张都要付出 86 至 192ms。当所有候选都超过字节上限时，两个编码器还会进入按比例缩图重试的循环，最终以 `IMAGE_TOO_LARGE` 报错，而实测最坏输入（均匀噪声）在默认预算下第一档质量就能装下。
+`@xfcodeai/dsh-attachment-local` 的图片规范化和请求版本编码此前按 5-bit 色数采样选择编码器：128×128 最近邻采样量化后不超过 256 色的图片先走 palette PNG（libimagequant）再退 WebP，其他透明图片走 WebP，其他不透明图片走 JPEG。高频摄影类 JPEG 的量化采样经常落在阈值以下，issue #2885 的 8000×8000 复现图片采样色数为 175 和 184，实际色数为 2145 和 4077，而 palette PNG 是管线里最慢的编码器，在这类内容上产物还比 JPEG 大约 4 倍（2048px master 尺寸实测 2657ms/3.95MiB 对 26ms/0.95MiB）。采样本身因 `fastShrinkOnLoad: false` 必须全尺寸解码，64MP 源图上每张都要付出 86 至 192ms。当所有候选都超过字节上限时，两个编码器还会进入按比例缩图重试的循环，最终以 `IMAGE_TOO_LARGE` 报错，而实测最坏输入（均匀噪声）在默认预算下第一档质量就能装下。
 
 ## 决定
 

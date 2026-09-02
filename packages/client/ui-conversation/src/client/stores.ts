@@ -1,6 +1,6 @@
 /** Per-session Conversation store shared by the shell body and header. */
-import { defineStore, type EngineStoreHandle } from '@deepseek-ai/dsh-client-store'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import { defineStore, type EngineStoreHandle } from '@xfcodeai/dsh-client-store'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
 import type { ConversationStoreState } from './contract/views.ts'
 
 const CONVERSATION_STORE_KEY = 'dsh.conversation'

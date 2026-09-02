@@ -16,15 +16,15 @@ Client 构建输入由发布 profile 选择，而 Host value import 由导入它
 
 [`verify-package-dependencies`](../../../../scripts/verify-package-dependencies.ts) 统一负责依赖区段策略。它始终覆盖 `packages/client/` 下的包，以及声明 `dsh.client` 的每个非实验包。在该目录内，`dsh.client` 标记需要扫描 Host 入口的 Client/Host 包；没有该声明的包是仅供 Client 编译的静态输入。在目录外，`dsh.client` 选择相同的 Client/Host 扫描。仅有 `"./client"` export 只是 API，不参与 npm 依赖策略选包。
 
-[`package-dependency-policy.ts`](../../../../scripts/package-dependency-policy.ts) 提供显式 Client 门面 include 与 exclude 列表。include 用于没有 `dsh.client` 的例外包，exclude 用于移除 `packages/client/` 之外自动发现的双面包。验证器拒绝未知、失效、冗余、重复、相互重叠和无法生效的配置项。include 列表为空；exclude 列表包含 `@deepseek-ai/dsh-api-session-controller` 和 `@deepseek-ai/dsh-api-workspace-controller`。把 Session Controller 加回会多迁移九条 Host 边，而五次候选复测的 resolver 中位数仅改善 0.15 秒。
+[`package-dependency-policy.ts`](../../../../scripts/package-dependency-policy.ts) 提供显式 Client 门面 include 与 exclude 列表。include 用于没有 `dsh.client` 的例外包，exclude 用于移除 `packages/client/` 之外自动发现的双面包。验证器拒绝未知、失效、冗余、重复、相互重叠和无法生效的配置项。include 列表为空；exclude 列表包含 `@xfcodeai/dsh-api-session-controller` 和 `@xfcodeai/dsh-api-workspace-controller`。把 Session Controller 加回会多迁移九条 Host 边，而五次候选复测的 resolver 中位数仅改善 0.15 秒。
 
-Host-only 包通过另一份显式列表加入同一策略。该列表包含 `@deepseek-ai/dsh-llm` 和 `@deepseek-ai/dsh-session`；源码 import 不会自动扩大列表。
+Host-only 包通过另一份显式列表加入同一策略。该列表包含 `@xfcodeai/dsh-llm` 和 `@xfcodeai/dsh-session`；源码 import 不会自动扩大列表。
 
 ### 依赖区段
 
 每个受管包都把 `@deepseek-ai/cordis` 保持在范围一致的 `peerDependencies` 和 `devDependencies` 中。Cordis 是由应用控制身份的共享插件运行时。
 
-Host 入口闭包中的运行期 value import 所到达的 workspace 包，只有在其完整运行时入口列入 `duplicateSafePackages`，或每个运行期导出都列入 `safeHostDependencyExports` 时才只属于 `dependencies`。包级列表包含 `@deepseek-ai/dsh-brand`、`@deepseek-ai/dsh-typert-protocol`、`@deepseek-ai/dsh-util-crypto` 与 `@deepseek-ai/dsh-util-values`：它们的值无状态、按结构识别，或通过带版本且可互操作的描述符存储。导出表负责处理其他导出无法提供同等保证的混合包中的已审查值。
+Host 入口闭包中的运行期 value import 所到达的 workspace 包，只有在其完整运行时入口列入 `duplicateSafePackages`，或每个运行期导出都列入 `safeHostDependencyExports` 时才只属于 `dependencies`。包级列表包含 `@xfcodeai/dsh-brand`、`@xfcodeai/dsh-typert-protocol`、`@xfcodeai/dsh-util-crypto` 与 `@xfcodeai/dsh-util-values`：它们的值无状态、按结构识别，或通过带版本且可互操作的描述符存储。导出表负责处理其他导出无法提供同等保证的混合包中的已审查值。
 
 constructor 身份或模块状态必须共享的导出列入 `peerRequiredHostExports`；一旦使用这类导出，整条包依赖边就保留在范围一致的 `peerDependencies` 与 `devDependencies` 中。每个导出表的 key 都是精确 module specifier，每个 value 都是经审查的导出集合。验证器从 Host 入口沿运行期本地 import 扫描，记录具名与默认 import 和 re-export，并拒绝既没有包级分类、也没有导出级分类的导出；除非完整的精确入口已按包分类，否则 namespace、dynamic 和 side-effect import 仍无法限定范围。
 

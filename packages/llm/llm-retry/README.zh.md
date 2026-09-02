@@ -3,13 +3,13 @@ description: "面向用户与维护者的重试执行器说明：在持久 agent
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm-retry
+# @xfcodeai/dsh-llm-retry
 
 [English](README.md) | 中文
 
 ## 概述
 
-`@deepseek-ai/dsh-llm-retry` 是失败模型请求的重试执行器：它在 agent loop 的打开步骤 `agent/request-error` 扩展点上应用各提供方解析后的重试策略，因此每次重试都会在同一个打开的轮次内重跑同一个步骤（基于同一份持久历史）。它不包装流式调用本身——每次适配器调用仍是一次提供方尝试，直接 `ctx.llm.stream()` 消费方仍是单次尝试。重试调度是持久的：插件在等待之前就把 `llm/retry` 事件追加进会话日志，退避期间取消会让日志保持一致。normal mode 以指数退避重试一组有界的失败 code，最多 `maxRetries` 次；always mode 先询问下游恢复，然后无尝试上限地重试每个失败。
+`@xfcodeai/dsh-llm-retry` 是失败模型请求的重试执行器：它在 agent loop 的打开步骤 `agent/request-error` 扩展点上应用各提供方解析后的重试策略，因此每次重试都会在同一个打开的轮次内重跑同一个步骤（基于同一份持久历史）。它不包装流式调用本身——每次适配器调用仍是一次提供方尝试，直接 `ctx.llm.stream()` 消费方仍是单次尝试。重试调度是持久的：插件在等待之前就把 `llm/retry` 事件追加进会话日志，退避期间取消会让日志保持一致。normal mode 以指数退避重试一组有界的失败 code，最多 `maxRetries` 次；always mode 先询问下游恢复，然后无尝试上限地重试每个失败。
 
 ## 目录
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-llm-deepseek'
+- name: '@xfcodeai/dsh-llm-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY
     retryPolicy:
@@ -44,7 +44,7 @@ kind: "package-reference"
         maxDelayMs: 30000
         jitterRatio: 0.2
 
-- name: '@deepseek-ai/dsh-llm-retry'
+- name: '@xfcodeai/dsh-llm-retry'
 ```
 
 省略 `retryPolicy` 时使用 normal mode：对 `EMPTY_RESPONSE`、`RATE_LIMIT`、`SERVER`、`TIMEOUT` 与 `TRANSPORT` 最多重试五次，退避从 500 毫秒到 10 秒、带 10% 抖动。normal mode 可以更改其有界预算、合格 code 与退避；always mode 先询问下游恢复，然后无尝试上限地重试每个模型请求失败，只在成功、取消或插件释放时停止。

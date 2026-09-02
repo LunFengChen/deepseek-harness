@@ -11,7 +11,7 @@
  * runs inline on this thread. Everything except preemption behaves the same,
  * and the difference is named rather than hidden: {@link RunningProcess.destroy}
  * can only ask an inline command to stop.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/shell/process/host
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/shell/process/host
  */
 
 import { runShellCommand, runShellProgram } from '../interpret.ts'

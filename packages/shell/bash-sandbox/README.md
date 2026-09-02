@@ -3,7 +3,7 @@ description: "The sandbox-consuming Bash executor for deployments and maintainer
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-bash-sandbox
+# @xfcodeai/dsh-bash-sandbox
 
 English | [中文](README.zh.md)
 
@@ -41,18 +41,18 @@ Choose it when a deployment needs file-level confinement for Bash commands: the 
 
 ### Minimal configuration
 
-The executor takes no sandbox configuration of its own: the default mode and workspace root come from `ctx.sandboxPolicy`, and the runner choice belongs to the `ctx.sandbox` provider. Its own config is the local executor's knobs verbatim; the generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-bash-sandbox) is the exhaustive source.
+The executor takes no sandbox configuration of its own: the default mode and workspace root come from `ctx.sandboxPolicy`, and the runner choice belongs to the `ctx.sandbox` provider. Its own config is the local executor's knobs verbatim; the generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-bash-sandbox) is the exhaustive source.
 
 ```yaml
 - id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'
+  name: '@xfcodeai/dsh-sandbox-local'
 - id: sandbox-policy
-  name: '@deepseek-ai/dsh-sandbox-policy'
+  name: '@xfcodeai/dsh-sandbox-policy'
   config:
     mode: read-only
     workspaceRoot: !!js process.cwd() # fallback for calls without a session cwd
 - id: bash
-  name: '@deepseek-ai/dsh-bash-sandbox'
+  name: '@xfcodeai/dsh-bash-sandbox'
 ```
 
 ### Denials are result facts
@@ -123,7 +123,7 @@ Read these pages when the executor contract is not enough. They move from the se
 
 #### What the model sees
 
-The generated [`dsh-tool-bash` schemas](../../../docs/tool-catalog.md#deepseek-aidsh-tool-bash) are the baseline. By advertising a confining `sandboxMode`, this backend augments `bash` with `sandbox_permissions` (enum `workspace-write` | `danger-full-access`) and `justification`. The policy owner separately contributes the current capability-neutral `sandbox:policy` context.
+The generated [`dsh-tool-bash` schemas](../../../docs/tool-catalog.md#xfcodeaidsh-tool-bash) are the baseline. By advertising a confining `sandboxMode`, this backend augments `bash` with `sandbox_permissions` (enum `workspace-write` | `danger-full-access`) and `justification`. The policy owner separately contributes the current capability-neutral `sandbox:policy` context.
 
 #### Token effect
 

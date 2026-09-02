@@ -1,12 +1,12 @@
 # Keyless twin of subagent-acp-diagnostic.cordis.yml: keep the real ACP child
 # permission-denial path and replace only the external parent model adapter.
 - id: llm-deepseek
-  name: '@deepseek-ai/dsh-llm-deepseek'
+  name: '@xfcodeai/dsh-llm-deepseek'
   disabled: true
 
 - insert:
     - id: llm-replay
-      name: '@deepseek-ai/dsh-llm-replay'
+      name: '@xfcodeai/dsh-llm-replay'
       config:
         providers:
           - id: deepseek-official
@@ -15,7 +15,7 @@
               - id: deepseek-v4-flash
               - id: deepseek-v4-pro
     - id: subagent-acp-diagnostic
-      name: '@deepseek-ai/dsh-subagent-acp'
+      name: '@xfcodeai/dsh-subagent-acp'
       config:
         providerName: acp-diagnostic
         command: !!js process.execPath
@@ -26,7 +26,7 @@
           MOCK_PERMISSION: '1'
           MOCK_TOOL_KIND: execute
     - id: tool-subagent-acp-diagnostic
-      name: '@deepseek-ai/dsh-tool-subagent'
+      name: '@xfcodeai/dsh-tool-subagent'
       config:
         provider: acp-diagnostic
         toolName: subagent_acp

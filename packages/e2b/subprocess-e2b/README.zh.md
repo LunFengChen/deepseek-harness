@@ -3,7 +3,7 @@ description: "共享远程沙箱内的 shell 命令与终端：agent 可以在�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subprocess-e2b
+# @xfcodeai/dsh-subprocess-e2b
 
 [English](README.md) | 中文
 
@@ -39,7 +39,7 @@ kind: "package-reference"
 |---|---|---|
 | `pollMs` | `20` | 包检查运行中命令状态的频率（毫秒） |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-subprocess-e2b)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-subprocess-e2b)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 运行命令
 
@@ -121,7 +121,7 @@ agent 可以在沙箱中打开交互式终端、发送输入、读取输出，�
 - [子进程 seam 包](../../subprocess/subprocess/README.zh.md)——本提供方实现的抽象约定。
 - [Bash 执行器](../../shell/bash-local/README.zh.md)——向模型渲染所启动命令的消费方。
 - [PTY 终端后端](../../terminal/terminal-bash/README.zh.md)——渲染终端会话的消费方。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-subprocess-e2b)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-subprocess-e2b)——每个受支持配置字段及其源声明。
 
 -----
 

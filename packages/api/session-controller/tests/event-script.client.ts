@@ -1,11 +1,11 @@
 import {
   ToolCallId, createMessage, createToolResultMessage, createUserMessage,
-} from '@deepseek-ai/dsh-llm'
-import { SessionSeq } from '@deepseek-ai/dsh-session/types'
+} from '@xfcodeai/dsh-llm'
+import { SessionSeq } from '@xfcodeai/dsh-session/types'
 // Minimal SessionEvent builders for orchestration tests (shape mirrors what the
 // host emits; only the fields the object layer reads).
-import type { ContentBlock } from '@deepseek-ai/dsh-llm/types'
-import type { SessionEvent } from '@deepseek-ai/dsh-session/types'
+import type { ContentBlock } from '@xfcodeai/dsh-llm/types'
+import type { SessionEvent } from '@xfcodeai/dsh-session/types'
 import type {
   SessionEventEntry,
   SessionPage,

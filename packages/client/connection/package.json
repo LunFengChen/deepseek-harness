@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-client-connection",
+  "name": "@xfcodeai/dsh-client-connection",
   "description": "Authenticated RPC transport, generation lifecycle, and browser fixture",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -34,7 +34,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-credentials": "workspace:^",
+    "@xfcodeai/dsh-credentials": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
@@ -48,15 +48,15 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-attachment": "workspace:^",
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-commands": "workspace:^",
-    "@deepseek-ai/dsh-host-directory-picker": "workspace:^",
-    "@deepseek-ai/dsh-host-webserver": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^",
-    "@deepseek-ai/dsh-tool-todo": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^"
+    "@xfcodeai/dsh-attachment": "workspace:^",
+    "@xfcodeai/dsh-brand": "workspace:^",
+    "@xfcodeai/dsh-commands": "workspace:^",
+    "@xfcodeai/dsh-host-directory-picker": "workspace:^",
+    "@xfcodeai/dsh-host-webserver": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-session": "workspace:^",
+    "@xfcodeai/dsh-settings": "workspace:^",
+    "@xfcodeai/dsh-tool-todo": "workspace:^",
+    "@xfcodeai/dsh-util-values": "workspace:^"
   }
 }

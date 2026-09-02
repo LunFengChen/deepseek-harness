@@ -33,7 +33,7 @@ surface 顺序还让另外两个问题成为结构性的。一次替换之后它
 本仓库对这一情形的既有答案是不含 cordis 的叶子子路径，本次变更就新增了一个：`COMPACT_CHECKPOINT_SOURCE` 与 `isCompactCheckpointSource` 现在住在 `packages/compaction/compaction/src/checkpoint.ts`，它不导入 cordis、也不增强任何模块（即 `dsh-commands/brand` / `dsh-llm/message` 的形状），而包根重新导出两者，因此每个宿主侧消费方——终端的 chat helper、`dsh-session-reference` 的投影——都不需改动。适配器用仅类型导入把它的字面量钉在该声明上：
 
 ```ts
-import type { CompactionCheckpointSource } from '@deepseek-ai/dsh-compaction/checkpoint'
+import type { CompactionCheckpointSource } from '@xfcodeai/dsh-compaction/checkpoint'
 const COMPACT_PLUGIN: CompactionCheckpointSource['plugin'] = 'compact'
 ```
 

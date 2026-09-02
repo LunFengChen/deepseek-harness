@@ -3,7 +3,7 @@ description: "Cordis dynamic-plugin browser surfaces for users and maintainers c
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-cordis
+# @xfcodeai/dsh-client-ui-cordis
 
 English | [中文](README.zh.md)
 

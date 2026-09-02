@@ -1,5 +1,5 @@
 /** Queue contracts derived from the Session Controller face. */
-import type { SessionFace, SessionSnapshot } from '@deepseek-ai/dsh-api-session-controller/client'
+import type { SessionFace, SessionSnapshot } from '@xfcodeai/dsh-api-session-controller/client'
 
 /** One address accepted by the Session Controller's queue mutation verb. */
 export type QueueItemId = Parameters<SessionFace['updateQueue']>[0]

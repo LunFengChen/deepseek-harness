@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ExaSearchProvider, EXA_DEFAULT_BASE_URL, EXA_DEFAULT_HIGHLIGHTS_PER_RESULT, EXA_DEFAULT_SEARCH_TYPE } from '@deepseek-ai/dsh-web-search-exa'
+import { ExaSearchProvider, EXA_DEFAULT_BASE_URL, EXA_DEFAULT_HIGHLIGHTS_PER_RESULT, EXA_DEFAULT_SEARCH_TYPE } from '@xfcodeai/dsh-web-search-exa'
 
 /**
  * Real-API smoke for the Exa search provider. Self-skips without `$EXA_API_KEY`

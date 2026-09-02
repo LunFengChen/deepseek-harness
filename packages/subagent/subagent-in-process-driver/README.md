@@ -3,7 +3,7 @@ description: "Shared in-process subagent run driver for maintainers and backend 
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-subagent-in-process-driver
+# @xfcodeai/dsh-subagent-in-process-driver
 
 English | [中文](README.zh.md)
 

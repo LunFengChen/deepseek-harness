@@ -3,7 +3,7 @@
  * registry owns store instances; this module exports only the factory so a
  * plugin reload cannot reuse a module-global handle.
  */
-import { defineStore, type EngineStoreHandle } from '@deepseek-ai/dsh-client-store'
+import { defineStore, type EngineStoreHandle } from '@xfcodeai/dsh-client-store'
 
 /** One in-progress answer, including an explicit skip. */
 export interface QuestionDraftAnswer {

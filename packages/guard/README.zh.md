@@ -37,7 +37,7 @@ kind: "package-group"
 先从工具子系统参考了解工具调用流水线，再看重复提醒的配置与策略背后的超时库决策。
 
 - [工具子系统参考](../../docs/subsystems/tools.zh.md)——两个 guard 都依赖的工具调用流水线与决策。
-- [生成配置目录](../../docs/config-catalog.zh.md#deepseek-aidsh-repeat-tool-reminder)——重复调用提醒的每个受支持字段。
+- [生成配置目录](../../docs/config-catalog.zh.md#xfcodeaidsh-repeat-tool-reminder)——重复调用提醒的每个受支持字段。
 - [超时截止时间库 Agent Note](../../.agents/notes/implemented/architecture/2026-07-06-timeout-deadline-library.zh.md)——`timeout-policy` 所执行的时序／终止拆分。
 
 <a id="dev-note"></a>

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 
 import {
   IconBranchOutline16, IconCheckOutline16, IconCopyOutline16, IconTrashOutline16,
   RiskConfirmation, Tooltip, writeClipboard,
-} from '@deepseek-ai/dsh-client-ui-primitives'
+} from '@xfcodeai/dsh-client-ui-primitives'
 import type { ChatViewSlotProps } from '../contract/slots.ts'
 import { formatMessageClock } from './message-chrome.ts'
 import { useCalendarDay } from './use-calendar-day.ts'

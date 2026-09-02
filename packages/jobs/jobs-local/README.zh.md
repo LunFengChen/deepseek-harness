@@ -3,7 +3,7 @@ description: "进程本地后台任务注册表，供组合、容量评估或排
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-jobs-local
+# @xfcodeai/dsh-jobs-local
 
 [English](README.md) | 中文
 
@@ -36,14 +36,14 @@ kind: "package-reference"
 加载插件即注册 `ctx.jobs`；`maxConcurrentJobsPerOwner` 可选，默认为 `10`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-jobs-local'
+- name: '@xfcodeai/dsh-jobs-local'
 ```
 
 | 字段 | 默认值 | 含义 |
 |---|---|---|
 | `maxConcurrentJobsPerOwner` | `10` | 每个精确所有者，或共享的无主桶中，`running` 加 `stopping` 任务的最大数量 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-jobs-local)是每个受支持字段的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-jobs-local)是每个受支持字段的穷尽式真源。
 
 ### 每个所有者得到什么
 

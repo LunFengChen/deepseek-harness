@@ -1,12 +1,12 @@
 import { Context, Service } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
-import type { TeamMemberView as TeamRosterMember, TeamTaskId } from '@deepseek-ai/dsh-experimental-agent-team/client'
-import type {} from '@deepseek-ai/dsh-experimental-agent-team/remote'
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
-import type { TypertRemoteContribution } from '@deepseek-ai/dsh-typert-protocol'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
+import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
+import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
+import type { TeamMemberView as TeamRosterMember, TeamTaskId } from '@xfcodeai/dsh-experimental-agent-team/client'
+import type {} from '@xfcodeai/dsh-experimental-agent-team/remote'
+import { RemoteError } from '@xfcodeai/dsh-client-test-runtime'
+import type { TypertRemoteContribution } from '@xfcodeai/dsh-typert-protocol'
 import { TeamAction, type TeamActionInjected } from '../src/client/TeamAction.tsx'
 import { inject, mountAgentTeamUi } from '../src/client/mount.ts'
 import { apply as nodeApply } from '../src/index.ts'
@@ -15,7 +15,7 @@ const SESSION = 'team-session' as SessionId
 const CHILD = 'team-child' as SessionId
 const TASK_ID = 'task-1' as TeamTaskId
 const REMOTE: TypertRemoteContribution = {
-  package: '@deepseek-ai/dsh-experimental-agent-team',
+  package: '@xfcodeai/dsh-experimental-agent-team',
   descriptors: [],
 }
 

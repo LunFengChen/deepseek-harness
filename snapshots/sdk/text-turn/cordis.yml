@@ -3,24 +3,24 @@
 # The fixture corpus must not depend on the developer's personal skill roots.
 # Ordinary product launches retain the sdk profile's default skill discovery.
 - id: skill-filesystem
-  name: '@deepseek-ai/dsh-skill-filesystem'
+  name: '@xfcodeai/dsh-skill-filesystem'
   config:
     includeDefaultRoots: false
 
 - id: llm-deepseek
-  name: '@deepseek-ai/dsh-llm-deepseek'
+  name: '@xfcodeai/dsh-llm-deepseek'
   config:
     thinking: enabled
     reasoningEffort: max
 
 - id: session-persistence-jsonl
-  name: '@deepseek-ai/dsh-session-persistence-jsonl'
+  name: '@xfcodeai/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: !!js "process.env.DSH_SNAPSHOT === undefined ? 'zstd' : 'none'"
 
 - id: tool-subagent
-  name: '@deepseek-ai/dsh-tool-subagent'
+  name: '@xfcodeai/dsh-tool-subagent'
   config:
     provider: spawn
     toolName: subagent
@@ -29,6 +29,6 @@
     maxDepth: 1
 
 - id: session-log-deepseek
-  name: '@deepseek-ai/dsh-session-log-deepseek'
+  name: '@xfcodeai/dsh-session-log-deepseek'
   config:
     enabled: true

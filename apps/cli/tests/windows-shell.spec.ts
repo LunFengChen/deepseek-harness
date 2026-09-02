@@ -18,8 +18,8 @@ import { fileURLToPath } from 'node:url'
 import yaml from 'js-yaml'
 import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
 import { evaluate } from '@deepseek-ai/cordis-plugin-loader'
-import { SHIPPED_PRESET_ROOT } from '@deepseek-ai/dsh-agent-presets'
-import { composeEntries, initProfile, loadProfile, PROFILES_DIR } from '@deepseek-ai/dsh-app-boot'
+import { SHIPPED_PRESET_ROOT } from '@xfcodeai/dsh-agent-presets'
+import { composeEntries, initProfile, loadProfile, PROFILES_DIR } from '@xfcodeai/dsh-app-boot'
 
 /**
  * The effective disabled state of one row on one platform: a `!!js` expression
@@ -43,7 +43,7 @@ describe('the shipped shell composition (real bundle layers)', () => {
 
   it('composes the confined pwsh roster on win32 and the bash roster on POSIX from the same rows', () => {
     home = mkdtempSync(join(tmpdir(), 'dsh-windows-home-'))
-    initProfile(join(home, PROFILES_DIR, 'web'), ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app'])
+    initProfile(join(home, PROFILES_DIR, 'web'), ['@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app'])
     const profile = loadProfile('dsh', 'web', anchor, home)
     const warnings: string[] = []
     const rows = composeEntries(
@@ -73,7 +73,7 @@ describe('the shipped shell composition (real bundle layers)', () => {
     // dependency closure into the profile's node_modules, so every bare
     // plugin name in the base patch must resolve from there.
     const cliManifest = JSON.parse(readFileSync(anchor, 'utf8')) as { dependencies?: Record<string, string> }
-    for (const name of ['@deepseek-ai/dsh-pwsh-sandbox', '@deepseek-ai/dsh-tool-pwsh']) {
+    for (const name of ['@xfcodeai/dsh-pwsh-sandbox', '@xfcodeai/dsh-tool-pwsh']) {
       expect(cliManifest.dependencies?.[name], `cold-start closure must reach ${name}`).toBeDefined()
     }
     expect(warnings).toEqual([])
@@ -81,7 +81,7 @@ describe('the shipped shell composition (real bundle layers)', () => {
 
   it('base-only profiles carry both stacks with the same platform gating', () => {
     home = mkdtempSync(join(tmpdir(), 'dsh-windows-home-'))
-    initProfile(join(home, PROFILES_DIR, 'base-only'), ['@deepseek-ai/dsh-base'])
+    initProfile(join(home, PROFILES_DIR, 'base-only'), ['@xfcodeai/dsh-base'])
     const profile = loadProfile('dsh', 'base-only', anchor, home)
     const warnings: string[] = []
     const rows = composeEntries(

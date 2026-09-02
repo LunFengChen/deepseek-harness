@@ -7,13 +7,13 @@
  * Capture commits only after the authoritative `tools/result` succeeds; PTC mode capture also
  * waits for the enclosing `run_code` result. The terminal result marker and monotonic tool
  * guard prevent later calls from reopening a completed structured run.
- * @module @deepseek-ai/dsh-subagent-in-process-driver/structured
+ * @module @xfcodeai/dsh-subagent-in-process-driver/structured
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { ToolSchema } from '@deepseek-ai/dsh-llm'
-import type { ToolExecution, ToolRunContext } from '@deepseek-ai/dsh-tools'
-import { ToolArgsError, validateJsonSchemaValue, type ObjectJsonSchema } from '@deepseek-ai/dsh-tools'
+import type { ToolSchema } from '@xfcodeai/dsh-llm'
+import type { ToolExecution, ToolRunContext } from '@xfcodeai/dsh-tools'
+import { ToolArgsError, validateJsonSchemaValue, type ObjectJsonSchema } from '@xfcodeai/dsh-tools'
 
 /** The model-facing tool name a structured child must call to finish. */
 export const STRUCTURED_OUTPUT_TOOL = 'structured_output'

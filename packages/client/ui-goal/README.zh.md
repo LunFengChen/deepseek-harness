@@ -3,7 +3,7 @@ description: "Web GUI 的 goal 表面：显示当前目标并支持编辑、暂�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-goal
+# @xfcodeai/dsh-client-ui-goal
 
 [English](README.md) | 中文
 

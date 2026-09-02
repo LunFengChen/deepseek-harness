@@ -22,13 +22,13 @@ harness 已有一个具体的 `bash` 能力 seam（`dsh-shell` / `dsh-bash-local
 
 文件系统访问是一个一等的能力 seam，遵循[能力 seam Agent Note](2026-06-13-capability-seams.zh.md)：
 
-1. `@deepseek-ai/dsh-fs`（`packages/fs/fs`）拥有抽象的 `ctx.fs` 服务、文件系统词汇类型，以及 `fs/*` 策略事件词汇。
-2. `@deepseek-ai/dsh-fs-local`（`packages/fs/fs-local`）提供第一个实现，以本地文件系统为后端。
-3. `@deepseek-ai/dsh-tool-fs`（`packages/fs/tool-fs`）通过 `ctx.fs` 提供面向模型的 `read`、`write` 和 `edit` 工具，是分发 `fs/*` 事件的执行器。
+1. `@xfcodeai/dsh-fs`（`packages/fs/fs`）拥有抽象的 `ctx.fs` 服务、文件系统词汇类型，以及 `fs/*` 策略事件词汇。
+2. `@xfcodeai/dsh-fs-local`（`packages/fs/fs-local`）提供第一个实现，以本地文件系统为后端。
+3. `@xfcodeai/dsh-tool-fs`（`packages/fs/tool-fs`）通过 `ctx.fs` 提供面向模型的 `read`、`write` 和 `edit` 工具，是分发 `fs/*` 事件的执行器。
 
 Consumer 包仅依赖 Service Definition 包，从不依赖 `dsh-fs-local`。需要不同后端的部署只需为 `ctx.fs` 加载不同的提供方，无需改动工具 schema 或面向模型的提示词引导。
 
-读后写/编辑与观测状态策略是第四个包 `@deepseek-ai/dsh-fs-observation-policy`（`packages/fs/fs-observation-policy`），通过 `fs/*` 事件门控贡献，而非挂在 `ctx.fs` 上；加载 `dsh-tool-fs` 的部署同时加载 `dsh-fs-observation-policy` 以获得读后写/编辑能力。本决策确立了由三个包构成的边界；策略从提供方基类拆出的决策由 [拆分文件系统 seam Agent Note](../simplification/2026-06-26-fsspec-style-fs-seam.zh.md) 做出，其以事件门控插件（而非方法服务）实现的方式由 [事件门控 Agent Note](2026-06-26-file-context-as-event-gate.zh.md) 做出。
+读后写/编辑与观测状态策略是第四个包 `@xfcodeai/dsh-fs-observation-policy`（`packages/fs/fs-observation-policy`），通过 `fs/*` 事件门控贡献，而非挂在 `ctx.fs` 上；加载 `dsh-tool-fs` 的部署同时加载 `dsh-fs-observation-policy` 以获得读后写/编辑能力。本决策确立了由三个包构成的边界；策略从提供方基类拆出的决策由 [拆分文件系统 seam Agent Note](../simplification/2026-06-26-fsspec-style-fs-seam.zh.md) 做出，其以事件门控插件（而非方法服务）实现的方式由 [事件门控 Agent Note](2026-06-26-file-context-as-event-gate.zh.md) 做出。
 
 第一个后端有意仅限本地：`dsh-fs-local` 基于宿主文件系统实现 `ctx.fs`。未来的兄弟后端可在同一接口之后提供沙箱、远程、虚拟或项目作用域的文件系统。
 
@@ -43,21 +43,21 @@ Consumer 包仅依赖 Service Definition 包，从不依赖 `dsh-fs-local`。需
 文件系统 seam 使用与 bash 三件套相同的依赖方向：
 
 ```text
-@deepseek-ai/dsh-tool-fs  --depends on-->  @deepseek-ai/dsh-fs  <--depends on--  @deepseek-ai/dsh-fs-local
+@xfcodeai/dsh-tool-fs  --depends on-->  @xfcodeai/dsh-fs  <--depends on--  @xfcodeai/dsh-fs-local
         consumer                                interface                         implementation
 ```
 
-`@deepseek-ai/dsh-fs` 仅依赖 `cordis` 加上来自 `@deepseek-ai/dsh-llm` 的仓库级 `HarnessError` 基类。它声明 `ctx.fs` 键、抽象 `FileSystem` 服务、后端和消费方共享的词汇类型、文件系统错误词汇，以及 `fs/*` 策略事件词汇。它不持有观测状态存储，也不持有 owner 推导形态；事件传递一个不透明的 `object` actor，提供方从不读取它，`dsh-fs-observation-policy` 插件在这些事件之上拥有 owner 推导形态和观测状态存储。
+`@xfcodeai/dsh-fs` 仅依赖 `cordis` 加上来自 `@xfcodeai/dsh-llm` 的仓库级 `HarnessError` 基类。它声明 `ctx.fs` 键、抽象 `FileSystem` 服务、后端和消费方共享的词汇类型、文件系统错误词汇，以及 `fs/*` 策略事件词汇。它不持有观测状态存储，也不持有 owner 推导形态；事件传递一个不透明的 `object` actor，提供方从不读取它，`dsh-fs-observation-policy` 插件在这些事件之上拥有 owner 推导形态和观测状态存储。
 
-`@deepseek-ai/dsh-fs-local` 依赖 `@deepseek-ai/dsh-fs` 和 `cordis`。它继承 `FileSystem`，将自身注册为 `ctx.fs`，拥有本地后端配置（如基目录），并包含所有直接的 `node:fs` / `node:path` 访问。它不持有观测状态存储——新鲜度是后端铸造、策略插件记录的版本令牌。
+`@xfcodeai/dsh-fs-local` 依赖 `@xfcodeai/dsh-fs` 和 `cordis`。它继承 `FileSystem`，将自身注册为 `ctx.fs`，拥有本地后端配置（如基目录），并包含所有直接的 `node:fs` / `node:path` 访问。它不持有观测状态存储——新鲜度是后端铸造、策略插件记录的版本令牌。
 
-`@deepseek-ai/dsh-tool-fs` 依赖 `@deepseek-ai/dsh-fs`、`@deepseek-ai/dsh-tools`、`@deepseek-ai/dsh-system-prompt` 和 `cordis`。它注册面向模型的工具和提示词段落。它禁止导入 `node:fs`、`node:path` 或 `@deepseek-ai/dsh-fs-local`；文件系统执行始终通过 `ctx.fs`。如果实现需要具体的 agent（智能体）或会话辅助类型，这些依赖属于 `tool-fs`；它们禁止回漏到 `dsh-fs` 中。
+`@xfcodeai/dsh-tool-fs` 依赖 `@xfcodeai/dsh-fs`、`@xfcodeai/dsh-tools`、`@xfcodeai/dsh-system-prompt` 和 `cordis`。它注册面向模型的工具和提示词段落。它禁止导入 `node:fs`、`node:path` 或 `@xfcodeai/dsh-fs-local`；文件系统执行始终通过 `ctx.fs`。如果实现需要具体的 agent（智能体）或会话辅助类型，这些依赖属于 `tool-fs`；它们禁止回漏到 `dsh-fs` 中。
 
 根 `tool-fs` 插件通过组合各工具的注册辅助函数来注册完整的文件系统工具套件（`read`、`write` 和 `edit`）。它注入 `fs`，从不导入 Service Provider 包。
 
 ## `ctx.fs` 约定
 
-`@deepseek-ai/dsh-fs` 拥有一个语义文件系统服务。它比 `readFile` / `writeFile` 更高层，这样 `tool-fs` 就不必重新实现路径解析、版本管理、文本解码、二进制拒绝、分页、原子替换、符号链接行为或字面编辑语义。
+`@xfcodeai/dsh-fs` 拥有一个语义文件系统服务。它比 `readFile` / `writeFile` 更高层，这样 `tool-fs` 就不必重新实现路径解析、版本管理、文本解码、二进制拒绝、分页、原子替换、符号链接行为或字面编辑语义。
 
 该接口涵盖以下语义操作：
 
@@ -102,7 +102,7 @@ Consumer 包仅依赖 Service Definition 包，从不依赖 `dsh-fs-local`。需
 
 ## 工具消费方行为
 
-`@deepseek-ai/dsh-tool-fs` 是面向模型的消费方。它拥有工具名称、JSON Schema、模型边界的参数校验、提示词段落和结果格式化。它不拥有文件系统执行。
+`@xfcodeai/dsh-tool-fs` 是面向模型的消费方。它拥有工具名称、JSON Schema、模型边界的参数校验、提示词段落和结果格式化。它不拥有文件系统执行。
 
 第一个工具套件包含：
 

@@ -3,7 +3,7 @@ description: "Web GUI 的 agent preset 表面：默认 preset 设置、新建会
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-agent-preset
+# @xfcodeai/dsh-client-ui-agent-preset
 
 [English](README.md) | 中文
 

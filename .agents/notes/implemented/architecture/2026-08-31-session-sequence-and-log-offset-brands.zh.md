@@ -12,7 +12,7 @@ Session 位置曾用同一个结构化 `number` 类型表达两种不兼容的�
 
 ## Decision
 
-`@deepseek-ai/dsh-brand` 导出编译后消失的数值原语 `BrandedNumber<B>` 与运行时保持原值的 helper `brandNumber()`。`@deepseek-ai/dsh-session` 拥有两个经验证的 brand：`SessionSeq` 指明一条已存在事件，`SessionLogOffset` 指明日志间隙、前缀长度或读取偏移。`SessionSeqCursor = SessionSeq | -1` 表达首条事件之前或之后的闭区间 watermark，`OptionalSessionSeq = SessionSeq | null` 表达允许以缺失为数据的事件身份。
+`@xfcodeai/dsh-brand` 导出编译后消失的数值原语 `BrandedNumber<B>` 与运行时保持原值的 helper `brandNumber()`。`@xfcodeai/dsh-session` 拥有两个经验证的 brand：`SessionSeq` 指明一条已存在事件，`SessionLogOffset` 指明日志间隙、前缀长度或读取偏移。`SessionSeqCursor = SessionSeq | -1` 表达首条事件之前或之后的闭区间 watermark，`OptionalSessionSeq = SessionSeq | null` 表达允许以缺失为数据的事件身份。
 
 `SessionEvent.seq`、surface 替换端点、provenance 以及 owner payload 中指向 Session 事件的字段使用 `SessionSeq`。`Session.seq`、`Session.firstLiveSeq`、`Session.inheritedEventCount`、带正文读取的偏移与继承前缀切点使用 `SessionLogOffset`。算术结果恢复为普通 number，并通过对应的验证构造函数重新进入任一领域。
 

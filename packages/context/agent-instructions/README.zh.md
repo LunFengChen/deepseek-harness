@@ -3,7 +3,7 @@ description: "面向用户与维护者的工作区指令上下文说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-instructions
+# @xfcodeai/dsh-agent-instructions
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 默认设置适合典型检出：`.git` 标记项目根目录，`AGENTS.md` 与 `CLAUDE.md` 是基础候选，`AGENTS.local.md` 与 `CLAUDE.local.md` 是叠加的本地 overlay。只有 `maxBytes` 必填——它限制完整渲染后的基线，让每个部署显式选择自己的提示词预算。
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-instructions'
+- name: '@xfcodeai/dsh-agent-instructions'
   config:
     maxBytes: 65536
 ```
@@ -63,7 +63,7 @@ export interface Config {
 | `localInstructionFileCandidates` | `['AGENTS.local.md', 'CLAUDE.local.md']` | 在基础文件之后加载的本地 overlay 文件名 |
 | `dshHome` | `$DSH_HOME` 或 `~/.dsh` | 存放用户全局 `AGENTS.md` 的目录 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-agent-instructions)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-agent-instructions)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 观察预算
 
@@ -115,7 +115,7 @@ export interface Config {
 - [文档标准](../../../docs/AGENTS.md)——`AGENTS.md` 指令文件包含什么、如何维护。
 - [工作区上下文决策记录](../../../.agents/notes/implemented/feature/2026-06-24-workspace-context.zh.md)——按 agent／会话隔离与生命周期理由。
 - [context 组地图](../README.zh.md)——相邻的请求上下文包。
-- [生成的配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-agent-instructions)——每个受支持配置字段及其源声明。
+- [生成的配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-agent-instructions)——每个受支持配置字段及其源声明。
 
 -----
 

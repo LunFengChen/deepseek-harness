@@ -84,7 +84,7 @@ class ScopedEventGenerator {
       ' * Generated scoped-event routing-subject resolvers for dsh-scope invariants.',
       ' * Do not edit by hand; run `pnpm run gen-scoped-events`.',
       ' *',
-      ' * @module @deepseek-ai/dsh-scope/scoped-events.generated',
+      ' * @module @xfcodeai/dsh-scope/scoped-events.generated',
       ' */',
       '',
       'type ScopedSubjectResolver = (args: readonly unknown[]) => unknown',

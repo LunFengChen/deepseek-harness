@@ -20,7 +20,7 @@ Vendor CLIs, build-only and test-only executables, direct in-process plugin moun
 
 ### Profile applications
 
-`@deepseek-ai/dsh-sdk-app` and `@deepseek-ai/dsh-acp-app` compose the full protocol applications over `@deepseek-ai/dsh-base`. The SDK bundle adds the JSON-RPC server plus app-owned help and stdio lifetime; the ACP bundle adds the automation-only ACP server plus the same application responsibilities. Both adopt the base model, tools, persistence, settings, credentials, policy, and environment behavior. The [standalone sdk-minimal profile](2026-08-24-standalone-sdk-minimal-profile.md) reuses SDK startup and JSON-RPC serving but deliberately owns a complete explicit tree without `dsh-base`.
+`@xfcodeai/dsh-sdk-app` and `@xfcodeai/dsh-acp-app` compose the full protocol applications over `@xfcodeai/dsh-base`. The SDK bundle adds the JSON-RPC server plus app-owned help and stdio lifetime; the ACP bundle adds the automation-only ACP server plus the same application responsibilities. Both adopt the base model, tools, persistence, settings, credentials, policy, and environment behavior. The [standalone sdk-minimal profile](2026-08-24-standalone-sdk-minimal-profile.md) reuses SDK startup and JSON-RPC serving but deliberately owns a complete explicit tree without `dsh-base`.
 
 Profile manifests own patch reload:
 
@@ -38,17 +38,17 @@ The shipped protocol profiles reserve stdout for protocol frames, expose help wi
 
 ### TypeScript SDK customization
 
-`@deepseek-ai/dsh-sdk-client` depends on the same-version `@deepseek-ai/dsh` package, resolves its installed CLI module, runs it through the current Node executable, and selects `sdk` by default. Both client layers expose `dshBin`, `profile`, ordered `patches`, `dshHome`, process cwd, environment, and timeouts; arbitrary command/argv launch remains an internal fake-runtime adapter.
+`@xfcodeai/dsh-sdk-client` depends on the same-version `@xfcodeai/dsh` package, resolves its installed CLI module, runs it through the current Node executable, and selects `sdk` by default. Both client layers expose `dshBin`, `profile`, ordered `patches`, `dshHome`, process cwd, environment, and timeouts; arbitrary command/argv launch remains an internal fake-runtime adapter.
 
-SDK users customize plugins through profiles. `dsh plugin --profile <name> ...` manages persistent dependencies and bundle order, the profile's `cordis.patch.yml` owns persistent row changes, and launch `patches` supply ordered ephemeral overrides. A custom profile must retain `@deepseek-ai/dsh-sdk-app` or another SDK server row. Relative CLI-module, patch, explicit home, and process-cwd paths become absolute before spawn, and initialization has a finite bound whose diagnostic names the selected profile.
+SDK users customize plugins through profiles. `dsh plugin --profile <name> ...` manages persistent dependencies and bundle order, the profile's `cordis.patch.yml` owns persistent row changes, and launch `patches` supply ordered ephemeral overrides. A custom profile must retain `@xfcodeai/dsh-sdk-app` or another SDK server row. Relative CLI-module, patch, explicit home, and process-cwd paths become absolute before spawn, and initialization has a finite bound whose diagnostic names the selected profile.
 
 Direct SDK use follows normal Harness-home resolution: explicit `dshHome`, inherited `DSH_HOME`, then `~/.dsh`. `subagent-dsh-sdk` instead requires an explicit absolute home, so a nested runtime cannot discover a person's profiles, installed plugins, credentials, or sessions through the operating-system home. DSH-specific ACP child examples also pass an isolated home; the ACP backend itself remains generic for non-DSH agents.
 
 ### Python runtime
 
-The Python runtime wheel packages the ordinary `@deepseek-ai/dsh` CLI from `node_modules/@deepseek-ai/dsh/lib/bin.js` through the private `dsh-python-runtime-closure` deploy manifest. The Python client selects `dsh --profile sdk` by default, ordered patch files, and an explicit Harness home; the runnable example under `python/sdk/examples` selects `sdk-minimal`. The installed `dsh` console command exposes the same profile grammar and the separately packaged `web` application.
+The Python runtime wheel packages the ordinary `@xfcodeai/dsh` CLI from `node_modules/@xfcodeai/dsh/lib/bin.js` through the private `dsh-python-runtime-closure` deploy manifest. The Python client selects `dsh --profile sdk` by default, ordered patch files, and an explicit Harness home; the runnable example under `python/sdk/examples` selects `sdk-minimal`. The installed `dsh` console command exposes the same profile grammar and the separately packaged `web` application.
 
-The executable family is `deepseek-harness-sdk-runtime-<platform>-<arch>`. The SDK wire, wheel and import distribution names, sidecar names, and wire identity `deepseek-harness-sdk-runtime` remain stable. The SDK package family is `@deepseek-ai/dsh-sdk-client`, `@deepseek-ai/dsh-sdk-protocol`, and `@deepseek-ai/dsh-sdk-jsonrpc-server`; `@deepseek-ai/dsh-acp` remains the ACP protocol plugin. There is no Python-specific Node application, checked-in complete config, compatibility package, forwarding executable, fallback parser, or SDK/ACP launcher alias. The [Python profile-runtime decision](2026-08-23-python-sdk-dsh-profile-runtime.md) owns this launch, and the [Windows x64 runtime decision](2026-08-23-python-sdk-windows-x64-runtime.md) owns the fourth carrier.
+The executable family is `deepseek-harness-sdk-runtime-<platform>-<arch>`. The SDK wire, wheel and import distribution names, sidecar names, and wire identity `deepseek-harness-sdk-runtime` remain stable. The SDK package family is `@xfcodeai/dsh-sdk-client`, `@xfcodeai/dsh-sdk-protocol`, and `@xfcodeai/dsh-sdk-jsonrpc-server`; `@xfcodeai/dsh-acp` remains the ACP protocol plugin. There is no Python-specific Node application, checked-in complete config, compatibility package, forwarding executable, fallback parser, or SDK/ACP launcher alias. The [Python profile-runtime decision](2026-08-23-python-sdk-dsh-profile-runtime.md) owns this launch, and the [Windows x64 runtime decision](2026-08-23-python-sdk-windows-x64-runtime.md) owns the fourth carrier.
 
 ### Enforcement
 
@@ -93,6 +93,6 @@ The [ACP automation-only protocol](../simplification/2026-07-23-acp-automation-o
 - A user changes an SDK application's plugin composition through a named profile and ordered patches, using the same installation and resolution model as every other dsh application.
 - A custom profile receives live config watching without server module HMR and opts into source-module replacement only through an explicit row override.
 - The full SDK and ACP profiles share the complete base application and one set of policy and tools; `sdk-minimal` owns its explicit standalone roster, and snapshots present intentional assembled differences.
-- Adding `@deepseek-ai/dsh` increases the TypeScript client's install size in exchange for a deterministic same-version runtime.
+- Adding `@xfcodeai/dsh` increases the TypeScript client's install size in exchange for a deterministic same-version runtime.
 - Trusted user patches can add a plugin that writes to stdout and corrupt their own protocol stream; shipped profiles guarantee purity, not arbitrary third-party composition.
 - Python packages the ordinary `dsh` profile launcher while retaining a closed native runtime and no system-Node requirement for wheel users.

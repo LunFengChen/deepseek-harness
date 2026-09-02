@@ -47,7 +47,7 @@
 
 - insert:
     - id: agent-team
-      name: '@deepseek-ai/dsh-experimental-agent-team'
+      name: '@xfcodeai/dsh-experimental-agent-team'
       config:
         maxMembers: 8
         maxTasks: 256
@@ -56,7 +56,7 @@
         disposalTimeoutMs: 5000
 
     - id: tool-agent-team
-      name: '@deepseek-ai/dsh-experimental-tool-agent-team'
+      name: '@xfcodeai/dsh-experimental-tool-agent-team'
       config:
         freshProvider: spawn
         forkProvider: fork

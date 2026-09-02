@@ -9,7 +9,7 @@ kind: "package-group"
 
 ## 概述
 
-`client/` 组运行 dsh web GUI 的浏览器侧：它启动 web 外壳、加载浏览器侧插件模块、维持浏览器与宿主之间的 RPC 与事件投递，并提供渲染应用所需的共享客户端服务与 UI 功能插件。UI 功能通过 slot 系统组合——每个插件填充已声明的扩展 slot，携带类型化 props 与 store，由外壳渲染组装后的整棵树。本组所有包均为产品包，名为 `@deepseek-ai/dsh-client-<name>`；服务于页面的宿主半侧位于 [`host/`](../host/README.zh.md)。编写规则见 [AGENTS.md](AGENTS.md)，模块图、slot 模型与对象层的说明见下方相关文档。
+`client/` 组运行 dsh web GUI 的浏览器侧：它启动 web 外壳、加载浏览器侧插件模块、维持浏览器与宿主之间的 RPC 与事件投递，并提供渲染应用所需的共享客户端服务与 UI 功能插件。UI 功能通过 slot 系统组合——每个插件填充已声明的扩展 slot，携带类型化 props 与 store，由外壳渲染组装后的整棵树。本组所有包均为产品包，名为 `@xfcodeai/dsh-client-<name>`；服务于页面的宿主半侧位于 [`host/`](../host/README.zh.md)。编写规则见 [AGENTS.md](AGENTS.md)，模块图、slot 模型与对象层的说明见下方相关文档。
 
 ## 目录
 

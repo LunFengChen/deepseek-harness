@@ -3,7 +3,7 @@ description: "共享的 Typert Remote 协议：业务包、生成产物、Host G
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-typert-protocol
+# @xfcodeai/dsh-typert-protocol
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-library"
 业务包用 `@Remote`（当接收者来自作用域 Context 时用 `@RemoteScope(key)`）标记一个公开实例方法，所属服务要么继承 `TypertRemoteService`，要么通过 `bindTypertRemote()` 声明 `typertRemote` 绑定：
 
 ```text
-import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
+import { Remote, TypertRemoteService } from '@xfcodeai/dsh-typert-protocol'
 
 export class GoalService extends TypertRemoteService {
   @Remote
@@ -53,7 +53,7 @@ export class GoalService extends TypertRemoteService {
 所有 Remote 失败都由一个类承载：`RemoteError`，携带稳定的 `<domain>/<reason>` 码，以及按该码定型的 details。本包声明通用载体码（`gateway/bad-request`、`gateway/cancelled`、`gateway/internal`），并拥有 `RemoteErrorDetailsMap`——可合并扩展的码表，其他每个包都在自己的抛出点旁扩展它：
 
 ```text
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@xfcodeai/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
     'goal/not-found': { readonly goalId: string }
   }

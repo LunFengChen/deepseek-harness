@@ -3,7 +3,7 @@ description: "dsh Web 客户端的 slot 注册表纯核心：SlotMap 声明合�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-ui-slots
+# @xfcodeai/dsh-client-ui-slots
 
 [English](README.md) | 中文
 

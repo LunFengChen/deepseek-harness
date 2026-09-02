@@ -3,7 +3,7 @@ description: "The Exa-backed search provider for ctx.web: how deployments mount 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-exa
+# @xfcodeai/dsh-web-search-exa
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose this backend when a deployment holds an Exa API key and wants Exa's keywo
 Load the web service and the provider; the API key falls back to `$EXA_API_KEY` from the launch environment, and all other settings have safe defaults.
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-exa'
+- name: '@xfcodeai/dsh-web'
+- name: '@xfcodeai/dsh-web-search-exa'
   config:
     apiKey: !!js process.env.EXA_API_KEY
 ```
@@ -50,7 +50,7 @@ Load the web service and the provider; the API key falls back to `$EXA_API_KEY` 
 | `numResults` | (unset) | Default result count when a request carries no `maxResults`; must be a positive integer |
 | `highlightsPerResult` | `1` | Highlight sentences requested per result (Exa's `highlightsPerUrl`); must be a positive integer |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web-search-exa) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-web-search-exa) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What a search returns
 
@@ -103,7 +103,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Web package map](../README.md) — the six-package family and each role.
 - [dsh-web](../web/README.md) — the web service this provider registers into.
 - [dsh-tool-web](../tool-web/README.md) — the model-facing `web_search` tool that renders this provider's sources.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web-search-exa) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-web-search-exa) — every accepted config field and its source declaration.
 - [Web capability seam decision](../../../.agents/notes/implemented/architecture/2026-06-24-web-capability-seam.md) — why search and fetch share one provider-selection service.
 
 -----

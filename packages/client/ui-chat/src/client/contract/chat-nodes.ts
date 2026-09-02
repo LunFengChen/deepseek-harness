@@ -2,7 +2,7 @@ import type {
   AssistantBlock, AssistantMessageNode, CommandNode, CompactionSummaryNode,
   ConversationLocation, ConversationViewNode, ModelRetryNode, RunningToolCall,
   ToolCallBlock,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@xfcodeai/dsh-client-ui-conversation/client'
 
 /** Final Chat render unit produced by a Chat business Definition. */
 export interface ChatConversationViewNode extends ConversationViewNode {

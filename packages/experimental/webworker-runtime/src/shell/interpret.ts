@@ -7,7 +7,7 @@
  * Output is text, not streams: every program is a JavaScript function that
  * returns before the next one runs, so a pipeline hands a string along instead
  * of plumbing byte streams a browser worker has no way to schedule between.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/shell/interpret
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/shell/interpret
  */
 
 import { parseShell } from '@yarnpkg/parsers'

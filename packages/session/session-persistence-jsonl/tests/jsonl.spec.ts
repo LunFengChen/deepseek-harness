@@ -1,12 +1,12 @@
-import { MessageId, createUserMessage, createMessage } from '@deepseek-ai/dsh-llm'
+import { MessageId, createUserMessage, createMessage } from '@xfcodeai/dsh-llm'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { appendFile, mkdtemp, mkdir, rm, readFile, writeFile, readdir, stat, symlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
-import SessionStore, { SessionId, SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionHeader } from '@deepseek-ai/dsh-session'
-import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
+import SessionStore, { SessionId, SessionLogOffset, SessionSeq } from '@xfcodeai/dsh-session'
+import type { Session, SessionEvent, SessionHeader } from '@xfcodeai/dsh-session'
+import JsonlSessionPersistence from '@xfcodeai/dsh-session-persistence-jsonl'
 import {
   encodeSegment, eventLines, logPath, parseHeader, projectDir, projectKey, scanLog, sessionDir, SessionLogScanner,
   toHeaderLine,

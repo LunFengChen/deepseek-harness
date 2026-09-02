@@ -2,9 +2,9 @@
 
 import { Buffer } from 'node:buffer'
 import { posix } from 'node:path'
-import { e2bControlEnvs } from '@deepseek-ai/dsh-e2b'
-import type { Sandbox } from '@deepseek-ai/dsh-e2b'
-import { SENSITIVE_ENV_PATTERN } from '@deepseek-ai/dsh-subprocess'
+import { e2bControlEnvs } from '@xfcodeai/dsh-e2b'
+import type { Sandbox } from '@xfcodeai/dsh-e2b'
+import { SENSITIVE_ENV_PATTERN } from '@xfcodeai/dsh-subprocess'
 
 const BASE64 = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/
 

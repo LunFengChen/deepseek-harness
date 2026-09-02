@@ -2,7 +2,7 @@
 description: "渲染 Session 对话节点、详情、历史图片、操作、本地化和滚动状态的浏览器 Chat target。"
 kind: "package-reference"
 ---
-# @deepseek-ai/dsh-client-ui-chat
+# @xfcodeai/dsh-client-ui-chat
 
 [English](README.md) | 中文
 

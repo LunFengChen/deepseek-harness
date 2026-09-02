@@ -39,7 +39,7 @@ kind: "package-group"
 
 - [凭据子系统参考](../../docs/subsystems/credentials.zh.md)——`CredentialRef` 与 `CredentialKey`、按操作解析、对 UI 安全的 `CredentialInfo`、授权 flow 与生成的 cordis 接口面。
 - [能力 seam](../../docs/capability-seams.zh.md)——本家族遵循的 Service Definition / Service Provider / Consumer 拆分。
-- [生成配置目录](../../docs/config-catalog.zh.md#deepseek-aidsh-credentials-local)——本地存储的每个受支持字段。
+- [生成配置目录](../../docs/config-catalog.zh.md#xfcodeaidsh-credentials-local)——本地存储的每个受支持字段。
 
 <a id="dev-note"></a>
 ## 开发备注

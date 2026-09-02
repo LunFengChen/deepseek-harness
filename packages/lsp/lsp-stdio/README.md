@@ -3,7 +3,7 @@ description: "The stdio language-server provider for ctx.lsp: configured server 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-lsp-stdio
+# @xfcodeai/dsh-lsp-stdio
 
 English | [中文](README.zh.md)
 
@@ -32,10 +32,10 @@ Mount this provider when a deployment has local language servers — for example
 The `servers` record maps each stable provider id to one server command. The provider resolves every executable at load after credential scrubbing, so a bad entry prevents every provider from registering; processes launch lazily on the first matching query.
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
-- name: '@deepseek-ai/dsh-subprocess-local'
-- name: '@deepseek-ai/dsh-lsp'
-- name: '@deepseek-ai/dsh-lsp-stdio'
+- name: '@xfcodeai/dsh-fs-local'
+- name: '@xfcodeai/dsh-subprocess-local'
+- name: '@xfcodeai/dsh-lsp'
+- name: '@xfcodeai/dsh-lsp-stdio'
   config:
     servers:
       typescript:
@@ -43,7 +43,7 @@ The `servers` record maps each stable provider id to one server command. The pro
         args: ['--stdio']
         extensionToLanguage:
           '.ts': typescript
-- name: '@deepseek-ai/dsh-tool-lsp'
+- name: '@xfcodeai/dsh-tool-lsp'
 ```
 
 | Field | Default | Meaning |
@@ -60,7 +60,7 @@ The `servers` record maps each stable provider id to one server command. The pro
 | `shutdownTimeoutMs` | `5000` | Graceful `shutdown`/`exit` budget before escalation |
 | `killGraceMs` | `2000` | Request-cancel and SIGTERM→SIGKILL escalation grace |
 
-`servers` must contain at least one entry with non-empty ids; timer budgets must be positive integers within Node's timer range, and byte caps must be positive. The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-lsp-stdio) is the exhaustive source for every accepted field.
+`servers` must contain at least one entry with non-empty ids; timer budgets must be positive integers within Node's timer range, and byte caps must be positive. The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-lsp-stdio) is the exhaustive source for every accepted field.
 
 ### What a query does
 

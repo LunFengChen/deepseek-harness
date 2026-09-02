@@ -2,13 +2,13 @@
  * Browser-safe durable workflow-record events written by the model-facing
  * workflow tool into its calling parent Session.
  *
- * @module @deepseek-ai/dsh-tool-workflow/types
+ * @module @xfcodeai/dsh-tool-workflow/types
  */
 
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
 import type {
   WorkflowAgentOutcome, WorkflowRunId, WorkflowStopReason,
-} from '@deepseek-ai/dsh-workflow/types'
+} from '@xfcodeai/dsh-workflow/types'
 
 /** Opens one durable top-level workflow run record. */
 export interface ToolWorkflowRunStartData {
@@ -38,7 +38,7 @@ export interface ToolWorkflowRunEndData {
   readonly stopReason: WorkflowStopReason
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@xfcodeai/dsh-session/types' {
   interface SessionEventMap {
     /**
      * Opens one top-level workflow record.

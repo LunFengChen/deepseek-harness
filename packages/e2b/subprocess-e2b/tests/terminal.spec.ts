@@ -9,10 +9,10 @@ import {
   type CommandHandle,
   type CommandResult,
   type Sandbox,
-} from '@deepseek-ai/dsh-e2b'
-import type E2BRuntime from '@deepseek-ai/dsh-e2b'
-import type { SubprocessTerminalSpawnSpec } from '@deepseek-ai/dsh-subprocess'
-import E2BSubprocessRuntime from '@deepseek-ai/dsh-subprocess-e2b'
+} from '@xfcodeai/dsh-e2b'
+import type E2BRuntime from '@xfcodeai/dsh-e2b'
+import type { SubprocessTerminalSpawnSpec } from '@xfcodeai/dsh-subprocess'
+import E2BSubprocessRuntime from '@xfcodeai/dsh-subprocess-e2b'
 import { spawnE2BTerminal } from '../src/terminal.ts'
 
 function commandError(exitCode: number): CommandExitError {

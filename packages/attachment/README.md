@@ -38,7 +38,7 @@ Start with the subsystem reference for the service contract, then the capability
 
 - [Attachment subsystem reference](../../docs/subsystems/attachment.md) — service contract, payload types, and the `ctx.attachments` cordis surface.
 - [Capability seams](../../docs/capability-seams.md) — the Service Definition / Service Provider / Consumer split this family follows.
-- [Generated configuration catalog](../../docs/config-catalog.md#deepseek-aidsh-attachment-local) — every accepted field of the local backend.
+- [Generated configuration catalog](../../docs/config-catalog.md#xfcodeaidsh-attachment-local) — every accepted field of the local backend.
 
 <a id="dev-note"></a>
 ## Dev Note

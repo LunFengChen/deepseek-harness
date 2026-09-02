@@ -4,9 +4,9 @@ import {
   RemoteStream,
   RemoteStreamCarrierError,
   type RemoteStreamOptions,
-} from '@deepseek-ai/dsh-api-gateway/client'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
-import type { RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+} from '@xfcodeai/dsh-api-gateway/client'
+import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
+import type { RemoteResult } from '@xfcodeai/dsh-typert-protocol'
 import {
   createSessionControlStream,
   SessionEventStream,

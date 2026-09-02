@@ -18,10 +18,10 @@ import { join } from 'node:path'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterEach, describe, expect, it, onTestFailed } from 'vitest'
-import type { RetryPolicyConfig } from '@deepseek-ai/dsh-llm'
-import { deriveReplayScript, parseSessionLog } from '@deepseek-ai/dsh-llm-replay'
-import type { ReplayEntry, ReplayOverrideDoc } from '@deepseek-ai/dsh-llm-replay'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import type { RetryPolicyConfig } from '@xfcodeai/dsh-llm'
+import { deriveReplayScript, parseSessionLog } from '@xfcodeai/dsh-llm-replay'
+import type { ReplayEntry, ReplayOverrideDoc } from '@xfcodeai/dsh-llm-replay'
+import type { SessionEvent } from '@xfcodeai/dsh-session'
 import {
   assertFixtureInventory, captureExpandedTurnProcessAria, captureStableAria,
   compareOrRefreshGolden, fixtureUserPrompts,

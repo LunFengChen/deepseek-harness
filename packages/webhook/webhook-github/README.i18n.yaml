@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/webhook/webhook-github/README.md
-README.md: 9c2b20f4abbc183fd5aa78454ce3b2c9266aa79c
-README.zh.md: 34d847b76acf4ead271f5005a924df6563aacb9f
+README.md: 3fe8b6310c1f9b0f5d9a9136541be3ec260f0538
+README.zh.md: 56909b725b7cd62c67f52be614bc0bd6e684db17

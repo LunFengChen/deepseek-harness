@@ -12,7 +12,7 @@ Status: implemented
 
 但 `broken` 是承重的，不是卡片上的装饰。`presetOptions` 会把损坏的行从会话选择器里滤掉，好让选择的人不必等到会话启动失败才发现；`resolveMountable` 会在花费一次挂载之前拒绝它。因此下游一切都把「不是 broken」读作「能组装」。
 
-这个缺口在[仓库命名契约](2026-08-11-repository-naming-contract-and-rename-ledger.zh.md)按预发布立场重命名包时暴露出来。仓库内的引用随之更新；写在 `<dshHome>/.agent-presets` 下的 preset 没有，于是引用 `@deepseek-ai/dsh-workspace-context` 的那一个保住了健康的卡片、保住了在选择器里的位置，直到有人切换过去才失败。引用了被后续版本改名或卸载的包，正是手写 preset 真正的腐化方式，而它恰好是这项检查排除掉的那一类。
+这个缺口在[仓库命名契约](2026-08-11-repository-naming-contract-and-rename-ledger.zh.md)按预发布立场重命名包时暴露出来。仓库内的引用随之更新；写在 `<dshHome>/.agent-presets` 下的 preset 没有，于是引用 `@xfcodeai/dsh-workspace-context` 的那一个保住了健康的卡片、保住了在选择器里的位置，直到有人切换过去才失败。引用了被后续版本改名或卸载的包，正是手写 preset 真正的腐化方式，而它恰好是这项检查排除掉的那一类。
 
 而它真正产出的失败，说得比它知道的还少。加载器的逐行包装构造一个普通 `Error`，其 message 以 `cause.message` 结尾，cause 只留在 `error.cause` 上。于是一个有两行失败的 group，抵达时是一行被包装的行，message 为 `failed to apply loader entry <group> (cordis:group): loader entries failed to apply`，两条真正的原因只能经由 `cause.errors` 取得。挂载诊断只展平 `AggregateError.errors`，从不跟随 `cause`，因此它停在那一行，一行都没点名。
 

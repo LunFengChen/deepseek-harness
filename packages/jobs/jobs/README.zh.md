@@ -3,7 +3,7 @@ description: "后台任务注册表约定，供组合、实现或排查后台工
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-jobs
+# @xfcodeai/dsh-jobs
 
 [English](README.md) | 中文
 
@@ -42,8 +42,8 @@ kind: "package-reference"
 ### 最小可用组合
 
 ```yaml
-- name: '@deepseek-ai/dsh-jobs-local'
-- name: '@deepseek-ai/dsh-tool-jobs'
+- name: '@xfcodeai/dsh-jobs-local'
+- name: '@xfcodeai/dsh-tool-jobs'
 ```
 
 在已提供 agent、tools 与 system-prompt 服务的 harness 基础上加载这两个插件，即可获得完整功能：`dsh-jobs-local` 提供进程内后台任务注册表，`dsh-tool-jobs` 提供 `job_output`、`job_list`、`job_kill` 工具以及完成通知投递。

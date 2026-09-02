@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-api-gateway",
+  "name": "@xfcodeai/dsh-api-gateway",
   "description": "Typert Remote Host dispatcher and Client API endpoint",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -32,8 +32,8 @@
   "dsh": {
     "client": {
       "inject": [
-        "@deepseek-ai/dsh-typert-registry",
-        "@deepseek-ai/dsh-client-connection"
+        "@xfcodeai/dsh-typert-registry",
+        "@xfcodeai/dsh-client-connection"
       ],
       "platform": "web",
       "immediately": true
@@ -51,21 +51,21 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-deque": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
+    "@xfcodeai/dsh-deque": "workspace:^",
+    "@xfcodeai/dsh-timeout": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "ws": "^8.21.0",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^"
+    "@xfcodeai/dsh-typert-protocol": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/dsh-host-webserver": "workspace:^",
-    "@deepseek-ai/dsh-typert-registry": "workspace:^",
-    "@deepseek-ai/dsh-util-crypto": "workspace:^",
+    "@xfcodeai/dsh-brand": "workspace:^",
+    "@xfcodeai/dsh-client-connection": "workspace:^",
+    "@xfcodeai/dsh-host-webserver": "workspace:^",
+    "@xfcodeai/dsh-typert-registry": "workspace:^",
+    "@xfcodeai/dsh-util-crypto": "workspace:^",
     "@types/ws": "^8.18.1",
     "@deepseek-ai/cordis": "workspace:^",
     "zod": "^4.4.3"

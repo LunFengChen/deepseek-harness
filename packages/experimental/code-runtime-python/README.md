@@ -3,7 +3,7 @@ description: "CPython-subprocess code runtime: the dsh-code-runtime seam impleme
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-experimental-code-runtime-python
+# @xfcodeai/dsh-experimental-code-runtime-python
 
 English | [中文](README.zh.md)
 

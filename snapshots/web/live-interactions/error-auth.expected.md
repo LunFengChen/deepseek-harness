@@ -16,10 +16,10 @@
 - text: Reply with a one-sentence description of event sourcing, then stop. {{clock}}
 - button "Copy":
   - img
-- button "Context injection @deepseek-ai/dsh-system-prompt":
+- button "Context injection @xfcodeai/dsh-system-prompt":
   - img
   - img
-  - text: Context injection @deepseek-ai/dsh-system-prompt
+  - text: Context injection @xfcodeai/dsh-system-prompt
 - status:
   - text: This turn failedAPI key is invalid
   - code: AUTH

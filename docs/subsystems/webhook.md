@@ -32,7 +32,7 @@ Failed attachment disposes the new Agent before a prompt exists. A failure betwe
 
 ## GitHub adapter
 
-`@deepseek-ai/dsh-webhook-github` registers an exact route on an injected WebServer, resolves its credential reference for each request, verifies the untouched `application/json` body before parsing, and returns `202` immediately after in-memory dispatch. Its normalized event guarantees a signed lossless-JSON object; rules validate the event-specific fields they consume.
+`@xfcodeai/dsh-webhook-github` registers an exact route on an injected WebServer, resolves its credential reference for each request, verifies the untouched `application/json` body before parsing, and returns `202` immediately after in-memory dispatch. Its normalized event guarantees a signed lossless-JSON object; rules validate the event-specific fields they consume.
 
 The [GitHub review guide](../user/guide/github-review.md) mounts this route on an isolated second WebServer so exposing webhook ingress does not expose the browser API.
 

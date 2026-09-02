@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-08-26-inspector-execution-realms-and-protocol-planes.md
-2026-08-26-inspector-execution-realms-and-protocol-planes.md: 1c274bda4cb10458ddc9ecec846b6355fb811c2f
-2026-08-26-inspector-execution-realms-and-protocol-planes.zh.md: 49fde96a3b0acc5d9621b1ca4cfd1546ca970931
+2026-08-26-inspector-execution-realms-and-protocol-planes.md: 5490f978287adb84990940587db4b851f88115ab
+2026-08-26-inspector-execution-realms-and-protocol-planes.zh.md: 5e0b441597204804218f623639e95fc0265b833a

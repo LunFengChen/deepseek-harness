@@ -3,7 +3,7 @@ description: "面向用户与维护者的默认 agent 驱动器说明，用于�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-loop
+# @xfcodeai/dsh-agent-loop
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 配置中声明的 agent 会在插件加载时自动启动。每个条目需要一个 `id` 标签；模型调用还同时需要 `provider` 与 `model`（`agent/request` 可以在分发前补齐缺失的这一对值）。
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-loop'
+- name: '@xfcodeai/dsh-agent-loop'
   config:
     maxParallelToolCalls: 10
     agents:
@@ -54,7 +54,7 @@ kind: "package-reference"
 | `agents[].sessionId` | — | 确切身份：首次使用创建，重新挂载时恢复已实体化的历史 |
 | `agents[].resumeSessionId` | — | 加载这个持久化会话而不是创建新会话；与 `sessionId` 互斥 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-agent-loop)是每个受支持字段的穷尽式真源。适配器会校验有效推理等级，循环则把它记录在请求头中。`maxParallelToolCalls` 也是整个 `agent-loop` 设置分节，因此叠加在该条目之上的用户层无需重启即可限制下一组工具调用。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-agent-loop)是每个受支持字段的穷尽式真源。适配器会校验有效推理等级，循环则把它记录在请求头中。`maxParallelToolCalls` 也是整个 `agent-loop` 设置分节，因此叠加在该条目之上的用户层无需重启即可限制下一组工具调用。
 
 ### 以编程方式创建或恢复 agent
 

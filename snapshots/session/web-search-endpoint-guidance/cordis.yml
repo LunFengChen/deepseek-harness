@@ -4,7 +4,7 @@
       name: './web-search-error-fixture.mjs'
 
 - id: web-search-deepseek
-  name: '@deepseek-ai/dsh-web-search-deepseek'
+  name: '@xfcodeai/dsh-web-search-deepseek'
   config:
     apiKey: snapshot-key
     # The fixture maps this recorded authority to its OS-assigned listener.

@@ -1,9 +1,9 @@
 /** Trajectory-owned conversion from durable Session events to ledger view data. */
 
-import type { ContentBlock, StreamChunk } from '@deepseek-ai/dsh-llm/types'
+import type { ContentBlock, StreamChunk } from '@xfcodeai/dsh-llm/types'
 import type {
   AssistantBlock, ContextProvenanceView, KnownContextForm,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@xfcodeai/dsh-client-ui-conversation/client'
 
 /* jscpd:ignore-start -- Chat and Trajectory own independent event-to-view projections. */
 

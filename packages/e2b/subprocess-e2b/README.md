@@ -3,7 +3,7 @@ description: "Shell commands and terminals inside the shared remote sandbox: wha
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subprocess-e2b
+# @xfcodeai/dsh-subprocess-e2b
 
 English | [中文](README.zh.md)
 
@@ -39,7 +39,7 @@ The only setting is how often the package checks a running command's status; the
 |---|---|---|
 | `pollMs` | `20` | How often the package checks a running command's status, in milliseconds |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subprocess-e2b) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subprocess-e2b) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Running commands
 
@@ -121,7 +121,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Subprocess seam package](../../subprocess/subprocess/README.md) — the abstract contract this provider implements.
 - [Bash executor](../../shell/bash-local/README.md) — the consumer that renders spawned commands to the model.
 - [PTY terminal backend](../../terminal/terminal-bash/README.md) — the consumer that renders terminal sessions.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subprocess-e2b) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subprocess-e2b) — every accepted config field and its source declaration.
 
 -----
 

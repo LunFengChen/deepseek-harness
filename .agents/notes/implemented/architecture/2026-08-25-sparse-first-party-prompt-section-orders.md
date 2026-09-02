@@ -14,7 +14,7 @@ The shell guidance also followed filesystem guidance even though shell commands 
 
 ## Decision
 
-`@deepseek-ai/dsh-system-prompt` owns private named allocations for repository prompt sections and runtime contexts. Every repository contributor asks the live service for its typed placement through `ctx.systemPrompt.getSectionOrder(name)` or `getContextOrder(name)` instead of importing a value or declaring a numeric literal. Section values are unique integers, and adjacent allocated section values differ by at least ten; context values are unique integers in their independent sequence.
+`@xfcodeai/dsh-system-prompt` owns private named allocations for repository prompt sections and runtime contexts. Every repository contributor asks the live service for its typed placement through `ctx.systemPrompt.getSectionOrder(name)` or `getContextOrder(name)` instead of importing a value or declaring a numeric literal. Section values are unique integers, and adjacent allocated section values differ by at least ten; context values are unique integers in their independent sequence.
 
 The allocation preserves the established first-party sequence except for two deliberate changes: Bash, or PowerShell in the Windows composition, leads per-tool guidance; and sections that shared an order receive an explicit sequence. The groups are:
 

@@ -3,7 +3,7 @@ description: "基于 `ctx.fs` 的独立 str_replace_editor 工具：供组合 Cl
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-str-replace-editor
+# @xfcodeai/dsh-tool-str-replace-editor
 
 [English](README.md) | 中文
 
@@ -32,9 +32,9 @@ kind: "package-reference"
 一个后端、可选地加策略插件，然后是工具；编辑器可与任何终端接口组合。
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
-- name: '@deepseek-ai/dsh-fs-observation-policy'
-- name: '@deepseek-ai/dsh-tool-str-replace-editor'
+- name: '@xfcodeai/dsh-fs-local'
+- name: '@xfcodeai/dsh-fs-observation-policy'
+- name: '@xfcodeai/dsh-tool-str-replace-editor'
 ```
 
 ### 配置
@@ -90,7 +90,7 @@ kind: "package-reference"
 - [tool-fs](../tool-fs/README.zh.md)——替代的 `read`/`write`/`edit` 工具套件。
 - [fs-observation-policy](../fs-observation-policy/README.zh.md)——通过 `fs/*` 事件防护变更的策略插件。
 - [fs-sandbox](../fs-sandbox/README.zh.md)——围栏变更的沙箱强制后端。
-- [生成工具目录](../../../docs/tool-catalog.zh.md#deepseek-aidsh-tool-str-replace-editor)——本包注册的穷尽式 schema。
+- [生成工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-str-replace-editor)——本包注册的穷尽式 schema。
 
 -----
 
@@ -101,7 +101,7 @@ kind: "package-reference"
 
 #### 模型看到的内容
 
-生成的 [`str_replace_editor` schema](../../../docs/tool-catalog.zh.md#deepseek-aidsh-tool-str-replace-editor)，包含配置的 `description`。本插件不贡献独立系统提示词段。
+生成的 [`str_replace_editor` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-str-replace-editor)，包含配置的 `description`。本插件不贡献独立系统提示词段。
 
 #### Token 影响
 

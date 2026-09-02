@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-code-runtime",
+  "name": "@xfcodeai/dsh-code-runtime",
   "description": "Abstract code-execution seam (ctx.codeRuntime) for the DeepSeek Harness",
   "version": "0.1.2-alpha.4",
   "publishConfig": {

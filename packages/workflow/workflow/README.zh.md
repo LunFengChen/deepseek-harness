@@ -3,7 +3,7 @@ description: "工作流编排能力：运行由模型编写的、扇出 subagent
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-workflow
+# @xfcodeai/dsh-workflow
 
 [English](README.md) | 中文
 

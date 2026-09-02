@@ -3,7 +3,7 @@ description: "Web 后台任务表面：列出本会话可见任务的会话头�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-jobs
+# @xfcodeai/dsh-client-ui-jobs
 
 [English](README.md) | 中文
 

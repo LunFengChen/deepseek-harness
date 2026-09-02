@@ -12,9 +12,9 @@ The SQLite full-text Session-query provider is not an alternative authoritative 
 
 ## Decision
 
-`@deepseek-ai/dsh-session-persistence-jsonl` is the sole first-party implementation of `ctx.sessionPersistence`. The abstract Service Definition and `PersistenceCoordinator` remain backend-neutral so an out-of-tree provider can implement the same service, but the repository owns and tests one authoritative physical Session format.
+`@xfcodeai/dsh-session-persistence-jsonl` is the sole first-party implementation of `ctx.sessionPersistence`. The abstract Service Definition and `PersistenceCoordinator` remain backend-neutral so an out-of-tree provider can implement the same service, but the repository owns and tests one authoritative physical Session format.
 
-The `@deepseek-ai/dsh-session-persistence-sqlite` package, its schema resources, backend-specific tests, configuration surface, and Windows differential lane are absent. Cross-package persistence tests use the real JSONL provider or an owner-local fake. `@deepseek-ai/dsh-session-query-sqlite` remains the optional FTS5 query provider over a separate rebuildable database, and `@deepseek-ai/dsh-storage-sqlite` remains the generic domain-KV provider.
+The `@xfcodeai/dsh-session-persistence-sqlite` package, its schema resources, backend-specific tests, configuration surface, and Windows differential lane are absent. Cross-package persistence tests use the real JSONL provider or an owner-local fake. `@xfcodeai/dsh-session-query-sqlite` remains the optional FTS5 query provider over a separate rebuildable database, and `@xfcodeai/dsh-storage-sqlite` remains the generic domain-KV provider.
 
 Existing databases written by the removed provider are not opened or migrated by the current build. An operator who needs their contents must use a build that still contains that provider and export the logical Session before upgrading.
 

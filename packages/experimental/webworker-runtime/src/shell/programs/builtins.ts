@@ -1,7 +1,7 @@
 /**
  * Shell builtins: the programs that read or change the shell's own state
  * (directory, environment, exit status) rather than the filesystem.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/shell/programs/builtins
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/shell/programs/builtins
  */
 
 import { readVariable } from '../expand.ts'

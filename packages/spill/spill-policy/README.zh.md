@@ -3,7 +3,7 @@ description: "工具结果 spill 策略：部署如何用预览和可检索的 s
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-spill-policy
+# @xfcodeai/dsh-spill-policy
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-reference"
 以 UTF-8 字节计的 `maxInlineBytes` 预算加载策略，并同时挂载 spill 后端：
 
 ```yaml
-- name: '@deepseek-ai/dsh-spill-local'
-- name: '@deepseek-ai/dsh-spill-policy'
+- name: '@xfcodeai/dsh-spill-local'
+- name: '@xfcodeai/dsh-spill-policy'
   config:
     maxInlineBytes: 50000
 ```
@@ -42,7 +42,7 @@ kind: "package-reference"
 |---|---|---|
 | `maxInlineBytes` | 省略 | 纯文本结果面向模型的上下文上限（UTF-8 字节）；省略时完全禁用该策略 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-spill-policy)是每个受支持字段的穷尽式真源。负数或小数上限会让插件加载失败，而不是破坏每次调用的行为。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-spill-policy)是每个受支持字段的穷尽式真源。负数或小数上限会让插件加载失败，而不是破坏每次调用的行为。
 
 ### 模型看到什么
 

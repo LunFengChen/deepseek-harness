@@ -10,21 +10,21 @@
  */
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest'
 import { act, cleanup, fireEvent, render } from '@testing-library/react'
-import type { SessionSnapshot } from '@deepseek-ai/dsh-api-session-controller/client'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
-import { InputTriggerService } from '@deepseek-ai/dsh-client-ui-input-trigger/client'
+import type { SessionSnapshot } from '@xfcodeai/dsh-api-session-controller/client'
+import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
+import { InputTriggerService } from '@xfcodeai/dsh-client-ui-input-trigger/client'
 import type {
   ClientSessionContext, SubmitEnvelope,
-} from '@deepseek-ai/dsh-client-ui-input-trigger/client'
+} from '@xfcodeai/dsh-client-ui-input-trigger/client'
 import type {
   CommandClaim, PickOutcome, SubmitImageAttachment, SubmitOutcome,
 } from '../src/client/contract/input.ts'
 import {
   bindSnapshotSelector, conversationSnapshot, makeTranslate, sessionSnapshot, SlotTestRuntime,
-} from '@deepseek-ai/dsh-client-test-runtime'
-import type { SessionPendingInteractionSnapshot } from '@deepseek-ai/dsh-client-ui-session/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import { zh as commonZh } from '@deepseek-ai/dsh-client-locale/src/locales/zh.ts'
+} from '@xfcodeai/dsh-client-test-runtime'
+import type { SessionPendingInteractionSnapshot } from '@xfcodeai/dsh-client-ui-session/client'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
+import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
 import type { DraftAttachmentId } from '../src/client/contract/input.ts'
 import { SessionInputShell } from '../src/client/input/facade.ts'
 import { InputBar } from '../src/client/skeleton/InputBar.tsx'

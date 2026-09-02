@@ -1,6 +1,6 @@
 /**
  * Error vocabulary for the storage hub and its backends.
- * @module @deepseek-ai/dsh-storage/src/error
+ * @module @xfcodeai/dsh-storage/src/error
  */
 
 /** Discriminant codes carried by every {@link StorageError}. */

@@ -3,7 +3,7 @@ description: "dsh Web 客户端的 subagent 对话目录、续接路由 UI 与 '
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-subagent
+# @xfcodeai/dsh-client-ui-subagent
 
 [English](README.md) | 中文
 

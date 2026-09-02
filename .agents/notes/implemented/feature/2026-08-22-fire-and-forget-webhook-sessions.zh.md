@@ -12,13 +12,13 @@ Status: implemented
 
 ## Decision
 
-`@deepseek-ai/dsh-webhook` 拥有只有两个操作的 Host runtime：规则通过 `register()` 注册，已验证身份的提供方适配器调用 `dispatch()`。每个匹配回调都作为任意受信任代码独立运行，并返回 `null` 或一个基于 Workspace 的 Session 请求。dispatch 会在回调结算前返回，而 effect disposer 只中止并排空自己拥有的调用。
+`@xfcodeai/dsh-webhook` 拥有只有两个操作的 Host runtime：规则通过 `register()` 注册，已验证身份的提供方适配器调用 `dispatch()`。每个匹配回调都作为任意受信任代码独立运行，并返回 `null` 或一个基于 Workspace 的 Session 请求。dispatch 会在回调结算前返回，而 effect disposer 只中止并排空自己拥有的调用。
 
 runtime 不存储提供方交付或执行记录。它不重试、不去重、不恢复回调工作、不观察 Agent 状态，也不收集结果。重复交付可能创建另一个 Session。`WebhookDeliveryId` 仍可供有意通过自有状态实现幂等性的规则使用。
 
 ## Provider adapters
 
-身份验证属于提供方适配器。`@deepseek-ai/dsh-webhook-github` 会在注入的 WebServer 上注册一条精确路由，限制未改动的 UTF-8 body，为每次请求解析密钥引用，在解析前验证 `X-Hub-Signature-256`，并把签名无损 JSON 对象交给 runtime。`202` 只表示已验证的内存分发；它先于规则匹配、外部调用和 Session 创建。
+身份验证属于提供方适配器。`@xfcodeai/dsh-webhook-github` 会在注入的 WebServer 上注册一条精确路由，限制未改动的 UTF-8 body，为每次请求解析密钥引用，在解析前验证 `X-Hub-Signature-256`，并把签名无损 JSON 对象交给 runtime。`202` 只表示已验证的内存分发；它先于规则匹配、外部调用和 Session 创建。
 
 普通 Web 组合保持其 UI/API WebServer 独立。GitHub 示例会把另一个 WebServer 及其适配器挂载到只隔离 `webServer` 的 group 中，因此反向代理可以暴露 webhook 端口，而不暴露 `/api`、WebSocket 或前端文件。
 

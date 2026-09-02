@@ -13,8 +13,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { type SessionEvent } from '@deepseek-ai/dsh-session'
-import { runLoaderSmoke } from '@deepseek-ai/dsh-loader-smoke'
+import { type SessionEvent } from '@xfcodeai/dsh-session'
+import { runLoaderSmoke } from '@xfcodeai/dsh-loader-smoke'
 
 const fixtureDir = new URL('./fixtures/loader/', import.meta.url)
 const driver = fileURLToPath(new URL('driver.ts', fixtureDir))

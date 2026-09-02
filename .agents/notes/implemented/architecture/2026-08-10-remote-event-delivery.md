@@ -102,7 +102,7 @@ export const API_REMOTE_FORWARDED_EVENTS = [
 // types.ts — the type face, derived
 export type ApiRemoteForwardedEvent = typeof API_REMOTE_FORWARDED_EVENTS[number]['event']
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@xfcodeai/dsh-typert-protocol' {
   interface TypertRemoteEventSelection extends Record<ApiRemoteForwardedEvent, true> {}
 }
 ```
@@ -140,7 +140,7 @@ The Client requires an opening `ready` item with a non-empty `clientId` and `hos
 
 The `apps/web/tests/**` e2e files typecheck in root `tsconfig.host.json`: they boot a real harness in process and directly access `ctx.connection`, Host `SessionStore.get/create/flush`, and `ctx.sessionProjectionCache`. Driving a browser at runtime does not place a file in the Client TypeScript program. Moving these tests to the Client aggregate produces errors because one program cannot hold both faces' merges for the same Context key.
 
-This implies one build rule needed by the design: importing a value or type from a Client package in those tests brings that package's whole project and all its project references into the Host build graph. Four consumers (`ui-settings-general`, `ui-settings-models`, `ui-permission`, and `ui-commands`) reference API Remotes' Client face, which cannot compile until Host tsdown generates `@deepseek-ai/dsh-goal/remote`. That forms a build-order cycle: Host tsc needs API Remotes Client, which needs generated `goal/remote`, which Host tsdown emits after Host tsc.
+This implies one build rule needed by the design: importing a value or type from a Client package in those tests brings that package's whole project and all its project references into the Host build graph. Four consumers (`ui-settings-general`, `ui-settings-models`, `ui-permission`, and `ui-commands`) reference API Remotes' Client face, which cannot compile until Host tsdown generates `@xfcodeai/dsh-goal/remote`. That forms a build-order cycle: Host tsc needs API Remotes Client, which needs generated `goal/remote`, which Host tsdown emits after Host tsc.
 
 The few required Client symbols are mirrored on the test side: `scaffold.ts` exports the mirrored welcome-notice constants, while the two chat e2e files import `dsh-client-runtime/client` directly because the Runtime project already belongs to the Host graph. This removes those four consumers from the Host graph, and the 15 Client project references in `apps/cli/tsconfig.json` no longer serve an owner-map role. Each mirror is byte-identical to its source; drift produces a selector mismatch or an unsuppressed notice and fails loudly.
 

@@ -3,7 +3,7 @@ description: "The Agent handle, live registry, process-local initiator scope, an
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent
+# @xfcodeai/dsh-agent
 
 English | [中文](README.zh.md)
 

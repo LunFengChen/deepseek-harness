@@ -6,15 +6,15 @@ English | [中文](2026-08-08-remove-cli-demo.zh.md)
 
 ## Problem
 
-After [`dsh --profile headless`](../architecture/2026-08-06-app-owned-command-line.md) became the product one-shot command, `@deepseek-ai/dsh-cli-demo` remained a second application package for the same job. It carried another executable, argument grammar, app composition, cancellation lifecycle, text/JSON/stream-JSON output contract, built artifact, documentation surface, and test suite. The two entry points also assembled different trees, so a successful demo did not prove the shipped `headless` profile and users had to choose between overlapping commands.
+After [`dsh --profile headless`](../architecture/2026-08-06-app-owned-command-line.md) became the product one-shot command, `@xfcodeai/dsh-cli-demo` remained a second application package for the same job. It carried another executable, argument grammar, app composition, cancellation lifecycle, text/JSON/stream-JSON output contract, built artifact, documentation surface, and test suite. The two entry points also assembled different trees, so a successful demo did not prove the shipped `headless` profile and users had to choose between overlapping commands.
 
 The replay suites still need canonical session events to pin assembled backend behavior. That testing need does not require a published command or compatibility contract.
 
 ## Decision
 
-Delete `@deepseek-ai/dsh-cli-demo` completely: its package, bin, parser, app plugin, output formats, tests, workspace references, generated-catalog entries, and active documentation. No alias or compatibility package remains. Source users invoke the product command through `pnpm dsh --profile headless`; it owns final-text stdout, failure diagnostics on stderr, persistence, exit status, and shutdown.
+Delete `@xfcodeai/dsh-cli-demo` completely: its package, bin, parser, app plugin, output formats, tests, workspace references, generated-catalog entries, and active documentation. No alias or compatibility package remains. Source users invoke the product command through `pnpm dsh --profile headless`; it owns final-text stdout, failure diagnostics on stderr, persistence, exit status, and shutdown.
 
-`apps/cli/tests/profiles/headless` loads the shipped `base` and `headless` bundle layers, then applies narrow overlays for replay or mock providers, isolated persistence, and the behavior under test. The support-tier `@deepseek-ai/dsh-loader-smoke` package owns the shipped-profile composition helper, the shared direct-agent turn helper, and the test-only driver; the driver renders canonical events as JSONL without defining a supported product output format.
+`apps/cli/tests/profiles/headless` loads the shipped `base` and `headless` bundle layers, then applies narrow overlays for replay or mock providers, isolated persistence, and the behavior under test. The support-tier `@xfcodeai/dsh-loader-smoke` package owns the shipped-profile composition helper, the shared direct-agent turn helper, and the test-only driver; the driver renders canonical events as JSONL without defining a supported product output format.
 
 ## Alternatives considered
 
@@ -25,7 +25,7 @@ Delete `@deepseek-ai/dsh-cli-demo` completely: its package, bin, parser, app plu
 
 ## Consequences
 
-This is intentionally breaking. `dsh-cli-demo`, its `--output-format` choices, and imports from `@deepseek-ai/dsh-cli-demo/src/cli.ts` no longer resolve. There is no public event-stream replacement in this change; callers use `dsh --profile headless` for one-shot execution and must choose an existing protocol API when they need structured automation.
+This is intentionally breaking. `dsh-cli-demo`, its `--output-format` choices, and imports from `@xfcodeai/dsh-cli-demo/src/cli.ts` no longer resolve. There is no public event-stream replacement in this change; callers use `dsh --profile headless` for one-shot execution and must choose an existing protocol API when they need structured automation.
 
 The repository retains backend replay coverage through test-only infrastructure, while product smoke and built-bin acceptance exercise `dsh --profile headless`. A separate one-shot package may return only if it owns a genuinely independent, versioned protocol that cannot belong to the product launcher; a second spelling or output shim is not enough.
 

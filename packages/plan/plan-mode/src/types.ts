@@ -5,10 +5,10 @@
  * host consumers and `./client` for client aggregates — with zero content
  * duplication.
  *
- * @module @deepseek-ai/dsh-plan-mode/types
+ * @module @xfcodeai/dsh-plan-mode/types
  */
 
-import type { CommandId } from '@deepseek-ai/dsh-commands/brand'
+import type { CommandId } from '@xfcodeai/dsh-commands/brand'
 
 /**
  * The plan projection's wire value. `active` is the logged state in force
@@ -35,7 +35,7 @@ export interface PlanUnitState {
   activeAtLastHeader: boolean | null
 }
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@xfcodeai/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     /** Host plan-mode fold state. */
     plan: PlanUnitState

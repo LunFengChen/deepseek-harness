@@ -2,7 +2,7 @@
 # the pinned executable first; DSH starts it but does not run a package manager.
 - insert:
     - id: memory-mcp-reference
-      name: '@deepseek-ai/dsh-mcp-client'
+      name: '@xfcodeai/dsh-mcp-client'
       config:
         serverName: reference_memory
         transport: stdio

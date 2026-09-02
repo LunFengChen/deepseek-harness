@@ -3,7 +3,7 @@ description: "在 agent 运行期间使用你现有的 Claude Code hooks.json �
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-hooks-claude-code
+# @xfcodeai/dsh-hooks-claude-code
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-hooks-claude-code'
+- name: '@xfcodeai/dsh-hooks-claude-code'
   config:
     configPath: ./.claude/hooks.json
     pluginRoot: ./.claude/plugins/my-plugin
@@ -49,7 +49,7 @@ kind: "package-reference"
 | `defaultTimeoutMs` | `600,000` | hook 未设置时的每 hook 超时（即 Claude Code 默认值） |
 | `stderrSummaryMaxChars` | `500` | 持久化 `hook/result` stderr 摘要的字符上限 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-hooks-claude-code)是每个受支持字段的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-hooks-claude-code)是每个受支持字段的穷尽式真源。
 
 ### 你的钩子能做什么
 
@@ -129,7 +129,7 @@ matcher subject 是工具名称（`PreToolUse`／`PostToolUse`）、会话源（
 - [hook 协议库](../hook-protocol/README.zh.md)——本桥接应用的共享钩子规则。
 - [钩子桥接 Agent Note](../../../.agents/notes/implemented/feature/2026-06-30-hook-bridges.zh.md)——桥接设计、决策映射与延期缺口。
 - [拦截扩展点 Agent Note](../../../.agents/notes/implemented/feature/2026-06-30-interception-extension-points.zh.md)——桥接所映射的类型化 Decision 接口面。
-- [生成的配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-hooks-claude-code)——每个受支持配置字段及其源声明。
+- [生成的配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-hooks-claude-code)——每个受支持配置字段及其源声明。
 
 -----
 

@@ -16,12 +16,12 @@
  * before expanding and fails loud on a malformed row-tagged value instead of
  * silently dropping a whole run.
  *
- * @module @deepseek-ai/dsh-session/chunk-rows
+ * @module @xfcodeai/dsh-session/chunk-rows
  */
 
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { ToolCallId } from '@deepseek-ai/dsh-llm/brand'
-import type { StreamChunk } from '@deepseek-ai/dsh-llm'
+import { brandString } from '@xfcodeai/dsh-brand'
+import type { ToolCallId } from '@xfcodeai/dsh-llm/brand'
+import type { StreamChunk } from '@xfcodeai/dsh-llm'
 import { SessionSeq } from './types.ts'
 import type { SessionEvent, SessionSeq as SessionSeqType } from './types.ts'
 

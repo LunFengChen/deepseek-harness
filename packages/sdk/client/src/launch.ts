@@ -1,6 +1,6 @@
 /**
  * Resolve the public SDK launch configuration to one dsh subprocess.
- * @module @deepseek-ai/dsh-sdk-client/launch
+ * @module @xfcodeai/dsh-sdk-client/launch
  */
 
 import { existsSync, readFileSync } from 'node:fs'
@@ -61,7 +61,7 @@ export function resolveDshBinFromManifests(dshManifestUrl: string, clientManifes
   const bin = typeof dshManifest.bin === 'object' && dshManifest.bin !== null
     ? (dshManifest.bin as Record<string, unknown>).dsh
     : dshManifest.bin
-  if (typeof bin !== 'string' || bin === '') throw new Error('@deepseek-ai/dsh declares no dsh executable')
+  if (typeof bin !== 'string' || bin === '') throw new Error('@xfcodeai/dsh declares no dsh executable')
   return resolve(dirname(fileURLToPath(dshManifestUrl)), bin)
 }
 
@@ -71,7 +71,7 @@ export function resolveDshBinFromManifests(dshManifestUrl: string, clientManifes
  */
 export function installedDshBin(): string {
   return resolveDshBinFromManifests(
-    import.meta.resolve('@deepseek-ai/dsh/package.json'),
+    import.meta.resolve('@xfcodeai/dsh/package.json'),
     new URL('../package.json', import.meta.url).href,
   )
 }
@@ -97,7 +97,7 @@ export function resolveDshNodeLaunchFromManifests(
   const sourceTsconfig = resolve(packageDir, 'tsconfig.json')
   if (!existsSync(sourceBin) || !existsSync(sourcePatch) || !existsSync(sourceTsconfig)) {
     throw new Error(
-      `@deepseek-ai/dsh is missing its built executable ${bin} and complete source launch files ${sourceBin}, ${sourcePatch}, ${sourceTsconfig}`,
+      `@xfcodeai/dsh is missing its built executable ${bin} and complete source launch files ${sourceBin}, ${sourcePatch}, ${sourceTsconfig}`,
     )
   }
   const loader = sourceLoaderUrl ?? import.meta.resolve('tsx/esm')
@@ -114,7 +114,7 @@ export function resolveDshNodeLaunchFromManifests(
  */
 function installedDshNodeLaunch(): DshNodeLaunch {
   return resolveDshNodeLaunchFromManifests(
-    import.meta.resolve('@deepseek-ai/dsh/package.json'),
+    import.meta.resolve('@xfcodeai/dsh/package.json'),
     new URL('../package.json', import.meta.url).href,
   )
 }

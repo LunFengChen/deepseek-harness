@@ -18,7 +18,7 @@ import type {
   DynamicCordisRunResolution,
   DynamicCordisRunResponse,
   SessionId,
-} from '@deepseek-ai/dsh-api-remotes/client'
+} from '@xfcodeai/dsh-api-remotes/client'
 import { errorDetails } from './runtime.ts'
 import type { CordisErrorDetails, CordisObservable, DynamicCordisPackageRunner } from './runtime.ts'
 

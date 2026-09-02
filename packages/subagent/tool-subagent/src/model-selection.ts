@@ -1,8 +1,8 @@
 /** Child LLM route selection for the subagent tool. */
 
-import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type { LlmRuntime } from '@deepseek-ai/dsh-llm'
-import type { AgentOptions } from '@deepseek-ai/dsh-agent'
+import { ReasoningEffortId } from '@xfcodeai/dsh-llm'
+import type { LlmRuntime } from '@xfcodeai/dsh-llm'
+import type { AgentOptions } from '@xfcodeai/dsh-agent'
 import z from '@deepseek-ai/schemastery'
 
 /** One exact child LLM route authorized by a user setting. */

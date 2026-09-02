@@ -3,7 +3,7 @@ description: "面向用户与维护者的语义会话持久性检查点说明，
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-checkpoint-policy
+# @xfcodeai/dsh-session-checkpoint-policy
 
 [English](README.md) | 中文
 
@@ -37,10 +37,10 @@ kind: "package-reference"
 
 ```yaml
 - id: session-persistence
-  name: '@deepseek-ai/dsh-session-persistence-jsonl'
+  name: '@xfcodeai/dsh-session-persistence-jsonl'
 
 - id: session-checkpoints
-  name: '@deepseek-ai/dsh-session-checkpoint-policy'
+  name: '@xfcodeai/dsh-session-checkpoint-policy'
 ```
 
 ### 什么会变得持久

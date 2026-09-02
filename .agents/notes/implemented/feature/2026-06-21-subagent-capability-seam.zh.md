@@ -31,13 +31,13 @@ bash seam（[能力 seam](../architecture/2026-06-13-capability-seams.zh.md)）�
 
 | 包 | 角色 |
 |---|---|
-| `@deepseek-ai/dsh-subagent` | 接口：`SubagentRuntime`（`ctx.subagents`）、`SubagentProvider`、`SubagentRun`、请求、结果、能力词汇、`subagent/*` 事件 |
-| `@deepseek-ai/dsh-subagent-spawn-in-process` | 实现：通过 `ctx.agents.create` 创建全新的进程内子 agent |
-| `@deepseek-ai/dsh-subagent-fork-in-process` | 实现：用父 agent 日志快照初始化的进程内子 agent |
-| `@deepseek-ai/dsh-subagent-acp` | 实现：作为 ACP 客户端驱动已配置的子进程 |
-| `@deepseek-ai/dsh-subagent-codex` | 实现：一次性官方 Codex app-server 进程 |
-| `@deepseek-ai/dsh-subagent-claude-code` | 实现：通过 Agent SDK 运行的一次性官方 Claude Code 进程 |
-| `@deepseek-ai/dsh-tool-subagent` | 消费方：基于 `ctx.subagents` 的面向模型的 `subagent` 工具 |
+| `@xfcodeai/dsh-subagent` | 接口：`SubagentRuntime`（`ctx.subagents`）、`SubagentProvider`、`SubagentRun`、请求、结果、能力词汇、`subagent/*` 事件 |
+| `@xfcodeai/dsh-subagent-spawn-in-process` | 实现：通过 `ctx.agents.create` 创建全新的进程内子 agent |
+| `@xfcodeai/dsh-subagent-fork-in-process` | 实现：用父 agent 日志快照初始化的进程内子 agent |
+| `@xfcodeai/dsh-subagent-acp` | 实现：作为 ACP 客户端驱动已配置的子进程 |
+| `@xfcodeai/dsh-subagent-codex` | 实现：一次性官方 Codex app-server 进程 |
+| `@xfcodeai/dsh-subagent-claude-code` | 实现：通过 Agent SDK 运行的一次性官方 Claude Code 进程 |
+| `@xfcodeai/dsh-tool-subagent` | 消费方：基于 `ctx.subagents` 的面向模型的 `subagent` 工具 |
 
 ### 原语：异步 `start → SubagentRun`
 

@@ -1,8 +1,8 @@
 /** Mount the SDK delegation tool in each fixture Agent's scope. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import * as ToolSubagent from '@deepseek-ai/dsh-tool-subagent'
-import type { Config } from '@deepseek-ai/dsh-tool-subagent'
+import * as ToolSubagent from '@xfcodeai/dsh-tool-subagent'
+import type { Config } from '@xfcodeai/dsh-tool-subagent'
 
 export const name = 'scoped-tool-subagent'
 export const inject = ['agents', 'subagentModelSelection']

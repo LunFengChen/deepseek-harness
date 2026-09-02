@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
 import type {
   TeamMemberView as TeamRosterMember,
   TeamTaskAction,
@@ -7,14 +7,14 @@ import type {
   TeamTaskMutationResult,
   TeamTaskView as TeamTask,
   TeamView,
-} from '@deepseek-ai/dsh-experimental-agent-team/client'
-import type { RemoteResult } from '@deepseek-ai/dsh-api-remotes/client'
+} from '@xfcodeai/dsh-experimental-agent-team/client'
+import type { RemoteResult } from '@xfcodeai/dsh-api-remotes/client'
 import {
   IconCheckOutline14, IconCloseOutline16, IconEditOutline16, IconPlusOutline16,
   IconRefreshOutline14, IconTrashOutline16, IconUserOutline16, StateDot,
-} from '@deepseek-ai/dsh-client-ui-primitives'
-import type { PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@xfcodeai/dsh-client-ui-primitives'
+import type { PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
 import { NS, type TeamKey } from './locales.ts'
 import css from './TeamAction.module.css'
 

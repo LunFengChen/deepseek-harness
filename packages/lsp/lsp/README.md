@@ -3,7 +3,7 @@ description: "The LSP capability seam (ctx.lsp): provider selection by file exte
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-lsp
+# @xfcodeai/dsh-lsp
 
 English | [中文](README.zh.md)
 
@@ -36,11 +36,11 @@ Choose this service when a deployment wants model-visible code navigation backed
 The seam needs a provider and a consumer to do anything. A minimal composition mounts the service, a stdio provider, and the tool:
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
-- name: '@deepseek-ai/dsh-subprocess-local'
-- name: '@deepseek-ai/dsh-lsp'
-- name: '@deepseek-ai/dsh-lsp-stdio'
-- name: '@deepseek-ai/dsh-tool-lsp'
+- name: '@xfcodeai/dsh-fs-local'
+- name: '@xfcodeai/dsh-subprocess-local'
+- name: '@xfcodeai/dsh-lsp'
+- name: '@xfcodeai/dsh-lsp-stdio'
+- name: '@xfcodeai/dsh-tool-lsp'
 ```
 
 Server commands, extension mappings, and the filesystem/subprocess pairing are configured in the provider and tool packages; see [dsh-lsp-stdio](../lsp-stdio/README.md) and [dsh-tool-lsp](../tool-lsp/README.md).

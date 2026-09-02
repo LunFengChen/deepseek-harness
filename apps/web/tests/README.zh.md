@@ -15,11 +15,11 @@ Host 服务：`ctx.connection`、Host 侧 `SessionStore` 与 `ctx.sessionProject
 `Context`，因此单个程序无法同时看见两者。把这些文件挪进 Client aggregate 会让每一处
 Host 服务访问都无法编译。
 
-## 不要在此 import `@deepseek-ai/dsh-client-*`
+## 不要在此 import `@xfcodeai/dsh-client-*`
 
 import 一个 Client 包——无论值还是类型——都会把它整个 TypeScript 工程、以及它引用的每个工程
 拉进 **Host 构建图**。这已经坑过本 lane 一次：四个 Client 消费方包引用了 `api/remotes` 的
-Client face，而该 face 必须等 Host tsdown 生成 `@deepseek-ai/dsh-goal/remote` 之后才能编译，
+Client face，而该 face 必须等 Host tsdown 生成 `@xfcodeai/dsh-goal/remote` 之后才能编译，
 于是 Host 构建阶段变成在等一个由它自己产出的产物。
 
 当某个场景需要 Client 持有的常量或纯函数时，改为在此处镜像一份，并紧挨着一条注释掉的
@@ -27,8 +27,8 @@ import 点明源模块。这样漂移会表现为选择器未命中或镜像值�
 通过。`scaffold.ts` 按此规则镜像欢迎声明的 namespace、确认字段、版本和被断言的中文文案。
 
 有一类 Client import 是长期成立的。`assembled-boot.ts` 驱动 shell 本身，因此它从
-`@deepseek-ai/dsh-client-web` import `AppWebEntry`、从
-`@deepseek-ai/dsh-client-modules/client` import boot manifest 类型：启动真实 shell 正是该
+`@xfcodeai/dsh-client-web` import `AppWebEntry`、从
+`@xfcodeai/dsh-client-modules/client` import boot manifest 类型：启动真实 shell 正是该
 harness 的用途，且这两个包本来就在 Host 图中。chat 场景则在 `support.ts` 中镜像
 `conversationContextKey`，而不 import 其 Client owner。
 

@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-web",
+  "name": "@xfcodeai/dsh-web",
   "description": "Abstract web access capability seam (ctx.web) for the DeepSeek Harness — search/fetch provider registry, registration-order-independent selection, request/result vocabulary, and the WebError taxonomy",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -27,14 +27,14 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-llm": "workspace:^",
+    "@xfcodeai/dsh-llm": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

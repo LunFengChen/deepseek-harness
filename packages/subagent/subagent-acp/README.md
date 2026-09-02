@@ -3,7 +3,7 @@ description: "The out-of-process ACP subagent backend for users and maintainers 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-acp
+# @xfcodeai/dsh-subagent-acp
 
 English | [中文](README.zh.md)
 
@@ -44,13 +44,13 @@ Choose this backend when the child must run with its own runtime, model, and too
 | `disposeEofGraceMs` | `6000` | Grace after stdin EOF before platform termination |
 | `disposeGraceMs` | `3000` | Bound for observing structured process facts after failure and, on POSIX, the SIGTERM-to-SIGKILL grace |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-acp) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-acp) is the exhaustive source for every accepted field and its JSDoc.
 
 A DeepSeek Harness child uses the product launcher and an explicit absolute `DSH_HOME`. The isolated home prevents a nested runtime from discovering the launching person's profiles or credentials; the generic ACP provider does not impose this requirement on non-DSH agents.
 
 ```yaml
 - id: subagent-acp
-  name: '@deepseek-ai/dsh-subagent-acp'
+  name: '@xfcodeai/dsh-subagent-acp'
   config:
     providerName: acp
     command: dsh
@@ -114,7 +114,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [dsh-subagent seam](../subagent/README.md) — the registry and start API this provider registers on.
 - [Agent Client Protocol automation server](../../acp/acp/README.md) — the automation-only server this provider drives as a client.
 - [dsh-subprocess seam](../../subprocess/subprocess/README.md) — the process-spawn and teardown machinery behind each run.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-acp) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-acp) — every accepted config field and its source declaration.
 
 -----
 

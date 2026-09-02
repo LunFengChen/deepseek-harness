@@ -15,11 +15,11 @@ import { join } from 'node:path'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import { MessageId } from '@deepseek-ai/dsh-llm'
+import { MessageId } from '@xfcodeai/dsh-llm'
 import {
   SESSION_FORMAT_VERSION, SessionId as sessionId, SessionSeq, type SessionHeader, type SessionId,
-} from '@deepseek-ai/dsh-session'
-import { snapshotSubagentDescriptor } from '@deepseek-ai/dsh-subagent'
+} from '@xfcodeai/dsh-session'
+import { snapshotSubagentDescriptor } from '@xfcodeai/dsh-subagent'
 import {
   captureStableAria, compareOrRefreshGolden, launchWebScaffold, seedSession, watchConsole,
   webSnapshotMode, type WebScaffold,

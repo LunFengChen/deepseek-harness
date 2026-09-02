@@ -6,14 +6,14 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import AgentLoop from '@deepseek-ai/dsh-agent-loop'
-import LlmRuntime, { createUserMessage, LlmAdapter, LlmError, resolveRetryPolicy  } from '@deepseek-ai/dsh-llm'
-import type { GenerateOptions, ResolvedRetryPolicy, StreamChunk } from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime from '@deepseek-ai/dsh-tools'
+import AgentRegistry from '@xfcodeai/dsh-agent'
+import AgentLoop from '@xfcodeai/dsh-agent-loop'
+import LlmRuntime, { createUserMessage, LlmAdapter, LlmError, resolveRetryPolicy  } from '@xfcodeai/dsh-llm'
+import type { GenerateOptions, ResolvedRetryPolicy, StreamChunk } from '@xfcodeai/dsh-llm'
+import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
+import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import SystemPrompt from '@xfcodeai/dsh-system-prompt'
+import ToolRuntime from '@xfcodeai/dsh-tools'
 import * as retry from '../src/index.ts'
 
 let root: string | undefined
@@ -59,14 +59,14 @@ async function loadYaml(lines: readonly string[]): Promise<Context> {
   await context.plugin(Loader)
   context.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['@deepseek-ai/dsh-llm', LlmRuntime],
-    ['@deepseek-ai/dsh-session', SessionStore],
-    ['@deepseek-ai/dsh-session-projection', SessionProjectionRegistry],
-    ['@deepseek-ai/dsh-system-prompt', SystemPrompt],
-    ['@deepseek-ai/dsh-tools', ToolRuntime],
-    ['@deepseek-ai/dsh-agent', AgentRegistry],
-    ['@deepseek-ai/dsh-llm-retry', retry],
-    ['@deepseek-ai/dsh-agent-loop', AgentLoop],
+    ['@xfcodeai/dsh-llm', LlmRuntime],
+    ['@xfcodeai/dsh-session', SessionStore],
+    ['@xfcodeai/dsh-session-projection', SessionProjectionRegistry],
+    ['@xfcodeai/dsh-system-prompt', SystemPrompt],
+    ['@xfcodeai/dsh-tools', ToolRuntime],
+    ['@xfcodeai/dsh-agent', AgentRegistry],
+    ['@xfcodeai/dsh-llm-retry', retry],
+    ['@xfcodeai/dsh-agent-loop', AgentLoop],
   ])
   context.loader.internal = {
     version: 'v2',
@@ -89,14 +89,14 @@ describe('real Loader composition', () => {
   // to trip the default 5s budget on cold caches.
   it('loads provider-supplied policy and records recovery through the shipping loop', { timeout: 60_000 }, async () => {
     const loaded = await loadYaml([
-      "- name: '@deepseek-ai/dsh-llm'",
-      "- name: '@deepseek-ai/dsh-session'",
-      "- name: '@deepseek-ai/dsh-session-projection'",
-      "- name: '@deepseek-ai/dsh-system-prompt'",
-      "- name: '@deepseek-ai/dsh-tools'",
-      "- name: '@deepseek-ai/dsh-agent'",
-      "- name: '@deepseek-ai/dsh-llm-retry'",
-      "- name: '@deepseek-ai/dsh-agent-loop'",
+      "- name: '@xfcodeai/dsh-llm'",
+      "- name: '@xfcodeai/dsh-session'",
+      "- name: '@xfcodeai/dsh-session-projection'",
+      "- name: '@xfcodeai/dsh-system-prompt'",
+      "- name: '@xfcodeai/dsh-tools'",
+      "- name: '@xfcodeai/dsh-agent'",
+      "- name: '@xfcodeai/dsh-llm-retry'",
+      "- name: '@xfcodeai/dsh-agent-loop'",
     ])
 
     const unloaded = [...loaded.loader.entries()]

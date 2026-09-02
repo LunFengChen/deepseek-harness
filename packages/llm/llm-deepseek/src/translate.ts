@@ -8,9 +8,9 @@
  * @module dsh-llm-deepseek/translate
  */
 
-import { brandString } from '@deepseek-ai/dsh-brand'
-import { EMPTY_RESPONSE_CODE, LlmError } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, FinishReason, StreamChunk, TokenUsage, ToolCallId } from '@deepseek-ai/dsh-llm'
+import { brandString } from '@xfcodeai/dsh-brand'
+import { EMPTY_RESPONSE_CODE, LlmError } from '@xfcodeai/dsh-llm'
+import type { ContentBlock, FinishReason, StreamChunk, TokenUsage, ToolCallId } from '@xfcodeai/dsh-llm'
 import { DONE } from './sse.ts'
 import type { WireChunk, WireUsage } from './types.ts'
 

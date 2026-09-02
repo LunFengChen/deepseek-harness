@@ -9,10 +9,10 @@
  */
 import {
   IconChevronDownOutline14, IconChevronUpOutline14,
-} from '@deepseek-ai/dsh-client-ui-primitives'
-import type { PropsLocale, PropsRuntime, PropsStore } from '@deepseek-ai/dsh-client-ui-slots'
+} from '@xfcodeai/dsh-client-ui-primitives'
+import type { PropsLocale, PropsRuntime, PropsStore } from '@xfcodeai/dsh-client-ui-slots'
 import { FONT_SIZE_MAX, FONT_SIZE_MIN } from '../theme-settings.ts'
-import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
+import type {} from '@xfcodeai/dsh-client-ui-settings/client'
 import type { createFontSizeRowStore } from './settings-store.ts'
 import css from './FontSizeRow.module.css'
 

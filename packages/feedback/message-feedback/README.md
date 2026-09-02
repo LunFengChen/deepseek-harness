@@ -3,7 +3,7 @@ description: "Per-message ratings and notes for finalized assistant messages, fo
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-message-feedback
+# @xfcodeai/dsh-message-feedback
 
 English | [中文](README.zh.md)
 
@@ -35,12 +35,12 @@ Choose this service when a product surface should let users rate and annotate in
 
 ```yaml
 - id: message-feedback
-  name: '@deepseek-ai/dsh-message-feedback'
+  name: '@xfcodeai/dsh-message-feedback'
   config:
     maxNoteBytes: 8192
 ```
 
-A note must contain at least one non-whitespace character and fit within the configured byte length; a blank note is rejected with `note-blank` and an oversized one with `note-too-large`. Accepted text is stored exactly as submitted — nothing is trimmed. The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-message-feedback) is the exhaustive source for every accepted field and its JSDoc.
+A note must contain at least one non-whitespace character and fit within the configured byte length; a blank note is rejected with `note-blank` and an oversized one with `note-too-large`. Accepted text is stored exactly as submitted — nothing is trimmed. The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-message-feedback) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Reading and changing feedback
 

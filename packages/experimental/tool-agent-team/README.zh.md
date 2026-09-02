@@ -3,7 +3,7 @@ description: "十个让模型创建、发消息与协调 teammate 的工具，�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-experimental-tool-agent-team
+# @xfcodeai/dsh-experimental-tool-agent-team
 
 [English](README.md) | 中文
 
@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-当模型应该通过工具运行一支团队时，在 `@deepseek-ai/dsh-experimental-agent-team` 之上挂载本包。挂载后，每个团队成员——Lead 与每个 teammate——都会获得相同的十个工具，外加一段说明自身角色与名字的策略段落。
+当模型应该通过工具运行一支团队时，在 `@xfcodeai/dsh-experimental-agent-team` 之上挂载本包。挂载后，每个团队成员——Lead 与每个 teammate——都会获得相同的十个工具，外加一段说明自身角色与名字的策略段落。
 
 ### 何时选择
 
@@ -37,7 +37,7 @@ kind: "package-reference"
 
 ```yaml
 - id: tool-agent-team
-  name: '@deepseek-ai/dsh-experimental-tool-agent-team'
+  name: '@xfcodeai/dsh-experimental-tool-agent-team'
   config:
     freshProvider: spawn
     forkProvider: fork
@@ -48,7 +48,7 @@ kind: "package-reference"
 | `freshProvider` | `spawn` | 启动 fresh teammate 的 provider |
 | `forkProvider` | `fork` | 启动 fork teammate 的 provider |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-experimental-tool-agent-team)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-experimental-tool-agent-team)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 试试这样要求 Lead 模型：「创建一个名为 reviewer 的 teammate 检查 diff，再把变更摘要发给 reviewer」。模型会调用创建工具，然后调用消息工具。
 
@@ -113,7 +113,7 @@ member scope 上的一个 `team:policy` 段落教每个成员自己的角色与�
 
 - [agent-team 包](../agent-team/README.zh.md)——这些工具背后的 `ctx.agentTeams` 领域服务。
 - [Agent Teams 子系统](../../../docs/subsystems/agent-team.zh.md)——持久 Team 类型与服务 API。
-- [生成的工具目录](../../../docs/tool-catalog.zh.md#deepseek-aidsh-experimental-tool-agent-team)——模型接收的每个工具 schema。
+- [生成的工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-experimental-tool-agent-team)——模型接收的每个工具 schema。
 - [Agent Teams Agent Note](../../../.agents/notes/implemented/feature/2026-08-05-agent-teams.zh.md)——模型侧、scoping 与隔离决策。
 
 -----

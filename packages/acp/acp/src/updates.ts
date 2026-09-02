@@ -2,8 +2,8 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import type { SessionUpdate, ToolCallContent } from '@agentclientprotocol/sdk'
-import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
-import type {} from '@deepseek-ai/dsh-token-meter'
+import type { Session, SessionEvent } from '@xfcodeai/dsh-session'
+import type {} from '@xfcodeai/dsh-token-meter'
 import { assistantBlockToAcp } from './content.ts'
 
 /**

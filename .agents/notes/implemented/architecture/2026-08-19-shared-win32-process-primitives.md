@@ -10,7 +10,7 @@ The Windows ACL sandbox owns restricted-token, SID, DACL, grant, and workspace p
 
 ## Decision
 
-`@deepseek-ai/dsh-win32-process` owns the reusable Win32 process ABI and native resource operations currently consumed by `sandbox-windows-acl`. The package lazily loads `kernel32.dll` and `advapi32.dll`, verifies the x64 `STARTUPINFOW` and `PROCESS_INFORMATION` layouts, quotes argv for `CreateProcessAsUserW`, and exposes checked restricted-token pipe and inherited-stdio Job operations.
+`@xfcodeai/dsh-win32-process` owns the reusable Win32 process ABI and native resource operations currently consumed by `sandbox-windows-acl`. The package lazily loads `kernel32.dll` and `advapi32.dll`, verifies the x64 `STARTUPINFOW` and `PROCESS_INFORMATION` layouts, quotes argv for `CreateProcessAsUserW`, and exposes checked restricted-token pipe and inherited-stdio Job operations.
 
 The Windows ACL sandbox remains the only owner of restricted-token creation, SID and DACL policy, grants, writable-path decisions, temporary-directory policy, and the public sandbox child result. It extends the shared binding context with policy-specific APIs, supplies the primary token, combines pipe drains and waits, and closes the caller-owned Job at its lifecycle boundary.
 

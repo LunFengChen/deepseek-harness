@@ -3,7 +3,7 @@ description: "Session-local durable reminders: the schedule_create, schedule_lis
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-schedule
+# @xfcodeai/dsh-schedule
 
 English | [中文](README.zh.md)
 
@@ -49,7 +49,7 @@ One-time reminders come in two forms: after a delay — for example "in 30 minut
 
 A successful create returns the reminder with its id, target time, state, and delivery mode; `schedule_list` shows all pending reminders in the order you created them; canceling by id removes a pending reminder, and an unknown or already-finished id reports `schedule_not_found` without changing anything.
 
-Input that cannot become a reminder — an empty prompt, more than one selector, an invalid time zone, a non-future or out-of-range time, a repeating interval below 5 minutes — returns a stable error code instead of succeeding. The generated [tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-schedule) owns the exact arguments each tool accepts.
+Input that cannot become a reminder — an empty prompt, more than one selector, an invalid time zone, a non-future or out-of-range time, a repeating interval below 5 minutes — returns a stable error code instead of succeeding. The generated [tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-schedule) owns the exact arguments each tool accepts.
 
 ### When reminders fire
 
@@ -69,9 +69,9 @@ This section explains the design decisions behind the plugin and points at the c
 
 The plugin declares `inject = ['agents', 'sessions', 'tools', 'sessionPersistence']`, so a missing persistence service is a composition error. It observes only `agent/created` events published after it loads, installs on those root Agents, and registers all three tools through the exact `agent.ctx`; Agents already live at load time and runtime children never receive Schedule.
 
-Time-context is not a Schedule dependency. The official Web overlay mounts `@deepseek-ai/dsh-time-context` so the model can interpret natural language in the browser's request-local zone, but the model must still pass an explicit offset or `time_zone` to `schedule_create`; Schedule never imports or infers from model context.
+Time-context is not a Schedule dependency. The official Web overlay mounts `@xfcodeai/dsh-time-context` so the model can interpret natural language in the browser's request-local zone, but the model must still pass an explicit offset or `time_zone` to `schedule_create`; Schedule never imports or infers from model context.
 
-Session projection is optional. When `ctx.sessionProjections` exists, the plugin registers the strict `schedule` unit and exposes the complete active `ScheduleRecord[]`; a headless composition without the registry keeps the same tools and runtime. The browser-safe record vocabulary is available from the type-only `@deepseek-ai/dsh-schedule/client` export. The shipped Web bundle resolves `ui-schedule` through a disabled row, and the explicit Schedule overlay enables that row alongside the Host Schedule services.
+Session projection is optional. When `ctx.sessionProjections` exists, the plugin registers the strict `schedule` unit and exposes the complete active `ScheduleRecord[]`; a headless composition without the registry keeps the same tools and runtime. The browser-safe record vocabulary is available from the type-only `@xfcodeai/dsh-schedule/client` export. The shipped Web bundle resolves `ui-schedule` through a disabled row, and the explicit Schedule overlay enables that row alongside the Host Schedule services.
 
 ### Design philosophy
 
@@ -132,7 +132,7 @@ An overdue reminder first checkpoints persistence, then claims the Agent's idle 
 Read these pages when the package-level contract is not enough. They move from the shared subsystem contracts to the exact tool schemas and the decision evidence behind the delivery design.
 
 - [Session-local Schedule subsystem](../../../docs/subsystems/schedule.md) — durable record, transition, view, and delivery contracts with the exact type definitions.
-- [Generated tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-schedule) — the complete `schedule_create`, `schedule_list`, and `schedule_delete` schemas the model receives.
+- [Generated tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-schedule) — the complete `schedule_create`, `schedule_list`, and `schedule_delete` schemas the model receives.
 - [Durable Web Schedule decision](../../../.agents/notes/implemented/feature/2026-08-05-durable-web-schedule.md) — persistence and lifecycle decisions behind the package.
 - [Conversational delivery decision](../../../.agents/notes/implemented/simplification/2026-08-09-conversational-schedule-delivery.md) — the no-receipt boundary and follow-up delivery.
 - [Explicit time-zone boundary](../../../.agents/notes/implemented/simplification/2026-08-09-explicit-schedule-time-zone.md) — why the model must always pass an explicit zone.
@@ -148,7 +148,7 @@ Read these pages when the package-level contract is not enough. They move from t
 
 #### What the model sees
 
-The model sees the three generated tool schemas only in a live root Agent created after this plugin loads; the [generated tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-schedule) owns the exact argument and result schemas. Tool results contain the canonical JSON values described above.
+The model sees the three generated tool schemas only in a live root Agent created after this plugin loads; the [generated tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-schedule) owns the exact argument and result schemas. Tool results contain the canonical JSON values described above.
 
 #### Token effect
 

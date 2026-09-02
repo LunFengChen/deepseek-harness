@@ -3,7 +3,7 @@ description: "Settings domain base plugin: the settings-namespace scope service,
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-settings
+# @xfcodeai/dsh-client-ui-settings
 
 English | [中文](README.zh.md)
 

@@ -1,5 +1,5 @@
 /** Target-neutral Conversation state assembled from one Session event window. */
-import type { SessionSnapshot } from '@deepseek-ai/dsh-api-session-controller/client'
+import type { SessionSnapshot } from '@xfcodeai/dsh-api-session-controller/client'
 import type { ConversationViewSnapshotStore } from './conversation.ts'
 
 /** Latest registered target snapshots and their shell-level activity. */

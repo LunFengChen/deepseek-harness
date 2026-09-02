@@ -3,7 +3,7 @@ description: "The background-job registry contract for users and maintainers com
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-jobs
+# @xfcodeai/dsh-jobs
 
 English | [中文](README.zh.md)
 
@@ -42,8 +42,8 @@ A producer can start work only while a controller that serves the owner is attac
 ### Smallest working composition
 
 ```yaml
-- name: '@deepseek-ai/dsh-jobs-local'
-- name: '@deepseek-ai/dsh-tool-jobs'
+- name: '@xfcodeai/dsh-jobs-local'
+- name: '@xfcodeai/dsh-tool-jobs'
 ```
 
 Loading these two plugins on a harness base that already provides the agent, tools, and system-prompt services gives the full feature: `dsh-jobs-local` provides the in-process background-job registry, and `dsh-tool-jobs` provides the `job_output`, `job_list`, and `job_kill` tools plus completion-notice delivery.

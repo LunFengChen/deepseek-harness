@@ -3,7 +3,7 @@ description: "Standalone two-tool SDK profile for users who need a minimal cross
 kind: "package-bundle"
 ---
 
-# `@deepseek-ai/dsh-sdk-minimal`
+# `@xfcodeai/dsh-sdk-minimal`
 
 English | [中文](README.zh.md)
 

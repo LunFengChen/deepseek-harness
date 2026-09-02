@@ -3,7 +3,7 @@ description: "Cordis 动态插件浏览器面说明，供选择、组合或排�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-cordis
+# @xfcodeai/dsh-client-ui-cordis
 
 [English](README.md) | 中文
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { LayoutController } from '@deepseek-ai/dsh-client-ui-layout/src/client/service.ts'
-import type { PanelActions } from '@deepseek-ai/dsh-client-ui-layout/src/client/service.ts'
+import { LayoutController } from '@xfcodeai/dsh-client-ui-layout/src/client/service.ts'
+import type { PanelActions } from '@xfcodeai/dsh-client-ui-layout/src/client/service.ts'
 
 function fakePanels(): PanelActions {
   return {

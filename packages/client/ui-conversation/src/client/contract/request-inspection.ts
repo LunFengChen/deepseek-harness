@@ -1,5 +1,5 @@
-import type { ContentBlock, ToolSchema } from '@deepseek-ai/dsh-llm/types'
-import type { SessionEvent } from '@deepseek-ai/dsh-session/types'
+import type { ContentBlock, ToolSchema } from '@xfcodeai/dsh-llm/types'
+import type { SessionEvent } from '@xfcodeai/dsh-session/types'
 import type {
   AssistantProvenanceView, AssistantRequestConfig,
 } from './records.ts'

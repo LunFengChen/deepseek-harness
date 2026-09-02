@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest'
 import type {
   AssistantMessageNode, ConversationNode, UserMessageNode,
-} from '@deepseek-ai/dsh-client-ui-chat/client'
+} from '@xfcodeai/dsh-client-ui-chat/client'
 import { assistantStepReading, deriveTurnMetrics } from '../src/client/contract/turn-metrics.ts'
 import { formatLatencySeconds, formatTokensPerSecond } from '../src/client/chat/message-chrome.ts'
 import { formatCacheHitPercent } from '../src/client/chat/token-format.ts'

@@ -4,8 +4,8 @@
  * collected stdio, and one terminal-process primitive. Command defaulting,
  * shell semantics, deadlines, protocol framing, terminal readiness, and
  * presentation belong to consumers. The local implementation lives in
- * `@deepseek-ai/dsh-subprocess-local`.
- * @module @deepseek-ai/dsh-subprocess
+ * `@xfcodeai/dsh-subprocess-local`.
+ * @module @xfcodeai/dsh-subprocess
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'

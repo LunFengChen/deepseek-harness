@@ -5,8 +5,8 @@
 // tag probe).
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import { makeTranslate, RemoteError, SlotTestRuntime } from '@deepseek-ai/dsh-client-test-runtime'
-import type { QueuedMessage } from '@deepseek-ai/dsh-api-session-controller/client'
+import { makeTranslate, RemoteError, SlotTestRuntime } from '@xfcodeai/dsh-client-test-runtime'
+import type { QueuedMessage } from '@xfcodeai/dsh-api-session-controller/client'
 import { ComposerBlockRegistry } from '../src/client/input/blocks.ts'
 import { InputHub } from '../src/client/input/hub.ts'
 import { ConversationController, UnsupportedImageMediaTypeError } from '../src/client/service.ts'

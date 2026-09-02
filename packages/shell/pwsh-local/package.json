@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-pwsh-local",
+  "name": "@xfcodeai/dsh-pwsh-local",
   "description": "Local PowerShell implementation of the DeepSeek Harness bash executor seam",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -27,21 +27,21 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-shell": "workspace:^",
-    "@deepseek-ai/dsh-subprocess": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
+    "@xfcodeai/dsh-shell": "workspace:^",
+    "@xfcodeai/dsh-subprocess": "workspace:^",
+    "@xfcodeai/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^"
+    "@xfcodeai/dsh-settings": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-shell": "workspace:^",
-    "@deepseek-ai/dsh-subprocess": "workspace:^",
-    "@deepseek-ai/dsh-subprocess-local": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
+    "@xfcodeai/dsh-shell": "workspace:^",
+    "@xfcodeai/dsh-subprocess": "workspace:^",
+    "@xfcodeai/dsh-subprocess-local": "workspace:^",
+    "@xfcodeai/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^"
+    "@xfcodeai/dsh-settings": "workspace:^"
   }
 }

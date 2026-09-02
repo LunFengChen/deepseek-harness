@@ -3,7 +3,7 @@ description: "Loader integration for generated Typert artifacts: how mounted pac
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-typert-loader
+# @xfcodeai/dsh-typert-loader
 
 English | [中文](README.zh.md)
 
@@ -32,15 +32,15 @@ Mount this plugin in a Host Loader composition that loads packages publishing ge
 Load the registry and the loader; the loader defaults to discovering every Loader entry:
 
 ```yaml
-- name: '@deepseek-ai/dsh-typert-registry'
-- name: '@deepseek-ai/dsh-typert-loader'
+- name: '@xfcodeai/dsh-typert-registry'
+- name: '@xfcodeai/dsh-typert-loader'
 ```
 
 | Field | Default | Meaning |
 |---|---|---|
 | `packages` | `[]` | Additional package artifacts to register for plugins nested behind another Loader entry; each must resolve from the config tree and export `./typert` |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-typert-loader) is the exhaustive source for every accepted field.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-typert-loader) is the exhaustive source for every accepted field.
 
 ### What gets registered
 
@@ -90,7 +90,7 @@ Read these pages when the package-level contract is not enough; they move from t
 
 - [Typert registry](../registry/README.md) — the service this plugin feeds.
 - [Typert generator](../generator/README.md) — what produces the artifacts the loader imports.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-typert-loader) — the `packages` field declaration and JSDoc.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-typert-loader) — the `packages` field declaration and JSDoc.
 - [Typert group map](../README.md) — the full type-reflection pipeline.
 
 -----

@@ -18,9 +18,9 @@ There is also a provider-selection question. Existing `tool-bash` and `tool-fs` 
 
 Web access is a first-class capability seam following [the capability-seam Agent Note](2026-06-13-capability-seams.md):
 
-1. `@deepseek-ai/dsh-web` (`packages/web/web`) owns `ctx.web`, provider registration, provider selection, shared request/result vocabulary, and web-specific errors.
-2. Provider packages implement concrete backends and register capabilities with `ctx.web`, for example `@deepseek-ai/dsh-web-search-exa`, `@deepseek-ai/dsh-web-search-perplexity`, `@deepseek-ai/dsh-web-search-deepseek`, and `@deepseek-ai/dsh-web-fetch-http`.
-3. `@deepseek-ai/dsh-tool-web` (`packages/web/tool-web`) owns the model-facing `web_search` and `web_fetch` tool schemas, prompt sections, argument validation, result formatting, and tool-owned presentation over `ctx.web`.
+1. `@xfcodeai/dsh-web` (`packages/web/web`) owns `ctx.web`, provider registration, provider selection, shared request/result vocabulary, and web-specific errors.
+2. Provider packages implement concrete backends and register capabilities with `ctx.web`, for example `@xfcodeai/dsh-web-search-exa`, `@xfcodeai/dsh-web-search-perplexity`, `@xfcodeai/dsh-web-search-deepseek`, and `@xfcodeai/dsh-web-fetch-http`.
+3. `@xfcodeai/dsh-tool-web` (`packages/web/tool-web`) owns the model-facing `web_search` and `web_fetch` tool schemas, prompt sections, argument validation, result formatting, and tool-owned presentation over `ctx.web`.
 
 Providers do not register tools. Providers register capabilities. `dsh-tool-web` is the only owner of model-facing names, descriptions, prompt guidance, JSON schemas, and presentation.
 
@@ -43,13 +43,13 @@ The three-package Service Definition / Service Provider / Consumer split follows
 The dependency direction mirrors bash and filesystem:
 
 ```text
-@deepseek-ai/dsh-tool-web  --depends on-->  @deepseek-ai/dsh-web  <--depends on--  @deepseek-ai/dsh-web-search-exa
+@xfcodeai/dsh-tool-web  --depends on-->  @xfcodeai/dsh-web  <--depends on--  @xfcodeai/dsh-web-search-exa
         consumer                                 interface                       implementation
-                                                                 <--depends on--  @deepseek-ai/dsh-web-search-perplexity
+                                                                 <--depends on--  @xfcodeai/dsh-web-search-perplexity
                                                                                   implementation
-                                                                 <--depends on--  @deepseek-ai/dsh-web-search-deepseek
+                                                                 <--depends on--  @xfcodeai/dsh-web-search-deepseek
                                                                                   implementation
-                                                                 <--depends on--  @deepseek-ai/dsh-web-fetch-http
+                                                                 <--depends on--  @xfcodeai/dsh-web-fetch-http
                                                                                   implementation
 ```
 
@@ -57,27 +57,27 @@ At runtime, provider packages register capabilities with `ctx.web`; `tool-web` r
 
 ```mermaid
 flowchart LR
-  exa["@deepseek-ai/dsh-web-search-exa"] -->|registerSearchProvider| web["@deepseek-ai/dsh-web / ctx.web"]
-  perplexity["@deepseek-ai/dsh-web-search-perplexity"] -->|registerSearchProvider| web
-  deepseek["@deepseek-ai/dsh-web-search-deepseek"] -->|registerSearchProvider| web
-  fetchLocal["@deepseek-ai/dsh-web-fetch-http"] -->|registerFetchProvider| web
-  toolWeb["@deepseek-ai/dsh-tool-web"] -->|search/fetch| web
+  exa["@xfcodeai/dsh-web-search-exa"] -->|registerSearchProvider| web["@xfcodeai/dsh-web / ctx.web"]
+  perplexity["@xfcodeai/dsh-web-search-perplexity"] -->|registerSearchProvider| web
+  deepseek["@xfcodeai/dsh-web-search-deepseek"] -->|registerSearchProvider| web
+  fetchLocal["@xfcodeai/dsh-web-fetch-http"] -->|registerFetchProvider| web
+  toolWeb["@xfcodeai/dsh-tool-web"] -->|search/fetch| web
   toolWeb -->|ctx.tools.register| webSearch["tool: web_search"]
   toolWeb -->|ctx.tools.register| webFetch["tool: web_fetch"]
 ```
 
-`@deepseek-ai/dsh-web` depends only on Cordis and low-level harness support. It declares `ctx.web`, provider interfaces, request/result types, the provider availability contract, and error codes. It does not import tool, agent, session, LLM, or provider packages.
+`@xfcodeai/dsh-web` depends only on Cordis and low-level harness support. It declares `ctx.web`, provider interfaces, request/result types, the provider availability contract, and error codes. It does not import tool, agent, session, LLM, or provider packages.
 
 Provider packages depend only on `dsh-web` and Cordis. They own credentials, endpoints, wire mapping, parsing, and `WebError` translation, using platform `fetch`. Each provider injects the shared service and registers a backend; only `dsh-web` owns the `ctx.web` key. Provider-private protocol shapes do not create dependencies on `ctx.llm` or a Cordis HTTP service.
 
-`@deepseek-ai/dsh-tool-web` depends on `@deepseek-ai/dsh-web`, `@deepseek-ai/dsh-tools`, `@deepseek-ai/dsh-system-prompt`, and Cordis. It never imports concrete provider packages.
+`@xfcodeai/dsh-tool-web` depends on `@xfcodeai/dsh-web`, `@xfcodeai/dsh-tools`, `@xfcodeai/dsh-system-prompt`, and Cordis. It never imports concrete provider packages.
 
 ## `ctx.web` contract
 
 `ctx.web` is a provider registry plus a provider-selecting execution API. The registry half stays close to `LlmRuntime`: a `Map<id, provider>` per capability kind, `registerSearchProvider` / `registerFetchProvider` methods that return disposers, duplicate ids that throw `WebError`, and execution-time resolution that throws when the selected provider is absent or unusable. The authoritative signatures live in `packages/web/web/src/types.ts`; the seam's shape:
 
 ```ts
-import type { WebFetchRequest, WebFetchResult, WebSearchRequest, WebSearchResult } from '@deepseek-ai/dsh-web'
+import type { WebFetchRequest, WebFetchResult, WebSearchRequest, WebSearchResult } from '@xfcodeai/dsh-web'
 
 interface WebSearchProvider {
   readonly id: string
@@ -128,25 +128,25 @@ The "single provider auto-selects" rule is for tests, demos, and simple deployme
 
 ```yaml
 - id: web
-  name: '@deepseek-ai/dsh-web'
+  name: '@xfcodeai/dsh-web'
   config:
     searchProvider: exa
     fetchProvider: http
 
 - id: web-search-exa
-  name: '@deepseek-ai/dsh-web-search-exa'
+  name: '@xfcodeai/dsh-web-search-exa'
 
 - id: web-search-perplexity
-  name: '@deepseek-ai/dsh-web-search-perplexity'
+  name: '@xfcodeai/dsh-web-search-perplexity'
 
 - id: web-search-deepseek
-  name: '@deepseek-ai/dsh-web-search-deepseek'
+  name: '@xfcodeai/dsh-web-search-deepseek'
 
 - id: web-fetch-http
-  name: '@deepseek-ai/dsh-web-fetch-http'
+  name: '@xfcodeai/dsh-web-fetch-http'
 
 - id: tool-web
-  name: '@deepseek-ai/dsh-tool-web'
+  name: '@xfcodeai/dsh-tool-web'
 ```
 
 Operational overrides feed the same explicit selection path: `DSH_WEB_SEARCH_PROVIDER=perplexity` is equivalent to config `searchProvider: perplexity`, not a hidden priority chain inside `dsh-tool-web`.

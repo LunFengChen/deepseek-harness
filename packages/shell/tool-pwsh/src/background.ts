@@ -2,10 +2,10 @@
  * Generic-task adaptation for background pwsh process handles — the shell-agnostic
  * twin of `dsh-tool-bash`'s background adaptation.
  *
- * @module @deepseek-ai/dsh-tool-pwsh/background
+ * @module @xfcodeai/dsh-tool-pwsh/background
  */
 
-import type { ShellProcess } from '@deepseek-ai/dsh-shell'
+import type { ShellProcess } from '@xfcodeai/dsh-shell'
 
 /* jscpd:ignore-start -- deliberate twin of dsh-tool-bash/background.ts (Agent Note). */
 

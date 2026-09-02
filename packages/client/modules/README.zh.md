@@ -3,7 +3,7 @@ description: "面向用户与维护者的 web GUI 客户端模块系统说明：
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-modules
+# @xfcodeai/dsh-client-modules
 
 [English](README.md) | 中文
 
@@ -114,7 +114,7 @@ node 半侧会在发布前快照每个客户端 bundle 及其现有 source map�
 这些限制说明模块系统不做什么。它们是当前包约束，不是任务积压。
 
 - **有意采用扁平模块图**——每个 bundle 是一个模块节点，其边只指向表中的叶节点；接口（`loadCache`/`edges`/`invalidate`）已经支持通用模块图，因此可以改变 externalization 粒度而不更改接口。
-- **自身不维护卸载记录**——样式移除与 fiber 拆卸顺序属于 HMR 驱动器（`@deepseek-ai/dsh-client-hmr`）；loader 只在每条记录中登记其拥有的样式标签 id。
+- **自身不维护卸载记录**——样式移除与 fiber 拆卸顺序属于 HMR 驱动器（`@xfcodeai/dsh-client-hmr`）；loader 只在每条记录中登记其拥有的样式标签 id。
 - **快照式提供会保留产物字节**——Host 在内存中保留每个 bundle、可选 source map、生成的单资源响应和当前启动 combo 响应；HMR 还会保留上一代启动响应。内存会随已组合客户端产物增长为数份副本，以换取不可变响应和一代竞态容忍。
 
 <a id="dev-note"></a>

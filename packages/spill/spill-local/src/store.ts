@@ -3,7 +3,7 @@
  * session-scoped directory selection, safe-name derivation, path-traversal
  * protection, and the exclusive owner-only write.
  *
- * @module @deepseek-ai/dsh-spill-local/store
+ * @module @xfcodeai/dsh-spill-local/store
  */
 
 import { createHash, randomBytes } from 'node:crypto'

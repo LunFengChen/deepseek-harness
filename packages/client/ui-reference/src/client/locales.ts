@@ -1,6 +1,6 @@
 /** `reference` namespace dictionaries for the unified `@` source. */
 
-import type {} from '@deepseek-ai/dsh-client-ui-slots'
+import type {} from '@xfcodeai/dsh-client-ui-slots'
 
 /** Dictionary namespace owned by this plugin. */
 export const NS = 'reference'
@@ -28,7 +28,7 @@ export const zh = {
 /** The reference namespace key union. */
 export type ReferenceKey = keyof typeof zh
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@xfcodeai/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** The unified `@` reference menu's copy. */
     reference: ReferenceKey

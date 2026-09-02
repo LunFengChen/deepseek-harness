@@ -13,9 +13,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
-import { LocalFileSystem } from '@deepseek-ai/dsh-fs-local'
-import { FsVersion } from '@deepseek-ai/dsh-fs'
-import type { FsTarget } from '@deepseek-ai/dsh-fs'
+import { LocalFileSystem } from '@xfcodeai/dsh-fs-local'
+import { FsVersion } from '@xfcodeai/dsh-fs'
+import type { FsTarget } from '@xfcodeai/dsh-fs'
 
 let dir: string
 let ctx: Context

@@ -14,7 +14,7 @@ harness 此前无法消费 MCP（Model Context Protocol）生态中的工具。M
 
 ### 包
 
-单个包 `@deepseek-ai/dsh-mcp-client`，位于 `packages/mcp/mcp-client/`。不做能力 seam 的三包拆分——可预见范围内不会有第二种 MCP 客户端实现，且约定是「不要预防性拆分」（[能力 seam Agent Note](../architecture/2026-06-13-capability-seams.zh.md)）。
+单个包 `@xfcodeai/dsh-mcp-client`，位于 `packages/mcp/mcp-client/`。不做能力 seam 的三包拆分——可预见范围内不会有第二种 MCP 客户端实现，且约定是「不要预防性拆分」（[能力 seam Agent Note](../architecture/2026-06-13-capability-seams.zh.md)）。
 
 ### SDK
 
@@ -60,7 +60,7 @@ type Config = StdioConfig | StreamableHttpConfig
 
 ```yaml
 - id: mcp-github
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: '@xfcodeai/dsh-mcp-client'
   config:
     serverName: github
     transport: stdio
@@ -70,7 +70,7 @@ type Config = StdioConfig | StreamableHttpConfig
       GITHUB_TOKEN: !!js process.env.GITHUB_TOKEN
 
 - id: mcp-web
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: '@xfcodeai/dsh-mcp-client'
   config:
     serverName: web
     transport: streamable-http

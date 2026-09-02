@@ -4,7 +4,7 @@
  * user-authored metadata is never translated. A pure fold with no imports, so
  * browser bundles inline it and the Host uses the same single home for which
  * shipped id carries which copy key.
- * @module @deepseek-ai/dsh-agent-presets/display
+ * @module @xfcodeai/dsh-agent-presets/display
  */
 
 /** Dictionary keys carrying one shipped preset's display copy. */

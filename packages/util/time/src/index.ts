@@ -2,7 +2,7 @@
  * Time vocabulary shared by the wire boundaries that accept a caller's zone.
  * Validation and canonicalization only: this library formats nothing and owns
  * no failure vocabulary — each boundary declares and throws its own refusal.
- * @module @deepseek-ai/dsh-util-time
+ * @module @xfcodeai/dsh-util-time
  */
 
 /** Strict browser-zone profile: UTC or an IANA Area/Location-style identifier. */

@@ -20,7 +20,7 @@ Status: implemented
 
 ```yaml
 - id: approval
-  name: '@deepseek-ai/dsh-user-approval'
+  name: '@xfcodeai/dsh-user-approval'
   # config:
   #   policy: never   # deployment default for sessions without an override; 'ask' when omitted
 ```

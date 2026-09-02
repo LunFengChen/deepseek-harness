@@ -12,13 +12,13 @@ Turning this into a durable automation engine would introduce a second lifecycle
 
 ## Decision
 
-`@deepseek-ai/dsh-webhook` owns a two-operation Host runtime: rules register through `register()`, and authenticated provider adapters call `dispatch()`. Each matching callback runs independently as arbitrary trusted code and returns `null` or one Workspace-backed Session request. Dispatch returns before callbacks settle, while effect disposal aborts and drains only the calls it owns.
+`@xfcodeai/dsh-webhook` owns a two-operation Host runtime: rules register through `register()`, and authenticated provider adapters call `dispatch()`. Each matching callback runs independently as arbitrary trusted code and returns `null` or one Workspace-backed Session request. Dispatch returns before callbacks settle, while effect disposal aborts and drains only the calls it owns.
 
 The runtime stores no provider delivery or execution record. It does not retry, deduplicate, resume callback work, observe Agent status, or collect a result. A repeated delivery may create another Session. `WebhookDeliveryId` remains available to a rule that deliberately implements idempotency through its own state.
 
 ## Provider adapters
 
-Authentication belongs to provider adapters. `@deepseek-ai/dsh-webhook-github` registers one exact route on an injected WebServer, bounds the untouched UTF-8 body, resolves its secret reference per request, verifies `X-Hub-Signature-256` before parsing, and passes a signed lossless-JSON object to the runtime. `202` means only verified in-memory dispatch; it precedes rule matching, external calls, and Session creation.
+Authentication belongs to provider adapters. `@xfcodeai/dsh-webhook-github` registers one exact route on an injected WebServer, bounds the untouched UTF-8 body, resolves its secret reference per request, verifies `X-Hub-Signature-256` before parsing, and passes a signed lossless-JSON object to the runtime. `202` means only verified in-memory dispatch; it precedes rule matching, external calls, and Session creation.
 
 The normal Web composition keeps its UI/API WebServer separate. The GitHub example mounts another WebServer and its adapter in a group that isolates only `webServer`, so a reverse proxy can expose the webhook port without exposing `/api`, WebSockets, or frontend files.
 

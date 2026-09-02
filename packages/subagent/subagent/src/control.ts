@@ -3,13 +3,13 @@
  * the live Agent registry, one browser zone's validation, and the stable
  * failure codes the Remote surface answers with.
  *
- * @module @deepseek-ai/dsh-subagent
+ * @module @xfcodeai/dsh-subagent
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { AttachmentError } from '@deepseek-ai/dsh-attachment'
-import type { SessionId } from '@deepseek-ai/dsh-session'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
+import { AttachmentError } from '@xfcodeai/dsh-attachment'
+import type { SessionId } from '@xfcodeai/dsh-session'
+import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
 import { z } from 'zod'
 import type { SubagentCatalog, SubagentListEntry } from './control-types.ts'
 import { SubagentError } from './error.ts'
@@ -85,7 +85,7 @@ export function rejectCatalogRead(error: unknown, signal: AbortSignal): never {
   if (error instanceof SubagentError && error.code === 'SUBAGENT_CONTROL_PROJECTIONS_UNAVAILABLE') {
     throw new RemoteError(
       'subagent/projections-unavailable',
-      'subagent catalog is unavailable: this deployment does not mount the sessionProjections registry (load @deepseek-ai/dsh-session-projection)',
+      'subagent catalog is unavailable: this deployment does not mount the sessionProjections registry (load @xfcodeai/dsh-session-projection)',
       {},
       { cause: error },
     )

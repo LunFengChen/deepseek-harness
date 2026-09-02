@@ -3,7 +3,7 @@ description: "In-process fork subagent backend for users and maintainers choosin
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-fork-in-process
+# @xfcodeai/dsh-subagent-fork-in-process
 
 English | [中文](README.zh.md)
 
@@ -40,9 +40,9 @@ The seed ends at the parent's last completed turn. A parent's current tool-calli
 Load the subagent service and this backend, then configure a delegation tool. This composition exposes a `subagent` tool backed by fork:
 
 ```yaml
-- name: '@deepseek-ai/dsh-subagent'
-- name: '@deepseek-ai/dsh-subagent-fork-in-process'
-- name: '@deepseek-ai/dsh-tool-subagent'
+- name: '@xfcodeai/dsh-subagent'
+- name: '@xfcodeai/dsh-subagent-fork-in-process'
+- name: '@xfcodeai/dsh-tool-subagent'
   config:
     provider: fork
 ```
@@ -51,7 +51,7 @@ Load the subagent service and this backend, then configure a delegation tool. Th
 |---|---|---|
 | `providerName` | `fork` | Provider name registered on `ctx.subagents` |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-fork-in-process) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-fork-in-process) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What a fork delegation does
 
@@ -99,7 +99,7 @@ Read these pages when the package-level contract is not enough; they move from t
 - [dsh-subagent-in-process-driver](../subagent-in-process-driver/README.md) — the shared run driver this backend calls.
 - [dsh-subagent-spawn-in-process](../subagent-spawn-in-process/README.md) — the fresh-child sibling backend.
 - [dsh-tool-subagent](../tool-subagent/README.md) — the model-facing delegation tool that reaches this provider.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-subagent-fork-in-process) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-subagent-fork-in-process) — every accepted config field and its source declaration.
 - [Fork children stay one-shot](../../../.agents/notes/implemented/architecture/2026-08-10-fork-children-stay-one-shot.md) — why shipped compositions bind fork to one-shot.
 
 -----

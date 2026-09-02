@@ -3,7 +3,7 @@ description: "面向快照测试的无密钥 LLM 回放插件，供测试作者�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm-replay
+# @xfcodeai/dsh-llm-replay
 
 [English](README.md) | 中文
 
@@ -33,7 +33,7 @@ kind: "package-reference"
 
 ```yaml
 - id: llm-replay
-  name: '@deepseek-ai/dsh-llm-replay'
+  name: '@xfcodeai/dsh-llm-replay'
   config:
     providers:
       - id: deepseek-official
@@ -61,7 +61,7 @@ kind: "package-reference"
 | `providers` | 无 | 可选的仅回放提供方与模型目录；模型可声明 `contextWindow`、文本／图片模态，以及图片模型使用的正整数 `imageRequestTokens`；非法值会在加载时失败，路由绝不执行提供方 I/O |
 | `paceMs` | 无（突发） | 可选的每分片延迟（毫秒），用于真正的增量投递 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-llm-replay)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-llm-replay)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### fixture 的工作方式
 

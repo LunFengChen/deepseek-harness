@@ -8,7 +8,7 @@
  * fixed condition order, extension probing, and one cache keyed by resolved
  * absolute path. Module bodies are wrapped as the image holds them: lowering is
  * the packer's job, so nothing here parses JavaScript.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/module-system/module-loader
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/module-system/module-loader
  */
 import { createAlsRuntime, type AlsCausality, type AlsRuntime } from '../polyfill/async-context/als-runtime.ts'
 import { dirname, fileUrlToPath, isAbsolute, join, pathToFileUrl, resolve as resolvePath } from './posix-path.ts'

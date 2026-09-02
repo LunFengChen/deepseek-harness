@@ -18,7 +18,7 @@
  * a package that was renamed or uninstalled. Resolving those names is a
  * separate pass from the shape check and stops short of importing anything,
  * so a composition is judged without running a line of plugin code.
- * @module @deepseek-ai/dsh-agent-presets/discovery
+ * @module @xfcodeai/dsh-agent-presets/discovery
  */
 
 import { existsSync } from 'node:fs'
@@ -28,7 +28,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { load } from 'js-yaml'
 import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
-import { expandHomePath } from '@deepseek-ai/dsh-home-paths'
+import { expandHomePath } from '@xfcodeai/dsh-home-paths'
 import { readPresetMetadata } from './metadata.ts'
 import { PRESET_ID, type AgentPreset, type PresetRoot } from './preset.ts'
 import { classifyRowSpecifier, type RowSpecifier } from './specifier.ts'

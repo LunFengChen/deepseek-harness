@@ -5,15 +5,15 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { AttachmentError } from '@deepseek-ai/dsh-attachment'
-import type { MessageId } from '@deepseek-ai/dsh-llm'
-import { SessionId } from '@deepseek-ai/dsh-session'
+import { AttachmentError } from '@xfcodeai/dsh-attachment'
+import type { MessageId } from '@xfcodeai/dsh-llm'
+import { SessionId } from '@xfcodeai/dsh-session'
 import SubagentRuntime, {
   SubagentError,
   type SubagentListEntry,
   type SubagentPromptRequestId,
-} from '@deepseek-ai/dsh-subagent'
-import { queueSubagentPrompt, type HostPromptQueue } from '@deepseek-ai/dsh-subagent/internal'
+} from '@xfcodeai/dsh-subagent'
+import { queueSubagentPrompt, type HostPromptQueue } from '@xfcodeai/dsh-subagent/internal'
 
 const PARENT = SessionId('parent')
 const CHILD = SessionId('child')

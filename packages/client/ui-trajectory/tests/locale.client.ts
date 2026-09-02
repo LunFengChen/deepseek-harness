@@ -1,5 +1,5 @@
-import { en as commonEn } from '@deepseek-ai/dsh-client-locale/src/locales/en.ts'
-import { zh as commonZh } from '@deepseek-ai/dsh-client-locale/src/locales/zh.ts'
+import { en as commonEn } from '@xfcodeai/dsh-client-locale/src/locales/en.ts'
+import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
 import { en, zh, type TrajectoryTranslate } from '../src/client/locales.ts'
 
 function translator(dictionary: Record<string, string>): TrajectoryTranslate {

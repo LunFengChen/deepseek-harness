@@ -3,7 +3,7 @@ description: "Shared React UI atoms for the dsh web client: controls, icons, mar
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-ui-primitives
+# @xfcodeai/dsh-client-ui-primitives
 
 English | [中文](README.zh.md)
 

@@ -35,8 +35,8 @@ The goal group gives an agent session one durable completion objective that surv
 ## Related documentation
 
 - [Goal subsystem](../../docs/subsystems/goal.md) — goal types, durable `goal/change` events, and the generated service API.
-- [Generated tool catalog](../../docs/tool-catalog.md#deepseek-aidsh-tool-goal) — the three goal-tool schemas the model receives.
-- [Generated configuration catalog](../../docs/config-catalog.md#deepseek-aidsh-goal) — every accepted config field of the goal service.
+- [Generated tool catalog](../../docs/tool-catalog.md#xfcodeaidsh-tool-goal) — the three goal-tool schemas the model receives.
+- [Generated configuration catalog](../../docs/config-catalog.md#xfcodeaidsh-goal) — every accepted config field of the goal service.
 - [Goal domain Agent Note](../../.agents/notes/implemented/feature/2026-07-19-persisted-same-session-goal-domain.md) — the domain design and its decisions.
 - [Same-session driver Agent Note](../../.agents/notes/implemented/feature/2026-07-19-same-session-goal-round-driver.md) — the continuation races and lifecycle rationale.
 

@@ -3,7 +3,7 @@ description: "SPA dist server for the Web shell: claims the webserver fallback s
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-frontend-static
+# @xfcodeai/dsh-host-frontend-static
 
 English | [中文](README.zh.md)
 
@@ -30,7 +30,7 @@ Compose this plugin in a browser-facing host that serves the built Web shell: it
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-host-frontend-static'
+- name: '@xfcodeai/dsh-host-frontend-static'
   config:
     distIndex: /absolute/path/to/dist/index.html
 ```
@@ -81,7 +81,7 @@ Read these when the serving contract is not enough: the seat owner's contract, t
 - [Webserver](../webserver/README.md) — the fallback seat this plugin claims and the index taps it runs.
 - [dsh-web-app bundle](../../bundle/web-app/README.md) — the application that resolves `distIndex` and mounts this plugin.
 - [HTTP server subsystem](../../../docs/subsystems/web-server.md) — how the fallback seat fits the route tables.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-host-frontend-static) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-host-frontend-static) — every accepted config field and its source declaration.
 
 -----
 

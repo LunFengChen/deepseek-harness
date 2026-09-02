@@ -3,7 +3,7 @@ description: "The deployment default model selection for users and maintainers c
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-default-model
+# @xfcodeai/dsh-agent-default-model
 
 English | [中文](README.zh.md)
 
@@ -32,7 +32,7 @@ Mount this package wherever agents are created without an explicit model route. 
 The composition entry is the base of the default: it requires a provider and model and stays usable without any settings provider.
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-default-model'
+- name: '@xfcodeai/dsh-agent-default-model'
   config:
     provider: deepseek
     model: deepseek-chat
@@ -43,7 +43,7 @@ The composition entry is the base of the default: it requires a provider and mod
 | `provider` | required | Registered provider route for fresh agents |
 | `model` | required | Provider-owned model id for fresh agents |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-agent-default-model) is the exhaustive source for every accepted field. `reasoningEffort` is deliberately not a config field: it belongs to the settings layer, so a complete saved selection can clear an effort when the next selected model has none, while a composition value would be inherited again.
+The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-agent-default-model) is the exhaustive source for every accepted field. `reasoningEffort` is deliberately not a config field: it belongs to the settings layer, so a complete saved selection can clear an effort when the next selected model has none, while a composition value would be inherited again.
 
 ### Read and change the default
 
@@ -92,7 +92,7 @@ The package-level contract is enough for most consumers; read these when you nee
 
 - [Core subsystem](../../../docs/subsystems/core.md) — the `Agent` handle and `AgentOptions` route selection.
 - [agent-loop package](../agent-loop/README.md) — how agents resolve provider and model at request time.
-- [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-agent-default-model) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-agent-default-model) — every accepted config field and its source declaration.
 - [Core group map](../README.md) — how the core packages compose.
 
 -----

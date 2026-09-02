@@ -7,8 +7,8 @@ import { Context } from '@deepseek-ai/cordis'
 import { mkdtemp, readFile, rm, stat } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { credentialRef } from '@deepseek-ai/dsh-credentials'
-import { withFileLock, writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
+import { credentialRef } from '@xfcodeai/dsh-credentials'
+import { withFileLock, writeFileAtomic } from '@xfcodeai/dsh-atomic-write'
 import { LocalCredentialProvider, renderFlatLayoutMigration } from '../src/index.ts'
 
 /** Credential documents are seeded owner-only, exactly as the provider creates them. */

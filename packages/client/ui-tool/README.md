@@ -3,7 +3,7 @@ description: "Client Tool presentation plugin for the dsh web client: whole-call
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-tool
+# @xfcodeai/dsh-client-ui-tool
 
 English | [中文](README.zh.md)
 

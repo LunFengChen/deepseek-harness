@@ -9,12 +9,12 @@
  */
 
 import { useEffect } from 'react'
-import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
-import { IconAgentPresetOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import { IconAgentPresetOutline16 } from '@xfcodeai/dsh-client-ui-primitives'
 // Type-only: pulls the ui-conversation SlotMap merge (the header actions).
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type {} from '@deepseek-ai/dsh-agent-presets/types'
+import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
+import type {} from '@xfcodeai/dsh-agent-presets/types'
 import type { AgentPresetSettingsState } from './settings-store.ts'
 import { presetDisplayText } from './locales.ts'
 import css from './AgentPresetLabel.module.css'

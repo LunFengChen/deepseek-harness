@@ -1,7 +1,7 @@
 /** Canonical session URI and inline mention encoding. */
 
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { SessionId as SessionIdType } from '@deepseek-ai/dsh-session'
+import { brandString } from '@xfcodeai/dsh-brand'
+import type { SessionId as SessionIdType } from '@xfcodeai/dsh-session'
 import { SessionReferenceError } from './config.ts'
 import type { SessionReferenceInput } from './types.ts'
 

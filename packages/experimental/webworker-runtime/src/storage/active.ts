@@ -2,7 +2,7 @@
  * Process-wide slot holding the mounted filesystem. Kept apart from any
  * backend implementation: the `node:fs` proxy depends on the slot, not on
  * which backend the worker entry mounted.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/storage/active
+ * @module @xfcodeai/dsh-experimental-webworker-runtime/src/storage/active
  */
 import type { Vfs } from './types.ts'
 

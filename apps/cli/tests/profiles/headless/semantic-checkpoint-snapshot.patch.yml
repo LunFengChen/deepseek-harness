@@ -15,7 +15,7 @@
 
 - insert:
     - id: replay
-      name: '@deepseek-ai/dsh-llm-replay'
+      name: '@xfcodeai/dsh-llm-replay'
       config:
         file: !!js process.env.DSH_SNAPSHOT_FILE
         overrideFile: !!js process.env.DSH_SNAPSHOT_OVERRIDE

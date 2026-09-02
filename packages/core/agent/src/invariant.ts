@@ -1,10 +1,10 @@
-/** Package-owned agent lifecycle invariants. @module @deepseek-ai/dsh-agent/invariant */
+/** Package-owned agent lifecycle invariants. @module @xfcodeai/dsh-agent/invariant */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { InvariantInstaller } from '@deepseek-ai/dsh-invariants'
-import type { Agent, AgentStatus } from '@deepseek-ai/dsh-agent'
+import type { InvariantInstaller } from '@xfcodeai/dsh-invariants'
+import type { Agent, AgentStatus } from '@xfcodeai/dsh-agent'
 
-const PACKAGE_NAME = '@deepseek-ai/dsh-agent'
+const PACKAGE_NAME = '@xfcodeai/dsh-agent'
 
 /** Cordis companion plugin name. */
 export const name = 'agent-invariant'

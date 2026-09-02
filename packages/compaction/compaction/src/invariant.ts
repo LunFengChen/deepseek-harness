@@ -1,16 +1,16 @@
-/** Package-owned compaction log-stream invariants. @module @deepseek-ai/dsh-compaction/invariant */
+/** Package-owned compaction log-stream invariants. @module @xfcodeai/dsh-compaction/invariant */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { isReplacementSurfaceEvent, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
-import { SurfaceManager } from '@deepseek-ai/dsh-session/surface'
-import type { InvariantFailure, InvariantInstaller } from '@deepseek-ai/dsh-invariants'
+import { isReplacementSurfaceEvent, SessionSeq } from '@xfcodeai/dsh-session'
+import type { Session, SessionEvent } from '@xfcodeai/dsh-session'
+import { SurfaceManager } from '@xfcodeai/dsh-session/surface'
+import type { InvariantFailure, InvariantInstaller } from '@xfcodeai/dsh-invariants'
 import type { CompactionId } from './brand.ts'
 import { isCompactCheckpointSource } from './checkpoint.ts'
 import type { CompactionCheckpointSource } from './checkpoint.ts'
 import type {} from './types.ts'
 
-const PACKAGE_NAME = '@deepseek-ai/dsh-compaction'
+const PACKAGE_NAME = '@xfcodeai/dsh-compaction'
 
 /** Cordis companion plugin name. */
 export const name = 'compaction-invariant'

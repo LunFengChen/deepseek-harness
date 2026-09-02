@@ -3,7 +3,7 @@ description: "CPython 子进程代码 runtime：为 Python 模型代码实现 ds
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-experimental-code-runtime-python
+# @xfcodeai/dsh-experimental-code-runtime-python
 
 [English](README.md) | 中文
 

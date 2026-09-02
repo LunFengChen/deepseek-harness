@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import type { CredentialInfo } from '@deepseek-ai/dsh-credentials/types'
-import { remoteErrorOf, remoteMethods } from '@deepseek-ai/dsh-typert-protocol'
+import type { CredentialInfo } from '@xfcodeai/dsh-credentials/types'
+import { remoteErrorOf, remoteMethods } from '@xfcodeai/dsh-typert-protocol'
 import CredentialsController from '../src/credentials.ts'
 import { MemoryCredentials } from '../../../credentials/credentials/tests/memory.ts'
 
@@ -62,7 +62,7 @@ describe('the credentials Remote namespace a configuration surface calls', () =>
       const failure = await call().catch((error: unknown) => error)
       expect(remoteErrorOf(failure)).toMatchObject({
         code: 'gateway/internal',
-        message: 'credentials service is absent: this deployment does not mount a credential provider (e.g. @deepseek-ai/dsh-credentials-local) in its composition',
+        message: 'credentials service is absent: this deployment does not mount a credential provider (e.g. @xfcodeai/dsh-credentials-local) in its composition',
         details: {},
       })
     }

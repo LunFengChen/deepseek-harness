@@ -3,7 +3,7 @@ description: "面向用户与维护者的 web GUI 启动内核说明：客户端
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-web
+# @xfcodeai/dsh-client-web
 
 [English](README.md) | 中文
 

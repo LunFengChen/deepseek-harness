@@ -5,10 +5,10 @@ import {
   RemoteStreamCarrierError,
   type ClientRemote,
   type RemoteStreamOptions,
-} from '@deepseek-ai/dsh-api-gateway/client'
-import type { ConnectionHandle } from '@deepseek-ai/dsh-client-connection/client'
-import { SessionId } from '@deepseek-ai/dsh-session/types'
-import { RemoteError, type RemoteFailure, type RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+} from '@xfcodeai/dsh-api-gateway/client'
+import type { ConnectionHandle } from '@xfcodeai/dsh-client-connection/client'
+import { SessionId } from '@xfcodeai/dsh-session/types'
+import { RemoteError, type RemoteFailure, type RemoteResult } from '@xfcodeai/dsh-typert-protocol'
 import * as WorkspaceClientPlugin from '../src/client/index.ts'
 import {
   ClientWorkspaceModel,

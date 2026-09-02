@@ -3,7 +3,7 @@ description: "dsh 的浏览器 GUI：交互式聊天、模型与设置管理、�
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-web-app
+# @xfcodeai/dsh-web-app
 
 [English](README.md) | 中文
 
@@ -47,7 +47,7 @@ dsh --profile web --no-open --port 8080
 | `surfaceContext` | `true` | 给 agent（智能体）提供 GUI 定位上下文，并把 `DSH_WEB_URL` 暴露给其 shell 命令 |
 | `trustedHosts` | `[]` | 允许从网络访问 GUI 的额外主机 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-app)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-web-app)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### LAN 访问与可信主机
 
@@ -113,7 +113,7 @@ URL 行与浏览器交接都是就绪信号：监督方一观察到该行就发�
 - [dsh-base](../base/README.zh.md)——GUI 运行其上的共享核心。
 - [dsh-client-hmr](../../client/hmr/README.zh.md)——开发期间客户端插件变更如何重载。
 - [frontend-static](../../host/frontend-static/README.zh.md)——已构建的前端如何被服务。
-- [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-app)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-web-app)——每个受支持配置字段及其源声明。
 
 -----
 

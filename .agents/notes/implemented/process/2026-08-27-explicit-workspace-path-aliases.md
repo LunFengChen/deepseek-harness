@@ -6,7 +6,7 @@ English | [中文](2026-08-27-explicit-workspace-path-aliases.zh.md)
 
 ## Problem
 
-`tsconfig.base.json` is the resolution facade for the whole repository: every package project extends it, both aggregates read it, and every Vitest config points `vite-tsconfig-paths` at it. Two of its aliases carried one candidate per package *group* rather than one per package — `@deepseek-ai/dsh-*` listed 49 candidate globs and `@deepseek-ai/dsh-*/invariant` listed 45.
+`tsconfig.base.json` is the resolution facade for the whole repository: every package project extends it, both aggregates read it, and every Vitest config points `vite-tsconfig-paths` at it. Two of its aliases carried one candidate per package *group* rather than one per package — `@xfcodeai/dsh-*` listed 49 candidate globs and `@xfcodeai/dsh-*/invariant` listed 45.
 
 TypeScript and tsx try those candidates in order and take the first that exists, so a specifier whose package sits late in the list pays for every earlier miss. Under the `dsh` source launch each miss is an `ERR_MODULE_NOT_FOUND` that Node decorates with `decorateErrorWithCommonJSHints`, which runs a full CommonJS resolution walk per failure. A profile of a source-launch boot attributed 934.6 ms — 35% of the boot — to that decoration path alone, from 60,942 failed resolutions.
 
@@ -16,7 +16,7 @@ The cost fell hardest on the most-imported packages. `packages/util/*` sat at po
 
 `scripts/gen-tsconfig-paths.ts` writes one explicit alias per workspace package into a marked region at the end of `paths`, and both group wildcards are deleted. `pnpm run gen-tsconfig-paths` rewrites the region; `pnpm run verify-tsconfig-paths` reports drift instead, and runs in the `ci-static` lane beside the other generated-artifact checks.
 
-The generator emits an alias only for a package whose declared name is exactly `@deepseek-ai/dsh-<directory>`, because that is the only shape a wildcard could ever have resolved: it substituted the specifier's suffix into `packages/<group>/<suffix>/src`. Packages named after something other than their directory — `@deepseek-ai/dsh-typert-protocol` at `packages/typert/protocol`, the `dsh-client-*` and `dsh-host-*` families — already carry hand-written aliases and are left alone. A specifier claimed by two package directories throws rather than picking one, because an explicit map cannot express the group-order tiebreak the wildcard used; no such collision exists today.
+The generator emits an alias only for a package whose declared name is exactly `@xfcodeai/dsh-<directory>`, because that is the only shape a wildcard could ever have resolved: it substituted the specifier's suffix into `packages/<group>/<suffix>/src`. Packages named after something other than their directory — `@xfcodeai/dsh-typert-protocol` at `packages/typert/protocol`, the `dsh-client-*` and `dsh-host-*` families — already carry hand-written aliases and are left alone. A specifier claimed by two package directories throws rather than picking one, because an explicit map cannot express the group-order tiebreak the wildcard used; no such collision exists today.
 
 Deleting the wildcards removed the fallback that used to resolve a package nobody had aliased, so the generator also asserts coverage: every workspace package carrying a `src` directory must be mapped by a generated or hand-written alias, and `--check` names any that is not. Without it a package whose name does not match its directory could be added, skipped by the generator, and left resolving through the workspace symlink to built `lib/` output — the same artifact-plane leak the explicit aliases exist to close.
 
@@ -28,7 +28,7 @@ Four wildcards remain, each with a single candidate: `dsh-host-*/invariant`, `ds
 
 ## Resolution differences this change makes
 
-Every `@deepseek-ai/dsh-*` specifier appearing in repository sources — 1,023 distinct — resolves to the same target as before, with eleven exceptions that now resolve where they previously did not. All eleven previously reached built `lib/` output through the workspace symlink rather than source.
+Every `@xfcodeai/dsh-*` specifier appearing in repository sources — 1,023 distinct — resolves to the same target as before, with eleven exceptions that now resolve where they previously did not. All eleven previously reached built `lib/` output through the workspace symlink rather than source.
 
 Seven are `/invariant` subpaths: `dsh-invariants/invariant`, `dsh-lsp/invariant`, `dsh-lsp-stdio/invariant`, `dsh-tool-lsp/invariant`, `dsh-terminal/invariant`, `dsh-terminal-bash/invariant`, and `dsh-tool-terminal/invariant`.
 
@@ -56,6 +56,6 @@ The CLI entry guard uses the repository's established comparison, `import.meta.f
 
 A source-launch boot of the `headless` profile drops from a 2,157/2,182/2,153 ms baseline to 1,069/1,052/1,055 ms — about 1.1 seconds, or 51%, with the two ranges nowhere near overlapping and `--help` output byte-identical.
 
-The win is confined to the tsx source launch. Vitest resolves through `vite-tsconfig-paths`, which matches in-process and checks file existence without ever constructing a Node module error, so it never paid the decoration cost: an A/B over one package's suite measured 5,934/5,829/5,908 ms against 5,878/5,851/5,905 ms, which is noise. Repository gate scripts import few `@deepseek-ai/dsh-*` packages and likewise show no separable difference. Shipped users run built `lib/` under plain Node and were never affected.
+The win is confined to the tsx source launch. Vitest resolves through `vite-tsconfig-paths`, which matches in-process and checks file existence without ever constructing a Node module error, so it never paid the decoration cost: an A/B over one package's suite measured 5,934/5,829/5,908 ms against 5,878/5,851/5,905 ms, which is noise. Repository gate scripts import few `@xfcodeai/dsh-*` packages and likewise show no separable difference. Shipped users run built `lib/` under plain Node and were never affected.
 
 `paths` grows from 188 keys to 523, and adding a package now requires running the generator. The `--check` gate makes that a named failure rather than a silent one, and the generated region keeps the diff of such a change to a single line.

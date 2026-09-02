@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, expectTypeOf, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { Session, SessionId, SessionLogOffset, SessionSeq, type CreateSessionOptions, type SessionEvent } from '@deepseek-ai/dsh-session'
-import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
-import { createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import SessionStore, { Session, SessionId, SessionLogOffset, SessionSeq, type CreateSessionOptions, type SessionEvent } from '@xfcodeai/dsh-session'
+import DeepSeekLlmApiExtensionRegistry from '@xfcodeai/dsh-deepseek-llm-api-extensions'
+import { createUserMessage } from '@xfcodeai/dsh-llm'
+import type { JsonValue } from '@xfcodeai/dsh-util-values'
 import * as SessionLogDeepSeek from '../src/index.ts'
 import type { DeepSeekSessionLogExtension } from '../src/types.ts'
 

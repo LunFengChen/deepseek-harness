@@ -9,13 +9,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { stubSettingsScope } from '../src/settings-scope.ts'
 import { cleanup } from '@testing-library/react'
-import { defineStore } from '@deepseek-ai/dsh-client-store'
-import type { WorkspaceId } from '@deepseek-ai/dsh-api-workspace-controller/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { PropsRenderSlots, SessionStandardProps } from '@deepseek-ai/dsh-client-ui-slots'
-import { SlotTestRuntime } from '@deepseek-ai/dsh-client-test-runtime'
+import { defineStore } from '@xfcodeai/dsh-client-store'
+import type { WorkspaceId } from '@xfcodeai/dsh-api-workspace-controller/client'
+import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { PropsRenderSlots, SessionStandardProps } from '@xfcodeai/dsh-client-ui-slots'
+import { SlotTestRuntime } from '@xfcodeai/dsh-client-test-runtime'
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@xfcodeai/dsh-client-ui-slots' {
   interface SlotMap {
     'trt.panel': { kind: 'single'; scope: 'root'; owner: { label?: string } }
     'trt.chat': { kind: 'single'; scope: 'session' }

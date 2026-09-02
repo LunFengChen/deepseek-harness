@@ -27,7 +27,7 @@
       name: './mock-delegating-llm.ts'
 
     - id: subagent-model-selection-settings
-      name: '@deepseek-ai/dsh-tool-subagent/model-selection-settings'
+      name: '@xfcodeai/dsh-tool-subagent/model-selection-settings'
       config:
         enabled: true
         allowedModels:
@@ -45,7 +45,7 @@
 
     # providerName is omitted to exercise the shipped `dsh-sdk` default.
     - id: subagent-dsh-sdk
-      name: '@deepseek-ai/dsh-subagent-dsh-sdk'
+      name: '@xfcodeai/dsh-subagent-dsh-sdk'
       config:
         profile: sdk
         patches: !!js JSON.parse(process.env.DSH_TEST_CHILD_PATCHES ?? '[]')

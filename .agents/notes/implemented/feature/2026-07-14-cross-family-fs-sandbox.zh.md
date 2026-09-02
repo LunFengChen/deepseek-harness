@@ -18,7 +18,7 @@ Status: implemented
 
 ### `ctx.sandboxPolicy`——mode 与工作区根的统一归属
 
-`packages/sandbox/sandbox-policy/`（`@deepseek-ai/dsh-sandbox-policy`）注册 `ctx.sandboxPolicy`，即部署沙箱策略的唯一所有者：
+`packages/sandbox/sandbox-policy/`（`@xfcodeai/dsh-sandbox-policy`）注册 `ctx.sandboxPolicy`，即部署沙箱策略的唯一所有者：
 
 - `Config`：`mode`（封闭的 `SandboxMode` 联合，默认 `read-only`）与 `workspaceRoot`（默认进程 cwd，解析为绝对路径）。配置错误会在加载时明确报错。
 - per-session 覆盖事件 `sandbox/mode`，由本包注册在必需注入的 `ctx.sessionProjections` 注册表上的 `sandboxMode` 投影单元折叠（`stateVersion` 1、host-only；`stateOf(session, 'sandboxMode')` 即 host 读取），连同它的写入路径（`setSandboxMode(session, mode)`）与 `SANDBOX_MODES`。该事件是策略状态——被两个家族消费——所以它归于此处，而不归于任一能力的 seam。它的形状与仅日志（log-only）语义遵循 `approval/*` 的先例，且贡献方与读取方都必需注入 `sessionProjections`（[必需投影 seam](../architecture/2026-08-19-session-projection-mandatory-seam.zh.md)）。
@@ -29,7 +29,7 @@ Status: implemented
 
 ### `dsh-fs-sandbox`——在提供方内部强制执行
 
-`packages/fs/fs-sandbox/`（`@deepseek-ai/dsh-fs-sandbox`）镜像 `bash-local`/`bash-sandbox` 的拆分：`SandboxedFileSystem extends LocalFileSystem`，注册为 `ctx.fs`，注入 `sandboxPolicy`。读取（`resolve`/`stat`/`readText`/`streamText`/`listDir`）原样透传——每种模式都允许读。两个变更操作在委托给继承来的原子写之前按模式强制执行：
+`packages/fs/fs-sandbox/`（`@xfcodeai/dsh-fs-sandbox`）镜像 `bash-local`/`bash-sandbox` 的拆分：`SandboxedFileSystem extends LocalFileSystem`，注册为 `ctx.fs`，注入 `sandboxPolicy`。读取（`resolve`/`stat`/`readText`/`streamText`/`listDir`）原样透传——每种模式都允许读。两个变更操作在委托给继承来的原子写之前按模式强制执行：
 
 - `read-only` 直接拒绝 `writeText`/`editText`。
 - `workspace-write` 把规范化后的目标围栏于可写根集合——`dsh-sandbox` 中的 `writableRoots(policy)`：工作区根加上平台临时目录（`/tmp`、`os.tmpdir()`），各自 realpath——与 Seatbelt profile 授予的是同一个集合，所以 fs 围栏是这一个模式含义在 bwrap/Landlock/Seatbelt profile 之外的第四种方言，因此不会出现「write 工具不能写 `/tmp` 而 bash 能」的不对称。规范化路径写法采用词法包含的快速路径；当 Windows 以大小写不同的路径、长文件名或 8.3 短文件名表示同一目录时，系统会逐级遍历祖先目录并比较文件系统身份，而不会把边界弱化为依据文本前缀猜测包含关系。目标在委托前被立即重新规范化（`resolve` 对最深的既有祖先做 realpath），因此自工具解析该目标以来被换出的祖先符号链接会被捕获。

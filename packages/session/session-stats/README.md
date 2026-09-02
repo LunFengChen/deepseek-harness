@@ -3,7 +3,7 @@ description: "Whole-log conversation counts and wall times for clients and maint
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-stats
+# @xfcodeai/dsh-session-stats
 
 English | [中文](README.zh.md)
 
@@ -30,9 +30,9 @@ Mount the plugin beside the session store and the projection registry when clien
 ### Composition
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-projection'
-- name: '@deepseek-ai/dsh-session-stats'
+- name: '@xfcodeai/dsh-session'
+- name: '@xfcodeai/dsh-session-projection'
+- name: '@xfcodeai/dsh-session-stats'
 ```
 
 ### What the figures mean

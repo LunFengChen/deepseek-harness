@@ -1,6 +1,6 @@
-import type { ContentBlock } from '@deepseek-ai/dsh-llm/types'
+import type { ContentBlock } from '@xfcodeai/dsh-llm/types'
 import type { SessionQueuedItem } from '../../types.ts'
-import type { SessionEvent } from '@deepseek-ai/dsh-session/types'
+import type { SessionEvent } from '@xfcodeai/dsh-session/types'
 import type { QueuedMessage } from '../contract/snapshot.ts'
 
 const QUEUE_PREVIEW_CHARS = 200

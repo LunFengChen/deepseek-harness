@@ -3,7 +3,7 @@ description: "原子文件替换与跨进程写锁，供绝不允许在磁盘上
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-atomic-write
+# @xfcodeai/dsh-atomic-write
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-library"
 ### 原子写入文件
 
 ```ts
-import { writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
+import { writeFileAtomic } from '@xfcodeai/dsh-atomic-write'
 
 declare const text: string
 await writeFileAtomic('/home/u/.dsh/settings.yaml', text, { mode: 0o600 })
@@ -43,7 +43,7 @@ await writeFileAtomic('/home/u/.dsh/settings.yaml', text, { mode: 0o600 })
 对于单靠原子提交无法保证安全的读-渲染-提交循环，请在操作期间持有写锁：
 
 ```text
-import { withFileLock, writeFileAtomic } from '@deepseek-ai/dsh-atomic-write'
+import { withFileLock, writeFileAtomic } from '@xfcodeai/dsh-atomic-write'
 
 declare const render: (previous: string) => string
 declare const readCurrent: () => Promise<string>
