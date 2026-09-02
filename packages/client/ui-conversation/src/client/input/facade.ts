@@ -73,8 +73,6 @@ export interface SessionInputDeps {
     serialize(ids: readonly DraftAttachmentId[]): Promise<readonly SubmitImageAttachment[]>
     /** Free consumed draft images after a successful command submit. */
     release(ids: readonly DraftAttachmentId[]): void
-    /** Localized composer notice for a claimed command that does not accept images. */
-    unsupportedNotice(token: string): string
   }
 }
 
@@ -379,15 +377,9 @@ export class SessionInputShell implements SessionInput {
       }
       return
     }
-    // Claimed pre-gate: a claim that does not declare image acceptance never
-    // submits while images are attached — one notice, everything retained.
-    // Enter-time adjudication applies the same policy for unclaimed lines
-    // inside the command source itself.
-    const before = this.snapshot
-    if (before.phase === 'claimed' && this.imageIds.length > 0 && before.claim?.images !== true) {
-      this.notify('error', this.deps.commandImages.unsupportedNotice(before.claim?.token ?? before.draft))
-      return
-    }
+    // A claimed command receives serialized images only when it declares
+    // image acceptance. Otherwise the command source has already notified the
+    // user, and the image rail remains attached to the composer.
     this.dispatchRun(({ type: 'enter', mode, draft: this.projection.clipboardText }))
     const phase = this.snapshot.phase
     if (phase === 'adjudicating' || phase === 'submitting') {

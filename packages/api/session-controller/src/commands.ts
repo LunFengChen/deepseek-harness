@@ -283,7 +283,7 @@ export class SessionCommandController {
   }
 
   /**
-   * Admit one browser prompt after explicit Agent resume and image validation.
+   * Admit one browser prompt after explicit Agent resume and durable content validation.
    * @param request - Session identity, prompt content, source metadata, and delivery mode.
    * @returns acknowledgement that the Agent accepted the prompt.
    */
@@ -315,17 +315,9 @@ export class SessionCommandController {
     const hasImage = request.content.some(part => part.type === 'image')
     const admit = async (): Promise<SessionPromptValue> => {
       try {
-        if (hasImage) {
-          const current = this.agents.selectionFor(agent).current
-          const model = await this.ctx.llm.resolveModelInfo(current.provider, current.model)
-          if (model.inputModalities !== undefined && !model.inputModalities.includes('image')) {
-            throw new RemoteError(
-              'session/attachment-invalid',
-              `Model "${current.model}" does not support image input.`,
-              { reason: 'MODEL_DOES_NOT_SUPPORT_IMAGES' },
-            )
-          }
-        }
+        // Image capability is enforced at the final LLM dispatch boundary.
+        // That boundary projects durable images to text placeholders for a
+        // text-only model, so historical images cannot strand a session.
         const content = await admitPromptContent(this.ctx.attachments, request.content)
         const message: UserMessage = createUserMessage({ content, source })
         if (request.mode === 'steer') agent.steer(message)

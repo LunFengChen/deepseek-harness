@@ -94,7 +94,7 @@ function bench(over?: {
   const sink = vi.fn(() => Promise.resolve<SubmitOutcome>({ kind: 'success' }))
   const serialize = vi.fn(over?.serialize ?? (() => Promise.resolve<readonly SubmitImageAttachment[]>([])))
   const release = vi.fn()
-  const shell = new SessionInputShell({ actx: SCTX, defaultSink: sink, commandImages: { serialize, release, unsupportedNotice: (token: string) => `${token.trim()} images-unsupported` } })
+  const shell = new SessionInputShell({ actx: SCTX, defaultSink: sink, commandImages: { serialize, release } })
   const wiring = shell
   const view = mountBar(shell, over)
   const textarea = view.container.querySelector<HTMLDivElement>('[data-composer-input]')!
@@ -171,19 +171,17 @@ describe('matrix row: claimed', () => {
 describe('matrix row: claimed with images', () => {
   const img = 'img-1' as DraftAttachmentId
 
-  it('a claim without image acceptance blocks enter: one notice, draft/images/claim retained', async () => {
+  it('a claim without image acceptance submits text and retains the draft image', async () => {
     const submit = vi.fn(() => Promise.resolve({ kind: 'success' as const }))
-    const { view, textarea, shell, sink, claim } = bench({ submit })
+    const { textarea, shell, sink, claim } = bench({ submit })
     claim()
     act(() => { shell.addImages([img]) })
     fireEvent.keyDown(textarea, { key: 'Enter' })
-    await Promise.resolve()
-    expect(shell.snapshot.phase).toBe('claimed')
-    expect(submit).not.toHaveBeenCalled()
+    await vi.waitFor(() => { expect(submit).toHaveBeenCalledWith('', SCTX, []) })
     expect(sink).not.toHaveBeenCalled()
-    expect(view.getByText('/goal images-unsupported')).toBeTruthy()
     expect(shell.snapshot.imageIds).toEqual([img])
-    expect(shell.snapshot.draft).toBe('/goal ')
+    expect(shell.snapshot.draft).toBe('')
+    expect(shell.snapshot.phase).toBe('plain')
   })
 
   it('an accepting claim serializes and forwards the images; success consumes and clears', async () => {
@@ -191,7 +189,7 @@ describe('matrix row: claimed with images', () => {
     const png: SubmitImageAttachment = { mediaType: 'image/png', data: 'AA==' }
     const { textarea, shell, claim, serialize, release } = bench({ submit, serialize: () => Promise.resolve([png]) })
     claim('/goal ', '目标', true)
-    // The claim currency carries the acceptance flag the pre-gate reads.
+    // The claim currency carries the acceptance flag used for image serialization.
     expect(shell.snapshot.claim).toEqual({ token: '/goal ', hint: '目标', images: true })
     act(() => { shell.addImages([img]) })
     fireEvent.keyDown(textarea, { key: 'Enter' })

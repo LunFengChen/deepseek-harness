@@ -121,7 +121,7 @@ function bench(over?: BenchOptions) {
   const shell = new SessionInputShell({
     actx: SCTX,
     defaultSink: sink,
-    commandImages: { serialize: () => Promise.resolve([]), release: () => {}, unsupportedNotice: (token: string) => `${token.trim()} images-unsupported` },
+    commandImages: { serialize: () => Promise.resolve([]), release: () => {} },
     queue: {
       getSnapshot: () => session.getSnapshot().queue,
       subscribe: fn => session.subscribe(fn),

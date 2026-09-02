@@ -14,7 +14,6 @@ const spacedMention = '@[Research notes](dsh-session:InNvdXJjZSI)'
 const commandImages = {
   serialize: () => Promise.resolve([]),
   release: () => {},
-  unsupportedNotice: (token: string) => `${token.trim()} images-unsupported`,
 }
 
 function chip(shell: SessionInputShell): void {

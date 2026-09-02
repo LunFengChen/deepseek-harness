@@ -504,36 +504,52 @@ describe('matchEnter envelope policy (images)', () => {
   ]
   const png: SubmitImageAttachment = { mediaType: 'image/png', data: 'AA==' }
 
-  it('a leadingInput command not declaring acceptance refuses; a declaring one claims with images minted', async () => {
-    const { source, warm } = await bench({ commands: () => Promise.resolve({ commands: IMG_CMDS }) })
+  it('a leadingInput command not declaring acceptance continues without images; accepting one claims with images', async () => {
+    const { source, warm, mint, notices } = await bench({ commands: () => Promise.resolve({ commands: IMG_CMDS }) })
+    mint('s1')
     await warm(proj('s1'))
-    await expect(source.matchEnter!(proj('s1'), '/goal ship', signal(), { images: 1 }))
-      .rejects.toThrow('command:notice.imagesUnsupported{"command":"goal"}')
-    const outcome = await source.matchEnter!(proj('s1'), '/vision what is this', signal(), { images: 1 })
+    const outcome = await source.matchEnter!(proj('s1'), '/goal ship', signal(), { images: 1 })
     if (outcome === undefined || outcome === 'handled' || !('claim' in outcome)) throw new Error('expected claim')
-    expect(outcome.claim.token).toBe('/vision ')
-    expect(outcome.claim.images).toBe(true)
+    expect(outcome.claim.images).toBeUndefined()
+    expect(notices).toEqual([{
+      scope: sid('s1'),
+      level: 'info',
+      text: 'command:notice.imagesUnsupported{"command":"goal"}',
+    }])
+    const vision = await source.matchEnter!(proj('s1'), '/vision what is this', signal(), { images: 1 })
+    if (vision === undefined || vision === 'handled' || !('claim' in vision)) throw new Error('expected claim')
+    expect(vision.claim.token).toBe('/vision ')
+    expect(vision.claim.images).toBe(true)
   })
 
-  it('bare popup routes refuse images: contribution and decorated host both stay closed', async () => {
-    const { command, source, mint, warm } = await bench()
+  it('bare popup routes continue and retain images: contribution and decorated host both open', async () => {
+    const { command, source, mint, warm, notices } = await bench()
     command.register(themeContribution())
     command.decorate({ name: 'plan', available: () => true, ui: themeUi() })
     const scope = mint('s1')
     await warm(proj('s1'))
-    await expect(source.matchEnter!(proj('s1'), '/theme', signal(), { images: 1 }))
-      .rejects.toThrow('command:notice.imagesUnsupported{"command":"theme"}')
-    await expect(source.matchEnter!(proj('s1'), '/plan', signal(), { images: 2 }))
-      .rejects.toThrow('command:notice.imagesUnsupported{"command":"plan"}')
-    expect(command.popupFor(scope.ctx).state.getSnapshot().open).toBe(false)
+    await expect(source.matchEnter!(proj('s1'), '/theme', signal(), { images: 1 })).resolves.toBe('handled')
+    expect(command.popupFor(scope.ctx).state.getSnapshot().open).toBe(true)
+    command.popupFor(scope.ctx).dismiss()
+    await expect(source.matchEnter!(proj('s1'), '/plan', signal(), { images: 2 })).resolves.toBe('handled')
+    expect(command.popupFor(scope.ctx).state.getSnapshot().open).toBe(true)
+    expect(notices).toEqual([
+      { scope: sid('s1'), level: 'info', text: 'command:notice.imagesUnsupported{"command":"theme"}' },
+      { scope: sid('s1'), level: 'info', text: 'command:notice.imagesUnsupported{"command":"plan"}' },
+    ])
   })
 
-  it('bare host detached execute refuses images before any RPC', async () => {
-    const { source, warm, executeCalls } = await bench()
+  it('bare host detached execute continues without images before any RPC', async () => {
+    const { source, warm, mint, executeCalls, notices } = await bench()
+    mint('s1')
     await warm(proj('s1'))
-    await expect(source.matchEnter!(proj('s1'), '/plan', signal(), { images: 1 }))
-      .rejects.toThrow('command:notice.imagesUnsupported{"command":"plan"}')
-    expect(executeCalls).toEqual([])
+    await expect(source.matchEnter!(proj('s1'), '/plan', signal(), { images: 1 })).resolves.toBe('handled')
+    expect(executeCalls).toEqual([{ sessionId: sid('s1'), line: '/plan', images: [] }])
+    expect(notices).toEqual([{
+      scope: sid('s1'),
+      level: 'info',
+      text: 'command:notice.imagesUnsupported{"command":"plan"}',
+    }])
   })
 
   it('claim.submit forwards the images to execute; consumption follows the handler outcome', async () => {

@@ -9,7 +9,7 @@ export const zh = {
   'status.empty': '无选项',
   'overlay.aria': '/{command} 选项',
   'listbox.aria': '/{command} 匹配项',
-  'notice.imagesUnsupported': '/{command} 不接受图片附件，请先移除图片',
+  'notice.imagesUnsupported': '/{command} 不处理图片附件，将继续执行文本，图片会保留在输入框',
 } satisfies Record<string, string>
 
 /** The command namespace key union. */
@@ -24,5 +24,5 @@ export const en = {
   'status.empty': 'No options',
   'overlay.aria': '/{command} options',
   'listbox.aria': '/{command} matches',
-  'notice.imagesUnsupported': '/{command} does not accept image attachments; remove them first',
+  'notice.imagesUnsupported': '/{command} does not process image attachments; text will continue and images stay in the composer',
 } satisfies Record<CommandKey, string>
