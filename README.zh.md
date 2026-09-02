@@ -12,16 +12,19 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 
 ## Fork 概览
 
+下面的表格只汇总这个 fork 的用户可见和发布相关改动；合并上游的提交只负责集成，不单独展开。
+
 | 领域 | 改动 | 结果 |
 | --- | --- | --- |
-| 发布身份 | 包名保持 `@xfcodeai/dsh` / `@xfcodeai/dsh-*`，发布的可执行命令改为 `xfdsh`。 | fork 可以和上游 `dsh` 并装并用。 |
-| 会话历史 | Web UI 可以对当前会话做“真删除”：删掉某个问题/回答以及后面的所有历史，并且有双重确认。 | 不满意的回答可以直接从会话里移除，而不是另起一条分支。 |
-| 内存与持久化 | 会话持久化现在限制内存中的读取规模，并能重写 JSONL 落盘日志来支持真删除；projection cache 也同步升级了版本。 | 长会话不会再轻易撑爆内存，删除也能真正落盘。 |
+| 包命名空间 | 工作区包从 `@deepseek-ai/dsh-*` 改为 `@xfcodeai/dsh-*`；vendor 和 native 包保留上游命名空间。 | fork 拥有自己的发布包线。 |
+| 启动器与发布 | 发布出来的可执行命令是 `xfdsh`；release 校验、pack 布局和入口检查都已跟着调整。 | fork 可以和上游 `dsh` 并装并用，不会冲突。 |
+| 会话历史 | Web UI 可以对当前会话做“真删除”：删掉某个问题/回答以及后面的所有历史，并且有双重确认。session controller 会把删除请求下发给持久化层，JSONL 后端会重写落盘日志，projection cache 也同步升级了版本。 | 不满意的回答可以直接从会话里和磁盘里一起移除。 |
 | 会话工具 | 工作区列表里增加了复制 session id。 | 方便分享、排障和定位会话。 |
-| 长任务稳定性 | context overflow 会触发压缩；握手失败可以恢复； goal 轮次不再被旧的硬上限卡死。 | 长任务更不容易在中途停摆。 |
-| 模型与图片兼容 | 不支持图片的命令会直接 toast 拒绝；模型不兼容会以清晰的 `session/model-unavailable` 报错。 | 混合模型/图片流程会快速失败，不会悄悄卡住。 |
-| sandbox 与回放 | 会忽略过期的 full-access escalation target；pi-ai replay metadata 和包装后的响应状态处理更稳；临时的 `PI_AI_ERROR` 会重试。 | 更少误报，更少回放漂移。 |
-| 发布准备 | release 校验、pack 布局、文档和入口检查都已为 fork 调整。 | fork 可以按自己的包线发布和安装。 |
+| 内存与续跑 | 会话持久化现在限制内存中的读取规模；context overflow 会触发压缩；握手失败可以恢复；goal 轮次不再被旧的硬上限卡死；compaction 的默认重试次数也调高了。 | 长会话和长任务更不容易卡住或被过早终止。 |
+| LLM 与回放 | `PI_AI_ERROR` 会走默认重试；finish_reason 截断被归为不可重试；包装后的回放状态和外来 replay metadata 都能正确处理；还补了 provider-scoped 环境真的到达 wire request 的测试。 | 更少误报、更少回放不一致，重试行为也更清楚。 |
+| 模型与图片兼容 | 不支持图片的命令会继续执行文本并保留图片草稿；纯文本模型路由会在分发前把历史图片和新图片投影为稳定文本占位符。 | 切换到纯文本模型不会让已有图片的会话停摆。 |
+| sandbox 与权限 | 会忽略过期的 full-access escalation target。 | 旧的权限状态不会再走错升级路径。 |
+| 文档与示例 | README、CLI help、发布说明和 session-controller 的 API 文档都同步到了 fork 的行为。 | 文档和实际行为保持一致。 |
 
 ### 安装这个 fork
 

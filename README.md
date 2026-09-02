@@ -12,16 +12,19 @@ Fork note: this branch publishes `@xfcodeai/dsh` and the `xfdsh` launcher so it 
 
 ## Fork summary
 
+The rows below summarize the fork's user-visible and release-impacting changes; merge commits only integrate upstream work and are not listed separately.
+
 | Area | What changed | Result |
 | --- | --- | --- |
-| Publish identity | Packages stay under `@xfcodeai/dsh` / `@xfcodeai/dsh-*`, and the published executable is `xfdsh`. | The fork can be installed and run beside upstream `dsh`. |
-| Session history | The web UI can delete a turn and every later event in the same session, with destructive confirmation, instead of only forking away. | Unwanted answers can be removed without creating a new branch of history. |
-| Memory and persistence | Session persistence now bounds in-memory reads and can rewrite durable JSONL logs for destructive deletion; the projection cache schema was bumped to match. | Long sessions stop blowing up memory, and deletion stays durable. |
+| Package namespace | Workspace packages were rescoped from `@deepseek-ai/dsh-*` to `@xfcodeai/dsh-*`; vendor and native packages keep their upstream scopes. | The fork owns its own published package line. |
+| Launcher and release | The published executable is `xfdsh`; release verification, pack layout, and entrypoint checks were updated to match. | The fork installs and runs beside upstream `dsh` without command collisions. |
+| Session history | The web UI can delete a turn and every later event in the same session, with destructive confirmation. The session controller forwards the request to persistence, the JSONL backend rewrites durable logs, and the projection cache schema was bumped. | Unwanted answers can be removed from the live session and from disk. |
 | Session utilities | Workspace rows include a copy-session-id action. | Session ids are easier to share and debug. |
-| Long-run stability | Context overflow now compacts instead of stalling; handshake failures resume; goal rounds can continue past the old hard stop. | Long tasks are less likely to stop mid-run. |
-| Model and attachment compatibility | Commands that do not accept images reject them with a toast; model incompatibility is reported as a clear `session/model-unavailable` error. | Mixed model/image workflows fail fast instead of silently breaking. |
-| Sandbox and replay | Stale full-access escalation targets are ignored; pi-ai replay metadata and wrapped responses are handled more safely; transient `PI_AI_ERROR` is retried. | Fewer false failures and less replay drift. |
-| Release readiness | Release verification, pack layout, docs, and entrypoint checks were updated for the fork. | The fork can be published and installed as its own package line. |
+| Memory and continuation | Session persistence now bounds in-memory reads; context overflow triggers compaction; handshake failures resume; goal rounds can continue past the old hard stop; compaction retry defaults were raised. | Long sessions and long tasks are less likely to stall or get killed early. |
+| LLM and replay | `PI_AI_ERROR` gets default retries; finish-reason truncation is classified as non-retryable; wrapped replay state and foreign replay metadata are handled correctly; provider-scoped env reach is asserted in tests. | Fewer false failures, fewer replay mismatches, and clearer retry behavior. |
+| Model and attachment compatibility | Commands that do not accept images continue with text and keep the image draft; text-only model routes project historical and new images to stable text placeholders before dispatch. | Switching to a text-only model does not strand a session that already contains images. |
+| Sandbox and permissions | Stale full-access escalation targets are ignored. | Old permission artifacts stop triggering the wrong escalation path. |
+| Docs and examples | README, CLI help, release notes, and session-controller API docs were synchronized with the fork behavior. | The fork is documented the same way it behaves. |
 
 ### Install this fork
 
