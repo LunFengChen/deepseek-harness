@@ -479,6 +479,20 @@ declare class Session {
   /** The next event's sequence number — always the log length (the `seq = log.length` contiguity contract). */
   get seq(): SessionLogOffset;
   /**
+   * Find the beginning of the logical turn containing one visible message.
+   * Deletion is turn-granular so the retained event prefix remains balanced and
+   * the next prompt cannot inherit half of a previous turn.
+   * @param seq - visible message event sequence.
+   * @returns the first event of the containing turn.
+   */
+  deletionStart(seq: SessionSeq): SessionLogOffset;
+  /**
+   * Physically remove the selected turn and every later event from the live log.
+   * Persistence must be rewritten before this method is called.
+   * @param length - retained event-prefix length.
+   */
+  truncate(length: SessionLogOffset): void;
+  /**
    * Append one typed event to the log and synchronously notify observers via
    * the store-owned, module-private publication hooks. The hot path never blocks
    * on I/O — persistence plugins buffer asynchronously. Once the event enters
