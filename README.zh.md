@@ -8,6 +8,33 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 
 文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
 
+分支说明：这个 fork 发布的是 `@xfcodeai/dsh` 和 `xfdsh` 启动器，可以和上游 `dsh` 并存。下面表格概览这个 fork 相对上游的主要改动。
+
+## Fork 概览
+
+| 领域 | 改动 | 结果 |
+| --- | --- | --- |
+| 发布身份 | 包名保持 `@xfcodeai/dsh` / `@xfcodeai/dsh-*`，发布的可执行命令改为 `xfdsh`。 | fork 可以和上游 `dsh` 并装并用。 |
+| 会话历史 | Web UI 可以对当前会话做“真删除”：删掉某个问题/回答以及后面的所有历史，并且有双重确认。 | 不满意的回答可以直接从会话里移除，而不是另起一条分支。 |
+| 会话工具 | 工作区列表里增加了复制 session id。 | 方便分享、排障和定位会话。 |
+| 长任务稳定性 | context overflow 会触发压缩；握手失败可以恢复； goal 轮次不再被旧的硬上限卡死。 | 长任务更不容易在中途停摆。 |
+| 模型与图片兼容 | 不支持图片的命令会直接 toast 拒绝；模型不兼容会以清晰的 `session/model-unavailable` 报错。 | 混合模型/图片流程会快速失败，不会悄悄卡住。 |
+| sandbox 与回放 | 会忽略过期的 full-access escalation target；pi-ai replay metadata 和包装后的响应状态处理更稳；临时的 `PI_AI_ERROR` 会重试。 | 更少误报，更少回放漂移。 |
+| 发布准备 | release 校验、pack 布局、文档和入口检查都已为 fork 调整。 | fork 可以按自己的包线发布和安装。 |
+
+### 安装这个 fork
+
+```sh
+npm install --global @xfcodeai/dsh
+xfdsh web
+```
+
+一次性运行：
+
+```sh
+npx @xfcodeai/dsh web
+```
+
 ## 开发者预览
 
 DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来将出现破坏兼容性的变更。**
