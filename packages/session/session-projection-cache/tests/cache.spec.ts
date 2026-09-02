@@ -426,6 +426,25 @@ describe('SessionProjectionCache listing read', () => {
     expect(cache.cachedSnapshot(headerOf(id, 0), SessionLogOffset(0))).toBeUndefined()
   })
 
+  it('discards a record from before the identity schema version bump', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    roots.push(root)
+    const path = recordPath(root, SessionId('legacy-identity'))
+    await mkdir(dirname(path), { recursive: true })
+    await writeFile(path, JSON.stringify({
+      version: projectionCacheDomainSpec.version - 1,
+      record: {
+        identity: { createdAt: 0 },
+        rows: { 'cache-test/marks': { ver: 1, seq: 1, val: { marks: ['old'] } } },
+      },
+    }))
+
+    const { cache } = await harness({ root })
+
+    expect(cache.cachedSnapshot(headerOf(SessionId('legacy-identity')), SessionLogOffset(0)))
+      .toBeUndefined()
+  })
+
   it('returns undefined for a malformed record document (refold from the log on the caller side)', async () => {
     const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
     roots.push(root)
