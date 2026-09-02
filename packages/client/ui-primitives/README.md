@@ -119,3 +119,5 @@ These limits define how the atoms behave at the edges; they are current package 
 None.
 
 </details>
+
+**Runtime invariant:** No companion is published. Pure props-in React atoms with no Cordis API — no events, no services, no mutable cross-plugin state; rendering contracts are asserted directly by this package's component specs.

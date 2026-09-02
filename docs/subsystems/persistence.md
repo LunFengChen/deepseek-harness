@@ -40,7 +40,7 @@ interface SessionLocation {
 
 ## `SessionHeader` — metadata beside the log
 
-Per-session metadata travels **separately** from the event log: format version, cwd, lineage, and the seed boundary are storage concerns, not conversation events, so they stay out of `SessionEventMap` and never reach `deriveMessages()`. The header is attached to a `Session` via `session.header`.
+Per-session metadata travels **separately** from the event log: the header carries format version, cwd, and the `isSeeded` lineage bit, while body-bearing storage values carry the exact inherited cut beside it. Neither belongs to `SessionEventMap` or reaches `deriveMessages()`. The logical header is attached through `session.header`; the Session exposes its cut as `inheritedEventCount`.
 
 Source: [`packages/core/session/src/types.ts`](../../packages/core/session/src/types.ts)
 
@@ -64,10 +64,10 @@ interface SessionHeader {
   /** The session this one was forked from (seed lineage), if any. */
   readonly parentSession?: SessionId
   /**
-   * How many leading events were inherited through a seed. Persisting this
-   * boundary lets resume and replay distinguish parent history from child work.
+   * Whether this Session contains a fork-inherited event prefix. The exact prefix
+   * length is Session state rather than ordinary header metadata.
    */
-  readonly seedLength?: number
+  readonly isSeeded: boolean
   /**
    * Coarse product classification for a session created as a subagent child.
    * This is presentation metadata, not proof that the child is continuable.
@@ -95,7 +95,7 @@ A backend refuses a log it cannot faithfully interpret with `SessionFormatUnsupp
 
 ## `CreateSessionOptions` — seeding and metadata
 
-Creating a `Session` through the store takes a `seed` (initial replay or fork history) and `meta` (the storage-level fields the store folds into a `SessionHeader`). The store fills in `version`/`id` and defaults `createdAt`; the caller may supply the validated absolute `cwd`, the `parentSession` lineage, the `seedLength` seed boundary, the optional coarse `origin`, the `delegationDepth`, the `agentPreset` the agent was composed from, and an existing `createdAt`. `origin: 'subagent'` lets product navigation hide duplicate child rows; it does not prove that a descriptor is valid or that the child can resume.
+Creating a `Session` through the store takes a `seed` (initial replay or fork history), an optional exact `inheritedEventCount`, and `meta` (the storage-level fields the store folds into a `SessionHeader`). The store fills in `version`/`id` and defaults `createdAt`; the caller may supply the validated absolute `cwd`, `parentSession` lineage, `isSeeded` lineage bit, optional coarse `origin`, `delegationDepth`, `agentPreset`, and an existing `createdAt`. A seeded creation requires both an explicit seed and exact cut because child-owned setup events may follow the inherited prefix. `origin: 'subagent'` lets product navigation hide duplicate child rows; it does not prove that a descriptor is valid or that the child can resume.
 
 ```ts type-equiv
 /**
@@ -107,14 +107,19 @@ interface CreateSessionOptions {
   /** Initial replay or fork history supplied at construction. */
   readonly seed?: readonly SessionEvent[]
   /**
-   * Storage metadata read once before publication. `seedLength` is explicit
-   * because a resumed seed contains the full stored log, not only its inherited prefix.
+   * Exact fork-inherited prefix length when `meta.isSeeded` is true. A
+   * constructor seed may also contain child-owned setup events after this cut.
+   */
+  readonly inheritedEventCount?: SessionLogOffset
+  /**
+   * Storage metadata read once before publication. `isSeeded` marks fork
+   * lineage; supplying replay history alone does not make it inherited.
    */
   readonly meta?: {
     readonly cwd?: string
     readonly parentSession?: SessionId
     readonly createdAt?: number
-    readonly seedLength?: number
+    readonly isSeeded?: boolean
     readonly origin?: 'subagent'
     readonly delegationDepth?: number
     readonly agentPreset?: string
@@ -122,7 +127,21 @@ interface CreateSessionOptions {
 }
 ```
 
-Replay/fork is therefore `ctx.sessions.create(id, { seed: seedEvents })`; resuming a *persisted* session into a live agent is `ctx.agents.resume({ resumeSessionId })`.
+Plain replay is `ctx.sessions.create(id, { seed: seedEvents })`; a fork additionally supplies `inheritedEventCount` and `meta.isSeeded: true`. Resuming a *persisted* session into a live agent is `ctx.agents.resume({ resumeSessionId })`.
+
+## `SessionStorageMetadata` — logical header and inherited cut
+
+Every persistence result that reads a Session body carries `SessionStorageMetadata`: the current logical header plus the separately validated inherited-event cut. Header-only listing intentionally returns only `SessionHeader`.
+
+```ts type-equiv
+/** Logical Session header paired with its exact inherited cut for body-bearing storage operations. */
+interface SessionStorageMetadata {
+  /** Validated immutable Session header. */
+  readonly meta: SessionHeader
+  /** Number of leading events inherited from the Session's fork parent. */
+  readonly inheritedEventCount: SessionLogOffset
+}
+```
 
 ## `SessionRawArtifact` — verbatim stored artifact text
 
@@ -130,9 +149,7 @@ A backend's own artifact text for one session, byte-identical to what it durably
 
 ```ts type-equiv
 /** A backend's own raw artifact text for one session, verbatim. */
-interface SessionRawArtifact {
-  /** The session header parsed from the artifact's own first line. */
-  readonly meta: SessionHeader
+interface SessionRawArtifact extends SessionStorageMetadata {
   /** The artifact's base filename on disk, without any physical encoding suffix. */
   readonly filename: string
   /** The artifact's full text content, decoded from the backend's physical encoding. */
@@ -154,6 +171,8 @@ interface RestoredSessionOptions {
   readonly seed: SessionEvent[]
   /** Fresh detached storage metadata to validate and freeze in place. */
   readonly meta: SessionHeader
+  /** Exact number of fork-inherited leading events decoded from storage. */
+  readonly inheritedEventCount: SessionLogOffset
   /** Select the persistence ownership-transfer path. */
   readonly seedSource: 'persistence'
 }
@@ -198,10 +217,22 @@ declare class SessionPreparation implements Disposable {
 
 ```ts type-equiv
 /** Immutable logical session prepared from persistence or a live owner. */
-interface SessionInspection {
-  /** Validated immutable session metadata. */
-  readonly meta: SessionHeader
+interface SessionInspection extends SessionStorageMetadata {
   /** Validated contiguous logical event log. */
+  readonly events: readonly SessionEvent[]
+}
+```
+
+## Detached stored-log suffixes
+
+`readFrom` returns a detached `SessionEventSuffix` anchored by the requested `fromSeq`. Its event list may start above zero or be empty, so it is not a complete `SessionInspection` and must not be restored as a whole Session.
+
+```ts type-equiv
+/** Detached logical suffix returned by one explicit stored-log offset read. */
+interface SessionEventSuffix extends SessionStorageMetadata {
+  /** First requested log offset; {@link events} contains only seqs at or after it. */
+  readonly fromSeq: SessionLogOffset
+  /** Valid contiguous stored events at or after {@link fromSeq}; not a complete Session log when the offset is nonzero. */
   readonly events: readonly SessionEvent[]
 }
 ```
@@ -281,8 +312,10 @@ readRaw(_id: SessionId, signal?: AbortSignal): Promise<SessionRawArtifact | unde
  * created-but-never-appended session is absent from {@link list}
  * — abandoned sessions leave nothing behind.
  * @param meta - the immutable header (id, version, cwd, lineage) to record.
+ * @param inheritedEventCount - exact fork-inherited prefix length. Required
+ * for a seeded header and omitted only for an unseeded header.
  */
-abstract create(meta: SessionHeader): Promise<void>
+abstract create(meta: SessionHeader, inheritedEventCount?: SessionLogOffset): Promise<void>
 
 /**
  * Ensure a live session has a durable header even when it has no events.
@@ -297,6 +330,8 @@ ensureMaterialized(_session: Session): Promise<void>
  * seq contracts: the first event's `seq` MUST equal the stored next-seq
  * (after `load` has durably closed any interrupted turn). Rejects non-JSON-
  * serializable `event.data` with an error naming the offending event type.
+ * A seeded session's first materializing batch must reach its complete
+ * inherited prefix.
  * @param id - the session the batch belongs to.
  * @param events - the contiguous batch to persist, in seq order.
  */
@@ -371,11 +406,11 @@ abstract borrowSession(id: SessionId, signal?: AbortSignal): Promise<BorrowedSes
  * forward. The primitive bounds what is returned and refolded, not every
  * backend's physical read.
  * @param id - the persisted session to read.
- * @param fromSeq - first event seq to include; a non-negative safe integer.
+ * @param fromSeq - first event offset to include.
  * @param signal - optional cancellation for queued and backend read work.
- * @returns the header and the stored events with `seq >= fromSeq`.
+ * @returns storage metadata, the requested offset, and stored events with `seq >= fromSeq`.
  */
-abstract readFrom(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }>
+abstract readFrom(id: SessionId, fromSeq: SessionLogOffset, signal?: AbortSignal): Promise<SessionEventSuffix>
 
 /**
  * Lightweight listing from metadata, without a full-log parse.
@@ -397,7 +432,7 @@ abstract list(signal?: AbortSignal): Promise<SessionHeader[]>
 abstract listSnapshots(signal?: AbortSignal): Promise<SessionPersistenceSnapshot[]>
 ```
 
-Types: [Session](session.md) · [SessionEvent](session.md) · [SessionId](core.md)
+Types: [Session](session.md) · [SessionEvent](session.md) · [SessionId](core.md) · [SessionLogOffset](session.md)
 
 Source: [`packages/session/session-persistence/src/index.ts`](../../packages/session/session-persistence/src/index.ts)
 <!-- END GENERATED cordis-surface -->

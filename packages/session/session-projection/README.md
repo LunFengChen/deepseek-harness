@@ -40,7 +40,7 @@ const definition = {
   key: 'todo',
   stateSchema: todoStateSchema,
   stateVersion: 1,
-  init: () => ({ items: [] }),
+  init: (_header, _inheritedEventCount) => ({ items: [] }),
   apply: (state, event) => event.type === 'todo/upsert'
     ? { items: event.data.items }
     : state,
@@ -51,7 +51,7 @@ const definition = {
 }
 ```
 
-`apply` must be synchronous and must return the same state reference for events that do not concern the unit — an unchanged reference means zero downstream work. The registry compares consecutive raw `wire.view` results with `Object.is`; an object or array view must reuse its reference to suppress publication across internal-only state changes, while a structurally equal new object is still a change. A state-carrying log event must carry the complete post-change state, never a bare delta.
+`init(header, inheritedEventCount)` receives both lightweight metadata and the exact fork-inherited cut; it must not infer that cut from `firstLiveSeq` or `session/end-seed`. `apply` must be synchronous and must return the same state reference for events that do not concern the unit — an unchanged reference means zero downstream work. The registry compares consecutive raw `wire.view` results with `Object.is`; an object or array view must reuse its reference to suppress publication across internal-only state changes, while a structurally equal new object is still a change. A state-carrying log event must carry the complete post-change state, never a bare delta.
 
 ### Register and read
 
@@ -64,7 +64,7 @@ const { asOfSeq, values } = ctx.sessionProjections.snapshot(session)
 
 ### Persisted checkpoints
 
-Every unit's state is checkpointed — client-visible and host-only alike — through `checkpoint(session)`, and the sibling [session-projection-cache](../session-projection-cache/README.md) persists those checkpoints so cold reads skip full log loads. `restoreFloor` and `restore` implement the read recipe (cached state plus a forward tail replay) without a live session.
+Every unit's state is checkpointed — client-visible and host-only alike — through `checkpoint(session)`, and the sibling [session-projection-cache](../session-projection-cache/README.md) persists those checkpoints so cold reads skip full log loads. Checkpoint watermarks use `SessionSeqCursor` (`-1` for an empty log), while replay starts use `SessionLogOffset`; `restoreFloor` and `restore` implement the read recipe without conflating an existing event with a log gap.
 
 -----
 
@@ -86,7 +86,7 @@ The package is the Service Definition and drive role of a capability seam: the f
 |---|---|
 | [`src/index.ts`](src/index.ts) | Plugin entry: `SessionProjectionRegistry` service, `ProjectionDefinition`, snapshot and checkpoint machinery |
 | [`src/types.ts`](src/types.ts) | The merge-extensible `SessionProjectionMap` and `SessionProjectionStateMap` type tables |
-| [`src/invariant.ts`](src/invariant.ts) | Invariant companion (no runtime invariant; synchronous discipline is enforced by schema parse) |
+| — | No runtime invariant companion is published; the registry's own contracts (duplicate-key and stateVersion rejection, effect-tied removal, the Object.is change gate) are enforced synchronously inside the service and proven by its spec, the drive relation (every committed `session/event` passes every unit) would require re-running the drive to check — duplicating the implementation rather than detecting drift — and the served-value relation (every served key has a live registration) lives on each carrier's wire path, which emits no cordis event this companion could observe; carrier specs assert it. Synchronous-unit discipline is enforced as far as practical by the boundary `schema.parse` (a Promise-returning view fails loudly). |
 
 ### Drive and checkpoint flow
 

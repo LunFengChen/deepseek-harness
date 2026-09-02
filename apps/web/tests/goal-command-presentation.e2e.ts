@@ -95,6 +95,8 @@ describe('web e2e: /goal human transcript presentation', () => {
     expect(events.some(event => event.type === 'step/start')).toBe(false)
     expect(events.some(event => event.type === 'request/header')).toBe(false)
 
+    // The command result can arrive before Lexical clears the submitted claim.
+    await expect.poll(() => input.textContent(), { timeout: 10_000 }).toBe('')
     const snapshot = await captureStableAria(page, '[class*="centerCol"]', scaffold.workspaceCwd)
     await compareOrRefreshGolden(UI_EXPECTED, snapshot, MODE)
   }, 60_000)
@@ -113,7 +115,7 @@ describe('web e2e: /goal human transcript presentation', () => {
 
     const sessions = scaffold.ctx.sessions.list()
     expect(sessions).toHaveLength(1)
-    const persisted = sessions[0]?.events ?? []
+    const persisted = sessions[0]?.snapshotEvents() ?? []
     expect(persisted.filter(event => event.type === 'command/run' || event.type === 'command/done')
       .map(event => event.type)).toEqual(['command/run', 'command/done'])
     expect(persisted.some(event => event.type === 'user/message')).toBe(false)

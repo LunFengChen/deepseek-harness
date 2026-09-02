@@ -72,3 +72,5 @@ No direct effect; model requests remain owned by the Agent and LLM packages.
 None.
 
 </details>
+
+**Runtime invariant:** No companion is published. Every page and frame is checked against the addressed durable Session.

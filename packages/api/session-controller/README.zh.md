@@ -72,3 +72,5 @@ Session 对象还承载本地提交回显：`session.beginSubmission` 在调用�
 无。
 
 </details>
+
+**运行时不变式：** 不发布伴生入口。每个分页与帧都会对照其指向的持久 Session 校验。

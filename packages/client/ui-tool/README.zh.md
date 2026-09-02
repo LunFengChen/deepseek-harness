@@ -109,3 +109,5 @@ owner 载荷为 `ToolCallOwnerProps`：`callId`、`toolName`、冻结的 `block`
 无。
 
 </details>
+
+**运行时不变式：** 不发布伴生入口。Tool composition 只存在于浏览器，不贡献事件或跨插件可变状态；slot 所有权由 ui-slots 校验。

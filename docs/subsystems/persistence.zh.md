@@ -40,7 +40,7 @@ interface SessionLocation {
 
 ## `SessionHeader`：日志旁的元数据
 
-每个会话的元数据与事件日志**分开**存储：格式版本、cwd、血统与 seed 边界是存储层关注点而非对话事件，因此不进入 `SessionEventMap`，也不会到达 `deriveMessages()`。header 通过 `session.header` 附加到 `Session` 上。
+每个会话的元数据与事件日志**分开**存储：header 携带格式版本、cwd 与 `isSeeded` 谱系 bit，含正文的存储值则在其旁边单独携带精确 inherited cut。二者都不进入 `SessionEventMap`，也不会到达 `deriveMessages()`。logical header 通过 `session.header` 附加，Session 则以 `inheritedEventCount` 暴露其 cut。
 
 源码：[`packages/core/session/src/types.ts`](../../packages/core/session/src/types.ts)
 
@@ -64,10 +64,10 @@ interface SessionHeader {
   /** The session this one was forked from (seed lineage), if any. */
   readonly parentSession?: SessionId
   /**
-   * How many leading events were inherited through a seed. Persisting this
-   * boundary lets resume and replay distinguish parent history from child work.
+   * Whether this Session contains a fork-inherited event prefix. The exact prefix
+   * length is Session state rather than ordinary header metadata.
    */
-  readonly seedLength?: number
+  readonly isSeeded: boolean
   /**
    * Coarse product classification for a session created as a subagent child.
    * This is presentation metadata, not proof that the child is continuable.
@@ -95,7 +95,7 @@ interface SessionHeader {
 
 ## `CreateSessionOptions`：seed 与元数据
 
-通过 store 创建 `Session` 时会接收 `seed`（初始回放或 fork 历史）与 `meta`（store 整合进 `SessionHeader` 的存储层字段）。store 填充 `version`/`id` 并为 `createdAt` 提供默认值；调用方可以提供已校验的绝对 `cwd`、`parentSession` 谱系、`seedLength` 种子边界、可选的粗粒度 `origin`、`delegationDepth`、用于组装该 agent（智能体）的 `agentPreset` 以及已有的 `createdAt`。`origin: 'subagent'` 让产品导航能够隐藏重复的 child 行；它不证明描述符有效，也不证明 child 可以恢复。
+通过 store 创建 `Session` 时会接收 `seed`（初始回放或 fork 历史）、可选的精确 `inheritedEventCount` 与 `meta`（store 整合进 `SessionHeader` 的存储层字段）。store 填充 `version`/`id` 并为 `createdAt` 提供默认值；调用方可以提供已校验的绝对 `cwd`、`parentSession` 谱系、`isSeeded` 谱系标记、可选的粗粒度 `origin`、`delegationDepth`、用于组装该 agent（智能体）的 `agentPreset` 以及已有的 `createdAt`。seeded 创建必须同时显式提供 seed 与精确 cut，因为继承前缀之后还可能存在 child-owned setup event。`origin: 'subagent'` 让产品导航能够隐藏重复的 child 行；它不证明描述符有效，也不证明 child 可以恢复。
 
 ```ts type-equiv
 /**
@@ -107,14 +107,19 @@ interface CreateSessionOptions {
   /** Initial replay or fork history supplied at construction. */
   readonly seed?: readonly SessionEvent[]
   /**
-   * Storage metadata read once before publication. `seedLength` is explicit
-   * because a resumed seed contains the full stored log, not only its inherited prefix.
+   * Exact fork-inherited prefix length when `meta.isSeeded` is true. A
+   * constructor seed may also contain child-owned setup events after this cut.
+   */
+  readonly inheritedEventCount?: SessionLogOffset
+  /**
+   * Storage metadata read once before publication. `isSeeded` marks fork
+   * lineage; supplying replay history alone does not make it inherited.
    */
   readonly meta?: {
     readonly cwd?: string
     readonly parentSession?: SessionId
     readonly createdAt?: number
-    readonly seedLength?: number
+    readonly isSeeded?: boolean
     readonly origin?: 'subagent'
     readonly delegationDepth?: number
     readonly agentPreset?: string
@@ -122,7 +127,21 @@ interface CreateSessionOptions {
 }
 ```
 
-因此，回放/fork 的调用方式为 `ctx.sessions.create(id, { seed: seedEvents })`；将一个*持久化*会话恢复为活跃 agent 的调用方式为 `ctx.agents.resume({ resumeSessionId })`。
+因此，普通回放的调用方式为 `ctx.sessions.create(id, { seed: seedEvents })`；fork 还会提供 `inheritedEventCount` 与 `meta.isSeeded: true`。将一个*持久化*会话恢复为活跃 agent 的调用方式为 `ctx.agents.resume({ resumeSessionId })`。
+
+## `SessionStorageMetadata`：逻辑 header 与继承 cut
+
+每个读取 Session 正文的持久化结果都携带 `SessionStorageMetadata`：当前逻辑 header，以及单独校验的继承事件 cut。仅 header 的列表操作有意只返回 `SessionHeader`。
+
+```ts type-equiv
+/** Logical Session header paired with its exact inherited cut for body-bearing storage operations. */
+interface SessionStorageMetadata {
+  /** Validated immutable Session header. */
+  readonly meta: SessionHeader
+  /** Number of leading events inherited from the Session's fork parent. */
+  readonly inheritedEventCount: SessionLogOffset
+}
+```
 
 ## `SessionRawArtifact`——逐字存储工件文本
 
@@ -130,9 +149,7 @@ interface CreateSessionOptions {
 
 ```ts type-equiv
 /** A backend's own raw artifact text for one session, verbatim. */
-interface SessionRawArtifact {
-  /** The session header parsed from the artifact's own first line. */
-  readonly meta: SessionHeader
+interface SessionRawArtifact extends SessionStorageMetadata {
   /** The artifact's base filename on disk, without any physical encoding suffix. */
   readonly filename: string
   /** The artifact's full text content, decoded from the backend's physical encoding. */
@@ -154,6 +171,8 @@ interface RestoredSessionOptions {
   readonly seed: SessionEvent[]
   /** Fresh detached storage metadata to validate and freeze in place. */
   readonly meta: SessionHeader
+  /** Exact number of fork-inherited leading events decoded from storage. */
+  readonly inheritedEventCount: SessionLogOffset
   /** Select the persistence ownership-transfer path. */
   readonly seedSource: 'persistence'
 }
@@ -198,10 +217,22 @@ declare class SessionPreparation implements Disposable {
 
 ```ts type-equiv
 /** Immutable logical session prepared from persistence or a live owner. */
-interface SessionInspection {
-  /** Validated immutable session metadata. */
-  readonly meta: SessionHeader
+interface SessionInspection extends SessionStorageMetadata {
   /** Validated contiguous logical event log. */
+  readonly events: readonly SessionEvent[]
+}
+```
+
+## 分离的持久日志后缀
+
+`readFrom` 返回以请求的 `fromSeq` 为锚点、与其他状态分离的 `SessionEventSuffix`。其事件列表可能从非零位置开始，也可能为空，因此它不是完整的 `SessionInspection`，不得作为完整 Session 恢复。
+
+```ts type-equiv
+/** Detached logical suffix returned by one explicit stored-log offset read. */
+interface SessionEventSuffix extends SessionStorageMetadata {
+  /** First requested log offset; {@link events} contains only seqs at or after it. */
+  readonly fromSeq: SessionLogOffset
+  /** Valid contiguous stored events at or after {@link fromSeq}; not a complete Session log when the offset is nonzero. */
   readonly events: readonly SessionEvent[]
 }
 ```
@@ -281,8 +312,10 @@ readRaw(_id: SessionId, signal?: AbortSignal): Promise<SessionRawArtifact | unde
  * created-but-never-appended session is absent from {@link list}
  * — abandoned sessions leave nothing behind.
  * @param meta - the immutable header (id, version, cwd, lineage) to record.
+ * @param inheritedEventCount - exact fork-inherited prefix length. Required
+ * for a seeded header and omitted only for an unseeded header.
  */
-abstract create(meta: SessionHeader): Promise<void>
+abstract create(meta: SessionHeader, inheritedEventCount?: SessionLogOffset): Promise<void>
 
 /**
  * Ensure a live session has a durable header even when it has no events.
@@ -297,6 +330,8 @@ ensureMaterialized(_session: Session): Promise<void>
  * seq contracts: the first event's `seq` MUST equal the stored next-seq
  * (after `load` has durably closed any interrupted turn). Rejects non-JSON-
  * serializable `event.data` with an error naming the offending event type.
+ * A seeded session's first materializing batch must reach its complete
+ * inherited prefix.
  * @param id - the session the batch belongs to.
  * @param events - the contiguous batch to persist, in seq order.
  */
@@ -371,11 +406,11 @@ abstract borrowSession(id: SessionId, signal?: AbortSignal): Promise<BorrowedSes
  * forward. The primitive bounds what is returned and refolded, not every
  * backend's physical read.
  * @param id - the persisted session to read.
- * @param fromSeq - first event seq to include; a non-negative safe integer.
+ * @param fromSeq - first event offset to include.
  * @param signal - optional cancellation for queued and backend read work.
- * @returns the header and the stored events with `seq >= fromSeq`.
+ * @returns storage metadata, the requested offset, and stored events with `seq >= fromSeq`.
  */
-abstract readFrom(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }>
+abstract readFrom(id: SessionId, fromSeq: SessionLogOffset, signal?: AbortSignal): Promise<SessionEventSuffix>
 
 /**
  * Lightweight listing from metadata, without a full-log parse.
@@ -397,7 +432,7 @@ abstract list(signal?: AbortSignal): Promise<SessionHeader[]>
 abstract listSnapshots(signal?: AbortSignal): Promise<SessionPersistenceSnapshot[]>
 ```
 
-Types: [Session](session.zh.md) · [SessionEvent](session.zh.md) · [SessionId](core.zh.md)
+Types: [Session](session.zh.md) · [SessionEvent](session.zh.md) · [SessionId](core.zh.md) · [SessionLogOffset](session.zh.md)
 
 Source: [`packages/session/session-persistence/src/index.ts`](../../packages/session/session-persistence/src/index.ts)
 <!-- END GENERATED cordis-surface -->

@@ -10,7 +10,7 @@ import type { Agent, AgentHandle } from '@deepseek-ai/dsh-agent'
 import { composeEntries, loadOverlayPatches } from '@deepseek-ai/dsh-app-boot'
 import { ToolCallId, createUserMessage, LlmAdapter } from '@deepseek-ai/dsh-llm'
 import type { GenerateOptions, StreamChunk } from '@deepseek-ai/dsh-llm'
-import { SessionId, type SessionEvent } from '@deepseek-ai/dsh-session'
+import { SessionId, SessionLogOffset, type SessionEvent } from '@deepseek-ai/dsh-session'
 import {
   ScheduleId,
   createEveryScheduleRecord,
@@ -205,7 +205,7 @@ async function waitForReply(
 ): Promise<SessionEvent<'assistant/message'>> {
   const deadline = Date.now() + timeoutMs
   while (true) {
-    const event = handle.agent.session.events.find((candidate): candidate is SessionEvent<'assistant/message'> => (
+    const event = handle.agent.session.snapshotEvents().find((candidate): candidate is SessionEvent<'assistant/message'> => (
       candidate.type === 'assistant/message' && assistantText(candidate) === text
     ))
     if (event !== undefined) return event
@@ -455,7 +455,7 @@ describe.skipIf(MODE === 'record')('web e2e: conversational reminders', () => {
   it('batches one latest occurrence per overdue Every record into an ordinary follow-up', async () => {
     onTestFailed(() => saveFailureShot(page, 'web-e2e-schedule-every'))
     const ids = new Set(everyRecords.map(record => record.id))
-    const dispatches = everyHandle.agent.session.events.filter(event => (
+    const dispatches = everyHandle.agent.session.snapshotEvents().filter(event => (
       event.type === 'schedule/change'
       && event.data.operation === 'dispatch'
       && ids.has(event.data.id)
@@ -470,7 +470,7 @@ describe.skipIf(MODE === 'record')('web e2e: conversational reminders', () => {
     const decision = acceptedAt[0]
     if (decision === undefined) throw new Error('missing Every decision time')
 
-    const batch = everyHandle.agent.session.events.find(event => (
+    const batch = everyHandle.agent.session.snapshotEvents().find(event => (
       event.type === 'user/message'
       && event.data.source.kind === 'plugin'
       && event.data.source.plugin === 'schedule'
@@ -493,7 +493,7 @@ describe.skipIf(MODE === 'record')('web e2e: conversational reminders', () => {
     if (reminderRequest === undefined) throw new Error('model did not receive the Every batch')
     expect(requestText(reminderRequest)).toContain(batchBlock.text)
     expectReminderFraming(reminderRequest)
-    const active = foldScheduleEvents(everyHandle.agent.session.events).active
+    const active = foldScheduleEvents(everyHandle.agent.session.snapshotEvents()).active
     expect(active).toHaveLength(2)
     expect(active.every(record => Date.parse(record.scheduledAt) > Date.parse(decision))).toBe(true)
 
@@ -516,7 +516,7 @@ describe.skipIf(MODE === 'record')('web e2e: conversational reminders', () => {
 
   it('uses request-local browser context to create an explicit local At reminder', async () => {
     onTestFailed(() => saveFailureShot(page, 'web-e2e-schedule-at'))
-    const user = atHandle.agent.session.events.find(event => (
+    const user = atHandle.agent.session.snapshotEvents().find(event => (
       event.type === 'user/message'
       && event.data.source.kind === 'user'
       && event.data.content.some(block => block.type === 'text' && block.text === AT_USER_PROMPT)
@@ -541,12 +541,12 @@ describe.skipIf(MODE === 'record')('web e2e: conversational reminders', () => {
     }
     expect(selectedAt.time_zone).toBe(AT_BROWSER_ZONE)
 
-    const toolCall = atHandle.agent.session.events.find(event => (
+    const toolCall = atHandle.agent.session.snapshotEvents().find(event => (
       event.type === 'tool/call' && event.data.name === 'schedule_create'
     ))
     if (toolCall?.type !== 'tool/call') throw new Error('missing schedule_create tool call')
     expect(JSON.parse(toolCall.data.arguments)).toEqual({ prompt: AT_PROMPT, at: selectedAt })
-    const created = atHandle.agent.session.events.find(event => (
+    const created = atHandle.agent.session.snapshotEvents().find(event => (
       event.type === 'schedule/change'
       && event.data.operation === 'create'
       && event.data.schedule.kind === 'at'
@@ -560,7 +560,7 @@ describe.skipIf(MODE === 'record')('web e2e: conversational reminders', () => {
       prompt: AT_PROMPT,
       scheduledAt,
     })
-    expect(atHandle.agent.session.events.filter(event => (
+    expect(atHandle.agent.session.snapshotEvents().filter(event => (
       event.type === 'schedule/change'
       && event.data.operation === 'dispatch'
       && event.data.id === schedule.id
@@ -615,8 +615,12 @@ describe.skipIf(MODE === 'record')('web e2e: active Schedule catalog', () => {
     await workspace.attachSession(CATALOG_SESSION_ID)
 
     // Seed the zero-I/O list view before the Session is opened.
-    const catalog = await scaffold.ctx.sessionPersistence.readFrom(CATALOG_SESSION_ID, 0)
-    scaffold.ctx.sessionProjectionCache.coldSnapshot(catalog.meta, catalog.events)
+    const catalog = await scaffold.ctx.sessionPersistence.readFrom(CATALOG_SESSION_ID, SessionLogOffset(0))
+    scaffold.ctx.sessionProjectionCache.coldSnapshot(
+      catalog.meta,
+      catalog.inheritedEventCount,
+      catalog.events,
+    )
 
     browser = await chromium.launch()
     page = await browser.newPage({

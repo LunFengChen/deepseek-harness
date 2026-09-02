@@ -13,6 +13,7 @@ import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@deepseek-ai/dsh-l
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   SessionId,
+  SessionSeq,
   type SessionEvent,
   type SessionHeader,
 } from '@deepseek-ai/dsh-session'
@@ -32,7 +33,7 @@ async function seedSession(root: string, cwd: string, version: number, events: S
   const ctx = new Context()
   await ctx.plugin(SessionStore)
   await ctx.plugin(JsonlSessionPersistence, { root, compression: 'none' })
-  const meta: SessionHeader = { version, id: sessionId, createdAt: 1, cwd }
+  const meta: SessionHeader = { version, id: sessionId, createdAt: 1, cwd, isSeeded: false }
   try {
     await ctx.sessionPersistence.create(meta)
     await ctx.sessionPersistence.append(sessionId, events)
@@ -46,8 +47,8 @@ async function seedSession(root: string, cwd: string, version: number, events: S
 
 function closedTurn(): SessionEvent[] {
   return [
-    { type: 'turn/start', seq: 0, time: 1, data: { turn: 1 } },
-    { type: 'turn/end', seq: 1, time: 2, data: { turn: 1, reason: { kind: 'completed' } } },
+    { type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } },
+    { type: 'turn/end', seq: SessionSeq(1), time: 2, data: { turn: 1, reason: { kind: 'completed' } } },
   ]
 }
 
@@ -92,7 +93,7 @@ describe('session format guard through the assembled app', () => {
       prepare: async (runCwd) => {
         sessionPath = await seedSession(join(runCwd, '.sessions'), runCwd, SESSION_FORMAT_VERSION, [
           ...closedTurn(),
-          { type: 'future/event', seq: 2, time: 3, data: { payload: 1 } } as unknown as SessionEvent,
+          { type: 'future/event', seq: SessionSeq(2), time: 3, data: { payload: 1 } } as unknown as SessionEvent,
         ])
       },
     })

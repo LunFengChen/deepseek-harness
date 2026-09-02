@@ -181,13 +181,13 @@ describe('web e2e: long Chat interaction contract', () => {
     const toolAssistantMarker = FIXTURE.markers.assistant(TOOL_TURN)
     const toolMarker1 = FIXTURE.markers.tool(TOOL_TURN, 1)
     const toolMarker2 = FIXTURE.markers.tool(TOOL_TURN, 2)
-    const toolUserEvent = requiredEvent(source.session.events, 'user/message', toolUserMarker)
-    const toolAssistantEvent = requiredEvent(source.session.events, 'assistant/message', toolAssistantMarker)
+    const toolUserEvent = requiredEvent(source.session.snapshotEvents(), 'user/message', toolUserMarker)
+    const toolAssistantEvent = requiredEvent(source.session.snapshotEvents(), 'assistant/message', toolAssistantMarker)
     const branchUserMarker = FIXTURE.markers.user(BRANCH_TURN)
     const branchAssistantMarker = FIXTURE.markers.assistant(BRANCH_TURN)
-    const branchUserEvent = requiredEvent(source.session.events, 'user/message', branchUserMarker)
-    const branchAssistantEvent = requiredEvent(source.session.events, 'assistant/message', branchAssistantMarker)
-    const boundary = source.session.events.find((event): event is SessionEvent<'turn/end'> => (
+    const branchUserEvent = requiredEvent(source.session.snapshotEvents(), 'user/message', branchUserMarker)
+    const branchAssistantEvent = requiredEvent(source.session.snapshotEvents(), 'assistant/message', branchAssistantMarker)
+    const boundary = source.session.snapshotEvents().find((event): event is SessionEvent<'turn/end'> => (
       event.type === 'turn/end' && event.data.turn === BRANCH_TURN
     ))
     if (boundary === undefined) throw new Error(`turn ${String(BRANCH_TURN)} has no turn/end event`)
@@ -311,10 +311,10 @@ describe('web e2e: long Chat interaction contract', () => {
     const child = scaffold.ctx.agents.list()
       .find(agent => agent.session.header.parentSession === SessionId(SESSION_ID))
     if (child === undefined) throw new Error('message branch did not create a child session')
-    expect(child.session.header.seedLength).toBe(boundary.seq + 1)
-    expect(child.session.events.some(event => carries(event, branchAssistantMarker))).toBe(true)
-    expect(child.session.events.some(event => carries(event, FIXTURE.markers.user(BRANCH_TURN + 1)))).toBe(false)
-    expect(child.session.events.some(event => carries(event, FIXTURE.markers.user(FIXTURE.turns)))).toBe(false)
+    expect(child.session.inheritedEventCount).toBe(boundary.seq + 1)
+    expect(child.session.snapshotEvents().some(event => carries(event, branchAssistantMarker))).toBe(true)
+    expect(child.session.snapshotEvents().some(event => carries(event, FIXTURE.markers.user(BRANCH_TURN + 1)))).toBe(false)
+    expect(child.session.snapshotEvents().some(event => carries(event, FIXTURE.markers.user(FIXTURE.turns)))).toBe(false)
 
     const currentCrumb = page.getByRole('navigation', { name: 'Session hierarchy' })
       .getByRole('button').last()
@@ -331,11 +331,11 @@ describe('web e2e: long Chat interaction contract', () => {
     await expect.poll(() => page.locator('[data-streaming="true"]').count(), { timeout: 15_000 }).toBe(0)
     expect(await composer.textContent()).toBe('')
     expect(await composer.isEnabled()).toBe(true)
-    expect(source.session.events.some(event => carries(event, CONTINUE_PROMPT))).toBe(false)
-    expect(child.session.events.filter(event => (
+    expect(source.session.snapshotEvents().some(event => carries(event, CONTINUE_PROMPT))).toBe(false)
+    expect(child.session.snapshotEvents().filter(event => (
       event.type === 'user/message' && carries(event, CONTINUE_PROMPT)
     ))).toHaveLength(1)
-    const lastTurnEnd = child.session.events.findLast((event): event is SessionEvent<'turn/end'> => (
+    const lastTurnEnd = child.session.snapshotEvents().findLast((event): event is SessionEvent<'turn/end'> => (
       event.type === 'turn/end'
     ))
     expect(lastTurnEnd?.data.reason).toEqual({ kind: 'completed' })

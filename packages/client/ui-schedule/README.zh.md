@@ -57,7 +57,7 @@ dsh web --patch apps/cli/config/examples/schedule/cordis.yml
 | [`src/client/ScheduleCatalogAction.tsx`](src/client/ScheduleCatalogAction.tsx) | 可见性、排序、格式化、弹层与键盘行为 |
 | [`src/client/locales.ts`](src/client/locales.ts) | 中英文目录文案 |
 | [`src/index.ts`](src/index.ts) | 空的 Host apply，使 Loader 可以寻址该可选浏览器功能 |
-| [`src/invariant.ts`](src/invariant.ts) | 不变式伴生插件；本包不拥有可变跨插件状态 |
+| — | 不发布运行时不变量伴生入口；这个只读客户端目录不拥有可变的跨插件状态。 |
 
 [持久 Web Schedule Agent Note](../../../.agents/notes/implemented/feature/2026-08-05-durable-web-schedule.zh.md)拥有活动 projection 与 opt-in 呈现边界；本包拥有目录的时间与无障碍行为。
 

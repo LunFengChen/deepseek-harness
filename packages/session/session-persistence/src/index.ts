@@ -6,8 +6,13 @@
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import { SessionPreparation } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionId, SessionHeader } from '@deepseek-ai/dsh-session'
+import { SessionPreparation, SessionLogOffset } from '@deepseek-ai/dsh-session'
+import type {
+  Session,
+  SessionEvent,
+  SessionId,
+  SessionHeader,
+} from '@deepseek-ai/dsh-session'
 import type { SessionPersistenceRevision } from './revision.ts'
 
 // Re-export the metadata vocabulary so Consumers import it from the Service Definition.
@@ -23,11 +28,25 @@ export interface SessionPersistenceSnapshot {
   revision: SessionPersistenceRevision
 }
 
-/** Immutable logical session prepared from persistence or a live owner. */
-export interface SessionInspection {
-  /** Validated immutable session metadata. */
+/** Logical Session header paired with its exact inherited cut for body-bearing storage operations. */
+export interface SessionStorageMetadata {
+  /** Validated immutable Session header. */
   readonly meta: SessionHeader
+  /** Number of leading events inherited from the Session's fork parent. */
+  readonly inheritedEventCount: SessionLogOffset
+}
+
+/** Immutable logical session prepared from persistence or a live owner. */
+export interface SessionInspection extends SessionStorageMetadata {
   /** Validated contiguous logical event log. */
+  readonly events: readonly SessionEvent[]
+}
+
+/** Detached logical suffix returned by one explicit stored-log offset read. */
+export interface SessionEventSuffix extends SessionStorageMetadata {
+  /** First requested log offset; {@link events} contains only seqs at or after it. */
+  readonly fromSeq: SessionLogOffset
+  /** Valid contiguous stored events at or after {@link fromSeq}; not a complete Session log when the offset is nonzero. */
   readonly events: readonly SessionEvent[]
 }
 
@@ -52,9 +71,7 @@ export type BorrowedSessionSource = Disposable & (
 )
 
 /** A backend's own raw artifact text for one session, verbatim. */
-export interface SessionRawArtifact {
-  /** The session header parsed from the artifact's own first line. */
-  readonly meta: SessionHeader
+export interface SessionRawArtifact extends SessionStorageMetadata {
   /** The artifact's base filename on disk, without any physical encoding suffix. */
   readonly filename: string
   /** The artifact's full text content, decoded from the backend's physical encoding. */
@@ -150,8 +167,10 @@ export abstract class SessionPersistence extends Service {
    * created-but-never-appended session is absent from {@link list}
    * — abandoned sessions leave nothing behind.
    * @param meta - the immutable header (id, version, cwd, lineage) to record.
+   * @param inheritedEventCount - exact fork-inherited prefix length. Required
+   * for a seeded header and omitted only for an unseeded header.
    */
-  abstract create(meta: SessionHeader): Promise<void>
+  abstract create(meta: SessionHeader, inheritedEventCount?: SessionLogOffset): Promise<void>
 
   /**
    * Ensure a live session has a durable header even when it has no events.
@@ -168,6 +187,8 @@ export abstract class SessionPersistence extends Service {
    * seq contracts: the first event's `seq` MUST equal the stored next-seq
    * (after `load` has durably closed any interrupted turn). Rejects non-JSON-
    * serializable `event.data` with an error naming the offending event type.
+   * A seeded session's first materializing batch must reach its complete
+   * inherited prefix.
    * @param id - the session the batch belongs to.
    * @param events - the contiguous batch to persist, in seq order.
    */
@@ -194,6 +215,7 @@ export abstract class SessionPersistence extends Service {
     return SessionPreparation.create(sessions.prepare(id, {
       seed: loaded.events.map(event => structuredClone(event)),
       meta: structuredClone(loaded.meta),
+      inheritedEventCount: SessionLogOffset(loaded.inheritedEventCount),
       seedSource: 'persistence',
     }))
   }
@@ -255,12 +277,12 @@ export abstract class SessionPersistence extends Service {
    * forward. The primitive bounds what is returned and refolded, not every
    * backend's physical read.
    * @param id - the persisted session to read.
-   * @param fromSeq - first event seq to include; a non-negative safe integer.
+   * @param fromSeq - first event offset to include.
    * @param signal - optional cancellation for queued and backend read work.
-   * @returns the header and the stored events with `seq >= fromSeq`.
+   * @returns storage metadata, the requested offset, and stored events with `seq >= fromSeq`.
    */
-  abstract readFrom(id: SessionId, fromSeq: number, signal?: AbortSignal):
-  Promise<{ meta: SessionHeader; events: SessionEvent[] }>
+  abstract readFrom(id: SessionId, fromSeq: SessionLogOffset, signal?: AbortSignal):
+  Promise<SessionEventSuffix>
 
   /**
    * Lightweight listing from metadata, without a full-log parse.

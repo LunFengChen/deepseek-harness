@@ -54,7 +54,7 @@ kind: "package-reference"
 
 ### 磁盘布局
 
-每个会话在可读项目目录下获得一个会话自有目录；日志第一个逻辑行是不可变 `SessionHeader`，之后每个逻辑事件一条存储记录（或每个符合条件的连续段一条打包分片行）。存储记录使用下文所述的无损来源序列表示：
+每个会话在可读项目目录下获得一个会话自有目录；第一个逻辑行是私有 v0 物理 header，之后每个逻辑事件一条存储记录（或每个符合条件的连续段一条打包分片行）。其可选数字 `seedLength` 保持字节兼容：缺席解码为 `SessionHeader.isSeeded: false`，零或正值解码为 `isSeeded: true` 加精确 `inheritedEventCount`。存储记录使用下文所述的无损来源序列表示：
 
 ```text
 <root>/
@@ -72,7 +72,7 @@ kind: "package-reference"
 
 ### 读取日志
 
-`inspect(id)` 返回不可变的平衡视图，不提交恢复。`readFrom(id, fromSeq)` 为水位消费方返回该序列号及之后的已存储事件；JSONL 这类顺序介质解析整个产物并向前跳过。选择 `compression: 'none'` 后，日志是外部读取方可直接消费的换行分隔文本；压缩默认值必须经后端读取。
+`inspect(id)` 返回带精确继承切点的不可变平衡视图，不提交恢复。`readFrom(id, fromOffset)` 接受 `SessionLogOffset`，返回该偏移及之后的已存储事件，并在后缀旁保留同一切点；JSONL 这类顺序介质解析整个产物并向前跳过。仅 header 的列表读取不读事件正文即可公开 `isSeeded`。选择 `compression: 'none'` 后，日志是外部读取方可直接消费的换行分隔文本；压缩默认值必须经后端读取。
 
 -----
 
@@ -100,7 +100,7 @@ kind: "package-reference"
 | [`src/format.ts`](src/format.ts) | 日志路径派生、header 编码、记录扫描、打包行布局 |
 | [`src/zstd.ts`](src/zstd.ts) | Zstandard 帧压缩、解码与帧扫描 |
 | [`src/win32.ts`](src/win32.ts) | Windows write-through 发布与目录创建 |
-| [`src/invariant.ts`](src/invariant.ts) | 不变式伴生插件（无运行时不变式；身份在存储层强制） |
+| — | 不发布运行时不变式伴生入口；身份在存储层强制。 |
 
 </details>
 

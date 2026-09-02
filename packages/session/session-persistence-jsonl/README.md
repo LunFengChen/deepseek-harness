@@ -54,7 +54,7 @@ The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-a
 
 ### On-disk layout
 
-Each session gets a session-owned directory under a readable project directory; the first logical line of the log is the immutable `SessionHeader`, followed by one storage record per logical event (or one packed chunk row per eligible run). Storage records use the lossless provenance representation described below:
+Each session gets a session-owned directory under a readable project directory; the first logical line is the private v0 physical header, followed by one storage record per logical event (or one packed chunk row per eligible run). Its optional numeric `seedLength` remains byte-compatible: absence decodes to `SessionHeader.isSeeded: false`, while zero or a positive value decodes to `isSeeded: true` plus the exact `inheritedEventCount`. Storage records use the lossless provenance representation described below:
 
 ```text
 <root>/
@@ -72,7 +72,7 @@ A session is materialized lazily: `create(meta)` writes nothing, and the first `
 
 ### Reading the logs
 
-`inspect(id)` returns an immutable balanced view without committing recovery. `readFrom(id, fromSeq)` returns stored events at or past a sequence number for watermark consumers; sequential media like JSONL parse the whole artifact and skip forward. With `compression: 'none'`, the log is newline-delimited text an external reader can consume directly; the compressed default must be read through the backend.
+`inspect(id)` returns an immutable balanced view with its exact inherited cut without committing recovery. `readFrom(id, fromOffset)` accepts a `SessionLogOffset`, returns stored events at or past that offset, and retains the same cut beside the suffix; sequential media like JSONL parse the whole artifact and skip forward. Header-only listing exposes `isSeeded` without reading event bodies. With `compression: 'none'`, the log is newline-delimited text an external reader can consume directly; the compressed default must be read through the backend.
 
 -----
 
@@ -100,7 +100,7 @@ The default artifact is a standard concatenation of independent [Zstandard frame
 | [`src/format.ts`](src/format.ts) | Log path derivation, header encoding, record scanning, packed-row layout |
 | [`src/zstd.ts`](src/zstd.ts) | Zstandard frame compression, decoding, and frame scanning |
 | [`src/win32.ts`](src/win32.ts) | Windows write-through publish and directory creation |
-| [`src/invariant.ts`](src/invariant.ts) | Invariant companion (no runtime invariant; identity is enforced at the storage layer) |
+| — | No runtime invariant companion is published; persistence correctness requires backend round-trip and crash-tail tests; this package exposes no continuously observable in-process relation. |
 
 </details>
 

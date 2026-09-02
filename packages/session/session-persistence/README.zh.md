@@ -9,7 +9,7 @@ kind: "package-reference"
 
 ## 概述
 
-`dsh-session-persistence` 通过后端无关的 `ctx.sessionPersistence` 服务持久存储会话的事件日志、在恢复时重新加载并列出已存储会话。持久化单元就是现有 `SessionEvent` 日志——不存在另一套并行的存储消息类型——不可回放的元数据（格式版本、工作目录、血缘、种子边界）作为 `SessionHeader` 单独传输。后端拥有自己的存储，而服务拥有仅追加日志、连续序列号、保留中断轮次而非截断的崩溃恢复，以及只在批次安全后才返回的持久写入。随产品交付的 JSONL provider 用每个 Session 一份产物实现该服务；第三方 provider 可以实现同一约定，而不改变 loop 或模型。
+`dsh-session-persistence` 通过后端无关的 `ctx.sessionPersistence` 服务持久存储会话的事件日志、在恢复时重新加载并列出已存储会话。持久化单元就是现有 `SessionEvent` 日志——不存在另一套并行的存储消息类型。`SessionHeader.isSeeded` 让轻量列表可见血缘，而精确的 `inheritedEventCount` 随每次带正文的存储读取与 prepared Session 一同传输。后端拥有自己的存储，而服务拥有仅追加日志、连续序列号、保留中断轮次而非截断的崩溃恢复，以及只在批次安全后才返回的持久写入。随产品交付的 JSONL provider 用每个 Session 一份产物实现该服务；第三方 provider 可以实现同一约定，而不改变 loop 或模型。
 
 ## 目录
 
@@ -36,18 +36,18 @@ seam 随产品交付 [JSONL](../session-persistence-jsonl/README.zh.md) 后端�
 挂载后端后，你可以持久存储会话事件、重新加载已存储日志并列出已存储内容：
 
 ```text
-await ctx.sessionPersistence.create(meta)                  // register a session
+await ctx.sessionPersistence.create(meta, inheritedEventCount) // cut required when meta.isSeeded
 await ctx.sessionPersistence.ensureMaterialized(session)   // persist an empty resumable session
 await ctx.sessionPersistence.append(id, events)            // durably persist a batch
-const { meta, events } = await ctx.sessionPersistence.load(id)   // reload on resume
+const { meta, inheritedEventCount, events } = await ctx.sessionPersistence.load(id)
 const headers = await ctx.sessionPersistence.list()        // every stored session
 ```
 
-`append` 只在批次持久后返回，因此成功返回的写入在操作系统崩溃或断电后依然存在。普通 `create` 保持惰性；只有当空会话本身必须出现在持久列表中时，生命周期前端才调用 `ensureMaterialized`，且不会虚构事件。`load` 返回不可变的平衡日志并提交任何需要的崩溃恢复；`inspect` 读取同一视图但不提交恢复。从水位恢复的消费方可以只读取该序列号及之后的已存储事件，会话的产物位置（`locate`）不经文件系统 I/O 即可解析。
+`append` 只在批次持久后返回，因此成功返回的写入在操作系统崩溃或断电后依然存在。普通 `create(meta, inheritedEventCount)` 保持惰性；`meta.isSeeded: true` 要求单独的精确 cut，unseeded metadata 可以省略它并拒绝非零值。seeded 会话的首个物化批次必须到达完整继承前缀，因此存储绝不公开 cut 超过日志的 metadata。只有当空会话本身必须出现在持久列表中时，生命周期前端才调用 `ensureMaterialized`，且不会虚构事件。`load` 返回不可变的平衡日志并提交任何需要的崩溃恢复；`inspect` 读取同一份完整视图但不提交恢复。`readFrom` 接受 `SessionLogOffset`，并返回分离的 `SessionEventSuffix`，其中携带该 `fromSeq`、不变的继承 cut，以及 cut 位置或之后的存储事件。会话的产物位置（`locate`）不经文件系统 I/O 即可解析。
 
 ### 恢复与崩溃恢复
 
-恢复就是 `load` 加会话准备：存储日志连同其头部血缘一起返回，因此恢复后的 agent（智能体）看到相同的历史与组装。中途崩溃的会话重新加载时，其被中断的最终轮次会保留并保持平衡：`load` 为未获回答的调用追加合成 `tool/result` 与 `turn/end {interrupted}` closer，而不是丢弃事件——单个轮次可能很大，而这些事件在崩溃前已持久写入。只有从未完整写入的撕裂尾部碎片会被丢弃。
+恢复就是 `load` 加会话准备：存储日志连同其 header 血缘与精确继承切点一起返回，因此所有权检查不从标记或完整恢复长度推断切点。中途崩溃的会话重新加载时，其被中断的最终轮次会保留并保持平衡：`load` 为未获回答的调用追加合成 `tool/result` 与 `turn/end {interrupted}` closer，而不是丢弃事件——单个轮次可能很大，而这些事件在崩溃前已持久写入。只有从未完整写入的撕裂尾部碎片会被丢弃。
 
 ### 失败与恢复
 
@@ -83,7 +83,7 @@ const headers = await ctx.sessionPersistence.list()        // every stored sessi
 | [`src/write-behind.ts`](src/write-behind.ts) | 每会话有界写入控制器与 flush 屏障 |
 | [`src/preparations.ts`](src/preparations.ts) | 为恢复复用而有界保留的未发布 Session 准备结果 |
 | [`src/revision.ts`](src/revision.ts) | 带品牌类型的不透明修订值 token |
-| [`src/invariant.ts`](src/invariant.ts) | 不变式伴生插件（无运行时不变式；协调器断言存储/活动身份与 cwd） |
+| — | 不发布运行时不变式伴生入口；协调器断言存储/活动身份与 cwd。 |
 
 ### 写入路径概览
 
