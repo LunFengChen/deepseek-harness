@@ -11,13 +11,29 @@ import {
   interruptedTurnClosers,
   KNOWN_SESSION_EVENT_TYPES,
   SESSION_FORMAT_VERSION,
+  SessionLogOffset,
   SessionPreparation,
-  snapshotJsonValue,
+  SessionSeq,
   snapshotSessionEvent,
 } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionId, SessionHeader } from '@deepseek-ai/dsh-session'
+import type {
+  Session,
+  SessionEvent,
+  SessionId,
+  SessionHeader,
+  SessionLogOffset as SessionLogOffsetType,
+  SessionSeq as SessionSeqType,
+} from '@deepseek-ai/dsh-session'
 import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
-import type { SessionInspection, SessionLocation } from './index.ts'
+import { snapshotJsonValue } from '@deepseek-ai/dsh-util-values'
+import type {
+  BorrowedSessionSource,
+  SessionEventSuffix,
+  SessionInspection,
+  SessionLocation,
+  SessionStorageMetadata,
+} from './index.ts'
+import { SessionPersistenceNotFoundError } from './errors.ts'
 import type { SessionPersistenceRevision } from './revision.ts'
 import { observeQueuedAbort, SessionPreparations } from './preparations.ts'
 import type { SessionPreparationReservation } from './preparations.ts'
@@ -68,7 +84,7 @@ export class SessionFormatUnsupportedError extends Error {
  * Direction-aware refusal text for a stored session whose format version this
  * build does not read. Shared by the coordinator's load-time check and by
  * backends that must refuse BEFORE decoding version-dependent structure (a
- * future format may not satisfy today's structural checks at all, and the
+ * future format may not satisfy this build's structural checks at all, and the
  * user must see "upgrade the harness", never "corrupt").
  * @param id - the stored session id, for message context.
  * @param version - the stored format version.
@@ -95,8 +111,7 @@ export interface PersistenceCoordinatorOptions {
  * returns its value to {@link PersistenceBackend.commitRepair}; each backend
  * owns the marker type.
  */
-export interface StoredPrefix<TornMarker = unknown> {
-  meta: SessionHeader
+export interface StoredPrefix<TornMarker = unknown> extends SessionStorageMetadata {
   events: SessionEvent[]
   /** Revision observed for exactly this detached prefix. */
   revision: SessionPersistenceRevision
@@ -109,8 +124,7 @@ export interface StoredPrefix<TornMarker = unknown> {
  * {@link PersistenceBackend.loadStoredFrom} hook. Non-mutating reads carry no
  * torn marker: there is nothing to repair.
  */
-export interface StoredSuffix {
-  meta: SessionHeader
+export interface StoredSuffix extends SessionStorageMetadata {
   events: SessionEvent[]
 }
 
@@ -154,8 +168,8 @@ export interface PersistenceBackend<TornMarker = unknown> {
   /**
    * Optional seek-capable suffix read behind the service's `readFrom`: return
    * the header plus the stored events with `seq >= fromSeq` without reading
-   * the whole log. A backend whose medium can address events by seq (SQLite)
-   * implements this so `readFrom` scales with the suffix; sequential backends
+   * the whole log. A backend whose medium can address events by seq implements
+   * this so `readFrom` scales with the suffix; sequential backends
    * omit it and the coordinator falls back to {@link loadStored} plus a
    * forward skip. Non-mutating (no truncation, no closers). Validation of the
    * region strictly below `fromSeq` is limited to seq contiguity — the
@@ -173,33 +187,34 @@ export interface PersistenceBackend<TornMarker = unknown> {
    *   validated by the coordinator before this hook runs).
    * @param signal - optional cancellation for backend read work.
    */
-  loadStoredFrom?(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<StoredSuffix | undefined>
+  loadStoredFrom?(id: SessionId, fromSeq: SessionLogOffsetType, signal?: AbortSignal): Promise<StoredSuffix | undefined>
 
-  /**
-   * Optional seek-capable head read behind the service's `readHead`: return
-   * the header plus the first `maxEvents` stored events without reading the
-   * whole log. A backend whose medium makes the log head cheap to address
-   * (JSONL's independently decodable first frames) implements this so
-   * `readHead` scales with the requested prefix; other backends omit it and
-   * the coordinator falls back to {@link loadStored} plus a forward slice.
-   * Non-mutating (no truncation, no closers). Validation follows the same
-   * head scope as the suffix read: only the returned events are checked, so
-   * an unknown required event after `maxEvents` does not refuse the read.
-   * @param id - persisted session id to resolve.
-   * @param maxEvents - number of oldest stored events to return (non-negative
-   *   safe integer, validated by the coordinator before this hook runs).
-   * @param signal - optional cancellation for backend read work.
-   */
-  loadStoredHead?(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<StoredSuffix | undefined>
-
+  /** Durably create an empty header-only session artifact. */
+  materializeHeader?(storage: SessionStorageMetadata): Promise<void>
 
   /**
    * Durably append a CONTIGUOUS batch, lazily materializing the session first
    * when `!isMaterialized`. The materialize-write and the first event batch MUST
    * commit ATOMICALLY (a crash between them must not leave a materialized-but-
    * empty session). Returns once the batch is durable.
+   * The coordinator calls this only after a first batch reaches the declared
+   * inherited prefix length.
    */
-  appendBatch(meta: SessionHeader, events: readonly SessionEvent[], isMaterialized: boolean): Promise<void>
+  appendBatch(
+    storage: SessionStorageMetadata,
+    events: readonly SessionEvent[],
+    isMaterialized: boolean,
+  ): Promise<void>
+
+  /**
+   * Replace the durable event log with the supplied contiguous prefix. The
+   * replacement must be durable before the coordinator advances its cursor.
+   * Backends that cannot rewrite their medium omit this hook and reject the
+   * public destructive-truncate operation.
+   * @param storage - metadata identifying the existing artifact.
+   * @param events - complete retained event prefix, possibly empty.
+   */
+  rewrite?(storage: SessionStorageMetadata, events: readonly SessionEvent[]): Promise<void>
 
   /**
    * Make a crash repair durable: truncate the torn tail (iff
@@ -208,7 +223,11 @@ export interface PersistenceBackend<TornMarker = unknown> {
    * Used by load (truncate + synthetic closers) and by live-adoption (truncate
    * only, `closers = []`).
    */
-  commitRepair(meta: SessionHeader, tornMarker: TornMarker | undefined, closers: readonly SessionEvent[]): Promise<void>
+  commitRepair(
+    storage: SessionStorageMetadata,
+    tornMarker: TornMarker | undefined,
+    closers: readonly SessionEvent[],
+  ): Promise<void>
 
   /**
    * List all stored (materialized) sessions' metadata.
@@ -234,9 +253,9 @@ export interface PersistenceBackend<TornMarker = unknown> {
 
 /** Per-session write state held by the coordinator's in-memory bookkeeping. */
 interface SessionState {
-  meta: SessionHeader
+  storage: SessionStorageMetadata
   /** The next seq the backend expects to append (the stored log length). */
-  cursor: number
+  cursor: SessionLogOffsetType
   /**
    * Whether lazy creation has produced a durable artifact. The first append
    * atomically materializes the header with events; reclaim logic uses this to
@@ -264,7 +283,7 @@ interface PreparedSessionSource<TornMarker> {
   readonly session: Session
   readonly revision: SessionPersistenceRevision
   /** Session length after constructor-owned seed markers were appended. */
-  readonly sessionLength: number
+  readonly sessionLength: SessionLogOffsetType
   readonly tornMarker: TornMarker | undefined
   readonly closers: readonly SessionEvent[]
 }
@@ -286,6 +305,26 @@ function seedCoversPrefix(seed: readonly SessionEvent[], prefix: readonly Sessio
       const seedEvent = seed[index]
       return seedEvent !== undefined && JSON.stringify(seedEvent) === JSON.stringify(event)
     })
+}
+
+/** Normalize the exact fork cut paired with one logical Session header. */
+function storageMetadata(
+  meta: SessionHeader,
+  inheritedEventCount?: SessionLogOffsetType,
+): SessionStorageMetadata {
+  if (meta.isSeeded && inheritedEventCount === undefined) {
+    throw new TypeError('seeded session metadata requires an inherited event count')
+  }
+  const cut = SessionLogOffset(inheritedEventCount ?? 0)
+  if (!meta.isSeeded && cut !== 0) {
+    throw new TypeError('unseeded session metadata inherited event count must be 0')
+  }
+  return { meta, inheritedEventCount: cut }
+}
+
+/** Exact storage metadata owned by one live Session. */
+function sessionStorageMetadata(session: Session): SessionStorageMetadata {
+  return storageMetadata(session.header, session.inheritedEventCount)
 }
 
 /** Reject events from an obsolete v0 vocabulary that this build cannot replay. */
@@ -328,16 +367,19 @@ function hasOnlyKeys(
 type PersistedMessageId = SessionEvent<'user/message'>['data']['id']
 
 /** Mint the stable import identity for a message persisted before identities existed. */
-function legacyMessageId(id: SessionId, seq: number): PersistedMessageId {
+function legacyMessageId(id: SessionId, seq: SessionSeqType): PersistedMessageId {
   return `legacy-message:${id}:${seq}` as PersistedMessageId
 }
 
 /** Read a replacement target while leaving malformed surface metadata to the session validator. */
-function replacementStart(event: SessionEvent): number | undefined {
+function replacementStart(event: SessionEvent): SessionSeqType | undefined {
   const op = asRecord((event as SessionEvent & { surfaceOp?: unknown }).surfaceOp)
-  return op?.['op'] === 'replace' && typeof op['start'] === 'number'
-    ? op['start']
-    : undefined
+  if (op?.['op'] !== 'replace' || typeof op['start'] !== 'number') return undefined
+  try {
+    return SessionSeq(op['start'])
+  } catch {
+    return undefined
+  }
 }
 
 /** Whether one suffix event needs facts available only from the preceding stored prefix. */
@@ -480,7 +522,7 @@ function migrateLegacyTurnEndEvent(event: SessionEvent, id: SessionId): SessionE
 function migrateLegacyMessageEvent(
   event: SessionEvent,
   id: SessionId,
-  messageIds: ReadonlyMap<number, PersistedMessageId>,
+  messageIds: ReadonlyMap<SessionSeqType, PersistedMessageId>,
 ): SessionEvent {
   const data = asRecord(event.data)
   if (data === undefined) return event
@@ -562,7 +604,7 @@ function eventMessageId(event: SessionEvent): PersistedMessageId | undefined {
 /** Materialize stored events as upgraded, validated snapshots with immutable messages. */
 function snapshotStoredEvents(events: readonly SessionEvent[], id: SessionId): SessionEvent[] {
   assertSupportedEvents(events, id)
-  const messageIds = new Map<number, PersistedMessageId>()
+  const messageIds = new Map<SessionSeqType, PersistedMessageId>()
   return events.map((event) => {
     const migratedStart = migrateLegacyTurnStartEvent(event, id)
     const migratedTurn = migrateLegacyTurnEndEvent(migratedStart, id)
@@ -577,7 +619,7 @@ function snapshotStoredEvents(events: readonly SessionEvent[], id: SessionId): S
 /** Upgrade and validate an exclusively owned backend result without copying it. */
 function adoptStoredEvents(events: SessionEvent[], id: SessionId): SessionEvent[] {
   assertSupportedEvents(events, id)
-  const messageIds = new Map<number, PersistedMessageId>()
+  const messageIds = new Map<SessionSeqType, PersistedMessageId>()
   for (const [index, event] of events.entries()) {
     const migratedStart = migrateLegacyTurnStartEvent(event, id)
     const migratedTurn = migrateLegacyTurnEndEvent(migratedStart, id)
@@ -647,8 +689,10 @@ export class PersistenceCoordinator<TornMarker = unknown> {
   /**
    * Register detached session metadata for lazy creation on the first append.
    * @param meta - header to snapshot; duplicate tracked or persisted ids reject.
+   * @param inheritedEventCount - exact inherited prefix length; required for
+   * a seeded header and omitted only for an unseeded header.
    */
-  create(meta: SessionHeader): Promise<void> {
+  create(meta: SessionHeader, inheritedEventCount?: SessionLogOffsetType): Promise<void> {
     // Snapshot before queueing so caller mutation cannot diverge the key and header.
     const snapshot = snapshotJsonValue(meta)
     if (snapshot === undefined) {
@@ -657,10 +701,40 @@ export class PersistenceCoordinator<TornMarker = unknown> {
     if (!Number.isSafeInteger(snapshot.createdAt) || snapshot.createdAt < 0) {
       return Promise.reject(new TypeError('session metadata createdAt must be a non-negative safe integer'))
     }
-    return this.serialize(snapshot.id, () => this.createCore(snapshot))
+    let storage: SessionStorageMetadata
+    try {
+      storage = storageMetadata(snapshot, inheritedEventCount)
+    } catch (error: unknown) {
+      /* v8 ignore next -- Session storage validation only throws Error instances. */
+      return Promise.reject(error instanceof Error
+        ? error
+        : new TypeError('invalid session storage metadata', { cause: error }))
+    }
+    return this.serialize(snapshot.id, () => this.createCore(storage))
   }
 
-  private async createCore(meta: SessionHeader): Promise<void> {
+  /**
+   * Materialize one exact live session without inventing a session event.
+   * @param session - live session already registered through the write path.
+   */
+  async ensureMaterialized(session: Session): Promise<void> {
+    await this.flush(session)
+    await this.serialize(session.id, async () => {
+      const state = this.states.get(session.id)
+      /* v8 ignore next -- successful live flush always initializes the exact session state. */
+      if (state === undefined) throw new Error(`session "${session.id}" is not registered for persistence`)
+      if (state.materialized) return
+      if (this.backend.materializeHeader === undefined) {
+        throw new Error('session persistence backend cannot materialize an empty session')
+      }
+      await this.backend.materializeHeader(state.storage)
+      state.materialized = true
+      this.preparations.invalidate(session.id)
+    })
+  }
+
+  private async createCore(storage: SessionStorageMetadata): Promise<void> {
+    const { meta } = storage
     // Do NOT clobber an existing session: the SessionId IS the identity.
     if (this.states.has(meta.id) || this.preparations.has(meta.id)) {
       throw new Error(`session "${meta.id}" already exists in this backend`)
@@ -672,7 +746,11 @@ export class PersistenceCoordinator<TornMarker = unknown> {
       throw new Error(`session "${meta.id}" already has a persisted log on disk; load/resume it instead of creating`)
     }
     // Pure lazy: record intent only. No artifact until the first append.
-    this.states.set(meta.id, { meta, cursor: 0, materialized: false })
+    this.states.set(meta.id, {
+      storage,
+      cursor: SessionLogOffset(0),
+      materialized: false,
+    })
   }
 
   // `async` so synchronous materialization failures below reject (not throw) per
@@ -719,12 +797,49 @@ export class PersistenceCoordinator<TornMarker = unknown> {
       }
     }
 
-    await this.backend.appendBatch(state.meta, events, state.materialized)
+    const nextCursor = SessionLogOffset(state.cursor + events.length)
+    if (!state.materialized && nextCursor < state.storage.inheritedEventCount) {
+      throw new Error(`session "${id}" cannot materialize before its inherited prefix is complete`)
+    }
+
+    await this.backend.appendBatch(state.storage, events, state.materialized)
     // The durable write is the transaction: mark materialized + advance the
     // cursor as soon as it commits (uniform across backends).
     state.materialized = true
-    state.cursor += events.length
+    state.cursor = nextCursor
     this.preparations.invalidate(id)
+  }
+
+  /**
+   * Durably remove a live Session turn and every later event. The caller keeps
+   * the live Session unchanged until this method resolves, then applies the
+   * same prefix with {@link Session.truncate}.
+   * @param session - exact live Session owned by this coordinator.
+   * @param length - number of events to retain.
+   */
+  async truncate(session: Session, length: SessionLogOffsetType): Promise<void> {
+    SessionLogOffset(length)
+    await this.flush(session)
+    await this.serialize(session.id, async () => {
+      const state = this.states.get(session.id)
+      if (state === undefined || state.owner !== session) {
+        throw new Error(`session "${session.id}" is not owned by this persistence coordinator`)
+      }
+      const events = session.snapshotEvents()
+      if (events.length !== session.seq) {
+        throw new Error(`session "${session.id}" changed while destructive deletion was preparing`)
+      }
+      if (length > events.length || length < state.storage.inheritedEventCount) {
+        throw new RangeError(`session truncation length ${String(length)} is outside the writable log prefix`)
+      }
+      if (this.backend.rewrite === undefined) {
+        throw new Error(`${this.backend.name} does not support destructive session deletion`)
+      }
+      await this.backend.rewrite(state.storage, events.slice(0, length))
+      state.cursor = SessionLogOffset(length)
+      state.materialized = true
+      this.preparations.invalidate(session.id)
+    })
   }
 
   /**
@@ -757,7 +872,7 @@ export class PersistenceCoordinator<TornMarker = unknown> {
           this.preparations.release(
             reservation,
             reservation.state.owner === undefined
-              && reservation.source.session.events.length === reservation.source.sessionLength,
+              && reservation.source.session.seq === reservation.source.sessionLength,
           )
         },
       })
@@ -837,6 +952,64 @@ export class PersistenceCoordinator<TornMarker = unknown> {
   }
 
   /**
+   * Borrow one exact logical view while pinning its reusable prepared Session.
+   * @param id - persisted session to observe.
+   * @param signal - optional cancellation for preparation work.
+   * @returns a disposable observation retaining the prepared source.
+   */
+  async borrowSession(id: SessionId, signal?: AbortSignal): Promise<BorrowedSessionSource> {
+    for (;;) {
+      signal?.throwIfAborted()
+      if (this.retirements.has(id)) await this.waitForRetirement(id, signal)
+      const live = this.ctx.sessions.get(id)
+      if (live !== undefined) {
+        return { source: 'live', inspection: this.inspectLive(live), [Symbol.dispose]: () => {} }
+      }
+      const observation = await this.preparations.borrow(
+        id,
+        () => this.serialize(id, () => this.prepareCore(id)),
+        signal,
+      )
+      const source = observation.source
+      try {
+        const attached = this.ctx.sessions.get(id)
+        if (attached !== undefined) {
+          observation[Symbol.dispose]()
+          return { source: 'live', inspection: this.inspectLive(attached), [Symbol.dispose]: () => {} }
+        }
+        const current = await this.serialize(
+          id,
+          () => this.isPreparedSourceCurrent(source, signal),
+          signal,
+        )
+        const published = this.ctx.sessions.get(id)
+        if (published !== undefined) {
+          observation[Symbol.dispose]()
+          return { source: 'live', inspection: this.inspectLive(published), [Symbol.dispose]: () => {} }
+        }
+        if (current || this.preparations.discardReady(id, source) === 'retained') {
+          return {
+            source: 'prepared',
+            inspection: source.inspection,
+            revision: source.revision,
+            preparedSession: source.session,
+            [Symbol.dispose]: () => { observation[Symbol.dispose]() },
+          }
+        }
+      } catch (error: unknown) {
+        observation[Symbol.dispose]()
+        signal?.throwIfAborted()
+        const attached = this.ctx.sessions.get(id)
+        if (attached !== undefined) {
+          return { source: 'live', inspection: this.inspectLive(attached), [Symbol.dispose]: () => {} }
+        }
+        throw error
+      }
+      observation[Symbol.dispose]()
+    }
+  }
+
+  /**
    * Read the stored events from `fromSeq` onward, detached and non-mutating
    * (the read-from-seq primitive behind the service's `readFrom`). Runs on
    * the same per-id chain as writes; a backend with the seek-capable
@@ -845,11 +1018,20 @@ export class PersistenceCoordinator<TornMarker = unknown> {
    * @param id - persisted session to read.
    * @param fromSeq - first event seq to include; a non-negative safe integer.
    * @param signal - optional cancellation for queued and backend read work.
-   * @returns stored header and the valid stored events with `seq >= fromSeq`.
+   * @returns stored metadata, the requested offset, and valid events with `seq >= fromSeq`.
    */
-  readFrom(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    if (!Number.isSafeInteger(fromSeq) || fromSeq < 0) {
-      return Promise.reject(new TypeError(`readFrom fromSeq must be a non-negative safe integer, got ${String(fromSeq)}`))
+  readFrom(
+    id: SessionId,
+    fromSeq: SessionLogOffsetType,
+    signal?: AbortSignal,
+  ): Promise<SessionEventSuffix> {
+    try {
+      SessionLogOffset(fromSeq)
+    } catch (error: unknown) {
+      /* v8 ignore next -- Session log-offset validation only throws Error instances. */
+      return Promise.reject(error instanceof Error
+        ? error
+        : new TypeError('invalid session read offset', { cause: error }))
     }
     const retired = Promise.resolve(this.retirements.get(id))
     const waited = signal === undefined ? retired : observeQueuedAbort(retired, signal, () => false)
@@ -858,9 +1040,9 @@ export class PersistenceCoordinator<TornMarker = unknown> {
 
   private async readFromCore(
     id: SessionId,
-    fromSeq: number,
+    fromSeq: SessionLogOffsetType,
     signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
+  ): Promise<SessionEventSuffix> {
     signal?.throwIfAborted()
     if (this.backend.loadStoredFrom !== undefined) {
       let suffix: StoredSuffix | undefined
@@ -871,87 +1053,53 @@ export class PersistenceCoordinator<TornMarker = unknown> {
         throw error
       }
       signal?.throwIfAborted()
-      if (suffix === undefined) throw new Error(`session "${id}" not found`)
+      if (suffix === undefined) throw new SessionPersistenceNotFoundError(id)
       this.assertStoredId(id, suffix.meta)
       this.assertVersion(suffix.meta)
       if (suffix.events.some(needsLegacyPrefix)) {
         const whole = await this.readStoredPrefix(id, signal)
-        return { meta: whole.meta, events: whole.events.filter(event => event.seq >= fromSeq) }
+        return {
+          meta: whole.meta,
+          inheritedEventCount: whole.inheritedEventCount,
+          fromSeq,
+          events: whole.events.filter(event => event.seq >= fromSeq),
+        }
       }
       const events = snapshotStoredEvents(suffix.events, id)
       this.assertEventsSupported(suffix.meta, events)
-      return { meta: structuredClone(suffix.meta), events }
+      return {
+        meta: structuredClone(suffix.meta),
+        inheritedEventCount: SessionLogOffset(suffix.inheritedEventCount),
+        fromSeq,
+        events,
+      }
     }
     const whole = await this.readStoredPrefix(id, signal)
     // Sequential fallback: contiguous seqs from 0 make the suffix an index slice.
-    return { meta: whole.meta, events: whole.events.slice(fromSeq) }
-  }
-
-
-  /**
-   * Read the first `maxEvents` stored events of a session, detached and
-   * non-mutating — the read-head primitive behind the service's `readHead`.
-   * Runs on the same per-id chain as every other operation; a backend with
-   * the seek-capable {@link PersistenceBackend.loadStoredHead} hook reads
-   * only the prefix it returns, every other backend reads its stored prefix
-   * and slices here.
-   * @param id - persisted session to read.
-   * @param maxEvents - number of oldest stored events to include; a
-   *   non-negative safe integer.
-   * @param signal - optional cancellation for queued and backend read work.
-   * @returns stored header and the first `maxEvents` stored events.
-   */
-  readHead(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    if (!Number.isSafeInteger(maxEvents) || maxEvents < 0) {
-      return Promise.reject(new TypeError(`readHead maxEvents must be a non-negative safe integer, got ${String(maxEvents)}`))
+    return {
+      meta: whole.meta,
+      inheritedEventCount: whole.inheritedEventCount,
+      fromSeq,
+      events: whole.events.slice(fromSeq),
     }
-    const retired = Promise.resolve(this.retirements.get(id))
-    const waited = signal === undefined ? retired : observeQueuedAbort(retired, signal, () => false)
-    return waited.then(() => this.serialize(id, () => this.readHeadCore(id, maxEvents, signal), signal))
-  }
-
-  private async readHeadCore(
-    id: SessionId,
-    maxEvents: number,
-    signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    signal?.throwIfAborted()
-    if (this.backend.loadStoredHead !== undefined) {
-      let head: StoredSuffix | undefined
-      try {
-        head = await this.backend.loadStoredHead(id, maxEvents, signal)
-      } catch (error: unknown) {
-        if (signal?.aborted) signal.throwIfAborted()
-        throw error
-      }
-      signal?.throwIfAborted()
-      if (head === undefined) throw new Error(`session "${id}" not found`)
-      this.assertStoredId(id, head.meta)
-      this.assertVersion(head.meta)
-      const events = snapshotStoredEvents(head.events, id)
-      this.assertEventsSupported(head.meta, events)
-      return { meta: structuredClone(head.meta), events }
-    }
-    const whole = await this.readStoredPrefix(id, signal)
-    // Sequential fallback: contiguous seqs from 0 make the head an index slice.
-    return { meta: whole.meta, events: whole.events.slice(0, maxEvents) }
   }
 
   /** Read one detached physical prefix without logical recovery or caching. */
   private async readStoredPrefix(
     id: SessionId,
     signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
+  ): Promise<SessionInspection> {
     signal?.throwIfAborted()
     const stored = await this.backend.loadStored(id, signal)
     signal?.throwIfAborted()
-    if (stored === undefined) throw new Error(`session "${id}" not found`)
+    if (stored === undefined) throw new SessionPersistenceNotFoundError(id)
     this.assertStoredId(id, stored.meta)
     this.assertVersion(stored.meta)
     const events = snapshotStoredEvents(stored.events, id)
     this.assertEventsSupported(stored.meta, events)
     return {
       meta: structuredClone(stored.meta),
+      inheritedEventCount: SessionLogOffset(stored.inheritedEventCount),
       events,
     }
   }
@@ -959,13 +1107,16 @@ export class PersistenceCoordinator<TornMarker = unknown> {
   /** Read, repair in memory, validate, and freeze one cold source once. */
   private async prepareCore(id: SessionId): Promise<PreparedSessionSource<TornMarker>> {
     const stored = await this.backend.loadStored(id)
-    if (stored === undefined) throw new Error(`session "${id}" not found`)
+    if (stored === undefined) throw new SessionPersistenceNotFoundError(id)
     try {
-      const { meta, events, revision, tornMarker } = stored
+      const { meta, inheritedEventCount, events, revision, tornMarker } = stored
       this.assertStoredId(id, meta)
       this.assertVersion(meta)
       const storedEvents = adoptStoredEvents(events, id)
       this.assertEventsSupported(meta, storedEvents)
+      if (inheritedEventCount > storedEvents.length) {
+        throw new Error(`session "${id}" inherited event count exceeds its stored event count`)
+      }
 
       // Preserve complete interrupted events and synthesize only missing closers.
       const closers = interruptedTurnClosers(storedEvents).map(adoptSessionEvent)
@@ -973,17 +1124,19 @@ export class PersistenceCoordinator<TornMarker = unknown> {
       const session = this.ctx.sessions.prepare(id, {
         seed: balanced,
         meta,
+        inheritedEventCount,
         seedSource: 'persistence',
       })
       const inspection: SessionInspection = Object.freeze({
         meta: session.header,
+        inheritedEventCount: session.inheritedEventCount,
         events: Object.freeze(balanced),
       })
       return {
         inspection,
         session,
         revision,
-        sessionLength: session.events.length,
+        sessionLength: session.seq,
         tornMarker,
         closers,
       }
@@ -1003,24 +1156,24 @@ export class PersistenceCoordinator<TornMarker = unknown> {
     source: PreparedSessionSource<TornMarker>,
   ): Promise<{ source: PreparedSessionSource<TornMarker>; state: SessionState } | undefined> {
     const id = source.inspection.meta.id
-    const cursor = source.inspection.events.length
+    const cursor = SessionLogOffset(source.inspection.events.length)
     const existing = this.states.get(id)
     if (existing?.owner !== undefined) {
       throw new Error(`session "${id}" already has a live persistence owner`)
     }
     if (!await this.isPreparedSourceCurrent(source)) return undefined
     if (source.tornMarker !== undefined || source.closers.length > 0) {
-      await this.backend.commitRepair(source.inspection.meta, source.tornMarker, source.closers)
+      await this.backend.commitRepair(source.inspection, source.tornMarker, source.closers)
       // The repair changed the durable revision. Reload the exact committed
       // graph instead of associating the old in-memory view with a newer revision.
       return undefined
     }
     const state = existing ?? {
-      meta: source.inspection.meta,
+      storage: source.inspection,
       cursor,
       materialized: true,
     }
-    state.meta = source.inspection.meta
+    state.storage = source.inspection
     state.cursor = cursor
     state.materialized = true
     this.states.set(id, state)
@@ -1040,21 +1193,29 @@ export class PersistenceCoordinator<TornMarker = unknown> {
 
   /** Return one durable immutable view of an already-live Session. */
   private async loadLiveSnapshot(session: Session): Promise<SessionInspection> {
-    const events = session.events
+    const events = session.snapshotEvents()
     await this.flush(session)
     const state = this.states.get(session.id)
     /* v8 ignore next -- successful flush always publishes this live session's durable state */
     if (state === undefined) throw new Error(`session "${session.id}" lost persistence state during load`)
-    if (events.length === 0) throw new Error(`session "${session.id}" not found`)
+    if (events.length === 0 && !state.materialized) throw new Error(`session "${session.id}" not found`)
     if (interruptedTurnClosers(events).length > 0) {
       throw new Error(`cannot load session "${session.id}" while its live turn is open; use the live Session or wait for the turn to close`)
     }
-    return Object.freeze({ meta: state.meta, events })
+    return Object.freeze({
+      meta: state.storage.meta,
+      inheritedEventCount: state.storage.inheritedEventCount,
+      events,
+    })
   }
 
   /** Borrow one immutable view from an already-live Session. */
   private inspectLive(session: Session): SessionInspection {
-    return Object.freeze({ meta: session.header, events: session.events })
+    return Object.freeze({
+      meta: session.header,
+      inheritedEventCount: session.inheritedEventCount,
+      events: session.snapshotEvents(),
+    })
   }
 
   /** Await one retiring lifecycle with caller cancellation. */
@@ -1199,8 +1360,7 @@ export class PersistenceCoordinator<TornMarker = unknown> {
     // Session disposal is observe-only, so retirement contains its own failure.
     ctx.on('session/disposed', (session) => { this.retire(session) })
 
-    // HMR: a hot reload does not replay session/created, so seed existing live
-    // sessions (mirrors dsh-invariants).
+    // HMR does not replay session/created, so seed existing live sessions.
     for (const session of ctx.sessions.list()) void this.initFor(session)
   }
 
@@ -1239,7 +1399,7 @@ export class PersistenceCoordinator<TornMarker = unknown> {
       return restored
     }
     // Session owns this stable deep-frozen snapshot; backends only serialize it.
-    const seed = session.events
+    const seed = session.snapshotEvents()
     const live: LiveSessionState = {
       init: Promise.resolve(),
       writes: this.createWriteBehind(session, () => live.init),
@@ -1261,7 +1421,7 @@ export class PersistenceCoordinator<TornMarker = unknown> {
       || session.firstLiveSeq !== state.cursor) {
       throw new Error(`session "${session.id}" preparation no longer matches its persistence state`)
     }
-    const suffix = session.events.slice(state.cursor).map(event => structuredClone(event))
+    const suffix = session.snapshotEvents(state.cursor).map(event => structuredClone(event))
     this.preparations.attach(reservation)
     state.owner = session
     const live: LiveSessionState = {
@@ -1280,7 +1440,11 @@ export class PersistenceCoordinator<TornMarker = unknown> {
    * events. A `cursor` of 0 (nothing persisted yet) trivially matches. Used when
    * a live session claims ownerless state left by a prior `load()`/`create()`.
    */
-  private async seedMatchesPersisted(id: SessionId, seed: readonly SessionEvent[], cursor: number): Promise<boolean> {
+  private async seedMatchesPersisted(
+    id: SessionId,
+    seed: readonly SessionEvent[],
+    cursor: SessionLogOffsetType,
+  ): Promise<boolean> {
     if (cursor === 0) return true
     const stored = await this.backend.loadStored(id)
     /* v8 ignore next -- a cursor > 0 means the session was materialized, so it exists */
@@ -1317,8 +1481,11 @@ export class PersistenceCoordinator<TornMarker = unknown> {
         // the stored header's cwd. The seed guard then ensures the live events
         // reproduce the persisted prefix; otherwise a fresh session reusing the
         // id could have its leading events filtered as already written.
-        if (tracked.meta.cwd !== session.header.cwd) {
-          throw new Error(`session "${id}" is already persisted at a different cwd (persisted: ${String(tracked.meta.cwd)}, live: ${String(session.header.cwd)}) (id collision)`)
+        if (tracked.storage.meta.cwd !== session.header.cwd) {
+          throw new Error(`session "${id}" is already persisted at a different cwd (persisted: ${String(tracked.storage.meta.cwd)}, live: ${String(session.header.cwd)}) (id collision)`)
+        }
+        if (tracked.storage.inheritedEventCount !== session.inheritedEventCount) {
+          throw new Error(`session "${id}" is already persisted with a different inherited event count (id collision)`)
         }
         if (!await this.seedMatchesPersisted(id, seed, tracked.cursor)) {
           throw new Error(`session "${id}" is already persisted with ${tracked.cursor} event(s) that do not match this live session (id collision)`)
@@ -1351,8 +1518,11 @@ export class PersistenceCoordinator<TornMarker = unknown> {
 
     // case 4: a genuinely new session. Register its meta (lazy), then persist its
     // seed (events present at creation time) once.
-    const meta: SessionHeader = { ...session.header }
-    await this.createCore(meta)
+    const storage = sessionStorageMetadata(session)
+    await this.createCore({
+      meta: { ...storage.meta },
+      inheritedEventCount: storage.inheritedEventCount,
+    })
     // Bind this state to the live session so a later DIFFERENT session reusing
     // the id is detected as a collision (case 1) rather than silently no-opped.
     const created = this.states.get(id)
@@ -1368,10 +1538,13 @@ export class PersistenceCoordinator<TornMarker = unknown> {
    * live suffix that was ahead of the stored prefix.
    */
   private async adoptLivePrefix(session: Session, seed: readonly SessionEvent[], stored: StoredPrefix<TornMarker>): Promise<void> {
-    const { meta, events, tornMarker } = stored
+    const { meta, inheritedEventCount, events, tornMarker } = stored
     this.assertStoredId(session.header.id, meta)
     if (meta.cwd !== session.header.cwd) {
       throw new Error(`session "${session.header.id}" is already persisted at a different cwd (persisted: ${String(meta.cwd)}, live: ${String(session.header.cwd)}) (id collision)`)
+    }
+    if (inheritedEventCount !== session.inheritedEventCount) {
+      throw new Error(`session "${session.header.id}" is already persisted with a different inherited event count (id collision)`)
     }
     this.assertVersion(meta)
     const storedEvents = snapshotStoredEvents(events, session.header.id)
@@ -1380,10 +1553,13 @@ export class PersistenceCoordinator<TornMarker = unknown> {
       throw new Error(`session "${session.header.id}" already has a persisted log on disk that does not match this live session (id collision)`)
     }
     // Truncate-only repair (no closers): the open turn is NOT closed here.
-    if (tornMarker !== undefined) await this.backend.commitRepair(meta, tornMarker, [])
+    if (tornMarker !== undefined) await this.backend.commitRepair(stored, tornMarker, [])
     this.states.set(session.header.id, {
-      meta: { ...meta },
-      cursor: storedEvents.length,
+      storage: {
+        meta: { ...meta },
+        inheritedEventCount,
+      },
+      cursor: SessionLogOffset(storedEvents.length),
       materialized: true,
       owner: session,
     })

@@ -9,7 +9,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { readdirSync } from 'node:fs'
-import { open, mkdir, readFile, readdir, realpath, link, rm, stat, truncate } from 'node:fs/promises'
+import { open, mkdir, readFile, readdir, realpath, link, rename, rm, stat, truncate } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { scheduler } from 'node:timers/promises'
@@ -17,20 +17,28 @@ import { randomBytes } from 'node:crypto'
 import {
   DEFAULT_PREPARED_SESSION_CACHE_SIZE, DEFAULT_WRITE_BATCH_MAX_DELAY_MS, MAX_WRITE_BATCH_DELAY_MS,
   SessionPersistence, SessionPersistenceRevision, PersistenceCoordinator, SessionFormatUnsupportedError,
+  type BorrowedSessionSource,
   type PersistenceBackend, type SessionLocation, type SessionPersistenceSnapshot,
-  type SessionInspection, type SessionPersistenceRevision as PersistenceRevision, type SessionRawArtifact,
-  type StoredPrefix, type StoredSuffix,
+  type SessionEventSuffix, type SessionInspection,
+  type SessionPersistenceRevision as PersistenceRevision, type SessionRawArtifact,
+  type SessionStorageMetadata,
+  type StoredPrefix,
 } from '@deepseek-ai/dsh-session-persistence'
-import { decodeStorageRecord } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionId, SessionHeader, SessionPreparation } from '@deepseek-ai/dsh-session'
+import type {
+  Session,
+  SessionEvent,
+  SessionId,
+  SessionHeader,
+  SessionLogOffset,
+  SessionPreparation,
+} from '@deepseek-ai/dsh-session'
 import {
-  encodeSegment, eventLines, logPath, logSuffix, parseHeaderMeta, parseHeaderRecord, projectDir, scanLog,
-  sessionDir, SessionLogScanner, toHeaderLine,
+  encodeSegment, eventLines, logPath, logSuffix, parseHeader, parseHeaderMeta, projectDir, scanLog, sessionDir,
+  SessionLogScanner, toHeaderLine,
   type JsonlCompression,
 } from './format.ts'
 import {
-  compressZstdFrame, createZstdFrameDecoder, decompressZstdFrame, decompressZstdPrefix, scanZstdFrameRanges, scanZstdFrames,
-  type ZstdFrameRange,
+  compressZstdFrame, createZstdFrameDecoder, decompressZstdFrame, decompressZstdPrefix, scanZstdFrames,
 } from './zstd.ts'
 import { ensureDurableDirectoryWin32, publishNewFileWin32 } from './win32.ts'
 
@@ -44,45 +52,12 @@ const DEFAULT_COMPRESSION: JsonlCompression = 'zstd'
  * remains an indivisible synchronous decode.
  */
 const ZSTD_DECODE_YIELD_INTERVAL_MS = 500
-const HEAD_READ_CHUNK_BYTES = 64 * 1024
-const MAX_HEAD_HEADER_BYTES = 1024 * 1024
-const MAX_READ_FRAME_BYTES = 64 * 1024 * 1024
-const MAX_READ_FRAME_PLAINTEXT_BYTES = 64 * 1024 * 1024
 
 /** Assert that the independently decodable first frame contains only the header record. */
 function assertZstdHeaderFrame(plaintext: Buffer): void {
   if (plaintext.length === 0 || plaintext.indexOf(0x0A) !== plaintext.length - 1) {
     throw new Error('corrupt Zstandard session log: first frame is not exactly one header line')
   }
-}
-
-/**
- * Expand one complete event frame's JSONL rows into its events. Every frame
- * is exactly one durable append batch, so rows never cross frame boundaries
- * and the decoded events are contiguous by construction; a hand-crafted frame
- * that breaks that invariant is committed corruption.
- */
-function decodeEventFrame(plaintext: Buffer): SessionEvent[] {
-  const events: SessionEvent[] = []
-  let line = 0
-  for (const row of plaintext.toString('utf8').split('\n')) {
-    line += 1
-    if (row.length === 0) continue
-    let decoded: SessionEvent[]
-    try {
-      decoded = decodeStorageRecord(JSON.parse(row))
-    } catch {
-      throw new Error(`corrupt session log: unparsable committed event at frame line ${line}`)
-    }
-    for (const event of decoded) {
-      const previous = events.at(-1)
-      if (previous !== undefined && event.seq !== previous.seq + 1) {
-        throw new Error(`corrupt session log: seq gap inside appended batch at frame line ${line}`)
-      }
-      events.push(event)
-    }
-  }
-  return events
 }
 
 /** Loader schema for the JSONL artifact's physical encoding. */
@@ -208,8 +183,12 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
     return { kind: 'jsonl', path: logPath(this.root, meta.cwd, meta.id, this.compression) }
   }
 
-  create(meta: SessionHeader): Promise<void> {
-    return this.coordinator.create(meta)
+  create(meta: SessionHeader, inheritedEventCount?: SessionLogOffset): Promise<void> {
+    return this.coordinator.create(meta, inheritedEventCount)
+  }
+
+  override ensureMaterialized(session: Session): Promise<void> {
+    return this.coordinator.ensureMaterialized(session)
   }
 
   append(id: SessionId, events: readonly SessionEvent[]): Promise<void> {
@@ -228,19 +207,19 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
     return this.coordinator.inspect(id, signal)
   }
 
-  // The loadStoredFrom backend hook serves range reads directly (see below);
-  // the coordinator validates the returned suffix and falls back to a full
-  // prefix read for legacy shapes that need earlier message-identity facts.
-  readFrom(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    return this.coordinator.readFrom(id, fromSeq, signal)
+  override borrowSession(id: SessionId, signal?: AbortSignal): Promise<BorrowedSessionSource> {
+    return this.coordinator.borrowSession(id, signal)
+  }
+
+  override truncate(session: Session, length: SessionLogOffset): Promise<void> {
+    return this.coordinator.truncate(session, length)
   }
 
 
-  // The loadStoredHead backend hook serves head reads directly (see below);
-  // the coordinator validates the returned prefix and falls back to a full
-  // stored-prefix read sliced forward for backends without the hook.
-  override readHead(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    return this.coordinator.readHead(id, maxEvents, signal)
+  // JSONL is sequential media: no loadStoredFrom hook, so the coordinator
+  // parses the stored prefix (both encodings) and skips forward to fromSeq.
+  readFrom(id: SessionId, fromSeq: SessionLogOffset, signal?: AbortSignal): Promise<SessionEventSuffix> {
+    return this.coordinator.readFrom(id, fromSeq, signal)
   }
 
   // One method serves both public `list` and the backend hook; delegating it to
@@ -257,75 +236,6 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
     const path = await this.findLog(id, signal)
     if (path === undefined) return undefined
     return this.readPrefix(path, id, signal)
-  }
-
-  /**
-   * Read the stored events at or past `fromSeq` without parsing the whole
-   * artifact. JSONL is sequential media, but every Zstandard frame (or
-   * plaintext batch) is one independently decodable append batch, so a suffix
-   * read needs only the batches from the one containing `fromSeq` to the tail;
-   * a typical paging read decodes just the final few batches. A torn final
-   * frame is omitted, matching the committed-prefix semantics of every other
-   * read, and the read is non-mutating (no truncation, no closers).
-   * @param id - persisted session id to resolve.
-   * @param fromSeq - first event seq to include (non-negative safe integer,
-   *   validated by the coordinator before this hook runs).
-   * @param signal - optional cancellation for the stat/read/decode work.
-   */
-  async loadStoredFrom(id: SessionId, fromSeq: number, signal?: AbortSignal): Promise<StoredSuffix | undefined> {
-    signal?.throwIfAborted()
-    await this.ensureRootEncoding()
-    signal?.throwIfAborted()
-    const path = await this.findLog(id, signal)
-    if (path === undefined) return undefined
-    if (this.compression === 'none') {
-      const result = await this.readStablePlainSuffix(path, fromSeq, signal)
-      signal?.throwIfAborted()
-      await this.assertStoredIdentity(path, result.meta, id, signal)
-      return result
-    }
-    if (this.compression === 'zstd') {
-      const result = await this.readStableZstdSuffix(path, fromSeq, signal)
-      signal?.throwIfAborted()
-      await this.assertStoredIdentity(path, result.meta, id, signal)
-      return result
-    }
-    throw new Error(`unsupported JSONL compression ${this.compression}`)
-  }
-
-  /**
-   * Read the stored events from the head of a log without parsing the whole
-   * artifact. JSONL is sequential media, but every Zstandard frame (or
-   * plaintext batch) is one independently decodable append batch, so a head
-   * read needs only the batches from the first one forward until it has
-   * `maxEvents` events; a typical preset-resolution read decodes just the
-   * first few batches. The read is non-mutating (no truncation, no closers),
-   * and only events from the valid contiguous stored prefix are returned.
-   * @param id - persisted session id to resolve.
-   * @param maxEvents - number of oldest stored events to include (non-negative
-   *   safe integer, validated by the coordinator before this hook runs).
-   * @param signal - optional cancellation for the stat/read/decode work.
-   */
-  async loadStoredHead(id: SessionId, maxEvents: number, signal?: AbortSignal): Promise<StoredSuffix | undefined> {
-    signal?.throwIfAborted()
-    await this.ensureRootEncoding()
-    signal?.throwIfAborted()
-    const path = await this.findLog(id, signal)
-    if (path === undefined) return undefined
-    let result: { meta: SessionHeader; events: SessionEvent[] }
-    try {
-      result = await this.readStableHead(path, maxEvents, signal)
-    } catch (error: unknown) {
-      if (error instanceof SessionFormatUnsupportedError && error.location === undefined) {
-        throw new SessionFormatUnsupportedError(`${error.message} (raw log: ${path})`, { kind: 'jsonl', path })
-      }
-      throw error
-    }
-    const { meta, events } = result
-    signal?.throwIfAborted()
-    await this.assertStoredIdentity(path, meta, id, signal)
-    signal?.throwIfAborted()
-    return { meta, events }
   }
 
   /**
@@ -385,243 +295,13 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
     } else {
       content = buffer.toString('utf8')
     }
-    const meta = parseHeaderMeta(content.split('\n', 1)[0] as string)
-    if (meta === undefined || meta.id !== id) {
+    const storage = parseHeader(content.split('\n', 1)[0] as string)
+    if (storage === undefined || storage.meta.id !== id) {
       throw new Error(`corrupt session log: invalid header line in "${path}"`)
     }
     // The logical artifact name is `session.jsonl` regardless of the physical
     // encoding suffix (`.jsonl.zstd` marks compression only).
-    return { meta, filename: 'session.jsonl', content }
-  }
-
-  private async readStablePlainSuffix(
-    path: string,
-    fromSeq: number,
-    signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    for (;;) {
-      signal?.throwIfAborted()
-      const before = fileRevision(await stat(path, { bigint: true }))
-      const handle = await open(path, 'r')
-      try {
-        let offset = 0
-        let pending = Buffer.alloc(0)
-        let scanner: SessionLogScanner | undefined
-        for (;;) {
-          signal?.throwIfAborted()
-          const chunk = Buffer.allocUnsafe(HEAD_READ_CHUNK_BYTES)
-          const result = await handle.read(chunk, 0, chunk.length, offset)
-          if (result.bytesRead === 0) break
-          offset += result.bytesRead
-          const input = pending.length === 0
-            ? chunk.subarray(0, result.bytesRead)
-            : Buffer.concat([pending, chunk.subarray(0, result.bytesRead)])
-          if (scanner === undefined) {
-            const headerEnd = input.indexOf(0x0A)
-            if (headerEnd === -1) {
-              if (input.length > MAX_HEAD_HEADER_BYTES) throw new Error('corrupt session log: header line exceeds head read limit')
-              pending = Buffer.from(input)
-              continue
-            }
-            scanner = new SessionLogScanner(input.subarray(0, headerEnd + 1), Number.POSITIVE_INFINITY, fromSeq)
-            scanner.write(input.subarray(headerEnd + 1))
-          } else {
-            scanner.write(input)
-          }
-          pending = Buffer.alloc(0)
-          if (result.bytesRead < chunk.length) break
-        }
-        if (scanner === undefined) throw new Error('empty or header-less session log')
-        const complete = scanner.finish()
-        signal?.throwIfAborted()
-        const after = fileRevision(await stat(path, { bigint: true }))
-        if (before === after) return { meta: complete.meta, events: complete.events }
-      } finally {
-        await handle.close()
-      }
-    }
-  }
-
-  private async readStableZstdSuffix(
-    path: string,
-    fromSeq: number,
-    signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    for (;;) {
-      signal?.throwIfAborted()
-      const before = fileRevision(await stat(path, { bigint: true }))
-      const handle = await open(path, 'r')
-      try {
-        const size = Number((await handle.stat()).size)
-        const readRange = this.createRangeReader(handle, signal)
-        const result = await this.readZstdSuffixRanges(size, readRange, fromSeq, signal)
-        signal?.throwIfAborted()
-        const after = fileRevision(await stat(path, { bigint: true }))
-        if (before === after) return result
-      } finally {
-        await handle.close()
-      }
-    }
-  }
-
-  private async readZstdSuffixRanges(
-    size: number,
-    readRange: (offset: number, length: number) => Promise<Buffer>,
-    fromSeq: number,
-    signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    let frameLimit = 2
-    let decodedFrames = 0
-    let meta: SessionHeader | undefined
-    const events: SessionEvent[] = []
-    let previousSeq: number | undefined
-    for (;;) {
-      const { frames } = await scanZstdFrameRanges(size, readRange, signal, frameLimit)
-      if (frames.length === 0) throw new Error('empty or header-less Zstandard session log')
-      if (meta === undefined) {
-        const headerFrame = frames[0] as ZstdFrameRange
-        const header = await decompressZstdFrame(await readRange(headerFrame.start, headerFrame.end - headerFrame.start))
-        assertZstdHeaderFrame(header)
-        meta = parseHeaderRecord(header)
-        decodedFrames = 1
-      }
-      for (; decodedFrames < frames.length; decodedFrames += 1) {
-        signal?.throwIfAborted()
-        const frame = frames[decodedFrames] as ZstdFrameRange
-        const plaintext = await decompressZstdFrame(await readRange(frame.start, frame.end - frame.start))
-        if (plaintext.length > MAX_READ_FRAME_PLAINTEXT_BYTES) throw new Error('session log frame expands beyond the bounded read limit')
-        const batch = decodeEventFrame(plaintext)
-        const retained = batch.filter(event => event.seq >= fromSeq)
-        const first = batch[0]
-        if (retained.length > 0 && previousSeq !== undefined && first !== undefined && first.seq !== previousSeq + 1) {
-          throw new Error('corrupt session log: seq gap between appended batches')
-        }
-        events.push(...retained)
-        if (retained.length > 0) previousSeq = batch.at(-1)?.seq ?? previousSeq
-      }
-      if (frames.length < frameLimit) break
-      frameLimit += 1
-    }
-    return { meta: meta as SessionHeader, events }
-  }
-
-  private async readStableHead(
-    path: string,
-    maxEvents: number,
-    signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    for (;;) {
-      signal?.throwIfAborted()
-      const before = fileRevision(await stat(path, { bigint: true }))
-      const handle = await open(path, 'r')
-      try {
-        const size = Number((await handle.stat()).size)
-        const readRange = this.createRangeReader(handle, signal)
-        const result = this.compression === 'zstd'
-          ? await this.readZstdHeadRanges(size, readRange, maxEvents, signal)
-          : await this.readPlainHead(handle, maxEvents, signal)
-        signal?.throwIfAborted()
-        const after = fileRevision(await stat(path, { bigint: true }))
-        if (before === after) return result
-      } finally {
-        await handle.close()
-      }
-    }
-  }
-
-  private createRangeReader(
-    handle: Awaited<ReturnType<typeof open>>,
-    signal?: AbortSignal,
-  ): (offset: number, length: number) => Promise<Buffer> {
-    return async (offset, length) => {
-      if (length > MAX_READ_FRAME_BYTES) throw new Error('session log frame exceeds the bounded read limit')
-      const buffer = Buffer.allocUnsafe(length)
-      let position = 0
-      while (position < length) {
-        signal?.throwIfAborted()
-        const result = await handle.read(buffer, position, length - position, offset + position)
-        if (result.bytesRead === 0) break
-        position += result.bytesRead
-      }
-      return position === length ? buffer : buffer.subarray(0, position)
-    }
-  }
-
-  private async readPlainHead(
-    handle: Awaited<ReturnType<typeof open>>,
-    maxEvents: number,
-    signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    let offset = 0
-    let pending = Buffer.alloc(0)
-    let scanner: SessionLogScanner | undefined
-    for (;;) {
-      signal?.throwIfAborted()
-      const chunk = Buffer.allocUnsafe(HEAD_READ_CHUNK_BYTES)
-      const result = await handle.read(chunk, 0, chunk.length, offset)
-      if (result.bytesRead === 0) throw new Error('empty or header-less session log')
-      offset += result.bytesRead
-      const input = pending.length === 0
-        ? chunk.subarray(0, result.bytesRead)
-        : Buffer.concat([pending, chunk.subarray(0, result.bytesRead)])
-      if (scanner === undefined) {
-        const headerEnd = input.indexOf(0x0A)
-        if (headerEnd === -1) {
-          if (input.length > MAX_HEAD_HEADER_BYTES) throw new Error('corrupt session log: header line exceeds head read limit')
-          pending = Buffer.from(input)
-          if (result.bytesRead < chunk.length) throw new Error('empty or header-less session log')
-          continue
-        }
-        scanner = new SessionLogScanner(input.subarray(0, headerEnd + 1), maxEvents)
-        if (maxEvents === 0) return { meta: scanner.finish().meta, events: [] }
-        scanner.write(input.subarray(headerEnd + 1))
-        pending = Buffer.alloc(0)
-      } else {
-        scanner.write(input)
-      }
-      if (scanner.checkpoint().eventCount >= maxEvents || result.bytesRead < chunk.length) break
-    }
-    const complete = (scanner as SessionLogScanner).finish()
-    return { meta: complete.meta, events: complete.events.slice(0, maxEvents) }
-  }
-
-  private async readZstdHeadRanges(
-    size: number,
-    readRange: (offset: number, length: number) => Promise<Buffer>,
-    maxEvents: number,
-    signal?: AbortSignal,
-  ): Promise<{ meta: SessionHeader; events: SessionEvent[] }> {
-    let frameLimit = 2
-    let meta: SessionHeader | undefined
-    const events: SessionEvent[] = []
-    while (events.length < maxEvents || meta === undefined) {
-      const { frames } = await scanZstdFrameRanges(size, readRange, signal, frameLimit)
-      if (frames.length === 0) throw new Error('empty or header-less Zstandard session log')
-      const headerFrame = frames[0] as ZstdFrameRange
-      if (meta === undefined) {
-        const header = await decompressZstdFrame(await readRange(headerFrame.start, headerFrame.end - headerFrame.start))
-        signal?.throwIfAborted()
-        assertZstdHeaderFrame(header)
-        meta = parseHeaderRecord(header)
-        if (maxEvents === 0) return { meta, events: [] }
-      }
-      let previousSeq = events.at(-1)?.seq
-      for (let index = Math.max(1, frames.length - 1); index < frames.length; index += 1) {
-        const frame = frames[index] as ZstdFrameRange
-        const plaintext = await decompressZstdFrame(await readRange(frame.start, frame.end - frame.start))
-        if (plaintext.length > MAX_READ_FRAME_PLAINTEXT_BYTES) throw new Error('session log frame expands beyond the bounded read limit')
-        const batch = decodeEventFrame(plaintext)
-        const first = batch[0]
-        if (first !== undefined && previousSeq !== undefined && first.seq !== previousSeq + 1) {
-          throw new Error('corrupt session log: seq gap between appended batches')
-        }
-        events.push(...batch)
-        previousSeq = events.at(-1)?.seq
-      }
-      if (events.length >= maxEvents || frames.length < frameLimit) break
-      frameLimit += 1
-    }
-    return { meta: meta as SessionHeader, events: events.slice(0, maxEvents) }
+    return { ...storage, filename: 'session.jsonl', content }
   }
 
   /**
@@ -662,10 +342,11 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
         prefix = await this.readZstdPrefix(buffer, signal)
       } else {
         signal?.throwIfAborted()
-        const { meta, events, committedBytes } = scanLog(buffer)
+        const { meta, inheritedEventCount, events, committedBytes } = scanLog(buffer)
         signal?.throwIfAborted()
         prefix = {
           meta,
+          inheritedEventCount,
           events,
           ...committedBytes < buffer.byteLength
             ? { tornMarker: { truncateTo: committedBytes, recoveredEvents: [] } }
@@ -727,7 +408,11 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
       }
       if (tornStart === undefined) {
         const prefix = scanner.finish()
-        return { meta: prefix.meta, events: prefix.events }
+        return {
+          meta: prefix.meta,
+          inheritedEventCount: prefix.inheritedEventCount,
+          events: prefix.events,
+        }
       }
 
       let recoveredPlaintext: Buffer = Buffer.alloc(0)
@@ -746,6 +431,7 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
       signal?.throwIfAborted()
       return {
         meta: recoveredPrefix.meta,
+        inheritedEventCount: recoveredPrefix.inheritedEventCount,
         events: recoveredPrefix.events,
         tornMarker: {
           truncateTo: tornStart,
@@ -762,13 +448,22 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
   }
 
   /** Durably append a batch, lazily materializing the file when not yet present. */
-  async appendBatch(meta: SessionHeader, events: readonly SessionEvent[], isMaterialized: boolean): Promise<void> {
+  async appendBatch(
+    storage: SessionStorageMetadata,
+    events: readonly SessionEvent[],
+    isMaterialized: boolean,
+  ): Promise<void> {
     await this.ensureRootEncoding()
     if (isMaterialized) {
-      await this.appendLines(meta, events)
+      await this.appendLines(storage.meta, events)
     } else {
-      await this.materialize(meta, events)
+      await this.materialize(storage, events)
     }
+  }
+
+  /** Materialize a header-only JSONL artifact for an explicitly durable empty session. */
+  async materializeHeader(storage: SessionStorageMetadata): Promise<void> {
+    await this.materialize(storage, [])
   }
 
   /**
@@ -776,14 +471,33 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
    * decoded from it, then append synthetic closers. Two fsync'd steps — the seam
    * does not require this to be atomic.
    */
+  /** Rewrite one existing session artifact with an earlier event prefix. */
+  async rewrite(storage: SessionStorageMetadata, events: readonly SessionEvent[]): Promise<void> {
+    await this.ensureRootEncoding()
+    await this.rejectOppositeArtifact(storage.meta.cwd, storage.meta.id)
+    const finalPath = logPath(this.root, storage.meta.cwd, storage.meta.id, this.compression)
+    const content = await this.encodeMaterialization(storage, events)
+    const tmp = await this.writeSyncedTempFile(finalPath, content)
+    let published = false
+    try {
+      await rename(tmp, finalPath)
+      published = true
+      if (process.platform !== 'win32') await this.syncDirPosix(dirname(finalPath))
+    } finally {
+      if (!published) await rm(tmp, { force: true })
+    }
+  }
+
   async commitRepair(
-    meta: SessionHeader,
+    storage: SessionStorageMetadata,
     tornMarker: JsonlTornMarker | undefined,
     closers: readonly SessionEvent[],
   ): Promise<void> {
+    const { meta } = storage
     if (tornMarker !== undefined) await this.repair(meta, tornMarker.truncateTo)
     const repairedEvents = [...(tornMarker?.recoveredEvents ?? []), ...closers]
     if (repairedEvents.length > 0) await this.appendLines(meta, repairedEvents)
+    if (tornMarker !== undefined) this.ctx.logger.warn(`${this.name}: session "${meta.id}" recovered from a torn tail; incomplete tail bytes were discarded`)
   }
 
   /** List valid unique stored sessions' metadata (header line only — no full-log parse). */
@@ -854,12 +568,13 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
   // --- materialization / append / repair (file mechanics) ---
 
   /** Atomically write the header line + first batch (temp-write, fsync, publish). */
-  private async materialize(meta: SessionHeader, events: readonly SessionEvent[]): Promise<void> {
+  private async materialize(storage: SessionStorageMetadata, events: readonly SessionEvent[]): Promise<void> {
+    const { meta } = storage
     const project = projectDir(this.root, meta.cwd)
     const dir = sessionDir(this.root, meta.cwd, meta.id)
     const finalPath = logPath(this.root, meta.cwd, meta.id, this.compression)
     await this.rejectOppositeArtifact(meta.cwd, meta.id)
-    const content = await this.encodeMaterialization(meta, events)
+    const content = await this.encodeMaterialization(storage, events)
     /* v8 ignore next -- native Windows coverage exercises this platform dispatch; Linux covers the POSIX peer */
     if (process.platform === 'win32') {
       await this.materializeWin32(project, dir, finalPath, meta.id, content)
@@ -902,7 +617,7 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
     // parent directory's metadata is synced.
     await this.syncDirPosix(dir)
     // Best-effort temp cleanup: the log is already published and durable, so a
-    // failure to remove the (now-redundant) temp hard link must NOT reject the
+    // failure to remove the redundant temp hard link must NOT reject the
     // append. Swallow only the rm failure; nothing else of consequence runs here.
     try {
       await rm(tmp, { force: true })
@@ -959,8 +674,14 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
   }
 
   /** Encode the header and first batch without combining their frame boundaries. */
-  private async encodeMaterialization(meta: SessionHeader, events: readonly SessionEvent[]): Promise<Buffer | string> {
-    const header = JSON.stringify(toHeaderLine(meta)) + '\n'
+  private async encodeMaterialization(
+    storage: SessionStorageMetadata,
+    events: readonly SessionEvent[],
+  ): Promise<Buffer | string> {
+    const header = JSON.stringify(toHeaderLine(storage.meta, storage.inheritedEventCount)) + '\n'
+    if (events.length === 0) {
+      return this.compression === 'none' ? header : compressZstdFrame(header)
+    }
     const body = eventLines(events, this.packChunks) + '\n'
     if (this.compression === 'none') return header + body
     const headerFrame = await compressZstdFrame(header)
@@ -1277,11 +998,14 @@ export class JsonlSessionPersistence extends SessionPersistence implements Persi
     } catch (error) {
       // Only ENOENT means absent. A permission/I/O error must surface rather
       // than letting load or collision checks proceed under false absence.
-      // Windows reports ENOENT, not ENOTDIR, for `regular-file/child`; verify
-      // the immediate parent so a blocked session directory remains a storage fault.
       /* v8 ignore else -- Windows reports file-valued parents as ENOENT; POSIX covers direct ENOTDIR. */
       if (isENOENT(error)) {
-        await this.assertLogParentAllowsAbsence(path)
+        // Windows reports ENOENT, not ENOTDIR, for `regular-file/child`, so it
+        // alone verifies the immediate parent to keep a blocked session
+        // directory a storage fault. POSIX open already reported ENOTDIR before
+        // this point, where the extra stat would only cost a syscall per probe.
+        /* v8 ignore next -- native Windows coverage exercises this platform dispatch; POSIX reports ENOTDIR from open */
+        if (process.platform === 'win32') await this.assertLogParentAllowsAbsence(path)
         return false
       }
       /* v8 ignore next -- Windows repairs ENOTDIR from ENOENT above; POSIX covers direct ENOTDIR. */

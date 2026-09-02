@@ -106,11 +106,15 @@ function invalidReplay(message: string): never {
   throw new LlmError(`invalid pi-ai replay state: ${message}`, 'INVALID_REPLAY_STATE')
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function validateReplayCore(response: Record<string, unknown>): void {
+/** Validate the durable adapter-private envelope before it reaches pi-ai. */
+function readReplayState(value: unknown): PiAiReplayState {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return invalidReplay('expected a replay envelope')
+  const envelope = value as Record<string, unknown>
+  const rawResponse = envelope['response']
+  if (typeof rawResponse !== 'object' || rawResponse === null || Array.isArray(rawResponse)) return invalidReplay('expected a response object')
+  const response = rawResponse as Record<string, unknown>
+  if (response['kind'] !== 'pi-ai') return invalidReplay('unknown state kind')
+  if (response['version'] !== 2) return invalidReplay(`unsupported version ${String(response['version'])}`)
   for (const key of ['api', 'provider', 'model'] as const) {
     if (typeof response[key] !== 'string' || response[key].length === 0) return invalidReplay(`${key} must be a non-empty string`)
   }
@@ -119,72 +123,21 @@ function validateReplayCore(response: Record<string, unknown>): void {
   }
   if (response['responseModel'] !== undefined && typeof response['responseModel'] !== 'string') return invalidReplay('responseModel must be a string')
   if (response['responseId'] !== undefined && typeof response['responseId'] !== 'string') return invalidReplay('responseId must be a string')
-}
-
-function validateReplayBlocks(blocks: unknown): void {
+  const blocks = envelope['blocks']
   if (!Array.isArray(blocks)) return invalidReplay('blocks must be an array')
   for (const [index, value] of blocks.entries()) {
-    if (!isRecord(value)) return invalidReplay(`block ${index} must be an object`)
-    const block = value
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) return invalidReplay(`block ${index} must be an object`)
+    const block = value as Record<string, unknown>
     if (!['text', 'reasoning', 'tool-call'].includes(String(block['type']))) return invalidReplay(`block ${index} has an unknown type`)
     for (const signature of ['textSignature', 'thinkingSignature', 'thoughtSignature'] as const) {
       if (block[signature] !== undefined && typeof block[signature] !== 'string') return invalidReplay(`block ${index} ${signature} must be a string`)
     }
     if (block['redacted'] !== undefined && typeof block['redacted'] !== 'boolean') return invalidReplay(`block ${index} redacted must be boolean`)
   }
-}
-
-function replayResponseFromFlatState(state: Record<string, unknown>): PiAiReplayResponse {
-  return {
-    kind: 'pi-ai',
-    version: 2,
-    api: state['api'] as Api,
-    provider: state['provider'] as string,
-    model: state['model'] as string,
-    ...state['responseModel'] === undefined ? {} : { responseModel: state['responseModel'] as string },
-    ...state['responseId'] === undefined ? {} : { responseId: state['responseId'] as string },
-    stopReason: state['stopReason'] as AssistantMessage['stopReason'],
-  }
-}
-
-function normalizeWrappedReplayState(state: Record<string, unknown>): PiAiReplayState | undefined {
-  const rawResponse = state['response']
-  if (!isRecord(rawResponse)) return invalidReplay('expected a response object')
-  const response = rawResponse
-  // Replay metadata is adapter-private: if another adapter's wrapped state
-  // reaches pi-ai, treat it as absent instead of crashing the whole chat replay
-  // path.
-  if (response['kind'] !== 'pi-ai') return undefined
-  if (response['version'] !== 2) return invalidReplay(`unsupported version ${String(response['version'])}`)
-  validateReplayCore(response)
-  validateReplayBlocks(state['blocks'])
   return {
     response: response as unknown as PiAiReplayResponse,
-    blocks: state['blocks'] as PiAiReplayBlock[],
+    blocks: blocks as PiAiReplayBlock[],
   }
-}
-
-function normalizeFlatReplayState(state: Record<string, unknown>): PiAiReplayState | undefined {
-  // Older development builds wrote a flat pi-ai v1 state. Accept it so existing
-  // sessions keep response ids/signatures instead of degrading to foreign
-  // history after the fork is rebased onto the upstream v2 envelope format.
-  if (state['kind'] !== 'pi-ai') return undefined
-  if (state['version'] !== 1) return invalidReplay(`unsupported version ${String(state['version'])}`)
-  validateReplayCore(state)
-  validateReplayBlocks(state['blocks'])
-  return {
-    response: replayResponseFromFlatState(state),
-    blocks: state['blocks'] as PiAiReplayBlock[],
-  }
-}
-
-/** Validate the adapter-private state before it reaches pi-ai. */
-function readReplayState(value: unknown): PiAiReplayState | undefined {
-  if (!isRecord(value)) return invalidReplay('expected a replay envelope')
-  const state = value
-  if ('response' in state) return normalizeWrappedReplayState(state)
-  if ('kind' in state) return normalizeFlatReplayState(state)
-  return invalidReplay('expected a response object')
 }
 
 /** Convert provider-neutral blocks without trusting them as same-model replay. */
@@ -225,7 +178,6 @@ function foreignAssistant(message: Message): AssistantMessage {
 /** Recombine durable Harness content with validated pi-ai replay metadata. */
 function replayedAssistant(message: Message, source: ModelMessageSource, rawState: unknown): AssistantMessage {
   const state = readReplayState(rawState)
-  if (state === undefined) return foreignAssistant(message)
   if (state.response.provider !== source.provider) return invalidReplay('provider does not match assistant source')
   if (state.response.model !== source.model) return invalidReplay('model does not match assistant source')
   if (state.blocks.length !== message.content.length) return invalidReplay('block count does not match assistant content')
@@ -288,7 +240,7 @@ export function toPiAssistant(message: Message, onDegrade?: (reason: string) => 
   try {
     return replayedAssistant(message, source, source.replayState)
   } catch (error: unknown) {
-    /* v8 ignore next -- replayedAssistant throws only INVALID_REPLAY_STATE LlmErrors today; the
+    /* v8 ignore next -- replayedAssistant throws only INVALID_REPLAY_STATE LlmErrors; the
        guard keeps a future non-replay failure loud instead of silently degrading it */
     if (!(error instanceof LlmError) || error.code !== 'INVALID_REPLAY_STATE') throw error
     onDegrade?.(error.message)

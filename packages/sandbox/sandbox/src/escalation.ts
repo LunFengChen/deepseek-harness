@@ -16,7 +16,7 @@
  * @module dsh-sandbox/escalation
  */
 
-import { assertNever } from '@deepseek-ai/dsh-llm'
+import { assertNever } from '@deepseek-ai/dsh-util-values'
 import type { SandboxMode } from './index.ts'
 
 /**
@@ -42,12 +42,11 @@ export const ESCALATION_TARGETS: readonly SandboxMode[] = ['workspace-write', 'd
 
 /**
  * Return whether an advertised target is already covered by a full-access
- * standing policy. Model calls can retain stale retry arguments after the
- * session has reached the maximum mode; those arguments must not trigger a
- * second approval or a strict-widening failure.
+ * standing policy. Stale retry arguments must not trigger a second approval or
+ * a strict-widening failure after the session has reached full access.
  * @param requestedMode - the raw `sandbox_permissions` target.
  * @param effectiveMode - the call's effective standing mode.
- * @returns `true` for the closed target vocabulary under `danger-full-access`.
+ * @returns `true` when the target is part of the closed escalation vocabulary and the standing mode is full access.
  */
 export function isEscalationSatisfiedByStandingMode(requestedMode: string, effectiveMode: SandboxMode): boolean {
   return effectiveMode === 'danger-full-access' && ESCALATION_TARGETS.includes(requestedMode as SandboxMode)
@@ -110,7 +109,7 @@ export type EscalationOutcome = 'allowed-once' | 'rejected' | 'cancelled' | 'una
  * structurally the approval seam's `ApprovalService`, generic over the agent
  * type `A` and call-id type `C` so this package resolves escalations through
  * `ctx.approval` without importing the approval or agent packages (the tool
- * layer infers `A`/`C` as its own `Agent`/`CallId`).
+ * layer infers `A`/`C` as its own `Agent`/`ToolCallId`).
  */
 export interface EscalationApprover<A = object, C = string> {
   /**
