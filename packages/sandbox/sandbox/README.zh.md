@@ -123,6 +123,21 @@ kind: "package-reference"
 <a id="model-experience"></a>
 ## 模型体验
 
+### full-access 下的陈旧升权参数
+
+#### 模型看到的内容
+
+当有效的常驻模式已经是 `danger-full-access` 时，执行工具消费方会把声明的两个目标（`workspace-write` 或 `danger-full-access`）都视为已经满足。它们保留 full-access 策略、跳过审批，也不会调用严格升权检查；参数配对错误和未知目标仍会沿用正常校验路径失败。
+
+#### Token 影响
+
+接受陈旧的声明目标时不会产生额外的模型可见内容。
+
+#### KV Cache 影响
+
+请求内容不变；接受该目标会保留现有可复用前缀。
+
+
 ### 间接的限制错误
 
 #### 模型看到什么

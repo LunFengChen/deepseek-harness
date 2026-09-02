@@ -123,6 +123,21 @@ Start with the subsystem reference for the exhaustive contract, then the backend
 <a id="model-experience"></a>
 ## Model Experience
 
+### Stale escalation arguments under full access
+
+#### What the model sees
+
+When the effective standing mode is `danger-full-access`, the enforcing tool consumers treat either advertised target (`workspace-write` or `danger-full-access`) as already satisfied. They keep the full-access policy, skip approval, and do not call the strict-widening checker; malformed argument pairing and unknown targets still fail through the normal validation path.
+
+#### Token effect
+
+No additional model-visible content is emitted when a stale advertised target is accepted.
+
+#### KV Cache effect
+
+No request content changes; accepting the target preserves the existing reusable prefix.
+
+
 ### Confinement error, indirectly
 
 #### What the model sees
