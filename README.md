@@ -16,6 +16,7 @@ Fork note: this branch publishes `@xfcodeai/dsh` and the `xfdsh` launcher so it 
 | --- | --- | --- |
 | Publish identity | Packages stay under `@xfcodeai/dsh` / `@xfcodeai/dsh-*`, and the published executable is `xfdsh`. | The fork can be installed and run beside upstream `dsh`. |
 | Session history | The web UI can delete a turn and every later event in the same session, with destructive confirmation, instead of only forking away. | Unwanted answers can be removed without creating a new branch of history. |
+| Memory and persistence | Session persistence now bounds in-memory reads and can rewrite durable JSONL logs for destructive deletion; the projection cache schema was bumped to match. | Long sessions stop blowing up memory, and deletion stays durable. |
 | Session utilities | Workspace rows include a copy-session-id action. | Session ids are easier to share and debug. |
 | Long-run stability | Context overflow now compacts instead of stalling; handshake failures resume; goal rounds can continue past the old hard stop. | Long tasks are less likely to stop mid-run. |
 | Model and attachment compatibility | Commands that do not accept images reject them with a toast; model incompatibility is reported as a clear `session/model-unavailable` error. | Mixed model/image workflows fail fast instead of silently breaking. |
