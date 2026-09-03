@@ -1,0 +1,177 @@
+# 构建并发布 xfdsh 自包含产物到 GitHub Releases。
+#
+# 产物 = 每个平台一个自包含运行目录包（含 prod 依赖的 node_modules 树），
+# 供 npm launcher 包 @xfcodeai/xfdsh 的 postinstall 按平台下载解压。
+#
+# 触发:
+#   - push dsh-v* tag（随 dsh 版本自动出产物）
+#   - workflow_dispatch（手动指定版本补发）
+name: Release product (xfdsh)
+
+on:
+  push:
+    tags:
+      - 'dsh-v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '产物版本（缺省从 tag/仓库版本推断）'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  PRIMARY_NODE_VERSION: '24'
+  DSH_TELEMETRY_DISABLED: '1'
+
+jobs:
+  build:
+    name: Build product ${{ matrix.platform }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos
+            arch: arm64
+            runner: macos-14
+          - platform: macos
+            arch: x64
+            runner: macos-13
+          - platform: linux
+            arch: x64
+            runner: ubuntu-24.04
+          - platform: linux
+            arch: arm64
+            runner: ubuntu-24.04-arm
+          - platform: windows
+            arch: x64
+            runner: windows-2025
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          dest: ${{ runner.temp }}/setup-pnpm
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.PRIMARY_NODE_VERSION }}
+
+      - name: 推断版本号
+        id: version
+        shell: bash
+        run: |
+          if [[ -n "${{ inputs.version }}" ]]; then
+            echo "value=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_REF" == refs/tags/dsh-v* ]]; then
+            echo "value=${GITHUB_REF#refs/tags/dsh-v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          fi
+          echo "构建版本: $(cat $GITHUB_OUTPUT | grep '^value=')"
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建
+        run: pnpm run build:official
+
+      - name: 打包发布族 tarball（本地，不发布 npm）
+        shell: bash
+        run: |
+          mkdir -p dist/product
+          pnpm run release:pack --family dsh --out dist/product/npm --concurrency 8
+          pnpm run release:pack --family vendor --out dist/product/npm-vendor --concurrency 8
+          if [[ -d native/landlock-run ]]; then
+            (cd native/landlock-run && pnpm run build:ts) || true
+            (cd native/landlock-run/packages/entry && pnpm pack --pack-destination "$PWD/dist/product/npm-landlock") || true
+          fi
+
+      - name: 生成 consumer 清单并安装本地 tarball
+        shell: bash
+        run: |
+          python3 - dist/product <<'PY'
+          import json, os, sys, tarfile, glob
+          dist = sys.argv[1]
+          os.makedirs('consumer', exist_ok=True)
+          tarballs = {}
+          for pat in ['npm/*.tgz', 'npm-vendor/*.tgz', 'npm-landlock/*.tgz']:
+              for tgz in glob.glob(os.path.join(dist, pat)):
+                  with tarfile.open(tgz) as t:
+                      name = json.load(t.extractfile('package/package.json'))['name']
+                  tarballs[name] = os.path.abspath(tgz)
+          manifest = {"name": "xfdsh-product-consumer", "version": "0.0.0", "private": True,
+                      "dependencies": {n: f"file:{p}" for n, p in tarballs.items()}}
+          open('consumer/package.json', 'w').write(json.dumps(manifest, indent=2))
+          print(f'consumer 清单: {len(tarballs)} 个本地 tarball')
+          PY
+          cd consumer
+          npm install --no-audit --no-fund --package-lock=false
+
+      - name: 瘦身（移除 subagent SDK，主 agent 用不到）
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import shutil
+          for d in ['node_modules/@anthropic-ai', 'node_modules/@openai']:
+              shutil.rmtree(d, ignore_errors=True)
+          PY
+
+      - name: 验证入口
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          ACTUAL=$(node node_modules/@xfcodeai/dsh/lib/bin.js --version)
+          echo "期望: $VERSION 实际: $ACTUAL"
+          [[ "$ACTUAL" == "$VERSION" ]] || { echo "版本不匹配"; exit 1; }
+
+      - name: 打包产物
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          NAME="xfdsh-${{ matrix.platform }}-${{ matrix.arch }}-$VERSION"
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            python3 - consumer "$NAME.zip" <<'PY'
+          import sys, shutil
+          shutil.make_archive(sys.argv[2], 'zip', sys.argv[1])
+          PY
+          else
+            tar czf "$NAME.tar.gz" -C consumer .
+          fi
+          mkdir -p dist/out
+          mv "$NAME"* dist/out/
+          ls -lh dist/out/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: product-${{ matrix.platform }}-${{ matrix.arch }}
+          path: dist/out/*
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/dsh-v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist/assets
+          merge-multiple: true
+
+      - name: 创建/更新 Release 并上传产物
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#dsh-v}"
+          gh release create "$TAG" dist/assets/* --title "xfdsh $VERSION" --notes "自包含产物（macOS arm64/x64、Linux x64/arm64、Windows x64）。npm 安装: \`npm i -g @xfcodeai/xfdsh\`" || gh release upload "$TAG" dist/assets/* --clobber
