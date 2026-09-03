@@ -21,23 +21,23 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { FiberState } from '@deepseek-ai/cordis'
-import { createNodeBuiltins, REPLACED_PREFIXES } from '@xfcodeai/dsh-experimental-webworker-runtime/src/node/builtins.ts'
+import { createNodeBuiltins, REPLACED_PREFIXES } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/node/builtins.ts'
 import {
   setActiveModuleLoader, WorkerModuleLoader,
-} from '@xfcodeai/dsh-experimental-webworker-runtime/src/module-system/module-loader.ts'
-import { inflateImage } from '@xfcodeai/dsh-experimental-webworker-runtime/src/storage/image-gzip.ts'
-import { loadVfsImage } from '@xfcodeai/dsh-experimental-webworker-runtime/src/storage/memory.ts'
-import { setActiveVfs } from '@xfcodeai/dsh-experimental-webworker-runtime/src/storage/active.ts'
+} from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/module-system/module-loader.ts'
+import { inflateImage } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/image-gzip.ts'
+import { loadVfsImage } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/memory.ts'
+import { setActiveVfs } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/active.ts'
 import { indexWorkspacePackages, previewFixtures } from '../src/repository.ts'
 import { DEFAULT_ROOT, MANIFEST_PATH, packVfsImage, packVfsOverlay } from '../src/pack.ts'
 
 const repoRoot = fileURLToPath(new URL('../../../../', import.meta.url))
 
 /** A leaf workspace package: real build output, no dependencies to drag in. */
-const SUBJECT = '@xfcodeai/dsh-timeout'
+const SUBJECT = '@x1a0f3n9/dsh-timeout'
 const LANDLOCK = '@deepseek-ai/node-addon-landlock-run'
-const PLUGIN_INVENTORY = '@xfcodeai/dsh-plugin-package-inventory-deepseek'
-const WEB_SERVER = '@xfcodeai/dsh-host-webserver'
+const PLUGIN_INVENTORY = '@x1a0f3n9/dsh-plugin-package-inventory-deepseek'
+const WEB_SERVER = '@x1a0f3n9/dsh-host-webserver'
 
 const workspaces = indexWorkspacePackages(repoRoot)
 

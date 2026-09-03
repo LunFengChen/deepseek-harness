@@ -6,8 +6,8 @@
  * type-only.
  */
 
-import type {} from '@xfcodeai/dsh-api-session-controller/remote-events'
-import type { TypertForwardableEventEntry } from '@xfcodeai/dsh-typert-protocol'
+import type {} from '@x1a0f3n9/dsh-api-session-controller/remote-events'
+import type { TypertForwardableEventEntry } from '@x1a0f3n9/dsh-typert-protocol'
 
 /**
  * Host events this application forwards without renaming. The explicit mode is

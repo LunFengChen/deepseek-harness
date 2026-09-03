@@ -1,12 +1,12 @@
-/** Package-owned durable goal-stream invariants. @module @xfcodeai/dsh-goal/invariant */
+/** Package-owned durable goal-stream invariants. @module @x1a0f3n9/dsh-goal/invariant */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { InvariantFailure, InvariantInstaller } from '@xfcodeai/dsh-invariants'
-import type { Session, SessionEvent } from '@xfcodeai/dsh-session'
+import type { InvariantFailure, InvariantInstaller } from '@x1a0f3n9/dsh-invariants'
+import type { Session, SessionEvent } from '@x1a0f3n9/dsh-session'
 import { applyGoalEvent, emptyGoalFoldState } from './fold.ts'
 import type { GoalFoldState } from './fold.ts'
 
-const PACKAGE_NAME = '@xfcodeai/dsh-goal'
+const PACKAGE_NAME = '@x1a0f3n9/dsh-goal'
 
 /** Cordis companion plugin name. */
 export const name = 'goal-invariant'

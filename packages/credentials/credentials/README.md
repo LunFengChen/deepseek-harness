@@ -3,7 +3,7 @@ description: "The credential seam for users and maintainers resolving, describin
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-credentials
+# @x1a0f3n9/dsh-credentials
 
 English | [中文](README.zh.md)
 
@@ -36,18 +36,18 @@ Use a credential store whenever configuration must stay free of secret values: s
 Load the local store package with a document path:
 
 ```yaml
-- name: '@xfcodeai/dsh-credentials-local'
+- name: '@x1a0f3n9/dsh-credentials-local'
   config:
     path: /absolute/path/to/.credentials.yaml
 ```
 
-The local store README owns the full configuration surface; the generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-credentials-local) is the exhaustive field list.
+The local store README owns the full configuration surface; the generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-credentials-local) is the exhaustive field list.
 
 ### Storing, checking, and removing keys
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialRef } from '@xfcodeai/dsh-credentials'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 
@@ -66,7 +66,7 @@ A plugin addresses each record by `<scope>/<id>` — its own registered name plu
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialKey } from '@xfcodeai/dsh-credentials'
+import { credentialKey } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 

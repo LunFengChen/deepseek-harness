@@ -6,7 +6,7 @@ Status: implemented
 
 ## Problem
 
-`tsconfig.base.json` 是整个仓库的解析门面：每个包的 project 都 extends 它，两个聚合配置都读它，每个 Vitest 配置都把 `vite-tsconfig-paths` 指向它。其中两条别名按包**分组**而不是按包各写一条候选——`@xfcodeai/dsh-*` 列了 49 个候选 glob，`@xfcodeai/dsh-*/invariant` 列了 45 个。
+`tsconfig.base.json` 是整个仓库的解析门面：每个包的 project 都 extends 它，两个聚合配置都读它，每个 Vitest 配置都把 `vite-tsconfig-paths` 指向它。其中两条别名按包**分组**而不是按包各写一条候选——`@x1a0f3n9/dsh-*` 列了 49 个候选 glob，`@x1a0f3n9/dsh-*/invariant` 列了 45 个。
 
 TypeScript 与 tsx 按顺序逐个尝试这些候选、取第一个存在的，因此一个位于列表靠后位置的包，其说明符要为前面每一次未命中买单。在 `dsh` 源码启动下，每次未命中都是一个 `ERR_MODULE_NOT_FOUND`，而 Node 会用 `decorateErrorWithCommonJSHints` 装饰它——每次失败都跑一遍完整的 CommonJS 解析走查。一次源码启动的 profile 把 **934.6 ms（占启动 35%）**单独归给了这条装饰路径，来源是 60,942 次失败解析。
 
@@ -16,7 +16,7 @@ TypeScript 与 tsx 按顺序逐个尝试这些候选、取第一个存在的，�
 
 `scripts/gen-tsconfig-paths.ts` 在 `paths` 末尾一个带标记的区域里，为每个 workspace 包写入一条显式别名，两条分组通配符随之删除。`pnpm run gen-tsconfig-paths` 重写该区域；`pnpm run verify-tsconfig-paths` 只报告漂移，并与其他生成物检查一起跑在 `ci-static` 车道上。
 
-生成器只为**声明名恰好等于 `@xfcodeai/dsh-<目录名>`** 的包发别名，因为那是通配符唯一可能解析出的形态：它把说明符的后缀代入 `packages/<group>/<后缀>/src`。名字与目录不一致的包——`packages/typert/protocol` 上的 `@xfcodeai/dsh-typert-protocol`、以及 `dsh-client-*` 与 `dsh-host-*` 两族——本来就有手写别名，保持不动。若某个说明符被两个包目录同时认领，生成器**抛错**而不是任选其一，因为显式映射无法表达通配符依赖的分组顺序裁决；当前不存在这种冲突。
+生成器只为**声明名恰好等于 `@x1a0f3n9/dsh-<目录名>`** 的包发别名，因为那是通配符唯一可能解析出的形态：它把说明符的后缀代入 `packages/<group>/<后缀>/src`。名字与目录不一致的包——`packages/typert/protocol` 上的 `@x1a0f3n9/dsh-typert-protocol`、以及 `dsh-client-*` 与 `dsh-host-*` 两族——本来就有手写别名，保持不动。若某个说明符被两个包目录同时认领，生成器**抛错**而不是任选其一，因为显式映射无法表达通配符依赖的分组顺序裁决；当前不存在这种冲突。
 
 删除通配符也删掉了「没人写别名的包仍能解析」的兜底，因此生成器同时断言覆盖完备：每个含 `src` 的 workspace 包都必须被生成别名或手写别名映射，`--check` 会点名任何未被覆盖者。没有这条断言，一个名字与目录不一致的新包会被生成器跳过，继续经 workspace 软链解析到构建产物 `lib/`——正是显式别名要消除的产物层泄漏。
 
@@ -28,7 +28,7 @@ TypeScript 与 tsx 按顺序逐个尝试这些候选、取第一个存在的，�
 
 ## Resolution differences this change makes
 
-仓库源码中出现的每个 `@xfcodeai/dsh-*` 说明符——共 1,023 个互不相同——解析目标与改动前完全一致，只有十一个例外：它们现在能解析，而此前不能。这十一个此前都是经 workspace 软链解析到构建产物 `lib/`，而不是源码。
+仓库源码中出现的每个 `@x1a0f3n9/dsh-*` 说明符——共 1,023 个互不相同——解析目标与改动前完全一致，只有十一个例外：它们现在能解析，而此前不能。这十一个此前都是经 workspace 软链解析到构建产物 `lib/`，而不是源码。
 
 其中七个是 `/invariant` 子路径：`dsh-invariants/invariant`、`dsh-lsp/invariant`、`dsh-lsp-stdio/invariant`、`dsh-tool-lsp/invariant`、`dsh-terminal/invariant`、`dsh-terminal-bash/invariant`、`dsh-tool-terminal/invariant`。
 
@@ -56,6 +56,6 @@ CLI 入口守卫采用仓库既有的比较方式 `import.meta.filename === reso
 
 `headless` profile 的源码启动从 2,157 / 2,182 / 2,153 ms 的基线降到 1,069 / 1,052 / 1,055 ms——约 **1.1 秒，51%**，两个区间相距极远，且 `--help` 输出逐字节一致。
 
-**收益仅限于 tsx 源码启动这一条路径。** Vitest 走 `vite-tsconfig-paths`，它在进程内做匹配与文件存在性检查，从不构造 Node 模块错误，因此从未付过那笔装饰代价：对某个包的整套用例做 A/B，实测 5,934 / 5,829 / 5,908 ms 对 5,878 / 5,851 / 5,905 ms，属于噪声。仓库的门禁脚本只 import 少数几个 `@xfcodeai/dsh-*` 包，同样测不出可分离的差异。发布用户在裸 Node 下跑构建好的 `lib/`，本来就不受影响。
+**收益仅限于 tsx 源码启动这一条路径。** Vitest 走 `vite-tsconfig-paths`，它在进程内做匹配与文件存在性检查，从不构造 Node 模块错误，因此从未付过那笔装饰代价：对某个包的整套用例做 A/B，实测 5,934 / 5,829 / 5,908 ms 对 5,878 / 5,851 / 5,905 ms，属于噪声。仓库的门禁脚本只 import 少数几个 `@x1a0f3n9/dsh-*` 包，同样测不出可分离的差异。发布用户在裸 Node 下跑构建好的 `lib/`，本来就不受影响。
 
 `paths` 从 188 个 key 增长到 523 个，新增包时必须运行生成器。`--check` 门禁把这件事变成一次具名失败而非静默失败，而生成区域让这类改动的 diff 只有一行。

@@ -18,10 +18,10 @@ Two forces shape the design. First, compaction policy and reusable token measure
 
 Per the [capability-seams Agent Note](../architecture/2026-06-13-capability-seams.md), compaction ships as separate packages so the contract, the algorithm, and (later) the consumer API evolve independently:
 
-1. **Interface** — `@xfcodeai/dsh-compaction`: an abstract `CompactionEngine` owning the `ctx.compaction` key, the `CompactionResult` vocabulary, the `compaction/*` session events, the manual failure taxonomy, and the canonical checkpoint message source. It declares `compactIfNeeded()`, `compactNow()`, and `compactRegion()` as **abstract** — the contract states *what* compaction does, not *how*.
-2. **Implementation** — `@xfcodeai/dsh-compaction-basic`: a concrete `BasicCompactionEngine` that consumes `ctx.tokenMeter` and owns the tail→head retention walk, summarization via `ctx.llm.stream()`, the surface replacement, the lock, pre-step pressure, and canonical context-overflow recovery. `summarize()` is its sole subclass hook; pricing and replay stay with the meter.
-3. **Model-free companion** — `@xfcodeai/dsh-compaction-tool-result-pruner`: a concrete optional service that rewrites oversized current `tool/result` nodes before the backend selects a summary range. It is not a second compaction implementation and does not implement `CompactionEngine`.
-4. **Human consumer** — `@xfcodeai/dsh-command-compact` registers argument-free `/compact` through `ctx.commands` and calls the backend-independent `compactNow()` operation. It is direct human control, not a model-facing tool.
+1. **Interface** — `@x1a0f3n9/dsh-compaction`: an abstract `CompactionEngine` owning the `ctx.compaction` key, the `CompactionResult` vocabulary, the `compaction/*` session events, the manual failure taxonomy, and the canonical checkpoint message source. It declares `compactIfNeeded()`, `compactNow()`, and `compactRegion()` as **abstract** — the contract states *what* compaction does, not *how*.
+2. **Implementation** — `@x1a0f3n9/dsh-compaction-basic`: a concrete `BasicCompactionEngine` that consumes `ctx.tokenMeter` and owns the tail→head retention walk, summarization via `ctx.llm.stream()`, the surface replacement, the lock, pre-step pressure, and canonical context-overflow recovery. `summarize()` is its sole subclass hook; pricing and replay stay with the meter.
+3. **Model-free companion** — `@x1a0f3n9/dsh-compaction-tool-result-pruner`: a concrete optional service that rewrites oversized current `tool/result` nodes before the backend selects a summary range. It is not a second compaction implementation and does not implement `CompactionEngine`.
+4. **Human consumer** — `@x1a0f3n9/dsh-command-compact` registers argument-free `/compact` through `ctx.commands` and calls the backend-independent `compactNow()` operation. It is direct human control, not a model-facing tool.
 
 ### The contract depends on `dsh-session` and `dsh-llm` — a deliberate deviation
 

@@ -28,7 +28,7 @@ Status: implemented
 
 - **保留独立仓库作为发布镜像**：不予采纳，因为在权威源码已经迁入本仓库后，这仍会保留拆分的锁文件、源码导出、测试使用陈旧注册表版本的时间窗，以及跨仓库发布序列。
 - **发布一个包含所有平台二进制文件的 npm 包**：不予采纳，因为用户会下载无法在其主机上运行的二进制文件，而且 npm 无法再利用包级 `os`／`cpu` 筛选。仓库归属与 npm 包布局是两个彼此独立的选择。
-- **让启动器使用 DeepSeek Harness 根版本，并递归发布整个 monorepo**：不予采纳，因为本次改动负责的是一个由 3 个包组成的公开包家族，而不是独立的 `@xfcodeai/dsh-*` 基线。[产物优先的 npm 基线提案](../../proposed/process/2026-08-04-artifact-first-npm-baseline-publication.zh.md)明确将原生 workspace 排除在其目标集合之外。
+- **让启动器使用 DeepSeek Harness 根版本，并递归发布整个 monorepo**：不予采纳，因为本次改动负责的是一个由 3 个包组成的公开包家族，而不是独立的 `@x1a0f3n9/dsh-*` 基线。[产物优先的 npm 基线提案](../../proposed/process/2026-08-04-artifact-first-npm-baseline-publication.zh.md)明确将原生 workspace 排除在其目标集合之外。
 - **在一个发布作业中交叉编译两个二进制文件**：不予采纳，因为仓库内已提交的包矩阵已经为每种架构分配了原生 GitHub runner，无需再把交叉工具链纳入信任边界。
 
 ## 后果

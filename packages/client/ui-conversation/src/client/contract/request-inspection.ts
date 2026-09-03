@@ -1,5 +1,5 @@
-import type { ContentBlock, ToolSchema } from '@xfcodeai/dsh-llm/types'
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
+import type { ContentBlock, ToolSchema } from '@x1a0f3n9/dsh-llm/types'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 import type {
   AssistantProvenanceView, AssistantRequestConfig,
 } from './records.ts'

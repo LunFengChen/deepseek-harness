@@ -10,7 +10,7 @@ Host diagnostics, browser Client observations, and JavaScript debugging originat
 
 ## Decision
 
-`@xfcodeai/dsh-experimental-inspector` is one private Client/Host Cordis plugin package. Its Host face starts a Node Worker; its Client face connects directly to that Worker. Cordis owns composition, service publication, bootstrap injection, and disposal only. The source protocol, Worker state, CDP server, V8 bridge, and domain adapters do not inspect Cordis runtime data.
+`@x1a0f3n9/dsh-experimental-inspector` is one private Client/Host Cordis plugin package. Its Host face starts a Node Worker; its Client face connects directly to that Worker. Cordis owns composition, service publication, bootstrap injection, and disposal only. The source protocol, Worker state, CDP server, V8 bridge, and domain adapters do not inspect Cordis runtime data.
 
 The Worker is the sole CDP endpoint and the sole owner of CDP state. Host and Client producers send validated observations under a versioned internal protocol; Client Runtime, Console, Sources, and semantic queries use separate typed frame families on the same authenticated carrier. A realm registry gives every DevTools connection the same Runtime, Console, Sources, and Debugger capability slots, while explicit unsupported members preserve different Host and Client support levels.
 

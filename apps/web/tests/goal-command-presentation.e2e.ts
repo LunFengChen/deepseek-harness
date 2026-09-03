@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
-import type {} from '@xfcodeai/dsh-commands/types'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
+import type {} from '@x1a0f3n9/dsh-commands/types'
 import {
   acknowledgeReloadConnectionLoss, assertFixtureInventory, captureStableAria,
   compareOrRefreshGolden, launchWebScaffold, watchConsole, webSnapshotMode,

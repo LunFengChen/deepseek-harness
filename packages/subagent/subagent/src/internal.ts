@@ -1,13 +1,13 @@
 /**
  * Continuation integration markers and host adapters outside the public
  * Service Definition and model-facing Agent messaging contract.
- * @module @xfcodeai/dsh-subagent/internal
+ * @module @x1a0f3n9/dsh-subagent/internal
  */
 
-import type { Agent } from '@xfcodeai/dsh-agent'
-import type { ContentBlock, MessageId, MessageSource } from '@xfcodeai/dsh-llm'
-import type { SessionId } from '@xfcodeai/dsh-session'
-import type { ToolDefinition } from '@xfcodeai/dsh-tools'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type { ContentBlock, MessageId, MessageSource } from '@x1a0f3n9/dsh-llm'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
+import type { ToolDefinition } from '@x1a0f3n9/dsh-tools'
 import type SubagentRuntime from './index.ts'
 
 /** Process-stable identity carried only by the standard adjacent-Agent messaging tool. */

@@ -2,7 +2,7 @@
 import { vi } from 'vitest'
 import type {
   SettingsScope, SettingsScopeSnapshot,
-} from '@xfcodeai/dsh-client-ui-settings/client'
+} from '@x1a0f3n9/dsh-client-ui-settings/client'
 
 /** Handle over one stubbed scope: the scope, its write spy, and publication controls. */
 export interface StubSettingsScope<T> {

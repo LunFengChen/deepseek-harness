@@ -3,11 +3,11 @@
  * contract and rejects every violation by name. Meta arrives as schema-checked
  * JSON data, never evaluated script text; evaluating it on the host could run getters outside the
  * worker timeout that exists to isolate model-written code.
- * @module @xfcodeai/dsh-workflow-worker-thread/meta
+ * @module @x1a0f3n9/dsh-workflow-worker-thread/meta
  */
 
-import { WorkflowError } from '@xfcodeai/dsh-workflow'
-import type { WorkflowMeta, WorkflowPhase } from '@xfcodeai/dsh-workflow'
+import { WorkflowError } from '@x1a0f3n9/dsh-workflow'
+import type { WorkflowMeta, WorkflowPhase } from '@x1a0f3n9/dsh-workflow'
 
 /** Collect shape violations for a meta value (plain JSON data by the seam contract). */
 function validateMetaShape(meta: unknown): { meta?: WorkflowMeta; violations: string[] } {

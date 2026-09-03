@@ -3,7 +3,7 @@ description: "LSP 能力 seam（ctx.lsp）：按文件扩展名选择提供方�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-lsp
+# @x1a0f3n9/dsh-lsp
 
 [English](README.md) | 中文
 
@@ -36,11 +36,11 @@ kind: "package-reference"
 seam 需要提供方与消费方才能发挥作用。最小组合挂载服务、stdio 提供方与工具：
 
 ```yaml
-- name: '@xfcodeai/dsh-fs-local'
-- name: '@xfcodeai/dsh-subprocess-local'
-- name: '@xfcodeai/dsh-lsp'
-- name: '@xfcodeai/dsh-lsp-stdio'
-- name: '@xfcodeai/dsh-tool-lsp'
+- name: '@x1a0f3n9/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-lsp'
+- name: '@x1a0f3n9/dsh-lsp-stdio'
+- name: '@x1a0f3n9/dsh-tool-lsp'
 ```
 
 服务器命令、扩展名映射与文件系统／子进程配对在提供方与工具包中配置；见 [dsh-lsp-stdio](../lsp-stdio/README.zh.md) 与 [dsh-tool-lsp](../tool-lsp/README.zh.md)。

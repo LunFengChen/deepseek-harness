@@ -3,7 +3,7 @@ description: "面向浏览器功能测试的 jsdom slot 测试运行时，供测
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-client-test-runtime
+# @x1a0f3n9/dsh-client-test-runtime
 
 [English](README.md) | 中文
 
@@ -53,7 +53,7 @@ await runtime.dispose()
 按 Host 会答的码来脚本化失败，并以生产代码同样的方式断言——判 `code`，绝不判类：
 
 ```text
-import { RemoteError } from '@xfcodeai/dsh-client-test-runtime'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 
 remote.goals.create.mockResolvedValue({
   ok: false,

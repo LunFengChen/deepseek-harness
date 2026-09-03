@@ -1,7 +1,7 @@
 /** Browser-zone derivation and model-facing policy text for one open request turn. */
 
-import type { UserMessage } from '@xfcodeai/dsh-llm'
-import { assertNever } from '@xfcodeai/dsh-util-values'
+import type { UserMessage } from '@x1a0f3n9/dsh-llm'
+import { assertNever } from '@x1a0f3n9/dsh-util-values'
 
 const IANA_TIME_ZONE = /^[A-Za-z][A-Za-z0-9_+.-]*(?:\/[A-Za-z0-9_+.-]+)+$/
 

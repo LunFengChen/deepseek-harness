@@ -11,8 +11,8 @@ import type {
   RequestView,
   ToolCallBlock,
   ToolResultNode,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
 import type {
   TrajectoryCellProps,
   TrajectorySourceBlock,

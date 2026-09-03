@@ -1,20 +1,20 @@
 import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { SessionSeq } from '@xfcodeai/dsh-session/types'
-import type { SessionEvent, SessionId } from '@xfcodeai/dsh-session/types'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
+import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { SessionEvent, SessionId } from '@x1a0f3n9/dsh-session/types'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import {
   createScope, MutableSessionEventSource,
-} from '@xfcodeai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   ISessions, SessionBinding, SessionFace, SessionListState, SessionSnapshot,
-} from '@xfcodeai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import {
   ConversationEventRegistry, ConversationNodeAssembler, ConversationViewRegistry, UiConversation,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ConversationNodeDefinition, ConversationViewDefinition, ConversationViewNode,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 const SESSION_ID = 'resident' as SessionId
 

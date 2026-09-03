@@ -13,7 +13,7 @@ import type { Config } from '../src/index.ts'
 // child only TMPDIR, so a bare `python3` inside a wrapper would resolve against
 // /bin/sh's default PATH rather than the caller's selected interpreter.
 const PYABS = resolvePythonBin('python3') ?? 'python3'
-import type { CodeBindingFunction, CodeJsonValue, CodeRunResult } from '@xfcodeai/dsh-code-runtime'
+import type { CodeBindingFunction, CodeJsonValue, CodeRunResult } from '@x1a0f3n9/dsh-code-runtime'
 
 /**
  * Names one `py/` script whose `copyFileSync` must fail, for the partial-staging

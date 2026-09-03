@@ -3,7 +3,7 @@ description: "面向 Linux、macOS 或 Windows 上选择、配置或排查进程
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-sandbox-local
+# @x1a0f3n9/dsh-sandbox-local
 
 [English](README.md) | 中文
 
@@ -37,7 +37,7 @@ kind: "package-reference"
 
 ```yaml
 - id: sandbox
-  name: '@xfcodeai/dsh-sandbox-local'
+  name: '@x1a0f3n9/dsh-sandbox-local'
 ```
 
 | 字段 | 默认值 | 含义 |
@@ -46,7 +46,7 @@ kind: "package-reference"
 | `runnerFailureSignatures` | `[]` | 识别自定义 runner 自身失败方言的不区分大小写 stderr 子串；与 `runnerCommand` 搭配必需 |
 | `probeTimeoutMs` | `5,000` | 每次竞争 runner 候选功能探测的超时时间 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-sandbox-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-sandbox-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 受限执行与强制执行
 

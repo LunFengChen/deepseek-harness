@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-session-query-sqlite",
+  "name": "@x1a0f3n9/dsh-session-query-sqlite",
   "description": "Concrete ctx.sessionQuery backend with SQLite FTS5 search",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -27,13 +27,13 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-session-persistence": {
+    "@x1a0f3n9/dsh-session-persistence": {
       "optional": true
     }
   },
@@ -42,11 +42,11 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-persistence-jsonl": "workspace:^",
-    "@xfcodeai/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

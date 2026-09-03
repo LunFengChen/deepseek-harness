@@ -1,11 +1,11 @@
 /** Registers the sidebar shell into the layout-owned slot. */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
-import type {} from '@xfcodeai/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
 // Type-only: pulls the SlotRegistry service merge (ctx.slots).
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 // Type-only: pulls the Session root standard-props merge.
-import type {} from '@xfcodeai/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
 import type { SidebarRootInjected } from './contract/slots.ts'
 import { SidebarRoot } from './SidebarRoot.tsx'
 import { en, zh, type SidebarKey } from './locales.ts'
@@ -16,7 +16,7 @@ export type {
 } from './contract/slots.ts'
 export type { SidebarKey } from './locales.ts'
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Sidebar shell controls copy. */
     sidebar: SidebarKey

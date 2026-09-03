@@ -3,7 +3,7 @@ description: "dsh Web 客户端的 ask_user_question 功能：接管编辑器的
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-user-questions
+# @x1a0f3n9/dsh-client-ui-user-questions
 
 [English](README.md) | 中文
 

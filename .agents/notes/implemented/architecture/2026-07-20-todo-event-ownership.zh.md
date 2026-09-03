@@ -10,7 +10,7 @@ Status: implemented
 
 ## 决策
 
-`@xfcodeai/dsh-tool-todo` 在其仅类型出口中声明 `TodoItem`，并通过 `@xfcodeai/dsh-session/types` 的声明合并加入 `todo/write`。包根入口和 `/client` 入口重新导出 `TodoItem`，使 host 与浏览器消费方共享同一处声明，而无需加载 todo 插件。
+`@x1a0f3n9/dsh-tool-todo` 在其仅类型出口中声明 `TodoItem`，并通过 `@x1a0f3n9/dsh-session/types` 的声明合并加入 `todo/write`。包根入口和 `/client` 入口重新导出 `TodoItem`，使 host 与浏览器消费方共享同一处声明，而无需加载 todo 插件。
 
 检查 todo 记录的消费方使用仅类型导入，并声明显式包依赖与 TypeScript 项目引用。产出的 JavaScript 不含 todo 导入；组合仅为了搜索、传输或渲染可能含有 `todo/write` 的日志时，无需挂载 todo 工具。
 

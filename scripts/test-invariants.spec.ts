@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { Context, FiberState, Service, ValidationError } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import z from '@deepseek-ai/schemastery'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
-import type { InvariantInstaller } from '@xfcodeai/dsh-invariants'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import type { InvariantInstaller } from '@x1a0f3n9/dsh-invariants'
 import { packageInvariantOwners } from './package-invariants.ts'
 import {
   TEST_INVARIANT_READY_SERVICE,

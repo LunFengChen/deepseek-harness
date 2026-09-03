@@ -1,6 +1,6 @@
 /** Exact-read Session query used by the descriptor-less child snapshot. */
 
-import SessionQueryEngine from '@xfcodeai/dsh-session-query'
+import SessionQueryEngine from '@x1a0f3n9/dsh-session-query'
 
 /** Search is outside this fixture; inherited corpus and observation reads stay real. */
 export default class SubagentDiagnosticQuery extends SessionQueryEngine {

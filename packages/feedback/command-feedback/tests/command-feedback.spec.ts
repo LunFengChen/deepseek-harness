@@ -1,19 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import AgentRegistry, { Inbox } from '@xfcodeai/dsh-agent'
-import type { Agent, AgentStatus } from '@xfcodeai/dsh-agent'
-import CommandRuntime from '@xfcodeai/dsh-commands'
-import SessionStore, { foldSurface, Session, SessionId } from '@xfcodeai/dsh-session'
-import { SessionTelemetryBackend, type SessionTelemetrySharingStatus } from '@xfcodeai/dsh-session-telemetry'
-import * as commandFeedback from '@xfcodeai/dsh-command-feedback'
+import AgentRegistry, { Inbox } from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentStatus } from '@x1a0f3n9/dsh-agent'
+import CommandRuntime from '@x1a0f3n9/dsh-commands'
+import SessionStore, { foldSurface, Session, SessionId } from '@x1a0f3n9/dsh-session'
+import { SessionTelemetryBackend, type SessionTelemetrySharingStatus } from '@x1a0f3n9/dsh-session-telemetry'
+import * as commandFeedback from '@x1a0f3n9/dsh-command-feedback'
 
 const { USER_ID, getOrCreateAnonymousUserId } = vi.hoisted(() => {
   const USER_ID = '01234567-89ab-4cde-8f01-23456789abcd'
   return { USER_ID, getOrCreateAnonymousUserId: vi.fn(() => USER_ID) }
 })
 
-vi.mock('@xfcodeai/dsh-anonymous-user-id', () => ({
+vi.mock('@x1a0f3n9/dsh-anonymous-user-id', () => ({
   getOrCreateAnonymousUserId,
 }))
 
@@ -99,7 +99,7 @@ function feedbackTexts(session: Session): string[] {
     .map(event => event.data.text)
 }
 
-describe('@xfcodeai/dsh-command-feedback registration', () => {
+describe('@x1a0f3n9/dsh-command-feedback registration', () => {
   it('registers one global command with Loader-safe exports and disposes it', async () => {
     const test = await harness()
     expect(commandFeedback.name).toBe('command-feedback')

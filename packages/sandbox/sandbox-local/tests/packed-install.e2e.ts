@@ -73,7 +73,7 @@ describe.skipIf(!packable)('sandbox-local: packed-tarball distribution (publish-
     // Derive the current runtime closure so a newly introduced workspace
     // dependency cannot fall through to an unpublished registry version.
     const workspaceClosure = packedWorkspaceClosure(
-      '@xfcodeai/dsh-sandbox-local',
+      '@x1a0f3n9/dsh-sandbox-local',
       readWorkspacePackages(repoRoot),
     ).filter(member => !member.name.startsWith(NATIVE_PACKAGE_PREFIX))
 
@@ -110,7 +110,7 @@ describe.skipIf(!packable)('sandbox-local: packed-tarball distribution (publish-
       import { existsSync } from 'node:fs'
       import { Context } from '@deepseek-ai/cordis'
       import { launcherPath } from '@deepseek-ai/node-addon-landlock-run'
-      import { LocalSandboxProvider } from '@xfcodeai/dsh-sandbox-local'
+      import { LocalSandboxProvider } from '@x1a0f3n9/dsh-sandbox-local'
       const ctx = new Context()
       await ctx.plugin(LocalSandboxProvider, {})
       const sandbox = ctx.sandbox

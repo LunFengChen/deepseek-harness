@@ -19,10 +19,10 @@
 - button "Thought for a while" [expanded]:
   - text: Thought for a while
   - img
-- button "Context injection @xfcodeai/dsh-system-prompt":
+- button "Context injection @x1a0f3n9/dsh-system-prompt":
   - img
   - img
-  - text: Context injection @xfcodeai/dsh-system-prompt
+  - text: Context injection @x1a0f3n9/dsh-system-prompt
 - button "Context injection user-invoke-demo":
   - img
   - img

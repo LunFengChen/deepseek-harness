@@ -15,10 +15,10 @@ import type { AuthContext, Credential, CredentialInfo, CredentialStore } from '@
 import type { Context } from '@deepseek-ai/cordis'
 import {
   credentialKey, credentialKeyId, credentialKeyScope, credentialRef, isCredentialKeySegment, isCredentialRefName,
-} from '@xfcodeai/dsh-credentials'
-import type { CredentialKey, CredentialProvider, CredentialRecord } from '@xfcodeai/dsh-credentials'
-import { launchEnvironmentOf } from '@xfcodeai/dsh-launch-environment'
-import { LlmError } from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-credentials'
+import type { CredentialKey, CredentialProvider, CredentialRecord } from '@x1a0f3n9/dsh-credentials'
+import { launchEnvironmentOf } from '@x1a0f3n9/dsh-launch-environment'
+import { LlmError } from '@x1a0f3n9/dsh-llm'
 
 /**
  * The record scope every credential this adapter family stores is written

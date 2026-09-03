@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { ToolCallId, LlmAdapter } from '@xfcodeai/dsh-llm'
-import type { GenerateOptions, StreamChunk } from '@xfcodeai/dsh-llm'
-import * as LlmInvariant from '@xfcodeai/dsh-llm/invariant'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
+import LlmRuntime, { ToolCallId, LlmAdapter } from '@x1a0f3n9/dsh-llm'
+import type { GenerateOptions, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import * as LlmInvariant from '@x1a0f3n9/dsh-llm/invariant'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
 
 async function setup(): Promise<Context> {
   const ctx = new Context()

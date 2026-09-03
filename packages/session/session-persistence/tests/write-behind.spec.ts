@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { SessionSeq, type SessionEvent } from '@xfcodeai/dsh-session'
+import { SessionSeq, type SessionEvent } from '@x1a0f3n9/dsh-session'
 import { SessionWriteBehind } from '../src/write-behind.ts'
 
 /** Minimal ordered event fixture; batching does not interpret event vocabulary. */

@@ -6,11 +6,11 @@
  */
 import type {
   ModelCatalogFailure, ModelProviderGroup, ModelSelection, ModelSelectionProjection,
-} from '@xfcodeai/dsh-api-session-controller/types'
-import type { SessionId } from '@xfcodeai/dsh-api-remotes/client'
-import type { TypertClientRemote } from '@xfcodeai/dsh-typert-protocol'
-import type { ObservableSnapshot, SnapshotStore } from '@xfcodeai/dsh-client-store'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
+} from '@x1a0f3n9/dsh-api-session-controller/types'
+import type { SessionId } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { TypertClientRemote } from '@x1a0f3n9/dsh-typert-protocol'
+import type { ObservableSnapshot, SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type { ModelCatalogDirectory } from './catalog.ts'
 
 /** Directory snapshot both entries render from. */

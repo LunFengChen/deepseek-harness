@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-tmux-context",
+  "name": "@x1a0f3n9/dsh-tmux-context",
   "description": "Opt-in durable per-step context with this agent's tmux pane and window location",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -31,19 +31,19 @@
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-shell": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-shell": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-shell": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-shell": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

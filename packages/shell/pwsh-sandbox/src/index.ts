@@ -1,6 +1,6 @@
 /**
  * Sandbox-consuming PowerShell executor — the pwsh twin of
- * `@xfcodeai/dsh-bash-sandbox`. It wraps the exact local pwsh argv through
+ * `@x1a0f3n9/dsh-bash-sandbox`. It wraps the exact local pwsh argv through
  * `ctx.sandbox` (which on Windows resolves to the ACL restricted-token runner
  * chain), inherits local process mechanics, and reports the selected mode,
  * enforcement, and denial facts. Positive runner-launch evidence means the
@@ -9,12 +9,12 @@
  * local-executor semantics. The tool layer owns the escalation approval flow
  * through `ctx.approval`; this executor reports the sandbox facts the tool
  * renders.
- * @module @xfcodeai/dsh-pwsh-sandbox
+ * @module @x1a0f3n9/dsh-pwsh-sandbox
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } from '@xfcodeai/dsh-shell'
-import { SandboxUnavailableError } from '@xfcodeai/dsh-sandbox'
+import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } from '@x1a0f3n9/dsh-shell'
+import { SandboxUnavailableError } from '@x1a0f3n9/dsh-sandbox'
 import type {
   ConfinedArgv,
   ConfinedSandboxMode,
@@ -23,16 +23,16 @@ import type {
   SandboxExecutionPolicy,
   SandboxMode,
   SandboxPolicy,
-} from '@xfcodeai/dsh-sandbox'
-import type {} from '@xfcodeai/dsh-sandbox-policy'
-import { PwshLocalExecutor } from '@xfcodeai/dsh-pwsh-local'
-import type { Config as LocalConfig } from '@xfcodeai/dsh-pwsh-local'
+} from '@x1a0f3n9/dsh-sandbox'
+import type {} from '@x1a0f3n9/dsh-sandbox-policy'
+import { PwshLocalExecutor } from '@x1a0f3n9/dsh-pwsh-local'
+import type { Config as LocalConfig } from '@x1a0f3n9/dsh-pwsh-local'
 import { classifyDenial, classifyRunnerFailure, isRunnerSpawnFailure, matchesSignature } from './helpers.ts'
 
 /**
  * Plugin config: the local executor's knobs, verbatim. The sandbox policy —
  * the default mode and fallback `workspace-write` root — is NOT here: it lives
- * on `ctx.sandboxPolicy` (`@xfcodeai/dsh-sandbox-policy`), which resolves
+ * on `ctx.sandboxPolicy` (`@x1a0f3n9/dsh-sandbox-policy`), which resolves
  * each calling session's mode and cwd for every enforcing capability. The
  * runner choice is likewise the `ctx.sandbox` provider's config, not this
  * executor's.

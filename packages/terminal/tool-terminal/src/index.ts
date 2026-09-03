@@ -1,21 +1,21 @@
 /**
  * Six model-facing persistent terminal tools. Owner identity comes from the exact
  * tool execution Agent; generic `ctx.jobs` owns background ids and collection.
- * @module @xfcodeai/dsh-tool-terminal
+ * @module @x1a0f3n9/dsh-tool-terminal
  */
 
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
-import { TerminalSessionId } from '@xfcodeai/dsh-terminal'
-import type { TerminalSendResult, TerminalSessionId as TerminalSessionIdType, TerminalSignal } from '@xfcodeai/dsh-terminal'
-import type {} from '@xfcodeai/dsh-jobs'
-import { defineTool } from '@xfcodeai/dsh-tools'
-import type { ToolDefinition } from '@xfcodeai/dsh-tools'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import { TerminalSessionId } from '@x1a0f3n9/dsh-terminal'
+import type { TerminalSendResult, TerminalSessionId as TerminalSessionIdType, TerminalSignal } from '@x1a0f3n9/dsh-terminal'
+import type {} from '@x1a0f3n9/dsh-jobs'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { ToolDefinition } from '@x1a0f3n9/dsh-tools'
 import { boundTerminalText, renderList, renderRead, renderSend, renderSendRead, renderSpawn } from './render.ts'
 
-declare module '@xfcodeai/dsh-jobs' {
+declare module '@x1a0f3n9/dsh-jobs' {
   interface JobKindMap {
     'pty-send': 'pty-send'
   }
@@ -250,7 +250,7 @@ export function apply(ctx: Context, config: Config = {}): void {
       if (args.run_in_background === true) {
         if (!enableRunInBackground) throw new Error('background terminal sends are disabled by tool-terminal configuration')
         const jobs = ctx.get('jobs')
-        if (jobs === undefined) throw new Error('background terminal sends require @xfcodeai/dsh-jobs and @xfcodeai/dsh-tool-jobs')
+        if (jobs === undefined) throw new Error('background terminal sends require @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs')
         let cancelRequested = false
         const jobId = jobs.start({
           kind: 'pty-send',

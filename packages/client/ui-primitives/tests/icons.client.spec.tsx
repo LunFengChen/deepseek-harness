@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 import { cleanup, render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
-import * as primitives from '@xfcodeai/dsh-client-ui-primitives'
+import * as primitives from '@x1a0f3n9/dsh-client-ui-primitives'
 import {
   IconAlarmClockOutline16, IconApiOutline14, IconArchiveOutline20, IconFolderClose16,
   IconGoalOutline16, IconSendOutline16,
-} from '@xfcodeai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
 
 afterEach(cleanup)
 

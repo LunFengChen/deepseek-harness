@@ -1,15 +1,15 @@
 /** ui-subagent browser half: catalog actions and read-only composer routing. */
 import { Context } from '@deepseek-ai/cordis'
-import { stubSettingsScope } from '@xfcodeai/dsh-client-test-runtime'
+import { stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
 import { describe, expect, it } from 'vitest'
 import type {
   SessionListState, SessionSnapshot, SessionSummary,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { SubagentAddress } from '@xfcodeai/dsh-subagent/client'
-import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { ComposerChainProps } from '@xfcodeai/dsh-client-ui-conversation/client'
-import { apply as applyLocale, inject as localeInject } from '@xfcodeai/dsh-client-locale/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SubagentAddress } from '@x1a0f3n9/dsh-subagent/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { ComposerChainProps } from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { apply as applyLocale, inject as localeInject } from '@x1a0f3n9/dsh-client-locale/client'
 import {
   SubagentHeaderLineage, type SubagentCatalogInjected,
 } from '../src/client/SubagentHeaderLineage.tsx'

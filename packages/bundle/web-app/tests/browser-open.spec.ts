@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import WebServer from '@xfcodeai/dsh-host-webserver'
+import WebServer from '@x1a0f3n9/dsh-host-webserver'
 import { apply, internals } from '../src/index.ts'
 
 const contexts: Context[] = []

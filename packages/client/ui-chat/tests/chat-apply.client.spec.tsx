@@ -3,27 +3,27 @@ import { describe, expect, it, vi } from 'vitest'
 import { act, render } from '@testing-library/react'
 import {
   SlotTestRuntime, TestRemote, stubSettingsScope, usePinnedBrowserLanguages,
-} from '@xfcodeai/dsh-client-test-runtime'
-import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
-import { resolveSlotLabel } from '@xfcodeai/dsh-client-ui-slots'
-import type { ObservableSnapshot } from '@xfcodeai/dsh-client-store'
-import type { SessionBinding } from '@xfcodeai/dsh-api-session-controller/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+} from '@x1a0f3n9/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import { resolveSlotLabel } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import type { SessionBinding } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import {
   apply as applyConversation, inject as injectConversation,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ConversationLocationDataSource, ConversationLocationDataStore, ConversationTurnDataMap,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import {
   apply as applyChat, EMPTY_CHAT_SNAPSHOT, inject as injectChat,
-} from '@xfcodeai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
 import type {
   ChatNodeTurnDataInjected, ChatSnapshot, TranscriptViewRowInjected, UseChatNodeTurnData,
-} from '@xfcodeai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
 import { CHAT_SETTINGS_NAMESPACE, type ChatSettings } from '../src/chat-settings.ts'
 
-declare module '@xfcodeai/dsh-client-ui-conversation/client' {
+declare module '@x1a0f3n9/dsh-client-ui-conversation/client' {
   interface ConversationTurnDataMap {
     metric: number
   }

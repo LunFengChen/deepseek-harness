@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-host-directory-picker-native",
+  "name": "@x1a0f3n9/dsh-host-directory-picker-native",
   "description": "Native-OS-chooser backend of the directory-picker seam for the DeepSeek Harness web GUI host",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -32,8 +32,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@xfcodeai/dsh-host-directory-picker": "workspace:^",
-    "@xfcodeai/dsh-native-command": "workspace:^",
+    "@x1a0f3n9/dsh-host-directory-picker": "workspace:^",
+    "@x1a0f3n9/dsh-native-command": "workspace:^",
     "koffi": "^3.1.0"
   },
   "peerDependencies": {

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-09-02-fork-npm-scope-for-dsh-publication.md
-2026-09-02-fork-npm-scope-for-dsh-publication.md: 48ed0333059e1ee0037c2763949c11069585a823
-2026-09-02-fork-npm-scope-for-dsh-publication.zh.md: a532bb0dfaffc31ce988229ffd39975ad71fd03a
+2026-09-02-fork-npm-scope-for-dsh-publication.md: 29f9fc64fb63a02ee53c0c58236f1e1474e4a8f4
+2026-09-02-fork-npm-scope-for-dsh-publication.zh.md: c745f15916f31c6db8f80b5be008a3190eeb23cc

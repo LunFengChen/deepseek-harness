@@ -1,7 +1,7 @@
 /** Attachment error and limit copy owned by the conversation input flow. */
 
-import type { ImageAttachmentLimits } from '@xfcodeai/dsh-attachment'
-import type { Translate } from '@xfcodeai/dsh-client-ui-slots'
+import type { ImageAttachmentLimits } from '@x1a0f3n9/dsh-attachment'
+import type { Translate } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ConversationKey } from './locales.ts'
 
 /**

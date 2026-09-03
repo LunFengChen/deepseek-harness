@@ -1,19 +1,19 @@
 /** Test-owned Session Controller faces over declarative fixtures. */
 import type { Context } from '@deepseek-ai/cordis'
-import type { AttachmentIdType } from '@xfcodeai/dsh-attachment'
+import type { AttachmentIdType } from '@x1a0f3n9/dsh-attachment'
 import {
   createScope, MutableSessionEventSource, scopeOf, SESSION_SEARCH_RESULT_LIMIT,
-} from '@xfcodeai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   AgentContext, ISessions, ProjectionsFace, SessionBinding, SessionFace, SessionListState,
   SessionEventLikeEntry, SessionLiveEventEntry, SessionSearchResultItem,
   SessionSnapshot, SessionSummary, SubmissionHandle,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { SessionRequestId } from '@xfcodeai/dsh-api-session-controller/types'
-import type { SubagentAddress } from '@xfcodeai/dsh-subagent/client'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { ObservableSnapshot, SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionRequestId } from '@x1a0f3n9/dsh-api-session-controller/types'
+import type { SubagentAddress } from '@x1a0f3n9/dsh-subagent/client'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { ObservableSnapshot, SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { sessionSnapshot } from './fixtures.ts'
 import type {
   SessionFixture, SessionFixtureSnapshot, Stabilizer,

@@ -246,7 +246,7 @@ describe('Python SDK dsh profile keyless smoke', () => {
         await readFile(join(root, '.dsh', 'profiles', 'sdk-minimal', 'package.json'), 'utf8'),
       ) as { dsh?: { profile?: { bundles?: string[]; patchReload?: string } } }
       expect(profile.dsh?.profile).toEqual({
-        bundles: ['@xfcodeai/dsh-sdk-minimal'],
+        bundles: ['@x1a0f3n9/dsh-sdk-minimal'],
         patchReload: 'startup',
       })
 
@@ -287,7 +287,7 @@ describe('Python SDK dsh profile keyless smoke', () => {
       expect(exitCode, stderr).toBe(1)
       expect(stdout).toBe('')
       expect(stderr).toContain('plugin tree failed to load')
-      expect(stderr).toContain('failed to apply loader entry sdk-jsonrpc-server (@xfcodeai/dsh-sdk-jsonrpc-server)')
+      expect(stderr).toContain('failed to apply loader entry sdk-jsonrpc-server (@x1a0f3n9/dsh-sdk-jsonrpc-server)')
       expect(stderr).toContain('sometimes')
     } finally {
       await rm(root, { recursive: true, force: true })

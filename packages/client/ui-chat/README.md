@@ -2,7 +2,7 @@
 description: "Browser Chat target that renders Session conversation nodes, details, historical images, actions, localization, and scroll state."
 kind: "package-reference"
 ---
-# @xfcodeai/dsh-client-ui-chat
+# @x1a0f3n9/dsh-client-ui-chat
 
 English | [中文](README.zh.md)
 

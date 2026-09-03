@@ -5,7 +5,7 @@
  * This implementation answers from memory. A command running in its own
  * worker uses the message-backed one (`./process/child.ts`), which this one
  * serves from the host side.
- * @module @xfcodeai/dsh-experimental-webworker-runtime/src/shell/fs-access
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/fs-access
  */
 
 import { resolve } from '../module-system/posix-path.ts'

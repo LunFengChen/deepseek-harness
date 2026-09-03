@@ -1,11 +1,11 @@
 # Minimal keyless composition: real app, pwsh executor, and pwsh tool; replayed model.
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   disabled: true
 
 - insert:
     - id: llm-replay
-      name: '@xfcodeai/dsh-llm-replay'
+      name: '@x1a0f3n9/dsh-llm-replay'
       config:
         providers:
           - id: deepseek-official
@@ -14,72 +14,72 @@
               - id: deepseek-v4-pro
 
 - id: subprocess
-  name: '@xfcodeai/dsh-subprocess-local'
+  name: '@x1a0f3n9/dsh-subprocess-local'
 
 - id: bash-sandbox
-  name: '@xfcodeai/dsh-bash-sandbox'
+  name: '@x1a0f3n9/dsh-bash-sandbox'
   disabled: true
 
 - id: pwsh-sandbox
-  name: '@xfcodeai/dsh-pwsh-sandbox'
+  name: '@x1a0f3n9/dsh-pwsh-sandbox'
   disabled: false
 
 - id: shell-env
-  name: '@xfcodeai/dsh-shell-env'
+  name: '@x1a0f3n9/dsh-shell-env'
 
 - id: agent-default-model
-  name: '@xfcodeai/dsh-agent-default-model'
+  name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: deepseek-official
     model: deepseek-v4-pro
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: none
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   disabled: true
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: You are a concise snapshot agent working in {{cwd}}.
 
 - id: goal
-  name: '@xfcodeai/dsh-goal'
+  name: '@x1a0f3n9/dsh-goal'
   disabled: true
 
 - id: goal-round-driver
-  name: '@xfcodeai/dsh-goal-round-driver'
+  name: '@x1a0f3n9/dsh-goal-round-driver'
   disabled: true
 
 - id: command-goal
-  name: '@xfcodeai/dsh-command-goal'
+  name: '@x1a0f3n9/dsh-command-goal'
   disabled: true
 
 - id: tool-goal
-  name: '@xfcodeai/dsh-tool-goal'
+  name: '@x1a0f3n9/dsh-tool-goal'
   disabled: true
 
 - id: skill
-  name: '@xfcodeai/dsh-skill'
+  name: '@x1a0f3n9/dsh-skill'
   disabled: true
 
 - id: skill-filesystem
-  name: '@xfcodeai/dsh-skill-filesystem'
+  name: '@x1a0f3n9/dsh-skill-filesystem'
   disabled: true
 
 - id: tool-skill
-  name: '@xfcodeai/dsh-tool-skill'
+  name: '@x1a0f3n9/dsh-tool-skill'
   disabled: true
 
 - id: tool-bash
-  name: '@xfcodeai/dsh-tool-bash'
+  name: '@x1a0f3n9/dsh-tool-bash'
   disabled: true
 
 - id: tool-pwsh
-  name: '@xfcodeai/dsh-tool-pwsh'
+  name: '@x1a0f3n9/dsh-tool-pwsh'
   disabled: false

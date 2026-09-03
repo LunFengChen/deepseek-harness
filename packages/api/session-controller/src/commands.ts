@@ -2,21 +2,21 @@
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@xfcodeai/dsh-brand'
-import type { Agent, ModelSelection as AgentModelSelection } from '@xfcodeai/dsh-agent'
-import { AttachmentError, admitPromptContent } from '@xfcodeai/dsh-attachment'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type { Agent, ModelSelection as AgentModelSelection } from '@x1a0f3n9/dsh-agent'
+import { AttachmentError, admitPromptContent } from '@x1a0f3n9/dsh-attachment'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
 import {
   ReasoningEffortId, createUserMessage, freezeMessage,
-} from '@xfcodeai/dsh-llm'
-import type { MessageSource } from '@xfcodeai/dsh-llm'
-import { SessionLogOffset, SessionSeq } from '@xfcodeai/dsh-session'
-import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@xfcodeai/dsh-session'
-import { SessionQueryError, type SessionObservation } from '@xfcodeai/dsh-session-query'
-import { SessionTitleInvalidError } from '@xfcodeai/dsh-session-title'
-import { canonicalClientTimeZone } from '@xfcodeai/dsh-util-time'
-import { RemoteError, remoteErrorOf } from '@xfcodeai/dsh-typert-protocol'
-import type { Workspace } from '@xfcodeai/dsh-workspace'
+} from '@x1a0f3n9/dsh-llm'
+import type { MessageSource } from '@x1a0f3n9/dsh-llm'
+import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@x1a0f3n9/dsh-session'
+import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
+import { SessionTitleInvalidError } from '@x1a0f3n9/dsh-session-title'
+import { canonicalClientTimeZone } from '@x1a0f3n9/dsh-util-time'
+import { RemoteError, remoteErrorOf } from '@x1a0f3n9/dsh-typert-protocol'
+import type { Workspace } from '@x1a0f3n9/dsh-workspace'
 import {
   ApiSessionAgentController,
   ApiSessionCwdConflict,

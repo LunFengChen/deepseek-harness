@@ -3,7 +3,7 @@
  * (a file-tree root, a database file) and exposes operation groups over it.
  * This module defines the normative contract text for backend implementers; the shared
  * conformance suite in `tests/contract.ts` checks every rule.
- * @module @xfcodeai/dsh-storage/src/backend
+ * @module @x1a0f3n9/dsh-storage/src/backend
  */
 
 /** Allowed format for unit and table names: safe as a file name and as a SQL identifier segment without escaping. */

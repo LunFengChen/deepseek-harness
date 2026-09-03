@@ -14,7 +14,7 @@
  * NOTE: ./suite.ts imports vitest, so this package is importable only inside a
  * vitest run — a support-tier constraint stated in the README.
  *
- * @module @xfcodeai/dsh-session-snapshot
+ * @module @x1a0f3n9/dsh-session-snapshot
  */
 
 export {

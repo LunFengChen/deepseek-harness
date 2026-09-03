@@ -2,39 +2,39 @@
 # e2b.cwd and sandbox-policy.workspaceRoot must name the same remote directory,
 # which is also bash-local's implicit default workdir.
 - id: e2b
-  name: '@xfcodeai/dsh-e2b'
+  name: '@x1a0f3n9/dsh-e2b'
   config:
     cwd: !!js process.cwd()
     timeoutMs: 180000
 
 - id: subprocess-e2b
-  name: '@xfcodeai/dsh-subprocess-e2b'
+  name: '@x1a0f3n9/dsh-subprocess-e2b'
 
 - id: bash
-  name: '@xfcodeai/dsh-bash-local'
+  name: '@x1a0f3n9/dsh-bash-local'
   config:
     timeoutMs: 30000
 
 - id: fs-e2b
-  name: '@xfcodeai/dsh-fs-e2b'
+  name: '@x1a0f3n9/dsh-fs-e2b'
 
 - id: agents
-  name: '@xfcodeai/dsh-agent'
+  name: '@x1a0f3n9/dsh-agent'
 
 - id: session-projection
-  name: '@xfcodeai/dsh-session-projection'
+  name: '@x1a0f3n9/dsh-session-projection'
 
 - id: sandbox-policy
-  name: '@xfcodeai/dsh-sandbox-policy'
+  name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: danger-full-access
     workspaceRoot: !!js process.cwd()
 
 - id: pty
-  name: '@xfcodeai/dsh-terminal'
+  name: '@x1a0f3n9/dsh-terminal'
 
 - id: terminal-bash
-  name: '@xfcodeai/dsh-terminal-bash'
+  name: '@x1a0f3n9/dsh-terminal-bash'
   config:
     pollIntervalMs: 25
     exactProbeAfterMs: 150
@@ -44,10 +44,10 @@
     disposeGraceMs: 1000
 
 - id: lsp
-  name: '@xfcodeai/dsh-lsp'
+  name: '@x1a0f3n9/dsh-lsp'
 
 - id: lsp-stdio
-  name: '@xfcodeai/dsh-lsp-stdio'
+  name: '@x1a0f3n9/dsh-lsp-stdio'
   config:
     servers:
       fixture:

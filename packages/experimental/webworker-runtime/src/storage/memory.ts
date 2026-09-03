@@ -2,7 +2,7 @@
  * In-memory filesystem behind the worker's `node:fs` proxy. Contents come from
  * the build-time image (see {@link loadVfsImage}); this remains the synchronous
  * authority when an asynchronous durable sink mirrors selected subtrees.
- * @module @xfcodeai/dsh-experimental-webworker-runtime/src/storage/memory
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/memory
  */
 import { dirname, join, normalize, resolve, SEP } from '../module-system/posix-path.ts'
 import { IMAGE_OVERLAY_DIRECTORIES } from '../image-layout.ts'

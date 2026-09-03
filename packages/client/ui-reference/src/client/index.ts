@@ -9,22 +9,22 @@
  * workspace is not the current one. A session is dated from the Host session
  * list, so the `@` menu and the session list never disagree about its age.
  *
- * @module @xfcodeai/dsh-client-ui-reference/client
+ * @module @x1a0f3n9/dsh-client-ui-reference/client
  */
 // Type-only: pulls the generated Remote API and ctx.remote merge through the Client assembly boundary.
-import type {} from '@xfcodeai/dsh-api-remotes/client'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
-import type {} from '@xfcodeai/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { ISessions } from '@xfcodeai/dsh-api-session-controller/client'
-import { relativeTime } from '@xfcodeai/dsh-client-ui-primitives'
+import type { ISessions } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { relativeTime } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type {
   ClientSessionContext, InputTriggerCrumb, InputTriggerServiceContract, InputTriggerSource,
-} from '@xfcodeai/dsh-client-ui-input-trigger/client'
-import { formatFileMention } from '@xfcodeai/dsh-file-reference/grammar'
-import type { FileReferenceCandidate } from '@xfcodeai/dsh-file-reference/types'
-import type { SessionReferenceMentionCandidate } from '@xfcodeai/dsh-session-reference/types'
-import { abbreviateHomePath } from '@xfcodeai/dsh-util-workspace-path'
+} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
+import { formatFileMention } from '@x1a0f3n9/dsh-file-reference/grammar'
+import type { FileReferenceCandidate } from '@x1a0f3n9/dsh-file-reference/types'
+import type { SessionReferenceMentionCandidate } from '@x1a0f3n9/dsh-session-reference/types'
+import { abbreviateHomePath } from '@x1a0f3n9/dsh-util-workspace-path'
 import { en, NS, zh, type ReferenceKey } from './locales.ts'
 
 /** Required services: the trigger registry, the Remote namespaces, and the copy. */

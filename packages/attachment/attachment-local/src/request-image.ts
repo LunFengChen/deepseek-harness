@@ -4,14 +4,14 @@ import { createHash, randomUUID } from 'node:crypto'
 import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import sharp, { type Sharp } from 'sharp'
-import { AttachmentError, ImageVariantId, requestImageDimensions } from '@xfcodeai/dsh-attachment'
+import { AttachmentError, ImageVariantId, requestImageDimensions } from '@x1a0f3n9/dsh-attachment'
 import type {
   ImageMediaType,
   ImageAttachmentRef,
   ImageRequestPolicy,
   RequestImageAttachment,
   StoredImageAttachment,
-} from '@xfcodeai/dsh-attachment'
+} from '@x1a0f3n9/dsh-attachment'
 import {
   IMAGE_ENCODING_QUALITIES,
   WEBP_ENCODING_EFFORT,

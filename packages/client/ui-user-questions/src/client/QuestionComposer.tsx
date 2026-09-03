@@ -4,7 +4,7 @@ import {
   Button, IconCheckOutline14, IconChevronDownOutline14, IconChevronLeftOutline14,
   IconChevronRightOutline14, IconChevronUpOutline14, IconCloseOutline16,
   IconEditOutline16, MarkdownText,
-} from '@xfcodeai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
 import {
   planReviewOf,
   type QuestionAnswer, type QuestionComposerProps,

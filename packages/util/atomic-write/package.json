@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-atomic-write",
+  "name": "@x1a0f3n9/dsh-atomic-write",
   "description": "Zero-dependency atomic file replacement: exclusive-create random-suffix temp + rename carrying the caller-stated permissions (writeFileAtomic)",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },

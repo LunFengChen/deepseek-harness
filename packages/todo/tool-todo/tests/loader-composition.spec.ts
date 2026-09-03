@@ -9,14 +9,14 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import { ToolCallId } from '@xfcodeai/dsh-llm'
-import { Session, SessionId } from '@xfcodeai/dsh-session'
-import AgentRegistry, { Inbox } from '@xfcodeai/dsh-agent'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime from '@xfcodeai/dsh-tools'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import * as ToolTodo from '@xfcodeai/dsh-tool-todo'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import { Session, SessionId } from '@x1a0f3n9/dsh-session'
+import AgentRegistry, { Inbox } from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import * as ToolTodo from '@x1a0f3n9/dsh-tool-todo'
 
 let root: string | undefined
 let context: Context | undefined
@@ -56,11 +56,11 @@ async function boot(configLines: readonly string[]): Promise<Context> {
   root = await mkdtemp(join(tmpdir(), 'dsh-todo-loader-'))
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [
-    "- name: '@xfcodeai/dsh-agent'",
-    "- name: '@xfcodeai/dsh-system-prompt'",
-    "- name: '@xfcodeai/dsh-tools'",
-    "- name: '@xfcodeai/dsh-session-projection'",
-    "- name: '@xfcodeai/dsh-tool-todo'",
+    "- name: '@x1a0f3n9/dsh-agent'",
+    "- name: '@x1a0f3n9/dsh-system-prompt'",
+    "- name: '@x1a0f3n9/dsh-tools'",
+    "- name: '@x1a0f3n9/dsh-session-projection'",
+    "- name: '@x1a0f3n9/dsh-tool-todo'",
     ...configLines.length > 0 ? ['  config:', ...configLines] : [],
     '',
   ].join('\n'))
@@ -71,11 +71,11 @@ async function boot(configLines: readonly string[]): Promise<Context> {
   await ctx.plugin(Loader)
   ctx.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['@xfcodeai/dsh-agent', AgentRegistry],
-    ['@xfcodeai/dsh-system-prompt', SystemPrompt],
-    ['@xfcodeai/dsh-tools', ToolRuntime],
-    ['@xfcodeai/dsh-session-projection', SessionProjectionRegistry],
-    ['@xfcodeai/dsh-tool-todo', ToolTodo],
+    ['@x1a0f3n9/dsh-agent', AgentRegistry],
+    ['@x1a0f3n9/dsh-system-prompt', SystemPrompt],
+    ['@x1a0f3n9/dsh-tools', ToolRuntime],
+    ['@x1a0f3n9/dsh-session-projection', SessionProjectionRegistry],
+    ['@x1a0f3n9/dsh-tool-todo', ToolTodo],
   ])
   ctx.loader.internal = {
     version: 'v2',

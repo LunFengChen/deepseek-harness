@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-subagent-spawn-in-process",
+  "name": "@x1a0f3n9/dsh-subagent-spawn-in-process",
   "description": "In-process spawn subagent backend: runs a fresh child agent on ctx.agents",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -27,8 +27,8 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-subagent": "workspace:^",
-    "@xfcodeai/dsh-subagent-in-process-driver": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-subagent-in-process-driver": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -36,20 +36,20 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-loop": "workspace:^",
-    "@xfcodeai/dsh-agent-loop-testkit": "workspace:^",
-    "@xfcodeai/dsh-bash-local": "workspace:^",
-    "@xfcodeai/dsh-subprocess-local": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-llm-deepseek": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-subagent": "workspace:^",
-    "@xfcodeai/dsh-subagent-in-process-driver": "workspace:^",
-    "@xfcodeai/dsh-tool-bash": "workspace:^",
-    "@xfcodeai/dsh-tool-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:^",
+    "@x1a0f3n9/dsh-bash-local": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-llm-deepseek": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-subagent-in-process-driver": "workspace:^",
+    "@x1a0f3n9/dsh-tool-bash": "workspace:^",
+    "@x1a0f3n9/dsh-tool-subagent": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

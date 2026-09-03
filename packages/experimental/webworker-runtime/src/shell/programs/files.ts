@@ -3,7 +3,7 @@
  * shell's filesystem. Listings print one entry per line: nothing here is ever
  * a terminal, so the column layout a real `ls` picks for a tty would only be
  * noise in a tool result.
- * @module @xfcodeai/dsh-experimental-webworker-runtime/src/shell/programs/files
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/programs/files
  */
 
 import picomatch from 'picomatch'

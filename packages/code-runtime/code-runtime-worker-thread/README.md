@@ -3,7 +3,7 @@ description: "Worker-thread code execution for users and maintainers composing, 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-code-runtime-worker-thread
+# @x1a0f3n9/dsh-code-runtime-worker-thread
 
 English | [中文](README.zh.md)
 
@@ -30,8 +30,8 @@ Mount this backend with the code-runtime seam when a composition should execute 
 ### Minimal configuration
 
 ```yaml
-- name: '@xfcodeai/dsh-code-runtime'
-- name: '@xfcodeai/dsh-code-runtime-worker-thread'
+- name: '@x1a0f3n9/dsh-code-runtime'
+- name: '@x1a0f3n9/dsh-code-runtime-worker-thread'
   config:
     computeMs: 60000            # busy-time budget (measured event-loop active time)
     maxWallMs: 600000           # wall-clock ceiling; never pauses for anything
@@ -46,7 +46,7 @@ Mount this backend with the code-runtime seam when a composition should execute 
 | `maxOutputBytes` | `67,108,864` | Hard cap for serialized logs plus the completion value or failure message; at least `4` |
 | `maxOldGenerationSizeMb` | `512` | Worker heap cap; overflow kills the worker and surfaces as `worker-exit` |
 
-Every field is validated and defaulted at load; there are no other tunables. The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-code-runtime-worker-thread) is the exhaustive source for every accepted field.
+Every field is validated and defaulted at load; there are no other tunables. The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-code-runtime-worker-thread) is the exhaustive source for every accepted field.
 
 ### What a run returns
 
@@ -118,7 +118,7 @@ Read these when the backend contract is not enough. They move from the seam defi
 - [Code runtime seam](../code-runtime/README.md) — the abstract contract this backend implements.
 - [PTC mode Agent Note](../../../.agents/notes/implemented/feature/2026-06-15-ptc.md) — how `dsh-tools` consumes `ctx.codeRuntime` and presents `run_code`.
 - [Code runtime subsystem reference](../../../docs/subsystems/code-runtime.md) — request/result vocabulary, bindings, and failure taxonomy.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-code-runtime-worker-thread) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-code-runtime-worker-thread) — every accepted config field and its source declaration.
 
 -----
 

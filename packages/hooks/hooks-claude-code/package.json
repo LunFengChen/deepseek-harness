@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-hooks-claude-code",
+  "name": "@x1a0f3n9/dsh-hooks-claude-code",
   "description": "Bridge plugin: run a Claude Code hooks.json / settings hook config on the DeepSeek Harness interception seams",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -30,31 +30,31 @@
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "peerDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-hook-protocol": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-subagent": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-hook-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-loop": "workspace:^",
-    "@xfcodeai/dsh-agent-loop-testkit": "workspace:^",
-    "@xfcodeai/dsh-shell": "workspace:^",
-    "@xfcodeai/dsh-bash-local": "workspace:^",
-    "@xfcodeai/dsh-subprocess-local": "workspace:^",
-    "@xfcodeai/dsh-hook-protocol": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-persistence-jsonl": "workspace:^",
-    "@xfcodeai/dsh-subagent": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:^",
+    "@x1a0f3n9/dsh-shell": "workspace:^",
+    "@x1a0f3n9/dsh-bash-local": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
+    "@x1a0f3n9/dsh-hook-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

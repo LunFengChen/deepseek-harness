@@ -6,9 +6,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import TokenMeter from '@xfcodeai/dsh-token-meter'
-import ToolResultPruner from '@xfcodeai/dsh-compaction-tool-result-pruner'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import ToolResultPruner from '@x1a0f3n9/dsh-compaction-tool-result-pruner'
 
 let root: string | undefined
 let context: Context | undefined
@@ -25,9 +25,9 @@ describe('compaction-tool-result-pruner real Loader composition', () => {
     root = await mkdtemp(join(tmpdir(), 'dsh-compact-tool-result-prune-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@xfcodeai/dsh-session-projection'",
-      "- name: '@xfcodeai/dsh-token-meter'",
-      "- name: '@xfcodeai/dsh-compaction-tool-result-pruner'",
+      "- name: '@x1a0f3n9/dsh-session-projection'",
+      "- name: '@x1a0f3n9/dsh-token-meter'",
+      "- name: '@x1a0f3n9/dsh-compaction-tool-result-pruner'",
       '  config:',
       '    thresholdChars: 100',
       '    headChars: 20',
@@ -42,9 +42,9 @@ describe('compaction-tool-result-pruner real Loader composition', () => {
     context.loader.internal = {
       version: 'v2',
       async import(specifier: string) {
-        if (specifier === '@xfcodeai/dsh-session-projection') return SessionProjectionRegistry
-        if (specifier === '@xfcodeai/dsh-token-meter') return TokenMeter
-        if (specifier === '@xfcodeai/dsh-compaction-tool-result-pruner') return ToolResultPruner
+        if (specifier === '@x1a0f3n9/dsh-session-projection') return SessionProjectionRegistry
+        if (specifier === '@x1a0f3n9/dsh-token-meter') return TokenMeter
+        if (specifier === '@x1a0f3n9/dsh-compaction-tool-result-pruner') return ToolResultPruner
         throw new Error(`unexpected Loader import: ${specifier}`)
       },
     } as unknown as NonNullable<typeof context.loader.internal>

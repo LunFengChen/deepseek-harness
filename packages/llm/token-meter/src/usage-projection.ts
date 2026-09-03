@@ -3,11 +3,11 @@
  */
 
 import { z } from 'zod'
-import type { TokenUsage } from '@xfcodeai/dsh-llm'
-import type {} from '@xfcodeai/dsh-llm-retry/types'
-import { SessionSeq } from '@xfcodeai/dsh-session'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
+import type { TokenUsage } from '@x1a0f3n9/dsh-llm'
+import type {} from '@x1a0f3n9/dsh-llm-retry/types'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import type { ContextPressureProjection, TokenUsageProjection } from './projection.ts'
 import { foldSurfaceProjection } from './surface-projection.ts'
 
@@ -86,7 +86,7 @@ const usageOf = (event: SessionEvent): TokenUsage | undefined =>
       ? event.data.usage
       : undefined
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     tokenUsage: TokenUsageState
     contextPressure: ContextPressureState

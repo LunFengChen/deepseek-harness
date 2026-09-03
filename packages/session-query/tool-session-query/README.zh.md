@@ -3,7 +3,7 @@ description: "面向 agent 开发者与维护者的工作区授权模型会话�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-session-query
+# @x1a0f3n9/dsh-tool-session-query
 
 [English](README.md) | 中文
 
@@ -38,7 +38,7 @@ kind: "package-reference"
 | `maxSearchResults` | `100` | 一次搜索调用返回的最大已授权命中数 |
 | `searchTimeoutMs` | `30000` | 附加到两个全文搜索工具的协作式截止时间 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-tool-session-query)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-tool-session-query)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 模型可以做什么
 
@@ -54,7 +54,7 @@ kind: "package-reference"
 
 ### 失败与恢复
 
-每个可信查询服务调用都经过一个错误净化器：调用方取消被精确保留，语料库与提供方诊断进入内部日志，不安全或不可打印的失败回退到固定 `SESSION_QUERY_TOOL_FAILED` 代码与消息。本地参数校验与授权错误保留精确的工具自有消息（目标在调用方工作区之外时为 `SESSION_QUERY_TOOL_UNAUTHORIZED`）。本包不执行字节或字符截断，也不导入 spill 后端；需要限制内联输出的部署应挂载 `@xfcodeai/dsh-spill-policy`，它可以在保留完整结果的同时替换过大的已渲染文本。
+每个可信查询服务调用都经过一个错误净化器：调用方取消被精确保留，语料库与提供方诊断进入内部日志，不安全或不可打印的失败回退到固定 `SESSION_QUERY_TOOL_FAILED` 代码与消息。本地参数校验与授权错误保留精确的工具自有消息（目标在调用方工作区之外时为 `SESSION_QUERY_TOOL_UNAUTHORIZED`）。本包不执行字节或字符截断，也不导入 spill 后端；需要限制内联输出的部署应挂载 `@x1a0f3n9/dsh-spill-policy`，它可以在保留完整结果的同时替换过大的已渲染文本。
 
 -----
 
@@ -101,7 +101,7 @@ kind: "package-reference"
 
 当包级约定不够用时阅读以下页面。它们从工具表面逐步进入底层服务、schema 目录与设计证据。
 
-- [生成的工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-session-query)——模型看到的五个工具 schema。
+- [生成的工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-session-query)——模型看到的五个工具 schema。
 - [dsh-session-query](../session-query/README.zh.md)——这些工具调用的服务。
 - [dsh-session-query-sqlite](../session-query-sqlite/README.zh.md)——两个搜索工具背后的全文后端。
 - [会话查询子系统参考](../../../docs/subsystems/session-query.zh.md)——工具之下的类型级约定。
@@ -136,7 +136,7 @@ Use session_search to find relevant work from prior sessions, or session_event_s
 
 #### 模型看到什么
 
-模型会看到生成的 [`session_search`、`session_event_search`、`session_trace`、`session_event_trace` 与 `session_event_read` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-session-query)。搜索过滤器会增加固定 schema token，而游标、工作区路径、输出分页与模型可控结果上限仍不存在。
+模型会看到生成的 [`session_search`、`session_event_search`、`session_trace`、`session_event_trace` 与 `session_event_read` schema](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-session-query)。搜索过滤器会增加固定 schema token，而游标、工作区路径、输出分页与模型可控结果上限仍不存在。
 
 #### Token 影响
 

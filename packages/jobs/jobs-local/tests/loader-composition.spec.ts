@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import LocalJobRegistry from '@xfcodeai/dsh-jobs-local'
+import LocalJobRegistry from '@x1a0f3n9/dsh-jobs-local'
 
 let root: string | undefined
 let context: Context | undefined
@@ -23,7 +23,7 @@ describe('jobs-local through a real Loader composition', () => {
     root = await mkdtemp(join(tmpdir(), 'dsh-jobs-local-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@xfcodeai/dsh-jobs-local'",
+      "- name: '@x1a0f3n9/dsh-jobs-local'",
       '  config:',
       '    maxConcurrentJobsPerOwner: 1',
       '',
@@ -36,7 +36,7 @@ describe('jobs-local through a real Loader composition', () => {
     context.loader.internal = {
       version: 'v2',
       async import(specifier: string) {
-        if (specifier === '@xfcodeai/dsh-jobs-local') return LocalJobRegistry
+        if (specifier === '@x1a0f3n9/dsh-jobs-local') return LocalJobRegistry
         throw new Error(`unexpected Loader import: ${specifier}`)
       },
     } as unknown as NonNullable<typeof context.loader.internal>

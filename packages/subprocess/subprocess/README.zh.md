@@ -3,7 +3,7 @@ description: "面向组合作者与能力消费方的子进程服务（`ctx.subp
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-subprocess
+# @x1a0f3n9/dsh-subprocess
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-reference"
 每个组合由唯一一个提供方注册 `ctx.subprocess`；把它与经由它 spawn 的消费方放在一起加载——bash 执行器、LSP 主机、PTY shell 后端或进程外 subagent 后端。加载第二个提供方会快速失败（每个上下文只有一个服务，这是 cordis 的标准行为）。
 
 ```yaml
-- name: '@xfcodeai/dsh-subprocess-local'
-- name: '@xfcodeai/dsh-bash-local'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-bash-local'
 ```
 
 ### 启动受管进程

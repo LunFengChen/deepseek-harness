@@ -7,8 +7,8 @@
  * @module dsh-session/request-header
  */
 
-import { callConfigEquals } from '@xfcodeai/dsh-llm'
-import type { ToolSchema } from '@xfcodeai/dsh-llm'
+import { callConfigEquals } from '@x1a0f3n9/dsh-llm'
+import type { ToolSchema } from '@x1a0f3n9/dsh-llm'
 import type { EpochHeader, SessionEvent } from './types.ts'
 
 /**

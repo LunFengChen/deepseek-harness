@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-settings-plugin-inventory",
+  "name": "@x1a0f3n9/dsh-client-ui-settings-plugin-inventory",
   "description": "Read-only Cordis Loader inventory tab in Web Plugins settings",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,10 +28,10 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-api-remotes",
-        "@xfcodeai/dsh-client-ui-settings",
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-agent-preset"
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-ui-settings",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-agent-preset"
       ],
       "platform": "web"
     }
@@ -45,20 +45,20 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-agent-preset": "workspace:^",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-client-ui-settings": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-agent-preset": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^"
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^"
   },
   "files": [
     "lib/index.js",

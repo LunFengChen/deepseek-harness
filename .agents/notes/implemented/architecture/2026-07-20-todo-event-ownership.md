@@ -10,7 +10,7 @@ English | [中文](2026-07-20-todo-event-ownership.zh.md)
 
 ## Decision
 
-`@xfcodeai/dsh-tool-todo` declares `TodoItem` and merges `todo/write` into `@xfcodeai/dsh-session/types` from its type-only outlet. The package root and `/client` entrypoint re-export `TodoItem`, so host and browser consumers share one declaration without loading the todo plugin.
+`@x1a0f3n9/dsh-tool-todo` declares `TodoItem` and merges `todo/write` into `@x1a0f3n9/dsh-session/types` from its type-only outlet. The package root and `/client` entrypoint re-export `TodoItem`, so host and browser consumers share one declaration without loading the todo plugin.
 
 Consumers that inspect todo records use type-only imports plus explicit package dependencies and TypeScript project references. The emitted JavaScript has no todo import, and a composition does not need to mount the todo tool merely to search, transmit, or render a log that may contain `todo/write`.
 

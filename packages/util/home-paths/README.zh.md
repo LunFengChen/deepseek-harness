@@ -3,7 +3,7 @@ description: "DeepSeek Harness 主目录与用户数据路径的共享解析，�
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-home-paths
+# @x1a0f3n9/dsh-home-paths
 
 [English](README.md) | 中文
 
@@ -29,7 +29,7 @@ kind: "package-library"
 ### 解析主目录
 
 ```ts
-import { resolveDshHome, dshHomePath } from '@xfcodeai/dsh-home-paths'
+import { resolveDshHome, dshHomePath } from '@x1a0f3n9/dsh-home-paths'
 
 const home = resolveDshHome()                // configured path, else $DSH_HOME, else ~/.dsh
 const settings = dshHomePath('settings')     // join one child onto the resolved home

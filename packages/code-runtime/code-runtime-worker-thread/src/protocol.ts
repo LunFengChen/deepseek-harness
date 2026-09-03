@@ -2,7 +2,7 @@
  * Versionless, structured-clone wire protocol between co-shipped host and worker code. The host
  * treats inbound traffic as hostile because model code can forge `parentPort` messages; the
  * worker trusts host replies.
- * @module @xfcodeai/dsh-code-runtime-worker-thread/src/protocol
+ * @module @x1a0f3n9/dsh-code-runtime-worker-thread/src/protocol
  */
 
 import type { WorkerJsonWire } from './worker-json.ts'

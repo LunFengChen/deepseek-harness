@@ -8,8 +8,8 @@
  */
 import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { SessionId } from '@xfcodeai/dsh-api-remotes/client'
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
+import type { SessionId } from '@x1a0f3n9/dsh-api-remotes/client'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
 import { ClientSessions, SessionCreateError } from '../src/client/sessions/service.ts'
 import { scopeOf } from '../src/client/scope.ts'
 import type { SessionFollowFrame } from '../src/types.ts'

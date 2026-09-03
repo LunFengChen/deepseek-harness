@@ -2,24 +2,24 @@
  * The model-facing `workflow` tool: run a JavaScript orchestration script that fans out
  * subagents, and return the script's final value. It owns the model-facing schema and run lifecycle; script
  * parsing, execution, caps, and cancellation live behind `ctx.workflowEngine`
- * (`@xfcodeai/dsh-workflow`), so a hardened engine swaps in without touching what the model
+ * (`@x1a0f3n9/dsh-workflow`), so a hardened engine swaps in without touching what the model
  * sees. Execution awaits `run.result` and always disposes the run; non-completed reasons become tool
  * errors, and background collection remains deferred. Presentation is an args-only generic card
  * titled from `meta.name`. Explicit-ask usage guidance is registered as the tool's own prompt
  * section rather than deployment persona prose.
- * @module @xfcodeai/dsh-tool-workflow
+ * @module @x1a0f3n9/dsh-tool-workflow
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { defineTool } from '@xfcodeai/dsh-tools'
-import type { ToolCallView, ToolResultView } from '@xfcodeai/dsh-tools'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
-import type { Session, SessionEventMap } from '@xfcodeai/dsh-session'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { ToolCallView, ToolResultView } from '@x1a0f3n9/dsh-tools'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { Session, SessionEventMap } from '@x1a0f3n9/dsh-session'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import type {
   WorkflowResult, WorkflowRun, WorkflowRunId, WorkflowStopReason,
-} from '@xfcodeai/dsh-workflow'
+} from '@x1a0f3n9/dsh-workflow'
 import type {
   ToolWorkflowAgentEndData, ToolWorkflowAgentStartData,
   ToolWorkflowRunEndData, ToolWorkflowRunStartData,

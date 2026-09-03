@@ -8,13 +8,13 @@
  */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
-import { createScope, scopeOf } from '@xfcodeai/dsh-api-session-controller/client'
-import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { InputTriggerSource } from '@xfcodeai/dsh-client-ui-input-trigger/client'
+import { createScope, scopeOf } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { InputTriggerSource } from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
 import type { CommandUiContract } from '../src/client/contract.ts'
 import type { PopupSelectInjected } from '../src/client/PopupSelectView.tsx'
-import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import { apply, CommandUiRuntime, inject } from '../src/client/index.ts'
 
 const sid = (k: string): SessionId => k as SessionId

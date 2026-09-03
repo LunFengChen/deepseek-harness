@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest'
-import { stubSettingsScope } from '@xfcodeai/dsh-client-test-runtime'
+import { stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
 import type { ChatSettings } from '../src/chat-settings.ts'
 import { TranscriptViewPolicy } from '../src/client/transcript-view.ts'
 

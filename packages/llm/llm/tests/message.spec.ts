@@ -6,7 +6,7 @@ import {
   createUserMessage,
   freezeMessage,
   MessageId,
-} from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 
 describe('message construction', () => {
   it('assigns identity immediately and returns a detached deep-frozen message', () => {

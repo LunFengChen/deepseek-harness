@@ -9,15 +9,15 @@
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
-import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@xfcodeai/dsh-loader-smoke'
+import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@x1a0f3n9/dsh-loader-smoke'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   SessionId,
   SessionSeq,
   type SessionEvent,
   type SessionHeader,
-} from '@xfcodeai/dsh-session'
-import JsonlSessionPersistence from '@xfcodeai/dsh-session-persistence-jsonl'
+} from '@x1a0f3n9/dsh-session'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import { describe, expect, it } from 'vitest'
 
 const fixtureDir = join(dirname(fileURLToPath(import.meta.url)), 'expected/workspace-context-resume/offline-edit')

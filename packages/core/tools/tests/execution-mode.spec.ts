@@ -2,14 +2,14 @@
 
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { ToolCallId } from '@xfcodeai/dsh-llm'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime, {
   defineContentToolFixture,
   type ToolDefinition,
   type ToolExecutionInput,
   type ToolExecutionMode,
-} from '@xfcodeai/dsh-tools'
+} from '@x1a0f3n9/dsh-tools'
 
 const testToolSignal = new AbortController().signal
 

@@ -1,7 +1,7 @@
 /** Packed history records become one event-shaped Client value per wire record. */
 
 import { describe, expect, it } from 'vitest'
-import { ToolCallId } from '@xfcodeai/dsh-llm/brand'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm/brand'
 import type { SessionHistoryRecord } from '../src/types.ts'
 import {
   historyEntries,

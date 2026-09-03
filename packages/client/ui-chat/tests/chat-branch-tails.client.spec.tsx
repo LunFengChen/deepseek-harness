@@ -2,11 +2,11 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { bindSnapshotSelector, makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+import { bindSnapshotSelector, makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import type {
   ChatConversationViewNode, ConversationNode,
-} from '@xfcodeai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
 import type { ChatNodeViewProps } from '../src/client/contract/slots.ts'
 import {
   formatMessageClock, msUntilNextLocalMidnight, startOfLocalDay,
@@ -654,11 +654,11 @@ describe('MessageItem arms', () => {
         content: [{ type: 'text', text: 'Current runtime context.\n\nsandbox\n\nworkspace' }],
         source: {
           kind: 'plugin',
-          plugin: '@xfcodeai/dsh-system-prompt',
+          plugin: '@x1a0f3n9/dsh-system-prompt',
           form: 'snapshot',
           sections: [{ name: 'sandbox:policy', text: 'workspace-write' }, { name: 'workspace', text: '/repo' }],
         },
-        provenance: { role: 'inject', label: '@xfcodeai/dsh-system-prompt' },
+        provenance: { role: 'inject', label: '@x1a0f3n9/dsh-system-prompt' },
         form: 'snapshot',
       } as never}
       />,

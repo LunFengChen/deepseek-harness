@@ -2,13 +2,13 @@
 description: "具有显式快照、订阅与生命周期所有权的浏览器可观察状态 store。"
 kind: "package-library"
 ---
-# @xfcodeai/dsh-client-store
+# @x1a0f3n9/dsh-client-store
 
 [English](README.md) | 中文
 
 ## 概述
 
-供 Client controller 与 renderer adapter 共用的不依赖 React 的 observable 和 snapshot-store 基础设施。本包负责同步与 animation-frame 发布、基于 Immer 的更新、浅比较和可选的浏览器持久化；React hook 的构造仍属于 `@xfcodeai/dsh-client-ui-renderer`。当 Client 状态必须在不依赖 React 的情况下发布稳定 snapshot 时，请使用它。
+供 Client controller 与 renderer adapter 共用的不依赖 React 的 observable 和 snapshot-store 基础设施。本包负责同步与 animation-frame 发布、基于 Immer 的更新、浅比较和可选的浏览器持久化；React hook 的构造仍属于 `@x1a0f3n9/dsh-client-ui-renderer`。当 Client 状态必须在不依赖 React 的情况下发布稳定 snapshot 时，请使用它。
 
 ## 目录
 

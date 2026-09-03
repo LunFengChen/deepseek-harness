@@ -14,7 +14,7 @@
 
 ## 决策
 
-`@xfcodeai/dsh-acp` 实现通用控制器需要的完整标准 ACP v1 自动化子集：`session/new`、`session/list`、`session/resume`、`session/close`、`session/prompt`、`session/cancel`、`session/set_config_option`、JSON-RPC `$/cancel_request`、`session/update` 和 `session/request_permission`。仓库内每条连接的两端都使用 `@agentclientprotocol/sdk` 1.4 的 app／context 接口。
+`@x1a0f3n9/dsh-acp` 实现通用控制器需要的完整标准 ACP v1 自动化子集：`session/new`、`session/list`、`session/resume`、`session/close`、`session/prompt`、`session/cancel`、`session/set_config_option`、JSON-RPC `$/cancel_request`、`session/update` 和 `session/request_permission`。仓库内每条连接的两端都使用 `@agentclientprotocol/sdk` 1.4 的 app／context 接口。
 
 能力会省略未支持的方法和功能。DSH 不增加自定义方法、能力标记或 `_meta`，也不为客户端元数据赋予私有含义。`session/load`、`session/delete`、`session/fork`、附加目录、SSE 和 ACP 传输 MCP、模式、命令、计划、终端、客户端文件系统操作和 elicitation 仍不受支持。会话控制和语义更新是自动化协议数据；它们不会使 ACP 成为人工 UI。
 

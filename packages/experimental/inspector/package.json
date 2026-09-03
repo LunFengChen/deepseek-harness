@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-experimental-inspector",
+  "name": "@x1a0f3n9/dsh-experimental-inspector",
   "description": "Experimental cross-realm CDP hub for Host debugging and Client Runtime inspection",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "private": true,
   "repository": {
     "type": "git",
@@ -37,22 +37,22 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-util-crypto": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-util-crypto": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "ws": "^8.21.0"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-client-modules": "workspace:^",
-    "@xfcodeai/dsh-host-webserver": "workspace:^"
+    "@x1a0f3n9/dsh-client-modules": "workspace:^",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-host-webserver": "workspace:^",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
     "@types/ws": "^8.18.1",
     "playwright": "^1.49.0",
     "tsx": "^4.19.2"

@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-experimental-code-runtime-python",
+  "name": "@x1a0f3n9/dsh-experimental-code-runtime-python",
   "description": "CPython subprocess implementation of the DeepSeek Harness code-execution seam",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
@@ -24,16 +24,16 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-code-runtime": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-code-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-code-runtime": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-code-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"

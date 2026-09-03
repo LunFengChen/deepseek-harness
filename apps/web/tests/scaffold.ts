@@ -48,21 +48,21 @@ import {
   scrubSessionSnapshot,
   stabilizeFixtureMessageIds,
   type NormalizeContext,
-} from '@xfcodeai/dsh-session-snapshot'
+} from '@x1a0f3n9/dsh-session-snapshot'
 import {
   assertEntriesLoaded,
   composeEntries,
   healProfilesModuleFallback,
   loadOverlayPatches,
   type Profile,
-} from '@xfcodeai/dsh-app-boot'
-import { dshHomePath } from '@xfcodeai/dsh-home-paths'
-import { LlmAdapter } from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-app-boot'
+import { dshHomePath } from '@x1a0f3n9/dsh-home-paths'
+import { LlmAdapter } from '@x1a0f3n9/dsh-llm'
 import type {
   LlmModelInfo, LlmProviderInfo, LlmResolvedModelInfo, RetryPolicyConfig, StreamChunk,
-} from '@xfcodeai/dsh-llm'
-import type { ReplayHandle } from '@xfcodeai/dsh-llm-replay'
-import { installLlmReplay, parseSessionLog } from '@xfcodeai/dsh-llm-replay'
+} from '@x1a0f3n9/dsh-llm'
+import type { ReplayHandle } from '@x1a0f3n9/dsh-llm-replay'
+import { installLlmReplay, parseSessionLog } from '@x1a0f3n9/dsh-llm-replay'
 import SessionStore, {
   packChunkRuns,
   SESSION_FORMAT_VERSION,
@@ -71,12 +71,12 @@ import SessionStore, {
   type Session,
   type SessionEvent,
   type SessionHeader,
-} from '@xfcodeai/dsh-session'
-import JsonlSessionPersistence from '@xfcodeai/dsh-session-persistence-jsonl'
+} from '@x1a0f3n9/dsh-session'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 // Empty type imports carry the webServer/agents/sessionPersistence Context merges.
-import type {} from '@xfcodeai/dsh-host-webserver'
-import type {} from '@xfcodeai/dsh-agent'
-import { provideCmdline } from '@xfcodeai/dsh-cmdline'
+import type {} from '@x1a0f3n9/dsh-host-webserver'
+import type {} from '@x1a0f3n9/dsh-agent'
+import { provideCmdline } from '@x1a0f3n9/dsh-cmdline'
 import { REPO_ROOT, requireDist } from './support.ts'
 
 // Host-side web e2e cannot import a browser package: doing so would pull that
@@ -86,7 +86,7 @@ import { REPO_ROOT, requireDist } from './support.ts'
 // import {
 //   WELCOME_NOTICE_ACK_FIELD, WELCOME_NOTICE_SETTINGS_NAMESPACE,
 //   WELCOME_NOTICE_VERSION, WELCOME_NOTICE_COPY,
-// } from '@xfcodeai/dsh-client-ui-settings-models'
+// } from '@x1a0f3n9/dsh-client-ui-settings-models'
 export const WELCOME_NOTICE_SETTINGS_NAMESPACE = 'ui-onboarding'
 export const WELCOME_NOTICE_ACK_FIELD = 'welcomeNoticeVersion'
 export const WELCOME_NOTICE_VERSION = '2026-08-13.1'
@@ -514,7 +514,7 @@ export async function launchWebScaffold(options: LaunchOptions = {}): Promise<We
       },
     },
     // The bundle's web-runtime row resolves the same built dist under test
-    // (apps/web IS @xfcodeai/dsh-web-frontend); native browser opening and the
+    // (apps/web IS @x1a0f3n9/dsh-web-frontend); native browser opening and the
     // URL line are disabled because this scaffold owns its Playwright browser.
     // Preserve the composed surface-context choice because a patch replaces
     // the row's complete config.
@@ -532,8 +532,8 @@ export async function launchWebScaffold(options: LaunchOptions = {}): Promise<We
     // disable+insert pair.
     { id: 'directory-picker', disabled: true },
     { insert: [
-      { id: 'directory-picker-browse', name: '@xfcodeai/dsh-host-directory-picker-browse' },
-      { id: 'ui-directory-picker-browse', name: '@xfcodeai/dsh-client-ui-directory-picker-browse' },
+      { id: 'directory-picker-browse', name: '@x1a0f3n9/dsh-host-directory-picker-browse' },
+      { id: 'ui-directory-picker-browse', name: '@x1a0f3n9/dsh-client-ui-directory-picker-browse' },
     ] },
     ...options.agentPresets === undefined
       ? []
@@ -545,7 +545,7 @@ export async function launchWebScaffold(options: LaunchOptions = {}): Promise<We
     // scenario adds only the model-facing tools that exercise those services.
     ...options.cordisTools === true
       ? [{ insert: [
-        { id: 'tool-cordis', name: '@xfcodeai/dsh-tool-cordis' },
+        { id: 'tool-cordis', name: '@x1a0f3n9/dsh-tool-cordis' },
       ] }]
       : [],
     ...options.deepSeekSearch === undefined

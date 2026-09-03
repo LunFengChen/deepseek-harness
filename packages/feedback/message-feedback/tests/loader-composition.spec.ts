@@ -6,12 +6,12 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import SessionStore, { SessionId, SessionLogOffset } from '@xfcodeai/dsh-session'
-import JsonlSessionPersistence from '@xfcodeai/dsh-session-persistence-jsonl'
-import Storage from '@xfcodeai/dsh-storage'
-import * as StorageDomain from '@xfcodeai/dsh-storage-domain'
-import * as StorageJson from '@xfcodeai/dsh-storage-json'
-import { remoteMethods } from '@xfcodeai/dsh-typert-protocol'
+import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import Storage from '@x1a0f3n9/dsh-storage'
+import * as StorageDomain from '@x1a0f3n9/dsh-storage-domain'
+import * as StorageJson from '@x1a0f3n9/dsh-storage-json'
+import { remoteMethods } from '@x1a0f3n9/dsh-typert-protocol'
 import MessageFeedbackService from '../src/index.ts'
 import { appendMessageFixture } from './helpers.ts'
 
@@ -30,12 +30,12 @@ async function loadComposition(configPath: string): Promise<Context> {
   await ctx.plugin(Loader)
   ctx.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['@xfcodeai/dsh-session', SessionStore],
-    ['@xfcodeai/dsh-session-persistence-jsonl', JsonlSessionPersistence],
-    ['@xfcodeai/dsh-storage', Storage],
-    ['@xfcodeai/dsh-storage-json', StorageJson],
-    ['@xfcodeai/dsh-storage-domain', StorageDomain],
-    ['@xfcodeai/dsh-message-feedback', MessageFeedbackService],
+    ['@x1a0f3n9/dsh-session', SessionStore],
+    ['@x1a0f3n9/dsh-session-persistence-jsonl', JsonlSessionPersistence],
+    ['@x1a0f3n9/dsh-storage', Storage],
+    ['@x1a0f3n9/dsh-storage-json', StorageJson],
+    ['@x1a0f3n9/dsh-storage-domain', StorageDomain],
+    ['@x1a0f3n9/dsh-message-feedback', MessageFeedbackService],
   ])
   ctx.loader.internal = {
     version: 'v2',
@@ -61,20 +61,20 @@ describe('message feedback through a real Loader composition', () => {
     root = await mkdtemp(join(tmpdir(), 'dsh-message-feedback-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@xfcodeai/dsh-session'",
-      "- name: '@xfcodeai/dsh-session-persistence-jsonl'",
+      "- name: '@x1a0f3n9/dsh-session'",
+      "- name: '@x1a0f3n9/dsh-session-persistence-jsonl'",
       '  config:',
       `    root: ${JSON.stringify(join(root, 'sessions'))}`,
       '    compression: none',
       '    writeBatchMaxDelayMs: 1',
-      "- name: '@xfcodeai/dsh-storage'",
-      "- name: '@xfcodeai/dsh-storage-json'",
+      "- name: '@x1a0f3n9/dsh-storage'",
+      "- name: '@x1a0f3n9/dsh-storage-json'",
       '  config:',
       `    root: ${JSON.stringify(join(root, 'storage'))}`,
-      "- name: '@xfcodeai/dsh-storage-domain'",
+      "- name: '@x1a0f3n9/dsh-storage-domain'",
       '  config:',
       '    backend: json',
-      "- name: '@xfcodeai/dsh-message-feedback'",
+      "- name: '@x1a0f3n9/dsh-message-feedback'",
       '  config:',
       '    maxNoteBytes: 32',
       '',

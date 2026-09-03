@@ -4,22 +4,22 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   ConversationNodeAssembler, UiConversation,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ConversationMatch, ConversationNodeDefinition, ConversationStartMatch,
   ConversationViewDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type { ChatConversationViewNode } from '@xfcodeai/dsh-client-ui-chat/client'
-import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { ChatConversationViewNode } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import type {
   SessionListState, SessionLiveEventEntry,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { SessionEvent, SessionId } from '@xfcodeai/dsh-session/types'
-import { apply as applyLocale, inject as localeInject } from '@xfcodeai/dsh-client-locale/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionEvent, SessionId } from '@x1a0f3n9/dsh-session/types'
+import { apply as applyLocale, inject as localeInject } from '@x1a0f3n9/dsh-client-locale/client'
 import {
   chatSnapshot as emptyChatSnapshot, conversationSnapshot, makeTranslate, sessionSnapshot,
   stubSettingsScope, workspaceSnapshot,
-} from '@xfcodeai/dsh-client-test-runtime'
+} from '@x1a0f3n9/dsh-client-test-runtime'
 import {
   WorkflowRunPanel, type WorkflowRunInjected, type WorkflowRunPanelProps,
 } from '../src/client/WorkflowRunPanel.tsx'

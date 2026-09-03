@@ -3,7 +3,7 @@
 # stdout remains reserved for ACP JSON-RPC.
 
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     thinking: enabled
     reasoningEffort: max
@@ -14,30 +14,30 @@
         inputModalities: [text, image]
 
 - id: sandbox-policy
-  name: '@xfcodeai/dsh-sandbox-policy'
+  name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: !!js "process.env.DSH_PERMISSION_MODE ?? (process.env.DSH_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')"
     workspaceRoot: !!js process.cwd()
 
 - id: approval
-  name: '@xfcodeai/dsh-user-approval'
+  name: '@x1a0f3n9/dsh-user-approval'
   config:
     policy: !!js "(process.env.DSH_PERMISSION_MODE ?? (process.env.DSH_SNAPSHOT === undefined ? 'workspace-write' : 'danger-full-access')) === 'danger-full-access' ? 'never' : 'ask'"
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js process.env.DSH_SNAPSHOT_SESSIONS_ROOT ?? dshHomePath('sessions')
     compression: !!js "process.env.DSH_SNAPSHOT === undefined ? 'zstd' : 'none'"
 
 - id: acp
-  name: '@xfcodeai/dsh-acp'
+  name: '@x1a0f3n9/dsh-acp'
   config:
     provider: deepseek-official
     model: deepseek-v4-flash
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: |
       You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}. Your bash tool runs under a file sandbox — a `[sandbox: file access denied …]` result is policy, not a command bug.
@@ -45,12 +45,12 @@
       Verify your work by running the code or tests. Keep answers brief and factual.
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 
 - id: tool-subagent
-  name: '@xfcodeai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: spawn
     toolName: subagent
@@ -65,7 +65,7 @@
 # See .agents/notes/implemented/feature/2026-08-18-model-selected-subagent-routes.md
 # and .agents/notes/implemented/architecture/2026-08-10-fork-children-stay-one-shot.md.
 - id: tool-subagent-fork
-  name: '@xfcodeai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: fork
     toolName: subagent_fork
@@ -74,17 +74,17 @@
     maxDepth: 1
 
 - id: fs-sandbox
-  name: '@xfcodeai/dsh-fs-sandbox'
+  name: '@x1a0f3n9/dsh-fs-sandbox'
   config:
     cwd: !!js process.cwd()
 
 - insert:
     - id: hooks-claude-code
-      name: '@xfcodeai/dsh-hooks-claude-code'
+      name: '@x1a0f3n9/dsh-hooks-claude-code'
       config:
         configPath: ./hooks.json
 
     - id: hooks-codex
-      name: '@xfcodeai/dsh-hooks-codex'
+      name: '@x1a0f3n9/dsh-hooks-codex'
       config:
         configPath: ./codex-hooks.json

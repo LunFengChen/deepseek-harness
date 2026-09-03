@@ -1,12 +1,12 @@
 /**
  * Durable agent session-event vocabulary shared with type-only consumers.
  *
- * @module @xfcodeai/dsh-agent/types
+ * @module @x1a0f3n9/dsh-agent/types
  */
 
-import type { UserMessage } from '@xfcodeai/dsh-llm/types'
-import type { OptionalSessionSeq, SessionId, SessionSeq } from '@xfcodeai/dsh-session/types'
-import type { TypertContext, TypertLookup } from '@xfcodeai/dsh-typert-protocol'
+import type { UserMessage } from '@x1a0f3n9/dsh-llm/types'
+import type { OptionalSessionSeq, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { TypertContext, TypertLookup } from '@x1a0f3n9/dsh-typert-protocol'
 
 /** Public live-agent handle; the runtime face augments its live capabilities. */
 export interface Agent {
@@ -14,7 +14,7 @@ export interface Agent {
   readonly id: SessionId
 }
 
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface TypertLookupMap {
     agent: TypertLookup<Agent, SessionId>
   }
@@ -48,7 +48,7 @@ export interface TurnBoundaryProjection {
   readonly lastTurn: number
 }
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * One normalized mutation of an agent's durable pending-message lists.

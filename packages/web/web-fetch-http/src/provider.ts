@@ -1,14 +1,14 @@
 /**
  * Safe HTTP(S) retrieval for `ctx.web`: validates and pins public IP destinations, follows
  * only same-origin redirects, enforces time and size limits, classifies and decodes text,
- * and leaves presentation to `@xfcodeai/dsh-tool-web`. Requests carry no browser cookies
+ * and leaves presentation to `@x1a0f3n9/dsh-tool-web`. Requests carry no browser cookies
  * or ambient credentials.
- * @module @xfcodeai/dsh-web-fetch-http/provider
+ * @module @x1a0f3n9/dsh-web-fetch-http/provider
  */
 
-import { WebError } from '@xfcodeai/dsh-web'
-import type { WebFetchBody, WebFetchProvider, WebFetchRequest, WebFetchResult } from '@xfcodeai/dsh-web'
-import { deadline, timeoutOf } from '@xfcodeai/dsh-timeout'
+import { WebError } from '@x1a0f3n9/dsh-web'
+import type { WebFetchBody, WebFetchProvider, WebFetchRequest, WebFetchResult } from '@x1a0f3n9/dsh-web'
+import { deadline, timeoutOf } from '@x1a0f3n9/dsh-timeout'
 import type { Response } from 'undici'
 import { publicHttpNetwork } from './network.ts'
 import type { PublicAddress } from './network.ts'

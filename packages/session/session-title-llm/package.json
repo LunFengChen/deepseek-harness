@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-session-title-llm",
+  "name": "@x1a0f3n9/dsh-session-title-llm",
   "description": "Shared LLM generation policy for DeepSeek Harness session-title providers",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,20 +28,20 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^"
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^"
   },
   "dependencies": {
-    "@xfcodeai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^"
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^"
   }
 }

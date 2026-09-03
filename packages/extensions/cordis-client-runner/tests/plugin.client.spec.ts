@@ -13,10 +13,10 @@ import { describe, expect, it, vi } from 'vitest'
 import type {
   ApprovalRequestId, CordisDynamicPackageId, CordisDynamicPluginId, CordisDynamicPluginRunId,
   DynamicCordisInvokeResult, SessionId,
-} from '@xfcodeai/dsh-api-remotes/client'
+} from '@x1a0f3n9/dsh-api-remotes/client'
 // Type-only: resolves the `ctx.remote.$on` surface.
-import type {} from '@xfcodeai/dsh-api-gateway/client'
-import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-api-gateway/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import * as NodeHalf from '../src/index.ts'
 import * as ClientHalf from '../src/client/index.ts'
 

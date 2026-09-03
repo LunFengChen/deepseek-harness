@@ -3,7 +3,7 @@ description: "Web GUI 的逐消息反馈：已定稿助手消息动作行中的 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-message-feedback
+# @x1a0f3n9/dsh-client-ui-message-feedback
 
 [English](README.md) | 中文
 

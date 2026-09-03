@@ -16,13 +16,13 @@
  * identity, so the identity-gated change feed pushes at most three times per
  * turn (boundary, prompt, response).
  *
- * @module @xfcodeai/dsh-session-turn-outline/projection
+ * @module @x1a0f3n9/dsh-session-turn-outline/projection
  */
 
 import { z } from 'zod'
 import type { ZodType } from 'zod'
-import { SessionSeq, type SessionEvent } from '@xfcodeai/dsh-session'
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
+import { SessionSeq, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import type { TurnOutlineEntry, TurnOutlineState } from './types.ts'
 
 /** Prompt budget: one rail-card line (13px over ~276px), ASCII worst case included. */

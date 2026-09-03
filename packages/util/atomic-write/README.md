@@ -3,7 +3,7 @@ description: "Atomic file replacement and cross-process writer locking for packa
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-atomic-write
+# @x1a0f3n9/dsh-atomic-write
 
 English | [中文](README.zh.md)
 
@@ -30,7 +30,7 @@ Use `writeFileAtomic` when a file-backed store must replace one already-rendered
 ### Writing a file atomically
 
 ```ts
-import { writeFileAtomic } from '@xfcodeai/dsh-atomic-write'
+import { writeFileAtomic } from '@x1a0f3n9/dsh-atomic-write'
 
 declare const text: string
 await writeFileAtomic('/home/u/.dsh/settings.yaml', text, { mode: 0o600 })
@@ -43,7 +43,7 @@ Parent directories are created as needed, and readers observe either the old or 
 For a read-render-commit cycle that a bare atomic commit cannot make safe on its own, hold the writer lock around the operation:
 
 ```text
-import { withFileLock, writeFileAtomic } from '@xfcodeai/dsh-atomic-write'
+import { withFileLock, writeFileAtomic } from '@x1a0f3n9/dsh-atomic-write'
 
 declare const render: (previous: string) => string
 declare const readCurrent: () => Promise<string>

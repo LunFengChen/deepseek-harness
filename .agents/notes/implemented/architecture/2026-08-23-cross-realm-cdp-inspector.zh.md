@@ -10,7 +10,7 @@ Host 诊断、浏览器 Client 观测和 JavaScript 调试来自不同 JavaScrip
 
 ## Decision
 
-`@xfcodeai/dsh-experimental-inspector` 是一个私有 Client/Host 双面 Cordis 插件包。Host 面启动 Node Worker，Client 面直接连接该 Worker。Cordis 只负责组合、服务发布、bootstrap 注入与 dispose；source 协议、Worker 状态、CDP server、V8 bridge 和 domain adapter 不检查 Cordis 运行时数据。
+`@x1a0f3n9/dsh-experimental-inspector` 是一个私有 Client/Host 双面 Cordis 插件包。Host 面启动 Node Worker，Client 面直接连接该 Worker。Cordis 只负责组合、服务发布、bootstrap 注入与 dispose；source 协议、Worker 状态、CDP server、V8 bridge 和 domain adapter 不检查 Cordis 运行时数据。
 
 Worker 是唯一 CDP endpoint，也是 CDP 状态的唯一 owner。Host 与 Client producer 通过有版本的内部协议发送验证后的观测记录；Client Runtime、Console、Sources 和语义查询在同一条鉴权 carrier 上使用相互独立的类型化帧。realm registry 为每条 DevTools 连接提供相同的 Runtime、Console、Sources 和 Debugger capability slot，并用明确的 unsupported 成员保留 Host 与 Client 的支持差异。
 

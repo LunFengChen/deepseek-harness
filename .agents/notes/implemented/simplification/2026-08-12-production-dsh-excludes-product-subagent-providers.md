@@ -6,13 +6,13 @@ English | [中文](2026-08-12-production-dsh-excludes-product-subagent-providers
 
 ## Problem
 
-`@xfcodeai/dsh` receives the `@xfcodeai/dsh-base` dependency closure. Including the Codex and Claude Code subagent providers there makes every production install download optional product integration code and large platform CLI payloads, even when neither integration is used.
+`@x1a0f3n9/dsh` receives the `@x1a0f3n9/dsh-base` dependency closure. Including the Codex and Claude Code subagent providers there makes every production install download optional product integration code and large platform CLI payloads, even when neither integration is used.
 
 ## Decision
 
-This decision partially supersedes only the default-inclusion part of the [shared-host placement](../architecture/2026-08-10-product-subagent-providers-in-shared-host.md): `@xfcodeai/dsh-base` does not depend on or mount the Codex and Claude Code subagent providers. Each provider package is a directly installable Profile Bundle whose `dsh.bundle.patch` points to one package-owned `cordis.patch.yml`. Each patch contributes exactly one self-provider Host row and no Agent tool row.
+This decision partially supersedes only the default-inclusion part of the [shared-host placement](../architecture/2026-08-10-product-subagent-providers-in-shared-host.md): `@x1a0f3n9/dsh-base` does not depend on or mount the Codex and Claude Code subagent providers. Each provider package is a directly installable Profile Bundle whose `dsh.bundle.patch` points to one package-owned `cordis.patch.yml`. Each patch contributes exactly one self-provider Host row and no Agent tool row.
 
-The two Bundles remain independent. The Codex Bundle owns the pinned official wrapper and six platform aliases; production starts the package-declared wrapper and never falls back to a host `codex`. The Claude Code Bundle owns the pinned Agent SDK and matching platform CLI; production lets the SDK select that private CLI and never falls back to a host `claude`. Installing one Bundle does not pull in the other, and the default `@xfcodeai/dsh` production closure contains neither provider nor either product runtime. Each installed Bundle registers a dormant provider on the next Profile start, while an Agent Preset independently decides whether a new Session receives the corresponding tool. Installation does not start a product, authenticate an account, rewrite native settings, or grant model access.
+The two Bundles remain independent. The Codex Bundle owns the pinned official wrapper and six platform aliases; production starts the package-declared wrapper and never falls back to a host `codex`. The Claude Code Bundle owns the pinned Agent SDK and matching platform CLI; production lets the SDK select that private CLI and never falls back to a host `claude`. Installing one Bundle does not pull in the other, and the default `@x1a0f3n9/dsh` production closure contains neither provider nor either product runtime. Each installed Bundle registers a dormant provider on the next Profile start, while an Agent Preset independently decides whether a new Session receives the corresponding tool. Installation does not start a product, authenticate an account, rewrite native settings, or grant model access.
 
 ## Verification
 
@@ -26,4 +26,4 @@ Package tests pin both Bundle manifests, published patches, exact self-provider 
 
 ## Consequences
 
-Installing `@xfcodeai/dsh` does not download either product provider through the base bundle. A Profile can add or remove either provider Bundle independently; changed Host availability takes effect on the next Profile start, and selecting a product explicitly accepts its private platform payload. A separately authored Agent Preset grants either model-visible tool only to newly composed Sessions. No wrapper package beyond the products' official distributions, meta Bundle, dynamic installer, or persisted product-enable state is introduced.
+Installing `@x1a0f3n9/dsh` does not download either product provider through the base bundle. A Profile can add or remove either provider Bundle independently; changed Host availability takes effect on the next Profile start, and selecting a product explicitly accepts its private platform payload. A separately authored Agent Preset grants either model-visible tool only to newly composed Sessions. No wrapper package beyond the products' official distributions, meta Bundle, dynamic installer, or persisted product-enable state is introduced.

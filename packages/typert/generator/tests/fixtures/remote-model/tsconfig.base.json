@@ -9,7 +9,7 @@
     "allowImportingTsExtensions": true,
     "ignoreDeprecations": "6.0",
     "paths": {
-      "@xfcodeai/dsh-typert-protocol": ["./typert-protocol.d.ts"],
+      "@x1a0f3n9/dsh-typert-protocol": ["./typert-protocol.d.ts"],
       "@fixture/domain": ["./packages/domain/src/index.ts"],
       "@fixture/domain/*": ["./packages/domain/src/*"],
       "@fixture/remote": ["./packages/remote/src/index.ts"],

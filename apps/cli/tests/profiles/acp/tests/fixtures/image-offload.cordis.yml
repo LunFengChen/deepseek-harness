@@ -2,7 +2,7 @@
 # local provider endpoint is supplied by the snapshot test; the real attachment
 # store and ACP bridge carry two uploaded images into one model request.
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     apiKeyEnv: DSH_SNAPSHOT_API_KEY
     baseURL: !!js process.env.DSH_SNAPSHOT_BASE_URL
@@ -16,24 +16,24 @@
         inputModalities: [text, image]
 
 - id: acp
-  name: '@xfcodeai/dsh-acp'
+  name: '@x1a0f3n9/dsh-acp'
   config:
     provider: deepseek-official
     model: deepseek-v4-flash-vision-exp
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js process.env.DSH_SNAPSHOT_SESSIONS_ROOT ?? './.sessions'
     compression: none
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: |
       You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}.
@@ -41,4 +41,4 @@
       Keep answers brief and factual.
 
 - id: attachment-local
-  name: '@xfcodeai/dsh-attachment-local'
+  name: '@x1a0f3n9/dsh-attachment-local'

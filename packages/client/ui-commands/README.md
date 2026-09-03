@@ -3,7 +3,7 @@ description: "Client command API for the Web GUI: the / command source, three di
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-commands
+# @x1a0f3n9/dsh-client-ui-commands
 
 English | [中文](README.zh.md)
 

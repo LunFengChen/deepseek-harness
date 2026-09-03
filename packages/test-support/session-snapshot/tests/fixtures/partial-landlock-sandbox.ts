@@ -1,6 +1,6 @@
 import { join } from 'node:path'
-import type { ConfinedArgv, SandboxPolicy } from '@xfcodeai/dsh-sandbox'
-import { SandboxProvider } from '@xfcodeai/dsh-sandbox'
+import type { ConfinedArgv, SandboxPolicy } from '@x1a0f3n9/dsh-sandbox'
+import { SandboxProvider } from '@x1a0f3n9/dsh-sandbox'
 
 const NOTICE = 'landlock-run: partial enforcement (older Landlock ABI)'
 const MISSING_RUNNER_ENV = 'DSH_SNAPSHOT_MISSING_SANDBOX_RUNNER'

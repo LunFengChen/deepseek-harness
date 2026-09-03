@@ -8,20 +8,20 @@
  * anything, while an in-flight stream keeps the facts it started with. The
  * one registration-captured fact — the retry policy — re-registers the route
  * in place when it changes.
- * @module @xfcodeai/dsh-llm-deepseek
+ * @module @x1a0f3n9/dsh-llm-deepseek
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { assertUsableApiKey, LlmError, resolveImageAttachmentAccess, resolveRetryPolicy, RetryPolicySchema } from '@xfcodeai/dsh-llm'
-import type { ModelModality, RetryPolicyConfig } from '@xfcodeai/dsh-llm'
-import type {} from '@xfcodeai/dsh-fs'
-import { credentialRef } from '@xfcodeai/dsh-credentials'
-import { launchEnvironmentOf, type LaunchEnvironmentSnapshot } from '@xfcodeai/dsh-launch-environment'
-import type {} from '@xfcodeai/dsh-settings'
-import { MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
-import { deepEqualJson } from '@xfcodeai/dsh-util-values'
-import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@xfcodeai/dsh-anonymous-user-id'
+import { assertUsableApiKey, LlmError, resolveImageAttachmentAccess, resolveRetryPolicy, RetryPolicySchema } from '@x1a0f3n9/dsh-llm'
+import type { ModelModality, RetryPolicyConfig } from '@x1a0f3n9/dsh-llm'
+import type {} from '@x1a0f3n9/dsh-fs'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
+import { launchEnvironmentOf, type LaunchEnvironmentSnapshot } from '@x1a0f3n9/dsh-launch-environment'
+import type {} from '@x1a0f3n9/dsh-settings'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
+import { deepEqualJson } from '@x1a0f3n9/dsh-util-values'
+import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
 import {
   DEFAULT_CONTEXT_WINDOW,
   DEFAULT_FILE_EXPIRY_SECONDS,

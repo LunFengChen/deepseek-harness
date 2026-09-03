@@ -2,12 +2,12 @@
  * Types for the TypeScript SDK client: launch options, notification shapes,
  * and owned activity results.
  *
- * @module @xfcodeai/dsh-sdk-client/types
+ * @module @x1a0f3n9/dsh-sdk-client/types
  */
 
-import type { ContentBlock, ReasoningEffortId } from '@xfcodeai/dsh-llm'
-import type { SdkPromptContentBlock } from '@xfcodeai/dsh-sdk-protocol'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+import type { ContentBlock, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type { SdkPromptContentBlock } from '@x1a0f3n9/dsh-sdk-protocol'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 
 /** One server-to-client notification as received off the wire. */
 export interface HarnessNotification {
@@ -36,7 +36,7 @@ export interface HarnessClientOptions {
    * The complete child environment, read when {@link HarnessClient.start}
    * spawns. `undefined` reads the parent env at that time; passing an object
    * reads that object at spawn and replaces the parent environment entirely, so callers own
-   * credential policy (see `scrubbedParentEnv` in `@xfcodeai/dsh-subprocess`
+   * credential policy (see `scrubbedParentEnv` in `@x1a0f3n9/dsh-subprocess`
    * for the shared scrub-then-merge base).
    */
   env?: NodeJS.ProcessEnv

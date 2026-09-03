@@ -1,7 +1,7 @@
 /**
  * Harness error base with a stable machine-routable code and chained cause.
  * Package errors extend it so tool results and replay can retain failure class.
- * @module @xfcodeai/dsh-llm/error
+ * @module @x1a0f3n9/dsh-llm/error
  */
 
 /**

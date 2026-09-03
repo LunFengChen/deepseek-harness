@@ -14,11 +14,11 @@ A complete caller-supplied Cordis tree gives an exact roster but bypasses profil
 
 ### Launch and ownership
 
-`dsh --profile sdk-minimal` is a shipped startup-only profile. Its manifest lists only `@xfcodeai/dsh-sdk-minimal`; it does not list `@xfcodeai/dsh-base`. The bundle inserts the complete Cordis tree over the launcher's empty profile root, while the profile patch, home patch, and ordered invocation patches retain their ordinary precedence above it.
+`dsh --profile sdk-minimal` is a shipped startup-only profile. Its manifest lists only `@x1a0f3n9/dsh-sdk-minimal`; it does not list `@x1a0f3n9/dsh-base`. The bundle inserts the complete Cordis tree over the launcher's empty profile root, while the profile patch, home patch, and ordered invocation patches retain their ordinary precedence above it.
 
 The `dsh` CLI remains the only application launcher. The Python example selects `sdk-minimal` through the public `profile` field and an explicit Harness home. Python exposes no complete-config or arbitrary-argv path. The full Python and TypeScript SDK defaults remain `sdk`.
 
-The bundle reuses `@xfcodeai/dsh-sdk-app` for command help, stdin EOF, and bounded shutdown. The startup provider accepts a profile-name config so both SDK profiles render their actual command without duplicating process lifecycle code.
+The bundle reuses `@x1a0f3n9/dsh-sdk-app` for command help, stdin EOF, and bounded shutdown. The startup provider accepts a profile-name config so both SDK profiles render their actual command without duplicating process lifecycle code.
 
 ### Explicit composition
 

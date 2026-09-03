@@ -3,7 +3,7 @@ description: "面向需要跨调用终端状态的 agent 的 6 个持久终端�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-terminal
+# @x1a0f3n9/dsh-tool-terminal
 
 [English](README.md) | 中文
 
@@ -41,12 +41,12 @@ kind: "package-reference"
 ### 组合方式
 
 ```yaml
-- name: '@xfcodeai/dsh-terminal'
-- name: '@xfcodeai/dsh-terminal-bash'
-- name: '@xfcodeai/dsh-tool-terminal'
+- name: '@x1a0f3n9/dsh-terminal'
+- name: '@x1a0f3n9/dsh-terminal-bash'
+- name: '@x1a0f3n9/dsh-tool-terminal'
 ```
 
-工具需要 `ctx.terminals`——必须挂载一个后端——以及用于指引章节的系统提示词服务。后台发送还额外要求任务服务及其面向模型的控制器（`@xfcodeai/dsh-tool-jobs`）。
+工具需要 `ctx.terminals`——必须挂载一个后端——以及用于指引章节的系统提示词服务。后台发送还额外要求任务服务及其面向模型的控制器（`@x1a0f3n9/dsh-tool-jobs`）。
 
 ### 配置
 
@@ -55,7 +55,7 @@ kind: "package-reference"
 | `enableRunInBackground` | `true` | 公开并接受 `run_in_background`；设为 `false` 时移除 schema 字段并拒绝该参数 |
 | `maxResultBytes` | `262144` | 每个完整终端结果的 UTF-8 上限（最小值 `64`）；在等待、会话、分页、截断与任务状态元数据全部加入后计算 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-tool-terminal)与[工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-terminal)是配置字段与 schema 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-tool-terminal)与[工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-terminal)是配置字段与 schema 的穷尽式真源。
 
 ### 后台发送
 
@@ -103,7 +103,7 @@ kind: "package-reference"
 
 当包级约定不够用时阅读以下页面。它们从生成的 schema 进入服务约定、后端与后台任务接口面。
 
-- [工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-terminal)——6 个生成的 schema 与结果形态。
+- [工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-terminal)——6 个生成的 schema 与结果形态。
 - [终端子系统参考](../../../docs/subsystems/terminal.zh.md)——工具背后的服务约定与共享类型。
 - [terminal 服务](../terminal/README.zh.md)——会话操作、所有者限制与清理语义。
 - [terminal-bash 后端](../terminal-bash/README.zh.md)——提供会话的随附 shell 后端。
@@ -139,7 +139,7 @@ Use a terminal session only when work needs persistent terminal state or interac
 
 #### 模型看到什么
 
-6 个生成的 schema 列在 [`dsh-tool-terminal` 目录章节](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-terminal)中。此插件活跃时，请求中会包含它们的固定 schema token；按 agent 范围过滤工具时可能隐藏这些 schema。
+6 个生成的 schema 列在 [`dsh-tool-terminal` 目录章节](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-terminal)中。此插件活跃时，请求中会包含它们的固定 schema token；按 agent 范围过滤工具时可能隐藏这些 schema。
 
 #### Token 影响
 
@@ -171,7 +171,7 @@ spawn 返回 id 与有界启动输出。发送与读取返回有界终端文本�
 这些限制说明缺失的面向模型接口面。它们是当前包约束，不是任务积压。
 
 - **没有 TUI 或按键序列接口面**——具名按键序列、全屏 TUI 交互、BEL、调整大小与自动启动均未出现在任何 schema 中。
-- **后台模式要求任务接口面**——`run_in_background` 同时需要 `@xfcodeai/dsh-jobs` 及其面向模型的控制器（`@xfcodeai/dsh-tool-jobs`）；缺少时会拒绝该参数。
+- **后台模式要求任务接口面**——`run_in_background` 同时需要 `@x1a0f3n9/dsh-jobs` 及其面向模型的控制器（`@x1a0f3n9/dsh-tool-jobs`）；缺少时会拒绝该参数。
 
 <a id="dev-note"></a>
 ### 开发备注

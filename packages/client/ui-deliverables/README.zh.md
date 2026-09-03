@@ -3,7 +3,7 @@ description: "Web GUI 的产出文件与可点击文件引用：已完成轮次�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-deliverables
+# @x1a0f3n9/dsh-client-ui-deliverables
 
 [English](README.md) | 中文
 

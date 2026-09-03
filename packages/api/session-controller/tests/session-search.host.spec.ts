@@ -6,17 +6,17 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry from '@xfcodeai/dsh-agent'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionSeq } from '@xfcodeai/dsh-session'
-import type { SessionHeader, SessionId } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import {
   SessionQueryEngine,
   SessionQueryError,
   type SessionSearchHit,
   type SessionSearchRequest,
-} from '@xfcodeai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-query'
 import { createSessionTestRemote } from './test-remote.ts'
 import { ApiSessionList } from '../src/list.ts'
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { TokenUsage } from '@xfcodeai/dsh-llm'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+import type { TokenUsage } from '@x1a0f3n9/dsh-llm'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import { deriveTurnTokenUsage } from '../src/turn-usage.ts'
 
 function event(seq: number, type: string, data: unknown): SessionEvent {

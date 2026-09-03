@@ -6,10 +6,10 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import CommandRuntime from '@xfcodeai/dsh-commands'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import * as SessionLogDownload from '@xfcodeai/dsh-session-log-export'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import CommandRuntime from '@x1a0f3n9/dsh-commands'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import * as SessionLogDownload from '@x1a0f3n9/dsh-session-log-export'
 
 let root: string | undefined
 let context: Context | undefined
@@ -26,9 +26,9 @@ describe('session-log-download real Loader composition', () => {
     root = await mkdtemp(join(tmpdir(), 'dsh-session-export-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@xfcodeai/dsh-session'",
-      "- name: '@xfcodeai/dsh-commands'",
-      "- name: '@xfcodeai/dsh-session-log-export'",
+      "- name: '@x1a0f3n9/dsh-session'",
+      "- name: '@x1a0f3n9/dsh-commands'",
+      "- name: '@x1a0f3n9/dsh-session-log-export'",
       '',
     ].join('\n'))
 
@@ -40,9 +40,9 @@ describe('session-log-download real Loader composition', () => {
     await context.plugin(Loader)
     context.loader.builtins.include = Include
     const modules = new Map<string, unknown>([
-      ['@xfcodeai/dsh-session', SessionStore],
-      ['@xfcodeai/dsh-commands', CommandRuntime],
-      ['@xfcodeai/dsh-session-log-export', SessionLogDownload],
+      ['@x1a0f3n9/dsh-session', SessionStore],
+      ['@x1a0f3n9/dsh-commands', CommandRuntime],
+      ['@x1a0f3n9/dsh-session-log-export', SessionLogDownload],
     ])
     context.loader.internal = {
       version: 'v2',

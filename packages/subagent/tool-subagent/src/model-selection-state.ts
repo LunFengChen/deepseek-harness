@@ -1,12 +1,12 @@
 /** Durable per-session state for the user-controlled model-selection opt-in. */
 
 import { z as zod } from 'zod'
-import type { Session } from '@xfcodeai/dsh-session'
-import type SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
+import type { Session } from '@x1a0f3n9/dsh-session'
+import type SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import { assertAllowedModelRoutes, type AllowedModelRoute } from './model-selection.ts'
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * Records that this session's delegation tool exposes child provider,
@@ -21,7 +21,7 @@ declare module '@xfcodeai/dsh-session/types' {
   }
 }
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     /** Exact routes authorized for child LLM selection, or null when disabled. */
     subagentModelSelectionPolicy: AllowedModelRoute[] | null

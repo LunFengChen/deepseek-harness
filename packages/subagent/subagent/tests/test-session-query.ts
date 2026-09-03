@@ -1,6 +1,6 @@
 /** Minimal concrete Session query for tests that exercise only corpus and point reads. */
 
-import SessionQueryEngine from '@xfcodeai/dsh-session-query'
+import SessionQueryEngine from '@x1a0f3n9/dsh-session-query'
 
 /** Session query implementation whose search faces are intentionally unavailable. */
 export class TestSessionQuery extends SessionQueryEngine {

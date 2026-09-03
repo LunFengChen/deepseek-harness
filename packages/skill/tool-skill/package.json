@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-tool-skill",
+  "name": "@x1a0f3n9/dsh-tool-skill",
   "description": "Model-facing skill loading tool for the DeepSeek Harness",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -27,23 +27,23 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-skill": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-skill": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-scope": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-skill": "workspace:^",
-    "@xfcodeai/dsh-skill-filesystem": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-skill": "workspace:^",
+    "@x1a0f3n9/dsh-skill-filesystem": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

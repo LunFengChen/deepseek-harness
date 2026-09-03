@@ -5,11 +5,11 @@
  */
 
 import { useEffect, useState } from 'react'
-import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import {
   IconChevronDownOutline14, Menu, RiskConfirmation,
-} from '@xfcodeai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { PermissionSettingsState } from './settings-store.ts'
 import type { PermissionSettingsKey } from './locales.ts'
 import { displayPermissionPreset, FULL_ACCESS_PRESET } from './presentation.ts'
@@ -127,7 +127,7 @@ export function PermissionRow({ load, select, usePermission, t }: PermissionRowP
   )
 }
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Permission row copy. */
     'settings.permission': PermissionSettingsKey

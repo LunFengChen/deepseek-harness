@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-subprocess-local",
+  "name": "@x1a0f3n9/dsh-subprocess-local",
   "description": "Local-subprocess implementation of the DeepSeek Harness subprocess seam",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -31,8 +31,8 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-subprocess": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -40,9 +40,9 @@
     "node-pty": "1.2.0-beta.15"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-loader-smoke": "workspace:^",
-    "@xfcodeai/dsh-subprocess": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-loader-smoke": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

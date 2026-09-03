@@ -2,10 +2,10 @@
 
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
-import { AttachmentId } from '@xfcodeai/dsh-attachment'
-import { makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
-import type { RenderMessageImages } from '@xfcodeai/dsh-client-ui-conversation/client'
+import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
+import { makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
+import type { RenderMessageImages } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { AssistantMarkdown } from '../src/client/chat/AssistantMarkdown.tsx'
 import { zh } from '../src/client/locale.ts'
 

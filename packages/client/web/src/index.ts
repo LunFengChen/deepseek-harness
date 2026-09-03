@@ -3,7 +3,7 @@
  * apps/web's Vite entry runs it against #root. The boot page and fiber-state
  * projection remain internal; the static module table and its platform words
  * form the package's build-time contract.
- * @module @xfcodeai/dsh-client-web
+ * @module @x1a0f3n9/dsh-client-web
  */
 
 export { AppWebEntry, type BootSeams } from './boot.ts'

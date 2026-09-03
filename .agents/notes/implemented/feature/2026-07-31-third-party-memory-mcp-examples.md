@@ -12,7 +12,7 @@ The acceptance bar is stronger than "the socket connects": each reference must s
 
 ## Decision
 
-Ship three default-off Cordis overlay examples under `apps/cli/config/examples/mcp-memory`: Memorix, MCP Reference Memory, and Engram. Every file inserts exactly one `@xfcodeai/dsh-mcp-client` row. None is referenced by the default composition, and the CLI declares the generic bridge so an explicitly selected overlay resolves in installed and source launches. The [memory MCP guide](../../../../docs/user/guide/mcp-memory.md) owns setup and verification.
+Ship three default-off Cordis overlay examples under `apps/cli/config/examples/mcp-memory`: Memorix, MCP Reference Memory, and Engram. Every file inserts exactly one `@x1a0f3n9/dsh-mcp-client` row. None is referenced by the default composition, and the CLI declares the generic bridge so an explicitly selected overlay resolves in installed and source launches. The [memory MCP guide](../../../../docs/user/guide/mcp-memory.md) owns setup and verification.
 
 These third-party configurations are provided as interoperability examples only. Their inclusion does not imply endorsement, recommendation, partnership, or ongoing support by DeepSeek. There is no memory preset registry, vendor-specific DSH plugin, universal memory service, installation UI, migration layer, health checker, or reconnect controller. Another memory MCP server uses the same documented stdio or Streamable HTTP row.
 
@@ -43,7 +43,7 @@ Project identity remains provider-owned: Memorix and Engram use the DSH working 
 
 ## Model guidance
 
-The examples do not patch `@xfcodeai/dsh-system-prompt`: a config patch replaces a row's complete config and could erase an existing persona. The README instead offers one optional additive instruction:
+The examples do not patch `@x1a0f3n9/dsh-system-prompt`: a config patch replaces a row's complete config and could erase an existing persona. The README instead offers one optional additive instruction:
 
 > When the user asks you to remember something, call a memory write tool. When historical information may be relevant, search memory and use relevant results.
 

@@ -1,12 +1,12 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import { Context, Service, symbols } from '@deepseek-ai/cordis'
-import { createUserMessage, freezeMessage } from '@xfcodeai/dsh-llm'
-import { Session, SessionId, type UserMessage } from '@xfcodeai/dsh-session'
+import { createUserMessage, freezeMessage } from '@x1a0f3n9/dsh-llm'
+import { Session, SessionId, type UserMessage } from '@x1a0f3n9/dsh-session'
 import AgentRegistry, {
   agentEvents,
   Inbox,
-} from '@xfcodeai/dsh-agent'
-import TypertRegistry from '@xfcodeai/dsh-typert-registry'
+} from '@x1a0f3n9/dsh-agent'
+import TypertRegistry from '@x1a0f3n9/dsh-typert-registry'
 
 import type {
   Agent,
@@ -15,7 +15,7 @@ import type {
   AgentStatus,
   CreateAgentOptions,
   ResumeAgentOptions,
-} from '@xfcodeai/dsh-agent'
+} from '@x1a0f3n9/dsh-agent'
 
 function stubAgent(rawId: string, overrides: Partial<Agent> = {}): Agent {
   const id = SessionId(rawId)
@@ -156,8 +156,8 @@ describe('AgentRegistry', () => {
     expect(lookup).toMatchObject({
       parameter: 'agent',
       wire: 'agentId',
-      hostTypeSymbol: '@xfcodeai/dsh-agent#Agent',
-      wireTypeSymbol: '@xfcodeai/dsh-session/types#SessionId',
+      hostTypeSymbol: '@x1a0f3n9/dsh-agent#Agent',
+      wireTypeSymbol: '@x1a0f3n9/dsh-session/types#SessionId',
     })
     expect(lookup?.resolve(agent.id)).toBe(agent)
     const context = ctx.typert.contexts.getHost('agent')

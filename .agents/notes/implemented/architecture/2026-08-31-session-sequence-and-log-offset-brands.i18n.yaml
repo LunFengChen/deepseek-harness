@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-08-31-session-sequence-and-log-offset-brands.md
-2026-08-31-session-sequence-and-log-offset-brands.md: 8f3218c6de2dab51c16f82390122f19fe7536c79
-2026-08-31-session-sequence-and-log-offset-brands.zh.md: 3dc3522d68391f7a5e5da0cd90e7ef92293ccdf5
+2026-08-31-session-sequence-and-log-offset-brands.md: 0eb4c4549d1f61a3910ceb19f8116076e5bc580a
+2026-08-31-session-sequence-and-log-offset-brands.zh.md: 3b16456587a6b3ecbcf8e6ee50d8216534f4ae89

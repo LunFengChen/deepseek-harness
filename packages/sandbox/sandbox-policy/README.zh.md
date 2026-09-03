@@ -3,7 +3,7 @@ description: "面向组合、配置或排查跨执行能力文件效果策略的
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-sandbox-policy
+# @x1a0f3n9/dsh-sandbox-policy
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 用默认模式加载本包；故障安全默认值是 `read-only`，想要可写工作区 agent 的部署需要显式选择 `workspace-write`。
 
 ```yaml
-- name: '@xfcodeai/dsh-sandbox-policy'
+- name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: workspace-write
     workspaceRoot: /absolute/path/to/workspace
@@ -47,7 +47,7 @@ kind: "package-reference"
 | `mode` | `read-only` | 会话起始的部署默认模式，加载时验证 |
 | `workspaceRoot` | `process.cwd()` | 无 agent（智能体）调用或没有 cwd 的会话在 `workspace-write` 下可写入的回退根目录；普通 agent 调用改用会话的不可变 cwd |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-sandbox-policy)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-sandbox-policy)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 切换会话模式
 

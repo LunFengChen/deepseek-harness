@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-llm-retry",
+  "name": "@x1a0f3n9/dsh-llm-retry",
   "description": "Provider-routed LLM request retry policy for the DeepSeek Harness",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -36,36 +36,36 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-loop": "workspace:^",
-    "@xfcodeai/dsh-agent-loop-testkit": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-llm-deepseek": "workspace:^",
-    "@xfcodeai/dsh-llm-mock-server": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence-jsonl": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-llm-deepseek": "workspace:^",
+    "@x1a0f3n9/dsh-llm-mock-server": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

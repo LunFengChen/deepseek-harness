@@ -11,7 +11,7 @@
  * design and its trade-offs are pinned in
  * .agents/notes/implemented/feature/2026-07-23-session-telemetry-otel-revival.md.
  *
- * @module @xfcodeai/dsh-session-telemetry
+ * @module @x1a0f3n9/dsh-session-telemetry
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'

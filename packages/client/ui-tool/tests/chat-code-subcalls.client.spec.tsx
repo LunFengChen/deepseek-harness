@@ -2,19 +2,19 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent } from '@testing-library/react'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type {
   ChatSnapshot, RunningToolCall, ToolCallBlock, ToolResultNode,
-} from '@xfcodeai/dsh-client-ui-chat/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { SlotTestRuntime, TestRemote, stubSettingsScope } from '@xfcodeai/dsh-client-test-runtime'
-import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
-import type { PropsRenderSlots } from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { SlotTestRuntime, TestRemote, stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import {
   ConversationEventRegistry, ConversationViewRegistry, type ConvViewOwnerProps,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import { en as conversationEn, NS as CONVERSATION_NS, zh as conversationZh } from '@xfcodeai/dsh-client-ui-conversation/src/client/locales.ts'
-import { apply as applyChat, inject as injectChat } from '@xfcodeai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { en as conversationEn, NS as CONVERSATION_NS, zh as conversationZh } from '@x1a0f3n9/dsh-client-ui-conversation/src/client/locales.ts'
+import { apply as applyChat, inject as injectChat } from '@x1a0f3n9/dsh-client-ui-chat/client'
 import { apply as applyTool, inject as injectTool } from '../src/client/apply.ts'
 import { toolChatSnapshot } from './tool-details-render.client.tsx'
 

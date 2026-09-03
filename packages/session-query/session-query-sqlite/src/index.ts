@@ -1,26 +1,26 @@
 /**
  * Concrete session-query service with SQLite FTS5 over the live-preferred corpus.
  *
- * @module @xfcodeai/dsh-session-query-sqlite
+ * @module @x1a0f3n9/dsh-session-query-sqlite
  */
 
 import { createHash, randomUUID } from 'node:crypto'
 import type { DatabaseSync } from 'node:sqlite'
 import { Context, Service, type Fiber } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { SessionSeq } from '@xfcodeai/dsh-session'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
 import type {
   Session,
   SessionEvent,
   SessionHeader,
   SessionId,
   SessionLogOffset,
-} from '@xfcodeai/dsh-session'
-import type SessionPersistence from '@xfcodeai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session'
+import type SessionPersistence from '@x1a0f3n9/dsh-session-persistence'
 import type {
   SessionPersistenceRevision,
   SessionPersistenceSnapshot,
-} from '@xfcodeai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-persistence'
 import SessionQueryEngine, {
   SESSION_QUERY_DEFAULT_PERSISTED_INSPECT_CONCURRENCY,
   SESSION_QUERY_READ_WINDOW_MAX,
@@ -28,7 +28,7 @@ import SessionQueryEngine, {
   SessionSearchCursor,
   assertSessionHeadersCompatible,
   buildSessionEventSearchDocuments,
-} from '@xfcodeai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-query'
 import type {
   Config as SessionQueryConfig,
   SessionEventSearchDocument,
@@ -40,7 +40,7 @@ import type {
   SessionSearchCursor as SessionSearchCursorValue,
   SessionSearchPage,
   SessionSearchRequest,
-} from '@xfcodeai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-query'
 import {
   type JournalMode,
   openSearchDatabase,

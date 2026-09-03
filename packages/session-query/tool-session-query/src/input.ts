@@ -1,21 +1,21 @@
 /**
  * Model argument schemas, normalization, and filter construction.
  *
- * @module @xfcodeai/dsh-tool-session-query/input
+ * @module @x1a0f3n9/dsh-tool-session-query/input
  */
 
 import {
   type SessionEventType,
   type SessionId as SessionIdValue,
-} from '@xfcodeai/dsh-session'
-import { brandString } from '@xfcodeai/dsh-brand'
+} from '@x1a0f3n9/dsh-session'
+import { brandString } from '@x1a0f3n9/dsh-brand'
 import {
   SessionQueryError,
   type SessionAvailability,
   type SessionEventMetadataFilter,
   type SessionEventSurface,
   type SessionResultFilter,
-} from '@xfcodeai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-query'
 
 interface SessionSearchArgs {
   query: string

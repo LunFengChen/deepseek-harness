@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /** Inspect the public Codex provider composition without invoking the product. */
 
-import { resolveConfigPath } from '@xfcodeai/dsh-app-boot'
-import type {} from '@xfcodeai/dsh-subagent'
-import type {} from '@xfcodeai/dsh-tools'
+import { resolveConfigPath } from '@x1a0f3n9/dsh-app-boot'
+import type {} from '@x1a0f3n9/dsh-subagent'
+import type {} from '@x1a0f3n9/dsh-tools'
 import { bootProductionProfile } from '../../../../../test-support/loader-smoke/tests/fixtures/production-profile.ts'
 
 const configPath = process.argv[2]

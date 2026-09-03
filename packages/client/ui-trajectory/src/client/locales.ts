@@ -184,7 +184,7 @@ export const zh = {
 /** The trajectory dictionary key union. */
 export type TrajectoryKey = keyof typeof zh
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** The complete trajectory ledger, timeline, inspector, and toolbar copy. */
     trajectory: TrajectoryKey
@@ -193,7 +193,7 @@ declare module '@xfcodeai/dsh-client-ui-slots' {
 
 /** Namespace-bound translator threaded through trajectory presentation code. */
 export type TrajectoryTranslate =
-  import('@xfcodeai/dsh-client-ui-slots').TranslateNS<typeof NS>
+  import('@x1a0f3n9/dsh-client-ui-slots').TranslateNS<typeof NS>
 
 /** English dictionary, checked complete against the Chinese source of truth. */
 export const en: Record<TrajectoryKey, string> = {

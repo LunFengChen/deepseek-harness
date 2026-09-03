@@ -1,6 +1,6 @@
 /** Pure replay-safe render intents for Cordis tools. */
 
-import type { GenericCallView } from '@xfcodeai/dsh-tools'
+import type { GenericCallView } from '@x1a0f3n9/dsh-tools'
 
 /**
  * Render a runtime-inspection call.

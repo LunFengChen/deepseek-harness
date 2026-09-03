@@ -22,15 +22,15 @@
  * and a hole has exactly one declaring entry — they carry the same owner
  * contract and the same occupant.
  */
-import type { HostObservable, PropsHooks, PropsLocale, PropsRenderSlots, PropsRuntime, PropsStore } from '@xfcodeai/dsh-client-ui-slots'
+import type { HostObservable, PropsHooks, PropsLocale, PropsRenderSlots, PropsRuntime, PropsStore } from '@x1a0f3n9/dsh-client-ui-slots'
 // Type-only: pull the owner SlotMap merges into programs that resolve the
 // runtime shares below.
-import type {} from '@xfcodeai/dsh-client-ui-sidebar/client'
-import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type { SessionSearchResultItem } from '@xfcodeai/dsh-api-session-controller/client'
-import type { RemoteHostFacts } from '@xfcodeai/dsh-api-remotes/client'
-import type { WorkspaceId, WorkspaceView } from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { SessionSearchResultItem } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { RemoteHostFacts } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { WorkspaceId, WorkspaceView } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type { createWorkspaceViewStore } from '../stores.ts'
 
 /**
@@ -51,7 +51,7 @@ export interface DirectoryFlowOwnerProps {
   onError: (message: string) => void
 }
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface SlotMap {
     /** Directory-flow hole under the conversation empty-state picker (declared by the WorkspacePicker entry). */
     'conversation.hero.workspace.directoryFlow': { kind: 'single'; scope: 'root'; owner: DirectoryFlowOwnerProps }

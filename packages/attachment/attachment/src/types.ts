@@ -1,4 +1,4 @@
-/** Durable attachment vocabulary. @module @xfcodeai/dsh-attachment/types */
+/** Durable attachment vocabulary. @module @x1a0f3n9/dsh-attachment/types */
 
 import type { AttachmentId, ImageVariantId } from './brand.ts'
 

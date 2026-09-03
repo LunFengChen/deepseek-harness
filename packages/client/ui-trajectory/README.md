@@ -3,7 +3,7 @@ description: "Trajectory view for the dsh web client: a turn-aware event ledger 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-trajectory
+# @x1a0f3n9/dsh-client-ui-trajectory
 
 English | [中文](README.zh.md)
 

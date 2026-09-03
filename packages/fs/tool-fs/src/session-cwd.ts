@@ -4,11 +4,11 @@
  * `read`/`write`/`edit` act on its workspace, not the server's launch directory.
  * Non-agent calls return `undefined`, leaving the fallback in the provider rather than reading
  * `process.cwd()` at the tool boundary.
- * @module @xfcodeai/dsh-tool-fs/session-cwd
+ * @module @x1a0f3n9/dsh-tool-fs/session-cwd
  */
 
-import type { ToolExecution } from '@xfcodeai/dsh-tools'
-import { canonicalPath } from '@xfcodeai/dsh-sandbox'
+import type { ToolExecution } from '@x1a0f3n9/dsh-tools'
+import { canonicalPath } from '@x1a0f3n9/dsh-sandbox'
 
 const PARENT_PATH_SEGMENT = /(?:^|[\\/])\.\.(?:[\\/]|$)/
 

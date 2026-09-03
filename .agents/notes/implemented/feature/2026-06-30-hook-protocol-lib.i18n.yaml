@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-06-30-hook-protocol-lib.md
-2026-06-30-hook-protocol-lib.md: 581cfcf53041721fd892f2eb99b362eb243d4b85
-2026-06-30-hook-protocol-lib.zh.md: 60d38d65f04aa203041c07f24832e54ee787c5d2
+2026-06-30-hook-protocol-lib.md: 5ba4108ef41355a909291d1f20d14334177339ad
+2026-06-30-hook-protocol-lib.zh.md: c7e9cd001db1768c7eaff6cc1614671b92800c25

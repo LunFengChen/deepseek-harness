@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-llm-pi-ai",
+  "name": "@x1a0f3n9/dsh-llm-pi-ai",
   "description": "pi-ai-backed DeepSeek adapter for the DeepSeek Harness LLM seam (design-verification twin of dsh-llm-deepseek)",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,31 +28,31 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-authorization": "workspace:^",
-    "@xfcodeai/dsh-credentials": "workspace:^",
-    "@xfcodeai/dsh-fs": "workspace:^",
-    "@xfcodeai/dsh-launch-environment": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^"
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-authorization": "workspace:^",
+    "@x1a0f3n9/dsh-credentials": "workspace:^",
+    "@x1a0f3n9/dsh-fs": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^"
   },
   "dependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "@earendil-works/pi-ai": "^0.84.2"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-authorization": "workspace:^",
-    "@xfcodeai/dsh-credentials": "workspace:^",
-    "@xfcodeai/dsh-fs": "workspace:^",
-    "@xfcodeai/dsh-launch-environment": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-llm-deepseek": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^"
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-authorization": "workspace:^",
+    "@x1a0f3n9/dsh-credentials": "workspace:^",
+    "@x1a0f3n9/dsh-fs": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-llm-deepseek": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^"
   }
 }

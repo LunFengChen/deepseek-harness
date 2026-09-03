@@ -3,7 +3,7 @@ description: "Goal surface for the Web GUI: the composer-context strip that show
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-goal
+# @x1a0f3n9/dsh-client-ui-goal
 
 English | [中文](README.zh.md)
 

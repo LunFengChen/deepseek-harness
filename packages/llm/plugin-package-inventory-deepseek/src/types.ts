@@ -12,7 +12,7 @@ export interface DeepSeekPluginPackageInventoryExtension {
   readonly packages: readonly DeepSeekPluginPackageIdentity[]
 }
 
-declare module '@xfcodeai/dsh-deepseek-llm-api-extensions/types' {
+declare module '@x1a0f3n9/dsh-deepseek-llm-api-extensions/types' {
   interface DeepSeekLlmApiExtensionMap {
     dsh_plugin_packages: DeepSeekPluginPackageInventoryExtension
   }

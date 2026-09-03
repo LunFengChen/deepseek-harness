@@ -56,8 +56,8 @@ def test_bundled_runtime_boots_the_sdk_profile(
     assert init.serverInfo.name == "deepseek-harness-sdk-runtime"
     profile = json.loads((tmp_path / "home" / "profiles" / "sdk" / "package.json").read_text())
     assert profile["dsh"]["profile"]["bundles"] == [
-        "@xfcodeai/dsh-base",
-        "@xfcodeai/dsh-sdk-app",
+        "@x1a0f3n9/dsh-base",
+        "@x1a0f3n9/dsh-sdk-app",
     ]
 
 
@@ -92,7 +92,7 @@ def test_bundled_runtime_surfaces_unbundled_plugin_failure(
 ) -> None:
     patch = tmp_path / "missing.patch.yml"
     patch.write_text(json.dumps([{
-        "insert": [{"id": "missing", "name": "@xfcodeai/dsh-does-not-exist"}],
+        "insert": [{"id": "missing", "name": "@x1a0f3n9/dsh-does-not-exist"}],
     }]))
 
     client = _client(tmp_path, mode, monkeypatch, patch)
@@ -103,4 +103,4 @@ def test_bundled_runtime_surfaces_unbundled_plugin_failure(
     finally:
         client.close()
 
-    assert "@xfcodeai/dsh-does-not-exist" in str(excinfo.value)
+    assert "@x1a0f3n9/dsh-does-not-exist" in str(excinfo.value)

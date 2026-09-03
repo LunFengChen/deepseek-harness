@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-tool-web",
+  "name": "@x1a0f3n9/dsh-tool-web",
   "description": "Model-facing web tools (web_search, web_fetch) over the DeepSeek Harness web capability seam (ctx.web)",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,30 +28,30 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
-    "@xfcodeai/dsh-web": "workspace:^"
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-web": "workspace:^"
   },
   "dependencies": {
-    "@xfcodeai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "@joplin/turndown-plugin-gfm": "^1.0.67",
     "turndown": "^7.2.4"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-spill-local": "workspace:^",
-    "@xfcodeai/dsh-spill-policy": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-tool-call-timeout-policy": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
-    "@xfcodeai/dsh-web": "workspace:^",
-    "@xfcodeai/dsh-web-fetch-http": "workspace:^",
-    "@xfcodeai/dsh-web-search-exa": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-spill-local": "workspace:^",
+    "@x1a0f3n9/dsh-spill-policy": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tool-call-timeout-policy": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-web": "workspace:^",
+    "@x1a0f3n9/dsh-web-fetch-http": "workspace:^",
+    "@x1a0f3n9/dsh-web-search-exa": "workspace:^",
     "@types/turndown": "^5.0.6"
   }
 }

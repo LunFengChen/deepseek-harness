@@ -3,18 +3,18 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import Storage from '@xfcodeai/dsh-storage'
-import { DomainFacility } from '@xfcodeai/dsh-storage-domain'
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
-import WorkspaceRegistry from '@xfcodeai/dsh-workspace'
-import type { WorkspaceId } from '@xfcodeai/dsh-workspace/types'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import Storage from '@x1a0f3n9/dsh-storage'
+import { DomainFacility } from '@x1a0f3n9/dsh-storage-domain'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import WorkspaceRegistry from '@x1a0f3n9/dsh-workspace'
+import type { WorkspaceId } from '@x1a0f3n9/dsh-workspace/types'
 import WorkspaceController from '../src/index.ts'
 import { WorkspaceFeed } from '../src/feed.ts'
 import type { WorkspaceFollowFrame } from '../src/types.ts'
 import { MemoryStorageBackend } from '../../../storage/storage-domain/tests/helpers/memory-backend.ts'
 
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
     'fixture/failure': {}
   }

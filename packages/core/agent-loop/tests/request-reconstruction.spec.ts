@@ -7,15 +7,15 @@
 
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { createUserMessage, LlmError, ReasoningEffortId  } from '@xfcodeai/dsh-llm'
-import type { GenerateOptions, LlmModelReasoningInfo, LlmResolvedModelInfo, StreamChunk } from '@xfcodeai/dsh-llm'
-import SessionStore, { Session, SessionId, foldRequestHeader } from '@xfcodeai/dsh-session'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { defineContentToolFixture } from '@xfcodeai/dsh-tools'
-import AgentRegistry, { type Agent } from '@xfcodeai/dsh-agent'
+import LlmRuntime, { createUserMessage, LlmError, ReasoningEffortId  } from '@x1a0f3n9/dsh-llm'
+import type { GenerateOptions, LlmModelReasoningInfo, LlmResolvedModelInfo, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, foldRequestHeader } from '@x1a0f3n9/dsh-session'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
+import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from './mock-adapter.ts'
 
 async function harness(adapter: MockAdapter, persona = 'stable base') {

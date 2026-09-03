@@ -1,7 +1,7 @@
 /**
  * Same-session goal domain: event-sourced state, compare-and-set mutations,
  * and process-local continuation activation.
- * @module @xfcodeai/dsh-goal
+ * @module @x1a0f3n9/dsh-goal
  */
 
 import { randomUUID } from 'node:crypto'
@@ -9,13 +9,13 @@ import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { z as zod } from 'zod'
 import type { ZodType } from 'zod'
-import { agentEvents } from '@xfcodeai/dsh-agent'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import { SessionSeq } from '@xfcodeai/dsh-session'
-import type { Session, SessionEvent, SessionLogOffset } from '@xfcodeai/dsh-session'
-import { TypertRemoteService, Remote } from '@xfcodeai/dsh-typert-protocol'
-import type {} from '@xfcodeai/dsh-session-projection'
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
+import { agentEvents } from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionEvent, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import { TypertRemoteService, Remote } from '@x1a0f3n9/dsh-typert-protocol'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import {
   applyGoalEvent,
   goalChangeRef,

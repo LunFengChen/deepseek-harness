@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import fc from 'fast-check'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import {
   ScheduleId,
   createEveryScheduleRecord,

@@ -3,8 +3,8 @@ import type { Context } from '@deepseek-ai/cordis'
 import clsx from 'clsx'
 import {
   IconApiOutline14, IconChevronDownOutline14, IconInspectOutline12, StateDot, TerminalBlock,
-} from '@xfcodeai/dsh-client-ui-primitives'
-import type { PropsLocale } from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { PropsLocale } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ToolCallViewProps } from '../../contract/slots.ts'
 import {
   isSettledPersistentShellCall,

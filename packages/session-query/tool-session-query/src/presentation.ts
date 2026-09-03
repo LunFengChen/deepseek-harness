@@ -1,7 +1,7 @@
 /**
  * Model text rendering and generic tool-call presentation.
  *
- * @module @xfcodeai/dsh-tool-session-query/presentation
+ * @module @x1a0f3n9/dsh-tool-session-query/presentation
  */
 
 import {
@@ -12,12 +12,12 @@ import {
   type SessionLineageTrace,
   type SessionRecord,
   type SessionSearchHit,
-} from '@xfcodeai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-query'
 import type {
   SessionEvent,
   SessionId,
-} from '@xfcodeai/dsh-session'
-import type { GenericCallView } from '@xfcodeai/dsh-tools'
+} from '@x1a0f3n9/dsh-session'
+import type { GenericCallView } from '@x1a0f3n9/dsh-tools'
 import { workspaceAccess } from './workspace-access.ts'
 
 type TitleView = Awaited<ReturnType<typeof workspaceAccess.readTitle>>

@@ -1,11 +1,11 @@
-import { createUserMessage } from '@xfcodeai/dsh-llm'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import type { Context } from '@deepseek-ai/cordis'
 import { codingHarness, finalText, SYSTEM_PROMPT, waitForIdle } from './harness.ts'
-import { SessionId } from '@xfcodeai/dsh-session'
+import { SessionId } from '@x1a0f3n9/dsh-session'
 
 /**
  * Key-gated smoke for mid-session compaction. It verifies the compact event

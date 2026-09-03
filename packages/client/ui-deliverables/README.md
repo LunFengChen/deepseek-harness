@@ -3,7 +3,7 @@ description: "Produced-files and clickable file references for the Web GUI: the 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-deliverables
+# @x1a0f3n9/dsh-client-ui-deliverables
 
 English | [中文](README.zh.md)
 

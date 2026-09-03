@@ -2,10 +2,10 @@
 
 import type { ContentBlock as AcpContentBlock } from '@agentclientprotocol/sdk'
 import type { Context } from '@deepseek-ai/cordis'
-import { isImageAdmissionError } from '@xfcodeai/dsh-attachment'
-import type { ImageAttachmentRef, ImageMediaType, SaveImageAttachment } from '@xfcodeai/dsh-attachment'
-import type { ModelSelection } from '@xfcodeai/dsh-agent'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
+import { isImageAdmissionError } from '@x1a0f3n9/dsh-attachment'
+import type { ImageAttachmentRef, ImageMediaType, SaveImageAttachment } from '@x1a0f3n9/dsh-attachment'
+import type { ModelSelection } from '@x1a0f3n9/dsh-agent'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
 
 /** Raster formats shared by ACP image blocks and the core attachment vocabulary. */
 const IMAGE_MEDIA_TYPES: readonly ImageMediaType[] = [

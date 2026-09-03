@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import {
   resolveRetryPolicy,
   RetryPolicySchema,
-} from '@xfcodeai/dsh-llm'
-import type { RetryPolicyConfig } from '@xfcodeai/dsh-llm'
-import { MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
+} from '@x1a0f3n9/dsh-llm'
+import type { RetryPolicyConfig } from '@x1a0f3n9/dsh-llm'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
 
 describe('provider retry policy', () => {
   it('resolves immutable normal defaults', () => {

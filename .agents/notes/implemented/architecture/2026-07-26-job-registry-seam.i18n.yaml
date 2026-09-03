@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-07-26-job-registry-seam.md
-2026-07-26-job-registry-seam.md: 943100fb11b33dbfae4c0735f12c040a837aa215
-2026-07-26-job-registry-seam.zh.md: eeb8a710125ae76121eb784d6af1aa46d3294720
+2026-07-26-job-registry-seam.md: 7e6acc7766d3d7d5e6d830b6b7877569ed291404
+2026-07-26-job-registry-seam.zh.md: 4d442da870da440a4be6694e65abdd5fa623be9c

@@ -6,10 +6,10 @@ import type {
   SessionListState,
   SessionSnapshot,
   UseProjection,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { notifySubscribers } from '@xfcodeai/dsh-client-store'
-import { standardHookPropName } from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { notifySubscribers } from '@x1a0f3n9/dsh-client-store'
+import { standardHookPropName } from '@x1a0f3n9/dsh-client-ui-slots'
 import type {
   HostObservable,
   KeyedStandardSource,
@@ -19,9 +19,9 @@ import type {
   SlotScopeAdapter,
   SnapshotSelectorHook,
   StandardSourceBinding,
-} from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 // Type-only service merge for ctx.slots.
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import { renderSessionArea } from './session-provider.tsx'
 
 /** Selector hook over the Session Controller list and current selection. */
@@ -101,7 +101,7 @@ class PendingInteractionDomain<T extends SessionPendingInteractionBase> {
   }
 }
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface GlobalStandardProps {
     /** Session list and current selection. */
     useSessions: UseSessions

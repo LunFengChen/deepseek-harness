@@ -1,6 +1,6 @@
 import { memo } from 'react'
-import { MessageText } from '@xfcodeai/dsh-client-ui-primitives'
-import type { PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import { MessageText } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { GoalCommandInputData } from './goal-command-input.ts'
 import css from './GoalCommandInputView.module.css'
 

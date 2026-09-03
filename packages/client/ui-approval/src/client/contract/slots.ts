@@ -1,9 +1,9 @@
 /** Approval composer and optional correlated-detail contracts. */
-import type { ToolCallId } from '@xfcodeai/dsh-llm'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {
   PropsLocale, PropsRenderSlots, PropsRuntime,
-} from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ApprovalKey } from '../locales.ts'
 
 /* jscpd:ignore-start -- Approval and Question intentionally own independent pending-settlement lifecycles. */
@@ -19,14 +19,14 @@ function settlePendingComposer(settle: () => void, failureMessage: string): Prom
 }
 /* jscpd:ignore-end */
 
-declare module '@xfcodeai/dsh-client-ui-session/client' {
+declare module '@x1a0f3n9/dsh-client-ui-session/client' {
   interface SessionPendingInteractionMap {
     /** Pending approval request. */
     approval: PendingApproval
   }
 }
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Approval prompt copy. */
     approval: ApprovalKey

@@ -1,6 +1,6 @@
 /**
  * `SandboxedFileSystem`: the sandbox-enforcing implementation of the
- * `@xfcodeai/dsh-fs` Service Definition. It extends `LocalFileSystem` so all
+ * `@x1a0f3n9/dsh-fs` Service Definition. It extends `LocalFileSystem` so all
  * text-storage mechanics — resolve, stat, read/stream, list, the atomic
  * write and the read-match-write edit critical section — are the local
  * implementation's, verbatim; this package adds only the per-call POLICY fence
@@ -12,7 +12,7 @@
  * and only the target path is untrusted, so canonicalize-then-contain is the
  * complete answer to this surface. This is containment, not a security
  * boundary; kernel-grade isolation of untrusted CODE stays `ctx.shell`'s job
- * (`@xfcodeai/dsh-bash-sandbox`). The residual
+ * (`@x1a0f3n9/dsh-bash-sandbox`). The residual
  * TOCTOU (an ancestor symlink swapped between the containment re-check and the
  * syscall) is narrowed by re-canonicalizing immediately before delegating and
  * is accepted for this threat model.
@@ -23,17 +23,17 @@
  * `danger-full-access` delegates unfenced. A denial throws the structured
  * `FS_SANDBOX_DENIED`.
  *
- * @module @xfcodeai/dsh-fs-sandbox
+ * @module @x1a0f3n9/dsh-fs-sandbox
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import { LocalFileSystem } from '@xfcodeai/dsh-fs-local'
-import type { Config as LocalConfig } from '@xfcodeai/dsh-fs-local'
-import { FsError } from '@xfcodeai/dsh-fs'
-import type { FsEditOutcome, FsEditRequest, FsTarget, FsVersion, FsWriteIntent, FsWriteOutcome } from '@xfcodeai/dsh-fs'
-import { writableRoots } from '@xfcodeai/dsh-sandbox'
-import type { SandboxExecutionPolicy, SandboxMode } from '@xfcodeai/dsh-sandbox'
-import type {} from '@xfcodeai/dsh-sandbox-policy'
+import { LocalFileSystem } from '@x1a0f3n9/dsh-fs-local'
+import type { Config as LocalConfig } from '@x1a0f3n9/dsh-fs-local'
+import { FsError } from '@x1a0f3n9/dsh-fs'
+import type { FsEditOutcome, FsEditRequest, FsTarget, FsVersion, FsWriteIntent, FsWriteOutcome } from '@x1a0f3n9/dsh-fs'
+import { writableRoots } from '@x1a0f3n9/dsh-sandbox'
+import type { SandboxExecutionPolicy, SandboxMode } from '@x1a0f3n9/dsh-sandbox'
+import type {} from '@x1a0f3n9/dsh-sandbox-policy'
 import { isPathUnder } from './containment.ts'
 
 /**

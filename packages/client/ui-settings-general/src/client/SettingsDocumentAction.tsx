@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react'
 import type { ReactNode } from 'react'
-import { Button } from '@xfcodeai/dsh-client-ui-primitives'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import { Button } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { SettingsDocumentStore } from './settings-document-store.ts'
 import css from './SettingsDocumentAction.module.css'
 

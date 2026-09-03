@@ -3,7 +3,7 @@
  * request results (`Location`, `LocationLink`, `Hover`), and the `textDocumentSync` shapes used to
  * decide transient-open support. Types only. Fields absent from a real server payload stay optional;
  * the translation layer normalizes them into the seam's closed unions.
- * @module @xfcodeai/dsh-lsp-stdio/protocol
+ * @module @x1a0f3n9/dsh-lsp-stdio/protocol
  */
 
 /** A zero-based UTF-16 position on the wire (the protocol's `Position`). */

@@ -2,7 +2,7 @@
 
 - insert:
     - id: llm-replay
-      name: '@xfcodeai/dsh-llm-replay'
+      name: '@x1a0f3n9/dsh-llm-replay'
       config:
         providers:
           - id: deepseek-official
@@ -16,7 +16,7 @@
                 reasoningEfforts: [max]
 
     - id: sdk-jsonrpc-server-dynamic-replay
-      name: '@xfcodeai/dsh-sdk-jsonrpc-server'
+      name: '@x1a0f3n9/dsh-sdk-jsonrpc-server'
       inject: [sdkAppStartup, loader]
       config:
         maxTokensAsSuccess: true

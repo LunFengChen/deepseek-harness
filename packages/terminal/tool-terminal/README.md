@@ -3,7 +3,7 @@ description: "Six model-facing persistent terminal tools with owner isolation, b
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-terminal
+# @x1a0f3n9/dsh-tool-terminal
 
 English | [中文](README.zh.md)
 
@@ -41,12 +41,12 @@ Enable these tools when the composition mounts a terminal backend and the model 
 ### Composition
 
 ```yaml
-- name: '@xfcodeai/dsh-terminal'
-- name: '@xfcodeai/dsh-terminal-bash'
-- name: '@xfcodeai/dsh-tool-terminal'
+- name: '@x1a0f3n9/dsh-terminal'
+- name: '@x1a0f3n9/dsh-terminal-bash'
+- name: '@x1a0f3n9/dsh-tool-terminal'
 ```
 
-The tools need `ctx.terminals` — a backend must be mounted — and the system-prompt service for the guidance section. Background sends additionally require the jobs service and its model-facing controller (`@xfcodeai/dsh-tool-jobs`).
+The tools need `ctx.terminals` — a backend must be mounted — and the system-prompt service for the guidance section. Background sends additionally require the jobs service and its model-facing controller (`@x1a0f3n9/dsh-tool-jobs`).
 
 ### Configuration
 
@@ -55,7 +55,7 @@ The tools need `ctx.terminals` — a backend must be mounted — and the system-
 | `enableRunInBackground` | `true` | Expose and accept `run_in_background`; `false` removes the schema field and rejects the argument |
 | `maxResultBytes` | `262144` | UTF-8 cap (minimum `64`) for each complete terminal result after wait, session, pagination, truncation, and job-status metadata |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-tool-terminal) and [tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-tool-terminal) are the exhaustive sources for config fields and schemas.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-tool-terminal) and [tool catalog](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-terminal) are the exhaustive sources for config fields and schemas.
 
 ### Background sends
 
@@ -103,7 +103,7 @@ Foreground sends use terminal call and result cards; background sends and the ot
 
 Read these pages when the package-level contract is not enough. They move from the generated schemas to the service contract, the backend, and the background-job surface.
 
-- [Tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-tool-terminal) — the six generated schemas and result shapes.
+- [Tool catalog](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-terminal) — the six generated schemas and result shapes.
 - [Terminal subsystem reference](../../../docs/subsystems/terminal.md) — the service contract and shared types behind the tools.
 - [terminal service](../terminal/README.md) — session operations, owner fencing, and cleanup semantics.
 - [terminal-bash backend](../terminal-bash/README.md) — the shipped shell backend that provides sessions.
@@ -139,7 +139,7 @@ Prefix-stable while the registration scope and guidance text are unchanged.
 
 #### What the model sees
 
-The six generated schemas are listed in the [`dsh-tool-terminal` catalog section](../../../docs/tool-catalog.md#xfcodeaidsh-tool-terminal). Their fixed schema tokens are present whenever this plugin is active; agent-scoped tool filtering may hide them.
+The six generated schemas are listed in the [`dsh-tool-terminal` catalog section](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-terminal). Their fixed schema tokens are present whenever this plugin is active; agent-scoped tool filtering may hide them.
 
 #### Token effect
 
@@ -171,7 +171,7 @@ Append-only; new results follow the reusable request prefix.
 These limits define the model-facing surface that is absent. They are current package constraints, not a task backlog.
 
 - **No TUI or key-sequence surface** — named key sequences, full-screen TUI interaction, BEL, resize, and auto-start are not exposed in any schema.
-- **Background mode requires the jobs surface** — `run_in_background` needs both `@xfcodeai/dsh-jobs` and its model-facing controller (`@xfcodeai/dsh-tool-jobs`); without them the argument is rejected.
+- **Background mode requires the jobs surface** — `run_in_background` needs both `@x1a0f3n9/dsh-jobs` and its model-facing controller (`@x1a0f3n9/dsh-tool-jobs`); without them the argument is rejected.
 
 <a id="dev-note"></a>
 ### Dev Note

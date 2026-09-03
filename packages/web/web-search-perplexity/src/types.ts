@@ -2,7 +2,7 @@
  * Wire types for the Perplexity search API (`POST https://api.perplexity.ai/chat/completions`,
  * an OpenAI-compatible chat shape). Results prefer structured `search_results` and fall back to
  * URL-only `citations`; the provider-private wire shape does not depend on `ctx.llm`.
- * @module @xfcodeai/dsh-web-search-perplexity/types
+ * @module @x1a0f3n9/dsh-web-search-perplexity/types
  */
 
 /** Request body sent to Perplexity's chat-completions endpoint. */

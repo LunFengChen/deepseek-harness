@@ -10,10 +10,10 @@
 
 - insert:
     - id: acp-app-startup
-      name: '@xfcodeai/dsh-acp-app'
+      name: '@x1a0f3n9/dsh-acp-app'
 
     - id: acp
-      name: '@xfcodeai/dsh-acp'
+      name: '@x1a0f3n9/dsh-acp'
       inject: [acpAppStartup]
       config:
         provider: deepseek-official

@@ -3,13 +3,13 @@ description: "File-reference discovery and @file mention grammar for host-backed
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-file-reference
+# @x1a0f3n9/dsh-file-reference
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-Host-backed user interfaces use `dsh-file-reference` to offer `@file` completion: a UI asks for path candidates for the addressed agent, the model types `@path` or `@"path with spaces"`, and picking a candidate inserts the matching mention as ordinary prompt text. The seam itself owns no filesystem access — a concrete provider such as `@xfcodeai/dsh-file-reference-local` supplies candidates, ranking, caching, and invalidation. Selecting a candidate never reads or attaches file contents; the model must call a filesystem tool to inspect a file. Session Controller exposes the same discovery to browser consumers through the `fileReferences/list` Remote.
+Host-backed user interfaces use `dsh-file-reference` to offer `@file` completion: a UI asks for path candidates for the addressed agent, the model types `@path` or `@"path with spaces"`, and picking a candidate inserts the matching mention as ordinary prompt text. The seam itself owns no filesystem access — a concrete provider such as `@x1a0f3n9/dsh-file-reference-local` supplies candidates, ranking, caching, and invalidation. Selecting a candidate never reads or attaches file contents; the model must call a filesystem tool to inspect a file. Session Controller exposes the same discovery to browser consumers through the `fileReferences/list` Remote.
 
 ## Table of Contents
 
@@ -37,7 +37,7 @@ An `@path` token at the start of input or after whitespace triggers completion; 
 
 ### Pairing with a provider
 
-For a local filesystem, mount `@xfcodeai/dsh-file-reference-local`; other namespaces (remote or virtual filesystems) need a provider whose discovery matches the effective tool. When the addressed agent can call `read`, a provider may install the stable `FILE_REFERENCE_PROMPT` guidance that tells the model to read a referenced file before claiming to have inspected it.
+For a local filesystem, mount `@x1a0f3n9/dsh-file-reference-local`; other namespaces (remote or virtual filesystems) need a provider whose discovery matches the effective tool. When the addressed agent can call `read`, a provider may install the stable `FILE_REFERENCE_PROMPT` guidance that tells the model to read a referenced file before claiming to have inspected it.
 
 -----
 
@@ -78,7 +78,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Local file-reference provider](../file-reference-local/README.md) — the shipped local-workspace implementation of this seam.
 - [Session-reference subsystem](../../../docs/subsystems/session-reference.md) — the shared file-reference and session-reference contracts behind host UIs.
 - [Context group map](../README.md) — sibling request-context packages.
-- [Filesystem tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-tool-fs) — the `read` tool that referenced paths are meant for.
+- [Filesystem tool catalog](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-fs) — the `read` tool that referenced paths are meant for.
 
 -----
 

@@ -3,7 +3,7 @@ description: "面向插件作者与维护者的作用域注册库，用于构建
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-scope
+# @x1a0f3n9/dsh-scope
 
 [English](README.md) | 中文
 

@@ -1,15 +1,15 @@
 /**
  * Instruction-file discovery and bounded, abort-aware provider reads.
  *
- * @module @xfcodeai/dsh-agent-instructions/files
+ * @module @x1a0f3n9/dsh-agent-instructions/files
  */
 
 import { createReadStream } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
-import type { FileSystem, FsInfo, FsTarget, FsVersion } from '@xfcodeai/dsh-fs'
-import { dshHomeDisplay } from '@xfcodeai/dsh-home-paths'
-import { assertNever } from '@xfcodeai/dsh-util-values'
+import type { FileSystem, FsInfo, FsTarget, FsVersion } from '@x1a0f3n9/dsh-fs'
+import { dshHomeDisplay } from '@x1a0f3n9/dsh-home-paths'
+import { assertNever } from '@x1a0f3n9/dsh-util-values'
 import { resolveConfig, resolveDiscoveryConfig, type ResolvedConfig } from './config.ts'
 import { trimmedInstructionDigest } from './digest.ts'
 import {

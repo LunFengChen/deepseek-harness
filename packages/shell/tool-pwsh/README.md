@@ -3,7 +3,7 @@ description: "The model-facing pwsh tool for users and maintainers choosing, con
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-pwsh
+# @x1a0f3n9/dsh-tool-pwsh
 
 English | [中文](README.zh.md)
 
@@ -36,9 +36,9 @@ Choose the pwsh tool when commands must be written in PowerShell — native path
 The common path is a PowerShell executor provider, the environment registry, and this tool.
 
 ```yaml
-- name: '@xfcodeai/dsh-pwsh-local'
-- name: '@xfcodeai/dsh-shell-env'
-- name: '@xfcodeai/dsh-tool-pwsh'
+- name: '@x1a0f3n9/dsh-pwsh-local'
+- name: '@x1a0f3n9/dsh-shell-env'
+- name: '@x1a0f3n9/dsh-tool-pwsh'
 ```
 
 The single config field toggles background support.
@@ -47,7 +47,7 @@ The single config field toggles background support.
 |---|---|---|
 | `enableRunInBackground` | `true` | Expose `run_in_background`; when `false`, forced background calls are rejected |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-tool-pwsh) is the exhaustive source for every accepted field and its JSDoc; the generated [tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-tool-pwsh) carries the full argument schema.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-tool-pwsh) is the exhaustive source for every accepted field and its JSDoc; the generated [tool catalog](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-pwsh) carries the full argument schema.
 
 ### Running a command
 
@@ -59,7 +59,7 @@ Under a sandboxing executor, denied commands report `[sandbox: file access denie
 
 ### What can go wrong
 
-A composition with no PowerShell executor never activates the tool, and the injected services (`tools`, `shell`, `systemPrompt`, `shellEnv`) must all exist. Background calls without the job runtime fail with `background jobs unavailable: load @xfcodeai/dsh-jobs and @xfcodeai/dsh-tool-jobs`, and `sandbox_permissions` without a sandboxing executor fails with `sandbox_permissions is not available in this composition (no sandboxing executor to escalate)`.
+A composition with no PowerShell executor never activates the tool, and the injected services (`tools`, `shell`, `systemPrompt`, `shellEnv`) must all exist. Background calls without the job runtime fail with `background jobs unavailable: load @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs`, and `sandbox_permissions` without a sandboxing executor fails with `sandbox_permissions is not available in this composition (no sandboxing executor to escalate)`.
 
 -----
 
@@ -106,8 +106,8 @@ Read these pages when the package-level contract is not enough. They move from t
 - [tool-jobs](../../jobs/tool-jobs/README.md) — `job_output`, `job_list`, and `job_kill` controls for background runs.
 - [pwsh tool and executor Agent Note](../../../.agents/notes/implemented/feature/2026-08-01-pwsh-tool-and-executor.md) — why the tool mirrors the bash tool and how the Windows sandbox gates its description.
 - [Windows ACL restricted-token sandbox Agent Note](../../../.agents/notes/implemented/feature/2026-08-08-windows-acl-restricted-token-sandbox.md) — the language-mode and named-pipe contracts.
-- [Generated tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-tool-pwsh) — the exact `pwsh` argument schema.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-tool-pwsh) — every accepted config field and its source declaration.
+- [Generated tool catalog](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-pwsh) — the exact `pwsh` argument schema.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-tool-pwsh) — every accepted config field and its source declaration.
 
 -----
 
@@ -138,7 +138,7 @@ Prefix-stable while the registration scope and prompt text are unchanged. Plugin
 
 #### What the model sees
 
-The model sees the generated [`pwsh` schema](../../../docs/tool-catalog.md#xfcodeaidsh-tool-pwsh). Agent-scoped tool restrictions can remove the definition for that agent.
+The model sees the generated [`pwsh` schema](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-pwsh). Agent-scoped tool restrictions can remove the definition for that agent.
 
 #### Token effect
 
@@ -180,7 +180,7 @@ Append-only; newly visible content follows the reusable request prefix and does 
 
 #### What the model sees
 
-Validation and infrastructure failures are normalized as `Error: <message>`. This package's stable messages are `invalid command: expected a non-empty string`, `invalid description: expected a non-empty string`, `invalid timeoutMs: expected a positive number, got <value>`, the escalation pairing failures, `sandbox_permissions is not available in this composition (no sandboxing executor to escalate)`, the shared escalation failures (not strictly wider / no approval service / no agent to route / no approval channel / user rejected / was cancelled), `run_in_background is disabled for this deployment (enableRunInBackground: false)`, `background jobs unavailable: load @xfcodeai/dsh-jobs and @xfcodeai/dsh-tool-jobs`, and `tool call aborted`.
+Validation and infrastructure failures are normalized as `Error: <message>`. This package's stable messages are `invalid command: expected a non-empty string`, `invalid description: expected a non-empty string`, `invalid timeoutMs: expected a positive number, got <value>`, the escalation pairing failures, `sandbox_permissions is not available in this composition (no sandboxing executor to escalate)`, the shared escalation failures (not strictly wider / no approval service / no agent to route / no approval channel / user rejected / was cancelled), `run_in_background is disabled for this deployment (enableRunInBackground: false)`, `background jobs unavailable: load @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs`, and `tool call aborted`.
 
 #### Token effect
 
@@ -198,7 +198,7 @@ Append-only; newly visible content follows the reusable request prefix and does 
 These limits define when the tool is a poor fit or needs special care. They are current package constraints, not a task backlog.
 
 - **Language mode and named-pipe capture under the Windows sandbox** — under the [Windows ACL sandbox](../../sandbox/sandbox-windows-acl/README.md), read-only pwsh starts in ConstrainedLanguage because its temp write denial makes PowerShell's AppLocker probe fail closed: `Add-Type`, non-core .NET statics (`[System.IO.*]::`, `[math]::`), COM objects, and reflection fail with "only core types" errors, and the mode cannot be lifted from inside. Workspace-write's private temp lets the probe complete, so it stays in FullLanguage unless host policy says otherwise. Both confined modes deny named-pipe opens, so a piped-stdio spawn inside a confined command fails with EPERM. The tool description teaches both contracts to the model; the backend README owns the full limitations.
-- **No persistent shell** — every call starts a fresh `pwsh -Command`; the persistent-shell counterpart is [`@xfcodeai/dsh-tool-pwsh-persistent`](../tool-pwsh-persistent/README.md), which keeps one owner-scoped pwsh alive across calls.
+- **No persistent shell** — every call starts a fresh `pwsh -Command`; the persistent-shell counterpart is [`@x1a0f3n9/dsh-tool-pwsh-persistent`](../tool-pwsh-persistent/README.md), which keeps one owner-scoped pwsh alive across calls.
 - **PowerShell-dialect contract** — the model must write PowerShell (native paths, `$env:` variables), not bash; there is no dialect translation.
 - **Session-cwd identity is not canonicalized** — the workdir base is the session header cwd as-is, unlike the bash tool's sandbox-root-canonicalized identity. Under a confining executor the policy's workspace root IS canonicalized (by the shared policy service), so the workdir and the confinement root can diverge when the raw session cwd differs from its canonical form — a parity gap deferred to the shared shell-tool base extraction.
 

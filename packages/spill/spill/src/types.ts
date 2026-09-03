@@ -1,14 +1,14 @@
 /**
  * Vocabulary for the spill storage Service Definition. Types only — the abstract service
  * lives in `./index.ts`, implementations in sibling packages
- * (`@xfcodeai/dsh-spill-local` first).
+ * (`@x1a0f3n9/dsh-spill-local` first).
  *
- * @module @xfcodeai/dsh-spill/types
+ * @module @x1a0f3n9/dsh-spill/types
  */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
-import type { ToolCallId } from '@xfcodeai/dsh-llm'
-import type { SessionId } from '@xfcodeai/dsh-session'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
+import type { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
 
 /**
  * Opaque model-facing handle for one spilled artifact. A local backend may use a

@@ -7,11 +7,11 @@
  * must stub); implementation-internal entry points (history staging, wire-frame
  * dispatch) stay on the class, invisible out here.
  */
-import type { AttachmentIdType, ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
-import type { MessageId } from '@xfcodeai/dsh-llm/brand'
-import type { SessionId, SessionSeq } from '@xfcodeai/dsh-session/types'
-import type { RemoteResult } from '@xfcodeai/dsh-typert-protocol'
-import type { ObservableSnapshot } from '@xfcodeai/dsh-client-store'
+import type { AttachmentIdType, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import type { SessionId, SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type { PromptContentPart, QueueAction, SessionRequestId } from '../../types.ts'
 import type { PendingSubmissionImage, SessionSnapshot } from './snapshot.ts'
 

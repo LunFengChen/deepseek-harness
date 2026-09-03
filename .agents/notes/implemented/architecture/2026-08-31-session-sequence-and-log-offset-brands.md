@@ -12,7 +12,7 @@ Session positions used one structural `number` type for two incompatible meaning
 
 ## Decision
 
-`@xfcodeai/dsh-brand` exports the erased numeric primitive `BrandedNumber<B>` and the runtime-identity helper `brandNumber()`. `@xfcodeai/dsh-session` owns two validated brands: `SessionSeq` names one existing event and `SessionLogOffset` names a log gap, prefix length, or read offset. `SessionSeqCursor = SessionSeq | -1` represents an inclusive watermark before or after the first event, and `OptionalSessionSeq = SessionSeq | null` represents an event identity whose absence is data.
+`@x1a0f3n9/dsh-brand` exports the erased numeric primitive `BrandedNumber<B>` and the runtime-identity helper `brandNumber()`. `@x1a0f3n9/dsh-session` owns two validated brands: `SessionSeq` names one existing event and `SessionLogOffset` names a log gap, prefix length, or read offset. `SessionSeqCursor = SessionSeq | -1` represents an inclusive watermark before or after the first event, and `OptionalSessionSeq = SessionSeq | null` represents an event identity whose absence is data.
 
 `SessionEvent.seq`, surface replacement endpoints, provenance, and owner payload fields that identify Session events use `SessionSeq`. `Session.seq`, `Session.firstLiveSeq`, `Session.inheritedEventCount`, body-read offsets, and inherited prefix cuts use `SessionLogOffset`. Arithmetic returns an ordinary number and re-enters either domain through its validating constructor.
 

@@ -4,8 +4,8 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@xfcodeai/dsh-agent-loop'
-import type {} from '@xfcodeai/dsh-subagent'
+import type {} from '@x1a0f3n9/dsh-agent-loop'
+import type {} from '@x1a0f3n9/dsh-subagent'
 
 /** Fixture plugin name. */
 export const name = 'subagent-settlement-fence'

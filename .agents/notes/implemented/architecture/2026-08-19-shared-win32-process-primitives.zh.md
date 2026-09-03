@@ -10,7 +10,7 @@ Windows ACL sandbox 拥有 restricted token、SID、DACL、grant 与 workspace p
 
 ## Decision
 
-`@xfcodeai/dsh-win32-process` 拥有 `sandbox-windows-acl` 当前消费的可复用 Win32 process ABI 与 native resource 操作。该包惰性加载 `kernel32.dll` 和 `advapi32.dll`，核验 x64 `STARTUPINFOW` 与 `PROCESS_INFORMATION` 布局，为 `CreateProcessAsUserW` 引用 argv，并提供带检查的 restricted-token pipe 与 inherited-stdio Job 操作。
+`@x1a0f3n9/dsh-win32-process` 拥有 `sandbox-windows-acl` 当前消费的可复用 Win32 process ABI 与 native resource 操作。该包惰性加载 `kernel32.dll` 和 `advapi32.dll`，核验 x64 `STARTUPINFOW` 与 `PROCESS_INFORMATION` 布局，为 `CreateProcessAsUserW` 引用 argv，并提供带检查的 restricted-token pipe 与 inherited-stdio Job 操作。
 
 Windows ACL sandbox 继续唯一拥有 restricted-token 创建、SID 与 DACL policy、grants、可写路径裁定、临时目录 policy 和公共 sandbox child result。它通过共享 binding context 扩展 policy-specific API，提供 primary token，组合 pipe drain 与 wait，并在自己的生命周期边界关闭调用方拥有的 Job。
 

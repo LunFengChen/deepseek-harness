@@ -11,7 +11,7 @@ import {
   dshHomePath,
   expandHomePath,
   resolveDshHome,
-} from '@xfcodeai/dsh-home-paths'
+} from '@x1a0f3n9/dsh-home-paths'
 
 afterEach(() => {
   vi.unstubAllEnvs()

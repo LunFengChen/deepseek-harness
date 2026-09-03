@@ -15,7 +15,7 @@ describe('dsh-acp-app bundle', () => {
       dsh?: { bundle?: { patch?: string } }
     }
     expect(manifest.dsh?.bundle?.patch).toBe('./cordis.patch.yml')
-    expect(manifest.dependencies).toHaveProperty('@xfcodeai/dsh-acp')
+    expect(manifest.dependencies).toHaveProperty('@x1a0f3n9/dsh-acp')
     const patches = yaml.load(
       readFileSync(resolve(root, manifest.dsh!.bundle!.patch!), 'utf8'),
       { schema: entryListSchema },
@@ -27,7 +27,7 @@ describe('dsh-acp-app bundle', () => {
     expect(patches.find(patch => patch.id === 'hmr')).toBeUndefined()
     expect(patches.find(patch => patch.id === 'session-title-llm')).toMatchObject({ disabled: true })
     const rows = patches.flatMap(patch => patch.insert ?? [])
-    expect(rows.find(row => row.id === 'acp-app-startup')?.name).toBe('@xfcodeai/dsh-acp-app')
+    expect(rows.find(row => row.id === 'acp-app-startup')?.name).toBe('@x1a0f3n9/dsh-acp-app')
     expect(rows.find(row => row.id === 'acp')).toMatchObject({
       inject: ['acpAppStartup'],
       config: { provider: 'deepseek-official', model: 'deepseek-v4-flash' },

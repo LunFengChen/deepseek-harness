@@ -1,27 +1,27 @@
 /**
  * Shared route, framing, timeout, assembly, and validation policy for
  * model-backed session-title providers.
- * @module @xfcodeai/dsh-session-title-llm
+ * @module @x1a0f3n9/dsh-session-title-llm
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { createUserMessage, BlockAssembler } from '@xfcodeai/dsh-llm'
-import type { FinishReason, GenerateOptions, Message } from '@xfcodeai/dsh-llm'
-import { deadline, MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
-import { deepFreeze } from '@xfcodeai/dsh-util-values'
-import type { SessionSeq } from '@xfcodeai/dsh-session'
+import { createUserMessage, BlockAssembler } from '@x1a0f3n9/dsh-llm'
+import type { FinishReason, GenerateOptions, Message } from '@x1a0f3n9/dsh-llm'
+import { deadline, MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
+import type { SessionSeq } from '@x1a0f3n9/dsh-session'
 import {
   normalizeSessionTitle,
   SessionTitleProviderId,
-} from '@xfcodeai/dsh-session-title'
+} from '@x1a0f3n9/dsh-session-title'
 import type {
   SessionTitleAutomaticMode,
   SessionTitleModelProvenance,
   SessionTitleProviderRequest,
   SessionTitleProviderResult,
   SessionTitleUserMessage,
-} from '@xfcodeai/dsh-session-title'
+} from '@x1a0f3n9/dsh-session-title'
 
 /** Exact model-visible request recorded before one auxiliary title dispatch. */
 export interface SessionTitleLlmRequestEventData {
@@ -39,7 +39,7 @@ export interface SessionTitleLlmRequestEventData {
   readonly maxTokens: number
 }
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /** Log-only pre-dispatch record of one session-title model request. */
     'session/title-llm-request': SessionTitleLlmRequestEventData

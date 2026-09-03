@@ -3,7 +3,7 @@
  * timestamps, goal lifecycle clocks, and hook duration while preserving semantic payload values.
  * Request-header scrubbers stay composable so one scenario per header class can pin prompt and
  * tool-schema sidecars.
- * @module @xfcodeai/dsh-session-snapshot/normalize
+ * @module @x1a0f3n9/dsh-session-snapshot/normalize
  */
 
 import {
@@ -13,7 +13,7 @@ import {
   SessionLogOffset,
   SessionSeq,
   type SessionEvent,
-} from '@xfcodeai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import { redactSessionSnapshotIds } from './identity.ts'
 
 const SESSION_ID = '{{sessionId}}'

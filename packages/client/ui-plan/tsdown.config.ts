@@ -1,3 +1,3 @@
 import { clientBundle } from '../tsdown.client.ts'
 
-export default clientBundle('@xfcodeai/dsh-client-ui-plan', ['lib/types/index.js'])
+export default clientBundle('@x1a0f3n9/dsh-client-ui-plan', ['lib/types/index.js'])

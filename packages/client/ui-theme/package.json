@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-theme",
+  "name": "@x1a0f3n9/dsh-client-ui-theme",
   "description": "Theme plugin: Host bootstrap for the pre-plugin palette; DOM-free ThemeRuntime for light/dark/system state; --dsw-* token styles and Appearance settings row",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,11 +28,11 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-client-connection",
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-renderer",
-        "@xfcodeai/dsh-client-ui-settings",
-        "@xfcodeai/dsh-api-remotes"
+        "@x1a0f3n9/dsh-client-connection",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-renderer",
+        "@x1a0f3n9/dsh-client-ui-settings",
+        "@x1a0f3n9/dsh-api-remotes"
       ],
       "platform": "web",
       "immediately": true
@@ -44,19 +44,19 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-settings": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
-    "@xfcodeai/dsh-host-webserver": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
     "@types/react": "~18.3.1",
     "react": "^18.2.0",
-    "@xfcodeai/dsh-settings": "workspace:^"
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   },
   "files": [
     "lib/index.js",

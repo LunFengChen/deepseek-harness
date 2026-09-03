@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-agent-preset",
+  "name": "@x1a0f3n9/dsh-client-ui-agent-preset",
   "description": "Agent-preset surfaces: the default for later sessions, this session's seat, and the composition editor",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,14 +28,14 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-api-session-controller",
-        "@xfcodeai/dsh-client-connection",
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-conversation",
-        "@xfcodeai/dsh-client-ui-session",
-        "@xfcodeai/dsh-client-ui-settings",
-        "@xfcodeai/dsh-client-ui-workspace",
-        "@xfcodeai/dsh-api-remotes"
+        "@x1a0f3n9/dsh-api-session-controller",
+        "@x1a0f3n9/dsh-client-connection",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-conversation",
+        "@x1a0f3n9/dsh-client-ui-session",
+        "@x1a0f3n9/dsh-client-ui-settings",
+        "@x1a0f3n9/dsh-client-ui-workspace",
+        "@x1a0f3n9/dsh-api-remotes"
       ],
       "platform": "web"
     }
@@ -49,24 +49,24 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-api-session-controller": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-conversation": "workspace:^",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-client-ui-settings": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-session": "workspace:^",
-    "@xfcodeai/dsh-client-ui-workspace": "workspace:^"
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:^"
   },
   "files": [
     "lib/index.js",

@@ -56,7 +56,7 @@ Installation uses the client behavior selected for this publication. Registry up
 
 The test covers at least these execution surfaces:
 
-- Installed `@xfcodeai/dsh` runs `dsh --version` and `dsh --dump-default-config` successfully under plain Node, covering the static CLI entry and one dynamic mode entry.
+- Installed `@x1a0f3n9/dsh` runs `dsh --version` and `dsh --dump-default-config` successfully under plain Node, covering the static CLI entry and one dynamic mode entry.
 - Installed default `dsh` completes one keyless TUI startup in a PTY and exits under test control after reaching a defined ready signal. This path must load the real TUI dynamic chunk, so a missing publication file such as `lib/tui-*.js` fails the gate.
 - Every other published `bin` defines a package-owned smoke command that neither reaches a real service nor modifies user state. Different CLIs are not forced to share `--help`; the test runs the actual installed entry and checks its agreed exit or ready signal.
 - Node-compatible public runtime entries load from the installation. Browser, worker, or host-protocol-only entries use matching isolated fixtures, but their inputs must still be the current tarballs exclusively.
@@ -107,7 +107,7 @@ The registry token is injected only into the publish job, which uses a protected
 
 Full packing, installation, and startup add CI time and workflow-artifact volume. The implementation should cache external dependencies and the pnpm store, but it must not cache or reuse installed workspace output for target packages. Safe consumer probes can run in parallel to reduce latency.
 
-Installing every tarball as a temporary project's top-level dependency can hide an undeclared internal dependency. The test generator should install each tested application's declared recursive closure and retain existing dependency gates. For `@xfcodeai/dsh`, whose dependency surface approaches the full set, package-manifest and static graph checks remain necessary to detect undeclared edges.
+Installing every tarball as a temporary project's top-level dependency can hide an undeclared internal dependency. The test generator should install each tested application's declared recursive closure and retain existing dependency gates. For `@x1a0f3n9/dsh`, whose dependency surface approaches the full set, package-manifest and static graph checks remain necessary to detect undeclared edges.
 
 Platform-specific optional dependencies, native addons, PTYs, and browser entries may require platform-owned probes. The first phase must cover primary `dsh` startup on the publication Linux runner and one local macOS path, then expand the matrix with the actual publication platforms. Skipping an unstable probe must not move a production path outside the gate.
 

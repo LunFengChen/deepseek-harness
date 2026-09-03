@@ -16,7 +16,7 @@
 import type { ReactNode } from 'react'
 import type {
   BoundActions, HandleOf, PropsStore, SnapshotSelectorHook, StoreDecl,
-} from '@xfcodeai/dsh-client-store'
+} from '@x1a0f3n9/dsh-client-store'
 import type { HostObservable, KeyedStandardSource } from './renderer.ts'
 
 export * from './store.ts'

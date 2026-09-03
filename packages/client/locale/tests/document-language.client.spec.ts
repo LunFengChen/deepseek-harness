@@ -10,11 +10,11 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
-import { apply as settingsApply, inject as settingsInject } from '@xfcodeai/dsh-client-ui-settings/client'
-import { TestRemote } from '@xfcodeai/dsh-client-test-runtime'
-import { apply, inject } from '@xfcodeai/dsh-client-locale/client'
-import type { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import { apply as settingsApply, inject as settingsInject } from '@x1a0f3n9/dsh-client-ui-settings/client'
+import { TestRemote } from '@x1a0f3n9/dsh-client-test-runtime'
+import { apply, inject } from '@x1a0f3n9/dsh-client-locale/client'
+import type { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import { LOCALE_SETTINGS_NAMESPACE, LocaleSettingsSchema } from '../src/locale-settings.ts'
 
 /** Boot the plugin over a stub Host settings document. */

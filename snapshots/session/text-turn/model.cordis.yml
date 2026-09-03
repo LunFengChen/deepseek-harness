@@ -2,7 +2,7 @@
 # selection in session JSONL instead of duplicating it across manifests.
 
 - id: agent-default-model
-  name: '@xfcodeai/dsh-agent-default-model'
+  name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: !!js process.env.DSH_SNAPSHOT_PROVIDER
     model: !!js process.env.DSH_SNAPSHOT_MODEL

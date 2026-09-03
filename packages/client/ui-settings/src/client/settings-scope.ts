@@ -10,10 +10,10 @@ import { Service } from '@deepseek-ai/cordis'
 import type { Context } from '@deepseek-ai/cordis'
 import type {
   SettingsNamespaceView, SettingsPathOpView,
-} from '@xfcodeai/dsh-api-remotes/client'
-import { createSnapshotStore, type SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
-// Type-only, and deliberately NOT `@xfcodeai/dsh-api-remotes/client`: this
+} from '@x1a0f3n9/dsh-api-remotes/client'
+import { createSnapshotStore, type SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
+// Type-only, and deliberately NOT `@x1a0f3n9/dsh-api-remotes/client`: this
 // package is reachable from the Host build graph through its feature-package
 // callers, and api-remotes' Client face imports a Host-tsdown-generated
 // `/remote` artifact, which would deadlock the Host tsc phase. The gateway's
@@ -22,13 +22,13 @@ import type { JsonValue } from '@xfcodeai/dsh-util-values'
 // `$on` and its key face without dragging a build artifact in. The runtime
 // `remote` injection belongs to the providing plugin's apply, which registers
 // the mirror's invalidation subscriptions.
-import type {} from '@xfcodeai/dsh-api-remotes/client'
-import type {} from '@xfcodeai/dsh-api-remotes/types'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
+import type {} from '@x1a0f3n9/dsh-api-remotes/types'
 // The forwarded event's own declaration: `$on`'s key face is
 // `Extract<keyof Events, keyof Selection>`, so the allowlist alone resolves to
 // never — the owning package's client-safe, type-only subpath supplies the
 // cordis `Events` entry (and with it the branded `SettingsNamespace`).
-import type {} from '@xfcodeai/dsh-settings/types'
+import type {} from '@x1a0f3n9/dsh-settings/types'
 import type { SettingsSchemaService } from './schema.ts'
 import type { SettingsScope, SettingsScopeSnapshot, SettingsScopeSpec } from './settings-contract.ts'
 import { SettingsDescribeMirror, type SettingsDescribeFace } from './settings-mirror.ts'

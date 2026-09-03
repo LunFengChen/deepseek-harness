@@ -14,12 +14,12 @@ The job registry, control tools, and completion notices form one harness capabil
 
 The `jobs/` package group owns background-job semantics:
 
-- `@xfcodeai/dsh-jobs` registers running work as `ctx.jobs` and owns job ids, authorization, snapshots, reads, cancellation, waiting, completion listeners, and cleanup.
-- `@xfcodeai/dsh-tool-jobs` exposes `job_output`, `job_list`, and `job_kill`, injects completion notices, and supplies the background-job system-prompt guidance.
+- `@x1a0f3n9/dsh-jobs` registers running work as `ctx.jobs` and owns job ids, authorization, snapshots, reads, cancellation, waiting, completion listeners, and cleanup.
+- `@x1a0f3n9/dsh-tool-jobs` exposes `job_output`, `job_list`, and `job_kill`, injects completion notices, and supplies the background-job system-prompt guidance.
 
 Long-running tools are producers. `dsh-tool-bash` adapts a `ShellProcess` into incremental output and process cancellation; `dsh-tool-subagent` adapts a child run into final output and child disposal. The bash and subagent capability seams remain independent of sessions and the job registry.
 
-`JobRegistry` is the Service Definition in `@xfcodeai/dsh-jobs`; the process-local provider is `LocalJobRegistry` in `@xfcodeai/dsh-jobs-local` (the [task-registry contract Agent Note](2026-07-26-job-registry-seam.md) records that split).
+`JobRegistry` is the Service Definition in `@x1a0f3n9/dsh-jobs`; the process-local provider is `LocalJobRegistry` in `@x1a0f3n9/dsh-jobs-local` (the [task-registry contract Agent Note](2026-07-26-job-registry-seam.md) records that split).
 
 ## Runtime contract
 

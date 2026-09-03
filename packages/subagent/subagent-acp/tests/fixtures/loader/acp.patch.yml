@@ -30,7 +30,7 @@
       name: './mock-delegating-llm.ts'
 
     - id: subagent-acp
-      name: '@xfcodeai/dsh-subagent-acp'
+      name: '@x1a0f3n9/dsh-subagent-acp'
       config:
         providerName: acp
         command: !!js process.execPath

@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-permission-presets",
+  "name": "@x1a0f3n9/dsh-permission-presets",
   "description": "User-facing permission presets (ctx.permissionPresets) for the DeepSeek Harness: one product-level Permissions select bundling the sandbox-mode and approval-policy knobs, written through to their own session events",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -41,15 +41,15 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-shell": "workspace:^",
-    "@xfcodeai/dsh-commands": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^",
-    "@xfcodeai/dsh-user-approval": "workspace:^",
+    "@x1a0f3n9/dsh-shell": "workspace:^",
+    "@x1a0f3n9/dsh-commands": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -57,15 +57,15 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-shell": "workspace:^",
-    "@xfcodeai/dsh-commands": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^",
-    "@xfcodeai/dsh-user-approval": "workspace:^",
+    "@x1a0f3n9/dsh-shell": "workspace:^",
+    "@x1a0f3n9/dsh-commands": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-llm",
+  "name": "@x1a0f3n9/dsh-llm",
   "description": "Provider-neutral LLM service interface for the DeepSeek Harness",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -60,17 +60,17 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
-    "@xfcodeai/dsh-util-crypto": "workspace:^",
+    "@x1a0f3n9/dsh-util-crypto": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3",
-    "@xfcodeai/dsh-timeout": "workspace:^",
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-util-values": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^"
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

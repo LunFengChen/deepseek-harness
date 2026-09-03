@@ -11,18 +11,18 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import LlmRuntime from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime from '@xfcodeai/dsh-tools'
-import AgentRegistry, { type Agent } from '@xfcodeai/dsh-agent'
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import { remoteErrorOf, type RemoteFailure } from '@xfcodeai/dsh-typert-protocol'
+import LlmRuntime from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import { remoteErrorOf, type RemoteFailure } from '@x1a0f3n9/dsh-typert-protocol'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import AgentPresets, { COMPOSITION_FILE, METADATA_FILE } from '@xfcodeai/dsh-agent-presets'
-import type { Config } from '@xfcodeai/dsh-agent-presets'
-import type {} from '@xfcodeai/dsh-agent-presets/types'
+import AgentPresets, { COMPOSITION_FILE, METADATA_FILE } from '@x1a0f3n9/dsh-agent-presets'
+import type { Config } from '@x1a0f3n9/dsh-agent-presets'
+import type {} from '@x1a0f3n9/dsh-agent-presets/types'
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
 const ROOTS = [
@@ -32,7 +32,7 @@ const ROOTS = [
 // A row naming a package, the way an authored preset's rows do. Health
 // resolves every row it can prove will start, so a path reaching outside the
 // temp preset directory these tests seed would report the composition broken.
-const VALID = '- id: prompt\n  name: \'@xfcodeai/dsh-system-prompt\'\n'
+const VALID = '- id: prompt\n  name: \'@x1a0f3n9/dsh-system-prompt\'\n'
 
 afterEach(() => vi.restoreAllMocks())
 

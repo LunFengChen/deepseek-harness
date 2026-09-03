@@ -3,7 +3,7 @@ description: "SDK stdio application profile for users and maintainers launching 
 kind: "package-bundle"
 ---
 
-# `@xfcodeai/dsh-sdk-app`
+# `@x1a0f3n9/dsh-sdk-app`
 
 English | [中文](README.zh.md)
 

@@ -1,4 +1,4 @@
-import { brandNumber, brandString, type Branded, type BrandedNumber } from '@xfcodeai/dsh-brand'
+import { brandNumber, brandString, type Branded, type BrandedNumber } from '@x1a0f3n9/dsh-brand'
 import type {
   AssistantMessage,
   ToolCallId,
@@ -10,8 +10,8 @@ import type {
   ToolResultMessage,
   ToolSchema,
   UserMessage,
-} from '@xfcodeai/dsh-llm'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
+} from '@x1a0f3n9/dsh-llm'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 
 /** Identifies one session in the store (and its persistence artifacts). */
 export type SessionId = Branded<'SessionId'>
@@ -465,7 +465,7 @@ export type SessionEvent<T extends SessionEventType = SessionEventType> = {
   } : object)
 }[T]
 
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
     /** The named Session does not exist; produced by every layer that resolves a SessionId. */
     'session/not-found': { readonly sessionId: SessionId }

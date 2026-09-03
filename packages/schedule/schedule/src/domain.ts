@@ -1,10 +1,10 @@
 /**
  * Strict Schedule decoding, replay, time validation, and framing.
- * @module @xfcodeai/dsh-schedule
+ * @module @x1a0f3n9/dsh-schedule
  */
 
-import { SessionLogOffset } from '@xfcodeai/dsh-session'
-import type { SessionEvent, SessionLogOffset as SessionLogOffsetType } from '@xfcodeai/dsh-session'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionLogOffset as SessionLogOffsetType } from '@x1a0f3n9/dsh-session'
 import type {
   AfterScheduleRecord,
   AtInput,

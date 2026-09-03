@@ -8,8 +8,8 @@
 
 import { useEffect } from 'react'
 import type { ReactNode } from 'react'
-import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { InjectFace, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { InjectFace, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ModelsSettingsState, ModelsSettingsStore } from './store.ts'
 import { onboardingReadiness } from './store.ts'
 import type { ModelsOperations } from './operations.ts'

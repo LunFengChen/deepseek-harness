@@ -3,7 +3,7 @@ description: "在 agent 运行期间使用你现有的 Codex hooks.json 钩子�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-hooks-codex
+# @x1a0f3n9/dsh-hooks-codex
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@xfcodeai/dsh-hooks-codex'
+- name: '@x1a0f3n9/dsh-hooks-codex'
   config:
     configPath: ./.codex/hooks.json
     model: deepseek-v4
@@ -47,7 +47,7 @@ kind: "package-reference"
 | `defaultTimeoutMs` | `600,000` | hook 未设置时的每 hook 超时（即 Codex 默认值） |
 | `stderrSummaryMaxChars` | `500` | 持久化 `hook/result` stderr 摘要的字符上限 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-hooks-codex)是每个受支持字段的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-hooks-codex)是每个受支持字段的穷尽式真源。
 
 ### 你的钩子能做什么
 
@@ -125,7 +125,7 @@ matcher subject 是工具名称（`PreToolUse`／`PostToolUse`）或会话源（
 - [hook 协议库](../hook-protocol/README.zh.md)——本桥接应用的共享钩子规则。
 - [钩子桥接 Agent Note](../../../.agents/notes/implemented/feature/2026-06-30-hook-bridges.zh.md)——桥接设计、决策映射与延期缺口。
 - [拦截扩展点 Agent Note](../../../.agents/notes/implemented/feature/2026-06-30-interception-extension-points.zh.md)——桥接所映射的类型化 Decision 接口面。
-- [生成的配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-hooks-codex)——每个受支持配置字段及其源声明。
+- [生成的配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-hooks-codex)——每个受支持配置字段及其源声明。
 
 -----
 

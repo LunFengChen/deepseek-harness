@@ -6,11 +6,11 @@
  * with one version-stamped document per record (`<table>/<key>.json`) plus a
  * `global.json` for the global slot, so a write rewrites one record instead
  * of the whole unit.
- * @module @xfcodeai/dsh-storage-json/src/format
+ * @module @x1a0f3n9/dsh-storage-json/src/format
  */
 
-import { StorageError } from '@xfcodeai/dsh-storage'
-import type { KvUnitDescriptor } from '@xfcodeai/dsh-storage'
+import { StorageError } from '@x1a0f3n9/dsh-storage'
+import type { KvUnitDescriptor } from '@x1a0f3n9/dsh-storage'
 
 /** In-memory authoritative state of one unit; the file is its projection. `global` is `null` until first written. */
 export interface UnitState {

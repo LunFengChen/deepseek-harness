@@ -2,13 +2,13 @@
 /** ToolCallTree-owned root/subcall markers and selection projection. */
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
-import type { SessionSnapshot } from '@xfcodeai/dsh-api-session-controller/client'
-import type { ToolResultNode } from '@xfcodeai/dsh-client-ui-chat/client'
-import { makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+import type { SessionSnapshot } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { ToolResultNode } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import type { ToolCallOwnerProps, ToolTreeProps } from '../src/client/contract/slots.ts'
 import { ToolCallTree } from '../src/client/tool/ToolCallTree.tsx'
-import { zh } from '@xfcodeai/dsh-client-ui-conversation/src/client/locales.ts'
+import { zh } from '@x1a0f3n9/dsh-client-ui-conversation/src/client/locales.ts'
 
 afterEach(cleanup)
 

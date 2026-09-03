@@ -1,14 +1,14 @@
 /**
  * Session-visible workspace instruction state and dynamic reconciliation.
  *
- * @module @xfcodeai/dsh-agent-instructions/state
+ * @module @x1a0f3n9/dsh-agent-instructions/state
  */
 
-import type { Agent } from '@xfcodeai/dsh-agent'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import type { Message } from '@xfcodeai/dsh-llm'
-import type { Session, UserMessage } from '@xfcodeai/dsh-session'
-import type { FileSystem, FsVersion } from '@xfcodeai/dsh-fs'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { Message } from '@x1a0f3n9/dsh-llm'
+import type { Session, UserMessage } from '@x1a0f3n9/dsh-session'
+import type { FileSystem, FsVersion } from '@x1a0f3n9/dsh-fs'
 import type { ResolvedConfig } from './config.ts'
 import { instructionContentSha1, trimmedInstructionDigest } from './digest.ts'
 import {
@@ -45,7 +45,7 @@ export interface AgentInstructionSource {
   changes: AgentInstructionChange[]
 }
 
-declare module '@xfcodeai/dsh-llm' {
+declare module '@x1a0f3n9/dsh-llm' {
   interface MessageSourceMap {
     'agent-instructions': AgentInstructionSource
   }

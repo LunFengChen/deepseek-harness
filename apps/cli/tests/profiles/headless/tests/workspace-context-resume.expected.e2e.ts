@@ -8,19 +8,19 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
-import { normalizeSessionSnapshot, type NormalizeContext } from '@xfcodeai/dsh-session-snapshot'
-import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@xfcodeai/dsh-loader-smoke'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
+import { normalizeSessionSnapshot, type NormalizeContext } from '@x1a0f3n9/dsh-session-snapshot'
+import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@x1a0f3n9/dsh-loader-smoke'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   SessionId,
   SessionSeq,
   type SessionEvent,
   type SessionHeader,
-} from '@xfcodeai/dsh-session'
-import JsonlSessionPersistence from '@xfcodeai/dsh-session-persistence-jsonl'
-import { renderWorkspaceContext } from '@xfcodeai/dsh-agent-instructions'
-import { resolveConfig, workspaceBaselineIdentity } from '@xfcodeai/dsh-agent-instructions/src/config.ts'
+} from '@x1a0f3n9/dsh-session'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import { renderWorkspaceContext } from '@x1a0f3n9/dsh-agent-instructions'
+import { resolveConfig, workspaceBaselineIdentity } from '@x1a0f3n9/dsh-agent-instructions/src/config.ts'
 import { describe, expect, it } from 'vitest'
 
 const fixtureDir = join(dirname(fileURLToPath(import.meta.url)), 'expected/workspace-context-resume/offline-edit')

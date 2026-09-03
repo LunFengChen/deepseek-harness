@@ -5,11 +5,11 @@ import type {
   SessionBinding,
   SessionListState,
   SessionSnapshot,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import { MutableSessionEventSource } from '@xfcodeai/dsh-api-session-controller/client'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { HostObservable } from '@xfcodeai/dsh-client-ui-slots'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import { MutableSessionEventSource } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { HostObservable } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { Fragment } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {

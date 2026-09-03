@@ -3,7 +3,7 @@ description: "Slot registry pure core for the dsh web client: SlotMap declaratio
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-client-ui-slots
+# @x1a0f3n9/dsh-client-ui-slots
 
 English | [中文](README.zh.md)
 

@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-acp",
+  "name": "@x1a0f3n9/dsh-acp",
   "description": "Automation-only Agent Client Protocol server for driving DeepSeek Harness agents over JSON-RPC stdio",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,39 +28,39 @@
   "license": "MIT",
   "dependencies": {
     "@agentclientprotocol/sdk": "1.4.0",
-    "@xfcodeai/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-mcp-client": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-token-meter": "workspace:^",
-    "@xfcodeai/dsh-user-approval": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-mcp-client": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-token-meter": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-token-meter": {
+    "@x1a0f3n9/dsh-token-meter": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-loop": "workspace:^",
-    "@xfcodeai/dsh-agent-loop-testkit": "workspace:^",
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-mcp-client": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-persistence-jsonl": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-token-meter": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
-    "@xfcodeai/dsh-user-approval": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-mcp-client": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-token-meter": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^"
   }
 }

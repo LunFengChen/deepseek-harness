@@ -3,7 +3,7 @@ description: "面向部署方与维护者的 SQLite FTS5 会话历史全文搜�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-query-sqlite
+# @x1a0f3n9/dsh-session-query-sqlite
 
 [English](README.md) | 中文
 
@@ -34,8 +34,8 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@xfcodeai/dsh-session'
-- name: '@xfcodeai/dsh-session-query-sqlite'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-query-sqlite'
   config:
     path: /absolute/path/to/session-search.db
 ```
@@ -51,7 +51,7 @@ kind: "package-reference"
 | `readWindowMax` | `50` | 继承的 `readEvent()` 的 `before`/`after` 原始事件数上限 |
 | `persistedInspectConcurrency` | `4` | 继承批量读取的并发持久化日志检查数 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-session-query-sqlite)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-session-query-sqlite)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 搜索行为
 

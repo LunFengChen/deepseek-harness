@@ -6,19 +6,19 @@
  * `updatedInput` is logged and warned but not honored. Bespoke behavior should
  * use typed native plugins on the same extension points; see the
  * [hook-bridges Agent Note](../../../../.agents/notes/implemented/feature/2026-06-30-hook-bridges.md).
- * @module @xfcodeai/dsh-hooks-claude-code
+ * @module @x1a0f3n9/dsh-hooks-claude-code
  */
 
 import { readFileSync } from 'node:fs'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { Agent, PreStepDecision, TurnBoundaryProjection } from '@xfcodeai/dsh-agent'
-import type {} from '@xfcodeai/dsh-session-projection'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import type { ContentBlock, MessageSource } from '@xfcodeai/dsh-llm'
-import type { UserMessage } from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-session-persistence'
-import type { PostToolDecision, PreToolDecision, ToolExecution, ToolExecutionResult } from '@xfcodeai/dsh-tools'
+import type { Agent, PreStepDecision, TurnBoundaryProjection } from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, MessageSource } from '@x1a0f3n9/dsh-llm'
+import type { UserMessage } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-session-persistence'
+import type { PostToolDecision, PreToolDecision, ToolExecution, ToolExecutionResult } from '@x1a0f3n9/dsh-tools'
 import {
   appendHookInvoked,
   appendHookResult,
@@ -31,10 +31,10 @@ import {
   type HookOutput,
   type MatcherGroup,
   type MergedHookOutcome,
-} from '@xfcodeai/dsh-hook-protocol'
+} from '@x1a0f3n9/dsh-hook-protocol'
 // Pulls in the declaration-merged subagent events and the identity pairing their
 // start/end edges.
-import type { SubagentRunId } from '@xfcodeai/dsh-subagent'
+import type { SubagentRunId } from '@x1a0f3n9/dsh-subagent'
 import { parseClaudeCodeConfig, type ClaudeCodeHookConfig } from './config.ts'
 
 export const name = 'hooks-claude-code'

@@ -11,13 +11,13 @@ import {
   JsonTree,
   MarkdownText,
   Tooltip,
-} from '@xfcodeai/dsh-client-ui-primitives'
-import type { JsonTreeLabels, MarkdownLabels } from '@xfcodeai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { JsonTreeLabels, MarkdownLabels } from '@x1a0f3n9/dsh-client-ui-primitives'
 import { structuredPatch } from 'diff'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
 import type {
   AssistantRequestConfig, ConversationPromptSnapshot, RenderMessageImages,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   AssistantMetricDetail, TrajectoryCellKind, TrajectoryCellProps, TrajectorySourceBlock,
 } from './trajectory-record.ts'

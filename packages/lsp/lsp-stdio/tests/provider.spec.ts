@@ -3,12 +3,12 @@ import { chmod, mkdtemp, mkdir, rm, writeFile, realpath } from 'node:fs/promises
 import { tmpdir } from 'node:os'
 import { delimiter, join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
-import LocalFileSystem from '@xfcodeai/dsh-fs-local'
-import Lsp, { type LspQueryRequest } from '@xfcodeai/dsh-lsp'
-import * as LspLocal from '@xfcodeai/dsh-lsp-stdio'
-import type { Config, LspLocalServerConfig } from '@xfcodeai/dsh-lsp-stdio'
-import { MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import LocalFileSystem from '@x1a0f3n9/dsh-fs-local'
+import Lsp, { type LspQueryRequest } from '@x1a0f3n9/dsh-lsp'
+import * as LspLocal from '@x1a0f3n9/dsh-lsp-stdio'
+import type { Config, LspLocalServerConfig } from '@x1a0f3n9/dsh-lsp-stdio'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
 
 let root: string
 let ws: string

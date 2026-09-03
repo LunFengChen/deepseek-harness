@@ -3,7 +3,7 @@ description: "Browser-host wire layer for the web GUI: Remote RPC, event-stream 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-connection
+# @x1a0f3n9/dsh-client-connection
 
 English | [中文](README.zh.md)
 

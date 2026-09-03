@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-fs-sandbox",
+  "name": "@x1a0f3n9/dsh-fs-sandbox",
   "description": "Sandbox-enforcing implementation of the DeepSeek Harness filesystem seam: fences write/edit by the per-call sandbox mode (read-only denies mutation, workspace-write contains it to the workspace + temp roots) while reads pass through",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -27,18 +27,18 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-fs": "workspace:^",
-    "@xfcodeai/dsh-fs-local": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-fs": "workspace:^",
+    "@x1a0f3n9/dsh-fs-local": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-fs": "workspace:^",
-    "@xfcodeai/dsh-fs-local": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-fs": "workspace:^",
+    "@x1a0f3n9/dsh-fs-local": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

@@ -6,12 +6,12 @@
 
 import { expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import SubagentRuntime from '@xfcodeai/dsh-subagent'
-import type { SubagentProvider } from '@xfcodeai/dsh-subagent'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
+import type { SubagentProvider } from '@x1a0f3n9/dsh-subagent'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import WorkerThreadWorkflowEngine from '../src/index.ts'
-import { SessionId } from '@xfcodeai/dsh-session'
+import { SessionId } from '@x1a0f3n9/dsh-session'
 
 // A fresh thread compiles the source runtime. Leave contention headroom on
 // shared CI runners without weakening any engine-level timeout assertion.

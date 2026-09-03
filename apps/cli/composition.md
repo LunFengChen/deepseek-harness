@@ -12,171 +12,171 @@ flowchart LR
   cfg --> plugin_dsh_base_timer
   plugin_dsh_base_hmr["hmr<br/>@deepseek-ai/cordis-plugin-hmr"]
   cfg --> plugin_dsh_base_hmr
-  plugin_dsh_base_llm["llm<br/>@xfcodeai/dsh-llm"]
+  plugin_dsh_base_llm["llm<br/>@x1a0f3n9/dsh-llm"]
   cfg --> plugin_dsh_base_llm
-  plugin_dsh_base_deepseek_llm_api_extensions["deepseek-llm-api-extensions<br/>@xfcodeai/dsh-deepseek-llm-api-extensions"]
+  plugin_dsh_base_deepseek_llm_api_extensions["deepseek-llm-api-extensions<br/>@x1a0f3n9/dsh-deepseek-llm-api-extensions"]
   cfg --> plugin_dsh_base_deepseek_llm_api_extensions
-  plugin_dsh_base_session["session<br/>@xfcodeai/dsh-session"]
+  plugin_dsh_base_session["session<br/>@x1a0f3n9/dsh-session"]
   cfg --> plugin_dsh_base_session
-  plugin_dsh_base_session_log_deepseek["session-log-deepseek<br/>@xfcodeai/dsh-session-log-deepseek"]
+  plugin_dsh_base_session_log_deepseek["session-log-deepseek<br/>@x1a0f3n9/dsh-session-log-deepseek"]
   cfg --> plugin_dsh_base_session_log_deepseek
-  plugin_dsh_base_typert["typert<br/>@xfcodeai/dsh-typert-registry"]
+  plugin_dsh_base_typert["typert<br/>@x1a0f3n9/dsh-typert-registry"]
   cfg --> plugin_dsh_base_typert
-  plugin_dsh_base_typert_loader["typert-loader<br/>@xfcodeai/dsh-typert-loader"]
+  plugin_dsh_base_typert_loader["typert-loader<br/>@x1a0f3n9/dsh-typert-loader"]
   cfg --> plugin_dsh_base_typert_loader
-  plugin_dsh_base_typert_gateway["typert-gateway<br/>@xfcodeai/dsh-api-gateway"]
+  plugin_dsh_base_typert_gateway["typert-gateway<br/>@x1a0f3n9/dsh-api-gateway"]
   cfg --> plugin_dsh_base_typert_gateway
-  plugin_dsh_base_session_title["session-title<br/>@xfcodeai/dsh-session-title"]
+  plugin_dsh_base_session_title["session-title<br/>@x1a0f3n9/dsh-session-title"]
   cfg --> plugin_dsh_base_session_title
-  plugin_dsh_base_session_title_llm["session-title-llm<br/>@xfcodeai/dsh-session-title-first-prompt-llm"]
+  plugin_dsh_base_session_title_llm["session-title-llm<br/>@x1a0f3n9/dsh-session-title-first-prompt-llm"]
   cfg --> plugin_dsh_base_session_title_llm
-  plugin_dsh_base_user_questions["user-questions<br/>@xfcodeai/dsh-user-questions"]
+  plugin_dsh_base_user_questions["user-questions<br/>@x1a0f3n9/dsh-user-questions"]
   cfg --> plugin_dsh_base_user_questions
-  plugin_dsh_base_agent["agent<br/>@xfcodeai/dsh-agent"]
+  plugin_dsh_base_agent["agent<br/>@x1a0f3n9/dsh-agent"]
   cfg --> plugin_dsh_base_agent
-  plugin_dsh_base_plugin_package_inventory_deepseek["plugin-package-inventory-deepseek<br/>@xfcodeai/dsh-plugin-package-inventory-deepseek"]
+  plugin_dsh_base_plugin_package_inventory_deepseek["plugin-package-inventory-deepseek<br/>@x1a0f3n9/dsh-plugin-package-inventory-deepseek"]
   cfg --> plugin_dsh_base_plugin_package_inventory_deepseek
-  plugin_dsh_base_agent_default_model["agent-default-model<br/>@xfcodeai/dsh-agent-default-model"]
+  plugin_dsh_base_agent_default_model["agent-default-model<br/>@x1a0f3n9/dsh-agent-default-model"]
   cfg --> plugin_dsh_base_agent_default_model
-  plugin_dsh_base_jobs["jobs<br/>@xfcodeai/dsh-jobs-local"]
+  plugin_dsh_base_jobs["jobs<br/>@x1a0f3n9/dsh-jobs-local"]
   cfg --> plugin_dsh_base_jobs
-  plugin_dsh_base_llm_retry["llm-retry<br/>@xfcodeai/dsh-llm-retry"]
+  plugin_dsh_base_llm_retry["llm-retry<br/>@x1a0f3n9/dsh-llm-retry"]
   cfg --> plugin_dsh_base_llm_retry
-  plugin_dsh_base_settings["settings<br/>@xfcodeai/dsh-settings-file"]
+  plugin_dsh_base_settings["settings<br/>@x1a0f3n9/dsh-settings-file"]
   cfg --> plugin_dsh_base_settings
-  plugin_dsh_base_credentials["credentials<br/>@xfcodeai/dsh-credentials-local"]
+  plugin_dsh_base_credentials["credentials<br/>@x1a0f3n9/dsh-credentials-local"]
   cfg --> plugin_dsh_base_credentials
-  plugin_dsh_base_llm_pi_ai["llm-pi-ai<br/>@xfcodeai/dsh-llm-pi-ai"]
+  plugin_dsh_base_llm_pi_ai["llm-pi-ai<br/>@x1a0f3n9/dsh-llm-pi-ai"]
   cfg --> plugin_dsh_base_llm_pi_ai
-  plugin_dsh_base_session_persistence_jsonl["session-persistence-jsonl<br/>@xfcodeai/dsh-session-persistence-jsonl"]
+  plugin_dsh_base_session_persistence_jsonl["session-persistence-jsonl<br/>@x1a0f3n9/dsh-session-persistence-jsonl"]
   cfg --> plugin_dsh_base_session_persistence_jsonl
-  plugin_dsh_base_attachment_local["attachment-local<br/>@xfcodeai/dsh-attachment-local"]
+  plugin_dsh_base_attachment_local["attachment-local<br/>@x1a0f3n9/dsh-attachment-local"]
   cfg --> plugin_dsh_base_attachment_local
-  plugin_dsh_base_session_query_sqlite["session-query-sqlite<br/>@xfcodeai/dsh-session-query-sqlite"]
+  plugin_dsh_base_session_query_sqlite["session-query-sqlite<br/>@x1a0f3n9/dsh-session-query-sqlite"]
   cfg --> plugin_dsh_base_session_query_sqlite
-  plugin_dsh_base_session_projection["session-projection<br/>@xfcodeai/dsh-session-projection"]
+  plugin_dsh_base_session_projection["session-projection<br/>@x1a0f3n9/dsh-session-projection"]
   cfg --> plugin_dsh_base_session_projection
-  plugin_dsh_base_storage["storage<br/>@xfcodeai/dsh-storage"]
+  plugin_dsh_base_storage["storage<br/>@x1a0f3n9/dsh-storage"]
   cfg --> plugin_dsh_base_storage
-  plugin_dsh_base_storage_json["storage-json<br/>@xfcodeai/dsh-storage-json"]
+  plugin_dsh_base_storage_json["storage-json<br/>@x1a0f3n9/dsh-storage-json"]
   cfg --> plugin_dsh_base_storage_json
-  plugin_dsh_base_storage_domain["storage-domain<br/>@xfcodeai/dsh-storage-domain"]
+  plugin_dsh_base_storage_domain["storage-domain<br/>@x1a0f3n9/dsh-storage-domain"]
   cfg --> plugin_dsh_base_storage_domain
-  plugin_dsh_base_session_projection_cache["session-projection-cache<br/>@xfcodeai/dsh-session-projection-cache"]
+  plugin_dsh_base_session_projection_cache["session-projection-cache<br/>@x1a0f3n9/dsh-session-projection-cache"]
   cfg --> plugin_dsh_base_session_projection_cache
-  plugin_dsh_base_session_telemetry_otel["session-telemetry-otel<br/>@xfcodeai/dsh-session-telemetry-otel"]
+  plugin_dsh_base_session_telemetry_otel["session-telemetry-otel<br/>@x1a0f3n9/dsh-session-telemetry-otel"]
   cfg --> plugin_dsh_base_session_telemetry_otel
-  plugin_dsh_base_subprocess["subprocess<br/>@xfcodeai/dsh-subprocess-local"]
+  plugin_dsh_base_subprocess["subprocess<br/>@x1a0f3n9/dsh-subprocess-local"]
   cfg --> plugin_dsh_base_subprocess
-  plugin_dsh_base_sandbox["sandbox<br/>@xfcodeai/dsh-sandbox-local"]
+  plugin_dsh_base_sandbox["sandbox<br/>@x1a0f3n9/dsh-sandbox-local"]
   cfg --> plugin_dsh_base_sandbox
-  plugin_dsh_base_sandbox_policy["sandbox-policy<br/>@xfcodeai/dsh-sandbox-policy"]
+  plugin_dsh_base_sandbox_policy["sandbox-policy<br/>@x1a0f3n9/dsh-sandbox-policy"]
   cfg --> plugin_dsh_base_sandbox_policy
-  plugin_dsh_base_bash_sandbox["bash-sandbox<br/>@xfcodeai/dsh-bash-sandbox"]
+  plugin_dsh_base_bash_sandbox["bash-sandbox<br/>@x1a0f3n9/dsh-bash-sandbox"]
   cfg --> plugin_dsh_base_bash_sandbox
-  plugin_dsh_base_pwsh_sandbox["pwsh-sandbox<br/>@xfcodeai/dsh-pwsh-sandbox"]
+  plugin_dsh_base_pwsh_sandbox["pwsh-sandbox<br/>@x1a0f3n9/dsh-pwsh-sandbox"]
   cfg --> plugin_dsh_base_pwsh_sandbox
-  plugin_dsh_base_approval["approval<br/>@xfcodeai/dsh-user-approval"]
+  plugin_dsh_base_approval["approval<br/>@x1a0f3n9/dsh-user-approval"]
   cfg --> plugin_dsh_base_approval
-  plugin_dsh_base_permission["permission<br/>@xfcodeai/dsh-permission-presets"]
+  plugin_dsh_base_permission["permission<br/>@x1a0f3n9/dsh-permission-presets"]
   cfg --> plugin_dsh_base_permission
-  plugin_dsh_base_shell_env["shell-env<br/>@xfcodeai/dsh-shell-env"]
+  plugin_dsh_base_shell_env["shell-env<br/>@x1a0f3n9/dsh-shell-env"]
   cfg --> plugin_dsh_base_shell_env
-  plugin_dsh_base_tool_bash["tool-bash<br/>@xfcodeai/dsh-tool-bash"]
+  plugin_dsh_base_tool_bash["tool-bash<br/>@x1a0f3n9/dsh-tool-bash"]
   cfg --> plugin_dsh_base_tool_bash
-  plugin_dsh_base_tool_pwsh["tool-pwsh<br/>@xfcodeai/dsh-tool-pwsh"]
+  plugin_dsh_base_tool_pwsh["tool-pwsh<br/>@x1a0f3n9/dsh-tool-pwsh"]
   cfg --> plugin_dsh_base_tool_pwsh
-  plugin_dsh_base_tool_jobs["tool-jobs<br/>@xfcodeai/dsh-tool-jobs"]
+  plugin_dsh_base_tool_jobs["tool-jobs<br/>@x1a0f3n9/dsh-tool-jobs"]
   cfg --> plugin_dsh_base_tool_jobs
-  plugin_dsh_base_fs_observation_policy["fs-observation-policy<br/>@xfcodeai/dsh-fs-observation-policy"]
+  plugin_dsh_base_fs_observation_policy["fs-observation-policy<br/>@x1a0f3n9/dsh-fs-observation-policy"]
   cfg --> plugin_dsh_base_fs_observation_policy
-  plugin_dsh_base_tool_fs["tool-fs<br/>@xfcodeai/dsh-tool-fs"]
+  plugin_dsh_base_tool_fs["tool-fs<br/>@x1a0f3n9/dsh-tool-fs"]
   cfg --> plugin_dsh_base_tool_fs
-  plugin_dsh_base_tool_fs_search["tool-fs-search<br/>@xfcodeai/dsh-tool-fs-search"]
+  plugin_dsh_base_tool_fs_search["tool-fs-search<br/>@x1a0f3n9/dsh-tool-fs-search"]
   cfg --> plugin_dsh_base_tool_fs_search
-  plugin_dsh_base_agent_instructions["agent-instructions<br/>@xfcodeai/dsh-agent-instructions"]
+  plugin_dsh_base_agent_instructions["agent-instructions<br/>@x1a0f3n9/dsh-agent-instructions"]
   cfg --> plugin_dsh_base_agent_instructions
-  plugin_dsh_base_skill["skill<br/>@xfcodeai/dsh-skill"]
+  plugin_dsh_base_skill["skill<br/>@x1a0f3n9/dsh-skill"]
   cfg --> plugin_dsh_base_skill
-  plugin_dsh_base_skill_filesystem["skill-filesystem<br/>@xfcodeai/dsh-skill-filesystem"]
+  plugin_dsh_base_skill_filesystem["skill-filesystem<br/>@x1a0f3n9/dsh-skill-filesystem"]
   cfg --> plugin_dsh_base_skill_filesystem
-  plugin_dsh_base_skill_badge["skill-badge<br/>@xfcodeai/dsh-skill-badge"]
+  plugin_dsh_base_skill_badge["skill-badge<br/>@x1a0f3n9/dsh-skill-badge"]
   cfg --> plugin_dsh_base_skill_badge
-  plugin_dsh_base_tool_skill["tool-skill<br/>@xfcodeai/dsh-tool-skill"]
+  plugin_dsh_base_tool_skill["tool-skill<br/>@x1a0f3n9/dsh-tool-skill"]
   cfg --> plugin_dsh_base_tool_skill
-  plugin_dsh_base_commands["commands<br/>@xfcodeai/dsh-commands"]
+  plugin_dsh_base_commands["commands<br/>@x1a0f3n9/dsh-commands"]
   cfg --> plugin_dsh_base_commands
-  plugin_dsh_base_command_feedback["command-feedback<br/>@xfcodeai/dsh-command-feedback"]
+  plugin_dsh_base_command_feedback["command-feedback<br/>@x1a0f3n9/dsh-command-feedback"]
   cfg --> plugin_dsh_base_command_feedback
-  plugin_dsh_base_goal["goal<br/>@xfcodeai/dsh-goal"]
+  plugin_dsh_base_goal["goal<br/>@x1a0f3n9/dsh-goal"]
   cfg --> plugin_dsh_base_goal
-  plugin_dsh_base_goal_round_driver["goal-round-driver<br/>@xfcodeai/dsh-goal-round-driver"]
+  plugin_dsh_base_goal_round_driver["goal-round-driver<br/>@x1a0f3n9/dsh-goal-round-driver"]
   cfg --> plugin_dsh_base_goal_round_driver
-  plugin_dsh_base_command_goal["command-goal<br/>@xfcodeai/dsh-command-goal"]
+  plugin_dsh_base_command_goal["command-goal<br/>@x1a0f3n9/dsh-command-goal"]
   cfg --> plugin_dsh_base_command_goal
-  plugin_dsh_base_plan_mode["plan-mode<br/>@xfcodeai/dsh-plan-mode"]
+  plugin_dsh_base_plan_mode["plan-mode<br/>@x1a0f3n9/dsh-plan-mode"]
   cfg --> plugin_dsh_base_plan_mode
-  plugin_dsh_base_token_meter["token-meter<br/>@xfcodeai/dsh-token-meter"]
+  plugin_dsh_base_token_meter["token-meter<br/>@x1a0f3n9/dsh-token-meter"]
   cfg --> plugin_dsh_base_token_meter
-  plugin_dsh_base_compaction_basic["compaction-basic<br/>@xfcodeai/dsh-compaction-basic"]
+  plugin_dsh_base_compaction_basic["compaction-basic<br/>@x1a0f3n9/dsh-compaction-basic"]
   cfg --> plugin_dsh_base_compaction_basic
-  plugin_dsh_base_command_compact["command-compact<br/>@xfcodeai/dsh-command-compact"]
+  plugin_dsh_base_command_compact["command-compact<br/>@x1a0f3n9/dsh-command-compact"]
   cfg --> plugin_dsh_base_command_compact
-  plugin_dsh_base_subagent["subagent<br/>@xfcodeai/dsh-subagent"]
+  plugin_dsh_base_subagent["subagent<br/>@x1a0f3n9/dsh-subagent"]
   cfg --> plugin_dsh_base_subagent
-  plugin_dsh_base_subagent_spawn_in_process["subagent-spawn-in-process<br/>@xfcodeai/dsh-subagent-spawn-in-process"]
+  plugin_dsh_base_subagent_spawn_in_process["subagent-spawn-in-process<br/>@x1a0f3n9/dsh-subagent-spawn-in-process"]
   cfg --> plugin_dsh_base_subagent_spawn_in_process
-  plugin_dsh_base_subagent_fork_in_process["subagent-fork-in-process<br/>@xfcodeai/dsh-subagent-fork-in-process"]
+  plugin_dsh_base_subagent_fork_in_process["subagent-fork-in-process<br/>@x1a0f3n9/dsh-subagent-fork-in-process"]
   cfg --> plugin_dsh_base_subagent_fork_in_process
-  plugin_dsh_base_tool_subagent_control["tool-subagent-control<br/>@xfcodeai/dsh-tool-subagent-control"]
+  plugin_dsh_base_tool_subagent_control["tool-subagent-control<br/>@x1a0f3n9/dsh-tool-subagent-control"]
   cfg --> plugin_dsh_base_tool_subagent_control
-  plugin_dsh_base_tool_subagent_list_agents["tool-subagent-list-agents<br/>@xfcodeai/dsh-tool-subagent-control/list-agents"]
+  plugin_dsh_base_tool_subagent_list_agents["tool-subagent-list-agents<br/>@x1a0f3n9/dsh-tool-subagent-control/list-agents"]
   cfg --> plugin_dsh_base_tool_subagent_list_agents
-  plugin_dsh_base_tool_subagent["tool-subagent<br/>@xfcodeai/dsh-tool-subagent"]
+  plugin_dsh_base_tool_subagent["tool-subagent<br/>@x1a0f3n9/dsh-tool-subagent"]
   cfg --> plugin_dsh_base_tool_subagent
-  plugin_dsh_base_tool_subagent_fork["tool-subagent-fork<br/>@xfcodeai/dsh-tool-subagent"]
+  plugin_dsh_base_tool_subagent_fork["tool-subagent-fork<br/>@x1a0f3n9/dsh-tool-subagent"]
   cfg --> plugin_dsh_base_tool_subagent_fork
-  plugin_dsh_base_workflow_worker_thread["workflow-worker-thread<br/>@xfcodeai/dsh-workflow-worker-thread"]
+  plugin_dsh_base_workflow_worker_thread["workflow-worker-thread<br/>@x1a0f3n9/dsh-workflow-worker-thread"]
   cfg --> plugin_dsh_base_workflow_worker_thread
-  plugin_dsh_base_tool_workflow["tool-workflow<br/>@xfcodeai/dsh-tool-workflow"]
+  plugin_dsh_base_tool_workflow["tool-workflow<br/>@x1a0f3n9/dsh-tool-workflow"]
   cfg --> plugin_dsh_base_tool_workflow
-  plugin_dsh_base_timeout_policy["timeout-policy<br/>@xfcodeai/dsh-tool-call-timeout-policy"]
+  plugin_dsh_base_timeout_policy["timeout-policy<br/>@x1a0f3n9/dsh-tool-call-timeout-policy"]
   cfg --> plugin_dsh_base_timeout_policy
-  plugin_dsh_base_spill_local["spill-local<br/>@xfcodeai/dsh-spill-local"]
+  plugin_dsh_base_spill_local["spill-local<br/>@x1a0f3n9/dsh-spill-local"]
   cfg --> plugin_dsh_base_spill_local
-  plugin_dsh_base_spill_policy["spill-policy<br/>@xfcodeai/dsh-spill-policy"]
+  plugin_dsh_base_spill_policy["spill-policy<br/>@x1a0f3n9/dsh-spill-policy"]
   cfg --> plugin_dsh_base_spill_policy
-  plugin_dsh_base_session_checkpoint_policy["session-checkpoint-policy<br/>@xfcodeai/dsh-session-checkpoint-policy"]
+  plugin_dsh_base_session_checkpoint_policy["session-checkpoint-policy<br/>@x1a0f3n9/dsh-session-checkpoint-policy"]
   cfg --> plugin_dsh_base_session_checkpoint_policy
-  plugin_dsh_base_tool_result_pruner["tool-result-pruner<br/>@xfcodeai/dsh-compaction-tool-result-pruner"]
+  plugin_dsh_base_tool_result_pruner["tool-result-pruner<br/>@x1a0f3n9/dsh-compaction-tool-result-pruner"]
   cfg --> plugin_dsh_base_tool_result_pruner
-  plugin_dsh_base_tool_todo["tool-todo<br/>@xfcodeai/dsh-tool-todo"]
+  plugin_dsh_base_tool_todo["tool-todo<br/>@x1a0f3n9/dsh-tool-todo"]
   cfg --> plugin_dsh_base_tool_todo
-  plugin_dsh_base_tool_goal["tool-goal<br/>@xfcodeai/dsh-tool-goal"]
+  plugin_dsh_base_tool_goal["tool-goal<br/>@x1a0f3n9/dsh-tool-goal"]
   cfg --> plugin_dsh_base_tool_goal
-  plugin_dsh_base_tool_ralph["tool-ralph<br/>@xfcodeai/dsh-tool-ralph"]
+  plugin_dsh_base_tool_ralph["tool-ralph<br/>@x1a0f3n9/dsh-tool-ralph"]
   cfg --> plugin_dsh_base_tool_ralph
-  plugin_dsh_base_tool_str_replace_editor["tool-str-replace-editor<br/>@xfcodeai/dsh-tool-str-replace-editor"]
+  plugin_dsh_base_tool_str_replace_editor["tool-str-replace-editor<br/>@x1a0f3n9/dsh-tool-str-replace-editor"]
   cfg --> plugin_dsh_base_tool_str_replace_editor
-  plugin_dsh_base_repeat_tool_reminder["repeat-tool-reminder<br/>@xfcodeai/dsh-repeat-tool-reminder"]
+  plugin_dsh_base_repeat_tool_reminder["repeat-tool-reminder<br/>@x1a0f3n9/dsh-repeat-tool-reminder"]
   cfg --> plugin_dsh_base_repeat_tool_reminder
-  plugin_dsh_base_web["web<br/>@xfcodeai/dsh-web"]
+  plugin_dsh_base_web["web<br/>@x1a0f3n9/dsh-web"]
   cfg --> plugin_dsh_base_web
-  plugin_dsh_base_web_search_deepseek["web-search-deepseek<br/>@xfcodeai/dsh-web-search-deepseek"]
+  plugin_dsh_base_web_search_deepseek["web-search-deepseek<br/>@x1a0f3n9/dsh-web-search-deepseek"]
   cfg --> plugin_dsh_base_web_search_deepseek
-  plugin_dsh_base_web_fetch_http["web-fetch-http<br/>@xfcodeai/dsh-web-fetch-http"]
+  plugin_dsh_base_web_fetch_http["web-fetch-http<br/>@x1a0f3n9/dsh-web-fetch-http"]
   cfg --> plugin_dsh_base_web_fetch_http
-  plugin_dsh_base_tool_web["tool-web<br/>@xfcodeai/dsh-tool-web"]
+  plugin_dsh_base_tool_web["tool-web<br/>@x1a0f3n9/dsh-tool-web"]
   cfg --> plugin_dsh_base_tool_web
-  plugin_dsh_base_tools["tools<br/>@xfcodeai/dsh-tools"]
+  plugin_dsh_base_tools["tools<br/>@x1a0f3n9/dsh-tools"]
   cfg --> plugin_dsh_base_tools
-  plugin_dsh_base_system_prompt["system-prompt<br/>@xfcodeai/dsh-system-prompt"]
+  plugin_dsh_base_system_prompt["system-prompt<br/>@x1a0f3n9/dsh-system-prompt"]
   cfg --> plugin_dsh_base_system_prompt
-  plugin_dsh_base_agent_loop["agent-loop<br/>@xfcodeai/dsh-agent-loop"]
+  plugin_dsh_base_agent_loop["agent-loop<br/>@x1a0f3n9/dsh-agent-loop"]
   cfg --> plugin_dsh_base_agent_loop
-  plugin_dsh_base_fs_sandbox["fs-sandbox<br/>@xfcodeai/dsh-fs-sandbox"]
+  plugin_dsh_base_fs_sandbox["fs-sandbox<br/>@x1a0f3n9/dsh-fs-sandbox"]
   cfg --> plugin_dsh_base_fs_sandbox
-  plugin_dsh_base_llm_deepseek["llm-deepseek<br/>@xfcodeai/dsh-llm-deepseek"]
+  plugin_dsh_base_llm_deepseek["llm-deepseek<br/>@x1a0f3n9/dsh-llm-deepseek"]
   cfg --> plugin_dsh_base_llm_deepseek
 ```
 
@@ -184,89 +184,89 @@ flowchart LR
 | --- | --- |
 | `timer` | `@deepseek-ai/cordis-plugin-timer` |
 | `hmr` | `@deepseek-ai/cordis-plugin-hmr` |
-| `llm` | `@xfcodeai/dsh-llm` |
-| `deepseek-llm-api-extensions` | `@xfcodeai/dsh-deepseek-llm-api-extensions` |
-| `session` | `@xfcodeai/dsh-session` |
-| `session-log-deepseek` | `@xfcodeai/dsh-session-log-deepseek` |
-| `typert` | `@xfcodeai/dsh-typert-registry` |
-| `typert-loader` | `@xfcodeai/dsh-typert-loader` |
-| `typert-gateway` | `@xfcodeai/dsh-api-gateway` |
-| `session-title` | `@xfcodeai/dsh-session-title` |
-| `session-title-llm` | `@xfcodeai/dsh-session-title-first-prompt-llm` |
-| `user-questions` | `@xfcodeai/dsh-user-questions` |
-| `agent` | `@xfcodeai/dsh-agent` |
-| `plugin-package-inventory-deepseek` | `@xfcodeai/dsh-plugin-package-inventory-deepseek` |
-| `agent-default-model` | `@xfcodeai/dsh-agent-default-model` |
-| `jobs` | `@xfcodeai/dsh-jobs-local` |
-| `llm-retry` | `@xfcodeai/dsh-llm-retry` |
-| `settings` | `@xfcodeai/dsh-settings-file` |
-| `credentials` | `@xfcodeai/dsh-credentials-local` |
-| `llm-pi-ai` | `@xfcodeai/dsh-llm-pi-ai` |
-| `session-persistence-jsonl` | `@xfcodeai/dsh-session-persistence-jsonl` |
-| `attachment-local` | `@xfcodeai/dsh-attachment-local` |
-| `session-query-sqlite` | `@xfcodeai/dsh-session-query-sqlite` |
-| `session-projection` | `@xfcodeai/dsh-session-projection` |
-| `storage` | `@xfcodeai/dsh-storage` |
-| `storage-json` | `@xfcodeai/dsh-storage-json` |
-| `storage-domain` | `@xfcodeai/dsh-storage-domain` |
-| `session-projection-cache` | `@xfcodeai/dsh-session-projection-cache` |
-| `session-telemetry-otel` | `@xfcodeai/dsh-session-telemetry-otel` |
-| `subprocess` | `@xfcodeai/dsh-subprocess-local` |
-| `sandbox` | `@xfcodeai/dsh-sandbox-local` |
-| `sandbox-policy` | `@xfcodeai/dsh-sandbox-policy` |
-| `bash-sandbox` | `@xfcodeai/dsh-bash-sandbox` |
-| `pwsh-sandbox` | `@xfcodeai/dsh-pwsh-sandbox` |
-| `approval` | `@xfcodeai/dsh-user-approval` |
-| `permission` | `@xfcodeai/dsh-permission-presets` |
-| `shell-env` | `@xfcodeai/dsh-shell-env` |
-| `tool-bash` | `@xfcodeai/dsh-tool-bash` |
-| `tool-pwsh` | `@xfcodeai/dsh-tool-pwsh` |
-| `tool-jobs` | `@xfcodeai/dsh-tool-jobs` |
-| `fs-observation-policy` | `@xfcodeai/dsh-fs-observation-policy` |
-| `tool-fs` | `@xfcodeai/dsh-tool-fs` |
-| `tool-fs-search` | `@xfcodeai/dsh-tool-fs-search` |
-| `agent-instructions` | `@xfcodeai/dsh-agent-instructions` |
-| `skill` | `@xfcodeai/dsh-skill` |
-| `skill-filesystem` | `@xfcodeai/dsh-skill-filesystem` |
-| `skill-badge` | `@xfcodeai/dsh-skill-badge` |
-| `tool-skill` | `@xfcodeai/dsh-tool-skill` |
-| `commands` | `@xfcodeai/dsh-commands` |
-| `command-feedback` | `@xfcodeai/dsh-command-feedback` |
-| `goal` | `@xfcodeai/dsh-goal` |
-| `goal-round-driver` | `@xfcodeai/dsh-goal-round-driver` |
-| `command-goal` | `@xfcodeai/dsh-command-goal` |
-| `plan-mode` | `@xfcodeai/dsh-plan-mode` |
-| `token-meter` | `@xfcodeai/dsh-token-meter` |
-| `compaction-basic` | `@xfcodeai/dsh-compaction-basic` |
-| `command-compact` | `@xfcodeai/dsh-command-compact` |
-| `subagent` | `@xfcodeai/dsh-subagent` |
-| `subagent-spawn-in-process` | `@xfcodeai/dsh-subagent-spawn-in-process` |
-| `subagent-fork-in-process` | `@xfcodeai/dsh-subagent-fork-in-process` |
-| `tool-subagent-control` | `@xfcodeai/dsh-tool-subagent-control` |
-| `tool-subagent-list-agents` | `@xfcodeai/dsh-tool-subagent-control/list-agents` |
-| `tool-subagent` | `@xfcodeai/dsh-tool-subagent` |
-| `tool-subagent-fork` | `@xfcodeai/dsh-tool-subagent` |
-| `workflow-worker-thread` | `@xfcodeai/dsh-workflow-worker-thread` |
-| `tool-workflow` | `@xfcodeai/dsh-tool-workflow` |
-| `timeout-policy` | `@xfcodeai/dsh-tool-call-timeout-policy` |
-| `spill-local` | `@xfcodeai/dsh-spill-local` |
-| `spill-policy` | `@xfcodeai/dsh-spill-policy` |
-| `session-checkpoint-policy` | `@xfcodeai/dsh-session-checkpoint-policy` |
-| `tool-result-pruner` | `@xfcodeai/dsh-compaction-tool-result-pruner` |
-| `tool-todo` | `@xfcodeai/dsh-tool-todo` |
-| `tool-goal` | `@xfcodeai/dsh-tool-goal` |
-| `tool-ralph` | `@xfcodeai/dsh-tool-ralph` |
-| `tool-str-replace-editor` | `@xfcodeai/dsh-tool-str-replace-editor` |
-| `repeat-tool-reminder` | `@xfcodeai/dsh-repeat-tool-reminder` |
-| `web` | `@xfcodeai/dsh-web` |
-| `web-search-deepseek` | `@xfcodeai/dsh-web-search-deepseek` |
-| `web-fetch-http` | `@xfcodeai/dsh-web-fetch-http` |
-| `tool-web` | `@xfcodeai/dsh-tool-web` |
-| `tools` | `@xfcodeai/dsh-tools` |
-| `system-prompt` | `@xfcodeai/dsh-system-prompt` |
-| `agent-loop` | `@xfcodeai/dsh-agent-loop` |
-| `fs-sandbox` | `@xfcodeai/dsh-fs-sandbox` |
-| `llm-deepseek` | `@xfcodeai/dsh-llm-deepseek` |
+| `llm` | `@x1a0f3n9/dsh-llm` |
+| `deepseek-llm-api-extensions` | `@x1a0f3n9/dsh-deepseek-llm-api-extensions` |
+| `session` | `@x1a0f3n9/dsh-session` |
+| `session-log-deepseek` | `@x1a0f3n9/dsh-session-log-deepseek` |
+| `typert` | `@x1a0f3n9/dsh-typert-registry` |
+| `typert-loader` | `@x1a0f3n9/dsh-typert-loader` |
+| `typert-gateway` | `@x1a0f3n9/dsh-api-gateway` |
+| `session-title` | `@x1a0f3n9/dsh-session-title` |
+| `session-title-llm` | `@x1a0f3n9/dsh-session-title-first-prompt-llm` |
+| `user-questions` | `@x1a0f3n9/dsh-user-questions` |
+| `agent` | `@x1a0f3n9/dsh-agent` |
+| `plugin-package-inventory-deepseek` | `@x1a0f3n9/dsh-plugin-package-inventory-deepseek` |
+| `agent-default-model` | `@x1a0f3n9/dsh-agent-default-model` |
+| `jobs` | `@x1a0f3n9/dsh-jobs-local` |
+| `llm-retry` | `@x1a0f3n9/dsh-llm-retry` |
+| `settings` | `@x1a0f3n9/dsh-settings-file` |
+| `credentials` | `@x1a0f3n9/dsh-credentials-local` |
+| `llm-pi-ai` | `@x1a0f3n9/dsh-llm-pi-ai` |
+| `session-persistence-jsonl` | `@x1a0f3n9/dsh-session-persistence-jsonl` |
+| `attachment-local` | `@x1a0f3n9/dsh-attachment-local` |
+| `session-query-sqlite` | `@x1a0f3n9/dsh-session-query-sqlite` |
+| `session-projection` | `@x1a0f3n9/dsh-session-projection` |
+| `storage` | `@x1a0f3n9/dsh-storage` |
+| `storage-json` | `@x1a0f3n9/dsh-storage-json` |
+| `storage-domain` | `@x1a0f3n9/dsh-storage-domain` |
+| `session-projection-cache` | `@x1a0f3n9/dsh-session-projection-cache` |
+| `session-telemetry-otel` | `@x1a0f3n9/dsh-session-telemetry-otel` |
+| `subprocess` | `@x1a0f3n9/dsh-subprocess-local` |
+| `sandbox` | `@x1a0f3n9/dsh-sandbox-local` |
+| `sandbox-policy` | `@x1a0f3n9/dsh-sandbox-policy` |
+| `bash-sandbox` | `@x1a0f3n9/dsh-bash-sandbox` |
+| `pwsh-sandbox` | `@x1a0f3n9/dsh-pwsh-sandbox` |
+| `approval` | `@x1a0f3n9/dsh-user-approval` |
+| `permission` | `@x1a0f3n9/dsh-permission-presets` |
+| `shell-env` | `@x1a0f3n9/dsh-shell-env` |
+| `tool-bash` | `@x1a0f3n9/dsh-tool-bash` |
+| `tool-pwsh` | `@x1a0f3n9/dsh-tool-pwsh` |
+| `tool-jobs` | `@x1a0f3n9/dsh-tool-jobs` |
+| `fs-observation-policy` | `@x1a0f3n9/dsh-fs-observation-policy` |
+| `tool-fs` | `@x1a0f3n9/dsh-tool-fs` |
+| `tool-fs-search` | `@x1a0f3n9/dsh-tool-fs-search` |
+| `agent-instructions` | `@x1a0f3n9/dsh-agent-instructions` |
+| `skill` | `@x1a0f3n9/dsh-skill` |
+| `skill-filesystem` | `@x1a0f3n9/dsh-skill-filesystem` |
+| `skill-badge` | `@x1a0f3n9/dsh-skill-badge` |
+| `tool-skill` | `@x1a0f3n9/dsh-tool-skill` |
+| `commands` | `@x1a0f3n9/dsh-commands` |
+| `command-feedback` | `@x1a0f3n9/dsh-command-feedback` |
+| `goal` | `@x1a0f3n9/dsh-goal` |
+| `goal-round-driver` | `@x1a0f3n9/dsh-goal-round-driver` |
+| `command-goal` | `@x1a0f3n9/dsh-command-goal` |
+| `plan-mode` | `@x1a0f3n9/dsh-plan-mode` |
+| `token-meter` | `@x1a0f3n9/dsh-token-meter` |
+| `compaction-basic` | `@x1a0f3n9/dsh-compaction-basic` |
+| `command-compact` | `@x1a0f3n9/dsh-command-compact` |
+| `subagent` | `@x1a0f3n9/dsh-subagent` |
+| `subagent-spawn-in-process` | `@x1a0f3n9/dsh-subagent-spawn-in-process` |
+| `subagent-fork-in-process` | `@x1a0f3n9/dsh-subagent-fork-in-process` |
+| `tool-subagent-control` | `@x1a0f3n9/dsh-tool-subagent-control` |
+| `tool-subagent-list-agents` | `@x1a0f3n9/dsh-tool-subagent-control/list-agents` |
+| `tool-subagent` | `@x1a0f3n9/dsh-tool-subagent` |
+| `tool-subagent-fork` | `@x1a0f3n9/dsh-tool-subagent` |
+| `workflow-worker-thread` | `@x1a0f3n9/dsh-workflow-worker-thread` |
+| `tool-workflow` | `@x1a0f3n9/dsh-tool-workflow` |
+| `timeout-policy` | `@x1a0f3n9/dsh-tool-call-timeout-policy` |
+| `spill-local` | `@x1a0f3n9/dsh-spill-local` |
+| `spill-policy` | `@x1a0f3n9/dsh-spill-policy` |
+| `session-checkpoint-policy` | `@x1a0f3n9/dsh-session-checkpoint-policy` |
+| `tool-result-pruner` | `@x1a0f3n9/dsh-compaction-tool-result-pruner` |
+| `tool-todo` | `@x1a0f3n9/dsh-tool-todo` |
+| `tool-goal` | `@x1a0f3n9/dsh-tool-goal` |
+| `tool-ralph` | `@x1a0f3n9/dsh-tool-ralph` |
+| `tool-str-replace-editor` | `@x1a0f3n9/dsh-tool-str-replace-editor` |
+| `repeat-tool-reminder` | `@x1a0f3n9/dsh-repeat-tool-reminder` |
+| `web` | `@x1a0f3n9/dsh-web` |
+| `web-search-deepseek` | `@x1a0f3n9/dsh-web-search-deepseek` |
+| `web-fetch-http` | `@x1a0f3n9/dsh-web-fetch-http` |
+| `tool-web` | `@x1a0f3n9/dsh-tool-web` |
+| `tools` | `@x1a0f3n9/dsh-tools` |
+| `system-prompt` | `@x1a0f3n9/dsh-system-prompt` |
+| `agent-loop` | `@x1a0f3n9/dsh-agent-loop` |
+| `fs-sandbox` | `@x1a0f3n9/dsh-fs-sandbox` |
+| `llm-deepseek` | `@x1a0f3n9/dsh-llm-deepseek` |
 
 Source config: [`packages/bundle/base/cordis.patch.yml`](../../packages/bundle/base/cordis.patch.yml).
 

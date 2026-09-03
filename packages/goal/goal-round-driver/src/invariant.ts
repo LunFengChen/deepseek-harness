@@ -1,13 +1,13 @@
-/** Package-owned goal-round prompt invariants. @module @xfcodeai/dsh-goal-round-driver/invariant */
+/** Package-owned goal-round prompt invariants. @module @x1a0f3n9/dsh-goal-round-driver/invariant */
 
 import { isDeepStrictEqual } from 'node:util'
 import type { Context } from '@deepseek-ai/cordis'
-import { foldGoal, type FoldedGoal, type GoalMessageSource, type GoalView } from '@xfcodeai/dsh-goal'
-import type { InvariantFailure, InvariantInstaller } from '@xfcodeai/dsh-invariants'
-import type { Session, SessionEvent } from '@xfcodeai/dsh-session'
+import { foldGoal, type FoldedGoal, type GoalMessageSource, type GoalView } from '@x1a0f3n9/dsh-goal'
+import type { InvariantFailure, InvariantInstaller } from '@x1a0f3n9/dsh-invariants'
+import type { Session, SessionEvent } from '@x1a0f3n9/dsh-session'
 import { renderGoalRoundPrompt } from './prompt.ts'
 
-const PACKAGE_NAME = '@xfcodeai/dsh-goal-round-driver'
+const PACKAGE_NAME = '@x1a0f3n9/dsh-goal-round-driver'
 
 /** Cordis companion plugin name. */
 export const name = 'goal-round-driver-invariant'

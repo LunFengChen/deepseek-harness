@@ -2,7 +2,7 @@
 
 [English](todo.md) | 中文
 
-本页记录 [`@xfcodeai/dsh-tool-todo`](../../packages/todo/tool-todo/README.zh.md) 拥有的持久 todo 词汇。面向模型的工具会整体替换一个 agent（智能体）会话的列表；该包还拥有事件声明、回放投影和不变量配套插件。工具行为与配置见[包 README](../../packages/todo/tool-todo/README.zh.md)。
+本页记录 [`@x1a0f3n9/dsh-tool-todo`](../../packages/todo/tool-todo/README.zh.md) 拥有的持久 todo 词汇。面向模型的工具会整体替换一个 agent（智能体）会话的列表；该包还拥有事件声明、回放投影和不变量配套插件。工具行为与配置见[包 README](../../packages/todo/tool-todo/README.zh.md)。
 
 源码：[`packages/todo/tool-todo/src/types.ts`](../../packages/todo/tool-todo/src/types.ts)
 

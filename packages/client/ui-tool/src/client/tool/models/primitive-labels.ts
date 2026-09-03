@@ -6,8 +6,8 @@ import type {
   ReadBlockLabels,
   SearchBlockLabels,
   WebBlockLabels,
-} from '@xfcodeai/dsh-client-ui-primitives'
-import type { TranslateNS } from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { TranslateNS } from '@x1a0f3n9/dsh-client-ui-slots'
 
 type T = TranslateNS<'conversation'>
 

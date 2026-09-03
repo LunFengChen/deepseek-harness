@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-plugin-package-inventory-deepseek",
+  "name": "@x1a0f3n9/dsh-plugin-package-inventory-deepseek",
   "description": "Active Loader-backed plugin package inventory for official DeepSeek LLM API requests",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -32,19 +32,19 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^",
-    "@xfcodeai/dsh-deepseek-llm-api-extensions": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-agent-presets": {
+    "@x1a0f3n9/dsh-agent-presets": {
       "optional": true
     }
   },
@@ -52,11 +52,11 @@
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^",
-    "@xfcodeai/dsh-deepseek-llm-api-extensions": "workspace:^",
-    "@xfcodeai/dsh-scope": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

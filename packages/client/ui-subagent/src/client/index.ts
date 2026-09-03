@@ -1,18 +1,18 @@
 /** Web subagent catalog, navigation, and addressed-session composer owner. */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { SubagentAddress } from '@xfcodeai/dsh-subagent/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { ComposerChainProps } from '@xfcodeai/dsh-client-ui-conversation/client'
+import type { SubagentAddress } from '@x1a0f3n9/dsh-subagent/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { ComposerChainProps } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { SubagentHeaderLineage, type SubagentCatalogInjected } from './SubagentHeaderLineage.tsx'
 import {
   SubagentReadOnlyComposer, type SubagentReadOnlyMatch,
 } from './SubagentReadOnlyComposer.tsx'
-import type {} from '@xfcodeai/dsh-client-locale/client'
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
-import type {} from '@xfcodeai/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
 import { en, NS, zh, type SubagentKey } from './locales.ts'
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Subagent catalog and read-only composer copy. */
     'subagent': SubagentKey

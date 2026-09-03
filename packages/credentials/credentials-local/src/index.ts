@@ -32,7 +32,7 @@
  * as the user's environment layer; a store that doubled as the environment
  * layer would shadow non-secret entries behind its precedence, making them
  * silently unreachable.
- * @module @xfcodeai/dsh-credentials-local
+ * @module @x1a0f3n9/dsh-credentials-local
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
@@ -41,10 +41,10 @@ import { watch as chokidarWatch } from 'chokidar'
 import { mkdir, readFile, stat } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { Document, isMap, isScalar, parseDocument, type YAMLError } from 'yaml'
-import { withFileLock, writeFileAtomic } from '@xfcodeai/dsh-atomic-write'
-import { canonicalizeWatchPath, resolveDshHome } from '@xfcodeai/dsh-home-paths'
-import { launchEnvironmentOf } from '@xfcodeai/dsh-launch-environment'
-import { CredentialProvider, credentialRef, parseCredentialKey } from '@xfcodeai/dsh-credentials'
+import { withFileLock, writeFileAtomic } from '@x1a0f3n9/dsh-atomic-write'
+import { canonicalizeWatchPath, resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
+import { launchEnvironmentOf } from '@x1a0f3n9/dsh-launch-environment'
+import { CredentialProvider, credentialRef, parseCredentialKey } from '@x1a0f3n9/dsh-credentials'
 import type {
   ApiKeyRecord,
   CredentialInfo,
@@ -54,8 +54,8 @@ import type {
   CredentialRecordInfo,
   CredentialRef,
   ResolvedCredential,
-} from '@xfcodeai/dsh-credentials'
-import type { LaunchEnvironmentEntry } from '@xfcodeai/dsh-launch-environment'
+} from '@x1a0f3n9/dsh-credentials'
+import type { LaunchEnvironmentEntry } from '@x1a0f3n9/dsh-launch-environment'
 
 /** Basename of the credentials document inside the harness home. */
 export const CREDENTIALS_FILENAME = '.credentials.yaml'

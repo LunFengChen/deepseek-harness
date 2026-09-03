@@ -102,14 +102,14 @@ The example composition remains opt-in and safe by default:
 
 ```yaml
 plugins:
-  '@xfcodeai/dsh-sandbox-local':
-  '@xfcodeai/dsh-sandbox-policy':
+  '@x1a0f3n9/dsh-sandbox-local':
+  '@x1a0f3n9/dsh-sandbox-policy':
     config:
       mode: workspace-write
       workspaceRoot: .
-  '@xfcodeai/dsh-terminal':
-  '@xfcodeai/dsh-subprocess-local':
-  '@xfcodeai/dsh-terminal-bash':
+  '@x1a0f3n9/dsh-terminal':
+  '@x1a0f3n9/dsh-subprocess-local':
+  '@x1a0f3n9/dsh-terminal-bash':
     config:
       scrollbackLines: 10000
       scrollbackMaxBytes: 4194304
@@ -120,7 +120,7 @@ plugins:
       handoffGraceMs: 500
       timeoutMs: 30000
       disposeGraceMs: 3000
-  '@xfcodeai/dsh-tool-terminal':
+  '@x1a0f3n9/dsh-tool-terminal':
     config:
       enableRunInBackground: true
       maxResultBytes: 262144

@@ -3,7 +3,7 @@ description: "Web Session-log ZIP export: Host streaming, the authenticated down
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-log-export
+# @x1a0f3n9/dsh-session-log-export
 
 English | [中文](README.zh.md)
 
@@ -35,7 +35,7 @@ Choose it for a Web deployment that needs user-facing session export with a visi
 
 ```yaml
 - id: session-log-download
-  name: '@xfcodeai/dsh-session-log-export'
+  name: '@x1a0f3n9/dsh-session-log-export'
 ```
 
 The Web bundle mounts the package with Connection, `dsh-commands`, `dsh-client-ui-commands`, and `dsh-client-ui-conversation`.

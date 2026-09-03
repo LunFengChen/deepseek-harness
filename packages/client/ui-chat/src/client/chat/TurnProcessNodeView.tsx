@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { IconChevronDownOutline14 } from '@xfcodeai/dsh-client-ui-primitives'
+import { IconChevronDownOutline14 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { ChatNodeViewProps } from '../contract/slots.ts'
 import css from './TurnProcessNodeView.module.css'
 

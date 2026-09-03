@@ -2,7 +2,7 @@
  * Surface retention selection and the shared log-recorded compaction
  * transaction for automatic open-turn and manual idle-session compaction.
  *
- * @module @xfcodeai/dsh-compaction-basic/region
+ * @module @x1a0f3n9/dsh-compaction-basic/region
  */
 
 import { randomUUID } from 'node:crypto'
@@ -13,14 +13,14 @@ import {
   compactCheckpointSource,
   toolPairingBalancedAfter,
   toolPairingBalancedBefore,
-} from '@xfcodeai/dsh-compaction'
-import type { CompactionResult } from '@xfcodeai/dsh-compaction'
-import type { CommandId } from '@xfcodeai/dsh-commands/brand'
-import { createUserMessage, errorChain } from '@xfcodeai/dsh-llm'
-import type { Message, UserMessage } from '@xfcodeai/dsh-llm'
-import type { TokenMeasurement, TokenMeter } from '@xfcodeai/dsh-token-meter'
-import { SessionSeq, type Session, type SessionEvent } from '@xfcodeai/dsh-session'
-import type { Agent } from '@xfcodeai/dsh-agent'
+} from '@x1a0f3n9/dsh-compaction'
+import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
+import type { CommandId } from '@x1a0f3n9/dsh-commands/brand'
+import { createUserMessage, errorChain } from '@x1a0f3n9/dsh-llm'
+import type { Message, UserMessage } from '@x1a0f3n9/dsh-llm'
+import type { TokenMeasurement, TokenMeter } from '@x1a0f3n9/dsh-token-meter'
+import { SessionSeq, type Session, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 import { frameSummary } from './summarizer.ts'
 import type { SummarizationInput, SummaryResult } from './summarizer.ts'
 

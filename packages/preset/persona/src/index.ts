@@ -10,13 +10,13 @@
  * That constraint is the reason the row exists. An agent preset cannot mount
  * the prompt registry itself, so without a row of its own a preset could
  * change an agent's tools but never its identity.
- * @module @xfcodeai/dsh-persona
+ * @module @x1a0f3n9/dsh-persona
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type {} from '@xfcodeai/dsh-system-prompt'
-import { PERSONA_SECTION } from '@xfcodeai/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-system-prompt'
+import { PERSONA_SECTION } from '@x1a0f3n9/dsh-system-prompt'
 
 export { PERSONA_SECTION }
 

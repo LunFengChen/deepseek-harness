@@ -9,16 +9,16 @@ import {
   FileNotFoundError,
   SandboxNotFoundError,
   quoteE2BShellArg,
-} from '@xfcodeai/dsh-e2b'
-import type { CommandHandle, CommandResult, Sandbox } from '@xfcodeai/dsh-e2b'
+} from '@x1a0f3n9/dsh-e2b'
+import type { CommandHandle, CommandResult, Sandbox } from '@x1a0f3n9/dsh-e2b'
 import type {
   SubprocessCollect,
   SubprocessHandle,
   SubprocessOutcome,
   SubprocessOutputMode,
   SubprocessSpawnSpec,
-} from '@xfcodeai/dsh-subprocess'
-import type E2BRuntime from '@xfcodeai/dsh-e2b'
+} from '@x1a0f3n9/dsh-subprocess'
+import type E2BRuntime from '@x1a0f3n9/dsh-e2b'
 import { bootstrapEnvironment, readRemoteEnvironment, serializeRemoteEnvironment } from './environment.ts'
 import { E2BBase64Decoder, E2B_OUTPUT_COMPLETE_FRAME, E2BOutputReader } from './output.ts'
 import { asError, commandOpts, signalRemoteGroups, waitTick } from './remote.ts'

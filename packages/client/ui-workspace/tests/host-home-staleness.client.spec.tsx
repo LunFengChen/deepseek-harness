@@ -8,11 +8,11 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, screen } from '@testing-library/react'
-import type { WorkspaceId } from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { PropsRenderSlots } from '@xfcodeai/dsh-client-ui-slots'
-import { SlotTestRuntime, TestRemote, usePinnedBrowserLanguages } from '@xfcodeai/dsh-client-test-runtime'
-import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
-import { apply, inject } from '@xfcodeai/dsh-client-ui-workspace/client'
+import type { WorkspaceId } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
+import { SlotTestRuntime, TestRemote, usePinnedBrowserLanguages } from '@x1a0f3n9/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import { apply, inject } from '@x1a0f3n9/dsh-client-ui-workspace/client'
 
 usePinnedBrowserLanguages('zh-CN')
 

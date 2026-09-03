@@ -2,12 +2,12 @@
 // substructure references. Stable node and location stores make old snapshots
 // live readers rather than time-point views.
 
-import type { CommandId } from '@xfcodeai/dsh-commands/brand'
-import type { MessageId } from '@xfcodeai/dsh-llm/brand'
-import type { ContentBlock } from '@xfcodeai/dsh-llm/types'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
-import type { LlmRetryEventData } from '@xfcodeai/dsh-llm-retry/types'
-import type { TodoItem } from '@xfcodeai/dsh-tool-todo/client'
+import type { CommandId } from '@x1a0f3n9/dsh-commands/brand'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm/types'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { LlmRetryEventData } from '@x1a0f3n9/dsh-llm-retry/types'
+import type { TodoItem } from '@x1a0f3n9/dsh-tool-todo/client'
 import type { ContextProvenanceView, KnownContextForm } from './context-provenance.ts'
 export type { TodoItem }
 

@@ -8,7 +8,7 @@ kind: "package-reference"
 
 ## 概述
 
-`@xfcodeai/dsh-api-settings-controller` 为浏览器配置界面提供生成的 `ctx.remote.settings` 与 `ctx.remote.credentials` namespace。它返回脱敏的 settings 与凭据元数据，支持 settings 与凭据写入而不返回密钥值，并在 Host 桌面打开由 provider 持有的 settings 或 Agent preset 位置。provider 缺失时，namespace 仍会注册，并返回可操作的配置错误。
+`@x1a0f3n9/dsh-api-settings-controller` 为浏览器配置界面提供生成的 `ctx.remote.settings` 与 `ctx.remote.credentials` namespace。它返回脱敏的 settings 与凭据元数据，支持 settings 与凭据写入而不返回密钥值，并在 Host 桌面打开由 provider 持有的 settings 或 Agent preset 位置。provider 缺失时，namespace 仍会注册，并返回可操作的配置错误。
 
 ## 目录
 
@@ -40,7 +40,7 @@ kind: "package-reference"
 |---|---|---|
 | `nativeOpen` | 平台探测 | Agent preset 目录能否交给原生桌面打开器 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-api-settings-controller)是所有受支持字段及其 JSDoc 的完整来源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-api-settings-controller)是所有受支持字段及其 JSDoc 的完整来源。
 
 -----
 

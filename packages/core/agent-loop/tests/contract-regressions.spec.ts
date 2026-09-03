@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { createUserMessage, ToolCallId, LlmError, MessageSource, ProviderRequestId, StreamChunk  } from '@xfcodeai/dsh-llm'
-import SessionStore, { Session, SessionEvent, SessionId, TurnEndReason, type UserMessage } from '@xfcodeai/dsh-session'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { defineContentToolFixture, type PostToolDecision } from '@xfcodeai/dsh-tools'
-import AgentRegistry, { type Agent } from '@xfcodeai/dsh-agent'
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import LlmRuntime, { createUserMessage, ToolCallId, LlmError, MessageSource, ProviderRequestId, StreamChunk  } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionEvent, SessionId, TurnEndReason, type UserMessage } from '@x1a0f3n9/dsh-session'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { defineContentToolFixture, type PostToolDecision } from '@x1a0f3n9/dsh-tools'
+import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { ReactLoopAgent } from '../src/agent.ts'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
-import * as SessionInvariant from '@xfcodeai/dsh-session/invariant'
-import * as AgentInvariant from '@xfcodeai/dsh-agent/invariant'
-import * as AgentLoopInvariant from '@xfcodeai/dsh-agent-loop/invariant'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
+import * as AgentInvariant from '@x1a0f3n9/dsh-agent/invariant'
+import * as AgentLoopInvariant from '@x1a0f3n9/dsh-agent-loop/invariant'
 import { MockAdapter, textResponse, toolCallResponse } from './mock-adapter.ts'
 
 async function mountInvariants(ctx: Context): Promise<void> {
@@ -863,7 +863,7 @@ describe('turn and step boundary recovery', () => {
     expect(adapter.requests).toHaveLength(1)
     expect(errors.map(error => error.message)).toEqual([
       'reject first step-end',
-      'invariant violated by "@xfcodeai/dsh-session": turn/end 1 while step 1 is still open',
+      'invariant violated by "@x1a0f3n9/dsh-session": turn/end 1 while step 1 is still open',
     ])
     expect(boundaryCounts(agent)).toMatchObject({
       turnStart: 1,

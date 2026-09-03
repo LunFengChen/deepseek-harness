@@ -12,8 +12,8 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { describe, expect, it } from 'vitest'
-import { runLoaderSmoke } from '@xfcodeai/dsh-loader-smoke'
-import { resolvePwshPath } from '@xfcodeai/dsh-pwsh-local'
+import { runLoaderSmoke } from '@x1a0f3n9/dsh-loader-smoke'
+import { resolvePwshPath } from '@x1a0f3n9/dsh-pwsh-local'
 
 // The probe follows the executor's own resolution (Program Files installs on
 // Windows are found even when bare `pwsh` is not on PATH).

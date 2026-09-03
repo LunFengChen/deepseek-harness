@@ -6,25 +6,25 @@ import { performance } from 'node:perf_hooks'
 import { brotliCompressSync, gzipSync } from 'node:zlib'
 import { expect, it } from 'vitest'
 import { z } from 'zod'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import { isChunkRow, packChunkRuns } from '@xfcodeai/dsh-session/chunk-rows'
-import type { ChunkRow } from '@xfcodeai/dsh-session/chunk-rows'
-import { SessionSeq } from '@xfcodeai/dsh-session/types'
-import type { SessionEvent, SessionEventMap } from '@xfcodeai/dsh-session/types'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import { isChunkRow, packChunkRuns } from '@x1a0f3n9/dsh-session/chunk-rows'
+import type { ChunkRow } from '@x1a0f3n9/dsh-session/chunk-rows'
+import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { SessionEvent, SessionEventMap } from '@x1a0f3n9/dsh-session/types'
 import type {
   ChunkRowEvent,
   SessionEventEntry,
   SessionHistoryRecord,
   SessionWireEvent,
-} from '@xfcodeai/dsh-api-session-controller/types'
-import { historyEntries } from '@xfcodeai/dsh-api-session-controller/src/client/sessions/history-records.ts'
-import type { SessionEventLikeEntry } from '@xfcodeai/dsh-api-session-controller/client'
-import { ConversationNodeAssembler } from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-api-session-controller/types'
+import { historyEntries } from '@x1a0f3n9/dsh-api-session-controller/src/client/sessions/history-records.ts'
+import type { SessionEventLikeEntry } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { ConversationNodeAssembler } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ConversationNodeDefinition,
   ConversationViewDefinition,
   ConversationViewNode,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 const LOGICAL_EVENTS = 416_756
 const DELTA_EVENTS = 416_176

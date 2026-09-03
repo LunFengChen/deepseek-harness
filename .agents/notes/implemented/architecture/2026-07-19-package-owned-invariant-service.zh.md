@@ -16,7 +16,7 @@ Status: implemented
 
 ### 一个注册表服务，贡献归包所有
 
-`@xfcodeai/dsh-invariants` 是与产品无关的 Cordis 服务插件，注册 `ctx.invariants`。它只负责配置、注册唯一性、子 fiber 生命周期和带包归属的失败；不导入 session、agent、scope 或 agent-loop 包，也不包含这些包的检查。
+`@x1a0f3n9/dsh-invariants` 是与产品无关的 Cordis 服务插件，注册 `ctx.invariants`。它只负责配置、注册唯一性、子 fiber 生命周期和带包归属的失败；不导入 session、agent、scope 或 agent-loop 包，也不包含这些包的检查。
 
 只有拥有可独立观察的事件或可变数据关系时，工作区包才发布 `./invariant` 伴随插件；该 companion 会注册自己完整且准确的 npm 包名。没有该关系的包会省略 companion 与发布接线，并在 README 中记录原因；[运行时约定 Agent Note](2026-07-19-package-invariant-runtime-contracts.zh.md) 与[省略决策](../simplification/2026-08-28-omit-unneeded-invariant-companions.zh.md)禁止生成占位符、空 installer 和合成 API 形状断言。包的根入口不会隐式导入或注册诊断，因此加载根包不会改变运行时检查，也不要求不变式服务存在。
 
@@ -59,10 +59,10 @@ blocklist 匹配优先于 allowlist 匹配。每个条目都是区分大小写�
 
 | 伴随入口 | 注册名 | 所属检查 |
 |---|---|---|
-| `@xfcodeai/dsh-session/invariant` | `@xfcodeai/dsh-session` | 会话序列、轮次/步骤包围关系和同一步骤的调用/结果轨迹 |
-| `@xfcodeai/dsh-agent/invariant` | `@xfcodeai/dsh-agent` | agent 状态转换 |
-| `@xfcodeai/dsh-scope/invariant` | `@xfcodeai/dsh-scope` | 作用域事件载体的存在性与主体一致性 |
-| `@xfcodeai/dsh-agent-loop/invariant` | `@xfcodeai/dsh-agent-loop` | 模型请求重建 |
+| `@x1a0f3n9/dsh-session/invariant` | `@x1a0f3n9/dsh-session` | 会话序列、轮次/步骤包围关系和同一步骤的调用/结果轨迹 |
+| `@x1a0f3n9/dsh-agent/invariant` | `@x1a0f3n9/dsh-agent` | agent 状态转换 |
+| `@x1a0f3n9/dsh-scope/invariant` | `@x1a0f3n9/dsh-scope` | 作用域事件载体的存在性与主体一致性 |
+| `@x1a0f3n9/dsh-agent-loop/invariant` | `@x1a0f3n9/dsh-agent-loop` | 模型请求重建 |
 
 这四个所有者提供了首批有状态检查。后续所有者会为真实事件或可变数据关系增加 companion，没有该关系的包则省略 companion 并记录原因。每个已发布伴随入口都是单独打包的 `./invariant` export，具有独立声明和对 Loader 安全的命名空间插件形态。
 

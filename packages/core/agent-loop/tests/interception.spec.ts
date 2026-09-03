@@ -1,22 +1,22 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { createUserMessage, ToolCallId  } from '@xfcodeai/dsh-llm'
+import LlmRuntime, { createUserMessage, ToolCallId  } from '@x1a0f3n9/dsh-llm'
 import SessionStore, {
   SessionId,
   type SessionEvent,
   type TurnEndReason,
   type UserMessage,
-} from '@xfcodeai/dsh-session'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { defineContentToolFixture, type PostToolDecision, type PreToolDecision } from '@xfcodeai/dsh-tools'
+} from '@x1a0f3n9/dsh-session'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { defineContentToolFixture, type PostToolDecision, type PreToolDecision } from '@x1a0f3n9/dsh-tools'
 import AgentRegistry, {
   type Agent,
   type PreStepDecision,
   type SessionStartSource,
-} from '@xfcodeai/dsh-agent'
+} from '@x1a0f3n9/dsh-agent'
 
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from './mock-adapter.ts'
 
 /**

@@ -5,9 +5,9 @@
  * one-shot convenience method.
  */
 
-import { BlockAssembler } from '@xfcodeai/dsh-llm'
+import { BlockAssembler } from '@x1a0f3n9/dsh-llm'
 import type { Context } from '@deepseek-ai/cordis'
-import type { FinishReason, GenerateOptions, Message, TokenUsage } from '@xfcodeai/dsh-llm'
+import type { FinishReason, GenerateOptions, Message, TokenUsage } from '@x1a0f3n9/dsh-llm'
 
 export interface AssembledResult {
   message: Message

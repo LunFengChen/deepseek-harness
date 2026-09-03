@@ -3,7 +3,7 @@ description: "面向启动持久 harness agent 的用户与维护者，说明纯
 kind: "package-bundle"
 ---
 
-# `@xfcodeai/dsh-acp-app`
+# `@x1a0f3n9/dsh-acp-app`
 
 [English](README.md) | 中文
 

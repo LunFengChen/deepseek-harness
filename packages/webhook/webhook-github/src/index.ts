@@ -1,8 +1,8 @@
 /** Signed GitHub HTTP adapter for the provider-neutral webhook runtime. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialRef } from '@xfcodeai/dsh-credentials'
-import type {} from '@xfcodeai/dsh-host-webserver'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
+import type {} from '@x1a0f3n9/dsh-host-webserver'
 import z from '@deepseek-ai/schemastery'
 import { createGitHubWebhookHandler } from './handler.ts'
 

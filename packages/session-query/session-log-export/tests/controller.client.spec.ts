@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import {
   downloadUrl, SessionLogDownloadController, sessionLogZipFilename,
 } from '../src/client/controller.ts'

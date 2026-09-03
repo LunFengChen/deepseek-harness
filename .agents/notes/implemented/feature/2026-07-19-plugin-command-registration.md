@@ -12,7 +12,7 @@ A shared mechanism must remain a UI concern rather than a model tool or agent-lo
 
 ## Decision
 
-`@xfcodeai/dsh-commands` in `packages/interaction/commands/` is the product command registry. `dsh-base` mounts it for consuming front ends; the [automation-only ACP app](../simplification/2026-07-23-acp-automation-only-protocol.md) and standalone `sdk-minimal` tree omit it. UI surfaces inject the service, while command producers depend only on the registry and any domain they operate.
+`@x1a0f3n9/dsh-commands` in `packages/interaction/commands/` is the product command registry. `dsh-base` mounts it for consuming front ends; the [automation-only ACP app](../simplification/2026-07-23-acp-automation-only-protocol.md) and standalone `sdk-minimal` tree omit it. UI surfaces inject the service, while command producers depend only on the registry and any domain they operate.
 
 ### Registry contract
 

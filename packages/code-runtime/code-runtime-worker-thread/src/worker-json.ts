@@ -1,9 +1,9 @@
 /**
  * Lossless-JSON snapshots for the dependency-free source worker closure.
- * @module @xfcodeai/dsh-code-runtime-worker-thread/worker-json
+ * @module @x1a0f3n9/dsh-code-runtime-worker-thread/worker-json
  */
 
-import type { CodeJsonValue } from '@xfcodeai/dsh-code-runtime'
+import type { CodeJsonValue } from '@x1a0f3n9/dsh-code-runtime'
 
 /* jscpd:ignore-start -- the source worker mirrors session JSON helpers without workspace runtime imports */
 type IntrinsicCallable = (this: unknown, ...args: unknown[]) => unknown

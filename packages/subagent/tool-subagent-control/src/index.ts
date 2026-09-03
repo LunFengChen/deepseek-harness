@@ -4,18 +4,18 @@
  * `ctx.subagents.interrupt()`. They perform no lifecycle routing of their own —
  * residency, cold resume, and interrupt authorization belong to the subagent
  * service — and they live apart from the provider-bound
- * `@xfcodeai/dsh-tool-subagent` instances so multiple delegation tools share
+ * `@x1a0f3n9/dsh-tool-subagent` instances so multiple delegation tools share
  * one control API.
- * @module @xfcodeai/dsh-tool-subagent-control
+ * @module @x1a0f3n9/dsh-tool-subagent-control
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@xfcodeai/dsh-brand'
-import { defineTool } from '@xfcodeai/dsh-tools'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
-import type { SessionId } from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-subagent'
-import { markAdjacentAgentSendMessageTool } from '@xfcodeai/dsh-subagent/internal'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-subagent'
+import { markAdjacentAgentSendMessageTool } from '@x1a0f3n9/dsh-subagent/internal'
 
 export const name = 'tool-subagent-control'
 export const inject = ['tools', 'subagents']

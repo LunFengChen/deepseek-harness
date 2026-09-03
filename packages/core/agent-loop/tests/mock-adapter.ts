@@ -1,5 +1,5 @@
-import type { GenerateOptions, LlmModelReasoningInfo, LlmResolvedModelInfo, StreamChunk } from '@xfcodeai/dsh-llm'
-import { ToolCallId, LlmAdapter } from '@xfcodeai/dsh-llm'
+import type { GenerateOptions, LlmModelReasoningInfo, LlmResolvedModelInfo, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import { ToolCallId, LlmAdapter } from '@x1a0f3n9/dsh-llm'
 
 /** Helpers to write scripted responses tersely. */
 export function textResponse(text: string): StreamChunk[] {

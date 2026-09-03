@@ -2,12 +2,12 @@
  * Crash-recovery repair for an interrupted session log. It preserves a fully
  * written final turn and supplies the missing tool, step, and turn boundaries
  * needed to resume with a provider-valid transcript.
- * @module @xfcodeai/dsh-session/repair
+ * @module @x1a0f3n9/dsh-session/repair
  */
 
-import { brandString } from '@xfcodeai/dsh-brand'
-import type { MessageId, ToolCallId, ToolResultMessage } from '@xfcodeai/dsh-llm'
-import { deepFreeze } from '@xfcodeai/dsh-util-values'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type { MessageId, ToolCallId, ToolResultMessage } from '@x1a0f3n9/dsh-llm'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
 import { SessionSeq } from './types.ts'
 import type { SessionEvent, SessionSeq as SessionSeqType } from './types.ts'
 

@@ -1,6 +1,6 @@
 /** Opaque revision identity for lightweight persistence observations. */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /**
  * Backend-owned token that identifies both one storage source and one revision

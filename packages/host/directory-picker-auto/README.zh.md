@@ -3,7 +3,7 @@ description: "目录选择 seam 的自适应选择器：在启动时判定一次
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-host-directory-picker-auto
+# @x1a0f3n9/dsh-host-directory-picker-auto
 
 [English](README.md) | 中文
 

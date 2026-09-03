@@ -1,4 +1,4 @@
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
 /** Browser owner for the Gateway multiplexed Remote stream socket. */
 
 import {
@@ -7,8 +7,8 @@ import {
   type RemoteStreamClientMessage,
   type RemoteStreamServerMessage,
 } from '../stream-protocol.ts'
-import { Deque } from '@xfcodeai/dsh-deque'
-import { randomUUID } from '@xfcodeai/dsh-util-crypto'
+import { Deque } from '@x1a0f3n9/dsh-deque'
+import { randomUUID } from '@x1a0f3n9/dsh-util-crypto'
 
 const INTERNAL_BASE = 'http://dsh.internal'
 

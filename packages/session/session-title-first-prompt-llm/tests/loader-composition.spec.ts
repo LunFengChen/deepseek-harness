@@ -6,12 +6,12 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import LlmRuntime, { createUserMessage, LlmAdapter  } from '@xfcodeai/dsh-llm'
-import type { GenerateOptions, StreamChunk } from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import SessionTitleService from '@xfcodeai/dsh-session-title'
-import * as providerPlugin from '@xfcodeai/dsh-session-title-first-prompt-llm'
+import LlmRuntime, { createUserMessage, LlmAdapter  } from '@x1a0f3n9/dsh-llm'
+import type { GenerateOptions, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import SessionTitleService from '@x1a0f3n9/dsh-session-title'
+import * as providerPlugin from '@x1a0f3n9/dsh-session-title-first-prompt-llm'
 
 let root: string | undefined
 let context: Context | undefined
@@ -37,15 +37,15 @@ async function loadComposition(): Promise<Context> {
   root = await mkdtemp(join(tmpdir(), 'dsh-title-loader-'))
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [
-    "- name: '@xfcodeai/dsh-llm'",
-    "- name: '@xfcodeai/dsh-session'",
-    "- name: '@xfcodeai/dsh-session-projection'",
-    "- name: '@xfcodeai/dsh-session-title'",
+    "- name: '@x1a0f3n9/dsh-llm'",
+    "- name: '@x1a0f3n9/dsh-session'",
+    "- name: '@x1a0f3n9/dsh-session-projection'",
+    "- name: '@x1a0f3n9/dsh-session-title'",
     '  config:',
     '    fallbackMaxWords: 5',
     '    fallbackMaxBytes: 40',
     '    maxTitleBytes: 80',
-    "- name: '@xfcodeai/dsh-session-title-first-prompt-llm'",
+    "- name: '@x1a0f3n9/dsh-session-title-first-prompt-llm'",
     '  config:',
     '    targetWords: 5',
     '    targetCjkCharacters: 10',
@@ -62,11 +62,11 @@ async function loadComposition(): Promise<Context> {
   await context.plugin(Loader)
   context.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['@xfcodeai/dsh-llm', LlmRuntime],
-    ['@xfcodeai/dsh-session', SessionStore],
-    ['@xfcodeai/dsh-session-projection', SessionProjectionRegistry],
-    ['@xfcodeai/dsh-session-title', SessionTitleService],
-    ['@xfcodeai/dsh-session-title-first-prompt-llm', providerPlugin],
+    ['@x1a0f3n9/dsh-llm', LlmRuntime],
+    ['@x1a0f3n9/dsh-session', SessionStore],
+    ['@x1a0f3n9/dsh-session-projection', SessionProjectionRegistry],
+    ['@x1a0f3n9/dsh-session-title', SessionTitleService],
+    ['@x1a0f3n9/dsh-session-title-first-prompt-llm', providerPlugin],
   ])
   context.loader.internal = {
     version: 'v2',

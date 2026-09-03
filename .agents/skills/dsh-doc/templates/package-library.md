@@ -16,7 +16,7 @@ kind: "package-library"
 ## Skeleton
 
 ```markdown
-# @xfcodeai/dsh-<name>
+# @x1a0f3n9/dsh-<name>
 
 English | [中文](README.zh.md)
 

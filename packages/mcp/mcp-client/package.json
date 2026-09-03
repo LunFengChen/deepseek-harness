@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-mcp-client",
+  "name": "@x1a0f3n9/dsh-mcp-client",
   "description": "MCP client bridge: connects to MCP servers and registers their tools on ctx.tools",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -27,12 +27,12 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-scope": "workspace:^",
-    "@xfcodeai/dsh-subprocess": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -41,13 +41,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-attachment-local": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-scope": "workspace:^",
-    "@xfcodeai/dsh-subprocess": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-attachment-local": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@modelcontextprotocol/server-everything": "^2026.7.4",
     "@modelcontextprotocol/server-filesystem": "^2026.7.4",
     "@deepseek-ai/cordis": "workspace:^"

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { encodeMessage, MessageDecoder } from '@xfcodeai/dsh-lsp-stdio'
+import { encodeMessage, MessageDecoder } from '@x1a0f3n9/dsh-lsp-stdio'
 
 /** Frame a message the way a server would, for decoder round-trips. */
 function frame(body: string): Buffer {

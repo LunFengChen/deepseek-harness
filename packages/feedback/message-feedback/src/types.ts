@@ -2,12 +2,12 @@
  * Public request, value, and failure vocabulary for per-message feedback.
  * This module contains types only so generated Remote clients can consume it
  * without importing Host runtime code.
- * @module @xfcodeai/dsh-message-feedback/types
+ * @module @x1a0f3n9/dsh-message-feedback/types
  */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
-import type { MessageId } from '@xfcodeai/dsh-llm/brand'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 
 /** Opaque compare-and-set token for one exact feedback item revision. */
 export type MessageFeedbackVersion = Branded<'MessageFeedbackVersion'>

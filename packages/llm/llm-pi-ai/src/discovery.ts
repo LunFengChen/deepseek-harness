@@ -22,9 +22,9 @@
  * @module dsh-llm-pi-ai/discovery
  */
 
-import { INVALID_CREDENTIAL_CODE, LlmError, normalizeApiKey } from '@xfcodeai/dsh-llm'
-import type { LlmDiscoveredModel, LlmModelDiscoveryOperation } from '@xfcodeai/dsh-llm'
-import { attributionHeaders } from '@xfcodeai/dsh-llm'
+import { INVALID_CREDENTIAL_CODE, LlmError, normalizeApiKey } from '@x1a0f3n9/dsh-llm'
+import type { LlmDiscoveredModel, LlmModelDiscoveryOperation } from '@x1a0f3n9/dsh-llm'
+import { attributionHeaders } from '@x1a0f3n9/dsh-llm'
 import { catalogModels } from './catalog.ts'
 
 /**

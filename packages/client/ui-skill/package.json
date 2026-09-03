@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-skill",
+  "name": "@x1a0f3n9/dsh-client-ui-skill",
   "description": "Web skill references and the dedicated skill tool row",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,12 +28,12 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-api-session-controller",
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-renderer",
-        "@xfcodeai/dsh-client-ui-tool",
-        "@xfcodeai/dsh-client-ui-input-trigger",
-        "@xfcodeai/dsh-api-remotes"
+        "@x1a0f3n9/dsh-api-session-controller",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-renderer",
+        "@x1a0f3n9/dsh-client-ui-tool",
+        "@x1a0f3n9/dsh-client-ui-input-trigger",
+        "@x1a0f3n9/dsh-api-remotes"
       ],
       "platform": "web"
     }
@@ -47,17 +47,17 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-api-session-controller": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-client-ui-input-trigger": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
-    "@xfcodeai/dsh-client-ui-tool": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-input-trigger": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-tool": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",

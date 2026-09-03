@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-output-retention",
+  "name": "@x1a0f3n9/dsh-output-retention",
   "description": "Zero-dependency bounded-retention primitive: ItemRetainer/TextRetainer + neutral notice helpers (what did we keep, what did we omit)",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },

@@ -5,7 +5,7 @@
  */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
 import * as RendererInvariant from '../src/invariant.ts'
 import { SlotRegistry } from '../src/client/registry.ts'
 

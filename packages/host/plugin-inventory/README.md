@@ -3,7 +3,7 @@ description: "Read-only projection of the current Cordis Loader plugin state wit
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-host-plugin-inventory
+# @x1a0f3n9/dsh-host-plugin-inventory
 
 English | [中文](README.zh.md)
 

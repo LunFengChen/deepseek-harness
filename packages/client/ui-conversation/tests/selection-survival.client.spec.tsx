@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 /** Exercises Conversation persistence through the real SlotRegistry store axis. */
 import { beforeEach, describe, expect, it } from 'vitest'
-import { SlotTestRuntime } from '@xfcodeai/dsh-client-test-runtime'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { PropsRenderSlots } from '@xfcodeai/dsh-client-ui-slots'
+import { SlotTestRuntime } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import { createConversationStore } from '../src/client/stores.ts'
 
 const sid = (value: string): SessionId => value as SessionId

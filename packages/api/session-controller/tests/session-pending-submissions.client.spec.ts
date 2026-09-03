@@ -1,10 +1,10 @@
 /** Local submission echoes: synchronous insertion, observed/failed retirement, and settlement callbacks. */
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
-import { SessionSeq, type SessionEvent, type SessionId } from '@xfcodeai/dsh-session/types'
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import { SessionSeq, type SessionEvent, type SessionId } from '@x1a0f3n9/dsh-session/types'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
 import { Session } from '../src/client/sessions/session.ts'
 import type { PendingSubmissionRetirement } from '../src/client/contract/session.ts'
 import type { SessionQueuedItem, SessionRequestId } from '../src/types.ts'

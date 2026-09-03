@@ -14,6 +14,6 @@
 
 - insert:
     - id: cordis-host-runner
-      name: '@xfcodeai/dsh-cordis-host-runner'
+      name: '@x1a0f3n9/dsh-cordis-host-runner'
     - id: tool-cordis
-      name: '@xfcodeai/dsh-tool-cordis'
+      name: '@x1a0f3n9/dsh-tool-cordis'

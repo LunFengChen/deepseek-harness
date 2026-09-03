@@ -3,7 +3,7 @@ description: "Web 壳的 SPA dist 服务器：占据 webserver 回退席位，�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-host-frontend-static
+# @x1a0f3n9/dsh-host-frontend-static
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@xfcodeai/dsh-host-frontend-static'
+- name: '@x1a0f3n9/dsh-host-frontend-static'
   config:
     distIndex: /absolute/path/to/dist/index.html
 ```
@@ -81,7 +81,7 @@ kind: "package-reference"
 - [Webserver](../webserver/README.zh.md)——本插件占据的回退席位与它运行的 index 转换器。
 - [dsh-web-app 组合包](../../bundle/web-app/README.zh.md)——解析 `distIndex` 并挂载本插件的应用。
 - [HTTP 服务器子系统](../../../docs/subsystems/web-server.zh.md)——回退席位如何融入路由表。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-host-frontend-static)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-host-frontend-static)——每个受支持配置字段及其源声明。
 
 -----
 

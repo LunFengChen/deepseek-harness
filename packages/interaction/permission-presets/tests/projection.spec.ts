@@ -11,15 +11,15 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import type { Session } from '@xfcodeai/dsh-session'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import { createScope } from '@xfcodeai/dsh-scope'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import CommandRuntime from '@xfcodeai/dsh-commands'
-import PermissionPresetService from '@xfcodeai/dsh-permission-presets'
-import type { Config } from '@xfcodeai/dsh-permission-presets'
-import ApprovalService from '@xfcodeai/dsh-user-approval'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import type { Session } from '@x1a0f3n9/dsh-session'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { createScope } from '@x1a0f3n9/dsh-scope'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import CommandRuntime from '@x1a0f3n9/dsh-commands'
+import PermissionPresetService from '@x1a0f3n9/dsh-permission-presets'
+import type { Config } from '@x1a0f3n9/dsh-permission-presets'
+import ApprovalService from '@x1a0f3n9/dsh-user-approval'
 
 async function harness(options: { withPermission?: boolean; config?: Config } = {}): Promise<{ ctx: Context; session: Session }> {
   const ctx = new Context()

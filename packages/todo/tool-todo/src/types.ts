@@ -5,7 +5,7 @@
  * for host consumers, `./client/types` (the browser half-entry's re-export)
  * for client aggregates — with zero content duplication.
  *
- * @module @xfcodeai/dsh-tool-todo/types
+ * @module @x1a0f3n9/dsh-tool-todo/types
  */
 
 /**
@@ -25,14 +25,14 @@ export interface TodoItem {
   status: 'pending' | 'in_progress' | 'completed'
 }
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /** Whole-list snapshot; latest write wins on replay. Log-only UI state; never derived history. */
     'todo/write': { todos: TodoItem[] }
   }
 }
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     todos: TodoItem[] | null
   }

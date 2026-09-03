@@ -60,7 +60,7 @@ Top-level `client/` and `host/` import `shared/` but never each other or `worker
 
 `worker/realms/` and `worker/inspection/` import shared interfaces but do not import `worker/cdp/`; normalized backend results and stored observations cannot contain Chrome connection state. `worker/cdp/` may consume realm and inspection interfaces to project CDP. `worker/bridge/` routes shared messages and invokes Worker services without becoming an owner of Cordis, network, Runtime, or Chrome state.
 
-The package remains one `@xfcodeai/dsh-experimental-inspector` package with explicit Client and Host compiler faces. Directory separation is an execution and dependency rule, not a package split.
+The package remains one `@x1a0f3n9/dsh-experimental-inspector` package with explicit Client and Host compiler faces. Directory separation is an execution and dependency rule, not a package split.
 
 ## Verification
 

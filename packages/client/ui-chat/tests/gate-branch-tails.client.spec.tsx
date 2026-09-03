@@ -2,20 +2,20 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
-import { bindSnapshotSelector, makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
+import { bindSnapshotSelector, makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type {
   SessionListState, SessionSnapshot,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { WorkspaceSnapshot } from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { SessionProviderComponent } from '@xfcodeai/dsh-client-ui-slots'
-import type { SessionPendingInteractionSnapshot } from '@xfcodeai/dsh-client-ui-session/client'
-import { EMPTY_CONVERSATION_SNAPSHOT } from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SessionProviderComponent } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { SessionPendingInteractionSnapshot } from '@x1a0f3n9/dsh-client-ui-session/client'
+import { EMPTY_CONVERSATION_SNAPSHOT } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   DetailsSlotProps, DetailsToolOwnerProps, RunningToolCall, SelectionTarget,
-} from '@xfcodeai/dsh-client-ui-chat/client'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import { createChatStore } from '../src/client/stores.ts'
 import { AssistantMarkdown, type AssistantMarkdownProps } from '../src/client/chat/AssistantMarkdown.tsx'
 import { StatsLine } from '../src/client/chat/StatsLine.tsx'

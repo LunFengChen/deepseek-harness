@@ -4,9 +4,9 @@ import {
   RemoteStream,
   RemoteStreamCarrierError,
   type RemoteStreamOptions,
-} from '@xfcodeai/dsh-api-gateway/client'
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
-import type { RemoteResult } from '@xfcodeai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-api-gateway/client'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import type { RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import {
   createSessionControlStream,
   SessionEventStream,

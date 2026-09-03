@@ -10,16 +10,16 @@ import {
 
 const experimental: WorkspaceManifest = {
   dir: 'packages/experimental/prototype',
-  manifest: { name: '@xfcodeai/dsh-experimental-prototype', private: true },
+  manifest: { name: '@x1a0f3n9/dsh-experimental-prototype', private: true },
 }
 
 describe('experimental workspace constraints', () => {
   it('requires the experimental package-name prefix', () => {
     expect(checkExperimentalManifest({
       ...experimental,
-      manifest: { ...experimental.manifest, name: '@xfcodeai/dsh-prototype' },
+      manifest: { ...experimental.manifest, name: '@x1a0f3n9/dsh-prototype' },
     })).toEqual([
-      '@xfcodeai/dsh-prototype: experimental package name must start with "@xfcodeai/dsh-experimental-"',
+      '@x1a0f3n9/dsh-prototype: experimental package name must start with "@x1a0f3n9/dsh-experimental-"',
     ])
   })
 
@@ -29,8 +29,8 @@ describe('experimental workspace constraints', () => {
       ...experimental,
       manifest: { ...experimental.manifest, private: false, publishConfig: { access: 'public' } },
     })).toEqual([
-      '@xfcodeai/dsh-experimental-prototype: experimental package must set "private": true',
-      '@xfcodeai/dsh-experimental-prototype: experimental package must omit publishConfig',
+      '@x1a0f3n9/dsh-experimental-prototype: experimental package must set "private": true',
+      '@x1a0f3n9/dsh-experimental-prototype: experimental package must omit publishConfig',
     ])
   })
 
@@ -40,11 +40,11 @@ describe('experimental workspace constraints', () => {
       expect(checkExperimentalDependencyIsolation([experimental, {
         dir: 'packages/core/consumer',
         manifest: {
-          name: '@xfcodeai/dsh-consumer',
-          [section]: { '@xfcodeai/dsh-experimental-prototype': 'workspace:^' },
+          name: '@x1a0f3n9/dsh-consumer',
+          [section]: { '@x1a0f3n9/dsh-experimental-prototype': 'workspace:^' },
         },
       }])).toEqual([
-        `@xfcodeai/dsh-consumer: ${section}.@xfcodeai/dsh-experimental-prototype must not reference an experimental package`,
+        `@x1a0f3n9/dsh-consumer: ${section}.@x1a0f3n9/dsh-experimental-prototype must not reference an experimental package`,
       ])
     },
   )
@@ -53,25 +53,25 @@ describe('experimental workspace constraints', () => {
     const manifests: WorkspaceManifest[] = [experimental, {
       dir: 'packages/core/test-only',
       manifest: {
-        name: '@xfcodeai/dsh-test-only',
-        devDependencies: { '@xfcodeai/dsh-experimental-prototype': 'workspace:^' },
+        name: '@x1a0f3n9/dsh-test-only',
+        devDependencies: { '@x1a0f3n9/dsh-experimental-prototype': 'workspace:^' },
       },
     }, {
       dir: 'packages/experimental/consumer',
       manifest: {
-        name: '@xfcodeai/dsh-experimental-consumer',
-        dependencies: { '@xfcodeai/dsh-experimental-prototype': 'workspace:^' },
+        name: '@x1a0f3n9/dsh-experimental-consumer',
+        dependencies: { '@x1a0f3n9/dsh-experimental-prototype': 'workspace:^' },
       },
     }, {
       dir: 'python/sdk-runtime',
       manifest: {
-        name: '@xfcodeai/dsh-python-runtime',
-        dependencies: { '@xfcodeai/dsh-experimental-prototype': 'workspace:^' },
+        name: '@x1a0f3n9/dsh-python-runtime',
+        dependencies: { '@x1a0f3n9/dsh-experimental-prototype': 'workspace:^' },
       },
     }]
 
     expect(checkExperimentalDependencyIsolation(manifests)).toEqual([
-      '@xfcodeai/dsh-python-runtime: dependencies.@xfcodeai/dsh-experimental-prototype must not reference an experimental package',
+      '@x1a0f3n9/dsh-python-runtime: dependencies.@x1a0f3n9/dsh-experimental-prototype must not reference an experimental package',
     ])
   })
 })
@@ -79,7 +79,7 @@ describe('experimental workspace constraints', () => {
 describe('package payload constraints', () => {
   it('includes a declared profile patch without a package-name allowlist', () => {
     expect(expectedDshPackageFiles({
-      name: '@xfcodeai/dsh-private-profile',
+      name: '@x1a0f3n9/dsh-private-profile',
       dsh: { bundle: { patch: './cordis.patch.yml' } },
     })).toEqual([
       'lib/index.js',

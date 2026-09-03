@@ -2,9 +2,9 @@
 # The scenario workspace supplies the deterministic stdio server used by this test composition.
 - insert:
     - id: lsp
-      name: '@xfcodeai/dsh-lsp'
+      name: '@x1a0f3n9/dsh-lsp'
     - id: lsp-stdio
-      name: '@xfcodeai/dsh-lsp-stdio'
+      name: '@x1a0f3n9/dsh-lsp-stdio'
       config:
         servers:
           fixture:
@@ -13,9 +13,9 @@
             extensionToLanguage:
               '.ts': typescript
     - id: tool-lsp
-      name: '@xfcodeai/dsh-tool-lsp'
+      name: '@x1a0f3n9/dsh-tool-lsp'
       config:
         maxLocations: 1
 
 - id: timeout-policy
-  name: '@xfcodeai/dsh-tool-call-timeout-policy'
+  name: '@x1a0f3n9/dsh-tool-call-timeout-policy'

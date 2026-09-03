@@ -3,13 +3,13 @@ description: "叠加在 dsh-base 上的私有 Agent Teams profile 层，供源�
 kind: "package-bundle"
 ---
 
-# @xfcodeai/dsh-experimental-agent-team-profile
+# @x1a0f3n9/dsh-experimental-agent-team-profile
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-experimental-agent-team-profile` 是在 `@xfcodeai/dsh-base` 之上启用 [Agent Teams](../agent-team/README.zh.md) 的私有 profile 层。它的 patch 会插入 Team domain 与 Team-scoped 工具、禁用名称重叠的全局 continuable-child control，并保留普通的一次性 fresh 与 fork delegation 工具。必须将本包显式添加到已初始化的源码 checkout profile；正式发布会排除本包。
+`dsh-experimental-agent-team-profile` 是在 `@x1a0f3n9/dsh-base` 之上启用 [Agent Teams](../agent-team/README.zh.md) 的私有 profile 层。它的 patch 会插入 Team domain 与 Team-scoped 工具、禁用名称重叠的全局 continuable-child control，并保留普通的一次性 fresh 与 fork delegation 工具。必须将本包显式添加到已初始化的源码 checkout profile；正式发布会排除本包。
 
 ## 目录
 
@@ -34,7 +34,7 @@ pnpm dsh plugin --profile headless add ./packages/experimental/agent-team-profil
 pnpm dsh --profile headless "Use Agent Teams to split this task between two teammates, wait, and summarize."
 ```
 
-profile 必须已经包含 `@xfcodeai/dsh-base`，本层会使用其中的 Subagent service 与 provider 配置行。执行 `dsh plugin --profile <name> remove @xfcodeai/dsh-experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
+profile 必须已经包含 `@x1a0f3n9/dsh-base`，本层会使用其中的 Subagent service 与 provider 配置行。执行 `dsh plugin --profile <name> remove @x1a0f3n9/dsh-experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
 
 ### 获得的功能
 
@@ -77,7 +77,7 @@ profile 必须已经包含 `@xfcodeai/dsh-base`，本层会使用其中的 Subag
 
 #### 模型会看到什么
 
-Team 策略与 schema 由 [`@xfcodeai/dsh-experimental-tool-agent-team`](../tool-agent-team/README.zh.md) 所有。本 bundle 只改变 composition：Team-scoped `list_agents`、`send_message` 与 `interrupt_agent` 会替代已禁用的全局 continuable-child control。`subagent` 与 `subagent_fork` 仍作为一次性 delegation 工具可用，其子 agent 不会获得 continuable-child `report` 工具。
+Team 策略与 schema 由 [`@x1a0f3n9/dsh-experimental-tool-agent-team`](../tool-agent-team/README.zh.md) 所有。本 bundle 只改变 composition：Team-scoped `list_agents`、`send_message` 与 `interrupt_agent` 会替代已禁用的全局 continuable-child control。`subagent` 与 `subagent_fork` 仍作为一次性 delegation 工具可用，其子 agent 不会获得 continuable-child `report` 工具。
 
 #### Token 影响
 

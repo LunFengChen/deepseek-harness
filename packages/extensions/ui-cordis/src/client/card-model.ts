@@ -1,6 +1,6 @@
 /** Replay-stable view models for Cordis lifecycle Tool calls. */
 
-import type { ToolCallViewProps } from '@xfcodeai/dsh-client-ui-tool/client'
+import type { ToolCallViewProps } from '@x1a0f3n9/dsh-client-ui-tool/client'
 import type {
   CordisDynamicPackageId, CordisDynamicPluginId, CordisDynamicPluginRunId, CordisDynamicRunMode,
 } from './events.ts'

@@ -3,7 +3,7 @@ description: "The SQLite FTS5 full-text search backend for session history, for 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-query-sqlite
+# @x1a0f3n9/dsh-session-query-sqlite
 
 English | [中文](README.zh.md)
 
@@ -34,8 +34,8 @@ Choose it when you want full-text recall over prior sessions with ranking and pa
 ### Minimal configuration
 
 ```yaml
-- name: '@xfcodeai/dsh-session'
-- name: '@xfcodeai/dsh-session-query-sqlite'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-query-sqlite'
   config:
     path: /absolute/path/to/session-search.db
 ```
@@ -51,7 +51,7 @@ Choose it when you want full-text recall over prior sessions with ranking and pa
 | `readWindowMax` | `50` | Maximum `before`/`after` raw events for the inherited `readEvent()` |
 | `persistedInspectConcurrency` | `4` | Concurrent persisted-log inspections for inherited batch reads |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-session-query-sqlite) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-session-query-sqlite) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Search behavior
 

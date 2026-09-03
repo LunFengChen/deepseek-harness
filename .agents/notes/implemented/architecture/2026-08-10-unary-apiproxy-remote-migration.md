@@ -12,7 +12,7 @@ Agent-bound calls require particular care. Shared lookup policy reuses live Agen
 
 ## Decision
 
-Simple unary operations live on their natural business Remote owner. The business package owns the Remote signature and Host adaptation; `@xfcodeai/dsh-api-remotes/client` selects its generated contribution; the Client package owns presentation joins. Connection owns the transport envelope and exact Fetch route registry, and no API Proxy service remains.
+Simple unary operations live on their natural business Remote owner. The business package owns the Remote signature and Host adaptation; `@x1a0f3n9/dsh-api-remotes/client` selects its generated contribution; the Client package owns presentation joins. Connection owns the transport envelope and exact Fetch route registry, and no API Proxy service remains.
 
 | Former API Proxy operation | Destination | Owner and preserved behavior |
 |---|---|---|
@@ -36,7 +36,7 @@ Simple unary operations live on their natural business Remote owner. The busines
 
 The shared Agent and Session resolver remains the authority for endpoints that accept those objects. It provides the same live reuse, cold restoration, concurrent deduplication, preset setup, persistence failures, and subagent ownership fence that legacy API Proxy calls used. The resolver raises a `RemoteError` carrying its own code — `session/not-found` or `session/agent-busy` — and the Gateway encodes that code, message, and details onto the wire unchanged, so a lookup refusal stays distinguishable from `gateway/internal` ([failure vocabulary](2026-08-28-ctx-remote-failure-vocabulary.md)).
 
-The native path implementation lives in `@xfcodeai/dsh-native-command`. Settings controllers select Host-owned targets, while Session-aware Clients resolve workspace paths before calling `SessionController`; the utility only performs platform detection, WSL translation, browser preference, text-editor intent, and shell-free command execution.
+The native path implementation lives in `@x1a0f3n9/dsh-native-command`. Settings controllers select Host-owned targets, while Session-aware Clients resolve workspace paths before calling `SessionController`; the utility only performs platform detection, WSL translation, browser preference, text-editor intent, and shell-free command execution.
 
 ## Browser authentication
 

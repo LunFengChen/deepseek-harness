@@ -1,7 +1,7 @@
 /**
  * Canonical directory-boundary checks for the Windows ACL workspace and
  * private-temp capabilities.
- * @module @xfcodeai/dsh-sandbox-windows-acl/path-boundary
+ * @module @x1a0f3n9/dsh-sandbox-windows-acl/path-boundary
  */
 
 import { realpathSync } from 'node:fs'

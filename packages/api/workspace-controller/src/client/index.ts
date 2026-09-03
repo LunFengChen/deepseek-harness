@@ -5,7 +5,7 @@ import {
   RemoteSnapshotStream,
   RemoteStreamCarrierError,
   type ClientRemote,
-} from '@xfcodeai/dsh-api-gateway/client'
+} from '@x1a0f3n9/dsh-api-gateway/client'
 import type { WorkspaceFollowFrame, WorkspaceFollowIncrement } from '../types.ts'
 import type { WorkspaceFollowSink } from './model.ts'
 import { ClientWorkspaceModel } from './model.ts'

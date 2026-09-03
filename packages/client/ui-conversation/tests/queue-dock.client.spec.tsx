@@ -8,15 +8,15 @@ import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react
 import { useSyncExternalStore } from 'react'
 import type {
   QueuedMessage, SessionListState, SessionSnapshot,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { SnapshotSelectorHook } from '@xfcodeai/dsh-client-ui-slots'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SnapshotSelectorHook } from '@x1a0f3n9/dsh-client-ui-slots'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import {
   bindSnapshotSelector, conversationSnapshot, makeTranslate,
-} from '@xfcodeai/dsh-client-test-runtime'
-import type { SessionPendingInteractionSnapshot } from '@xfcodeai/dsh-client-ui-session/client'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+} from '@x1a0f3n9/dsh-client-test-runtime'
+import type { SessionPendingInteractionSnapshot } from '@x1a0f3n9/dsh-client-ui-session/client'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import type { QueueItemId } from '../src/client/contract/queue.ts'
 import type { InputState } from '../src/client/contract/input.ts'
 import { zh } from '../src/client/locales.ts'

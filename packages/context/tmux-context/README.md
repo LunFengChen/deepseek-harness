@@ -3,7 +3,7 @@ description: "Opt-in per-turn tmux location context for users and maintainers en
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tmux-context
+# @x1a0f3n9/dsh-tmux-context
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ On each turn whose tmux state changed, the model receives one source-tagged cont
 The minimal mount needs no configuration. A positive `refreshIntervalMs` additionally suppresses injections that fall within that many milliseconds of the latest one; omission or `0` injects whenever the tmux state changed since the last injection.
 
 ```yaml
-- name: '@xfcodeai/dsh-tmux-context'
+- name: '@x1a0f3n9/dsh-tmux-context'
   config:
     refreshIntervalMs: 60000
 ```
@@ -45,7 +45,7 @@ The minimal mount needs no configuration. A positive `refreshIntervalMs` additio
 |---|---|---|
 | `refreshIntervalMs` | `0` (every changed turn) | Minimum milliseconds between durable injections in one session |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-tmux-context) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-tmux-context) is the exhaustive source for every accepted field and its JSDoc.
 
 ### When the location is known
 
@@ -88,7 +88,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Tmux location context decision record](../../../.agents/notes/implemented/feature/2026-07-27-tmux-location-context.md) — design rationale for the tty-based detection and reading shape.
 - [Shell subsystem](../../../docs/subsystems/shell.md) — the executor service the read-only query runs through.
 - [Context group map](../README.md) — sibling request-context packages.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-tmux-context) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-tmux-context) — every accepted config field and its source declaration.
 
 -----
 

@@ -3,7 +3,7 @@ description: "Web skill references and the dedicated skill tool row for the dsh 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-skill
+# @x1a0f3n9/dsh-client-ui-skill
 
 English | [中文](README.zh.md)
 

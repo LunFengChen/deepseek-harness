@@ -2,23 +2,23 @@
  * Cross-session snapshot preparation. Hosts adapt mentions into structured
  * references; this service owns exact reads, projection, budgets, and durable context.
  *
- * @module @xfcodeai/dsh-session-reference
+ * @module @x1a0f3n9/dsh-session-reference
  */
 
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { Agent, PreStepDecision } from '@xfcodeai/dsh-agent'
-import { Remote, TypertRemoteService } from '@xfcodeai/dsh-typert-protocol'
-import { createUserMessage, freezeMessage } from '@xfcodeai/dsh-llm'
-import type { ContentBlock, UserMessage } from '@xfcodeai/dsh-llm'
-import { SessionLogOffset } from '@xfcodeai/dsh-session'
-import type { SessionId } from '@xfcodeai/dsh-session'
+import type { Agent, PreStepDecision } from '@x1a0f3n9/dsh-agent'
+import { Remote, TypertRemoteService } from '@x1a0f3n9/dsh-typert-protocol'
+import { createUserMessage, freezeMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, UserMessage } from '@x1a0f3n9/dsh-llm'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
 // Type-only: the `title` projection key plus the live registry and durable
 // cache Context merges — the two projection faces discovery labels from.
-import type { ProjectionSnapshot } from '@xfcodeai/dsh-session-projection'
-import type {} from '@xfcodeai/dsh-session-projection-cache'
-import type {} from '@xfcodeai/dsh-session-title'
-import type { SessionRecord, SessionSurfaceSnapshot } from '@xfcodeai/dsh-session-query'
+import type { ProjectionSnapshot } from '@x1a0f3n9/dsh-session-projection'
+import type {} from '@x1a0f3n9/dsh-session-projection-cache'
+import type {} from '@x1a0f3n9/dsh-session-title'
+import type { SessionRecord, SessionSurfaceSnapshot } from '@x1a0f3n9/dsh-session-query'
 import {
   DEFAULT_CANDIDATE_LIMIT,
   DEFAULT_MAX_REFERENCE_BYTES,

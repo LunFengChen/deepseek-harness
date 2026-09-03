@@ -4,11 +4,11 @@ import { fileURLToPath } from 'node:url'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import type { AgentHandle } from '@xfcodeai/dsh-agent'
-import { ToolCallId, createUserMessage } from '@xfcodeai/dsh-llm'
-import { SessionId } from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-agent-presets'
-import type {} from '@xfcodeai/dsh-system-prompt'
+import type { AgentHandle } from '@x1a0f3n9/dsh-agent'
+import { ToolCallId, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import { SessionId } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-agent-presets'
+import type {} from '@x1a0f3n9/dsh-system-prompt'
 import {
   assertFixtureInventory,
   captureStableAria,
@@ -74,7 +74,7 @@ describe('minimal agent preset', () => {
     if (requestHeader === undefined) throw new Error('the minimal agent issued no model request')
     expect(agentHandle.agent.session.snapshotEvents().some(event => event.type === 'user/message'
       && event.data.source.kind === 'plugin'
-      && event.data.source.plugin === '@xfcodeai/dsh-system-prompt')).toBe(false)
+      && event.data.source.plugin === '@x1a0f3n9/dsh-system-prompt')).toBe(false)
     const presetFileSystem = scaffold.ctx.agentPresets.serviceFor(agentHandle.agent, 'fs')
     expect(presetFileSystem).toBeDefined()
     expect(presetFileSystem?.sandboxMode).toBeUndefined()

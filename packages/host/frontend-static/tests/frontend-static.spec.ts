@@ -14,9 +14,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import * as Connection from '@xfcodeai/dsh-client-connection'
-import LocalCredentials from '@xfcodeai/dsh-credentials-local'
-import HttpServer from '@xfcodeai/dsh-host-webserver'
+import * as Connection from '@x1a0f3n9/dsh-client-connection'
+import LocalCredentials from '@x1a0f3n9/dsh-credentials-local'
+import HttpServer from '@x1a0f3n9/dsh-host-webserver'
 import * as FrontendStatic from '../src/index.ts'
 
 let root: string | undefined
@@ -42,17 +42,17 @@ async function loadComposition(): Promise<Context> {
   await mkdir(join(dist, 'empty'))
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [
-    "- name: '@xfcodeai/dsh-credentials-local'",
+    "- name: '@x1a0f3n9/dsh-credentials-local'",
     '  config:',
     `    path: '${join(root, '.credentials.yaml')}'`,
     '    watch: false',
-    "- name: '@xfcodeai/dsh-host-webserver'",
+    "- name: '@x1a0f3n9/dsh-host-webserver'",
     '  config:',
     "    host: '127.0.0.1'",
     '    port: 0',
-    "- name: '@xfcodeai/dsh-client-connection'",
+    "- name: '@x1a0f3n9/dsh-client-connection'",
     '- id: frontend',
-    "  name: '@xfcodeai/dsh-host-frontend-static'",
+    "  name: '@x1a0f3n9/dsh-host-frontend-static'",
     '  config:',
     `    distIndex: '${distIndex}'`,
     '',
@@ -63,10 +63,10 @@ async function loadComposition(): Promise<Context> {
   await context.plugin(Loader)
   context.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['@xfcodeai/dsh-credentials-local', LocalCredentials],
-    ['@xfcodeai/dsh-host-webserver', HttpServer],
-    ['@xfcodeai/dsh-client-connection', Connection],
-    ['@xfcodeai/dsh-host-frontend-static', FrontendStatic],
+    ['@x1a0f3n9/dsh-credentials-local', LocalCredentials],
+    ['@x1a0f3n9/dsh-host-webserver', HttpServer],
+    ['@x1a0f3n9/dsh-client-connection', Connection],
+    ['@x1a0f3n9/dsh-host-frontend-static', FrontendStatic],
   ])
   context.loader.internal = {
     version: 'v2',

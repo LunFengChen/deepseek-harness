@@ -2,7 +2,7 @@
 description: "Browser approval UI that answers Host permission requests through the scoped interaction path."
 kind: "package-reference"
 ---
-# @xfcodeai/dsh-client-ui-approval
+# @x1a0f3n9/dsh-client-ui-approval
 
 English | [中文](README.zh.md)
 

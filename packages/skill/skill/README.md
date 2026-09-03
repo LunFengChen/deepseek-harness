@@ -3,7 +3,7 @@ description: "The skill provider registry for users and maintainers choosing, co
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-skill
+# @x1a0f3n9/dsh-skill
 
 English | [中文](README.zh.md)
 
@@ -36,14 +36,14 @@ Use `dsh-skill` when agents should load skills from more than one source through
 Load the plugin like any Cordis plugin. The only configuration limits how many completed provider catalogs are kept in memory; everything else is provider behavior.
 
 ```yaml
-- name: '@xfcodeai/dsh-skill'
+- name: '@x1a0f3n9/dsh-skill'
 ```
 
 | Field | Default | Meaning |
 |---|---|---|
 | `collectCacheMaxEntries` | `128` | Completed cwd/provider catalogs kept in memory |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-skill) is the exhaustive source for every accepted field.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-skill) is the exhaustive source for every accepted field.
 
 ### What the registry gives you
 
@@ -112,7 +112,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Skill subsystem reference](../../../docs/subsystems/skills.md) — the registry, provider contract, and local discovery priority.
 - [skill-filesystem package](../skill-filesystem/README.md) — the shipped local provider that discovers skills from disk.
 - [tool-skill package](../tool-skill/README.md) — the consumer that renders the session catalog and the `skill` tool.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-skill) — every config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-skill) — every config field and its source declaration.
 - [Skill invocation policy Agent Note](../../../.agents/notes/implemented/feature/2026-07-28-skill-invocation-policy.md) — the rationale for the model and user invocation controls.
 
 -----

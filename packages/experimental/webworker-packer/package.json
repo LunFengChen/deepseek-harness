@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-experimental-webworker-packer",
+  "name": "@x1a0f3n9/dsh-experimental-webworker-packer",
   "description": "Build-time packer for the browser runtime's base VFS image and ordered data-overlay archives",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "private": true,
   "repository": {
     "type": "git",
@@ -32,8 +32,8 @@
   "license": "MIT",
   "dependencies": {
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
-    "@xfcodeai/dsh-experimental-webworker-runtime": "workspace:^",
-    "@xfcodeai/dsh-home-paths": "workspace:^",
+    "@x1a0f3n9/dsh-experimental-webworker-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-home-paths": "workspace:^",
     "js-yaml": "^4.2.0",
     "picomatch": "^4.0.4"
   },

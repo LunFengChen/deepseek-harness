@@ -1,11 +1,11 @@
 /**
  * Incremental projection of durable agent inbox events.
  *
- * @module @xfcodeai/dsh-agent/inbox
+ * @module @x1a0f3n9/dsh-agent/inbox
  */
 
-import type { MessageId } from '@xfcodeai/dsh-llm'
-import type { Session, SessionEventMap, UserMessage } from '@xfcodeai/dsh-session'
+import type { MessageId } from '@x1a0f3n9/dsh-llm'
+import type { Session, SessionEventMap, UserMessage } from '@x1a0f3n9/dsh-session'
 import type { InboxTarget } from './types.ts'
 
 /** Mutable state privately owned by an {@link Inbox}. */

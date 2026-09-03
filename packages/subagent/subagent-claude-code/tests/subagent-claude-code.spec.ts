@@ -22,17 +22,17 @@ import {
   type Mock,
   vi,
 } from 'vitest'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
-import SubagentRuntime from '@xfcodeai/dsh-subagent'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import type {
   SubprocessHandle,
   SubprocessOutcome,
   SubprocessSpawnSpec,
-} from '@xfcodeai/dsh-subprocess'
-import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
-import { MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
+} from '@x1a0f3n9/dsh-subprocess'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
 import * as claudeCode from '../src/index.ts'
 import {
   claudeSpawnSpec,
@@ -358,7 +358,7 @@ describe('task admission and package contracts', () => {
       '^1.29.0',
     )
     expect(manifest.dependencies).toHaveProperty('zod', '^4.4.3')
-    expect(manifest.dependencies).not.toHaveProperty('@xfcodeai/dsh-subagent-codex')
+    expect(manifest.dependencies).not.toHaveProperty('@x1a0f3n9/dsh-subagent-codex')
 
     const sdkRoot = dirname(fileURLToPath(
       import.meta.resolve('@anthropic-ai/claude-agent-sdk'),
@@ -395,7 +395,7 @@ describe('task admission and package contracts', () => {
       : []
     expect(rows).toEqual([{
       id: 'subagent-claude-code',
-      name: '@xfcodeai/dsh-subagent-claude-code',
+      name: '@x1a0f3n9/dsh-subagent-claude-code',
     }])
     expect(JSON.stringify(rows)).not.toContain('tool-subagent')
   })

@@ -1,6 +1,6 @@
 /**
  * Pure request-projection geometry shared by attachment providers and
- * provider-side request pricing. @module @xfcodeai/dsh-attachment/request-projection
+ * provider-side request pricing. @module @x1a0f3n9/dsh-attachment/request-projection
  */
 
 /**

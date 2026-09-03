@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-session-reference",
+  "name": "@x1a0f3n9/dsh-session-reference",
   "description": "Cross-session snapshot references and durable untrusted model context (ctx.sessionReferenceResolver)",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -44,40 +44,40 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-compaction": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-output-retention": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
-    "@xfcodeai/dsh-session-query": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-compaction": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-output-retention": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-session-projection-cache": {
+    "@x1a0f3n9/dsh-session-projection-cache": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-compaction": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-output-retention": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
-    "@xfcodeai/dsh-session-query": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-compaction": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-output-retention": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
   }
 }

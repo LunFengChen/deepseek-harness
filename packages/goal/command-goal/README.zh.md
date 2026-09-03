@@ -3,7 +3,7 @@ description: "面向在 UI 命令平面中选择、组合或排查 goal 控制�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-command-goal
+# @x1a0f3n9/dsh-command-goal
 
 [English](README.md) | 中文
 
@@ -54,11 +54,11 @@ kind: "package-reference"
 
 ```yaml
 - id: commands
-  name: '@xfcodeai/dsh-commands'
+  name: '@x1a0f3n9/dsh-commands'
 - id: goal
-  name: '@xfcodeai/dsh-goal'
+  name: '@x1a0f3n9/dsh-goal'
 - id: command-goal
-  name: '@xfcodeai/dsh-command-goal'
+  name: '@x1a0f3n9/dsh-command-goal'
 ```
 
 随附的 `dsh` 基础配置启用持久 goal 栈与此命令。Web bundle 把 goal 服务与 driver 保留在 Host，禁用基础命令 producer，并在 `standard`、`code` 和 `cordis` agent preset 中挂载 producer；`minimal` 会省略它。ACP（Agent Client Protocol）自动化应用启用领域与模型工具，但不挂载命令适配器。独立的 `sdk-minimal` profile 省略完整 goal 栈，因此其结果 API 仍在一个关联的物理轮次后结束。

@@ -5,7 +5,7 @@
  *
  * Usage: dsh-pack-vfs-image --out <file> [--profile web] [--root /dsh]
  *        node --import tsx/esm src/bin.ts --out ../../apps/web/dist/preview/vfs-image.tar.gz
- * @module @xfcodeai/dsh-experimental-webworker-packer/src/bin
+ * @module @x1a0f3n9/dsh-experimental-webworker-packer/src/bin
  */
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import {
   PREVIEW_FIXTURE_MANIFEST_FILE, PREVIEW_FIXTURE_MANIFEST_VERSION,
   type PreviewFixtureManifest,
-} from '@xfcodeai/dsh-experimental-webworker-runtime'
+} from '@x1a0f3n9/dsh-experimental-webworker-runtime'
 import { packVfsImage, packVfsOverlay } from './pack.ts'
 import {
   composeProfile, configTrees, describePack, indexWorkspacePackages, previewFixtures,

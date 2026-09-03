@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-win32-process",
+  "name": "@x1a0f3n9/dsh-win32-process",
   "description": "Low-level Win32 process, stdio, and Job Object primitives for the DeepSeek Harness Windows sandbox",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },

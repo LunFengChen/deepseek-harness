@@ -1,9 +1,9 @@
 /** Client-side Workspace state model shared by Remote transport and UI projection. */
 
-import { notifySubscribers } from '@xfcodeai/dsh-client-store'
-import type {} from '@xfcodeai/dsh-api-workspace-controller/remote'
-import { isRemoteFailure } from '@xfcodeai/dsh-api-gateway/client'
-import type { RemoteFailure, RemoteResult, TypertClientRemote } from '@xfcodeai/dsh-typert-protocol'
+import { notifySubscribers } from '@x1a0f3n9/dsh-client-store'
+import type {} from '@x1a0f3n9/dsh-api-workspace-controller/remote'
+import { isRemoteFailure } from '@x1a0f3n9/dsh-api-gateway/client'
+import type { RemoteFailure, RemoteResult, TypertClientRemote } from '@x1a0f3n9/dsh-typert-protocol'
 import type {
   WorkspaceArchiveSessionRequest,
   WorkspaceArchiveValue,

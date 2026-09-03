@@ -3,7 +3,7 @@ description: "Settings shell, ownerless copy, and durable product-onboarding nam
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-settings-general
+# @x1a0f3n9/dsh-client-ui-settings-general
 
 English | [中文](README.zh.md)
 

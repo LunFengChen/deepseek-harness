@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { OnboardingSurface } from '@xfcodeai/dsh-client-ui-primitives'
+import { OnboardingSurface } from '@x1a0f3n9/dsh-client-ui-primitives'
 
 let appRoot: HTMLDivElement
 

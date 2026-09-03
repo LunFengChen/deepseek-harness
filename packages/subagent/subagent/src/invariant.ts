@@ -1,10 +1,10 @@
-/** Package-owned subagent registry and lifecycle invariants. @module @xfcodeai/dsh-subagent/invariant */
+/** Package-owned subagent registry and lifecycle invariants. @module @x1a0f3n9/dsh-subagent/invariant */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { InvariantFailure, InvariantInstaller } from '@xfcodeai/dsh-invariants'
+import type { InvariantFailure, InvariantInstaller } from '@x1a0f3n9/dsh-invariants'
 import type { SubagentProvider, SubagentRunEndInfo, SubagentRunInfo } from './types.ts'
 
-const PACKAGE_NAME = '@xfcodeai/dsh-subagent'
+const PACKAGE_NAME = '@x1a0f3n9/dsh-subagent'
 
 /** Cordis companion plugin name. */
 export const name = 'subagent-invariant'

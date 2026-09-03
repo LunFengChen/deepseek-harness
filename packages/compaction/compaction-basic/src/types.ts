@@ -1,10 +1,10 @@
 /**
  * Configuration vocabulary for the replay-aware basic compaction backend.
  *
- * @module @xfcodeai/dsh-compaction-basic/types
+ * @module @x1a0f3n9/dsh-compaction-basic/types
  */
 
-import type { LlmCallConfig } from '@xfcodeai/dsh-llm'
+import type { LlmCallConfig } from '@x1a0f3n9/dsh-llm'
 
 /** Policy fields shared by the default policy and exact model overrides. */
 export interface CompactionPolicyConfig {

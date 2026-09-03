@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-layout",
+  "name": "@x1a0f3n9/dsh-client-ui-layout",
   "description": "Shell plugin: three-column AppFrame with drag handles, ctx.layout viewing-state service (navigation + panels)",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,10 +28,10 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-renderer",
-        "@xfcodeai/dsh-client-ui-session",
-        "@xfcodeai/dsh-client-ui-theme"
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-renderer",
+        "@x1a0f3n9/dsh-client-ui-session",
+        "@x1a0f3n9/dsh-client-ui-theme"
       ],
       "platform": "web"
     }
@@ -45,12 +45,12 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-session": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
-    "@xfcodeai/dsh-client-ui-theme": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-theme": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0"

@@ -3,11 +3,11 @@
  * record of the child's declared composition before its first request, so a
  * later cold resume can reconstruct it from its own log.
  *
- * @module @xfcodeai/dsh-subagent/descriptor-seed
+ * @module @x1a0f3n9/dsh-subagent/descriptor-seed
  */
 
-import { Session } from '@xfcodeai/dsh-session'
-import type { SessionEvent, SessionId } from '@xfcodeai/dsh-session'
+import { Session } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionId } from '@x1a0f3n9/dsh-session'
 import type { SubagentDescriptorData } from './descriptor.ts'
 
 /**

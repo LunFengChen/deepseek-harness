@@ -1,6 +1,6 @@
 /** Opaque cursor identity for session-search pagination. */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /** Provider-owned opaque continuation token returned by session search. */
 export type SessionSearchCursor = Branded<'SessionSearchCursor'>

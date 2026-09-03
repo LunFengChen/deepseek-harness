@@ -1,7 +1,7 @@
 /**
  * Pure client-safe token-projection vocabulary.
  *
- * @module @xfcodeai/dsh-token-meter/projection
+ * @module @x1a0f3n9/dsh-token-meter/projection
  */
 
 /**
@@ -65,7 +65,7 @@ export interface ContextBreakdownProjection {
   messageTokens: number
 }
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionMap {
     /** Provider-reported usage accumulated across the complete durable log. */
     tokenUsage: TokenUsageProjection

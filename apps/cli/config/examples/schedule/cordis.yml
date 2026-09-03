@@ -3,10 +3,10 @@
 
 - insert:
     - id: time-context
-      name: '@xfcodeai/dsh-time-context'
+      name: '@x1a0f3n9/dsh-time-context'
 
     - id: schedule
-      name: '@xfcodeai/dsh-schedule'
+      name: '@x1a0f3n9/dsh-schedule'
 
 - id: ui-schedule
   disabled: false

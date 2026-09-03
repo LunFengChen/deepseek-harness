@@ -3,7 +3,7 @@ description: "Cross-session snapshot references and durable untrusted model cont
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-reference
+# @x1a0f3n9/dsh-session-reference
 
 English | [中文](README.zh.md)
 
@@ -47,7 +47,7 @@ A message that cites other sessions is followed immediately by a `## Referenced 
 | `candidateLimit` | `50` | Default candidate count returned to a host |
 | `maxReferenceBytes` | `65536` | Maximum serialized JSON bytes for one reference object |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-session-reference) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-session-reference) is the exhaustive source for every accepted field and its JSDoc.
 
 -----
 
@@ -92,7 +92,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Cross-session references decision record](../../../.agents/notes/implemented/feature/2026-07-21-cross-session-references.md) — design rationale for the reference contract.
 - [Session-query subsystem](../../../docs/subsystems/session-query.md) — the read service that supplies session surfaces.
 - [Context group map](../README.md) — sibling request-context packages.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-session-reference) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-session-reference) — every accepted config field and its source declaration.
 
 -----
 

@@ -46,12 +46,12 @@ describe('tierExternalDeps', () => {
     const { manifests, names } = workspace({
       // Root tooling and test infrastructure never ship, whichever section declares them.
       'package.json': { dependencies: { 'root-runtime-looking': '^1' }, devDependencies: { 'lint-tool': '^1' } },
-      'packages/test-support/loader-smoke/package.json': { name: '@xfcodeai/dsh-loader-smoke', dependencies: { 'smoke-helper': '^1' } },
-      'packages/test-support/client-runtime/package.json': { name: '@xfcodeai/dsh-client-test-runtime', dependencies: { 'test-lib': '^1' } },
+      'packages/test-support/loader-smoke/package.json': { name: '@x1a0f3n9/dsh-loader-smoke', dependencies: { 'smoke-helper': '^1' } },
+      'packages/test-support/client-runtime/package.json': { name: '@x1a0f3n9/dsh-client-test-runtime', dependencies: { 'test-lib': '^1' } },
       'website/package.json': { devDependencies: { 'site-tool': '^1' } },
       // A plugin package's runtime dependency ships even when no app mounts it by default.
-      'packages/mcp/mcp-client/package.json': { name: '@xfcodeai/dsh-mcp-client', dependencies: { 'protocol-sdk': '^1' }, devDependencies: { 'protocol-fixture-server': '^1' } },
-      'apps/cli/package.json': { name: '@xfcodeai/dsh-cli', dependencies: { 'cli-lib': '^1', '@xfcodeai/dsh-mcp-client': 'workspace:^' } },
+      'packages/mcp/mcp-client/package.json': { name: '@x1a0f3n9/dsh-mcp-client', dependencies: { 'protocol-sdk': '^1' }, devDependencies: { 'protocol-fixture-server': '^1' } },
+      'apps/cli/package.json': { name: '@x1a0f3n9/dsh-cli', dependencies: { 'cli-lib': '^1', '@x1a0f3n9/dsh-mcp-client': 'workspace:^' } },
     })
 
     expect(tierExternalDeps(manifests, names)).toEqual(new Map([
@@ -70,12 +70,12 @@ describe('tierExternalDeps', () => {
   it('keeps a package runtime when any shipping area declares it, and excludes workspace links', () => {
     const { manifests, names } = workspace({
       'package.json': { devDependencies: { shared: '^1' } },
-      'packages/interaction/tui/package.json': { name: '@xfcodeai/dsh-tui', dependencies: { shared: '^1', '@xfcodeai/dsh-cli': 'workspace:^' } },
-      'apps/cli/package.json': { name: '@xfcodeai/dsh-cli' },
+      'packages/interaction/tui/package.json': { name: '@x1a0f3n9/dsh-tui', dependencies: { shared: '^1', '@x1a0f3n9/dsh-cli': 'workspace:^' } },
+      'apps/cli/package.json': { name: '@x1a0f3n9/dsh-cli' },
     })
 
     expect(tierExternalDeps(manifests, names).get('shared')).toBe(true)
-    expect(tierExternalDeps(manifests, names).has('@xfcodeai/dsh-cli')).toBe(false)
+    expect(tierExternalDeps(manifests, names).has('@x1a0f3n9/dsh-cli')).toBe(false)
   })
 })
 

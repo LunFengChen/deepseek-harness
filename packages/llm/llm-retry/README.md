@@ -3,13 +3,13 @@ description: "The retry executor for users and maintainers configuring provider-
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-llm-retry
+# @x1a0f3n9/dsh-llm-retry
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`@xfcodeai/dsh-llm-retry` is the retry executor for failed model requests: it applies each provider's resolved retry policy at the agent loop's open-step `agent/request-error` extension point, so every retry re-runs the same step inside the same open turn over the same durable history. It does not wrap the streaming call itself — every adapter call remains one provider attempt, and direct `ctx.llm.stream()` consumers stay single-attempt. Retry scheduling is durable: the plugin appends `llm/retry` events to the session log before waiting, and cancellation during backoff leaves the log consistent. Normal mode retries a bounded set of failure codes up to `maxRetries` with exponential backoff; always mode asks downstream recovery first, then retries every failure without an attempt limit.
+`@x1a0f3n9/dsh-llm-retry` is the retry executor for failed model requests: it applies each provider's resolved retry policy at the agent loop's open-step `agent/request-error` extension point, so every retry re-runs the same step inside the same open turn over the same durable history. It does not wrap the streaming call itself — every adapter call remains one provider attempt, and direct `ctx.llm.stream()` consumers stay single-attempt. Retry scheduling is durable: the plugin appends `llm/retry` events to the session log before waiting, and cancellation during backoff leaves the log consistent. Normal mode retries a bounded set of failure codes up to `maxRetries` with exponential backoff; always mode asks downstream recovery first, then retries every failure without an attempt limit.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ Choose it when a composition runs the agent loop and wants durable request recov
 ### Minimal configuration
 
 ```yaml
-- name: '@xfcodeai/dsh-llm-deepseek'
+- name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY
     retryPolicy:
@@ -44,7 +44,7 @@ Choose it when a composition runs the agent loop and wants durable request recov
         maxDelayMs: 30000
         jitterRatio: 0.2
 
-- name: '@xfcodeai/dsh-llm-retry'
+- name: '@x1a0f3n9/dsh-llm-retry'
 ```
 
 Omission of `retryPolicy` uses normal mode: five retries for `EMPTY_RESPONSE`, `RATE_LIMIT`, `SERVER`, `TIMEOUT`, and `TRANSPORT`, with bounded exponential backoff from 500 ms to 10 seconds and 10 percent jitter. Normal mode can change its finite budget, eligible codes, and backoff; always mode asks downstream recovery first, then retries every model-request failure without an attempt limit, stopping only on success, cancellation, or plugin disposal.

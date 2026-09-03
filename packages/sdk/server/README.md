@@ -3,7 +3,7 @@ description: "The stdio JSON-RPC serving plugin for deployments that let out-of-
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-sdk-jsonrpc-server
+# @x1a0f3n9/dsh-sdk-jsonrpc-server
 
 English | [中文](README.zh.md)
 
@@ -37,7 +37,7 @@ The plugin creates one agent per `sessionId` on first use. A registered model ad
 |---|---|---|
 | `maxTokensAsSuccess` | `false` | Report max-token turn/subagent termination as a successful SDK result |
 
-The profile composition owns each root agent's tools. `input`, `output`, and `exit` are runtime-only transport hooks for tests; production uses process stdio and `process.exit`. The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-sdk-jsonrpc-server) is the exhaustive source for every accepted field.
+The profile composition owns each root agent's tools. `input`, `output`, and `exit` are runtime-only transport hooks for tests; production uses process stdio and `process.exit`. The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-sdk-jsonrpc-server) is the exhaustive source for every accepted field.
 
 ### stdout is the protocol
 

@@ -1,18 +1,18 @@
 /** Target-neutral Conversation slot declarations and composed component props. */
 import type { ReactNode, RefObject } from 'react'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
-import type { SessionSnapshot } from '@xfcodeai/dsh-api-session-controller/client'
-import type { WorkspaceSnapshot } from '@xfcodeai/dsh-api-workspace-controller/client'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { SessionSnapshot } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
 import type {
   MaybeSnapshotSelectorHook, ObservableSnapshot, SnapshotSelectorHook,
-} from '@xfcodeai/dsh-client-store'
+} from '@x1a0f3n9/dsh-client-store'
 import type {
   InjectFace, PropsLocale, PropsRenderSlots, PropsRuntime, PropsStore,
-} from '@xfcodeai/dsh-client-ui-slots'
-import type { SessionPendingInteraction } from '@xfcodeai/dsh-client-ui-session/client'
-import type {} from '@xfcodeai/dsh-client-ui-layout/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { WorkspaceId } from '@xfcodeai/dsh-workspace/types'
+} from '@x1a0f3n9/dsh-client-ui-slots'
+import type { SessionPendingInteraction } from '@x1a0f3n9/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-layout/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { WorkspaceId } from '@x1a0f3n9/dsh-workspace/types'
 import type { ComposerBlock } from './composer-blocks.ts'
 import type {
   ComposerKeyboard, DraftAttachmentId, EditSelection, InputActions, InputNotice, InputState,
@@ -89,7 +89,7 @@ export type UseConversation = SnapshotSelectorHook<ConversationSnapshot>
 /** Selector hook over the registered Conversation View roster. */
 export type UseConversationViews = SnapshotSelectorHook<readonly ViewTab[]>
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface SlotMap {
     /** Strict per-Session Conversation body. */
     'conversation.session': { kind: 'single'; scope: 'session' }

@@ -40,9 +40,9 @@ describe.skipIf(!requiredArtifacts)('Agent Teams built LIB service', () => {
     expect(output).toEqual({
       className: 'TeamService',
       methods: [
-        '@xfcodeai/dsh-experimental-agent-team#agentTeams/createTask',
-        '@xfcodeai/dsh-experimental-agent-team#agentTeams/updateTask',
-        '@xfcodeai/dsh-experimental-agent-team#agentTeams/view',
+        '@x1a0f3n9/dsh-experimental-agent-team#agentTeams/createTask',
+        '@x1a0f3n9/dsh-experimental-agent-team#agentTeams/updateTask',
+        '@x1a0f3n9/dsh-experimental-agent-team#agentTeams/view',
       ],
     })
   })

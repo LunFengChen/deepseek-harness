@@ -7,13 +7,13 @@
  * `sidebar.settings` registrant's (ui-settings), followed by optional footer
  * actions in `sidebar.footer.action`.
  */
-import type { PropsLocale, PropsRenderSlots, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
-import type { WorkspaceId } from '@xfcodeai/dsh-api-workspace-controller/client'
+import type { PropsLocale, PropsRenderSlots, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { WorkspaceId } from '@x1a0f3n9/dsh-api-workspace-controller/client'
 // Type-only: pulls ui-layout's SlotMap merge (the 'sidebar' entry) into every
 // program that sees this contract, so PropsRuntime<'sidebar'> resolves.
-import type {} from '@xfcodeai/dsh-client-ui-layout/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-layout/client'
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface SlotMap {
     /**
      * Brand mark rendered in the expanded brand row and collapsed rail.

@@ -1,14 +1,14 @@
 /**
  * Registry for ordered system sections, dynamic context, tool schemas, and prompt variables.
  *
- * @module @xfcodeai/dsh-system-prompt
+ * @module @x1a0f3n9/dsh-system-prompt
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { AnonymousEntries, NamedEntries, ScopedLayers, scopeTarget } from '@xfcodeai/dsh-scope'
-import type { ScopeKey, ScopeLayer, Scoped } from '@xfcodeai/dsh-scope'
-import type { ContextSnapshotSection, ToolSchema } from '@xfcodeai/dsh-llm'
+import { AnonymousEntries, NamedEntries, ScopedLayers, scopeTarget } from '@x1a0f3n9/dsh-scope'
+import type { ScopeKey, ScopeLayer, Scoped } from '@x1a0f3n9/dsh-scope'
+import type { ContextSnapshotSection, ToolSchema } from '@x1a0f3n9/dsh-llm'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
@@ -18,7 +18,7 @@ declare module '@deepseek-ai/cordis' {
   interface Events {
     /**
      * Expert waterfall over the assembled sections, contexts, tools, and variables.
-     * Scope-filtered dispatch (`@xfcodeai/dsh-scope`): scoped listeners
+     * Scope-filtered dispatch (`@x1a0f3n9/dsh-scope`): scoped listeners
      * receive only that scope's assemblies. The returned value is authoritative.
      * A supplied signal controls only this explicit assembly request and must not
      * be retained to control later turns. A registered complete section is

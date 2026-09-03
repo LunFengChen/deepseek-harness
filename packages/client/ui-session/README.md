@@ -2,7 +2,7 @@
 description: "React and Slot adapters for Session Controller lists, interaction state, and per-session context."
 kind: "package-reference"
 ---
-# @xfcodeai/dsh-client-ui-session
+# @x1a0f3n9/dsh-client-ui-session
 
 English | [中文](README.zh.md)
 

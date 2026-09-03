@@ -31,13 +31,13 @@ A new package group `packages/subagent/`:
 
 | Package | Role |
 |---|---|
-| `@xfcodeai/dsh-subagent` | interface: `SubagentRuntime` (`ctx.subagents`), `SubagentProvider`, `SubagentRun`, the request/result/capability vocabulary, the `subagent/*` events |
-| `@xfcodeai/dsh-subagent-spawn-in-process` | implementation: a fresh in-process child via `ctx.agents.create` |
-| `@xfcodeai/dsh-subagent-fork-in-process` | implementation: an in-process child seeded with a snapshot of the parent's log |
-| `@xfcodeai/dsh-subagent-acp` | implementation: an ACP client driving a configured child process |
-| `@xfcodeai/dsh-subagent-codex` | implementation: a one-shot official Codex app-server process |
-| `@xfcodeai/dsh-subagent-claude-code` | implementation: a one-shot official Claude Code process through the Agent SDK |
-| `@xfcodeai/dsh-tool-subagent` | consumer: the model-facing `subagent` tool over `ctx.subagents` |
+| `@x1a0f3n9/dsh-subagent` | interface: `SubagentRuntime` (`ctx.subagents`), `SubagentProvider`, `SubagentRun`, the request/result/capability vocabulary, the `subagent/*` events |
+| `@x1a0f3n9/dsh-subagent-spawn-in-process` | implementation: a fresh in-process child via `ctx.agents.create` |
+| `@x1a0f3n9/dsh-subagent-fork-in-process` | implementation: an in-process child seeded with a snapshot of the parent's log |
+| `@x1a0f3n9/dsh-subagent-acp` | implementation: an ACP client driving a configured child process |
+| `@x1a0f3n9/dsh-subagent-codex` | implementation: a one-shot official Codex app-server process |
+| `@x1a0f3n9/dsh-subagent-claude-code` | implementation: a one-shot official Claude Code process through the Agent SDK |
+| `@x1a0f3n9/dsh-tool-subagent` | consumer: the model-facing `subagent` tool over `ctx.subagents` |
 
 ### The primitive: async `start → SubagentRun`
 

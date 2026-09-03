@@ -5,14 +5,14 @@
  */
 import { Context, Service } from '@deepseek-ai/cordis'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { RemoteError } from '@xfcodeai/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import type {
   CandidateRequest, ClientSessionContext, InputTriggerCandidate, InputTriggerSource,
-} from '@xfcodeai/dsh-client-ui-input-trigger/client'
-import type { FileReferenceCandidate } from '@xfcodeai/dsh-file-reference/types'
-import type { SessionReferenceMentionCandidate } from '@xfcodeai/dsh-session-reference/types'
+} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
+import type { FileReferenceCandidate } from '@x1a0f3n9/dsh-file-reference/types'
+import type { SessionReferenceMentionCandidate } from '@x1a0f3n9/dsh-session-reference/types'
 import { apply, inject } from '../src/client/index.ts'
 import { apply as nodeApply } from '../src/index.ts'
 

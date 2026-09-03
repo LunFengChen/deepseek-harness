@@ -11,9 +11,9 @@
 
 `Requires:` 行列出插件通过 `inject` 注入的服务键：其 `cordis.yml` 树还必须加载这些服务的提供者。范围限定为 harness 层级（`packages/`）；配置树还可能加载的 vendored cordis 插件（`hmr`、控制台日志记录器等）固定为上游源代码（参见 [vendoring policy](../vendor/README.md)），未收录于此目录。
 
-<a id="xfcodeaidsh-acp"></a>
+<a id="x1a0f3n9dsh-acp"></a>
 
-## `@xfcodeai/dsh-acp`
+## `@x1a0f3n9/dsh-acp`
 
 需要：`agents` · `llm` · `sessionPersistence` · `sessions`
 
@@ -35,9 +35,9 @@ export interface AcpConfig {
 
 来源：[`packages/acp/acp/src/index.ts:75`](../packages/acp/acp/src/index.ts)
 
-<a id="xfcodeaidsh-agent-default-model"></a>
+<a id="x1a0f3n9dsh-agent-default-model"></a>
 
-## `@xfcodeai/dsh-agent-default-model`
+## `@x1a0f3n9/dsh-agent-default-model`
 
 ```ts config-catalog
 /** Composition entry for the default model selection. */
@@ -51,9 +51,9 @@ export interface Config {
 
 来源：[`packages/core/agent-default-model/src/index.ts:41`](../packages/core/agent-default-model/src/index.ts)
 
-<a id="xfcodeaidsh-agent-instructions"></a>
+<a id="x1a0f3n9dsh-agent-instructions"></a>
 
-## `@xfcodeai/dsh-agent-instructions`
+## `@x1a0f3n9/dsh-agent-instructions`
 
 需要：`sessionProjections`
 
@@ -83,9 +83,9 @@ export interface Config {
 
 来源：[`packages/context/agent-instructions/src/config.ts:18`](../packages/context/agent-instructions/src/config.ts)
 
-<a id="xfcodeaidsh-agent-loop"></a>
+<a id="x1a0f3n9dsh-agent-loop"></a>
 
-## `@xfcodeai/dsh-agent-loop`
+## `@x1a0f3n9/dsh-agent-loop`
 
 需要：`agents` · `sessions` · `llm` · `tools` · `systemPrompt` · `sessionProjections`
 
@@ -115,9 +115,9 @@ export interface Config {
 
 来源：[`packages/core/agent-loop/src/index.ts:311`](../packages/core/agent-loop/src/index.ts)
 
-<a id="xfcodeaidsh-agent-presets"></a>
+<a id="x1a0f3n9dsh-agent-presets"></a>
 
-## `@xfcodeai/dsh-agent-presets`
+## `@x1a0f3n9/dsh-agent-presets`
 
 需要：`loader` · `sessionProjections`
 
@@ -161,9 +161,9 @@ export type PresetTrust = 'system' | 'user'
 
 来源：[`packages/preset/agent-presets/src/preset.ts:52`](../packages/preset/agent-presets/src/preset.ts)
 
-<a id="xfcodeaidsh-agent-tool-presentation"></a>
+<a id="x1a0f3n9dsh-agent-tool-presentation"></a>
 
-## `@xfcodeai/dsh-agent-tool-presentation`
+## `@x1a0f3n9/dsh-agent-tool-presentation`
 
 需要：`tools`
 
@@ -185,9 +185,9 @@ export interface Config {
 
 来源：[`packages/core/agent-tool-presentation/src/index.ts:38`](../packages/core/agent-tool-presentation/src/index.ts)
 
-<a id="xfcodeaidsh-api-gateway"></a>
+<a id="x1a0f3n9dsh-api-gateway"></a>
 
-## `@xfcodeai/dsh-api-gateway`
+## `@x1a0f3n9/dsh-api-gateway`
 
 需要：`typert`
 
@@ -201,9 +201,9 @@ export interface Config {
 
 来源：[`packages/api/gateway/src/index.ts:119`](../packages/api/gateway/src/index.ts)
 
-<a id="xfcodeaidsh-api-session-controller"></a>
+<a id="x1a0f3n9dsh-api-session-controller"></a>
 
-## `@xfcodeai/dsh-api-session-controller`
+## `@x1a0f3n9/dsh-api-session-controller`
 
 需要：`agentDefaultModel` · `agents` · `attachments` · `llm` · `sessions` · `sessionProjections` · `sessionQuery` · `typert` · `workspaceRegistry`
 
@@ -219,9 +219,9 @@ export interface Config {
 
 来源：[`packages/api/session-controller/src/index.ts:68`](../packages/api/session-controller/src/index.ts)
 
-<a id="xfcodeaidsh-api-settings-controller"></a>
+<a id="x1a0f3n9dsh-api-settings-controller"></a>
 
-## `@xfcodeai/dsh-api-settings-controller`
+## `@x1a0f3n9/dsh-api-settings-controller`
 
 ```ts config-catalog
 /** Native document-opening policy. */
@@ -233,9 +233,9 @@ export interface Config {
 
 来源：[`packages/api/settings-controller/src/index.ts:36`](../packages/api/settings-controller/src/index.ts)
 
-<a id="xfcodeaidsh-attachment-local"></a>
+<a id="x1a0f3n9dsh-attachment-local"></a>
 
-## `@xfcodeai/dsh-attachment-local`
+## `@x1a0f3n9/dsh-attachment-local`
 
 ```ts config-catalog
 /** Local attachment backend configuration. */
@@ -268,9 +268,9 @@ export interface Config {
 
 来源：[`packages/attachment/attachment-local/src/index.ts:55`](../packages/attachment/attachment-local/src/index.ts)
 
-<a id="xfcodeaidsh-bash-local"></a>
+<a id="x1a0f3n9dsh-bash-local"></a>
 
-## `@xfcodeai/dsh-bash-local`
+## `@x1a0f3n9/dsh-bash-local`
 
 需要：`subprocess`
 
@@ -294,9 +294,9 @@ export interface Config {
 
 来源：[`packages/shell/bash-local/src/index.ts:41`](../packages/shell/bash-local/src/index.ts)
 
-<a id="xfcodeaidsh-bash-sandbox"></a>
+<a id="x1a0f3n9dsh-bash-sandbox"></a>
 
-## `@xfcodeai/dsh-bash-sandbox`
+## `@x1a0f3n9/dsh-bash-sandbox`
 
 需要：`subprocess` · `sandbox` · `sandboxPolicy`
 
@@ -304,20 +304,20 @@ export interface Config {
 /**
  * Plugin config: the local executor's knobs, verbatim. The sandbox policy —
  * the default mode and fallback `workspace-write` root — is NOT here: it lives
- * on `ctx.sandboxPolicy` (`@xfcodeai/dsh-sandbox-policy`), which resolves
+ * on `ctx.sandboxPolicy` (`@x1a0f3n9/dsh-sandbox-policy`), which resolves
  * each calling session's mode and cwd for every enforcing capability. The runner
  * choice is likewise the `ctx.sandbox` provider's config, not this executor's.
  */
 export type Config = LocalConfig
 ```
 
-依赖：[`LocalConfig`](#xfcodeaidsh-bash-local)
+依赖：[`LocalConfig`](#x1a0f3n9dsh-bash-local)
 
 来源：[`packages/shell/bash-sandbox/src/index.ts:35`](../packages/shell/bash-sandbox/src/index.ts)
 
-<a id="xfcodeaidsh-client-connection"></a>
+<a id="x1a0f3n9dsh-client-connection"></a>
 
-## `@xfcodeai/dsh-client-connection`
+## `@x1a0f3n9/dsh-client-connection`
 
 需要：`webServer` · `credentials`
 
@@ -342,9 +342,9 @@ export interface ConnectionConfig {
 
 来源：[`packages/client/connection/src/index.ts:55`](../packages/client/connection/src/index.ts)
 
-<a id="xfcodeaidsh-client-hmr"></a>
+<a id="x1a0f3n9dsh-client-hmr"></a>
 
-## `@xfcodeai/dsh-client-hmr`
+## `@x1a0f3n9/dsh-client-hmr`
 
 需要：`clientModules` · `webServer`
 
@@ -358,9 +358,9 @@ export interface Config {
 
 来源：[`packages/client/hmr/src/index.ts:31`](../packages/client/hmr/src/index.ts)
 
-<a id="xfcodeaidsh-code-runtime-worker-thread"></a>
+<a id="x1a0f3n9dsh-code-runtime-worker-thread"></a>
 
-## `@xfcodeai/dsh-code-runtime-worker-thread`
+## `@x1a0f3n9/dsh-code-runtime-worker-thread`
 
 ```ts config-catalog
 /** Plugin config: every execution cap, changeable from `cordis.yml` (no hardcoded tunables). */
@@ -395,9 +395,9 @@ export interface Config {
 
 来源：[`packages/code-runtime/code-runtime-worker-thread/src/index.ts:25`](../packages/code-runtime/code-runtime-worker-thread/src/index.ts)
 
-<a id="xfcodeaidsh-compaction-basic"></a>
+<a id="x1a0f3n9dsh-compaction-basic"></a>
 
-## `@xfcodeai/dsh-compaction-basic`
+## `@x1a0f3n9/dsh-compaction-basic`
 
 需要：`llm` · `tokenMeter` · `sessions`
 
@@ -441,9 +441,9 @@ export interface ModelCompactPolicyConfig extends CompactionPolicyConfig {
 
 来源：[`packages/compaction/compaction-basic/src/types.ts:38`](../packages/compaction/compaction-basic/src/types.ts)
 
-<a id="xfcodeaidsh-compaction-tool-result-pruner"></a>
+<a id="x1a0f3n9dsh-compaction-tool-result-pruner"></a>
 
-## `@xfcodeai/dsh-compaction-tool-result-pruner`
+## `@x1a0f3n9/dsh-compaction-tool-result-pruner`
 
 需要：`tokenMeter`
 
@@ -461,9 +461,9 @@ export interface ToolResultPruneConfig {
 
 来源：[`packages/compaction/compaction-tool-result-pruner/src/types.ts:5`](../packages/compaction/compaction-tool-result-pruner/src/types.ts)
 
-<a id="xfcodeaidsh-cordis-host-runner"></a>
+<a id="x1a0f3n9dsh-cordis-host-runner"></a>
 
-## `@xfcodeai/dsh-cordis-host-runner`
+## `@x1a0f3n9/dsh-cordis-host-runner`
 
 需要：`tools`
 
@@ -477,9 +477,9 @@ export interface Config {
 
 来源：[`packages/extensions/cordis-host-runner/src/index.ts:88`](../packages/extensions/cordis-host-runner/src/index.ts)
 
-<a id="xfcodeaidsh-credentials-local"></a>
+<a id="x1a0f3n9dsh-credentials-local"></a>
 
-## `@xfcodeai/dsh-credentials-local`
+## `@x1a0f3n9/dsh-credentials-local`
 
 ```ts config-catalog
 /** Plugin config: file location and hot-reload behavior. */
@@ -497,9 +497,9 @@ export interface Config {
 
 来源：[`packages/credentials/credentials-local/src/index.ts:64`](../packages/credentials/credentials-local/src/index.ts)
 
-<a id="xfcodeaidsh-e2b"></a>
+<a id="x1a0f3n9dsh-e2b"></a>
 
-## `@xfcodeai/dsh-e2b`
+## `@x1a0f3n9/dsh-e2b`
 
 ```ts config-catalog
 /** Configuration for the shared E2B sandbox owner. */
@@ -515,9 +515,9 @@ export interface Config {
 
 来源：[`packages/e2b/e2b/src/index.ts:43`](../packages/e2b/e2b/src/index.ts)
 
-<a id="xfcodeaidsh-experimental-agent-team"></a>
+<a id="x1a0f3n9dsh-experimental-agent-team"></a>
 
-## `@xfcodeai/dsh-experimental-agent-team`
+## `@x1a0f3n9/dsh-experimental-agent-team`
 
 需要：`agents` · `sessions` · `sessionPersistence` · `sessionProjections` · `subagents`
 
@@ -539,9 +539,9 @@ export interface Config {
 
 来源：[`packages/experimental/agent-team/src/types.ts:125`](../packages/experimental/agent-team/src/types.ts)
 
-<a id="xfcodeaidsh-experimental-code-runtime-python"></a>
+<a id="x1a0f3n9dsh-experimental-code-runtime-python"></a>
 
-## `@xfcodeai/dsh-experimental-code-runtime-python`
+## `@x1a0f3n9/dsh-experimental-code-runtime-python`
 
 ```ts config-catalog
 /** Plugin config: every cap, changeable from `cordis.yml` (no hardcoded tunables). */
@@ -606,9 +606,9 @@ export interface Config {
 
 来源：[`packages/experimental/code-runtime-python/src/index.ts:42`](../packages/experimental/code-runtime-python/src/index.ts)
 
-<a id="xfcodeaidsh-experimental-inspector"></a>
+<a id="x1a0f3n9dsh-experimental-inspector"></a>
 
-## `@xfcodeai/dsh-experimental-inspector`
+## `@x1a0f3n9/dsh-experimental-inspector`
 
 需要：`webServer`
 
@@ -674,9 +674,9 @@ export interface InspectorOptions {
 
 来源：[`packages/experimental/inspector/src/index.ts:66`](../packages/experimental/inspector/src/index.ts)
 
-<a id="xfcodeaidsh-experimental-tool-agent-team"></a>
+<a id="x1a0f3n9dsh-experimental-tool-agent-team"></a>
 
-## `@xfcodeai/dsh-experimental-tool-agent-team`
+## `@x1a0f3n9/dsh-experimental-tool-agent-team`
 
 需要：`agents` · `agentTeams` · `tools` · `systemPrompt`
 
@@ -692,9 +692,9 @@ export interface Config {
 
 来源：[`packages/experimental/tool-agent-team/src/index.ts:17`](../packages/experimental/tool-agent-team/src/index.ts)
 
-<a id="xfcodeaidsh-file-reference-local"></a>
+<a id="x1a0f3n9dsh-file-reference-local"></a>
 
-## `@xfcodeai/dsh-file-reference-local`
+## `@x1a0f3n9/dsh-file-reference-local`
 
 需要：`agents` · `sessionProjections`
 
@@ -712,9 +712,9 @@ export interface Config {
 
 来源：[`packages/context/file-reference-local/src/index.ts:34`](../packages/context/file-reference-local/src/index.ts)
 
-<a id="xfcodeaidsh-fs-local"></a>
+<a id="x1a0f3n9dsh-fs-local"></a>
 
-## `@xfcodeai/dsh-fs-local`
+## `@x1a0f3n9/dsh-fs-local`
 
 ```ts config-catalog
 /** Configuration for the local filesystem backend. */
@@ -731,9 +731,9 @@ export interface Config {
 
 来源：[`packages/fs/fs-local/src/index.ts:41`](../packages/fs/fs-local/src/index.ts)
 
-<a id="xfcodeaidsh-fs-sandbox"></a>
+<a id="x1a0f3n9dsh-fs-sandbox"></a>
 
-## `@xfcodeai/dsh-fs-sandbox`
+## `@x1a0f3n9/dsh-fs-sandbox`
 
 需要：`sandboxPolicy`
 
@@ -747,13 +747,13 @@ export interface Config {
 export type Config = LocalConfig
 ```
 
-依赖：[`LocalConfig`](#xfcodeaidsh-fs-local)
+依赖：[`LocalConfig`](#x1a0f3n9dsh-fs-local)
 
 来源：[`packages/fs/fs-sandbox/src/index.ts:45`](../packages/fs/fs-sandbox/src/index.ts)
 
-<a id="xfcodeaidsh-goal"></a>
+<a id="x1a0f3n9dsh-goal"></a>
 
-## `@xfcodeai/dsh-goal`
+## `@x1a0f3n9/dsh-goal`
 
 需要：`agents` · `sessionProjections`
 
@@ -767,9 +767,9 @@ export interface Config {
 
 来源：[`packages/goal/goal/src/index.ts:172`](../packages/goal/goal/src/index.ts)
 
-<a id="xfcodeaidsh-headless"></a>
+<a id="x1a0f3n9dsh-headless"></a>
 
-## `@xfcodeai/dsh-headless`
+## `@x1a0f3n9/dsh-headless`
 
 需要：`agentDefaultModel` · `agents` · `sessions`
 
@@ -783,9 +783,9 @@ export interface Config {
 
 来源：[`packages/bundle/headless/src/index.ts:33`](../packages/bundle/headless/src/index.ts)
 
-<a id="xfcodeaidsh-hooks-claude-code"></a>
+<a id="x1a0f3n9dsh-hooks-claude-code"></a>
 
-## `@xfcodeai/dsh-hooks-claude-code`
+## `@x1a0f3n9/dsh-hooks-claude-code`
 
 需要：`shell` · `sessionProjections`
 
@@ -821,9 +821,9 @@ export interface Config {
 
 来源：[`packages/hooks/hooks-claude-code/src/index.ts:46`](../packages/hooks/hooks-claude-code/src/index.ts)
 
-<a id="xfcodeaidsh-hooks-codex"></a>
+<a id="x1a0f3n9dsh-hooks-codex"></a>
 
-## `@xfcodeai/dsh-hooks-codex`
+## `@x1a0f3n9/dsh-hooks-codex`
 
 需要：`shell` · `sessionProjections`
 
@@ -848,9 +848,9 @@ export interface Config {
 
 来源：[`packages/hooks/hooks-codex/src/index.ts:45`](../packages/hooks/hooks-codex/src/index.ts)
 
-<a id="xfcodeaidsh-host-directory-picker-browse"></a>
+<a id="x1a0f3n9dsh-host-directory-picker-browse"></a>
 
-## `@xfcodeai/dsh-host-directory-picker-browse`
+## `@x1a0f3n9/dsh-host-directory-picker-browse`
 
 ```ts config-catalog
 /** Validated plugin configuration. */
@@ -862,9 +862,9 @@ export interface Config {
 
 来源：[`packages/host/directory-picker-browse/src/index.ts:181`](../packages/host/directory-picker-browse/src/index.ts)
 
-<a id="xfcodeaidsh-host-frontend-static"></a>
+<a id="x1a0f3n9dsh-host-frontend-static"></a>
 
-## `@xfcodeai/dsh-host-frontend-static`
+## `@x1a0f3n9/dsh-host-frontend-static`
 
 需要：`webServer` · `connection`
 
@@ -878,9 +878,9 @@ export interface Config {
 
 来源：[`packages/host/frontend-static/src/index.ts:30`](../packages/host/frontend-static/src/index.ts)
 
-<a id="xfcodeaidsh-host-webserver"></a>
+<a id="x1a0f3n9dsh-host-webserver"></a>
 
-## `@xfcodeai/dsh-host-webserver`
+## `@x1a0f3n9/dsh-host-webserver`
 
 ```ts config-catalog
 /** Web server listen and response-compression config. */
@@ -900,9 +900,9 @@ export interface Config {
 
 来源：[`packages/host/webserver/src/index.ts:59`](../packages/host/webserver/src/index.ts)
 
-<a id="xfcodeaidsh-invariants"></a>
+<a id="x1a0f3n9dsh-invariants"></a>
 
-## `@xfcodeai/dsh-invariants`
+## `@x1a0f3n9/dsh-invariants`
 
 ```ts config-catalog
 /** Runtime invariant selection configured on the service plugin. */
@@ -918,9 +918,9 @@ export interface Config {
 
 来源：[`packages/runtime-diagnostics/invariants/src/index.ts:15`](../packages/runtime-diagnostics/invariants/src/index.ts)
 
-<a id="xfcodeaidsh-jobs-local"></a>
+<a id="x1a0f3n9dsh-jobs-local"></a>
 
-## `@xfcodeai/dsh-jobs-local`
+## `@x1a0f3n9/dsh-jobs-local`
 
 ```ts config-catalog
 /** Configuration for the process-local job registry. */
@@ -935,9 +935,9 @@ export interface Config {
 
 来源：[`packages/jobs/jobs-local/src/index.ts:31`](../packages/jobs/jobs-local/src/index.ts)
 
-<a id="xfcodeaidsh-llm-deepseek"></a>
+<a id="x1a0f3n9dsh-llm-deepseek"></a>
 
-## `@xfcodeai/dsh-llm-deepseek`
+## `@x1a0f3n9/dsh-llm-deepseek`
 
 需要：`llm`
 
@@ -1016,9 +1016,9 @@ export interface DeepSeekCatalogModel {
 
 来源：[`packages/llm/llm-deepseek/src/index.ts:125`](../packages/llm/llm-deepseek/src/index.ts)
 
-<a id="xfcodeaidsh-llm-pi-ai"></a>
+<a id="x1a0f3n9dsh-llm-pi-ai"></a>
 
-## `@xfcodeai/dsh-llm-pi-ai`
+## `@x1a0f3n9/dsh-llm-pi-ai`
 
 需要：`llm`
 
@@ -1282,9 +1282,9 @@ export type PiAiThinkingFormat = NonNullable<OpenAICompletionsCompat['thinkingFo
 
 来源：[`packages/llm/llm-pi-ai/src/config.ts:213`](../packages/llm/llm-pi-ai/src/config.ts)
 
-<a id="xfcodeaidsh-llm-replay"></a>
+<a id="x1a0f3n9dsh-llm-replay"></a>
 
-## `@xfcodeai/dsh-llm-replay`
+## `@x1a0f3n9/dsh-llm-replay`
 
 需要：`llm`
 
@@ -1359,9 +1359,9 @@ export interface ReplayModelConfig {
 
 来源：[`packages/test-support/llm-replay/src/index.ts:924`](../packages/test-support/llm-replay/src/index.ts)
 
-<a id="xfcodeaidsh-llm-retry"></a>
+<a id="x1a0f3n9dsh-llm-retry"></a>
 
-## `@xfcodeai/dsh-llm-retry`
+## `@x1a0f3n9/dsh-llm-retry`
 
 需要：`agents` · `sessionProjections`
 
@@ -1372,9 +1372,9 @@ export type Config = Readonly<Record<string, never>>
 
 来源：[`packages/llm/llm-retry/src/index.ts:25`](../packages/llm/llm-retry/src/index.ts)
 
-<a id="xfcodeaidsh-lsp-stdio"></a>
+<a id="x1a0f3n9dsh-lsp-stdio"></a>
 
-## `@xfcodeai/dsh-lsp-stdio`
+## `@x1a0f3n9/dsh-lsp-stdio`
 
 需要：`fs` · `lsp` · `subprocess`
 
@@ -1414,9 +1414,9 @@ export interface LspLocalServerConfig {
 
 来源：[`packages/lsp/lsp-stdio/src/index.ts:82`](../packages/lsp/lsp-stdio/src/index.ts)
 
-<a id="xfcodeaidsh-mcp-client"></a>
+<a id="x1a0f3n9dsh-mcp-client"></a>
 
-## `@xfcodeai/dsh-mcp-client`
+## `@x1a0f3n9/dsh-mcp-client`
 
 需要：`tools`
 
@@ -1487,9 +1487,9 @@ export interface ReconnectConfig {
 
 来源：[`packages/mcp/mcp-client/src/index.ts:98`](../packages/mcp/mcp-client/src/index.ts)
 
-<a id="xfcodeaidsh-message-feedback"></a>
+<a id="x1a0f3n9dsh-message-feedback"></a>
 
-## `@xfcodeai/dsh-message-feedback`
+## `@x1a0f3n9/dsh-message-feedback`
 
 需要：`storageDomain` · `sessionPersistence` · `sessions`
 
@@ -1503,9 +1503,9 @@ export interface Config {
 
 来源：[`packages/feedback/message-feedback/src/index.ts:50`](../packages/feedback/message-feedback/src/index.ts)
 
-<a id="xfcodeaidsh-permission-presets"></a>
+<a id="x1a0f3n9dsh-permission-presets"></a>
 
-## `@xfcodeai/dsh-permission-presets`
+## `@x1a0f3n9/dsh-permission-presets`
 
 需要：`shell` · `approval` · `sessions` · `sessionProjections`
 
@@ -1542,9 +1542,9 @@ export interface PresetSpec {
 
 来源：[`packages/interaction/permission-presets/src/index.ts:143`](../packages/interaction/permission-presets/src/index.ts)
 
-<a id="xfcodeaidsh-persona"></a>
+<a id="x1a0f3n9dsh-persona"></a>
 
-## `@xfcodeai/dsh-persona`
+## `@x1a0f3n9/dsh-persona`
 
 需要：`systemPrompt`
 
@@ -1566,9 +1566,9 @@ export interface Config {
 
 来源：[`packages/preset/persona/src/index.ts:30`](../packages/preset/persona/src/index.ts)
 
-<a id="xfcodeaidsh-plan-mode"></a>
+<a id="x1a0f3n9dsh-plan-mode"></a>
 
-## `@xfcodeai/dsh-plan-mode`
+## `@x1a0f3n9/dsh-plan-mode`
 
 需要：`tools` · `systemPrompt` · `sessionProjections`
 
@@ -1582,9 +1582,9 @@ export interface PlanModeConfig {
 
 来源：[`packages/plan/plan-mode/src/index.ts:63`](../packages/plan/plan-mode/src/index.ts)
 
-<a id="xfcodeaidsh-plugin-package-inventory-deepseek"></a>
+<a id="x1a0f3n9dsh-plugin-package-inventory-deepseek"></a>
 
-## `@xfcodeai/dsh-plugin-package-inventory-deepseek`
+## `@x1a0f3n9/dsh-plugin-package-inventory-deepseek`
 
 需要：`agents` · `deepseekLlmApiExtensions` · `loader`
 
@@ -1598,9 +1598,9 @@ export interface Config {
 
 来源：[`packages/llm/plugin-package-inventory-deepseek/src/index.ts:31`](../packages/llm/plugin-package-inventory-deepseek/src/index.ts)
 
-<a id="xfcodeaidsh-pwsh-local"></a>
+<a id="x1a0f3n9dsh-pwsh-local"></a>
 
-## `@xfcodeai/dsh-pwsh-local`
+## `@x1a0f3n9/dsh-pwsh-local`
 
 需要：`subprocess`
 
@@ -1631,9 +1631,9 @@ export interface Config {
 
 来源：[`packages/shell/pwsh-local/src/index.ts:58`](../packages/shell/pwsh-local/src/index.ts)
 
-<a id="xfcodeaidsh-pwsh-sandbox"></a>
+<a id="x1a0f3n9dsh-pwsh-sandbox"></a>
 
-## `@xfcodeai/dsh-pwsh-sandbox`
+## `@x1a0f3n9/dsh-pwsh-sandbox`
 
 需要：`subprocess` · `sandbox` · `sandboxPolicy`
 
@@ -1641,7 +1641,7 @@ export interface Config {
 /**
  * Plugin config: the local executor's knobs, verbatim. The sandbox policy —
  * the default mode and fallback `workspace-write` root — is NOT here: it lives
- * on `ctx.sandboxPolicy` (`@xfcodeai/dsh-sandbox-policy`), which resolves
+ * on `ctx.sandboxPolicy` (`@x1a0f3n9/dsh-sandbox-policy`), which resolves
  * each calling session's mode and cwd for every enforcing capability. The
  * runner choice is likewise the `ctx.sandbox` provider's config, not this
  * executor's.
@@ -1649,13 +1649,13 @@ export interface Config {
 export type Config = LocalConfig
 ```
 
-依赖：[`LocalConfig`](#xfcodeaidsh-pwsh-local)
+依赖：[`LocalConfig`](#x1a0f3n9dsh-pwsh-local)
 
 来源：[`packages/shell/pwsh-sandbox/src/index.ts:40`](../packages/shell/pwsh-sandbox/src/index.ts)
 
-<a id="xfcodeaidsh-repeat-tool-reminder"></a>
+<a id="x1a0f3n9dsh-repeat-tool-reminder"></a>
 
-## `@xfcodeai/dsh-repeat-tool-reminder`
+## `@x1a0f3n9/dsh-repeat-tool-reminder`
 
 ```ts config-catalog
 /**
@@ -1687,9 +1687,9 @@ export interface Config {
 
 来源：[`packages/guard/repeat-tool-reminder/src/index.ts:28`](../packages/guard/repeat-tool-reminder/src/index.ts)
 
-<a id="xfcodeaidsh-sandbox-local"></a>
+<a id="x1a0f3n9dsh-sandbox-local"></a>
 
-## `@xfcodeai/dsh-sandbox-local`
+## `@x1a0f3n9/dsh-sandbox-local`
 
 ```ts config-catalog
 /** Plugin config. All optional — `static Config` supplies the defaults. */
@@ -1719,9 +1719,9 @@ export interface Config {
 
 来源：[`packages/sandbox/sandbox-local/src/index.ts:44`](../packages/sandbox/sandbox-local/src/index.ts)
 
-<a id="xfcodeaidsh-sandbox-policy"></a>
+<a id="x1a0f3n9dsh-sandbox-policy"></a>
 
-## `@xfcodeai/dsh-sandbox-policy`
+## `@x1a0f3n9/dsh-sandbox-policy`
 
 需要：`sessionProjections`
 
@@ -1748,9 +1748,9 @@ export interface Config {
 
 来源：[`packages/sandbox/sandbox-policy/src/index.ts:70`](../packages/sandbox/sandbox-policy/src/index.ts)
 
-<a id="xfcodeaidsh-sdk-app"></a>
+<a id="x1a0f3n9dsh-sdk-app"></a>
 
-## `@xfcodeai/dsh-sdk-app`
+## `@x1a0f3n9/dsh-sdk-app`
 
 需要：`cmdlineArgs`
 
@@ -1764,9 +1764,9 @@ export interface Config {
 
 来源：[`packages/bundle/sdk-app/src/index.ts:23`](../packages/bundle/sdk-app/src/index.ts)
 
-<a id="xfcodeaidsh-sdk-jsonrpc-server"></a>
+<a id="x1a0f3n9dsh-sdk-jsonrpc-server"></a>
 
-## `@xfcodeai/dsh-sdk-jsonrpc-server`
+## `@x1a0f3n9/dsh-sdk-jsonrpc-server`
 
 需要：`agents`
 
@@ -1788,9 +1788,9 @@ export interface JsonRpcConfig {
 
 来源：[`packages/sdk/server/src/index.ts:25`](../packages/sdk/server/src/index.ts)
 
-<a id="xfcodeaidsh-session-log-deepseek"></a>
+<a id="x1a0f3n9dsh-session-log-deepseek"></a>
 
-## `@xfcodeai/dsh-session-log-deepseek`
+## `@x1a0f3n9/dsh-session-log-deepseek`
 
 需要：`deepseekLlmApiExtensions` · `sessions`
 
@@ -1804,9 +1804,9 @@ export interface Config {
 
 来源：[`packages/session/session-log-deepseek/src/index.ts:36`](../packages/session/session-log-deepseek/src/index.ts)
 
-<a id="xfcodeaidsh-session-log-export"></a>
+<a id="x1a0f3n9dsh-session-log-export"></a>
 
-## `@xfcodeai/dsh-session-log-export`
+## `@x1a0f3n9/dsh-session-log-export`
 
 需要：`commands` · `connection`
 
@@ -1823,9 +1823,9 @@ export type SessionLogCompressionLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 来源：[`packages/session-query/session-log-export/src/index.ts:42`](../packages/session-query/session-log-export/src/index.ts)
 
-<a id="xfcodeaidsh-session-persistence-jsonl"></a>
+<a id="x1a0f3n9dsh-session-persistence-jsonl"></a>
 
-## `@xfcodeai/dsh-session-persistence-jsonl`
+## `@x1a0f3n9/dsh-session-persistence-jsonl`
 
 需要：`sessions` · `sessionProjections`
 
@@ -1862,9 +1862,9 @@ export type JsonlCompression = 'zstd' | 'none'
 
 来源：[`packages/session/session-persistence-jsonl/src/index.ts:70`](../packages/session/session-persistence-jsonl/src/index.ts)
 
-<a id="xfcodeaidsh-session-projection-cache"></a>
+<a id="x1a0f3n9dsh-session-projection-cache"></a>
 
-## `@xfcodeai/dsh-session-projection-cache`
+## `@x1a0f3n9/dsh-session-projection-cache`
 
 需要：`storageDomain` · `sessionProjections` · `sessions`
 
@@ -1886,9 +1886,9 @@ export interface Config {
 
 来源：[`packages/session/session-projection-cache/src/index.ts:55`](../packages/session/session-projection-cache/src/index.ts)
 
-<a id="xfcodeaidsh-session-query-sqlite"></a>
+<a id="x1a0f3n9dsh-session-query-sqlite"></a>
 
-## `@xfcodeai/dsh-session-query-sqlite`
+## `@x1a0f3n9/dsh-session-query-sqlite`
 
 需要：`sessions`
 
@@ -1932,9 +1932,9 @@ export type JournalMode = 'wal' | 'delete' | 'truncate' | 'persist'
 
 来源：[`packages/session-query/session-query-sqlite/src/index.ts:96`](../packages/session-query/session-query-sqlite/src/index.ts)
 
-<a id="xfcodeaidsh-session-reference"></a>
+<a id="x1a0f3n9dsh-session-reference"></a>
 
-## `@xfcodeai/dsh-session-reference`
+## `@x1a0f3n9/dsh-session-reference`
 
 需要：`sessionQuery`
 
@@ -1952,9 +1952,9 @@ export interface Config {
 
 来源：[`packages/context/session-reference/src/config.ts:11`](../packages/context/session-reference/src/config.ts)
 
-<a id="xfcodeaidsh-session-telemetry-otel"></a>
+<a id="x1a0f3n9dsh-session-telemetry-otel"></a>
 
-## `@xfcodeai/dsh-session-telemetry-otel`
+## `@x1a0f3n9/dsh-session-telemetry-otel`
 
 需要：`sessions`
 
@@ -1998,9 +1998,9 @@ export enum SessionTelemetryMode {
 
 来源：[`packages/session/session-telemetry-otel/src/index.ts:91`](../packages/session/session-telemetry-otel/src/index.ts)
 
-<a id="xfcodeaidsh-session-title"></a>
+<a id="x1a0f3n9dsh-session-title"></a>
 
-## `@xfcodeai/dsh-session-title`
+## `@x1a0f3n9/dsh-session-title`
 
 需要：`sessions`
 
@@ -2018,9 +2018,9 @@ export interface Config {
 
 来源：[`packages/session/session-title/src/index.ts:56`](../packages/session/session-title/src/index.ts)
 
-<a id="xfcodeaidsh-session-title-all-prompts-llm"></a>
+<a id="x1a0f3n9dsh-session-title-all-prompts-llm"></a>
 
-## `@xfcodeai/dsh-session-title-all-prompts-llm`
+## `@x1a0f3n9/dsh-session-title-all-prompts-llm`
 
 需要：`sessionTitle` · `llm` · `sessions`
 
@@ -2033,9 +2033,9 @@ export type Config = SessionTitleLlmConfig
 
 来源：[`packages/session/session-title-all-prompts-llm/src/index.ts:15`](../packages/session/session-title-all-prompts-llm/src/index.ts)
 
-<a id="xfcodeaidsh-session-title-first-prompt-llm"></a>
+<a id="x1a0f3n9dsh-session-title-first-prompt-llm"></a>
 
-## `@xfcodeai/dsh-session-title-first-prompt-llm`
+## `@x1a0f3n9/dsh-session-title-first-prompt-llm`
 
 需要：`sessionTitle` · `llm` · `sessions`
 
@@ -2048,9 +2048,9 @@ export type Config = SessionTitleLlmConfig
 
 来源：[`packages/session/session-title-first-prompt-llm/src/index.ts:15`](../packages/session/session-title-first-prompt-llm/src/index.ts)
 
-<a id="xfcodeaidsh-settings-file"></a>
+<a id="x1a0f3n9dsh-settings-file"></a>
 
-## `@xfcodeai/dsh-settings-file`
+## `@x1a0f3n9/dsh-settings-file`
 
 ```ts config-catalog
 /** Plugin config: file location and hot-reload behavior. */
@@ -2068,9 +2068,9 @@ export interface Config {
 
 来源：[`packages/settings/settings-file/src/index.ts:22`](../packages/settings/settings-file/src/index.ts)
 
-<a id="xfcodeaidsh-shell-env"></a>
+<a id="x1a0f3n9dsh-shell-env"></a>
 
-## `@xfcodeai/dsh-shell-env`
+## `@x1a0f3n9/dsh-shell-env`
 
 ```ts config-catalog
 /** Plugin config (all optional — the built-in facts resolve without defaults). */
@@ -2082,9 +2082,9 @@ export interface Config {
 
 来源：[`packages/shell/shell-env/src/index.ts:29`](../packages/shell/shell-env/src/index.ts)
 
-<a id="xfcodeaidsh-skill"></a>
+<a id="x1a0f3n9dsh-skill"></a>
 
-## `@xfcodeai/dsh-skill`
+## `@x1a0f3n9/dsh-skill`
 
 ```ts config-catalog
 /** Skill registry configuration. */
@@ -2096,9 +2096,9 @@ export interface Config {
 
 来源：[`packages/skill/skill/src/index.ts:280`](../packages/skill/skill/src/index.ts)
 
-<a id="xfcodeaidsh-skill-filesystem"></a>
+<a id="x1a0f3n9dsh-skill-filesystem"></a>
 
-## `@xfcodeai/dsh-skill-filesystem`
+## `@x1a0f3n9/dsh-skill-filesystem`
 
 需要：`skills`
 
@@ -2134,9 +2134,9 @@ export interface Config {
 
 来源：[`packages/skill/skill-filesystem/src/index.ts:49`](../packages/skill/skill-filesystem/src/index.ts)
 
-<a id="xfcodeaidsh-spill-local"></a>
+<a id="x1a0f3n9dsh-spill-local"></a>
 
-## `@xfcodeai/dsh-spill-local`
+## `@x1a0f3n9/dsh-spill-local`
 
 ```ts config-catalog
 /** Plugin config (all optional — `static Config` supplies the defaults). */
@@ -2163,9 +2163,9 @@ export interface Config {
 
 来源：[`packages/spill/spill-local/src/index.ts:31`](../packages/spill/spill-local/src/index.ts)
 
-<a id="xfcodeaidsh-spill-policy"></a>
+<a id="x1a0f3n9dsh-spill-policy"></a>
 
-## `@xfcodeai/dsh-spill-policy`
+## `@x1a0f3n9/dsh-spill-policy`
 
 需要：`tools` · `sessionProjections`
 
@@ -2183,9 +2183,9 @@ export interface Config {
 
 来源：[`packages/spill/spill-policy/src/index.ts:60`](../packages/spill/spill-policy/src/index.ts)
 
-<a id="xfcodeaidsh-storage-domain"></a>
+<a id="x1a0f3n9dsh-storage-domain"></a>
 
-## `@xfcodeai/dsh-storage-domain`
+## `@x1a0f3n9/dsh-storage-domain`
 
 需要：`storage`
 
@@ -2206,9 +2206,9 @@ export interface Config {
 
 来源：[`packages/storage/storage-domain/src/index.ts:52`](../packages/storage/storage-domain/src/index.ts)
 
-<a id="xfcodeaidsh-storage-json"></a>
+<a id="x1a0f3n9dsh-storage-json"></a>
 
-## `@xfcodeai/dsh-storage-json`
+## `@x1a0f3n9/dsh-storage-json`
 
 需要：`storage`
 
@@ -2227,9 +2227,9 @@ export interface Config {
 
 来源：[`packages/storage/storage-json/src/index.ts:28`](../packages/storage/storage-json/src/index.ts)
 
-<a id="xfcodeaidsh-storage-sqlite"></a>
+<a id="x1a0f3n9dsh-storage-sqlite"></a>
 
-## `@xfcodeai/dsh-storage-sqlite`
+## `@x1a0f3n9/dsh-storage-sqlite`
 
 需要：`storage`
 
@@ -2267,9 +2267,9 @@ export type JournalMode = 'wal' | 'delete' | 'truncate' | 'persist'
 
 来源：[`packages/storage/storage-sqlite/src/index.ts:24`](../packages/storage/storage-sqlite/src/index.ts)
 
-<a id="xfcodeaidsh-subagent-acp"></a>
+<a id="x1a0f3n9dsh-subagent-acp"></a>
 
-## `@xfcodeai/dsh-subagent-acp`
+## `@x1a0f3n9/dsh-subagent-acp`
 
 需要：`subagents` · `subprocess`
 
@@ -2320,9 +2320,9 @@ export type PermissionPolicy = 'allow' | 'reject'
 
 来源：[`packages/subagent/subagent-acp/src/index.ts:27`](../packages/subagent/subagent-acp/src/index.ts)
 
-<a id="xfcodeaidsh-subagent-claude-code"></a>
+<a id="x1a0f3n9dsh-subagent-claude-code"></a>
 
-## `@xfcodeai/dsh-subagent-claude-code`
+## `@x1a0f3n9/dsh-subagent-claude-code`
 
 需要：`subagents` · `subprocess`
 
@@ -2355,9 +2355,9 @@ export type ClaudeCodePermissionMode = typeof CLAUDE_CODE_PERMISSION_MODES[numbe
 
 来源：[`packages/subagent/subagent-claude-code/src/index.ts:38`](../packages/subagent/subagent-claude-code/src/index.ts)
 
-<a id="xfcodeaidsh-subagent-codex"></a>
+<a id="x1a0f3n9dsh-subagent-codex"></a>
 
-## `@xfcodeai/dsh-subagent-codex`
+## `@x1a0f3n9/dsh-subagent-codex`
 
 需要：`subagents` · `subprocess`
 
@@ -2388,9 +2388,9 @@ export type CodexPermissionMode =
 
 来源：[`packages/subagent/subagent-codex/src/index.ts:36`](../packages/subagent/subagent-codex/src/index.ts)
 
-<a id="xfcodeaidsh-subagent-dsh-sdk"></a>
+<a id="x1a0f3n9dsh-subagent-dsh-sdk"></a>
 
-## `@xfcodeai/dsh-subagent-dsh-sdk`
+## `@x1a0f3n9/dsh-subagent-dsh-sdk`
 
 需要：`subagents`
 
@@ -2444,9 +2444,9 @@ export interface Config {
 
 来源：[`packages/subagent/subagent-dsh-sdk/src/index.ts:34`](../packages/subagent/subagent-dsh-sdk/src/index.ts)
 
-<a id="xfcodeaidsh-subagent-fork-in-process"></a>
+<a id="x1a0f3n9dsh-subagent-fork-in-process"></a>
 
-## `@xfcodeai/dsh-subagent-fork-in-process`
+## `@x1a0f3n9/dsh-subagent-fork-in-process`
 
 需要：`subagents`
 
@@ -2460,9 +2460,9 @@ export interface Config {
 
 来源：[`packages/subagent/subagent-fork-in-process/src/index.ts:31`](../packages/subagent/subagent-fork-in-process/src/index.ts)
 
-<a id="xfcodeaidsh-subagent-spawn-in-process"></a>
+<a id="x1a0f3n9dsh-subagent-spawn-in-process"></a>
 
-## `@xfcodeai/dsh-subagent-spawn-in-process`
+## `@x1a0f3n9/dsh-subagent-spawn-in-process`
 
 需要：`subagents`
 
@@ -2476,9 +2476,9 @@ export interface Config {
 
 来源：[`packages/subagent/subagent-spawn-in-process/src/index.ts:25`](../packages/subagent/subagent-spawn-in-process/src/index.ts)
 
-<a id="xfcodeaidsh-subprocess-e2b"></a>
+<a id="x1a0f3n9dsh-subprocess-e2b"></a>
 
-## `@xfcodeai/dsh-subprocess-e2b`
+## `@x1a0f3n9/dsh-subprocess-e2b`
 
 需要：`e2b`
 
@@ -2492,9 +2492,9 @@ export interface Config {
 
 来源：[`packages/e2b/subprocess-e2b/src/index.ts:25`](../packages/e2b/subprocess-e2b/src/index.ts)
 
-<a id="xfcodeaidsh-system-prompt"></a>
+<a id="x1a0f3n9dsh-system-prompt"></a>
 
-## `@xfcodeai/dsh-system-prompt`
+## `@x1a0f3n9/dsh-system-prompt`
 
 ```ts config-catalog
 /** Plugin config: the deployment-authored fragment of the system prompt (see {@link Config.persona} for its contract). */
@@ -2519,9 +2519,9 @@ export interface Config {
 
 来源：[`packages/core/system-prompt/src/index.ts:237`](../packages/core/system-prompt/src/index.ts)
 
-<a id="xfcodeaidsh-terminal-bash"></a>
+<a id="x1a0f3n9dsh-terminal-bash"></a>
 
-## `@xfcodeai/dsh-terminal-bash`
+## `@x1a0f3n9/dsh-terminal-bash`
 
 需要：`terminals` · `sandboxPolicy` · `sessionProjections` · `subprocess`
 
@@ -2569,9 +2569,9 @@ export type ShellDialect = 'bash' | 'pwsh'
 
 来源：[`packages/terminal/terminal-bash/src/config.ts:10`](../packages/terminal/terminal-bash/src/config.ts)
 
-<a id="xfcodeaidsh-time-context"></a>
+<a id="x1a0f3n9dsh-time-context"></a>
 
-## `@xfcodeai/dsh-time-context`
+## `@x1a0f3n9/dsh-time-context`
 
 需要：`agents` · `sessionProjections`
 
@@ -2587,9 +2587,9 @@ export interface Config {
 
 来源：[`packages/context/time-context/src/index.ts:48`](../packages/context/time-context/src/index.ts)
 
-<a id="xfcodeaidsh-tmux-context"></a>
+<a id="x1a0f3n9dsh-tmux-context"></a>
 
-## `@xfcodeai/dsh-tmux-context`
+## `@x1a0f3n9/dsh-tmux-context`
 
 需要：`agents` · `sessionProjections`
 
@@ -2603,9 +2603,9 @@ export interface Config {
 
 来源：[`packages/context/tmux-context/src/index.ts:36`](../packages/context/tmux-context/src/index.ts)
 
-<a id="xfcodeaidsh-token-meter"></a>
+<a id="x1a0f3n9dsh-token-meter"></a>
 
-## `@xfcodeai/dsh-token-meter`
+## `@x1a0f3n9/dsh-token-meter`
 
 需要：`sessionProjections`
 
@@ -2616,9 +2616,9 @@ export type TokenMeterConfig = Record<string, never>
 
 来源：[`packages/llm/token-meter/src/types.ts:13`](../packages/llm/token-meter/src/types.ts)
 
-<a id="xfcodeaidsh-tool-bash"></a>
+<a id="x1a0f3n9dsh-tool-bash"></a>
 
-## `@xfcodeai/dsh-tool-bash`
+## `@x1a0f3n9/dsh-tool-bash`
 
 需要：`tools` · `shell` · `systemPrompt` · `shellEnv`
 
@@ -2632,9 +2632,9 @@ export interface Config {
 
 来源：[`packages/shell/tool-bash/src/index.ts:33`](../packages/shell/tool-bash/src/index.ts)
 
-<a id="xfcodeaidsh-tool-bash-persistent"></a>
+<a id="x1a0f3n9dsh-tool-bash-persistent"></a>
 
-## `@xfcodeai/dsh-tool-bash-persistent`
+## `@x1a0f3n9/dsh-tool-bash-persistent`
 
 需要：`tools` · `terminals`
 
@@ -2654,9 +2654,9 @@ export interface Config {
 
 来源：[`packages/shell/tool-bash-persistent/src/index.ts:432`](../packages/shell/tool-bash-persistent/src/index.ts)
 
-<a id="xfcodeaidsh-tool-fs"></a>
+<a id="x1a0f3n9dsh-tool-fs"></a>
 
-## `@xfcodeai/dsh-tool-fs`
+## `@x1a0f3n9/dsh-tool-fs`
 
 需要：`tools` · `fs` · `systemPrompt`
 
@@ -2676,9 +2676,9 @@ export interface Config {
 
 来源：[`packages/fs/tool-fs/src/index.ts:25`](../packages/fs/tool-fs/src/index.ts)
 
-<a id="xfcodeaidsh-tool-fs-search"></a>
+<a id="x1a0f3n9dsh-tool-fs-search"></a>
 
-## `@xfcodeai/dsh-tool-fs-search`
+## `@x1a0f3n9/dsh-tool-fs-search`
 
 需要：`tools` · `systemPrompt` · `subprocess`
 
@@ -2703,7 +2703,7 @@ export interface Config {
   stderrMaxBytes?: number
   /**
    * Cooperative tool-call timeout budget (ms) on both tools, enforced by
-   * `@xfcodeai/dsh-tool-call-timeout-policy` through `exec.signal`.
+   * `@x1a0f3n9/dsh-tool-call-timeout-policy` through `exec.signal`.
    */
   timeoutMs?: number
 }
@@ -2711,9 +2711,9 @@ export interface Config {
 
 来源：[`packages/fs/tool-fs-search/src/index.ts:73`](../packages/fs/tool-fs-search/src/index.ts)
 
-<a id="xfcodeaidsh-tool-goal"></a>
+<a id="x1a0f3n9dsh-tool-goal"></a>
 
-## `@xfcodeai/dsh-tool-goal`
+## `@x1a0f3n9/dsh-tool-goal`
 
 需要：`agents` · `goals` · `tools` · `systemPrompt` · `sessionProjections`
 
@@ -2727,9 +2727,9 @@ export interface Config {
 
 来源：[`packages/goal/tool-goal/src/index.ts:25`](../packages/goal/tool-goal/src/index.ts)
 
-<a id="xfcodeaidsh-tool-jobs"></a>
+<a id="x1a0f3n9dsh-tool-jobs"></a>
 
-## `@xfcodeai/dsh-tool-jobs`
+## `@x1a0f3n9/dsh-tool-jobs`
 
 需要：`tools` · `jobs` · `systemPrompt`
 
@@ -2761,9 +2761,9 @@ export type CompletionDelivery = 'quiet' | 'wakeup'
 
 来源：[`packages/jobs/tool-jobs/src/index.ts:31`](../packages/jobs/tool-jobs/src/index.ts)
 
-<a id="xfcodeaidsh-tool-lsp"></a>
+<a id="x1a0f3n9dsh-tool-lsp"></a>
 
-## `@xfcodeai/dsh-tool-lsp`
+## `@x1a0f3n9/dsh-tool-lsp`
 
 需要：`tools` · `lsp` · `systemPrompt`
 
@@ -2781,9 +2781,9 @@ export interface Config {
 
 来源：[`packages/lsp/tool-lsp/src/index.ts:57`](../packages/lsp/tool-lsp/src/index.ts)
 
-<a id="xfcodeaidsh-tool-pwsh"></a>
+<a id="x1a0f3n9dsh-tool-pwsh"></a>
 
-## `@xfcodeai/dsh-tool-pwsh`
+## `@x1a0f3n9/dsh-tool-pwsh`
 
 需要：`tools` · `shell` · `systemPrompt` · `shellEnv`
 
@@ -2797,9 +2797,9 @@ export interface Config {
 
 来源：[`packages/shell/tool-pwsh/src/index.ts:51`](../packages/shell/tool-pwsh/src/index.ts)
 
-<a id="xfcodeaidsh-tool-pwsh-persistent"></a>
+<a id="x1a0f3n9dsh-tool-pwsh-persistent"></a>
 
-## `@xfcodeai/dsh-tool-pwsh-persistent`
+## `@x1a0f3n9/dsh-tool-pwsh-persistent`
 
 需要：`tools` · `terminals`
 
@@ -2819,9 +2819,9 @@ export interface Config {
 
 来源：[`packages/shell/tool-pwsh-persistent/src/index.ts:472`](../packages/shell/tool-pwsh-persistent/src/index.ts)
 
-<a id="xfcodeaidsh-tool-ralph"></a>
+<a id="x1a0f3n9dsh-tool-ralph"></a>
 
-## `@xfcodeai/dsh-tool-ralph`
+## `@x1a0f3n9/dsh-tool-ralph`
 
 需要：`tools` · `workflowEngine` · `subagents` · `systemPrompt`
 
@@ -2841,9 +2841,9 @@ export interface Config {
 
 来源：[`packages/workflow/tool-ralph/src/index.ts:21`](../packages/workflow/tool-ralph/src/index.ts)
 
-<a id="xfcodeaidsh-tool-session-query"></a>
+<a id="x1a0f3n9dsh-tool-session-query"></a>
 
-## `@xfcodeai/dsh-tool-session-query`
+## `@x1a0f3n9/dsh-tool-session-query`
 
 需要：`tools` · `systemPrompt` · `sessionQuery` · `sessionProjections`
 
@@ -2859,9 +2859,9 @@ export interface Config {
 
 来源：[`packages/session-query/tool-session-query/src/index.ts:28`](../packages/session-query/tool-session-query/src/index.ts)
 
-<a id="xfcodeaidsh-tool-skill"></a>
+<a id="x1a0f3n9dsh-tool-skill"></a>
 
-## `@xfcodeai/dsh-tool-skill`
+## `@x1a0f3n9/dsh-tool-skill`
 
 需要：`agents` · `tools` · `skills`
 
@@ -2875,9 +2875,9 @@ export interface Config {
 
 来源：[`packages/skill/tool-skill/src/index.ts:61`](../packages/skill/tool-skill/src/index.ts)
 
-<a id="xfcodeaidsh-tool-str-replace-editor"></a>
+<a id="x1a0f3n9dsh-tool-str-replace-editor"></a>
 
-## `@xfcodeai/dsh-tool-str-replace-editor`
+## `@x1a0f3n9/dsh-tool-str-replace-editor`
 
 需要：`tools` · `fs`
 
@@ -2893,9 +2893,9 @@ export interface Config {
 
 来源：[`packages/fs/tool-str-replace-editor/src/index.ts:505`](../packages/fs/tool-str-replace-editor/src/index.ts)
 
-<a id="xfcodeaidsh-tool-subagent"></a>
+<a id="x1a0f3n9dsh-tool-subagent"></a>
 
-## `@xfcodeai/dsh-tool-subagent`
+## `@x1a0f3n9/dsh-tool-subagent`
 
 需要：`tools` · `subagents` · `systemPrompt` · `sessionProjections`
 
@@ -2963,9 +2963,9 @@ export interface Config {
 
 来源：[`packages/subagent/tool-subagent/src/index.ts:48`](../packages/subagent/tool-subagent/src/index.ts)
 
-<a id="xfcodeaidsh-tool-terminal"></a>
+<a id="x1a0f3n9dsh-tool-terminal"></a>
 
-## `@xfcodeai/dsh-tool-terminal`
+## `@x1a0f3n9/dsh-tool-terminal`
 
 需要：`terminals` · `tools` · `systemPrompt`
 
@@ -2981,9 +2981,9 @@ export interface Config {
 
 来源：[`packages/terminal/tool-terminal/src/index.ts:35`](../packages/terminal/tool-terminal/src/index.ts)
 
-<a id="xfcodeaidsh-tool-todo"></a>
+<a id="x1a0f3n9dsh-tool-todo"></a>
 
-## `@xfcodeai/dsh-tool-todo`
+## `@x1a0f3n9/dsh-tool-todo`
 
 需要：`tools`
 
@@ -3003,9 +3003,9 @@ export interface Config {
 
 来源：[`packages/todo/tool-todo/src/index.ts:29`](../packages/todo/tool-todo/src/index.ts)
 
-<a id="xfcodeaidsh-tool-web"></a>
+<a id="x1a0f3n9dsh-tool-web"></a>
 
-## `@xfcodeai/dsh-tool-web`
+## `@x1a0f3n9/dsh-tool-web`
 
 需要：`tools` · `web` · `systemPrompt`
 
@@ -3031,9 +3031,9 @@ export interface Config {
 
 来源：[`packages/web/tool-web/src/index.ts:37`](../packages/web/tool-web/src/index.ts)
 
-<a id="xfcodeaidsh-tool-workflow"></a>
+<a id="x1a0f3n9dsh-tool-workflow"></a>
 
-## `@xfcodeai/dsh-tool-workflow`
+## `@x1a0f3n9/dsh-tool-workflow`
 
 需要：`tools` · `workflowEngine` · `systemPrompt`
 
@@ -3049,9 +3049,9 @@ export interface Config {
 
 来源：[`packages/workflow/tool-workflow/src/index.ts:32`](../packages/workflow/tool-workflow/src/index.ts)
 
-<a id="xfcodeaidsh-tools"></a>
+<a id="x1a0f3n9dsh-tools"></a>
 
-## `@xfcodeai/dsh-tools`
+## `@x1a0f3n9/dsh-tools`
 
 需要：`systemPrompt`
 
@@ -3085,9 +3085,9 @@ export type ToolPresentationMode = 'native' | 'ptc' | 'both'
 
 来源：[`packages/core/tools/src/index.ts:647`](../packages/core/tools/src/index.ts)
 
-<a id="xfcodeaidsh-typert-loader"></a>
+<a id="x1a0f3n9dsh-typert-loader"></a>
 
-## `@xfcodeai/dsh-typert-loader`
+## `@x1a0f3n9/dsh-typert-loader`
 
 需要：`typert` · `loader`
 
@@ -3101,9 +3101,9 @@ export interface Config {
 
 来源：[`packages/typert/loader/src/index.ts:47`](../packages/typert/loader/src/index.ts)
 
-<a id="xfcodeaidsh-user-approval"></a>
+<a id="x1a0f3n9dsh-user-approval"></a>
 
-## `@xfcodeai/dsh-user-approval`
+## `@x1a0f3n9/dsh-user-approval`
 
 ```ts config-catalog
 /** Plugin config. All optional — `static Config` supplies the defaults. */
@@ -3132,9 +3132,9 @@ export type ApprovalPolicy = 'ask' | 'never'
 
 来源：[`packages/interaction/user-approval/src/index.ts:126`](../packages/interaction/user-approval/src/index.ts)
 
-<a id="xfcodeaidsh-web"></a>
+<a id="x1a0f3n9dsh-web"></a>
 
-## `@xfcodeai/dsh-web`
+## `@x1a0f3n9/dsh-web`
 
 ```ts config-catalog
 /**
@@ -3153,9 +3153,9 @@ export interface WebRuntimeConfig {
 
 来源：[`packages/web/web/src/index.ts:55`](../packages/web/web/src/index.ts)
 
-<a id="xfcodeaidsh-web-app"></a>
+<a id="x1a0f3n9dsh-web-app"></a>
 
-## `@xfcodeai/dsh-web-app`
+## `@x1a0f3n9/dsh-web-app`
 
 需要：`webServer`
 
@@ -3180,9 +3180,9 @@ export interface Config {
 
 来源：[`packages/bundle/web-app/src/index.ts:44`](../packages/bundle/web-app/src/index.ts)
 
-<a id="xfcodeaidsh-web-fetch-http"></a>
+<a id="x1a0f3n9dsh-web-fetch-http"></a>
 
-## `@xfcodeai/dsh-web-fetch-http`
+## `@x1a0f3n9/dsh-web-fetch-http`
 
 需要：`web`
 
@@ -3204,9 +3204,9 @@ export interface Config {
 
 来源：[`packages/web/web-fetch-http/src/index.ts:32`](../packages/web/web-fetch-http/src/index.ts)
 
-<a id="xfcodeaidsh-web-search-deepseek"></a>
+<a id="x1a0f3n9dsh-web-search-deepseek"></a>
 
-## `@xfcodeai/dsh-web-search-deepseek`
+## `@x1a0f3n9/dsh-web-search-deepseek`
 
 需要：`web`
 
@@ -3232,9 +3232,9 @@ export interface Config {
 
 来源：[`packages/web/web-search-deepseek/src/index.ts:46`](../packages/web/web-search-deepseek/src/index.ts)
 
-<a id="xfcodeaidsh-web-search-exa"></a>
+<a id="x1a0f3n9dsh-web-search-exa"></a>
 
-## `@xfcodeai/dsh-web-search-exa`
+## `@x1a0f3n9/dsh-web-search-exa`
 
 需要：`web`
 
@@ -3256,9 +3256,9 @@ export interface Config {
 
 来源：[`packages/web/web-search-exa/src/index.ts:35`](../packages/web/web-search-exa/src/index.ts)
 
-<a id="xfcodeaidsh-web-search-perplexity"></a>
+<a id="x1a0f3n9dsh-web-search-perplexity"></a>
 
-## `@xfcodeai/dsh-web-search-perplexity`
+## `@x1a0f3n9/dsh-web-search-perplexity`
 
 需要：`web`
 
@@ -3280,9 +3280,9 @@ export interface Config {
 
 来源：[`packages/web/web-search-perplexity/src/index.ts:30`](../packages/web/web-search-perplexity/src/index.ts)
 
-<a id="xfcodeaidsh-webhook-github"></a>
+<a id="x1a0f3n9dsh-webhook-github"></a>
 
-## `@xfcodeai/dsh-webhook-github`
+## `@x1a0f3n9/dsh-webhook-github`
 
 需要：`webServer` · `webhookRuntime` · `credentials`
 
@@ -3302,9 +3302,9 @@ export interface Config {
 
 来源：[`packages/webhook/webhook-github/src/index.ts:17`](../packages/webhook/webhook-github/src/index.ts)
 
-<a id="xfcodeaidsh-workflow-worker-thread"></a>
+<a id="x1a0f3n9dsh-workflow-worker-thread"></a>
 
-## `@xfcodeai/dsh-workflow-worker-thread`
+## `@x1a0f3n9/dsh-workflow-worker-thread`
 
 需要：`subagents`
 
@@ -3336,147 +3336,147 @@ export interface Config {
 
 这些插件通过 `cordis.yml` 中不含 `config:` 块的条目加载；它们未声明任何配置接口。
 
-- `@xfcodeai/dsh-acp-app` — 需要 `cmdlineArgs`（[`packages/bundle/acp-app/src/index.ts`](../packages/bundle/acp-app/src/index.ts)）
-- `@xfcodeai/dsh-agent`（[`packages/core/agent/src/index.ts`](../packages/core/agent/src/index.ts)）
-- `@xfcodeai/dsh-api-remotes` — 需要 `typertGateway`（[`packages/api/remotes/src/index.ts`](../packages/api/remotes/src/index.ts)）
-- `@xfcodeai/dsh-api-workspace-controller` — 需要 `typert` · `workspaceRegistry`（[`packages/api/workspace-controller/src/index.ts`](../packages/api/workspace-controller/src/index.ts)）
-- `@xfcodeai/dsh-authorization` — 需要 `credentials`（[`packages/credentials/authorization/src/index.ts`](../packages/credentials/authorization/src/index.ts)）
-- `@xfcodeai/dsh-client-locale`（[`packages/client/locale/src/index.ts`](../packages/client/locale/src/index.ts)）
-- `@xfcodeai/dsh-client-modules` — 需要 `webServer` · `loader`（[`packages/client/modules/src/index.ts`](../packages/client/modules/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-agent-preset`（[`packages/client/ui-agent-preset/src/index.ts`](../packages/client/ui-agent-preset/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-approval`（[`packages/client/ui-approval/src/index.ts`](../packages/client/ui-approval/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-attachment`（[`packages/client/ui-attachment/src/index.ts`](../packages/client/ui-attachment/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-brand-official`（[`packages/client/ui-brand-official/src/index.ts`](../packages/client/ui-brand-official/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-chat`（[`packages/client/ui-chat/src/index.ts`](../packages/client/ui-chat/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-commands`（[`packages/client/ui-commands/src/index.ts`](../packages/client/ui-commands/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-conversation`（[`packages/client/ui-conversation/src/index.ts`](../packages/client/ui-conversation/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-cordis`（[`packages/extensions/ui-cordis/src/index.ts`](../packages/extensions/ui-cordis/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-deliverables` — 需要 `systemPrompt`（[`packages/client/ui-deliverables/src/index.ts`](../packages/client/ui-deliverables/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-directory-picker-browse`（[`packages/client/ui-directory-picker-browse/src/index.ts`](../packages/client/ui-directory-picker-browse/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-directory-picker-native`（[`packages/client/ui-directory-picker-native/src/index.ts`](../packages/client/ui-directory-picker-native/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-goal`（[`packages/client/ui-goal/src/index.ts`](../packages/client/ui-goal/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-input-trigger`（[`packages/client/ui-input-trigger/src/index.ts`](../packages/client/ui-input-trigger/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-jobs`（[`packages/client/ui-jobs/src/index.ts`](../packages/client/ui-jobs/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-layout`（[`packages/client/ui-layout/src/index.ts`](../packages/client/ui-layout/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-message-feedback`（[`packages/client/ui-message-feedback/src/index.ts`](../packages/client/ui-message-feedback/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-model-selection`（[`packages/client/ui-model-selection/src/index.ts`](../packages/client/ui-model-selection/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-permission-presets`（[`packages/client/ui-permission-presets/src/index.ts`](../packages/client/ui-permission-presets/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-plan`（[`packages/client/ui-plan/src/index.ts`](../packages/client/ui-plan/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-reference`（[`packages/client/ui-reference/src/index.ts`](../packages/client/ui-reference/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-renderer`（[`packages/client/ui-renderer/src/index.ts`](../packages/client/ui-renderer/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-schedule`（[`packages/client/ui-schedule/src/index.ts`](../packages/client/ui-schedule/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-session`（[`packages/client/ui-session/src/index.ts`](../packages/client/ui-session/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-settings`（[`packages/client/ui-settings/src/index.ts`](../packages/client/ui-settings/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-settings-general`（[`packages/client/ui-settings-general/src/index.ts`](../packages/client/ui-settings-general/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-settings-models`（[`packages/client/ui-settings-models/src/index.ts`](../packages/client/ui-settings-models/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-settings-plugin-inventory`（[`packages/client/ui-settings-plugin-inventory/src/index.ts`](../packages/client/ui-settings-plugin-inventory/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-settings-plugins`（[`packages/client/ui-settings-plugins/src/index.ts`](../packages/client/ui-settings-plugins/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-sidebar`（[`packages/client/ui-sidebar/src/index.ts`](../packages/client/ui-sidebar/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-skill`（[`packages/client/ui-skill/src/index.ts`](../packages/client/ui-skill/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-subagent`（[`packages/client/ui-subagent/src/index.ts`](../packages/client/ui-subagent/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-theme`（[`packages/client/ui-theme/src/index.ts`](../packages/client/ui-theme/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-tool`（[`packages/client/ui-tool/src/index.ts`](../packages/client/ui-tool/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-trajectory`（[`packages/client/ui-trajectory/src/index.ts`](../packages/client/ui-trajectory/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-user-questions`（[`packages/client/ui-user-questions/src/index.ts`](../packages/client/ui-user-questions/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-workflow-run`（[`packages/client/ui-workflow-run/src/index.ts`](../packages/client/ui-workflow-run/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-workspace`（[`packages/client/ui-workspace/src/index.ts`](../packages/client/ui-workspace/src/index.ts)）
-- `@xfcodeai/dsh-command-compact` — 需要 `commands` · `compact`（[`packages/compaction/command-compact/src/index.ts`](../packages/compaction/command-compact/src/index.ts)）
-- `@xfcodeai/dsh-command-feedback` — 需要 `commands`（[`packages/feedback/command-feedback/src/index.ts`](../packages/feedback/command-feedback/src/index.ts)）
-- `@xfcodeai/dsh-command-goal` — 需要 `commands` · `goals`（[`packages/goal/command-goal/src/index.ts`](../packages/goal/command-goal/src/index.ts)）
-- `@xfcodeai/dsh-commands`（[`packages/interaction/commands/src/index.ts`](../packages/interaction/commands/src/index.ts)）
-- `@xfcodeai/dsh-cordis-client-runner`（[`packages/extensions/cordis-client-runner/src/index.ts`](../packages/extensions/cordis-client-runner/src/index.ts)）
-- `@xfcodeai/dsh-deepseek-llm-api-extensions`（[`packages/llm/deepseek-llm-api-extensions/src/index.ts`](../packages/llm/deepseek-llm-api-extensions/src/index.ts)）
-- `@xfcodeai/dsh-experimental-client-ui-agent-team`（[`packages/experimental/client-ui-agent-team/src/index.ts`](../packages/experimental/client-ui-agent-team/src/index.ts)）
-- `@xfcodeai/dsh-fs-e2b` — 需要 `e2b`（[`packages/e2b/fs-e2b/src/index.ts`](../packages/e2b/fs-e2b/src/index.ts)）
-- `@xfcodeai/dsh-fs-observation-policy`（[`packages/fs/fs-observation-policy/src/index.ts`](../packages/fs/fs-observation-policy/src/index.ts)）
-- `@xfcodeai/dsh-goal-round-driver` — 需要 `agents` · `goals` · `sessions`（[`packages/goal/goal-round-driver/src/index.ts`](../packages/goal/goal-round-driver/src/index.ts)）
-- `@xfcodeai/dsh-host-directory-picker-auto` — 需要 `webServer` · `loader`（[`packages/host/directory-picker-auto/src/index.ts`](../packages/host/directory-picker-auto/src/index.ts)）
-- `@xfcodeai/dsh-host-directory-picker-native`（[`packages/host/directory-picker-native/src/index.ts`](../packages/host/directory-picker-native/src/index.ts)）
-- `@xfcodeai/dsh-host-plugin-inventory` — 需要 `loader`（[`packages/host/plugin-inventory/src/index.ts`](../packages/host/plugin-inventory/src/index.ts)）
-- `@xfcodeai/dsh-llm`（[`packages/llm/llm/src/index.ts`](../packages/llm/llm/src/index.ts)）
-- `@xfcodeai/dsh-lsp`（[`packages/lsp/lsp/src/index.ts`](../packages/lsp/lsp/src/index.ts)）
-- `@xfcodeai/dsh-schedule` — 需要 `agents` · `sessions` · `tools` · `sessionPersistence`（[`packages/schedule/schedule/src/index.ts`](../packages/schedule/schedule/src/index.ts)）
-- `@xfcodeai/dsh-session`（[`packages/core/session/src/index.ts`](../packages/core/session/src/index.ts)）
-- `@xfcodeai/dsh-session-checkpoint-policy` — 需要 `llm` · `sessionPersistence` · `sessions` · `tools`（[`packages/session/session-checkpoint-policy/src/index.ts`](../packages/session/session-checkpoint-policy/src/index.ts)）
-- `@xfcodeai/dsh-session-projection`（[`packages/session/session-projection/src/index.ts`](../packages/session/session-projection/src/index.ts)）
-- `@xfcodeai/dsh-session-stats` — 需要 `sessionProjections`（[`packages/session/session-stats/src/index.ts`](../packages/session/session-stats/src/index.ts)）
-- `@xfcodeai/dsh-session-turn-outline` — 需要 `sessionProjections`（[`packages/session/session-turn-outline/src/index.ts`](../packages/session/session-turn-outline/src/index.ts)）
-- `@xfcodeai/dsh-skill-badge` — 需要 `skills`（[`packages/skill/skill-badge/src/index.ts`](../packages/skill/skill-badge/src/index.ts)）
-- `@xfcodeai/dsh-storage`（[`packages/storage/storage/src/index.ts`](../packages/storage/storage/src/index.ts)）
-- `@xfcodeai/dsh-subagent`（[`packages/subagent/subagent/src/index.ts`](../packages/subagent/subagent/src/index.ts)）
-- `@xfcodeai/dsh-subprocess-local`（[`packages/subprocess/subprocess-local/src/index.ts`](../packages/subprocess/subprocess-local/src/index.ts)）
-- `@xfcodeai/dsh-terminal`（[`packages/terminal/terminal/src/index.ts`](../packages/terminal/terminal/src/index.ts)）
-- `@xfcodeai/dsh-tool-ask-user` — 需要 `tools` · `userInteraction`（[`packages/interaction/tool-ask-user/src/index.ts`](../packages/interaction/tool-ask-user/src/index.ts)）
-- `@xfcodeai/dsh-tool-call-timeout-policy` — 需要 `tools`（[`packages/guard/timeout-policy/src/index.ts`](../packages/guard/timeout-policy/src/index.ts)）
-- `@xfcodeai/dsh-tool-cordis` — 需要 `tools` · `systemPrompt` · `dynamicCordisRunner` · `cordisInspect`（[`packages/extensions/tool-cordis/src/index.ts`](../packages/extensions/tool-cordis/src/index.ts)）
-- `@xfcodeai/dsh-tool-subagent-control` — 需要 `tools` · `subagents`（[`packages/subagent/tool-subagent-control/src/index.ts`](../packages/subagent/tool-subagent-control/src/index.ts)）
-- `@xfcodeai/dsh-user-questions`（[`packages/interaction/user-questions/src/index.ts`](../packages/interaction/user-questions/src/index.ts)）
-- `@xfcodeai/dsh-webhook` — 需要 `agents` · `agentDefaultModel` · `agentPresets` · `permissionPresets` · `sessionTitle` · `workspaceRegistry`（[`packages/webhook/webhook/src/index.ts`](../packages/webhook/webhook/src/index.ts)）
-- `@xfcodeai/dsh-workspace` — 需要 `storageDomain` · `sessionPersistence`（[`packages/workspace/workspace/src/index.ts`](../packages/workspace/workspace/src/index.ts)）
+- `@x1a0f3n9/dsh-acp-app` — 需要 `cmdlineArgs`（[`packages/bundle/acp-app/src/index.ts`](../packages/bundle/acp-app/src/index.ts)）
+- `@x1a0f3n9/dsh-agent`（[`packages/core/agent/src/index.ts`](../packages/core/agent/src/index.ts)）
+- `@x1a0f3n9/dsh-api-remotes` — 需要 `typertGateway`（[`packages/api/remotes/src/index.ts`](../packages/api/remotes/src/index.ts)）
+- `@x1a0f3n9/dsh-api-workspace-controller` — 需要 `typert` · `workspaceRegistry`（[`packages/api/workspace-controller/src/index.ts`](../packages/api/workspace-controller/src/index.ts)）
+- `@x1a0f3n9/dsh-authorization` — 需要 `credentials`（[`packages/credentials/authorization/src/index.ts`](../packages/credentials/authorization/src/index.ts)）
+- `@x1a0f3n9/dsh-client-locale`（[`packages/client/locale/src/index.ts`](../packages/client/locale/src/index.ts)）
+- `@x1a0f3n9/dsh-client-modules` — 需要 `webServer` · `loader`（[`packages/client/modules/src/index.ts`](../packages/client/modules/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-agent-preset`（[`packages/client/ui-agent-preset/src/index.ts`](../packages/client/ui-agent-preset/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-approval`（[`packages/client/ui-approval/src/index.ts`](../packages/client/ui-approval/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-attachment`（[`packages/client/ui-attachment/src/index.ts`](../packages/client/ui-attachment/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-brand-official`（[`packages/client/ui-brand-official/src/index.ts`](../packages/client/ui-brand-official/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-chat`（[`packages/client/ui-chat/src/index.ts`](../packages/client/ui-chat/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-commands`（[`packages/client/ui-commands/src/index.ts`](../packages/client/ui-commands/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-conversation`（[`packages/client/ui-conversation/src/index.ts`](../packages/client/ui-conversation/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-cordis`（[`packages/extensions/ui-cordis/src/index.ts`](../packages/extensions/ui-cordis/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-deliverables` — 需要 `systemPrompt`（[`packages/client/ui-deliverables/src/index.ts`](../packages/client/ui-deliverables/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-directory-picker-browse`（[`packages/client/ui-directory-picker-browse/src/index.ts`](../packages/client/ui-directory-picker-browse/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-directory-picker-native`（[`packages/client/ui-directory-picker-native/src/index.ts`](../packages/client/ui-directory-picker-native/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-goal`（[`packages/client/ui-goal/src/index.ts`](../packages/client/ui-goal/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-input-trigger`（[`packages/client/ui-input-trigger/src/index.ts`](../packages/client/ui-input-trigger/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-jobs`（[`packages/client/ui-jobs/src/index.ts`](../packages/client/ui-jobs/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-layout`（[`packages/client/ui-layout/src/index.ts`](../packages/client/ui-layout/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-message-feedback`（[`packages/client/ui-message-feedback/src/index.ts`](../packages/client/ui-message-feedback/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-model-selection`（[`packages/client/ui-model-selection/src/index.ts`](../packages/client/ui-model-selection/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-permission-presets`（[`packages/client/ui-permission-presets/src/index.ts`](../packages/client/ui-permission-presets/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-plan`（[`packages/client/ui-plan/src/index.ts`](../packages/client/ui-plan/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-reference`（[`packages/client/ui-reference/src/index.ts`](../packages/client/ui-reference/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-renderer`（[`packages/client/ui-renderer/src/index.ts`](../packages/client/ui-renderer/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-schedule`（[`packages/client/ui-schedule/src/index.ts`](../packages/client/ui-schedule/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-session`（[`packages/client/ui-session/src/index.ts`](../packages/client/ui-session/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-settings`（[`packages/client/ui-settings/src/index.ts`](../packages/client/ui-settings/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-settings-general`（[`packages/client/ui-settings-general/src/index.ts`](../packages/client/ui-settings-general/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-settings-models`（[`packages/client/ui-settings-models/src/index.ts`](../packages/client/ui-settings-models/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-settings-plugin-inventory`（[`packages/client/ui-settings-plugin-inventory/src/index.ts`](../packages/client/ui-settings-plugin-inventory/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-settings-plugins`（[`packages/client/ui-settings-plugins/src/index.ts`](../packages/client/ui-settings-plugins/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-sidebar`（[`packages/client/ui-sidebar/src/index.ts`](../packages/client/ui-sidebar/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-skill`（[`packages/client/ui-skill/src/index.ts`](../packages/client/ui-skill/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-subagent`（[`packages/client/ui-subagent/src/index.ts`](../packages/client/ui-subagent/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-theme`（[`packages/client/ui-theme/src/index.ts`](../packages/client/ui-theme/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-tool`（[`packages/client/ui-tool/src/index.ts`](../packages/client/ui-tool/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-trajectory`（[`packages/client/ui-trajectory/src/index.ts`](../packages/client/ui-trajectory/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-user-questions`（[`packages/client/ui-user-questions/src/index.ts`](../packages/client/ui-user-questions/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-workflow-run`（[`packages/client/ui-workflow-run/src/index.ts`](../packages/client/ui-workflow-run/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-workspace`（[`packages/client/ui-workspace/src/index.ts`](../packages/client/ui-workspace/src/index.ts)）
+- `@x1a0f3n9/dsh-command-compact` — 需要 `commands` · `compact`（[`packages/compaction/command-compact/src/index.ts`](../packages/compaction/command-compact/src/index.ts)）
+- `@x1a0f3n9/dsh-command-feedback` — 需要 `commands`（[`packages/feedback/command-feedback/src/index.ts`](../packages/feedback/command-feedback/src/index.ts)）
+- `@x1a0f3n9/dsh-command-goal` — 需要 `commands` · `goals`（[`packages/goal/command-goal/src/index.ts`](../packages/goal/command-goal/src/index.ts)）
+- `@x1a0f3n9/dsh-commands`（[`packages/interaction/commands/src/index.ts`](../packages/interaction/commands/src/index.ts)）
+- `@x1a0f3n9/dsh-cordis-client-runner`（[`packages/extensions/cordis-client-runner/src/index.ts`](../packages/extensions/cordis-client-runner/src/index.ts)）
+- `@x1a0f3n9/dsh-deepseek-llm-api-extensions`（[`packages/llm/deepseek-llm-api-extensions/src/index.ts`](../packages/llm/deepseek-llm-api-extensions/src/index.ts)）
+- `@x1a0f3n9/dsh-experimental-client-ui-agent-team`（[`packages/experimental/client-ui-agent-team/src/index.ts`](../packages/experimental/client-ui-agent-team/src/index.ts)）
+- `@x1a0f3n9/dsh-fs-e2b` — 需要 `e2b`（[`packages/e2b/fs-e2b/src/index.ts`](../packages/e2b/fs-e2b/src/index.ts)）
+- `@x1a0f3n9/dsh-fs-observation-policy`（[`packages/fs/fs-observation-policy/src/index.ts`](../packages/fs/fs-observation-policy/src/index.ts)）
+- `@x1a0f3n9/dsh-goal-round-driver` — 需要 `agents` · `goals` · `sessions`（[`packages/goal/goal-round-driver/src/index.ts`](../packages/goal/goal-round-driver/src/index.ts)）
+- `@x1a0f3n9/dsh-host-directory-picker-auto` — 需要 `webServer` · `loader`（[`packages/host/directory-picker-auto/src/index.ts`](../packages/host/directory-picker-auto/src/index.ts)）
+- `@x1a0f3n9/dsh-host-directory-picker-native`（[`packages/host/directory-picker-native/src/index.ts`](../packages/host/directory-picker-native/src/index.ts)）
+- `@x1a0f3n9/dsh-host-plugin-inventory` — 需要 `loader`（[`packages/host/plugin-inventory/src/index.ts`](../packages/host/plugin-inventory/src/index.ts)）
+- `@x1a0f3n9/dsh-llm`（[`packages/llm/llm/src/index.ts`](../packages/llm/llm/src/index.ts)）
+- `@x1a0f3n9/dsh-lsp`（[`packages/lsp/lsp/src/index.ts`](../packages/lsp/lsp/src/index.ts)）
+- `@x1a0f3n9/dsh-schedule` — 需要 `agents` · `sessions` · `tools` · `sessionPersistence`（[`packages/schedule/schedule/src/index.ts`](../packages/schedule/schedule/src/index.ts)）
+- `@x1a0f3n9/dsh-session`（[`packages/core/session/src/index.ts`](../packages/core/session/src/index.ts)）
+- `@x1a0f3n9/dsh-session-checkpoint-policy` — 需要 `llm` · `sessionPersistence` · `sessions` · `tools`（[`packages/session/session-checkpoint-policy/src/index.ts`](../packages/session/session-checkpoint-policy/src/index.ts)）
+- `@x1a0f3n9/dsh-session-projection`（[`packages/session/session-projection/src/index.ts`](../packages/session/session-projection/src/index.ts)）
+- `@x1a0f3n9/dsh-session-stats` — 需要 `sessionProjections`（[`packages/session/session-stats/src/index.ts`](../packages/session/session-stats/src/index.ts)）
+- `@x1a0f3n9/dsh-session-turn-outline` — 需要 `sessionProjections`（[`packages/session/session-turn-outline/src/index.ts`](../packages/session/session-turn-outline/src/index.ts)）
+- `@x1a0f3n9/dsh-skill-badge` — 需要 `skills`（[`packages/skill/skill-badge/src/index.ts`](../packages/skill/skill-badge/src/index.ts)）
+- `@x1a0f3n9/dsh-storage`（[`packages/storage/storage/src/index.ts`](../packages/storage/storage/src/index.ts)）
+- `@x1a0f3n9/dsh-subagent`（[`packages/subagent/subagent/src/index.ts`](../packages/subagent/subagent/src/index.ts)）
+- `@x1a0f3n9/dsh-subprocess-local`（[`packages/subprocess/subprocess-local/src/index.ts`](../packages/subprocess/subprocess-local/src/index.ts)）
+- `@x1a0f3n9/dsh-terminal`（[`packages/terminal/terminal/src/index.ts`](../packages/terminal/terminal/src/index.ts)）
+- `@x1a0f3n9/dsh-tool-ask-user` — 需要 `tools` · `userInteraction`（[`packages/interaction/tool-ask-user/src/index.ts`](../packages/interaction/tool-ask-user/src/index.ts)）
+- `@x1a0f3n9/dsh-tool-call-timeout-policy` — 需要 `tools`（[`packages/guard/timeout-policy/src/index.ts`](../packages/guard/timeout-policy/src/index.ts)）
+- `@x1a0f3n9/dsh-tool-cordis` — 需要 `tools` · `systemPrompt` · `dynamicCordisRunner` · `cordisInspect`（[`packages/extensions/tool-cordis/src/index.ts`](../packages/extensions/tool-cordis/src/index.ts)）
+- `@x1a0f3n9/dsh-tool-subagent-control` — 需要 `tools` · `subagents`（[`packages/subagent/tool-subagent-control/src/index.ts`](../packages/subagent/tool-subagent-control/src/index.ts)）
+- `@x1a0f3n9/dsh-user-questions`（[`packages/interaction/user-questions/src/index.ts`](../packages/interaction/user-questions/src/index.ts)）
+- `@x1a0f3n9/dsh-webhook` — 需要 `agents` · `agentDefaultModel` · `agentPresets` · `permissionPresets` · `sessionTitle` · `workspaceRegistry`（[`packages/webhook/webhook/src/index.ts`](../packages/webhook/webhook/src/index.ts)）
+- `@x1a0f3n9/dsh-workspace` — 需要 `storageDomain` · `sessionPersistence`（[`packages/workspace/workspace/src/index.ts`](../packages/workspace/workspace/src/index.ts)）
 
 ## Seam 包（不可直接加载）
 
 抽象服务类——部署时应改为加载具体的实现包（参见[能力 seam](../.agents/notes/implemented/architecture/2026-06-13-capability-seams.zh.md)）。
 
-- `@xfcodeai/dsh-attachment` — 抽象 `AttachmentStore`（[`packages/attachment/attachment/src/index.ts`](../packages/attachment/attachment/src/index.ts)）
-- `@xfcodeai/dsh-code-runtime` — 抽象 `CodeRuntime`（[`packages/code-runtime/code-runtime/src/index.ts`](../packages/code-runtime/code-runtime/src/index.ts)）
-- `@xfcodeai/dsh-compaction` — 抽象 `CompactionEngine`（[`packages/compaction/compaction/src/index.ts`](../packages/compaction/compaction/src/index.ts)）
-- `@xfcodeai/dsh-credentials` — 抽象 `Credentials`（[`packages/credentials/credentials/src/index.ts`](../packages/credentials/credentials/src/index.ts)）
-- `@xfcodeai/dsh-file-reference` — 抽象 `FileReferenceService`（[`packages/context/file-reference/src/index.ts`](../packages/context/file-reference/src/index.ts)）
-- `@xfcodeai/dsh-fs` — 抽象 `FileSystem`（[`packages/fs/fs/src/index.ts`](../packages/fs/fs/src/index.ts)）
-- `@xfcodeai/dsh-host-directory-picker` — 抽象 `DirectoryPicker`（[`packages/host/directory-picker/src/index.ts`](../packages/host/directory-picker/src/index.ts)）
-- `@xfcodeai/dsh-jobs` — 抽象 `JobRegistry`（[`packages/jobs/jobs/src/index.ts`](../packages/jobs/jobs/src/index.ts)）
-- `@xfcodeai/dsh-sandbox` — 抽象 `SandboxProvider`（[`packages/sandbox/sandbox/src/index.ts`](../packages/sandbox/sandbox/src/index.ts)）
-- `@xfcodeai/dsh-session-persistence` — 抽象 `SessionPersistence`（[`packages/session/session-persistence/src/index.ts`](../packages/session/session-persistence/src/index.ts)）
-- `@xfcodeai/dsh-session-query` — 抽象 `SessionQueryEngine`（[`packages/session-query/session-query/src/index.ts`](../packages/session-query/session-query/src/index.ts)）
-- `@xfcodeai/dsh-settings` — 抽象 `Settings`（[`packages/settings/settings/src/index.ts`](../packages/settings/settings/src/index.ts)）
-- `@xfcodeai/dsh-shell` — 抽象 `ShellExecutor`（[`packages/shell/shell/src/index.ts`](../packages/shell/shell/src/index.ts)）
-- `@xfcodeai/dsh-spill` — 抽象 `SpillStore`（[`packages/spill/spill/src/index.ts`](../packages/spill/spill/src/index.ts)）
-- `@xfcodeai/dsh-subprocess` — 抽象 `SubprocessRuntime`（[`packages/subprocess/subprocess/src/index.ts`](../packages/subprocess/subprocess/src/index.ts)）
-- `@xfcodeai/dsh-workflow` — 抽象 `WorkflowEngine`（[`packages/workflow/workflow/src/index.ts`](../packages/workflow/workflow/src/index.ts)）
+- `@x1a0f3n9/dsh-attachment` — 抽象 `AttachmentStore`（[`packages/attachment/attachment/src/index.ts`](../packages/attachment/attachment/src/index.ts)）
+- `@x1a0f3n9/dsh-code-runtime` — 抽象 `CodeRuntime`（[`packages/code-runtime/code-runtime/src/index.ts`](../packages/code-runtime/code-runtime/src/index.ts)）
+- `@x1a0f3n9/dsh-compaction` — 抽象 `CompactionEngine`（[`packages/compaction/compaction/src/index.ts`](../packages/compaction/compaction/src/index.ts)）
+- `@x1a0f3n9/dsh-credentials` — 抽象 `Credentials`（[`packages/credentials/credentials/src/index.ts`](../packages/credentials/credentials/src/index.ts)）
+- `@x1a0f3n9/dsh-file-reference` — 抽象 `FileReferenceService`（[`packages/context/file-reference/src/index.ts`](../packages/context/file-reference/src/index.ts)）
+- `@x1a0f3n9/dsh-fs` — 抽象 `FileSystem`（[`packages/fs/fs/src/index.ts`](../packages/fs/fs/src/index.ts)）
+- `@x1a0f3n9/dsh-host-directory-picker` — 抽象 `DirectoryPicker`（[`packages/host/directory-picker/src/index.ts`](../packages/host/directory-picker/src/index.ts)）
+- `@x1a0f3n9/dsh-jobs` — 抽象 `JobRegistry`（[`packages/jobs/jobs/src/index.ts`](../packages/jobs/jobs/src/index.ts)）
+- `@x1a0f3n9/dsh-sandbox` — 抽象 `SandboxProvider`（[`packages/sandbox/sandbox/src/index.ts`](../packages/sandbox/sandbox/src/index.ts)）
+- `@x1a0f3n9/dsh-session-persistence` — 抽象 `SessionPersistence`（[`packages/session/session-persistence/src/index.ts`](../packages/session/session-persistence/src/index.ts)）
+- `@x1a0f3n9/dsh-session-query` — 抽象 `SessionQueryEngine`（[`packages/session-query/session-query/src/index.ts`](../packages/session-query/session-query/src/index.ts)）
+- `@x1a0f3n9/dsh-settings` — 抽象 `Settings`（[`packages/settings/settings/src/index.ts`](../packages/settings/settings/src/index.ts)）
+- `@x1a0f3n9/dsh-shell` — 抽象 `ShellExecutor`（[`packages/shell/shell/src/index.ts`](../packages/shell/shell/src/index.ts)）
+- `@x1a0f3n9/dsh-spill` — 抽象 `SpillStore`（[`packages/spill/spill/src/index.ts`](../packages/spill/spill/src/index.ts)）
+- `@x1a0f3n9/dsh-subprocess` — 抽象 `SubprocessRuntime`（[`packages/subprocess/subprocess/src/index.ts`](../packages/subprocess/subprocess/src/index.ts)）
+- `@x1a0f3n9/dsh-workflow` — 抽象 `WorkflowEngine`（[`packages/workflow/workflow/src/index.ts`](../packages/workflow/workflow/src/index.ts)）
 ## 库包（无插件入口）
 
 由其他包作为库导入；`cordis.yml` 无法加载它们。
 
-- `@xfcodeai/dsh-agent-loop-testkit`（[`packages/test-support/agent-loop-testkit/src/index.ts`](../packages/test-support/agent-loop-testkit/src/index.ts)）
-- `@xfcodeai/dsh-anonymous-user-id`（[`packages/identity/anonymous-user-id/src/index.ts`](../packages/identity/anonymous-user-id/src/index.ts)）
-- `@xfcodeai/dsh-app-boot`（[`packages/boot/app-boot/src/index.ts`](../packages/boot/app-boot/src/index.ts)）
-- `@xfcodeai/dsh-atomic-write`（[`packages/util/atomic-write/src/index.ts`](../packages/util/atomic-write/src/index.ts)）
-- `@xfcodeai/dsh-base`（[`packages/bundle/base/src/index.ts`](../packages/bundle/base/src/index.ts)）
-- `@xfcodeai/dsh-brand`（[`packages/util/brand/src/index.ts`](../packages/util/brand/src/index.ts)）
-- `@xfcodeai/dsh-client-store`（[`packages/client/store/src/index.ts`](../packages/client/store/src/index.ts)）
-- `@xfcodeai/dsh-client-test-runtime`（[`packages/test-support/client-runtime/src/index.ts`](../packages/test-support/client-runtime/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-primitives`（[`packages/client/ui-primitives/src/index.ts`](../packages/client/ui-primitives/src/index.ts)）
-- `@xfcodeai/dsh-client-ui-slots`（[`packages/client/ui-slots/src/index.ts`](../packages/client/ui-slots/src/index.ts)）
-- `@xfcodeai/dsh-client-web`（[`packages/client/web/src/index.ts`](../packages/client/web/src/index.ts)）
-- `@xfcodeai/dsh-cmdline`（[`packages/boot/cmdline/src/index.ts`](../packages/boot/cmdline/src/index.ts)）
-- `@xfcodeai/dsh-deque`（[`packages/util/deque/src/index.ts`](../packages/util/deque/src/index.ts)）
-- `@xfcodeai/dsh-experimental-agent-team-profile`（[`packages/experimental/agent-team-profile/src/index.ts`](../packages/experimental/agent-team-profile/src/index.ts)）
-- `@xfcodeai/dsh-experimental-agent-team-web-profile`（[`packages/experimental/agent-team-web-profile/src/index.ts`](../packages/experimental/agent-team-web-profile/src/index.ts)）
-- `@xfcodeai/dsh-experimental-webworker-packer`（[`packages/experimental/webworker-packer/src/index.ts`](../packages/experimental/webworker-packer/src/index.ts)）
-- `@xfcodeai/dsh-experimental-webworker-runtime`（[`packages/experimental/webworker-runtime/src/index.ts`](../packages/experimental/webworker-runtime/src/index.ts)）
-- `@xfcodeai/dsh-home-paths`（[`packages/util/home-paths/src/index.ts`](../packages/util/home-paths/src/index.ts)）
-- `@xfcodeai/dsh-hook-protocol`（[`packages/hooks/hook-protocol/src/index.ts`](../packages/hooks/hook-protocol/src/index.ts)）
-- `@xfcodeai/dsh-launch-environment`（[`packages/util/launch-environment/src/index.ts`](../packages/util/launch-environment/src/index.ts)）
-- `@xfcodeai/dsh-llm-mock-server`（[`packages/test-support/llm-mock-server/src/index.ts`](../packages/test-support/llm-mock-server/src/index.ts)）
-- `@xfcodeai/dsh-loader-smoke`（[`packages/test-support/loader-smoke/src/index.ts`](../packages/test-support/loader-smoke/src/index.ts)）
-- `@xfcodeai/dsh-native-command`（[`packages/util/native-command/src/index.ts`](../packages/util/native-command/src/index.ts)）
-- `@xfcodeai/dsh-output-retention`（[`packages/util/output-retention/src/index.ts`](../packages/util/output-retention/src/index.ts)）
-- `@xfcodeai/dsh-sandbox-windows-acl`（[`packages/sandbox/sandbox-windows-acl/src/index.ts`](../packages/sandbox/sandbox-windows-acl/src/index.ts)）
-- `@xfcodeai/dsh-scope`（[`packages/core/scope/src/index.ts`](../packages/core/scope/src/index.ts)）
-- `@xfcodeai/dsh-sdk-client`（[`packages/sdk/client/src/index.ts`](../packages/sdk/client/src/index.ts)）
-- `@xfcodeai/dsh-sdk-minimal`（[`packages/bundle/sdk-minimal/src/index.ts`](../packages/bundle/sdk-minimal/src/index.ts)）
-- `@xfcodeai/dsh-sdk-protocol`（[`packages/sdk/protocol/src/index.ts`](../packages/sdk/protocol/src/index.ts)）
-- `@xfcodeai/dsh-session-snapshot`（[`packages/test-support/session-snapshot/src/index.ts`](../packages/test-support/session-snapshot/src/index.ts)）
-- `@xfcodeai/dsh-session-telemetry`（[`packages/session/session-telemetry/src/index.ts`](../packages/session/session-telemetry/src/index.ts)）
-- `@xfcodeai/dsh-session-title-llm`（[`packages/session/session-title-llm/src/index.ts`](../packages/session/session-title-llm/src/index.ts)）
-- `@xfcodeai/dsh-subagent-in-process-driver`（[`packages/subagent/subagent-in-process-driver/src/index.ts`](../packages/subagent/subagent-in-process-driver/src/index.ts)）
-- `@xfcodeai/dsh-timeout`（[`packages/util/timeout/src/index.ts`](../packages/util/timeout/src/index.ts)）
-- `@xfcodeai/dsh-typert-generator`（[`packages/typert/generator/src/index.ts`](../packages/typert/generator/src/index.ts)）
-- `@xfcodeai/dsh-typert-protocol`（[`packages/typert/protocol/src/index.ts`](../packages/typert/protocol/src/index.ts)）
-- `@xfcodeai/dsh-typert-registry`（[`packages/typert/registry/src/index.ts`](../packages/typert/registry/src/index.ts)）
-- `@xfcodeai/dsh-util-crypto`（[`packages/util/crypto/src/index.ts`](../packages/util/crypto/src/index.ts)）
-- `@xfcodeai/dsh-util-time`（[`packages/util/time/src/index.ts`](../packages/util/time/src/index.ts)）
-- `@xfcodeai/dsh-util-values`（[`packages/util/values/src/index.ts`](../packages/util/values/src/index.ts)）
-- `@xfcodeai/dsh-util-workspace-path`（[`packages/util/workspace-path/src/index.ts`](../packages/util/workspace-path/src/index.ts)）
-- `@xfcodeai/dsh-win32-process`（[`packages/subprocess/win32-process/src/index.ts`](../packages/subprocess/win32-process/src/index.ts)）
+- `@x1a0f3n9/dsh-agent-loop-testkit`（[`packages/test-support/agent-loop-testkit/src/index.ts`](../packages/test-support/agent-loop-testkit/src/index.ts)）
+- `@x1a0f3n9/dsh-anonymous-user-id`（[`packages/identity/anonymous-user-id/src/index.ts`](../packages/identity/anonymous-user-id/src/index.ts)）
+- `@x1a0f3n9/dsh-app-boot`（[`packages/boot/app-boot/src/index.ts`](../packages/boot/app-boot/src/index.ts)）
+- `@x1a0f3n9/dsh-atomic-write`（[`packages/util/atomic-write/src/index.ts`](../packages/util/atomic-write/src/index.ts)）
+- `@x1a0f3n9/dsh-base`（[`packages/bundle/base/src/index.ts`](../packages/bundle/base/src/index.ts)）
+- `@x1a0f3n9/dsh-brand`（[`packages/util/brand/src/index.ts`](../packages/util/brand/src/index.ts)）
+- `@x1a0f3n9/dsh-client-store`（[`packages/client/store/src/index.ts`](../packages/client/store/src/index.ts)）
+- `@x1a0f3n9/dsh-client-test-runtime`（[`packages/test-support/client-runtime/src/index.ts`](../packages/test-support/client-runtime/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-primitives`（[`packages/client/ui-primitives/src/index.ts`](../packages/client/ui-primitives/src/index.ts)）
+- `@x1a0f3n9/dsh-client-ui-slots`（[`packages/client/ui-slots/src/index.ts`](../packages/client/ui-slots/src/index.ts)）
+- `@x1a0f3n9/dsh-client-web`（[`packages/client/web/src/index.ts`](../packages/client/web/src/index.ts)）
+- `@x1a0f3n9/dsh-cmdline`（[`packages/boot/cmdline/src/index.ts`](../packages/boot/cmdline/src/index.ts)）
+- `@x1a0f3n9/dsh-deque`（[`packages/util/deque/src/index.ts`](../packages/util/deque/src/index.ts)）
+- `@x1a0f3n9/dsh-experimental-agent-team-profile`（[`packages/experimental/agent-team-profile/src/index.ts`](../packages/experimental/agent-team-profile/src/index.ts)）
+- `@x1a0f3n9/dsh-experimental-agent-team-web-profile`（[`packages/experimental/agent-team-web-profile/src/index.ts`](../packages/experimental/agent-team-web-profile/src/index.ts)）
+- `@x1a0f3n9/dsh-experimental-webworker-packer`（[`packages/experimental/webworker-packer/src/index.ts`](../packages/experimental/webworker-packer/src/index.ts)）
+- `@x1a0f3n9/dsh-experimental-webworker-runtime`（[`packages/experimental/webworker-runtime/src/index.ts`](../packages/experimental/webworker-runtime/src/index.ts)）
+- `@x1a0f3n9/dsh-home-paths`（[`packages/util/home-paths/src/index.ts`](../packages/util/home-paths/src/index.ts)）
+- `@x1a0f3n9/dsh-hook-protocol`（[`packages/hooks/hook-protocol/src/index.ts`](../packages/hooks/hook-protocol/src/index.ts)）
+- `@x1a0f3n9/dsh-launch-environment`（[`packages/util/launch-environment/src/index.ts`](../packages/util/launch-environment/src/index.ts)）
+- `@x1a0f3n9/dsh-llm-mock-server`（[`packages/test-support/llm-mock-server/src/index.ts`](../packages/test-support/llm-mock-server/src/index.ts)）
+- `@x1a0f3n9/dsh-loader-smoke`（[`packages/test-support/loader-smoke/src/index.ts`](../packages/test-support/loader-smoke/src/index.ts)）
+- `@x1a0f3n9/dsh-native-command`（[`packages/util/native-command/src/index.ts`](../packages/util/native-command/src/index.ts)）
+- `@x1a0f3n9/dsh-output-retention`（[`packages/util/output-retention/src/index.ts`](../packages/util/output-retention/src/index.ts)）
+- `@x1a0f3n9/dsh-sandbox-windows-acl`（[`packages/sandbox/sandbox-windows-acl/src/index.ts`](../packages/sandbox/sandbox-windows-acl/src/index.ts)）
+- `@x1a0f3n9/dsh-scope`（[`packages/core/scope/src/index.ts`](../packages/core/scope/src/index.ts)）
+- `@x1a0f3n9/dsh-sdk-client`（[`packages/sdk/client/src/index.ts`](../packages/sdk/client/src/index.ts)）
+- `@x1a0f3n9/dsh-sdk-minimal`（[`packages/bundle/sdk-minimal/src/index.ts`](../packages/bundle/sdk-minimal/src/index.ts)）
+- `@x1a0f3n9/dsh-sdk-protocol`（[`packages/sdk/protocol/src/index.ts`](../packages/sdk/protocol/src/index.ts)）
+- `@x1a0f3n9/dsh-session-snapshot`（[`packages/test-support/session-snapshot/src/index.ts`](../packages/test-support/session-snapshot/src/index.ts)）
+- `@x1a0f3n9/dsh-session-telemetry`（[`packages/session/session-telemetry/src/index.ts`](../packages/session/session-telemetry/src/index.ts)）
+- `@x1a0f3n9/dsh-session-title-llm`（[`packages/session/session-title-llm/src/index.ts`](../packages/session/session-title-llm/src/index.ts)）
+- `@x1a0f3n9/dsh-subagent-in-process-driver`（[`packages/subagent/subagent-in-process-driver/src/index.ts`](../packages/subagent/subagent-in-process-driver/src/index.ts)）
+- `@x1a0f3n9/dsh-timeout`（[`packages/util/timeout/src/index.ts`](../packages/util/timeout/src/index.ts)）
+- `@x1a0f3n9/dsh-typert-generator`（[`packages/typert/generator/src/index.ts`](../packages/typert/generator/src/index.ts)）
+- `@x1a0f3n9/dsh-typert-protocol`（[`packages/typert/protocol/src/index.ts`](../packages/typert/protocol/src/index.ts)）
+- `@x1a0f3n9/dsh-typert-registry`（[`packages/typert/registry/src/index.ts`](../packages/typert/registry/src/index.ts)）
+- `@x1a0f3n9/dsh-util-crypto`（[`packages/util/crypto/src/index.ts`](../packages/util/crypto/src/index.ts)）
+- `@x1a0f3n9/dsh-util-time`（[`packages/util/time/src/index.ts`](../packages/util/time/src/index.ts)）
+- `@x1a0f3n9/dsh-util-values`（[`packages/util/values/src/index.ts`](../packages/util/values/src/index.ts)）
+- `@x1a0f3n9/dsh-util-workspace-path`（[`packages/util/workspace-path/src/index.ts`](../packages/util/workspace-path/src/index.ts)）
+- `@x1a0f3n9/dsh-win32-process`（[`packages/subprocess/win32-process/src/index.ts`](../packages/subprocess/win32-process/src/index.ts)）

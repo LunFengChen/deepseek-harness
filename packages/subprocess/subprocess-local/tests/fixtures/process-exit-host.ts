@@ -2,7 +2,7 @@ import { access, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
-import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
 
 const [kind, trigger, root] = process.argv.slice(2)
 if ((kind !== 'ordinary' && kind !== 'terminal')

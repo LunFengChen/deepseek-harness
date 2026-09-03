@@ -3,7 +3,7 @@ description: "The web GUI host's HTTP server: named-route and upgrade registrati
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-host-webserver
+# @x1a0f3n9/dsh-host-webserver
 
 English | [中文](README.zh.md)
 
@@ -30,7 +30,7 @@ Compose the webserver as the HTTP transport of a browser-facing host, then let t
 ### Minimal configuration
 
 ```yaml
-- name: '@xfcodeai/dsh-host-webserver'
+- name: '@x1a0f3n9/dsh-host-webserver'
   config:
     host: 127.0.0.1
     port: 3000
@@ -90,7 +90,7 @@ Read these when the server contract is not enough: the subsystem reference, then
 - [HTTP server subsystem](../../../docs/subsystems/web-server.md) — routes, matching order, and the config the server accepts.
 - [SPA dist server](../frontend-static/README.md) — the shipped owner of the fallback seat.
 - [Web config-tree boot and transport layering](../../../.agents/notes/implemented/architecture/2026-07-24-web-config-tree-boot-and-transport-layering.md) — why feature plugins own every route.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-host-webserver) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-host-webserver) — every accepted config field and its source declaration.
 
 -----
 

@@ -3,7 +3,7 @@ description: "面向用户与维护者的日志会话标题说明，用于选择
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-title
+# @x1a0f3n9/dsh-session-title
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 所有上限都是必填项；该库不提供默认值。以三个上限挂载服务：
 
 ```yaml
-- name: '@xfcodeai/dsh-session'
-- name: '@xfcodeai/dsh-session-title'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-title'
   config:
     fallbackMaxWords: 8
     fallbackMaxBytes: 96
@@ -50,7 +50,7 @@ kind: "package-reference"
 | `fallbackMaxBytes` | 必填 | 回退允许的最大 UTF-8 字节数；不得超过 `maxTitleBytes` |
 | `maxTitleBytes` | 必填 | 接受任何来源标题的最大 UTF-8 字节数 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-session-title)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-session-title)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 添加提供方
 

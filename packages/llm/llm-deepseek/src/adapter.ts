@@ -8,7 +8,7 @@
  * @module dsh-llm-deepseek/adapter
  */
 
-import { attributionHeaders, contentHasImage, CONTEXT_WINDOW_EXCEEDED_CODE, isContextWindowExceededError, isQuotaExceededError, LlmAdapter, LlmError, offloadedImageText, offloadRequestImagesWithPolicy, ProviderRequestId, QUOTA_EXCEEDED_CODE, ReasoningEffortId } from '@xfcodeai/dsh-llm'
+import { attributionHeaders, contentHasImage, CONTEXT_WINDOW_EXCEEDED_CODE, isContextWindowExceededError, isQuotaExceededError, LlmAdapter, LlmError, offloadedImageText, offloadRequestImagesWithPolicy, ProviderRequestId, QUOTA_EXCEEDED_CODE, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 import type {
   ContentBlock,
   GenerateOptions,
@@ -20,21 +20,21 @@ import type {
   ModelModality,
   ResolvedRetryPolicy,
   StreamChunk,
-} from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 import type {
   AttachmentId,
   AttachmentStore,
   ImageAttachmentRef,
   RequestImageAttachment,
-} from '@xfcodeai/dsh-attachment'
-import type { CredentialRef } from '@xfcodeai/dsh-credentials'
-import { deadline, idleWatchdog, timeoutOf } from '@xfcodeai/dsh-timeout'
-import type { AnonymousUserId } from '@xfcodeai/dsh-anonymous-user-id'
+} from '@x1a0f3n9/dsh-attachment'
+import type { CredentialRef } from '@x1a0f3n9/dsh-credentials'
+import { deadline, idleWatchdog, timeoutOf } from '@x1a0f3n9/dsh-timeout'
+import type { AnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
 import type {
   DeepSeekLlmApiExtensionRequest,
   DeepSeekLlmApiJson,
   PreparedDeepSeekLlmApiExtensions,
-} from '@xfcodeai/dsh-deepseek-llm-api-extensions'
+} from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
 import { serializeRequest, serializeRequestWithImages } from './serialize.ts'
 import type { ImageWireLocation, RequestDefaults } from './serialize.ts'
 import { deepSeekImageRequestPricing, resolveRequestImagePolicy } from './request-pricing.ts'

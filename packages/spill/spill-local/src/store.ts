@@ -3,7 +3,7 @@
  * session-scoped directory selection, safe-name derivation, path-traversal
  * protection, and the exclusive owner-only write.
  *
- * @module @xfcodeai/dsh-spill-local/store
+ * @module @x1a0f3n9/dsh-spill-local/store
  */
 
 import { createHash, randomBytes } from 'node:crypto'

@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-settings",
+  "name": "@x1a0f3n9/dsh-client-ui-settings",
   "description": "Settings domain base plugin: the settings-namespace scope service and the canonical settings slot-type contract",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,7 +28,7 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-api-remotes"
+        "@x1a0f3n9/dsh-api-remotes"
       ],
       "platform": "web"
     }
@@ -43,15 +43,15 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^",
     "@types/react": "~18.3.1",
     "react": "^18.2.0",
     "@deepseek-ai/schemastery": "workspace:^",
-    "@xfcodeai/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
   },
   "files": [
     "lib/index.js",

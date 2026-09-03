@@ -5,25 +5,25 @@
  * Background policy is selected by this plugin's configuration: one-shot
  * calls own a plain Task, while continuable calls use
  * `ctx.subagents.startContinuable()`.
- * @module @xfcodeai/dsh-tool-subagent
+ * @module @x1a0f3n9/dsh-tool-subagent
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { scopeChainOf, scopeOf } from '@xfcodeai/dsh-scope'
-import { defineTool } from '@xfcodeai/dsh-tools'
-import type { Agent, AgentOptions } from '@xfcodeai/dsh-agent'
-import { ReasoningEffortId } from '@xfcodeai/dsh-llm'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
-import { SessionSeq } from '@xfcodeai/dsh-session'
+import { scopeChainOf, scopeOf } from '@x1a0f3n9/dsh-scope'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { Agent, AgentOptions } from '@x1a0f3n9/dsh-agent'
+import { ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
 import {
   assertSubagentMaxDepth,
   parentAgentOptionsForDelegation,
   settleRun,
-} from '@xfcodeai/dsh-subagent'
-import type { SubagentProvider, SubagentResult, SubagentRun } from '@xfcodeai/dsh-subagent'
-import type { JobOutcome } from '@xfcodeai/dsh-jobs'
+} from '@x1a0f3n9/dsh-subagent'
+import type { SubagentProvider, SubagentResult, SubagentRun } from '@x1a0f3n9/dsh-subagent'
+import type { JobOutcome } from '@x1a0f3n9/dsh-jobs'
 import {
   assertAllowedModelSelection,
   hasConfiguredLlmSelection,
@@ -530,7 +530,7 @@ export function apply(ctx: Context, config: Config): void {
             }
             const jobs = runtimeCtx.get('jobs')
             if (jobs === undefined) {
-              throw new Error('background jobs unavailable: load @xfcodeai/dsh-jobs and @xfcodeai/dsh-tool-jobs')
+              throw new Error('background jobs unavailable: load @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs')
             }
             // One-shot background child: job preflight finishes before the
             // starter can spawn, and the task-owned signal covers startup.
@@ -607,7 +607,7 @@ export function apply(ctx: Context, config: Config): void {
   if (settings === undefined) {
     throw new Error(
       'tool-subagent: `modelSelectionSettings` requires '
-      + '@xfcodeai/dsh-tool-subagent/model-selection-settings in the Host scope',
+      + '@x1a0f3n9/dsh-tool-subagent/model-selection-settings in the Host scope',
     )
   }
   const compositionScope = scopeOf(ctx)

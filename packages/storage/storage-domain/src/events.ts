@@ -4,7 +4,7 @@
  * and an operation discriminant — never the old value (a diffing consumer
  * keeps its own previous snapshot). This is the event source for cross-process
  * change push (RPC frames) in a later phase.
- * @module @xfcodeai/dsh-storage-domain/src/events
+ * @module @x1a0f3n9/dsh-storage-domain/src/events
  */
 
 /** Shared location fields of one durable domain change. */

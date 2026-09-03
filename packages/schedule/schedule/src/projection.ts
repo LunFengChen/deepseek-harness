@@ -1,12 +1,12 @@
 /**
  * Strict Session projection of the Schedule domain's active reminder set.
- * @module @xfcodeai/dsh-schedule/projection
+ * @module @x1a0f3n9/dsh-schedule/projection
  */
 
 import { z } from 'zod'
-import { SessionLogOffset } from '@xfcodeai/dsh-session'
-import type { SessionLogOffset as SessionLogOffsetType } from '@xfcodeai/dsh-session'
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionLogOffset as SessionLogOffsetType } from '@x1a0f3n9/dsh-session'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import { applyScheduleChanges, decodeScheduleChange } from './domain.ts'
 import type { FoldedSchedules } from './domain.ts'
 import type { ScheduleChange, ScheduleId, ScheduleRecord } from './types.ts'
@@ -84,7 +84,7 @@ export const scheduleProjectionDefinition = {
   stateVersion: 2,
 } satisfies ProjectionDefinition<'schedule', ScheduleProjectionState>
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     schedule: ScheduleProjectionState
   }

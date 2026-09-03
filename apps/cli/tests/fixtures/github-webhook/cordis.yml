@@ -3,7 +3,7 @@
 
 - insert:
     - id: webhook-runtime
-      name: '@xfcodeai/dsh-webhook'
+      name: '@x1a0f3n9/dsh-webhook'
 
     - id: github-webhook-real-e2e-rule
       name: './github-webhook-rule.mjs'
@@ -22,13 +22,13 @@
         webServer: true
       config:
         - id: github-webhook-real-e2e-server
-          name: '@xfcodeai/dsh-host-webserver'
+          name: '@x1a0f3n9/dsh-host-webserver'
           config:
             host: '127.0.0.1'
             port: !!js Number(process.env.DSH_GITHUB_WEBHOOK_PORT)
 
         - id: github-webhook-real-e2e-adapter
-          name: '@xfcodeai/dsh-webhook-github'
+          name: '@x1a0f3n9/dsh-webhook-github'
           config:
             source: github-real-e2e
             path: /github

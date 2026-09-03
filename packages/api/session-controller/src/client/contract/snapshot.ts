@@ -1,9 +1,9 @@
 /** Session-owned observable state excluding Conversation target data. */
-import type { ContentBlock } from '@xfcodeai/dsh-llm/types'
-import type { MessageId } from '@xfcodeai/dsh-llm/brand'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { SubagentAddress } from '@xfcodeai/dsh-subagent/client'
-import type { RemoteFailure } from '@xfcodeai/dsh-typert-protocol'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm/types'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SubagentAddress } from '@x1a0f3n9/dsh-subagent/client'
+import type { RemoteFailure } from '@x1a0f3n9/dsh-typert-protocol'
 import type { SessionRequestId } from '../../types.ts'
 
 /** One transient inbox occurrence from the authoritative queue snapshot. */

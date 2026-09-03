@@ -3,7 +3,7 @@ description: "Scope-grouped read-only plugin inventory tab in Web Plugins settin
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-settings-plugin-inventory
+# @x1a0f3n9/dsh-client-ui-settings-plugin-inventory
 
 English | [中文](README.zh.md)
 

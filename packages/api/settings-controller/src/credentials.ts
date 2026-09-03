@@ -2,14 +2,14 @@
  * Host owner of the `credentials` Remote namespace: the reference half of
  * `ctx.credentials` as a browser configuration page reads and writes it.
  *
- * @module @xfcodeai/dsh-api-settings-controller/src/credentials.ts
+ * @module @x1a0f3n9/dsh-api-settings-controller/src/credentials.ts
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import { credentialRef } from '@xfcodeai/dsh-credentials'
-import type { CredentialProvider } from '@xfcodeai/dsh-credentials'
-import type { CredentialInfo } from '@xfcodeai/dsh-credentials/types'
-import { Remote, RemoteError, TypertRemoteService } from '@xfcodeai/dsh-typert-protocol'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
+import type { CredentialProvider } from '@x1a0f3n9/dsh-credentials'
+import type { CredentialInfo } from '@x1a0f3n9/dsh-credentials/types'
+import { Remote, RemoteError, TypertRemoteService } from '@x1a0f3n9/dsh-typert-protocol'
 import { z } from 'zod'
 
 /**
@@ -123,7 +123,7 @@ export class CredentialsController extends TypertRemoteService {
     if (credentials === undefined) {
       throw new RemoteError(
         'gateway/internal',
-        'credentials service is absent: this deployment does not mount a credential provider (e.g. @xfcodeai/dsh-credentials-local) in its composition',
+        'credentials service is absent: this deployment does not mount a credential provider (e.g. @x1a0f3n9/dsh-credentials-local) in its composition',
         {},
       )
     }

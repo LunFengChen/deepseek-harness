@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-session-title-all-prompts-llm",
+  "name": "@x1a0f3n9/dsh-session-title-all-prompts-llm",
   "description": "All-user-messages LLM provider plugin for DeepSeek Harness session titles",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -23,22 +23,22 @@
   "files": ["lib/index.js", "lib/types/**/*.d.ts"],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-session-title-llm": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-session-title-llm": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-session-title-llm": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-session-title-llm": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-agent-loop": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:^"
   }
 }

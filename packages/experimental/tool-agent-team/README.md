@@ -3,7 +3,7 @@ description: "Ten tools that let the model create, message, and coordinate teamm
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-experimental-tool-agent-team
+# @x1a0f3n9/dsh-experimental-tool-agent-team
 
 English | [中文](README.zh.md)
 
@@ -25,7 +25,7 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Add this package on top of `@xfcodeai/dsh-experimental-agent-team` when the model should run a team through tools. Once mounted, every team member — the Lead and each teammate — gets the same ten tools plus a policy paragraph that states its own role and name.
+Add this package on top of `@x1a0f3n9/dsh-experimental-agent-team` when the model should run a team through tools. Once mounted, every team member — the Lead and each teammate — gets the same ten tools plus a policy paragraph that states its own role and name.
 
 ### When to choose it
 
@@ -37,7 +37,7 @@ The smallest addition to an existing composition is the two-package fragment fro
 
 ```yaml
 - id: tool-agent-team
-  name: '@xfcodeai/dsh-experimental-tool-agent-team'
+  name: '@x1a0f3n9/dsh-experimental-tool-agent-team'
   config:
     freshProvider: spawn
     forkProvider: fork
@@ -48,7 +48,7 @@ The smallest addition to an existing composition is the two-package fragment fro
 | `freshProvider` | `spawn` | Provider that starts fresh teammates |
 | `forkProvider` | `fork` | Provider that starts fork teammates |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-experimental-tool-agent-team) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-experimental-tool-agent-team) is the exhaustive source for every accepted field and its JSDoc.
 
 Try it by asking the Lead model: "create a teammate named reviewer to check the diff, then send reviewer the change summary". The model calls the creation tool and then the messaging tool.
 
@@ -113,7 +113,7 @@ Read these pages when the package-level contract is not enough. They move from t
 
 - [agent-team package](../agent-team/README.md) — the `ctx.agentTeams` domain service behind these tools.
 - [Agent Teams subsystem](../../../docs/subsystems/agent-team.md) — durable Team types and service API.
-- [Generated tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-experimental-tool-agent-team) — every tool schema the model receives.
+- [Generated tool catalog](../../../docs/tool-catalog.md#x1a0f3n9dsh-experimental-tool-agent-team) — every tool schema the model receives.
 - [Agent Teams Agent Note](../../../.agents/notes/implemented/feature/2026-08-05-agent-teams.md) — model-facing, scoping, and isolation decisions.
 
 -----

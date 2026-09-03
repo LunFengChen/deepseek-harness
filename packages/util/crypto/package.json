@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-util-crypto",
+  "name": "@x1a0f3n9/dsh-util-crypto",
   "description": "Zero-dependency browser-safe UUID and byte-encoding helpers",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },

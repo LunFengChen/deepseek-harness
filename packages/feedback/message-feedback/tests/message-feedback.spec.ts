@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import type { MessageId } from '@xfcodeai/dsh-llm/brand'
-import { Session, SessionId } from '@xfcodeai/dsh-session'
-import { remoteMethods } from '@xfcodeai/dsh-typert-protocol'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import { Session, SessionId } from '@x1a0f3n9/dsh-session'
+import { remoteMethods } from '@x1a0f3n9/dsh-typert-protocol'
 import MessageFeedbackService, { messageFeedbackRowSchema } from '../src/index.ts'
 import type {
   MessageFeedbackItem,

@@ -3,7 +3,7 @@ description: "当前 Cordis Loader 插件状态的只读投影，并附带每个
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-host-plugin-inventory
+# @x1a0f3n9/dsh-host-plugin-inventory
 
 [English](README.md) | 中文
 

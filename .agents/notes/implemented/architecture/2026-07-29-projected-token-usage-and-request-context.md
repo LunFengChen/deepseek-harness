@@ -12,7 +12,7 @@ Context occupancy needs a numerator and a denominator that no existing surface c
 
 ## Decision
 
-Both values are ordinary durable session-projection state. `@xfcodeai/dsh-token-meter` registers two units when `ctx.sessionProjections` is present.
+Both values are ordinary durable session-projection state. `@x1a0f3n9/dsh-token-meter` registers two units when `ctx.sessionProjections` is present.
 
 `tokenUsage` folds the complete durable log into uncached input, output, cache-read, and cache-write buckets. An `assistant/chunk` usage sample survives a later failed request; an `assistant/message` usage value replaces the earlier sample from the same model attempt instead of double-counting it. A matching `llm/retry-started` boundary ends that replacement scope, so a retry with the same `(turn, step)` contributes a new attempt. Reasoning stays an output subdivision. Compaction and surface replacement do not erase earlier billing.
 

@@ -51,12 +51,12 @@ The example keeps the producer declarations and client contribution in one block
 ```ts ignore-check
 import { createElement } from 'react'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { Branded } from '@xfcodeai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 import type {
   ConversationLocation, ConversationNodeContext,
   ConversationNodeDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type { ChatNodeViewProps } from '@xfcodeai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { ChatNodeViewProps } from '@x1a0f3n9/dsh-client-ui-chat/client'
 
 type ReviewId = Branded<'ReviewId'>
 
@@ -81,7 +81,7 @@ interface ReviewEndData {
   readonly summary: string
 }
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * Opens one durable review job.
@@ -111,13 +111,13 @@ interface ReviewChatData {
   readonly summary?: string
 }
 
-declare module '@xfcodeai/dsh-client-ui-chat/client' {
+declare module '@x1a0f3n9/dsh-client-ui-chat/client' {
   interface ChatNodeDataMap {
     'review-job': ReviewChatData
   }
 }
 
-declare module '@xfcodeai/dsh-client-ui-conversation/client' {
+declare module '@x1a0f3n9/dsh-client-ui-conversation/client' {
   interface ConversationStepDataMap {
     'review-job': ReviewChatData
   }

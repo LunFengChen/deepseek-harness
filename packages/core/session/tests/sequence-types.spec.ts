@@ -9,7 +9,7 @@ import {
   type SessionHeader,
   type SessionSeq as SessionSeqType,
   type SessionSeqCursor,
-} from '@xfcodeai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 
 describe('Session log positions', () => {
   it('admits non-negative safe integers into distinct sequence roles', () => {

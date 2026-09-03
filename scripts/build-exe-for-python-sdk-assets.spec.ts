@@ -21,8 +21,8 @@ describe('Python runtime executable assets', () => {
     })
 
     expect(result.status).toBe(0)
-    expect(result.stdout).toContain('node_modules/@xfcodeai/dsh-web-frontend/dist/**/*')
-    expect(result.stdout).toContain('node_modules/@xfcodeai/dsh-skill-badge/assets/**/*')
+    expect(result.stdout).toContain('node_modules/@x1a0f3n9/dsh-web-frontend/dist/**/*')
+    expect(result.stdout).toContain('node_modules/@x1a0f3n9/dsh-skill-badge/assets/**/*')
     expect(result.stdout).not.toContain('node_modules/**/*.py')
   })
 })

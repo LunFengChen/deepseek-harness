@@ -6,7 +6,7 @@ type SessionControllerRemoteEvent =
   | 'api-session/removed'
   | 'api-session/status'
 
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface TypertRemoteEventSelection extends
     Record<SessionControllerRemoteEvent, true> {}
 }

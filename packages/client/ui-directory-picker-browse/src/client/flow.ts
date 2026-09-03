@@ -5,10 +5,10 @@
  */
 import { createElement } from 'react'
 import type { ReactElement } from 'react'
-import type { DirectoryListing } from '@xfcodeai/dsh-api-remotes/client'
-import type { Translate } from '@xfcodeai/dsh-client-locale/client'
+import type { DirectoryListing } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { Translate } from '@x1a0f3n9/dsh-client-locale/client'
 // Type-only: the owner contract of the directory-flow holes.
-import type { DirectoryFlowOwnerProps } from '@xfcodeai/dsh-client-ui-workspace/client'
+import type { DirectoryFlowOwnerProps } from '@x1a0f3n9/dsh-client-ui-workspace/client'
 import { DirectoryBrowser } from './DirectoryBrowser.tsx'
 
 /** Injected face: the browse wire calls and copy the dialog drives (bound in apply's closure). */

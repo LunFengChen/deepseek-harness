@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { ContentBlock } from '@xfcodeai/dsh-llm/types'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm/types'
 import {
   contextForm, contextProvenance, displayFailure, emptyAssistantBlock, isTokenDelta,
   toAssistantBlock, toAssistantBlocks,

@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-commands",
+  "name": "@x1a0f3n9/dsh-client-ui-commands",
   "description": "Client command surface: global directory cache, '/' source, three command UI kinds, popupSelect registry",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,10 +28,10 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-api-remotes",
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-input-trigger",
-        "@xfcodeai/dsh-client-ui-conversation"
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-input-trigger",
+        "@x1a0f3n9/dsh-client-ui-conversation"
       ],
       "platform": "web"
     }
@@ -48,23 +48,23 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-conversation": "workspace:^",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-client-ui-input-trigger": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
-    "@xfcodeai/dsh-commands": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-input-trigger": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-commands": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0",
-    "@xfcodeai/dsh-api-session-controller": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-session": "workspace:^"
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:^"
   },
   "files": [
     "lib/index.js",

@@ -127,7 +127,7 @@ dsh plugin --profile sdk-minimal add file:C:/work/my-plugin-bundle
 
 第一个命令初始化随附的独立 profile。第二个命令把包管理转发给 `pnpm`，然后记录所有导出 `dsh.bundle` 层的已安装包。只有执行此管理命令时才需要安装 `pnpm`；启动已安装 SDK 不需要它。持久配置项变更应编辑 `$DSH_HOME/profiles/sdk-minimal/cordis.patch.yml`；单次启动变更则从 Python 传入 patch 文件。
 
-另一个 `profile` 只有包含 `@xfcodeai/dsh-sdk-app` 或另一个 JSON-RPC server 配置项时才有效。缺失 server 配置项、无法解析的插件和非法 patch 会在启动时失败，不会回退到其他组合。
+另一个 `profile` 只有包含 `@x1a0f3n9/dsh-sdk-app` 或另一个 JSON-RPC server 配置项时才有效。缺失 server 配置项、无法解析的插件和非法 patch 会在启动时失败，不会回退到其他组合。
 
 ## 理解极简 profile
 

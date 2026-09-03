@@ -4,7 +4,7 @@ import { act, cleanup } from '@testing-library/react'
 import { Context } from '@deepseek-ai/cordis'
 import { SlotRegistry } from '../src/client/registry.ts'
 import type { SlotScopeAdapter, StandardSourceBinding } from '../src/client/index.ts'
-import { apply as nodeApply } from '@xfcodeai/dsh-client-ui-renderer'
+import { apply as nodeApply } from '@x1a0f3n9/dsh-client-ui-renderer'
 import * as UiRenderer from '../src/client/index.ts'
 
 const mounted: (() => void)[] = []

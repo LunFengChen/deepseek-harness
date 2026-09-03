@@ -3,7 +3,7 @@ description: "共享超时运算、截止时间融合与超时/取消分类，�
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-timeout
+# @x1a0f3n9/dsh-timeout
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-library"
 ### 限制超时提示
 
 ```ts
-import { clampTimeout } from '@xfcodeai/dsh-timeout'
+import { clampTimeout } from '@x1a0f3n9/dsh-timeout'
 
 declare const requested: number | undefined
 declare const DEFAULT_TIMEOUT_MS: number
@@ -44,7 +44,7 @@ const timeoutMs = clampTimeout(requested, DEFAULT_TIMEOUT_MS, MAX_TIMEOUT_MS, 'b
 ### 在 deadline 下运行工作
 
 ```text
-import { deadline, timeoutOf } from '@xfcodeai/dsh-timeout'
+import { deadline, timeoutOf } from '@x1a0f3n9/dsh-timeout'
 
 using d = deadline(upstream, timeoutMs, 'BASH_TIMEOUT')
 const outcome = await runWork({ signal: d.signal })   // work listens on d.signal and terminates itself
@@ -61,7 +61,7 @@ const aborted = d.signal.aborted && !timedOut
 ### 用空闲 watchdog 处理流式传输
 
 ```ts
-import { idleWatchdog } from '@xfcodeai/dsh-timeout'
+import { idleWatchdog } from '@x1a0f3n9/dsh-timeout'
 
 declare const upstream: AbortSignal | undefined
 declare const idleMs: number

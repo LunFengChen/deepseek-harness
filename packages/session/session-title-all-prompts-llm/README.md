@@ -3,7 +3,7 @@ description: "All-messages LLM session-title provider for users and maintainers 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-title-all-prompts-llm
+# @x1a0f3n9/dsh-session-title-all-prompts-llm
 
 English | [中文](README.zh.md)
 
@@ -33,7 +33,7 @@ A new revision starts after each new eligible human prompt, including prompts in
 
 ### Configuration
 
-The plugin accepts the complete required [shared LLM configuration](../session-title-llm/README.md#configuration): `targetWords`, `targetCjkCharacters`, `maxInputBytes`, `maxOutputTokens`, `timeoutMs`, and the optional paired `provider`/`model` route. Omit both to inherit the exact route from each current logged main request, or set both to route title generation independently. The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-session-title-all-prompts-llm) is the exhaustive source for every accepted field.
+The plugin accepts the complete required [shared LLM configuration](../session-title-llm/README.md#configuration): `targetWords`, `targetCjkCharacters`, `maxInputBytes`, `maxOutputTokens`, `timeoutMs`, and the optional paired `provider`/`model` route. Omit both to inherit the exact route from each current logged main request, or set both to route title generation independently. The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-session-title-all-prompts-llm) is the exhaustive source for every accepted field.
 
 ### Failures and recovery
 

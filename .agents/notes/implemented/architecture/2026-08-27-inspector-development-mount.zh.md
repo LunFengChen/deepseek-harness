@@ -6,7 +6,7 @@ Status: implemented
 
 ## Problem
 
-`@xfcodeai/dsh-experimental-inspector` 是任何已发布 dsh 安装都不携带的 private 包，但开发启动需要按需把它挂进随货 Web 组合。随货 bundle patch 里的一行表达不了这件事：`verify-cordis-config` 要求 bundle patch 中每个具名行都能从该 bundle 自己的 `dependencies` 解析——disabled 行也不豁免——而已发布的 manifest 不得依赖未发布的包。
+`@x1a0f3n9/dsh-experimental-inspector` 是任何已发布 dsh 安装都不携带的 private 包，但开发启动需要按需把它挂进随货 Web 组合。随货 bundle patch 里的一行表达不了这件事：`verify-cordis-config` 要求 bundle patch 中每个具名行都能从该 bundle 自己的 `dependencies` 解析——disabled 行也不豁免——而已发布的 manifest 不得依赖未发布的包。
 
 ## Decision
 

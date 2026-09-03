@@ -1,28 +1,28 @@
 # Keyless session-query snapshot patch: replay plus the filesystem spill
 # settings inherited by this scenario. The ACP row re-pins the recorded flash model.
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   disabled: true
 
 - id: agent-default-model
-  name: '@xfcodeai/dsh-agent-default-model'
+  name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: deepseek-official
     model: deepseek-v4-flash
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: none
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: |
       You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}. Your bash tool runs under a file sandbox — a `[sandbox: file access denied …]` result is policy, not a command bug.
@@ -31,7 +31,7 @@
 
 - insert:
     - id: llm-replay
-      name: '@xfcodeai/dsh-llm-replay'
+      name: '@x1a0f3n9/dsh-llm-replay'
       config:
         providers:
           - id: deepseek-official
@@ -41,12 +41,12 @@
               - id: deepseek-v4-pro
 
 - id: spill-local
-  name: '@xfcodeai/dsh-spill-local'
+  name: '@x1a0f3n9/dsh-spill-local'
   config:
     root: !!js process.env.DSH_SNAPSHOT_SPILL_ROOT ?? './.spill'
 
 - id: spill-policy
-  name: '@xfcodeai/dsh-spill-policy'
+  name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: 800
 
@@ -54,7 +54,7 @@
 # supplies replay plus deterministic private spill storage and its byte limit.
 - insert:
     - id: tool-session-query
-      name: '@xfcodeai/dsh-tool-session-query'
+      name: '@x1a0f3n9/dsh-tool-session-query'
 
 - id: timeout-policy
-  name: '@xfcodeai/dsh-tool-call-timeout-policy'
+  name: '@x1a0f3n9/dsh-tool-call-timeout-policy'

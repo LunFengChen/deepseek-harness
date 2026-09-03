@@ -4,8 +4,8 @@ import type {
   RemoteEventHostInfo,
   TypertRemoteEventInvocation,
   TypertRemoteEventSource,
-} from '@xfcodeai/dsh-api-gateway'
-import { scopeTarget } from '@xfcodeai/dsh-scope'
+} from '@x1a0f3n9/dsh-api-gateway'
+import { scopeTarget } from '@x1a0f3n9/dsh-scope'
 import { describe, expect, it } from 'vitest'
 import { apply, inject } from '../src/index.ts'
 

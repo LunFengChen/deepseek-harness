@@ -1,10 +1,10 @@
 /**
  * Generic-task adaptation for background bash process handles.
  *
- * @module @xfcodeai/dsh-tool-bash/background
+ * @module @x1a0f3n9/dsh-tool-bash/background
  */
 
-import type { ShellProcess } from '@xfcodeai/dsh-shell'
+import type { ShellProcess } from '@x1a0f3n9/dsh-shell'
 
 /**
  * Map a settled background process onto the generic task-outcome vocabulary:

@@ -1,15 +1,15 @@
-import { createUserMessage } from '@xfcodeai/dsh-llm'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { defineContentToolFixture } from '@xfcodeai/dsh-tools'
-import AgentRegistry, { type Agent } from '@xfcodeai/dsh-agent'
+import LlmRuntime from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
+import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import * as LlmDeepSeek from '@xfcodeai/dsh-llm-deepseek'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
 
 /**
  * With-key proof that log-derived requests translate into real provider cache hits: a

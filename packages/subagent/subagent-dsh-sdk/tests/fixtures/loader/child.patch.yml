@@ -1,25 +1,25 @@
 # SDK-profile patch for the child runtime in the cwd-inheritance proof.
 
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   disabled: true
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: 'Echo where you run.'
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   disabled: true
 
 - id: skill-filesystem
-  name: '@xfcodeai/dsh-skill-filesystem'
+  name: '@x1a0f3n9/dsh-skill-filesystem'
   config:
     includeDefaultRoots: false
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: none

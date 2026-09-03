@@ -1,10 +1,10 @@
 /** Test-owned workspaces face: the renderer standard-kit observable plus recorded actions. */
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type {
   IWorkspaces, WorkspaceId, WorkspaceSnapshot, WorkspaceView,
-} from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
+} from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import { workspaceSnapshot } from './fixtures.ts'
 import type { FixtureSnapshot, Stabilizer } from './fixtures.ts'
 

@@ -1,4 +1,4 @@
-/** Wire-form admission of base64-encoded image uploads. @module @xfcodeai/dsh-attachment/admission */
+/** Wire-form admission of base64-encoded image uploads. @module @x1a0f3n9/dsh-attachment/admission */
 
 import { Buffer } from 'node:buffer'
 import { AttachmentError } from './error.ts'

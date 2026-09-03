@@ -18,14 +18,14 @@ import {
   type SessionNotification,
   type Stream,
 } from '@agentclientprotocol/sdk'
-import AttachmentStore, { AttachmentError, AttachmentId } from '@xfcodeai/dsh-attachment'
-import type { ImageAttachmentLimits, ImageAttachmentRef, SaveImageAttachment, StoredImageAttachment } from '@xfcodeai/dsh-attachment'
-import { type GenerateOptions, LlmAdapter, ReasoningEffortId, type LlmResolvedModelInfo, type StreamChunk } from '@xfcodeai/dsh-llm'
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import { mountAgentLoopTestDependencies } from '@xfcodeai/dsh-agent-loop-testkit'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import JsonlSessionPersistence from '@xfcodeai/dsh-session-persistence-jsonl'
-import TokenMeter from '@xfcodeai/dsh-token-meter'
+import AttachmentStore, { AttachmentError, AttachmentId } from '@x1a0f3n9/dsh-attachment'
+import type { ImageAttachmentLimits, ImageAttachmentRef, SaveImageAttachment, StoredImageAttachment } from '@x1a0f3n9/dsh-attachment'
+import { type GenerateOptions, LlmAdapter, ReasoningEffortId, type LlmResolvedModelInfo, type StreamChunk } from '@x1a0f3n9/dsh-llm'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
 import * as AcpPlugin from '../src/index.ts'
 import type { AcpConfig } from '../src/index.ts'
 

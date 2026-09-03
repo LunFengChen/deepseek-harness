@@ -9,7 +9,7 @@ import {
   launchAcpTestAgent,
   type AgentUnderTest,
   type LaunchedAcpTestAgent,
-} from '@xfcodeai/dsh-session-snapshot'
+} from '@x1a0f3n9/dsh-session-snapshot'
 import { describe, expect, it } from 'vitest'
 
 const repoRoot = fileURLToPath(new URL('../../../../../../', import.meta.url))

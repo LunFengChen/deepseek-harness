@@ -69,30 +69,30 @@ describe('npm resolution benchmark', () => {
       devDependencies: { ignored: '^1.0.0' },
     })
     writeJson(root, 'apps/cli/package.json', {
-      name: '@xfcodeai/dsh',
+      name: '@x1a0f3n9/dsh',
       version: '0.1.0',
-      dependencies: { '@xfcodeai/dsh-child': 'workspace:^', external: '^2.0.0' },
+      dependencies: { '@x1a0f3n9/dsh-child': 'workspace:^', external: '^2.0.0' },
       devDependencies: { ignored: 'workspace:^' },
     })
     writeJson(root, 'packages/core/child/package.json', {
-      name: '@xfcodeai/dsh-child',
+      name: '@x1a0f3n9/dsh-child',
       version: '0.1.0',
     })
 
     const index = buildRegistryIndex(root)
 
     expect(index.get('external')?.get('2.0.0')).toMatchObject({ dependencies: { child: '^1.0.0' } })
-    expect(index.get('@xfcodeai/dsh')?.get('0.1.0')).toEqual({
-      name: '@xfcodeai/dsh',
+    expect(index.get('@x1a0f3n9/dsh')?.get('0.1.0')).toEqual({
+      name: '@x1a0f3n9/dsh',
       version: '0.1.0',
-      dependencies: { '@xfcodeai/dsh-child': '^0.1.0', external: '^2.0.0' },
+      dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0', external: '^2.0.0' },
     })
   })
 
   it('runs npm against the local registry without requesting an archive', async () => {
     const index: RegistryIndex = new Map([[
-      '@xfcodeai/dsh',
-      new Map([['0.1.0', { name: '@xfcodeai/dsh', version: '0.1.0' }]]),
+      '@x1a0f3n9/dsh',
+      new Map([['0.1.0', { name: '@x1a0f3n9/dsh', version: '0.1.0' }]]),
     ]])
     const result = await benchmarkNpmResolution(index, '0.1.0', 10_000)
 
@@ -104,22 +104,22 @@ describe('npm resolution benchmark', () => {
 
   it('returns npm placement for two aliased package versions without requesting archives', async () => {
     const index: RegistryIndex = new Map([[
-      '@xfcodeai/dsh',
+      '@x1a0f3n9/dsh',
       new Map([
-        ['0.1.0', { name: '@xfcodeai/dsh', version: '0.1.0' }],
-        ['0.2.0', { name: '@xfcodeai/dsh', version: '0.2.0' }],
+        ['0.1.0', { name: '@x1a0f3n9/dsh', version: '0.1.0' }],
+        ['0.2.0', { name: '@x1a0f3n9/dsh', version: '0.2.0' }],
       ]),
     ]])
 
     const result = await resolveNpmPackageLock(index, {
-      '@xfcodeai/dsh': '0.2.0',
-      'dsh-previous': 'npm:@xfcodeai/dsh@0.1.0',
+      '@x1a0f3n9/dsh': '0.2.0',
+      'dsh-previous': 'npm:@x1a0f3n9/dsh@0.1.0',
     }, 10_000)
 
     expect(result.archiveRequests).toBe(0)
-    expect(result.packageLock.packages['node_modules/@xfcodeai/dsh']?.version).toBe('0.2.0')
+    expect(result.packageLock.packages['node_modules/@x1a0f3n9/dsh']?.version).toBe('0.2.0')
     expect(result.packageLock.packages['node_modules/dsh-previous']).toMatchObject({
-      name: '@xfcodeai/dsh',
+      name: '@x1a0f3n9/dsh',
       version: '0.1.0',
     })
   })
@@ -139,21 +139,21 @@ describe('npm resolution benchmark', () => {
     process.env.npm_config_omit = 'peer'
     try {
       const index: RegistryIndex = new Map([
-        ['@xfcodeai/dsh', new Map([['0.1.0', {
-          name: '@xfcodeai/dsh',
+        ['@x1a0f3n9/dsh', new Map([['0.1.0', {
+          name: '@x1a0f3n9/dsh',
           version: '0.1.0',
-          peerDependencies: { '@xfcodeai/dsh-peer': '1.0.0' },
+          peerDependencies: { '@x1a0f3n9/dsh-peer': '1.0.0' },
         }]])],
-        ['@xfcodeai/dsh-peer', new Map([['1.0.0', {
-          name: '@xfcodeai/dsh-peer',
+        ['@x1a0f3n9/dsh-peer', new Map([['1.0.0', {
+          name: '@x1a0f3n9/dsh-peer',
           version: '1.0.0',
         }]])],
       ])
 
-      const result = await resolveNpmPackageLock(index, { '@xfcodeai/dsh': '0.1.0' }, 10_000)
+      const result = await resolveNpmPackageLock(index, { '@x1a0f3n9/dsh': '0.1.0' }, 10_000)
 
       expect(result.archiveRequests).toBe(0)
-      expect(result.packageLock.packages['node_modules/@xfcodeai/dsh-peer']?.version).toBe('1.0.0')
+      expect(result.packageLock.packages['node_modules/@x1a0f3n9/dsh-peer']?.version).toBe('1.0.0')
     } finally {
       if (previous.userConfig === undefined) delete process.env.npm_config_userconfig
       else process.env.npm_config_userconfig = previous.userConfig

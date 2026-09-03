@@ -37,7 +37,7 @@ Providers register capabilities, not tools: `tool-lsp` is the only owner of the 
 
 - [LSP navigation subsystem](../../docs/subsystems/lsp.md) — operations, coordinates, requests and results, and `LspError` codes.
 - [LSP capability seam Agent Note](../../.agents/notes/implemented/architecture/2026-07-15-lsp-capability-seam.md) — design rationale, alternatives, and deliberately deferred API.
-- [Generated tool catalog](../../docs/tool-catalog.md#xfcodeaidsh-tool-lsp) — the `lsp` schema the model receives.
+- [Generated tool catalog](../../docs/tool-catalog.md#x1a0f3n9dsh-tool-lsp) — the `lsp` schema the model receives.
 
 -----
 

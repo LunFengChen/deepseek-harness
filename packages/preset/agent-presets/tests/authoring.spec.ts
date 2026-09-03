@@ -14,11 +14,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { beforeEach, describe, expect, it } from 'vitest'
 import AgentPresets, {
   COMPOSITION_FILE, copyComposition, METADATA_FILE, type Config,
-} from '@xfcodeai/dsh-agent-presets'
+} from '@x1a0f3n9/dsh-agent-presets'
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
 const VALID = '- id: tool-alpha\n  name: ../../plugins/contribute.js\n  config:\n    tool: alpha\n'

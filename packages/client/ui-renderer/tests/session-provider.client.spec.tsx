@@ -5,10 +5,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { act, render } from '@testing-library/react'
 import type {
   SessionProviderComponent, StoredEntry,
-} from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 import type {
   ScopedStandardSourceBinding, SlotRendererHost, SlotScopeAdapter, StandardSourceBinding,
-} from '@xfcodeai/dsh-client-ui-renderer/client'
+} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import { createSlotRenderer } from '../src/client/scoped-slots.tsx'
 
 type SessionBinding = ScopedStandardSourceBinding

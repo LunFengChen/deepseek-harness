@@ -1,5 +1,5 @@
-import type { ToolCallId } from '@xfcodeai/dsh-llm'
-import type { SessionSeq } from '@xfcodeai/dsh-session/types'
+import type { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import type { SessionSeq } from '@x1a0f3n9/dsh-session/types'
 
 /** Character-budget policy for deterministic tool-result pruning. */
 export interface ToolResultPruneConfig {

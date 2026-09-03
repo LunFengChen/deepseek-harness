@@ -3,11 +3,11 @@
  * consumes and produces, plus the fields in the `workflow/*` event payloads.
  * Types only (plus the id-brand factory), per the package convention.
  *
- * @module @xfcodeai/dsh-workflow/types
+ * @module @x1a0f3n9/dsh-workflow/types
  */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 
 /** Identifies one workflow run. */
 export type WorkflowRunId = Branded<'WorkflowRunId'>

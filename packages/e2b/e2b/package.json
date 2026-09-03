@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-e2b",
+  "name": "@x1a0f3n9/dsh-e2b",
   "description": "Shared E2B sandbox lifecycle for DeepSeek Harness provider adapters",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -35,18 +35,18 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-app-boot": "workspace:^",
-    "@xfcodeai/dsh-bash-local": "workspace:^",
-    "@xfcodeai/dsh-fs-e2b": "workspace:^",
-    "@xfcodeai/dsh-loader-smoke": "workspace:^",
-    "@xfcodeai/dsh-lsp": "workspace:^",
-    "@xfcodeai/dsh-lsp-stdio": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-subprocess-e2b": "workspace:^",
-    "@xfcodeai/dsh-terminal": "workspace:^",
-    "@xfcodeai/dsh-terminal-bash": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-app-boot": "workspace:^",
+    "@x1a0f3n9/dsh-bash-local": "workspace:^",
+    "@x1a0f3n9/dsh-fs-e2b": "workspace:^",
+    "@x1a0f3n9/dsh-loader-smoke": "workspace:^",
+    "@x1a0f3n9/dsh-lsp": "workspace:^",
+    "@x1a0f3n9/dsh-lsp-stdio": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess-e2b": "workspace:^",
+    "@x1a0f3n9/dsh-terminal": "workspace:^",
+    "@x1a0f3n9/dsh-terminal-bash": "workspace:^"
   }
 }

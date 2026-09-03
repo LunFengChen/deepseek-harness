@@ -3,7 +3,7 @@ description: "The event-sourced session log and in-memory store for users and ma
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session
+# @x1a0f3n9/dsh-session
 
 English | [中文](README.zh.md)
 

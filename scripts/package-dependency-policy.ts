@@ -5,52 +5,52 @@ const CLIENT_FACE_INCLUDE: readonly string[] = []
 
 /** Packages exempted from automatic Client/Host treatment despite declaring `dsh.client`. */
 const CLIENT_FACE_EXCLUDE: readonly string[] = [
-  '@xfcodeai/dsh-api-session-controller',
-  '@xfcodeai/dsh-api-workspace-controller',
+  '@x1a0f3n9/dsh-api-session-controller',
+  '@x1a0f3n9/dsh-api-workspace-controller',
 ]
 
 /** Host-only packages whose peer relays are deliberately flattened. */
 const HOST_DEPENDENCY_PACKAGES: readonly string[] = [
-  '@xfcodeai/dsh-llm',
-  '@xfcodeai/dsh-session',
+  '@x1a0f3n9/dsh-llm',
+  '@x1a0f3n9/dsh-session',
 ]
 
 /** Development-only package relationships not represented by source imports. */
 const CONFIGURATION_ONLY_DEV_DEPENDENCIES = {
-  '@xfcodeai/dsh-client-locale': ['@xfcodeai/dsh-api-remotes'],
-  '@xfcodeai/dsh-client-ui-conversation': [
-    '@xfcodeai/dsh-api-remotes',
-    '@xfcodeai/dsh-client-ui-workspace',
+  '@x1a0f3n9/dsh-client-locale': ['@x1a0f3n9/dsh-api-remotes'],
+  '@x1a0f3n9/dsh-client-ui-conversation': [
+    '@x1a0f3n9/dsh-api-remotes',
+    '@x1a0f3n9/dsh-client-ui-workspace',
   ],
-  '@xfcodeai/dsh-client-ui-model-selection': ['@xfcodeai/dsh-client-ui-input-trigger'],
-  '@xfcodeai/dsh-client-ui-sidebar': ['@xfcodeai/dsh-client-ui-workspace'],
-  '@xfcodeai/dsh-client-ui-subagent': ['@xfcodeai/dsh-client-ui-input-trigger'],
-  '@xfcodeai/dsh-client-ui-theme': ['@xfcodeai/dsh-api-remotes'],
-  '@xfcodeai/dsh-client-ui-tool': ['@xfcodeai/dsh-api-remotes'],
+  '@x1a0f3n9/dsh-client-ui-model-selection': ['@x1a0f3n9/dsh-client-ui-input-trigger'],
+  '@x1a0f3n9/dsh-client-ui-sidebar': ['@x1a0f3n9/dsh-client-ui-workspace'],
+  '@x1a0f3n9/dsh-client-ui-subagent': ['@x1a0f3n9/dsh-client-ui-input-trigger'],
+  '@x1a0f3n9/dsh-client-ui-theme': ['@x1a0f3n9/dsh-api-remotes'],
+  '@x1a0f3n9/dsh-client-ui-tool': ['@x1a0f3n9/dsh-api-remotes'],
 } as const satisfies Readonly<Record<string, readonly string[]>>
 
 /** Workspace packages whose complete runtime surface is safe across duplicate installations. */
 const DUPLICATE_SAFE_PACKAGES: readonly string[] = [
-  '@xfcodeai/dsh-brand',
-  '@xfcodeai/dsh-typert-protocol',
-  '@xfcodeai/dsh-util-crypto',
-  '@xfcodeai/dsh-util-values',
+  '@x1a0f3n9/dsh-brand',
+  '@x1a0f3n9/dsh-typert-protocol',
+  '@x1a0f3n9/dsh-util-crypto',
+  '@x1a0f3n9/dsh-util-values',
 ]
 
 /**
  * Runtime exports whose values remain valid when npm installs another package copy.
  */
 const SAFE_HOST_DEPENDENCY_EXPORTS = {
-  '@xfcodeai/dsh-credentials': ['credentialKey'],
-  '@xfcodeai/dsh-deque': ['Deque'],
-  '@xfcodeai/dsh-llm': ['callConfigEquals'],
-  '@xfcodeai/dsh-timeout': ['MAX_TIMER_DELAY_MS'],
+  '@x1a0f3n9/dsh-credentials': ['credentialKey'],
+  '@x1a0f3n9/dsh-deque': ['Deque'],
+  '@x1a0f3n9/dsh-llm': ['callConfigEquals'],
+  '@x1a0f3n9/dsh-timeout': ['MAX_TIMER_DELAY_MS'],
   '@deepseek-ai/schemastery': ['default'],
 } as const satisfies HostDependencyExports
 
 /** Runtime exports that require every consumer to resolve the provider's shared peer instance. */
 const PEER_REQUIRED_HOST_EXPORTS = {
-  '@xfcodeai/dsh-scope': ['carrierKeyOf', 'scopeOf', 'scopeTarget'],
+  '@x1a0f3n9/dsh-scope': ['carrierKeyOf', 'scopeOf', 'scopeTarget'],
 } as const satisfies HostDependencyExports
 
 /** Exact import specifier to reviewed runtime exports. */

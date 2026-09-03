@@ -2,18 +2,18 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { ToolCallId } from '@xfcodeai/dsh-llm'
-import { Session, SessionId } from '@xfcodeai/dsh-session'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
-import { bindScopeParent, createScope, scopeOf, scopeTarget } from '@xfcodeai/dsh-scope'
-import { SettingsProvider } from '@xfcodeai/dsh-settings'
-import type { SettingsNamespace } from '@xfcodeai/dsh-settings'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import { mountAgentLoopTestDependencies } from '@xfcodeai/dsh-agent-loop-testkit'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import SubagentRuntime from '@xfcodeai/dsh-subagent'
-import * as SubagentSpawn from '@xfcodeai/dsh-subagent-spawn-in-process'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import { Session, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
+import { bindScopeParent, createScope, scopeOf, scopeTarget } from '@x1a0f3n9/dsh-scope'
+import { SettingsProvider } from '@x1a0f3n9/dsh-settings'
+import type { SettingsNamespace } from '@x1a0f3n9/dsh-settings'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
+import * as SubagentSpawn from '@x1a0f3n9/dsh-subagent-spawn-in-process'
 import * as tool from '../src/index.ts'
 import * as ToolInvariant from '../src/invariant.ts'
 import SubagentModelSelectionConfig, {
@@ -335,7 +335,7 @@ describe('SubagentModelSelectionConfig', () => {
         modelSelectionSettings: true,
         maxDepth: 'provider-managed',
       })
-    }).toThrow('requires @xfcodeai/dsh-tool-subagent/model-selection-settings')
+    }).toThrow('requires @x1a0f3n9/dsh-tool-subagent/model-selection-settings')
     await withoutSettings.fiber.dispose()
 
     const withoutAgent = await boot()

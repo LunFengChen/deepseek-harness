@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { ReasoningEffortId, type LlmRuntime } from '@xfcodeai/dsh-llm'
+import { ReasoningEffortId, type LlmRuntime } from '@x1a0f3n9/dsh-llm'
 import { AcpModelControl } from '../src/model-control.ts'
 
 /** Minimal LLM catalog/runtime double for pure standard-option tests. */

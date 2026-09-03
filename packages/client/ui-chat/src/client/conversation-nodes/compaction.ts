@@ -1,8 +1,8 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type {
   ConversationMatch, ConversationNodeContext, ConversationNodeDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type {} from '@xfcodeai/dsh-compaction/types'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-compaction/types'
 import type { CompactionSummaryNode } from '../contract/snapshot.ts'
 import { chatNode } from './common.ts'
 import { compactSource, compactSummary, updateCompactionState } from './command.ts'

@@ -5,10 +5,10 @@
  * / epoch-guard behavior of the original global cache; the session-key axis
  * is the only extra dimension.
  */
-import type { CommandDescriptor } from '@xfcodeai/dsh-commands/types'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { CommandDescriptor } from '@x1a0f3n9/dsh-commands/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 
-export type { CommandDescriptor } from '@xfcodeai/dsh-commands/types'
+export type { CommandDescriptor } from '@x1a0f3n9/dsh-commands/types'
 
 /**
  * cold = never pulled; pending = pull in flight with nothing servable;

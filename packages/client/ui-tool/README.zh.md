@@ -3,7 +3,7 @@ description: "dsh Web 客户端的 Client 工具展示插件：整次调用树�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-tool
+# @x1a0f3n9/dsh-client-ui-tool
 
 [English](README.md) | 中文
 

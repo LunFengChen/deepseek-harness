@@ -3,7 +3,7 @@ description: "面向注册可信外部事件策略并创建 Workspace Session �
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-webhook
+# @x1a0f3n9/dsh-webhook
 
 [English](README.md) | 中文
 

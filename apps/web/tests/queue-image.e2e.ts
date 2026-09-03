@@ -12,8 +12,8 @@ import { join } from 'node:path'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterEach, describe, expect, it, onTestFailed } from 'vitest'
-import { deriveReplayScript, parseSessionLog, type ReplayEntry } from '@xfcodeai/dsh-llm-replay'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+import { deriveReplayScript, parseSessionLog, type ReplayEntry } from '@x1a0f3n9/dsh-llm-replay'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import {
   captureStableAria, compareOrRefreshGolden,
   launchWebScaffold, watchConsole, webSnapshotMode, type WebScaffold,

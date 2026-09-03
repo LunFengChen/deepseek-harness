@@ -2,29 +2,29 @@
 # adding `run_code` plus its generated TypeScript SDK prompt. Recording applies
 # this profile patch; replay applies its sibling patch.
 - id: agent-default-model
-  name: '@xfcodeai/dsh-agent-default-model'
+  name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: deepseek-official
     model: deepseek-v4-pro
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: !!js 'process.env.DSH_SNAPSHOT === undefined ? ''zstd'' : ''none'''
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 
 - id: tools
-  name: '@xfcodeai/dsh-tools'
+  name: '@x1a0f3n9/dsh-tools'
   config:
     mode: both
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: |
       You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}.

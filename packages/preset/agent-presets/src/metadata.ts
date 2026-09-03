@@ -14,7 +14,7 @@
  * Every read failure degrades to no metadata. A preset whose display text is
  * missing, malformed, or unreadable still mounts: presentation is not a
  * capability, and a broken name must never become an agent that cannot start.
- * @module @xfcodeai/dsh-agent-presets/metadata
+ * @module @x1a0f3n9/dsh-agent-presets/metadata
  */
 
 import { readFile } from 'node:fs/promises'

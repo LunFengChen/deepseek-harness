@@ -14,7 +14,7 @@ Python SDK 分发一个私有 Node 应用，直接启动完整外部 `cordis.yml
 
 ### 一个应用启动器
 
-运行时可执行程序打包 `@xfcodeai/dsh` 并运行其普通命令语法。Python 客户端默认选择 `--profile sdk`，转发有序绝对 `--patch` 路径，也可以选择另一个 `dsh` 可执行程序或 profile。可运行极简示例选择随附 `sdk-minimal` profile。私有 `@xfcodeai/dsh-sdk-python-runtime` 应用包和检入的运行时 `cordis.yml` 均不存在。JSON-RPC 服务仍由 `@xfcodeai/dsh-sdk-app` bundle 与 `@xfcodeai/dsh-sdk-jsonrpc-server` 插件提供，而不是 Python 自有启动路径。
+运行时可执行程序打包 `@x1a0f3n9/dsh` 并运行其普通命令语法。Python 客户端默认选择 `--profile sdk`，转发有序绝对 `--patch` 路径，也可以选择另一个 `dsh` 可执行程序或 profile。可运行极简示例选择随附 `sdk-minimal` profile。私有 `@x1a0f3n9/dsh-sdk-python-runtime` 应用包和检入的运行时 `cordis.yml` 均不存在。JSON-RPC 服务仍由 `@x1a0f3n9/dsh-sdk-app` bundle 与 `@x1a0f3n9/dsh-sdk-jsonrpc-server` 插件提供，而不是 Python 自有启动路径。
 
 公开 Python 配置包括 `dsh_bin`、`profile`、有序 `patches`、`dsh_home`、进程 cwd／环境、provider／model／token 选择、有界初始化 timeout，以及可选的轮次／关闭 timeout。它不暴露完整 Cordis 树或任意启动 argv。`RunResult` 报告协议所有的运行值，不重复 profile 的持久化路径。
 
@@ -30,7 +30,7 @@ Python SDK 分发一个私有 Node 应用，直接启动完整外部 `cordis.yml
 
 ### 可执行程序打包
 
-零代码部署 manifest 是 `dsh-python-runtime-closure`。它把 `node_modules/@xfcodeai/dsh/lib/bin.js` 以及 profile、bundle、preset、原生 addon 与共享库资源打包进 `deepseek-harness-sdk-runtime-<platform>-<arch>`。Wheel distribution 名称、Python import 模块、JSON-RPC 消息和协议稳定的 `serverInfo.name = deepseek-harness-sdk-runtime` 保持不变。
+零代码部署 manifest 是 `dsh-python-runtime-closure`。它把 `node_modules/@x1a0f3n9/dsh/lib/bin.js` 以及 profile、bundle、preset、原生 addon 与共享库资源打包进 `deepseek-harness-sdk-runtime-<platform>-<arch>`。Wheel distribution 名称、Python import 模块、JSON-RPC 消息和协议稳定的 `serverInfo.name = deepseek-harness-sdk-runtime` 保持不变。
 
 普通 Node profile 在 `$DSH_HOME/profiles/node_modules` 中使用符号链接，让外部插件共享安装包。操作系统符号链接无法进入 pkg 的 `/snapshot` 文件系统，因此打包 CLI 改为写入小型真实 ESM 代理包。每个代理直接按 Node import 条件解析源包的显式 ESM exports map，公开安装中实际存在的目标，并重新导出其虚拟模块 URL。没有 ESM 运行时目标的 export 项以及仅含可执行入口或类型声明入口的包不会产生不可用的代理条目；格式错误的 exports map 会导致启动失败。完整且匹配的 generation 不会获取跨进程写入锁。缺失或过期的配置项会获取该锁、重新检查 generation，并在不暴露半成品代理的前提下修复；任一载体都可以替换另一载体留下的受管配置项。Loader 配置项和外部插件 peer 因而可以通过普通 profile 逐级向上查找解析，同时保留一个 Cordis 和每个内置模块的单一实例。
 

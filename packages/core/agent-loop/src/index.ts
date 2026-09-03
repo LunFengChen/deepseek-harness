@@ -2,15 +2,15 @@
  * Concrete agent-loop plugin: creates scoped ReactLoopAgents, publishes them
  * through the agent/session registries, and owns their ordered teardown.
  *
- * @module @xfcodeai/dsh-agent-loop
+ * @module @x1a0f3n9/dsh-agent-loop
  */
 
 import { Context, FiberState, Service } from '@deepseek-ai/cordis'
 import { randomUUID } from 'node:crypto'
 import z from '@deepseek-ai/schemastery'
 import { z as zod } from 'zod'
-import { brandString } from '@xfcodeai/dsh-brand'
-import { emitAgentEvent } from '@xfcodeai/dsh-agent'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { emitAgentEvent } from '@x1a0f3n9/dsh-agent'
 import type {
   Agent,
   AgentFactory,
@@ -21,16 +21,16 @@ import type {
   ResumeAgentOptions,
   SessionStartSource,
   TurnBoundaryProjection,
-} from '@xfcodeai/dsh-agent'
-import { errorChain, ReasoningEffortId } from '@xfcodeai/dsh-llm'
-import type {} from '@xfcodeai/dsh-settings'
-import { SessionPreparation, SessionSeq } from '@xfcodeai/dsh-session'
-import type { Session, SessionHeader, SessionId } from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-system-prompt'
-import type {} from '@xfcodeai/dsh-tools'
-import type {} from '@xfcodeai/dsh-session-projection'
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
-import type { SessionPersistence } from '@xfcodeai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-agent'
+import { errorChain, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type {} from '@x1a0f3n9/dsh-settings'
+import { SessionPreparation, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-tools'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
+import type { SessionPersistence } from '@x1a0f3n9/dsh-session-persistence'
 import { ReactLoopAgent } from './agent.ts'
 import { DEFAULT_MAX_PARALLEL_TOOL_CALLS } from './constants.ts'
 

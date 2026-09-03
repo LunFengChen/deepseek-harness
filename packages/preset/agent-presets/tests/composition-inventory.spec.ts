@@ -12,16 +12,16 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Context, FiberState } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import LlmRuntime from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime from '@xfcodeai/dsh-tools'
-import AgentRegistry from '@xfcodeai/dsh-agent'
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
+import LlmRuntime from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import AgentPresets, { COMPOSITION_FILE, METADATA_FILE } from '@xfcodeai/dsh-agent-presets'
-import type { Config } from '@xfcodeai/dsh-agent-presets'
+import AgentPresets, { COMPOSITION_FILE, METADATA_FILE } from '@x1a0f3n9/dsh-agent-presets'
+import type { Config } from '@x1a0f3n9/dsh-agent-presets'
 import { evaluate } from '@deepseek-ai/cordis-plugin-loader'
 import { fileComposition, mountedCompositionRows } from '../src/composition-inventory.ts'
 import { livePresetMounts } from '../src/mount.ts'
@@ -29,7 +29,7 @@ import { livePresetMounts } from '../src/mount.ts'
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
 const SYSTEM_ROOT = { path: join(FIXTURES, 'system'), trust: 'system' as const }
 // A row naming a package installed beside the harness, the way authored rows do.
-const VALID = '- id: prompt\n  name: \'@xfcodeai/dsh-system-prompt\'\n'
+const VALID = '- id: prompt\n  name: \'@x1a0f3n9/dsh-system-prompt\'\n'
 
 const contexts: Context[] = []
 
@@ -205,10 +205,10 @@ describe('AgentPresets.compositionInventory', () => {
     await writeFile(join(userRoot, 'documented', COMPOSITION_FILE), [
       VALID.trimEnd(),
       '- id: gated',
-      '  name: \'@xfcodeai/dsh-system-prompt\'',
+      '  name: \'@x1a0f3n9/dsh-system-prompt\'',
       '  disabled: !!js 1 === 1',
       '- id: undecidable',
-      '  name: \'@xfcodeai/dsh-system-prompt\'',
+      '  name: \'@x1a0f3n9/dsh-system-prompt\'',
       '  disabled: !!js nothing.here',
     ].join('\n'))
     await writeFile(join(userRoot, 'documented', METADATA_FILE), 'name: 我的模式\n')
@@ -241,14 +241,14 @@ describe('AgentPresets.compositionInventory', () => {
         name: '我的模式',
         isDefault: false,
         rows: [
-          { entryId: 'prompt', moduleName: '@xfcodeai/dsh-system-prompt', enabled: true },
+          { entryId: 'prompt', moduleName: '@x1a0f3n9/dsh-system-prompt', enabled: true },
           // The platform-gate shape: the service evaluates it with the
           // Loader's own scope, so the file answer matches a mount's.
-          { entryId: 'gated', moduleName: '@xfcodeai/dsh-system-prompt', enabled: false, condition: '1 === 1' },
+          { entryId: 'gated', moduleName: '@x1a0f3n9/dsh-system-prompt', enabled: false, condition: '1 === 1' },
           // An expression the evaluator refuses stays a mount's decision.
           {
             entryId: 'undecidable',
-            moduleName: '@xfcodeai/dsh-system-prompt',
+            moduleName: '@x1a0f3n9/dsh-system-prompt',
             enabled: 'conditional',
             condition: 'nothing.here',
           },

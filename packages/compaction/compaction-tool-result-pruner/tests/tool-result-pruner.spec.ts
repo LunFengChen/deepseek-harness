@@ -1,23 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { ToolCallId , createMessage, createToolResultMessage } from '@xfcodeai/dsh-llm'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
+import { ToolCallId , createMessage, createToolResultMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
 import SessionStore, {
   Session,
   SessionId,
-} from '@xfcodeai/dsh-session'
-import type { SurfaceEvent } from '@xfcodeai/dsh-session'
-import * as SessionInvariant from '@xfcodeai/dsh-session/invariant'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import TokenMeter from '@xfcodeai/dsh-token-meter'
+} from '@x1a0f3n9/dsh-session'
+import type { SurfaceEvent } from '@x1a0f3n9/dsh-session'
+import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
 import ToolResultPruner, {
   codePointLength,
   DEFAULTS,
   PRUNE_MARKER,
   resolveConfig,
-} from '@xfcodeai/dsh-compaction-tool-result-pruner'
-import type { ToolResultPruneConfig } from '@xfcodeai/dsh-compaction-tool-result-pruner'
+} from '@x1a0f3n9/dsh-compaction-tool-result-pruner'
+import type { ToolResultPruneConfig } from '@x1a0f3n9/dsh-compaction-tool-result-pruner'
 
 const MODEL = 'test-model'
 const SMALL: ToolResultPruneConfig = {

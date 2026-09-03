@@ -10,15 +10,15 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry, { Inbox } from '@xfcodeai/dsh-agent'
-import type { Agent, AgentStatus } from '@xfcodeai/dsh-agent'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import type { UserMessage } from '@xfcodeai/dsh-session'
-import SessionStore from '@xfcodeai/dsh-session'
-import type { Session } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import GoalService, { GoalId, applyGoalProjection, foldGoal, goalProjectionDefinition } from '@xfcodeai/dsh-goal'
-import type { GoalProjection, GoalProjectionState, GoalRef } from '@xfcodeai/dsh-goal'
+import AgentRegistry, { Inbox } from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentStatus } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { UserMessage } from '@x1a0f3n9/dsh-session'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import type { Session } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import GoalService, { GoalId, applyGoalProjection, foldGoal, goalProjectionDefinition } from '@x1a0f3n9/dsh-goal'
+import type { GoalProjection, GoalProjectionState, GoalRef } from '@x1a0f3n9/dsh-goal'
 
 interface Bench {
   ctx: Context

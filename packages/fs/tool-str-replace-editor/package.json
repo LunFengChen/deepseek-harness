@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-tool-str-replace-editor",
+  "name": "@x1a0f3n9/dsh-tool-str-replace-editor",
   "description": "Model-facing view, create, literal replace, and line insert tool over the Harness filesystem service",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -26,28 +26,28 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-fs": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-fs": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-fs": "workspace:^",
-    "@xfcodeai/dsh-fs-local": "workspace:^",
-    "@xfcodeai/dsh-fs-observation-policy": "workspace:^",
-    "@xfcodeai/dsh-fs-sandbox": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-fs": "workspace:^",
+    "@x1a0f3n9/dsh-fs-local": "workspace:^",
+    "@x1a0f3n9/dsh-fs-observation-policy": "workspace:^",
+    "@x1a0f3n9/dsh-fs-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

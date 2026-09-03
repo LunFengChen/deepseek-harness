@@ -21,11 +21,11 @@ Create the `packages/storage/` group — the `ctx.storage` hub (backend registry
 
 | Package | Path | ctx surface | This phase |
 | --- | --- | --- | --- |
-| `@xfcodeai/dsh-storage` | `packages/storage/storage/` | `ctx.storage` (the hub) | ✓ |
-| `@xfcodeai/dsh-storage-json` | `packages/storage/storage-json/` | registers backend `json` | ✓ |
-| `@xfcodeai/dsh-storage-sqlite` | `packages/storage/storage-sqlite/` | registers backend `sqlite` | ✓ |
-| `@xfcodeai/dsh-storage-domain` | `packages/storage/storage-domain/` | mounts `ctx.storage.domain` | ✓ |
-| `@xfcodeai/dsh-workspace` | `packages/workspace/workspace/` | `ctx.workspaceRegistry` | ✓ |
+| `@x1a0f3n9/dsh-storage` | `packages/storage/storage/` | `ctx.storage` (the hub) | ✓ |
+| `@x1a0f3n9/dsh-storage-json` | `packages/storage/storage-json/` | registers backend `json` | ✓ |
+| `@x1a0f3n9/dsh-storage-sqlite` | `packages/storage/storage-sqlite/` | registers backend `sqlite` | ✓ |
+| `@x1a0f3n9/dsh-storage-domain` | `packages/storage/storage-domain/` | mounts `ctx.storage.domain` | ✓ |
+| `@x1a0f3n9/dsh-workspace` | `packages/workspace/workspace/` | `ctx.workspaceRegistry` | ✓ |
 | `SessionPersistence.delete` extension + cascade orchestration | `packages/session/session-persistence*` | new method on the existing seam | ✗ future work (session side untouched this phase) |
 | `workspace.*` / `session.delete` RPC, GUI wiring, boot assembly | — | — | ✗ next phase |
 

@@ -1,30 +1,30 @@
 # TypeScript SDK snapshot patch for foreground and background DSH SDK failures.
 
 - id: skill-filesystem
-  name: '@xfcodeai/dsh-skill-filesystem'
+  name: '@x1a0f3n9/dsh-skill-filesystem'
   config:
     includeDefaultRoots: false
 
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     thinking: enabled
     reasoningEffort: max
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: !!js "process.env.DSH_SNAPSHOT === undefined ? 'zstd' : 'none'"
 
 - id: session-log-deepseek
-  name: '@xfcodeai/dsh-session-log-deepseek'
+  name: '@x1a0f3n9/dsh-session-log-deepseek'
   config:
     enabled: true
 
 - insert:
     - id: subagent-dsh-sdk-diagnostic
-      name: '@xfcodeai/dsh-subagent-dsh-sdk'
+      name: '@x1a0f3n9/dsh-subagent-dsh-sdk'
       config:
         providerName: dsh-sdk-diagnostic
         profile: sdk
@@ -37,14 +37,14 @@
           DSH_TELEMETRY_DISABLED: '1'
           DSH_TEST_CHILD_FAILURE: '1'
     - id: tool-subagent-dsh-sdk-diagnostic
-      name: '@xfcodeai/dsh-tool-subagent'
+      name: '@x1a0f3n9/dsh-tool-subagent'
       config:
         provider: dsh-sdk-diagnostic
         toolName: subagent_dsh_sdk
         backgroundMode: one-shot
         maxDepth: provider-managed
     - id: subagent-dsh-sdk-diagnostic-background
-      name: '@xfcodeai/dsh-subagent-dsh-sdk'
+      name: '@x1a0f3n9/dsh-subagent-dsh-sdk'
       config:
         providerName: dsh-sdk-diagnostic-background
         profile: sdk
@@ -58,7 +58,7 @@
           DSH_TEST_CHILD_FAILURE: '1'
           FAKE_INIT_GO: .dsh-sdk-background-release
     - id: tool-subagent-dsh-sdk-diagnostic-background
-      name: '@xfcodeai/dsh-tool-subagent'
+      name: '@x1a0f3n9/dsh-tool-subagent'
       config:
         provider: dsh-sdk-diagnostic-background
         toolName: subagent_dsh_sdk_background

@@ -1,7 +1,7 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-deliverables",
+  "name": "@x1a0f3n9/dsh-client-ui-deliverables",
   "description": "Produced-files turn tail and clickable final-response file references for Web",
-  "version": "0.1.2-alpha.5",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
@@ -28,12 +28,12 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-api-remotes",
-        "@xfcodeai/dsh-client-connection",
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-chat",
-        "@xfcodeai/dsh-client-ui-conversation",
-        "@xfcodeai/dsh-client-ui-renderer"
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-connection",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-chat",
+        "@x1a0f3n9/dsh-client-ui-conversation",
+        "@x1a0f3n9/dsh-client-ui-renderer"
       ],
       "platform": "web"
     }
@@ -47,21 +47,21 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-chat": "workspace:^",
-    "@xfcodeai/dsh-client-ui-conversation": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-chat": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^"
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^"
   },
   "files": [
     "lib/index.js",

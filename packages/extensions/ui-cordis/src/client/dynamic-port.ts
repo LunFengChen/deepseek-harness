@@ -1,6 +1,6 @@
 /** Host operations used directly by the frame-wide Cordis panel. */
 
-import type { SessionId } from '@xfcodeai/dsh-api-remotes/client'
+import type { SessionId } from '@x1a0f3n9/dsh-api-remotes/client'
 import type {
   CordisDynamicPluginId, DynamicCordisInventoryRow,
 } from './events.ts'

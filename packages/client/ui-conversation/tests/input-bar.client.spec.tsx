@@ -14,12 +14,12 @@ import { $getRoot, $isTextNode } from 'lexical'
 import {
   bindSnapshotSelector, conversationSnapshot as conversationFixture, makeTranslate, RemoteError,
   sessionSnapshot as sessionFixture,
-} from '@xfcodeai/dsh-client-test-runtime'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { SessionListState, SessionSnapshot } from '@xfcodeai/dsh-api-session-controller/client'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+} from '@x1a0f3n9/dsh-client-test-runtime'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SessionListState, SessionSnapshot } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import type { Context } from '@deepseek-ai/cordis'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type { SubmitOutcome } from '../src/client/contract/input.ts'
 import { SessionInputShell } from '../src/client/input/facade.ts'
 import { $replaceDetectSpanWithText, $selectDetectSpan } from '../src/client/input/editor/span-map.ts'

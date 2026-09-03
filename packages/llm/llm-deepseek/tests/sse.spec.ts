@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { LlmError } from '@xfcodeai/dsh-llm'
+import { LlmError } from '@x1a0f3n9/dsh-llm'
 import { DONE, parseSse } from '../src/sse.ts'
 
 /**

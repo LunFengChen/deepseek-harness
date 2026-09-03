@@ -3,7 +3,7 @@ description: "面向组合压缩的部署方的工具输出修剪：选择大小
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-compaction-tool-result-pruner
+# @x1a0f3n9/dsh-compaction-tool-result-pruner
 
 [English](README.md) | 中文
 
@@ -32,9 +32,9 @@ kind: "package-reference"
 按此顺序挂载 token 测量、本包与后端：
 
 ```yaml
-- name: '@xfcodeai/dsh-token-meter'
-- name: '@xfcodeai/dsh-compaction-tool-result-pruner'
-- name: '@xfcodeai/dsh-compaction-basic'
+- name: '@x1a0f3n9/dsh-token-meter'
+- name: '@x1a0f3n9/dsh-compaction-tool-result-pruner'
+- name: '@x1a0f3n9/dsh-compaction-basic'
 ```
 
 有了这些配置行，超大工具结果会在压缩过程中自动被修剪。你可以通过检查后续请求是否显示修剪后的结果来确认成功；完整原始内容仍保留在会话日志中。
@@ -45,7 +45,7 @@ kind: "package-reference"
 
 ### 设置大小限制
 
-所有设置都可选；默认会把文本超过 8,192 个字符的结果修剪为其前 4,096 加后 1,024 个字符，并用标记连接。生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-compaction-tool-result-pruner)是穷尽式真源。
+所有设置都可选；默认会把文本超过 8,192 个字符的结果修剪为其前 4,096 加后 1,024 个字符，并用标记连接。生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-compaction-tool-result-pruner)是穷尽式真源。
 
 | 字段 | 默认值 | 含义 |
 |---|---|---|
@@ -103,7 +103,7 @@ kind: "package-reference"
 - [压缩 seam](../compaction/README.zh.md)——本包接入的压缩约定。
 - [压缩子系统参考](../../../docs/subsystems/compaction.zh.md)——压缩词汇、结果与服务行为。
 - [Token meter](../../llm/token-meter/README.zh.md)——判定修剪是否缓解压力的测量服务。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-compaction-tool-result-pruner)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-compaction-tool-result-pruner)——每个受支持配置字段及其源声明。
 
 -----
 

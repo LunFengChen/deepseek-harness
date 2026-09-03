@@ -10,9 +10,9 @@ Status: implemented
 
 ## 决策
 
-`@xfcodeai/dsh-tool-bash-persistent` 消费 `ctx.terminals` 并注册一个 `bash(command)` 工具。它为每个精确 Agent 惰性创建一个交互式 shell，并串行化该所有者的调用。Cwd、导出的变量、已激活环境、函数和后台任务会保留。随机私有标记划分命令输出；保留的 scrollback 会向前分页，以恢复命令真正的输出前缀，若前缀已被丢弃则明确告知。经封装的命令以非零状态结束时，会追加 `[exit code: N]`；若 shell 在报告该状态前终止，则改为追加 `[shell exited: code N]`、`[shell killed by signal: SIG]`，或在后端既未提供退出码也未提供信号时追加 `[shell exited]`。`maxOutputChars` 限制保留的命令输出，而固定诊断可能使返回字符串更长。超时或取消会先关闭 shell，避免下一次调用复用状态不确定的会话，模型可见的超时／退出结果也会说明该重置。取消始终会重置 shell 并丢弃结果，即使已经能观察到完整状态标记也是如此，从而不会让模型未曾看到的状态变更得以保留。可配置描述默认只声明持久性事实，因此网络和软件包镜像等声明仍归部署所有。
+`@x1a0f3n9/dsh-tool-bash-persistent` 消费 `ctx.terminals` 并注册一个 `bash(command)` 工具。它为每个精确 Agent 惰性创建一个交互式 shell，并串行化该所有者的调用。Cwd、导出的变量、已激活环境、函数和后台任务会保留。随机私有标记划分命令输出；保留的 scrollback 会向前分页，以恢复命令真正的输出前缀，若前缀已被丢弃则明确告知。经封装的命令以非零状态结束时，会追加 `[exit code: N]`；若 shell 在报告该状态前终止，则改为追加 `[shell exited: code N]`、`[shell killed by signal: SIG]`，或在后端既未提供退出码也未提供信号时追加 `[shell exited]`。`maxOutputChars` 限制保留的命令输出，而固定诊断可能使返回字符串更长。超时或取消会先关闭 shell，避免下一次调用复用状态不确定的会话，模型可见的超时／退出结果也会说明该重置。取消始终会重置 shell 并丢弃结果，即使已经能观察到完整状态标记也是如此，从而不会让模型未曾看到的状态变更得以保留。可配置描述默认只声明持久性事实，因此网络和软件包镜像等声明仍归部署所有。
 
-`@xfcodeai/dsh-tool-str-replace-editor` 独立消费 `ctx.fs`，注册包含 `view`、`create`、`str_replace` 与 `insert` 的 `str_replace_editor`。它提供带行号文本查看、过滤后的两层目录列表、唯一字面量替换、规范插入边界和有界输出。路径必须为绝对路径；文件查看会保留内容中的制表符，因此复制的文本仍可作为有效的字面量替换输入；变更会保留请求编辑范围之外的制表符；公开 schema 与错误则只使用 `old_str`。命令专属字段接受 `null` 占位参数：当前命令不使用该字段时，执行会将其视为未提供；必填检查保持不变；`view_range: null` 表示查看完整文件；`str_replace.new_str: null` 会被拒绝，只有省略该字段才表示删除。它可以与持久 Bash、一次性 Bash、沙箱 Bash 或无 shell 组合。
+`@x1a0f3n9/dsh-tool-str-replace-editor` 独立消费 `ctx.fs`，注册包含 `view`、`create`、`str_replace` 与 `insert` 的 `str_replace_editor`。它提供带行号文本查看、过滤后的两层目录列表、唯一字面量替换、规范插入边界和有界输出。路径必须为绝对路径；文件查看会保留内容中的制表符，因此复制的文本仍可作为有效的字面量替换输入；变更会保留请求编辑范围之外的制表符；公开 schema 与错误则只使用 `old_str`。命令专属字段接受 `null` 占位参数：当前命令不使用该字段时，执行会将其视为未提供；必填检查保持不变；`view_range: null` 表示查看完整文件；`str_replace.new_str: null` 会被拒绝，只有省略该字段才表示删除。它可以与持久 Bash、一次性 Bash、沙箱 Bash 或无 shell 组合。
 
 `dsh-system-prompt` 接受 `includeHarnessIdentity: false`，profile 组合同时拥有该配置行与所选 shell 工具配置行。`sdk-minimal` 将该值设为 `false`，且只挂载按平台选择的持久 shell，因此部署可以拥有精确 persona，而不会重复注册提示词或工具。既有默认值不变。
 

@@ -4,12 +4,12 @@
  * `unit_globals` table. Each primitive is a single statement, so atomicity
  * comes from SQLite itself — no explicit transactions, and no write queue
  * (write ordering is the caller's responsibility per the KV contract).
- * @module @xfcodeai/dsh-storage-sqlite/unit
+ * @module @x1a0f3n9/dsh-storage-sqlite/unit
  */
 
 import type { DatabaseSync, StatementSync } from 'node:sqlite'
-import { StorageError } from '@xfcodeai/dsh-storage'
-import type { KvUnit, KvUnitDescriptor } from '@xfcodeai/dsh-storage'
+import { StorageError } from '@x1a0f3n9/dsh-storage'
+import type { KvUnit, KvUnitDescriptor } from '@x1a0f3n9/dsh-storage'
 import { recordTableName } from './schema.ts'
 
 /** Prepared statements for one declared table. */

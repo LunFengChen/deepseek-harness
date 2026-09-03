@@ -8,17 +8,17 @@
  * composes and drives them directly, so this driver owns exactly one turn with
  * one result.
  *
- * @module @xfcodeai/dsh-subagent-in-process-driver
+ * @module @x1a0f3n9/dsh-subagent-in-process-driver
  */
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@xfcodeai/dsh-brand'
-import { foldConsumedWork } from '@xfcodeai/dsh-agent'
-import type { Agent, AgentHandle } from '@xfcodeai/dsh-agent'
-import { SessionLogOffset } from '@xfcodeai/dsh-session'
-import type { SessionEvent, SessionId, SessionLogOffset as SessionLogOffsetType, TurnEndReason } from '@xfcodeai/dsh-session'
-import { createUserMessage, type ContentBlock } from '@xfcodeai/dsh-llm'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { foldConsumedWork } from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentHandle } from '@x1a0f3n9/dsh-agent'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionId, SessionLogOffset as SessionLogOffsetType, TurnEndReason } from '@x1a0f3n9/dsh-session'
+import { createUserMessage, type ContentBlock } from '@x1a0f3n9/dsh-llm'
 import {
   appendDelegatedPolicyOverrides,
   applyChildComposition,
@@ -28,14 +28,14 @@ import {
   finalAssistantOutput,
   resolveChildAgentOptions,
   resolveChildDepth,
-} from '@xfcodeai/dsh-subagent'
+} from '@x1a0f3n9/dsh-subagent'
 import type {
   ResolvedSubagentStartRequest,
   SubagentDescriptorData,
   SubagentResult,
   SubagentRun,
   SubagentStopReason,
-} from '@xfcodeai/dsh-subagent'
+} from '@x1a0f3n9/dsh-subagent'
 import {
   attachStructuredRuntime,
   type StructuredAttachment,

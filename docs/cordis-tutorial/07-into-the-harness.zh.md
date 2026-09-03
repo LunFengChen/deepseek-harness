@@ -10,9 +10,9 @@
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@xfcodeai/dsh-brand'
-import { defineTool } from '@xfcodeai/dsh-tools'
-import type { ToolCallId } from '@xfcodeai/dsh-llm'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { ToolCallId } from '@x1a0f3n9/dsh-llm'
 
 export const name = 'greet-tool'
 export const inject = ['tools']
@@ -55,7 +55,7 @@ export function apply(ctx: Context) {
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@xfcodeai/dsh-tools'
+import type {} from '@x1a0f3n9/dsh-tools'
 
 export const name = 'tool-logger'
 export const inject = ['tools']
@@ -70,18 +70,18 @@ export function apply(ctx: Context) {
 }
 ```
 
-`import type {} from '@xfcodeai/dsh-tools'` 行会引入该包的声明合并，使 `'tools/result'` 及其 payload 具有类型。这与第 4 章导入 `stats.ts` 的做法相同，只是扩展到了包级别。
+`import type {} from '@x1a0f3n9/dsh-tools'` 行会引入该包的声明合并，使 `'tools/result'` 及其 payload 具有类型。这与第 4 章导入 `stats.ts` 的做法相同，只是扩展到了包级别。
 
 ## 组合并运行
 
 ```yaml
-- name: '@xfcodeai/dsh-system-prompt'
-- name: '@xfcodeai/dsh-tools'
+- name: '@x1a0f3n9/dsh-system-prompt'
+- name: '@x1a0f3n9/dsh-tools'
 - name: './tool-logger.ts'
 - name: './greet-tool.ts'
 ```
 
-`@xfcodeai/dsh-tools` 会注入 `systemPrompt` 服务，因为工具需要向系统提示词贡献 schema，所以组合中也要列出该服务的提供方。缺少提供方时，工具插件会像[第 6 章](06-composition-and-hmr.zh.md)所述那样保持 PENDING。
+`@x1a0f3n9/dsh-tools` 会注入 `systemPrompt` 服务，因为工具需要向系统提示词贡献 schema，所以组合中也要列出该服务的提供方。缺少提供方时，工具插件会像[第 6 章](06-composition-and-hmr.zh.md)所述那样保持 PENDING。
 
 ```sh
 node --import tsx ../../vendor/cordis/bin.js

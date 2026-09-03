@@ -3,7 +3,7 @@ description: "面向开发者的浏览器客户端插件热重载说明：重建
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-hmr
+# @x1a0f3n9/dsh-client-hmr
 
 [English](README.md) | 中文
 
@@ -41,7 +41,7 @@ kind: "package-reference"
 |---|---|---|
 | `pollIntervalMs` | `500` | bundle stat 轮询间隔，单位为毫秒 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-client-hmr)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-client-hmr)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 观察成功
 
@@ -93,7 +93,7 @@ fiber 的激活 epoch 会串联其服务提供方的 uid，因此替换提供方
 - [客户端模块系统](../modules/README.zh.md)——本驱动器驱动的惰性 CJS 模块表与 `invalidate`/`prefetch` 钩子。
 - [Web 启动内核](../web/README.zh.md)——启动插件树并展示 entry 状态的外壳。
 - [客户端组地图](../README.zh.md)——本包重载的浏览器半侧。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-client-hmr)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-client-hmr)——每个受支持配置字段及其源声明。
 
 -----
 

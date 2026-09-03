@@ -3,7 +3,7 @@ description: "The local filesystem skill provider for users and maintainers auth
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-skill-filesystem
+# @x1a0f3n9/dsh-skill-filesystem
 
 English | [中文](README.zh.md)
 
@@ -58,8 +58,8 @@ The project root is the nearest ancestor containing `.git`; without one, the cur
 Load the plugin alongside the skill registry; it requires `ctx.skills`.
 
 ```yaml
-- name: '@xfcodeai/dsh-skill'
-- name: '@xfcodeai/dsh-skill-filesystem'
+- name: '@x1a0f3n9/dsh-skill'
+- name: '@x1a0f3n9/dsh-skill-filesystem'
 ```
 
 | Field | Default | Meaning |
@@ -72,7 +72,7 @@ Load the plugin alongside the skill registry; it requires `ctx.skills`.
 | `watch` | `true` | Watch local roots and invalidate the provider when the catalog may have changed |
 | `bundledSkillDir` | — | Bundled skill root scanned at rank 600 when configured |
 
-The remaining `watch*` fields tune Chokidar behavior — polling, stability window, interval, project cap, and symlink following. The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-skill-filesystem) is the exhaustive source for every field.
+The remaining `watch*` fields tune Chokidar behavior — polling, stability window, interval, project cap, and symlink following. The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-skill-filesystem) is the exhaustive source for every field.
 
 ### Change detection
 

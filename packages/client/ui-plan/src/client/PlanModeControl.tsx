@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
-import { IconCloseFill14 } from '@xfcodeai/dsh-client-ui-primitives'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
+import { IconCloseFill14 } from '@x1a0f3n9/dsh-client-ui-primitives'
 // Type-only: pulls the ui-conversation SlotMap merge (the input.plan seat and
 // its {locked} owner share).
-import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { PlanChipInjected } from './index.ts'
 import css from './PlanModeControl.module.css'
 

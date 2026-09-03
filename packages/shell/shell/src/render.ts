@@ -3,7 +3,7 @@
  * `dsh-tool-pwsh`): the exit-status marker contract the tools' renderers emit,
  * Host `presentResult` implementations parse here, and the Web terminal card
  * model mirrors without importing Host code.
- * @module @xfcodeai/dsh-shell/render
+ * @module @x1a0f3n9/dsh-shell/render
  */
 
 /**

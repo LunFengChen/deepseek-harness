@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { createUserMessage, ToolCallId, LlmError, ReasoningEffortId, StreamChunk } from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionId, TurnEndReason } from '@xfcodeai/dsh-session'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { defineContentToolFixture } from '@xfcodeai/dsh-tools'
-import AgentRegistry, { type Agent } from '@xfcodeai/dsh-agent'
+import LlmRuntime, { createUserMessage, ToolCallId, LlmError, ReasoningEffortId, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId, TurnEndReason } from '@x1a0f3n9/dsh-session'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
+import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { MockAdapter, maxTokensResponse, textResponse, toolCallResponse } from './mock-adapter.ts'
 
 function driverDone(agent: Agent): Promise<void> {
@@ -399,7 +399,7 @@ describe('agent loop', () => {
     const contextEvents = () => agent.session.snapshotEvents().flatMap(event =>
       event.type === 'user/message'
         && event.data.source.kind === 'plugin'
-        && event.data.source.plugin === '@xfcodeai/dsh-system-prompt'
+        && event.data.source.plugin === '@x1a0f3n9/dsh-system-prompt'
         ? [event]
         : [])
 
@@ -452,7 +452,7 @@ describe('agent loop', () => {
     const contextEvent = agent.session.snapshotEvents().find(event =>
       event.type === 'user/message'
       && event.data.source.kind === 'plugin'
-      && event.data.source.plugin === '@xfcodeai/dsh-system-prompt')
+      && event.data.source.plugin === '@x1a0f3n9/dsh-system-prompt')
     if (contextEvent?.type !== 'user/message') throw new Error('first turn did not materialize runtime context')
     agent.session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: 'compacted summary' }],
@@ -467,13 +467,13 @@ describe('agent loop', () => {
     const runtimeContexts = agent.session.snapshotEvents().flatMap(event =>
       event.type === 'user/message'
         && event.data.source.kind === 'plugin'
-        && event.data.source.plugin === '@xfcodeai/dsh-system-prompt'
+        && event.data.source.plugin === '@x1a0f3n9/dsh-system-prompt'
         ? [event]
         : [])
     expect(runtimeContexts).toHaveLength(2)
     expect(adapter.requests[1]?.messages.some(message =>
       message.source.kind === 'plugin'
-      && message.source.plugin === '@xfcodeai/dsh-system-prompt')).toBe(true)
+      && message.source.plugin === '@x1a0f3n9/dsh-system-prompt')).toBe(true)
   })
 
   it('clears compacted runtime context after the active set becomes empty', async () => {
@@ -487,7 +487,7 @@ describe('agent loop', () => {
     const contextEvent = agent.session.snapshotEvents().find(event =>
       event.type === 'user/message'
       && event.data.source.kind === 'plugin'
-      && event.data.source.plugin === '@xfcodeai/dsh-system-prompt')
+      && event.data.source.plugin === '@x1a0f3n9/dsh-system-prompt')
     if (contextEvent?.type !== 'user/message') throw new Error('first turn did not materialize runtime context')
     agent.session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: 'summary retaining old mode: read-only' }],
@@ -502,7 +502,7 @@ describe('agent loop', () => {
     await waitForIdle(ctx, agent)
     const clearing = adapter.requests[1]?.messages.find(message =>
       message.source.kind === 'plugin'
-      && message.source.plugin === '@xfcodeai/dsh-system-prompt')
+      && message.source.plugin === '@x1a0f3n9/dsh-system-prompt')
     expect(clearing?.content).toEqual([{
       type: 'text',
       text: 'Current runtime context: none. Earlier runtime-context snapshots no longer apply.',
@@ -529,7 +529,7 @@ describe('agent loop', () => {
     await waitForIdle(ctx, agent)
     expect(adapter.requests[0]?.messages.some(message =>
       message.source.kind === 'plugin'
-      && message.source.plugin === '@xfcodeai/dsh-system-prompt')).toBe(false)
+      && message.source.plugin === '@x1a0f3n9/dsh-system-prompt')).toBe(false)
   })
 
   it('replaces a malformed retained runtime-context message with the current complete snapshot', async () => {
@@ -539,7 +539,7 @@ describe('agent loop', () => {
     const agent = ctx.agentLoop.create(SessionId('a-runtime-context-malformed'), { provider: 'mock', model: 'mock' })
     agent.session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: 'broken' }, { type: 'text', text: 'snapshot' }],
-      source: { kind: 'plugin', plugin: '@xfcodeai/dsh-system-prompt' },
+      source: { kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt' },
     }), { surfaceOp: 'append' })
 
     send(agent, 'repair context')
@@ -547,7 +547,7 @@ describe('agent loop', () => {
     const runtimeContexts = agent.session.snapshotEvents().flatMap(event =>
       event.type === 'user/message'
         && event.data.source.kind === 'plugin'
-        && event.data.source.plugin === '@xfcodeai/dsh-system-prompt'
+        && event.data.source.plugin === '@x1a0f3n9/dsh-system-prompt'
         ? [event]
         : [])
     expect(runtimeContexts).toHaveLength(2)

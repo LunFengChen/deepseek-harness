@@ -1,11 +1,11 @@
 /**
  * Owner-scoped persistent PTY registry. Backends own terminal mechanics while
  * this service owns ids, publication, authorization, and awaited cleanup.
- * @module @xfcodeai/dsh-terminal
+ * @module @x1a0f3n9/dsh-terminal
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import type { Agent } from '@xfcodeai/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 import { TerminalBackendCleanupError } from './types.ts'
 import type {
   TerminalBackend,

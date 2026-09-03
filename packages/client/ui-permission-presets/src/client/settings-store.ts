@@ -7,13 +7,13 @@
  */
 
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { SettingsNamespaceView } from '@xfcodeai/dsh-api-remotes/client'
+import type { SettingsNamespaceView } from '@x1a0f3n9/dsh-api-remotes/client'
 import {
   createSnapshotStore, type SnapshotStore,
-} from '@xfcodeai/dsh-client-store'
+} from '@x1a0f3n9/dsh-client-store'
 import type {
   SchemaNode, SettingsDescribeFace, SettingsSchemaService,
-} from '@xfcodeai/dsh-client-ui-settings/client'
+} from '@x1a0f3n9/dsh-client-ui-settings/client'
 import { displayPermissionPreset } from './presentation.ts'
 
 /** Permission's settings namespace on the host wire. */

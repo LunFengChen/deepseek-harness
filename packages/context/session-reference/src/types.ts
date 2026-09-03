@@ -2,12 +2,12 @@
  * Public session-reference request, candidate, and preparation records.
  * Imports stay on type-only subpaths so generated Remote clients can consume
  * this module without Host runtime code.
- * @module @xfcodeai/dsh-session-reference/types
+ * @module @x1a0f3n9/dsh-session-reference/types
  */
 
-import type { UserMessage } from '@xfcodeai/dsh-llm/message'
-import type { ContentBlock } from '@xfcodeai/dsh-llm/types'
-import type { OptionalSessionSeq, SessionId } from '@xfcodeai/dsh-session/types'
+import type { UserMessage } from '@x1a0f3n9/dsh-llm/message'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm/types'
+import type { OptionalSessionSeq, SessionId } from '@x1a0f3n9/dsh-session/types'
 
 /** Durable source session, cited event seqs, and snapshot facts for prepared cross-session context. */
 export interface SessionReferenceSource {
@@ -29,7 +29,7 @@ export interface SessionReferenceSource {
   }[]
 }
 
-declare module '@xfcodeai/dsh-llm' {
+declare module '@x1a0f3n9/dsh-llm' {
   interface MessageSourceMap {
     'session-reference': SessionReferenceSource
   }

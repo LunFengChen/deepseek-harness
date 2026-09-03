@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
-import type { ConnectionHandle } from '@xfcodeai/dsh-api-remotes/client'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import type { ConnectionHandle } from '@x1a0f3n9/dsh-api-remotes/client'
 import {
   RemoteStreamCarrierError,
   RemoteStream,

@@ -1,9 +1,9 @@
 import type { Context } from '@deepseek-ai/cordis'
-import { notifySubscribers } from '@xfcodeai/dsh-client-store'
+import { notifySubscribers } from '@x1a0f3n9/dsh-client-store'
 import type {
   ConversationLocation, ConversationTimelineSnapshot, ConversationViewBuilder,
   ConversationViewDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { ChatConversationViewNode, ChatNode } from '../contract/chat-nodes.ts'
 import { isRunningTool } from '../contract/chat-nodes.ts'
 import type {

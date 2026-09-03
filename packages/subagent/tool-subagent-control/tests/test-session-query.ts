@@ -1,6 +1,6 @@
 /** Minimal concrete Session query for continuation and catalog integration tests. */
 
-import SessionQueryEngine from '@xfcodeai/dsh-session-query'
+import SessionQueryEngine from '@x1a0f3n9/dsh-session-query'
 
 /** Session query implementation whose search faces are outside these tests. */
 export class TestSessionQuery extends SessionQueryEngine {

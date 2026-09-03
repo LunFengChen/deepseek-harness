@@ -3,7 +3,7 @@ description: "面向部署方与维护者的本地 PowerShell 执行器说明，
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-pwsh-local
+# @x1a0f3n9/dsh-pwsh-local
 
 [English](README.md) | 中文
 
@@ -37,7 +37,7 @@ kind: "package-reference"
 
 ```yaml
 - id: bash
-  name: '@xfcodeai/dsh-pwsh-local'
+  name: '@x1a0f3n9/dsh-pwsh-local'
   config:
     cwd: C:\path\to\workspace
     timeoutMs: 120000
@@ -53,7 +53,7 @@ kind: "package-reference"
 | `graceMs` | `3,000` | 终止升级与退出后管道排空的宽限时间 |
 | `pwshPath` | 自动解析 | 显式 pwsh 可执行文件；否则依次探测常见位置，再查 PATH |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-pwsh-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-pwsh-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 运行命令
 

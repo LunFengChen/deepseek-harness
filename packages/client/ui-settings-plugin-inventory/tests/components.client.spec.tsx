@@ -35,8 +35,8 @@ const SNAPSHOT = {
     { entryId: 'timer', moduleName: 'cordis:timer', enabled: true, fiberPhase: 'active' },
     { entryId: '8a1b2c3d', moduleName: '@deepseek-ai/cordis-plugin-hmr', enabled: true, fiberPhase: 'active' },
     { entryId: 'unobserved', moduleName: '@fixture/unobserved-name', enabled: true, fiberPhase: null },
-    { entryId: 'bash-host', moduleName: '@xfcodeai/dsh-tool-bash', enabled: false, fiberPhase: null },
-    { entryId: 'fs-host', moduleName: '@xfcodeai/dsh-tool-fs', enabled: false, fiberPhase: null },
+    { entryId: 'bash-host', moduleName: '@x1a0f3n9/dsh-tool-bash', enabled: false, fiberPhase: null },
+    { entryId: 'fs-host', moduleName: '@x1a0f3n9/dsh-tool-fs', enabled: false, fiberPhase: null },
     { entryId: 'dormant', moduleName: '@fixture/dormant', enabled: false, fiberPhase: null },
   ],
   agentPresets: [
@@ -46,8 +46,8 @@ const SNAPSHOT = {
       name: '标准模式',
       isDefault: true,
       rows: [
-        { entryId: 'bash', moduleName: '@xfcodeai/dsh-tool-bash', enabled: true, fiberPhase: 'active' },
-        { entryId: 'fs', moduleName: '@xfcodeai/dsh-tool-fs', enabled: true, fiberPhase: null },
+        { entryId: 'bash', moduleName: '@x1a0f3n9/dsh-tool-bash', enabled: true, fiberPhase: 'active' },
+        { entryId: 'fs', moduleName: '@x1a0f3n9/dsh-tool-fs', enabled: true, fiberPhase: null },
         {
           entryId: 'pwsh',
           moduleName: '@fixture/pwsh',
@@ -65,9 +65,9 @@ const SNAPSHOT = {
       trust: 'system',
       isDefault: false,
       rows: [
-        { entryId: 'bash', moduleName: '@xfcodeai/dsh-tool-bash', enabled: true, fiberPhase: null },
-        { entryId: 'bash-fork', moduleName: '@xfcodeai/dsh-tool-bash', enabled: true, fiberPhase: null },
-        { entryId: 'fs', moduleName: '@xfcodeai/dsh-tool-fs', enabled: 'conditional', fiberPhase: null },
+        { entryId: 'bash', moduleName: '@x1a0f3n9/dsh-tool-bash', enabled: true, fiberPhase: null },
+        { entryId: 'bash-fork', moduleName: '@x1a0f3n9/dsh-tool-bash', enabled: true, fiberPhase: null },
+        { entryId: 'fs', moduleName: '@x1a0f3n9/dsh-tool-fs', enabled: 'conditional', fiberPhase: null },
       ],
     },
     { id: 'shattered', trust: 'user', name: '坏预设', isDefault: false, broken: 'the composition file is missing', rows: [] },

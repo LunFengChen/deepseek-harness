@@ -9,9 +9,9 @@
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import { ToolCallId, createAssistantMessage, createToolResultMessage, createUserMessage } from '@xfcodeai/dsh-llm'
-import { SESSION_FORMAT_VERSION, Session, SessionId } from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-session-title'
+import { ToolCallId, createAssistantMessage, createToolResultMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import { SESSION_FORMAT_VERSION, Session, SessionId } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-session-title'
 import {
   launchWebScaffold, seedSession, watchConsole, webSnapshotMode, type WebScaffold,
 } from './scaffold.ts'

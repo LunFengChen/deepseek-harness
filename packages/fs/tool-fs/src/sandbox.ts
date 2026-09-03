@@ -2,20 +2,20 @@
  * The sandbox-escalation API shared by the `write` and `edit` tools: the
  * per-call policy resolution, the advertised escalation fields, and the denial-marker
  * mapping — all delegating the vocabulary and the fail-closed approval
- * sequence to `@xfcodeai/dsh-sandbox` (the same pieces `@xfcodeai/dsh-tool-bash`
+ * sequence to `@x1a0f3n9/dsh-sandbox` (the same pieces `@x1a0f3n9/dsh-tool-bash`
  * uses), so bash and fs escalate identically. Built ONCE per plugin from
  * `ctx.fs.sandboxMode` (the capability fact — is a confining backend mounted?)
  * and shared by both mutating tools.
  *
- * @module @xfcodeai/dsh-tool-fs/sandbox
+ * @module @x1a0f3n9/dsh-tool-fs/sandbox
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { ToolExecution } from '@xfcodeai/dsh-tools'
-import type { SandboxExecutionPolicy, SandboxMode } from '@xfcodeai/dsh-sandbox'
-import { ESCALATION_TARGETS, approveEscalation, escalationHintMarker, isEscalationSatisfiedByStandingMode, sandboxDenialMarker, validateEscalationArgs } from '@xfcodeai/dsh-sandbox'
-import type { SandboxPolicyService } from '@xfcodeai/dsh-sandbox-policy'
-import { FsError } from '@xfcodeai/dsh-fs'
+import type { ToolExecution } from '@x1a0f3n9/dsh-tools'
+import type { SandboxExecutionPolicy, SandboxMode } from '@x1a0f3n9/dsh-sandbox'
+import { ESCALATION_TARGETS, approveEscalation, escalationHintMarker, isEscalationSatisfiedByStandingMode, sandboxDenialMarker, validateEscalationArgs } from '@x1a0f3n9/dsh-sandbox'
+import type { SandboxPolicyService } from '@x1a0f3n9/dsh-sandbox-policy'
+import { FsError } from '@x1a0f3n9/dsh-fs'
 
 /** The two escalation arguments a mutating tool may carry (advertised only under a confining backend). */
 export interface FsEscalationArgs {

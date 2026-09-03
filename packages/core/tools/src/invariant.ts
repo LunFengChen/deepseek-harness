@@ -1,11 +1,11 @@
-/** Package-owned tool-pipeline invariants. @module @xfcodeai/dsh-tools/invariant */
+/** Package-owned tool-pipeline invariants. @module @x1a0f3n9/dsh-tools/invariant */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { Session, SessionEvent } from '@xfcodeai/dsh-session'
-import type { InvariantFailure, InvariantInstaller } from '@xfcodeai/dsh-invariants'
+import type { Session, SessionEvent } from '@x1a0f3n9/dsh-session'
+import type { InvariantFailure, InvariantInstaller } from '@x1a0f3n9/dsh-invariants'
 import type { ToolExecution, ToolExecutionResult } from './index.ts'
 
-const PACKAGE_NAME = '@xfcodeai/dsh-tools'
+const PACKAGE_NAME = '@x1a0f3n9/dsh-tools'
 
 /** Cordis companion plugin name. */
 export const name = 'tools-invariant'

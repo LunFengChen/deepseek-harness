@@ -7,7 +7,7 @@
  */
 import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
-import type { CordisDynamicPluginId } from '@xfcodeai/dsh-api-remotes/client'
+import type { CordisDynamicPluginId } from '@x1a0f3n9/dsh-api-remotes/client'
 import {
   DynamicCordisStyles,
   DYNAMIC_CLIENT_REDIRECTS,

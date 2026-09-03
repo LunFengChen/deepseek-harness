@@ -1,4 +1,4 @@
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 import { describe, expect, it } from 'vitest'
 import type { RunningToolCall, ToolCallBlock } from '../src/client/contract/snapshot.ts'
 import {

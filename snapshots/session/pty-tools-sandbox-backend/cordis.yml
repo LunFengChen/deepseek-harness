@@ -2,9 +2,9 @@
 # deployment already owns the shared sandbox provider and policy.
 - insert:
     - id: pty
-      name: '@xfcodeai/dsh-terminal'
+      name: '@x1a0f3n9/dsh-terminal'
     - id: terminal-bash
-      name: '@xfcodeai/dsh-terminal-bash'
+      name: '@x1a0f3n9/dsh-terminal-bash'
       config:
         pollIntervalMs: 10
         exactProbeAfterMs: 20
@@ -13,4 +13,4 @@
         timeoutMs: 2000
         disposeGraceMs: 500
     - id: tool-terminal
-      name: '@xfcodeai/dsh-tool-terminal'
+      name: '@x1a0f3n9/dsh-tool-terminal'

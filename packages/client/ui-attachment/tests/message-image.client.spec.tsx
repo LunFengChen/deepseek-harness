@@ -2,9 +2,9 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react'
-import { AttachmentId } from '@xfcodeai/dsh-attachment'
-import { EMPTY_CHAT_SNAPSHOT, type MessageImagesProps } from '@xfcodeai/dsh-client-ui-chat/client'
-import { EMPTY_CONVERSATION_SNAPSHOT } from '@xfcodeai/dsh-client-ui-conversation/client'
+import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
+import { EMPTY_CHAT_SNAPSHOT, type MessageImagesProps } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { EMPTY_CONVERSATION_SNAPSHOT } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { ImageGallery, MessageImage } from '../src/MessageImage.tsx'
 import type { MessageImageLabels } from '../src/MessageImage.tsx'
 import { MessageImages } from '../src/client/MessageImages.tsx'

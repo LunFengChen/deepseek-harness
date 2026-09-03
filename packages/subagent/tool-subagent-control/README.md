@@ -3,7 +3,7 @@ description: "Global send_message, interrupt_agent, and list_agents tools for us
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-subagent-control
+# @x1a0f3n9/dsh-tool-subagent-control
 
 English | [中文](README.zh.md)
 
@@ -32,14 +32,14 @@ Mount this package in any composition with continuable children the model should
 Load the subagent service, a backend, the delegation tool, and this package. Adding the separate list plugin exposes all three tools:
 
 ```yaml
-- name: '@xfcodeai/dsh-subagent'
-- name: '@xfcodeai/dsh-subagent-spawn-in-process'
-- name: '@xfcodeai/dsh-tool-subagent'
+- name: '@x1a0f3n9/dsh-subagent'
+- name: '@x1a0f3n9/dsh-subagent-spawn-in-process'
+- name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: spawn
     backgroundMode: continuable
-- name: '@xfcodeai/dsh-tool-subagent-control'
-- name: '@xfcodeai/dsh-tool-subagent-control/list-agents'
+- name: '@x1a0f3n9/dsh-tool-subagent-control'
+- name: '@x1a0f3n9/dsh-tool-subagent-control/list-agents'
 ```
 
 This package takes no configuration: the root plugin provides `send_message` and `interrupt_agent`, and the list plugin provides `list_agents`.
@@ -97,7 +97,7 @@ Read these pages when the package-level contract is not enough; they move from t
 
 - [Subagent subsystem](../../../docs/subsystems/subagent.md) — continuable children, activations, inbox, interrupt, and follow-up authority.
 - [dsh-tool-subagent](../tool-subagent/README.md) — the delegation tool that starts continuable children.
-- [Generated tool catalog](../../../docs/tool-catalog.md#xfcodeaidsh-tool-subagent-control) — the three tool schemas.
+- [Generated tool catalog](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-subagent-control) — the three tool schemas.
 
 -----
 
@@ -108,7 +108,7 @@ Read these pages when the package-level contract is not enough; they move from t
 
 #### What the model sees
 
-The generated [schemas](../../../docs/tool-catalog.md#xfcodeaidsh-tool-subagent-control): `send_message` takes `agent_id` and `message`; `interrupt_agent` takes `agent_id`; `list_agents` takes the optional `scope` enum.
+The generated [schemas](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-subagent-control): `send_message` takes `agent_id` and `message`; `interrupt_agent` takes `agent_id`; `list_agents` takes the optional `scope` enum.
 
 #### Token effect
 

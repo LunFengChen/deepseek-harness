@@ -11,13 +11,13 @@
  *
  * Reconstruction reads the `agentPreset` Session projection, never the header
  * alone.
- * @module @xfcodeai/dsh-agent-presets/session
+ * @module @x1a0f3n9/dsh-agent-presets/session
  */
 
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import { z } from 'zod'
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * The session's agent preset was chosen after creation, while the session

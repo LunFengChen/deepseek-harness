@@ -3,7 +3,7 @@ description: "Web GUI 的客户端命令 API：/ 命令 source、三类派发、
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-commands
+# @x1a0f3n9/dsh-client-ui-commands
 
 [English](README.md) | 中文
 

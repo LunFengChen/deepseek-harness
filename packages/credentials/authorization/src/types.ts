@@ -2,10 +2,10 @@
  * Wire-safe authorization types, free of cordis/service imports so browser type
  * chains can consume them without loading this
  * package's Context augmentation.
- * @module @xfcodeai/dsh-authorization/types
+ * @module @x1a0f3n9/dsh-authorization/types
  */
 
-import type { CredentialKey } from '@xfcodeai/dsh-credentials/types'
+import type { CredentialKey } from '@x1a0f3n9/dsh-credentials/types'
 
 /** One way a flow can obtain its credential, named by the flow that offers it. */
 export interface AuthorizationMethod {

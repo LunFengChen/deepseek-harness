@@ -1,4 +1,4 @@
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   export interface TypertLookup<Host, Wire> {
     readonly host: Host
     readonly wire: Wire
