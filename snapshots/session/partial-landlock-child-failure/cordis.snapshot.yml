@@ -1,32 +1,32 @@
 # Keyless runner-classification composition: replay authored model turns and
 # replace the shipping provider with a deterministic process-launch stand-in.
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   disabled: true
 
 - id: sandbox
-  name: '@xfcodeai/dsh-sandbox-local'
+  name: '@x1a0f3n9/dsh-sandbox-local'
   disabled: true
 
 - id: agent-default-model
-  name: '@xfcodeai/dsh-agent-default-model'
+  name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: deepseek-official
     model: deepseek-v4-flash
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: none
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: |
       You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}. Your bash tool runs under a file sandbox — a `[sandbox: file access denied …]` result is policy, not a command bug.
@@ -35,7 +35,7 @@
 
 - insert:
     - id: llm-replay
-      name: '@xfcodeai/dsh-llm-replay'
+      name: '@x1a0f3n9/dsh-llm-replay'
       config:
         providers:
           - id: deepseek-official

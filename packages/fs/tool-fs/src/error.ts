@@ -4,11 +4,11 @@
  * not the only correct recovery (re-read / read the file), so this package
  * appends the remedy at the model boundary; provider messages stay
  * machine-oriented and unchanged.
- * @module @xfcodeai/dsh-tool-fs/src/error
+ * @module @x1a0f3n9/dsh-tool-fs/src/error
  */
 
-import { FsError } from '@xfcodeai/dsh-fs'
-import type { FsErrorCode } from '@xfcodeai/dsh-fs'
+import { FsError } from '@x1a0f3n9/dsh-fs'
+import type { FsErrorCode } from '@x1a0f3n9/dsh-fs'
 
 /** The remedy appended to each remediable failure code's message. */
 const REMEDIES: Partial<Record<FsErrorCode, string>> = {

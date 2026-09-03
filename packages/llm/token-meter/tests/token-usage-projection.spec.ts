@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createMessage, createUserMessage } from '@xfcodeai/dsh-llm'
-import type { TokenUsage } from '@xfcodeai/dsh-llm'
-import SessionStore from '@xfcodeai/dsh-session'
-import type { Session, SessionSeq } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import TokenMeter from '@xfcodeai/dsh-token-meter'
-import type { ContextPressureProjection, TokenUsageProjection } from '@xfcodeai/dsh-token-meter/client'
-import { RetryId } from '@xfcodeai/dsh-llm-retry'
-import { CompactionId } from '@xfcodeai/dsh-compaction'
+import { createMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { TokenUsage } from '@x1a0f3n9/dsh-llm'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import type { Session, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import type { ContextPressureProjection, TokenUsageProjection } from '@x1a0f3n9/dsh-token-meter/client'
+import { RetryId } from '@x1a0f3n9/dsh-llm-retry'
+import { CompactionId } from '@x1a0f3n9/dsh-compaction'
 
 const ZERO: TokenUsageProjection = {
   uncachedInputTokens: 0,

@@ -11,7 +11,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
-import { decodeStorageRecord } from '@xfcodeai/dsh-session/chunk-rows'
+import { decodeStorageRecord } from '@x1a0f3n9/dsh-session/chunk-rows'
 import { describe, expect, it } from 'vitest'
 import WebSocket from 'ws'
 

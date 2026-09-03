@@ -3,7 +3,7 @@ description: "建议性循环卫生 guard：当 agent 重复完全相同的工�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-repeat-tool-reminder
+# @x1a0f3n9/dsh-repeat-tool-reminder
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 想改变提醒何时触发或覆盖哪些工具时，用配置挂载插件：
 
 ```yaml
-- name: '@xfcodeai/dsh-repeat-tool-reminder'
+- name: '@x1a0f3n9/dsh-repeat-tool-reminder'
   config:
     thresholds: [3, 5, 8]        # remind at 3, 5, and 8 consecutive repeats
     include: []                  # track every tool; list patterns to track only some
@@ -51,7 +51,7 @@ kind: "package-reference"
 | `exclude` | `[]` | 绝不跟踪这些工具；对它们的调用既不计数也不重置 |
 | `argumentsPreviewChars` | `500` | 详细提醒中显示多少字符的重复参数 |
 
-无效配置会在启动时以清晰错误失败——空的 `thresholds` 列表、小于 2 的重复次数或重复值——绝不会静默改变行为。生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-repeat-tool-reminder)记录每个受支持的值。
+无效配置会在启动时以清晰错误失败——空的 `thresholds` 列表、小于 2 的重复次数或重复值——绝不会静默改变行为。生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-repeat-tool-reminder)记录每个受支持的值。
 
 ### 你会得到什么
 
@@ -107,7 +107,7 @@ guard 建立在四项承诺之上：
 当包级约定不够用时阅读以下页面。它们从工具 waterfall 逐步进入穷尽式配置与 guard 组映射。
 
 - [工具子系统参考](../../../docs/subsystems/tools.zh.md)——本 guard 消费的 `tools/execute` waterfall、`additionalContexts` 与决策形态。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-repeat-tool-reminder)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-repeat-tool-reminder)——每个受支持配置字段及其源声明。
 - [guard 组映射](../README.zh.md)——同组的 guard 包与循环卫生家族。
 
 -----

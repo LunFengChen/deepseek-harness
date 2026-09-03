@@ -1,5 +1,5 @@
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
-import type {} from '@xfcodeai/dsh-tools/types'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
+import type {} from '@x1a0f3n9/dsh-tools/types'
 import type {
   ConversationNode, RunningToolCall, ToolCallBlock, ToolResultNode,
 } from '../contract/snapshot.ts'

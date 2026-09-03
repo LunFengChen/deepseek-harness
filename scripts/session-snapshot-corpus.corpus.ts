@@ -13,7 +13,7 @@ import {
   scrubToolSchemas,
   sessionFixtureNames,
   type SnapshotManifest,
-} from '@xfcodeai/dsh-session-snapshot'
+} from '@x1a0f3n9/dsh-session-snapshot'
 
 const repoRoot = resolve(import.meta.dirname, '..')
 const corpusRoot = join(repoRoot, 'snapshots')

@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-subprocess-e2b",
+  "name": "@x1a0f3n9/dsh-subprocess-e2b",
   "description": "E2B subprocess implementation for DeepSeek Harness",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -27,18 +27,18 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-e2b": "workspace:^",
-    "@xfcodeai/dsh-subprocess": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-e2b": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-e2b": "workspace:^",
-    "@xfcodeai/dsh-subprocess": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-e2b": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

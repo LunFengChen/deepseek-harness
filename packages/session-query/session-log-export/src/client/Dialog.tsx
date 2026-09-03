@@ -1,7 +1,7 @@
-import type { ObservableSnapshot } from '@xfcodeai/dsh-client-store'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { Button, Modal } from '@xfcodeai/dsh-client-ui-primitives'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { Button, Modal } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { SessionLogDownloadState } from './controller.ts'
 import { NS } from './locales.ts'
 

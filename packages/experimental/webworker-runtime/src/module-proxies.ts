@@ -12,7 +12,7 @@
  * structural placeholder that mounts silently and reports the missing capability
  * when a call finally reaches it. External npm replacements live in
  * `./externals/`, named after the package they stand in for.
- * @module @xfcodeai/dsh-experimental-webworker-runtime/src/module-proxies
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/module-proxies
  */
 
 /**

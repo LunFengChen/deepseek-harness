@@ -7,10 +7,10 @@ import {
   type CommandHandle,
   type CommandResult,
   type Sandbox,
-} from '@xfcodeai/dsh-e2b'
-import type E2BRuntime from '@xfcodeai/dsh-e2b'
-import type { SubprocessSpawnSpec } from '@xfcodeai/dsh-subprocess'
-import E2BSubprocessRuntime from '@xfcodeai/dsh-subprocess-e2b'
+} from '@x1a0f3n9/dsh-e2b'
+import type E2BRuntime from '@x1a0f3n9/dsh-e2b'
+import type { SubprocessSpawnSpec } from '@x1a0f3n9/dsh-subprocess'
+import E2BSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-e2b'
 import { E2BBase64Decoder, E2B_OUTPUT_COMPLETE_FRAME, E2BOutputReader } from '../src/output.ts'
 import { E2BSubprocessHandle } from '../src/process.ts'
 import { describe, expect, it, vi } from 'vitest'

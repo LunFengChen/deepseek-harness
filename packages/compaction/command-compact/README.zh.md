@@ -3,7 +3,7 @@ description: "面向交互式组合的按需 /compact 命令：它做什么、�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-command-compact
+# @x1a0f3n9/dsh-command-compact
 
 [English](README.md) | 中文
 
@@ -55,11 +55,11 @@ kind: "package-reference"
 
 ```yaml
 - id: commands
-  name: '@xfcodeai/dsh-commands'
+  name: '@x1a0f3n9/dsh-commands'
 - id: compaction-basic
-  name: '@xfcodeai/dsh-compaction-basic'
+  name: '@x1a0f3n9/dsh-compaction-basic'
 - id: command-compact
-  name: '@xfcodeai/dsh-command-compact'
+  name: '@x1a0f3n9/dsh-command-compact'
 ```
 
 随附 `dsh` 基础配置把它挂载在默认后端旁，Web 客户端提供命令适配器。未组合命令适配器的自动化接口只保留自动压缩。

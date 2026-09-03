@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-tool-lsp",
+  "name": "@x1a0f3n9/dsh-tool-lsp",
   "description": "Model-facing lsp tool over the DeepSeek Harness LSP capability seam (ctx.lsp) — one read-only tool with goToDefinition/findReferences/goToImplementation/hover operations, one-based UTF-16 cursor coordinates, bounded location rendering, and hover normalization",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -28,28 +28,28 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-lsp": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^"
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-lsp": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^"
   },
   "dependencies": {
-    "@xfcodeai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-fs-local": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-lsp": "workspace:^",
-    "@xfcodeai/dsh-lsp-stdio": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-subprocess-local": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-timeout": "workspace:^",
-    "@xfcodeai/dsh-tool-call-timeout-policy": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-fs-local": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-lsp": "workspace:^",
+    "@x1a0f3n9/dsh-lsp-stdio": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-tool-call-timeout-policy": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^"
   }
 }

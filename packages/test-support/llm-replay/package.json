@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-llm-replay",
+  "name": "@x1a0f3n9/dsh-llm-replay",
   "description": "Replay LLM plugin: short-circuits llm/stream with model chunks reconstructed from a recorded session JSONL (keyless snapshot tests)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -28,24 +28,24 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-compaction": "workspace:^",
-    "@xfcodeai/dsh-deepseek-llm-api-extensions": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^"
+    "@x1a0f3n9/dsh-compaction": "workspace:^",
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-deepseek-llm-api-extensions": {
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-compaction": "workspace:^",
-    "@xfcodeai/dsh-deepseek-llm-api-extensions": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^"
+    "@x1a0f3n9/dsh-compaction": "workspace:^",
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^"
   },
   "dependencies": {
-    "@xfcodeai/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
   }
 }

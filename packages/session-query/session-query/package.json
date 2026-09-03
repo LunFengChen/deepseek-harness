@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-session-query",
+  "name": "@x1a0f3n9/dsh-session-query",
   "description": "Combined session query service contract with concrete reads, traces, and filters",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -27,36 +27,36 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-tool-todo": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-tool-todo": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-session-persistence": {
+    "@x1a0f3n9/dsh-session-persistence": {
       "optional": true
     },
-    "@xfcodeai/dsh-session-projection": {
+    "@x1a0f3n9/dsh-session-projection": {
       "optional": true
     },
-    "@xfcodeai/dsh-session-projection-cache": {
+    "@x1a0f3n9/dsh-session-projection-cache": {
       "optional": true
     }
   },
   "devDependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-title": "workspace:^",
-    "@xfcodeai/dsh-tool-todo": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-tool-todo": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

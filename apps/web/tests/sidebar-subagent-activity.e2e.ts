@@ -4,12 +4,12 @@ import { fileURLToPath } from 'node:url'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import type { AgentHandle } from '@xfcodeai/dsh-agent'
-import { createUserMessage, LlmAdapter } from '@xfcodeai/dsh-llm'
-import type { GenerateOptions, StreamChunk } from '@xfcodeai/dsh-llm'
-import { SessionId, type SessionId as SessionIdValue } from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-subagent'
-import type {} from '@xfcodeai/dsh-workspace'
+import type { AgentHandle } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, LlmAdapter } from '@x1a0f3n9/dsh-llm'
+import type { GenerateOptions, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import { SessionId, type SessionId as SessionIdValue } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-subagent'
+import type {} from '@x1a0f3n9/dsh-workspace'
 import {
   assertFixtureInventory,
   captureStableAria,

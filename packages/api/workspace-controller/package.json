@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-api-workspace-controller",
+  "name": "@x1a0f3n9/dsh-api-workspace-controller",
   "description": "Workspace Remote commands and reconnect-safe state transport",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -40,11 +40,11 @@
   "dsh": {
     "client": {
       "external": [
-        "@xfcodeai/dsh-api-gateway/client"
+        "@x1a0f3n9/dsh-api-gateway/client"
       ],
       "inject": [
-        "@xfcodeai/dsh-api-gateway",
-        "@xfcodeai/dsh-client-connection"
+        "@x1a0f3n9/dsh-api-gateway",
+        "@x1a0f3n9/dsh-client-connection"
       ],
       "platform": "web"
     }
@@ -65,28 +65,28 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@xfcodeai/dsh-deque": "workspace:^",
+    "@x1a0f3n9/dsh-deque": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-api-gateway": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-host-directory-picker": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-storage-domain": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^",
-    "@xfcodeai/dsh-workspace": "workspace:^"
+    "@x1a0f3n9/dsh-api-gateway": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-host-directory-picker": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-storage-domain": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-workspace": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-api-gateway": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-host-directory-picker": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-storage-domain": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^",
-    "@xfcodeai/dsh-workspace": "workspace:^"
+    "@x1a0f3n9/dsh-api-gateway": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-host-directory-picker": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-storage-domain": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-workspace": "workspace:^"
   }
 }

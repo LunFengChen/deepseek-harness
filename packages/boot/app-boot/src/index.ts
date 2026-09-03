@@ -3,7 +3,7 @@
  * `.env`, install the fail-loud Loader guards, resolve the config path (snapshot-aware), load the
  * optional user patch layers from the Harness home (`~/.dsh`), expose its path resolver to
  * config expressions, and drive the Cordis Loader against a leaf `cordis.yml` until the tree settles.
- * @module @xfcodeai/dsh-app-boot
+ * @module @x1a0f3n9/dsh-app-boot
  */
 
 import { pathToFileURL } from 'node:url'
@@ -15,10 +15,10 @@ import { Context, type FiberState } from '@deepseek-ai/cordis'
 import Loader, { type Entry, type EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import Include, { applyEntryPatches, entryListSchema, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
 import Group from '@deepseek-ai/cordis-plugin-group'
-import { dshHomePath, resolveDshHome } from '@xfcodeai/dsh-home-paths'
-import { createLaunchEnvironmentSnapshot, type LaunchEnvironmentSnapshot } from '@xfcodeai/dsh-launch-environment'
+import { dshHomePath, resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
+import { createLaunchEnvironmentSnapshot, type LaunchEnvironmentSnapshot } from '@x1a0f3n9/dsh-launch-environment'
 import type {} from '@deepseek-ai/cordis-plugin-hmr'
-import type {} from '@xfcodeai/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-system-prompt'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {

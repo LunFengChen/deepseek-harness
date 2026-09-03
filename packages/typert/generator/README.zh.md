@@ -3,7 +3,7 @@ description: "构建时 Typert 生成器：源代码类型分析、与编译器�
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-typert-generator
+# @x1a0f3n9/dsh-typert-generator
 
 [English](README.md) | 中文
 

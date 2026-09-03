@@ -10,13 +10,13 @@
  */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
-import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
-import { TestRemote, scriptedSettingsRemote } from '@xfcodeai/dsh-client-test-runtime'
-import { apply as settingsApply, inject as settingsInject } from '@xfcodeai/dsh-client-ui-settings/client'
-import type { CommandDecoration } from '@xfcodeai/dsh-client-ui-commands/client'
-import type { PermissionSelect } from '@xfcodeai/dsh-permission-presets/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import { TestRemote, scriptedSettingsRemote } from '@x1a0f3n9/dsh-client-test-runtime'
+import { apply as settingsApply, inject as settingsInject } from '@x1a0f3n9/dsh-client-ui-settings/client'
+import type { CommandDecoration } from '@x1a0f3n9/dsh-client-ui-commands/client'
+import type { PermissionSelect } from '@x1a0f3n9/dsh-permission-presets/client'
 import {
   PermissionRow, type PermissionRowInjected,
 } from '../src/client/PermissionRow.tsx'

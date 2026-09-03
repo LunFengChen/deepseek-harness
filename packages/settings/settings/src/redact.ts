@@ -4,7 +4,7 @@
  * each schema-declared secret position and whether it currently holds a value,
  * so a configuration surface can render a write-only input without ever
  * receiving the secret itself.
- * @module @xfcodeai/dsh-settings/redact
+ * @module @x1a0f3n9/dsh-settings/redact
  */
 
 import type z from '@deepseek-ai/schemastery'

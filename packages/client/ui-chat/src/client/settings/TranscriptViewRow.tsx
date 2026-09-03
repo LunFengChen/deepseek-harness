@@ -1,9 +1,9 @@
 /** General Settings row for completed-Turn transcript presentation. */
 
 import { useState } from 'react'
-import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
-import { IconChevronDownOutline14, Menu } from '@xfcodeai/dsh-client-ui-primitives'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import { IconChevronDownOutline14, Menu } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { TranscriptViewMode } from '../../chat-settings.ts'
 import type { ChatKey } from '../locale.ts'
 import css from './TranscriptViewRow.module.css'

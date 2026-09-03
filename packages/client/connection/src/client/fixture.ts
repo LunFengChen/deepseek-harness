@@ -4,9 +4,9 @@ import {
   createAssistantMessage,
   createToolResultMessage,
   createUserMessage,
-} from '@xfcodeai/dsh-llm/message'
-import { brandString } from '@xfcodeai/dsh-brand'
-import type { MessageId, ToolCallId } from '@xfcodeai/dsh-llm/brand'
+} from '@x1a0f3n9/dsh-llm/message'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type { MessageId, ToolCallId } from '@x1a0f3n9/dsh-llm/brand'
 import type {
   AssistantMessage,
   ContentBlock,
@@ -15,25 +15,25 @@ import type {
   TokenUsage,
   ToolResultMessage,
   UserMessage,
-} from '@xfcodeai/dsh-llm'
-import type { AttachmentIdType, ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
+} from '@x1a0f3n9/dsh-llm'
+import type { AttachmentIdType, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
 import type {
   SessionEvent,
   SessionId,
-} from '@xfcodeai/dsh-session/types'
-import { SessionSeq } from '@xfcodeai/dsh-session/types'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
-import { isChunkRow, packChunkRuns } from '@xfcodeai/dsh-session/chunk-rows'
-import type { ChunkRow } from '@xfcodeai/dsh-session/chunk-rows'
-import type { TodoItem } from '@xfcodeai/dsh-tool-todo/client'
+} from '@x1a0f3n9/dsh-session/types'
+import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
+import { isChunkRow, packChunkRuns } from '@x1a0f3n9/dsh-session/chunk-rows'
+import type { ChunkRow } from '@x1a0f3n9/dsh-session/chunk-rows'
+import type { TodoItem } from '@x1a0f3n9/dsh-tool-todo/client'
 // Type-only: the brand constructor is host-side; the fixture casts at its
 // wire-fabrication boundary (the schema layer's one-cast-point posture).
-import type { CommandId } from '@xfcodeai/dsh-commands/brand'
-import type { CommandDescriptor, CommandExecution, CommandResult } from '@xfcodeai/dsh-commands/types'
-import type { CredentialInfo } from '@xfcodeai/dsh-credentials/types'
-import type { DirectoryListing as FixtureDirectoryListing } from '@xfcodeai/dsh-host-directory-picker/types'
-import type { SettingsDescribeValue, SettingsNamespaceView } from '@xfcodeai/dsh-settings/types'
-import { deriveEventMessage, foldSurface } from '@xfcodeai/dsh-session/surface'
+import type { CommandId } from '@x1a0f3n9/dsh-commands/brand'
+import type { CommandDescriptor, CommandExecution, CommandResult } from '@x1a0f3n9/dsh-commands/types'
+import type { CredentialInfo } from '@x1a0f3n9/dsh-credentials/types'
+import type { DirectoryListing as FixtureDirectoryListing } from '@x1a0f3n9/dsh-host-directory-picker/types'
+import type { SettingsDescribeValue, SettingsNamespaceView } from '@x1a0f3n9/dsh-settings/types'
+import { deriveEventMessage, foldSurface } from '@x1a0f3n9/dsh-session/surface'
 import type { RpcResult } from './api.ts'
 import { randomUuid } from './random-uuid.ts'
 import type {
@@ -1895,9 +1895,9 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
    * roster a GUI journey sees after writing is the text it wrote.
    */
   const fixturePresets = new Map<string, { trust: 'system' | 'user'; content: string }>([
-    ['standard', { trust: 'system', content: "- id: tool-bash\n  name: '@xfcodeai/dsh-tool-bash'\n" }],
-    ['minimal', { trust: 'system', content: "- id: tool-web-search\n  name: '@xfcodeai/dsh-tool-web-search'\n" }],
-    ['my-agent', { trust: 'user', content: "- id: tool-read\n  name: '@xfcodeai/dsh-tool-read'\n" }],
+    ['standard', { trust: 'system', content: "- id: tool-bash\n  name: '@x1a0f3n9/dsh-tool-bash'\n" }],
+    ['minimal', { trust: 'system', content: "- id: tool-web-search\n  name: '@x1a0f3n9/dsh-tool-web-search'\n" }],
+    ['my-agent', { trust: 'user', content: "- id: tool-read\n  name: '@x1a0f3n9/dsh-tool-read'\n" }],
   ])
   let fixtureDefaultPreset = 'standard'
   const nextTurn = new Map<SessionId, number>([[sid('fx-alpha'), 75]])

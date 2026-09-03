@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-07-30-cordis-config-source-plane-resolution-gate.md
-2026-07-30-cordis-config-source-plane-resolution-gate.md: 2ddefeb57e8d7f6a697c7355a7923350bfd86a99
-2026-07-30-cordis-config-source-plane-resolution-gate.zh.md: 2ba189c7ca2e28f5ea515768ae33e11acade6e8b
+2026-07-30-cordis-config-source-plane-resolution-gate.md: 34880821910bf6a3ccb126bc4bc7b36a2adc6a0b
+2026-07-30-cordis-config-source-plane-resolution-gate.zh.md: 4eabd9bf1d6768e6eaf958a15ea8020753f9e0f1

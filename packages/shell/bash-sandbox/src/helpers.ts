@@ -1,12 +1,12 @@
 /**
  * Internal sandbox-result classification helpers.
  *
- * @module @xfcodeai/dsh-bash-sandbox/helpers
+ * @module @x1a0f3n9/dsh-bash-sandbox/helpers
  */
 
 import { accessSync, constants, statSync } from 'node:fs'
-import type { ShellRunResult } from '@xfcodeai/dsh-shell'
-import type { RunnerFailureRule } from '@xfcodeai/dsh-sandbox'
+import type { ShellRunResult } from '@x1a0f3n9/dsh-shell'
+import type { RunnerFailureRule } from '@x1a0f3n9/dsh-sandbox'
 
 /** Node-local spawn codes proven to identify executable resolution or permission failure. */
 const EXECUTABLE_SPAWN_CODES = new Set(['EACCES', 'ENOENT'])

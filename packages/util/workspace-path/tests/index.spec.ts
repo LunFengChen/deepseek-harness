@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   abbreviateHomePath, resolveWorkspacePath, workspaceTitleOf,
-} from '@xfcodeai/dsh-util-workspace-path'
+} from '@x1a0f3n9/dsh-util-workspace-path'
 
 describe('Workspace path helpers', () => {
   it('resolves relative paths without changing absolute paths', () => {

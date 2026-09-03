@@ -3,7 +3,7 @@ description: "面向模型的 ralph 工具：面向一个不可变目标的固�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-ralph
+# @x1a0f3n9/dsh-tool-ralph
 
 [English](README.md) | 中文
 
@@ -44,7 +44,7 @@ kind: "package-reference"
 | `maxHandoffChars` | `16384` | 一份 Round 报告序列化后的最大字符数。 |
 | `maxResultChars` | `16384` | 返回给父级的完整成功结果最大字符数。 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-tool-ralph)是每个受支持字段的穷尽式真源。配置的提供方必须存在、支持结构化输出，并报告 `inheritsParentContext: false`；针对违反此要求的提供方的调用会在任何 Round 开始前响亮失败。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-tool-ralph)是每个受支持字段的穷尽式真源。配置的提供方必须存在、支持结构化输出，并报告 `inheritsParentContext: false`；针对违反此要求的提供方的调用会在任何 Round 开始前响亮失败。
 
 -----
 
@@ -128,7 +128,7 @@ Use the ralph tool ONLY when the direct human explicitly asks for a Ralph loop o
 
 #### 模型看到什么
 
-已生成的 [`ralph` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-ralph) 公开一个必填 `objective` 字符串与一个可选 `maxRounds` 数字。提供方选择、交接大小、报告 schema、工作流脚本与编排行为均由部署侧控制，不在调用 schema 中。
+已生成的 [`ralph` schema](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-ralph) 公开一个必填 `objective` 字符串与一个可选 `maxRounds` 数字。提供方选择、交接大小、报告 schema、工作流脚本与编排行为均由部署侧控制，不在调用 schema 中。
 
 #### Token 影响
 

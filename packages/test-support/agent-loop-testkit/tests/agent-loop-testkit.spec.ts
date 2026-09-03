@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import { renderPrompt } from '@xfcodeai/dsh-system-prompt'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import { renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
 import { mountAgentLoopTestDependencies } from '../src/index.ts'
 
 describe('dsh-agent-loop-testkit', () => {

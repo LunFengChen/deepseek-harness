@@ -1,6 +1,6 @@
 /** Opaque webhook identities shared by adapters, rules, and Session provenance. */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /** Identifies one programmatic webhook rule. */
 export type WebhookRuleId = Branded<'WebhookRuleId'>

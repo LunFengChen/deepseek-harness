@@ -2,7 +2,7 @@
 
 import { closeSync, openSync, readFileSync, readdirSync, readlinkSync, readSync, statSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
-import type { SubprocessTerminalSignal } from '@xfcodeai/dsh-subprocess'
+import type { SubprocessTerminalSignal } from '@x1a0f3n9/dsh-subprocess'
 import { createWindowsProcessInspector } from './windows-inspector.ts'
 
 /** PID plus start identity, preventing teardown escalation after PID reuse. */

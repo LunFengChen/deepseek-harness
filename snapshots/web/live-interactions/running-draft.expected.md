@@ -16,10 +16,10 @@
 - text: Reply with a one-sentence description of event sourcing, then stop. {{clock}}
 - button "Copy":
   - img
-- button "Context injection @xfcodeai/dsh-system-prompt":
+- button "Context injection @x1a0f3n9/dsh-system-prompt":
   - img
   - img
-  - text: Context injection @xfcodeai/dsh-system-prompt
+  - text: Context injection @x1a0f3n9/dsh-system-prompt
 - paragraph: partial
 - status: Deep diving...
 - textbox "Message or run a task... / commands, @ files or sessions":

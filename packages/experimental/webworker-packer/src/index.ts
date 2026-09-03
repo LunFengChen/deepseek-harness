@@ -1,6 +1,6 @@
 /**
  * Build-time packer for the browser runtime's VFS image.
- * @module @xfcodeai/dsh-experimental-webworker-packer
+ * @module @x1a0f3n9/dsh-experimental-webworker-packer
  */
 export {
   WRAPPER_CONTRACT,

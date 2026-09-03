@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-07-29-package-regrouping.md
-2026-07-29-package-regrouping.md: c06a7776e331c44d3fc3b406d44c8a040bc6bf5d
-2026-07-29-package-regrouping.zh.md: e0676a928783557672cb9f5bd8b3abdafe93a2ce
+2026-07-29-package-regrouping.md: edf078723323dea30d7a79ff14293307c4e170b6
+2026-07-29-package-regrouping.zh.md: 75982b8e7116b7c7d636304eaf99c85c4848f1ea

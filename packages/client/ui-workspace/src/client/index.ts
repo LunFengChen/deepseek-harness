@@ -9,19 +9,19 @@
  * packages/client/AGENTS.md.
  */
 import type { Context } from '@deepseek-ai/cordis'
-import type { RemoteHostFacts } from '@xfcodeai/dsh-api-remotes/client'
-import type { ISessions } from '@xfcodeai/dsh-api-session-controller/client'
-import type { IWorkspaces, WorkspaceSnapshot } from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { HostObservable, SnapshotSelectorHook } from '@xfcodeai/dsh-client-ui-slots'
+import type { RemoteHostFacts } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { ISessions } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { IWorkspaces, WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { HostObservable, SnapshotSelectorHook } from '@x1a0f3n9/dsh-client-ui-slots'
 // Type-only: pulls the Controller service merges.
-import type {} from '@xfcodeai/dsh-api-session-controller/client'
-import type {} from '@xfcodeai/dsh-api-workspace-controller/client'
+import type {} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type {} from '@x1a0f3n9/dsh-api-workspace-controller/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
-import type {} from '@xfcodeai/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
 // Type-only: pulls the SlotRegistry service merge (ctx.slots).
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 // Type-only: pulls the Session root standard-hook merge.
-import type {} from '@xfcodeai/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
 import type { WorkspaceBrowserInjected, WorkspacePickerInjected } from './contract/slots.ts'
 import { UiWorkspaceService } from './navigation.ts'
 import { createWorkspaceViewStore } from './stores.ts'
@@ -36,7 +36,7 @@ export type {
 } from './contract/slots.ts'
 export type { WorkspaceKey } from './locales.ts'
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface GlobalStandardProps {
     /** Selector hook over the pure Workspace Controller snapshot. */
     useWorkspaces: SnapshotSelectorHook<WorkspaceSnapshot>

@@ -4,60 +4,60 @@
 
 - insert:
     - id: sdk-app-startup
-      name: '@xfcodeai/dsh-sdk-app'
+      name: '@x1a0f3n9/dsh-sdk-app'
       config:
         profile: sdk-minimal
 
     - id: sdk-jsonrpc-server
-      name: '@xfcodeai/dsh-sdk-jsonrpc-server'
+      name: '@x1a0f3n9/dsh-sdk-jsonrpc-server'
       inject: [sdkAppStartup, loader]
       config:
         maxTokensAsSuccess: false
 
     - id: deepseek-llm-api-extensions
-      name: '@xfcodeai/dsh-deepseek-llm-api-extensions'
+      name: '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
 
     - id: session-log-deepseek
-      name: '@xfcodeai/dsh-session-log-deepseek'
+      name: '@x1a0f3n9/dsh-session-log-deepseek'
 
     - id: plugin-package-inventory-deepseek
-      name: '@xfcodeai/dsh-plugin-package-inventory-deepseek'
+      name: '@x1a0f3n9/dsh-plugin-package-inventory-deepseek'
 
     - id: llm-deepseek
-      name: '@xfcodeai/dsh-llm-deepseek'
+      name: '@x1a0f3n9/dsh-llm-deepseek'
       config:
         apiKeyEnv: DEEPSEEK_API_KEY
         defaultContextWindow: !!js Number(process.env.DSH_CONTEXT_WINDOW ?? 1000000)
         streamIdleTimeoutMs: 172800000
 
     - id: sandbox
-      name: '@xfcodeai/dsh-sandbox-local'
+      name: '@x1a0f3n9/dsh-sandbox-local'
 
     # Shared projection registry: sandbox-policy and terminal-bash fold
     # sandbox-mode state through its units and require it as a hard injection.
     - id: session-projection
-      name: '@xfcodeai/dsh-session-projection'
+      name: '@x1a0f3n9/dsh-session-projection'
 
     - id: sandbox-policy
-      name: '@xfcodeai/dsh-sandbox-policy'
+      name: '@x1a0f3n9/dsh-sandbox-policy'
       config:
         mode: danger-full-access
         workspaceRoot: !!js process.cwd()
 
     - id: subprocess
-      name: '@xfcodeai/dsh-subprocess-local'
+      name: '@x1a0f3n9/dsh-subprocess-local'
 
     - id: pty
-      name: '@xfcodeai/dsh-terminal'
+      name: '@x1a0f3n9/dsh-terminal'
 
     - id: terminal-bash
-      name: '@xfcodeai/dsh-terminal-bash'
+      name: '@x1a0f3n9/dsh-terminal-bash'
       disabled: !!js process.platform === 'win32'
       config:
         timeoutMs: 300000
 
     - id: terminal-pwsh
-      name: '@xfcodeai/dsh-terminal-bash'
+      name: '@x1a0f3n9/dsh-terminal-bash'
       disabled: !!js process.platform !== 'win32'
       config:
         shellDialect: pwsh
@@ -66,7 +66,7 @@
     # The editor uses the bare local filesystem; persistent Bash still consumes
     # the shared danger-full-access sandbox policy above.
     - id: fs-local
-      name: '@xfcodeai/dsh-fs-local'
+      name: '@x1a0f3n9/dsh-fs-local'
       config:
         cwd: !!js process.cwd()
 
@@ -76,59 +76,59 @@
       name: '@deepseek-ai/cordis-plugin-timer'
 
     - id: llm
-      name: '@xfcodeai/dsh-llm'
+      name: '@x1a0f3n9/dsh-llm'
 
     - id: session
-      name: '@xfcodeai/dsh-session'
+      name: '@x1a0f3n9/dsh-session'
 
     - id: session-title
-      name: '@xfcodeai/dsh-session-title'
+      name: '@x1a0f3n9/dsh-session-title'
       config:
         fallbackMaxWords: 5
         fallbackMaxBytes: 40
         maxTitleBytes: 80
 
     - id: system-prompt
-      name: '@xfcodeai/dsh-system-prompt'
+      name: '@x1a0f3n9/dsh-system-prompt'
       config:
         includeHarnessIdentity: false
         includeRuntimeContext: false
         persona: !!js process.env.DSH_SYSTEM_PROMPT ?? 'You are a helpful software engineer assistant.'
 
     - id: tools
-      name: '@xfcodeai/dsh-tools'
+      name: '@x1a0f3n9/dsh-tools'
 
     - id: agent
-      name: '@xfcodeai/dsh-agent'
+      name: '@x1a0f3n9/dsh-agent'
 
     - id: llm-retry
-      name: '@xfcodeai/dsh-llm-retry'
+      name: '@x1a0f3n9/dsh-llm-retry'
 
     - id: jobs
-      name: '@xfcodeai/dsh-jobs-local'
+      name: '@x1a0f3n9/dsh-jobs-local'
 
     - id: invariants
-      name: '@xfcodeai/dsh-invariants'
+      name: '@x1a0f3n9/dsh-invariants'
 
     - id: session-invariant
-      name: '@xfcodeai/dsh-session/invariant'
+      name: '@x1a0f3n9/dsh-session/invariant'
 
     - id: agent-invariant
-      name: '@xfcodeai/dsh-agent/invariant'
+      name: '@x1a0f3n9/dsh-agent/invariant'
 
     - id: scope-invariant
-      name: '@xfcodeai/dsh-scope/invariant'
+      name: '@x1a0f3n9/dsh-scope/invariant'
 
     - id: agent-loop-invariant
-      name: '@xfcodeai/dsh-agent-loop/invariant'
+      name: '@x1a0f3n9/dsh-agent-loop/invariant'
 
     - id: agent-loop
-      name: '@xfcodeai/dsh-agent-loop'
+      name: '@x1a0f3n9/dsh-agent-loop'
       config:
         agents: []
 
     - id: persistent-bash
-      name: '@xfcodeai/dsh-tool-bash-persistent'
+      name: '@x1a0f3n9/dsh-tool-bash-persistent'
       disabled: !!js process.platform === 'win32'
       config:
         timeoutMs: 300000
@@ -143,7 +143,7 @@
           * Please run long lived commands in the background, e.g. 'sleep 10 &' or start a server in the background.
 
     - id: persistent-pwsh
-      name: '@xfcodeai/dsh-tool-pwsh-persistent'
+      name: '@x1a0f3n9/dsh-tool-pwsh-persistent'
       disabled: !!js process.platform !== 'win32'
       config:
         timeoutMs: 300000
@@ -157,12 +157,12 @@
           * Please run long lived commands in the background, e.g. 'Start-Job' or start a server with Start-Process.
 
     - id: str-replace-editor
-      name: '@xfcodeai/dsh-tool-str-replace-editor'
+      name: '@x1a0f3n9/dsh-tool-str-replace-editor'
       config:
         maxOutputChars: 16000
 
     - id: sessions
-      name: '@xfcodeai/dsh-session-persistence-jsonl'
+      name: '@x1a0f3n9/dsh-session-persistence-jsonl'
       config:
         root: !!js dshHomePath('sessions')
         compression: none

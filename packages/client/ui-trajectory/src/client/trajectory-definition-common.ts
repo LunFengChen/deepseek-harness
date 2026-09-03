@@ -1,4 +1,4 @@
-import type { ConversationNodeContext } from '@xfcodeai/dsh-client-ui-conversation/client'
+import type { ConversationNodeContext } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   TrajectoryContribution, TrajectoryConversationViewNode,
 } from './trajectory-contract.ts'

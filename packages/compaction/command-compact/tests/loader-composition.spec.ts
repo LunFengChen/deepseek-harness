@@ -6,8 +6,8 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import CommandRuntime from '@xfcodeai/dsh-commands'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import CommandRuntime from '@x1a0f3n9/dsh-commands'
 import {
   CompactionId,
   CompactionEngine,
@@ -15,9 +15,9 @@ import {
   type CompactionResult,
   type CompactionTrigger,
   type ManualCompactAgentContext,
-} from '@xfcodeai/dsh-compaction'
-import * as commandCompact from '@xfcodeai/dsh-command-compact'
-import { Session, SessionId, SessionSeq } from '@xfcodeai/dsh-session'
+} from '@x1a0f3n9/dsh-compaction'
+import * as commandCompact from '@x1a0f3n9/dsh-command-compact'
+import { Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
 
 const COMPACTION_ID = CompactionId('loader-command-compact-test')
 
@@ -84,9 +84,9 @@ describe('command-compact real Loader composition', () => {
     root = await mkdtemp(join(tmpdir(), 'dsh-command-compact-loader-'))
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@xfcodeai/dsh-commands'",
+      "- name: '@x1a0f3n9/dsh-commands'",
       "- name: '@test/compact-backend'",
-      "- name: '@xfcodeai/dsh-command-compact'",
+      "- name: '@x1a0f3n9/dsh-command-compact'",
       '',
     ].join('\n'))
 
@@ -95,9 +95,9 @@ describe('command-compact real Loader composition', () => {
     await context.plugin(Loader)
     context.loader.builtins.include = Include
     const modules = new Map<string, unknown>([
-      ['@xfcodeai/dsh-commands', CommandRuntime],
+      ['@x1a0f3n9/dsh-commands', CommandRuntime],
       ['@test/compact-backend', LoaderCompactionEngine],
-      ['@xfcodeai/dsh-command-compact', commandCompact],
+      ['@x1a0f3n9/dsh-command-compact', commandCompact],
     ])
     context.loader.internal = {
       version: 'v2',

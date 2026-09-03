@@ -5,12 +5,12 @@
  * `updatedAt` stamping and invalid-account pruning happen exactly once.
  * Not re-exported from the package entrypoint — consumers see only the
  * `Workspace` interface.
- * @module @xfcodeai/dsh-workspace/src/entity
+ * @module @x1a0f3n9/dsh-workspace/src/entity
  */
 
 import { stat } from 'node:fs/promises'
-import type { SessionHeader, SessionId } from '@xfcodeai/dsh-session'
-import type { KvTable } from '@xfcodeai/dsh-storage-domain'
+import type { SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import type { KvTable } from '@x1a0f3n9/dsh-storage-domain'
 import type { WorkspaceRecord } from './spec.ts'
 import type { Workspace, WorkspaceId } from './types.ts'
 import { realpathNormalize } from './paths.ts'

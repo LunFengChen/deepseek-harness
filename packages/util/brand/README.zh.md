@@ -3,7 +3,7 @@ description: "供拥有易混淆领域值的包使用的名义字符串与数字
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-brand
+# @x1a0f3n9/dsh-brand
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-library"
 在所属包中声明品牌化类型，并在该包准入字符串的位置应用品牌：
 
 ```ts
-import { brandString, type Branded } from '@xfcodeai/dsh-brand'
+import { brandString, type Branded } from '@x1a0f3n9/dsh-brand'
 
 export type SessionId = Branded<'SessionId'>
 
@@ -44,7 +44,7 @@ const sessionId = brandString<SessionId>('session-1')
 在所属包中声明数字品牌，并且仅在该包准入数字之后应用品牌：
 
 ```ts
-import { brandNumber, type BrandedNumber } from '@xfcodeai/dsh-brand'
+import { brandNumber, type BrandedNumber } from '@x1a0f3n9/dsh-brand'
 
 export type SessionSeq = BrandedNumber<'SessionSeq'>
 

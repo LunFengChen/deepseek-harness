@@ -2,10 +2,10 @@
 // — the durable relationship every appended session/title event must keep.
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import * as SessionTitleInvariantCompanion from '@xfcodeai/dsh-session-title/invariant'
-import InvariantRegistry, { InvariantError } from '@xfcodeai/dsh-invariants'
-import SessionStore, { SessionId, SessionSeq } from '@xfcodeai/dsh-session'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
+import * as SessionTitleInvariantCompanion from '@x1a0f3n9/dsh-session-title/invariant'
+import InvariantRegistry, { InvariantError } from '@x1a0f3n9/dsh-invariants'
+import SessionStore, { SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 
 async function setup(): Promise<Context> {
   const ctx = new Context()
@@ -38,13 +38,13 @@ describe('session-title source invariant', () => {
       session.append('session/title', { title: 'auto', messageSeqs: [], source: { kind: 'fallback' } })
     }).toThrow(expect.objectContaining<Partial<InvariantError>>({
       code: 'INVARIANT',
-      packageName: '@xfcodeai/dsh-session-title',
+      packageName: '@x1a0f3n9/dsh-session-title',
     }))
     expect(() => {
       session.append('session/title', { title: 'named', messageSeqs: [source.seq], source: { kind: 'user' } })
     }).toThrow(expect.objectContaining<Partial<InvariantError>>({
       code: 'INVARIANT',
-      packageName: '@xfcodeai/dsh-session-title',
+      packageName: '@x1a0f3n9/dsh-session-title',
     }))
     expect(session.seq).toBe(1)
   })

@@ -3,7 +3,7 @@ description: "The tool-result spill policy: how deployments keep oversized plain
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-spill-policy
+# @x1a0f3n9/dsh-spill-policy
 
 English | [中文](README.zh.md)
 
@@ -32,8 +32,8 @@ Mount the policy alongside a spill backend to cap how much of a tool's plain-tex
 Load the policy with a `maxInlineBytes` budget, in UTF-8 bytes, and a spill backend:
 
 ```yaml
-- name: '@xfcodeai/dsh-spill-local'
-- name: '@xfcodeai/dsh-spill-policy'
+- name: '@x1a0f3n9/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: 50000
 ```
@@ -42,7 +42,7 @@ Load the policy with a `maxInlineBytes` budget, in UTF-8 bytes, and a spill back
 |---|---|---|
 | `maxInlineBytes` | omitted | Model-facing context cap for a plain-text result, in UTF-8 bytes; omitted disables the policy entirely |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-spill-policy) is the exhaustive source for every accepted field. A negative or fractional cap fails plugin load rather than corrupting per-call behavior.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-spill-policy) is the exhaustive source for every accepted field. A negative or fractional cap fails plugin load rather than corrupting per-call behavior.
 
 ### What the model sees
 

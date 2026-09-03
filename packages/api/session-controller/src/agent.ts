@@ -2,18 +2,18 @@
 
 import { mkdir } from 'node:fs/promises'
 import type { Context } from '@deepseek-ai/cordis'
-import { installModelSelection } from '@xfcodeai/dsh-agent'
+import { installModelSelection } from '@x1a0f3n9/dsh-agent'
 import type {
   Agent, AgentOptions, AgentSetup, ModelSelection as AgentModelSelection, ModelSelectionRef,
-} from '@xfcodeai/dsh-agent'
-import type {} from '@xfcodeai/dsh-agent-default-model'
-import type {} from '@xfcodeai/dsh-agent-presets'
-import { ReasoningEffortId } from '@xfcodeai/dsh-llm'
-import type { Session, SessionId } from '@xfcodeai/dsh-session'
-import type { SessionInspection } from '@xfcodeai/dsh-session-persistence'
-import { SessionQueryError, type SessionObservation } from '@xfcodeai/dsh-session-query'
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
-import type {} from '@xfcodeai/dsh-typert-registry'
+} from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-agent-default-model'
+import type {} from '@x1a0f3n9/dsh-agent-presets'
+import { ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type { Session, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionInspection } from '@x1a0f3n9/dsh-session-persistence'
+import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import type {} from '@x1a0f3n9/dsh-typert-registry'
 import type { ModelSelection } from './types.ts'
 
 /** Cold Session identity absent from persistence. */

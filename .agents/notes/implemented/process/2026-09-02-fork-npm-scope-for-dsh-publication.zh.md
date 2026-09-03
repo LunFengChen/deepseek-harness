@@ -12,13 +12,13 @@ Fork 无法在没有上游组织凭据的情况下，使用上游 `@deepseek-ai`
 
 ## Decision
 
-第一方 dsh 发布族使用 `@xfcodeai` scope：启动器是 `@xfcodeai/dsh`，workspace 根包是 `@xfcodeai/dsh-root`，`packages/*/*` 与 `apps/*` 下的每个可发布包都使用 `@xfcodeai/dsh-*` 或该 scope 下的应用包名。 发布后的启动命令是 `xfdsh`，因此可以和官方 `dsh` 命令共存。
+第一方 dsh 发布族使用 `@x1a0f3n9` scope：启动器是 `@x1a0f3n9/dsh`，workspace 根包是 `@x1a0f3n9/dsh-root`，`packages/*/*` 与 `apps/*` 下的每个可发布包都使用 `@x1a0f3n9/dsh-*` 或该 scope 下的应用包名。 发布后的启动命令是 `xfdsh`，因此可以和官方 `dsh` 命令共存。
 
-当前源码导入、manifest、lockfile、Cordis 配置、测试、快照、生成目录和当前文档都使用 `@xfcodeai` dsh 名称。这个预发布仓库不为原 dsh 名称保留兼容别名。
+当前源码导入、manifest、lockfile、Cordis 配置、测试、快照、生成目录和当前文档都使用 `@x1a0f3n9` dsh 名称。这个预发布仓库不为原 dsh 名称保留兼容别名。
 
 Vendored Cordis 框架仍位于 `@deepseek-ai` 下，因为它是有独立上游 rescope 和发布规则的 vendored 发布族。Native Landlock 包也仍位于 `@deepseek-ai` 下，因为它是独立发布族，不属于本次 dsh scope 迁移。
 
-现有发布序列除 dsh scope 外保持不变：先构建 dsh，再校验 dsh 发布族，打包 tarball，验证打包后的安装，最后使用 Fork 的 npm 凭据发布版本。发布族校验器现在分别要求 dsh 成员使用 `@xfcodeai`、vendor 成员使用 `@deepseek-ai`，不再假设所有发布族共用一个 scope。
+现有发布序列除 dsh scope 外保持不变：先构建 dsh，再校验 dsh 发布族，打包 tarball，验证打包后的安装，最后使用 Fork 的 npm 凭据发布版本。发布族校验器现在分别要求 dsh 成员使用 `@x1a0f3n9`、vendor 成员使用 `@deepseek-ai`，不再假设所有发布族共用一个 scope。
 
 ## Alternatives considered
 
@@ -32,8 +32,8 @@ Vendored Cordis 框架仍位于 `@deepseek-ai` 下，因为它是有独立上游
 
 ## Consequences
 
-这个 Fork 的消费方应安装 `@xfcodeai/dsh`，而不是 `@deepseek-ai/dsh`。迁移到这个 Fork 时，使用原 dsh 包名的现有导入必须更新。
+这个 Fork 的消费方应安装 `@x1a0f3n9/dsh`，而不是 `@deepseek-ai/dsh`。迁移到这个 Fork 时，使用原 dsh 包名的现有导入必须更新。
 
-当 Fork 维护者拥有并完成认证的 `@xfcodeai` npm scope 后，dsh 包族可以独立发布。除非后续单独决定 scope，vendor 和 native 发布仍需要各自的 `@deepseek-ai` 发布所有权。
+当 Fork 维护者拥有并完成认证的 `@x1a0f3n9` npm scope 后，dsh 包族可以独立发布。除非后续单独决定 scope，vendor 和 native 发布仍需要各自的 `@deepseek-ai` 发布所有权。
 
 历史 archived Agent Notes 保留原始包名，不会被重写；当前 Agent Notes 和当前生成引用描述本仓库实际发布的名称。

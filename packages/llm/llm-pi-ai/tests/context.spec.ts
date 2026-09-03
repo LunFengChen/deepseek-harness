@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest'
-import { AttachmentId, ImageVariantId } from '@xfcodeai/dsh-attachment'
+import { AttachmentId, ImageVariantId } from '@x1a0f3n9/dsh-attachment'
 import type {
   AttachmentStore,
   ImageAttachmentRef,
   ImageRequestPolicy,
   RequestImageAttachment,
-} from '@xfcodeai/dsh-attachment'
-import { ToolCallId, createMessage, createUserMessage, offloadedImageText } from '@xfcodeai/dsh-llm'
-import type { ContentBlock, GenerateOptions, Message } from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-attachment'
+import { ToolCallId, createMessage, createUserMessage, offloadedImageText } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, GenerateOptions, Message } from '@x1a0f3n9/dsh-llm'
 import { toPiContext } from '../src/context.ts'
 import type { PiImageRequestContext } from '../src/context.ts'
 import { toPiAssistant } from '../src/replay.ts'

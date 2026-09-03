@@ -1,14 +1,14 @@
 /** Registers the target-neutral Conversation assembly, shell, input, and docks. */
 import type { Context } from '@deepseek-ai/cordis'
-import type { ISessions } from '@xfcodeai/dsh-api-session-controller/client'
-import { createSnapshotStore, type BoundActions } from '@xfcodeai/dsh-client-store'
-import { resolveSlotLabel } from '@xfcodeai/dsh-client-ui-slots'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { ISessions } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { createSnapshotStore, type BoundActions } from '@x1a0f3n9/dsh-client-store'
+import { resolveSlotLabel } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 // Type-only service and declaration merges used by this assembly.
-import type {} from '@xfcodeai/dsh-client-locale/client'
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
-import type {} from '@xfcodeai/dsh-client-ui-session/client'
-import type {} from '@xfcodeai/dsh-client-ui-settings/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-settings/client'
 import { UiConversation } from './conversation/assembly.ts'
 import type { ViewTab } from './contract/views.ts'
 import type {
@@ -34,7 +34,7 @@ import { resolveActiveView } from './view-selection.ts'
 import { en, NS, zh, type ConversationKey } from './locales.ts'
 import { CONVERSATION_SETTINGS_NAMESPACE, type ConversationSettings } from '../submission-settings.ts'
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Conversation shell, composer, queue, and dock copy. */
     conversation: ConversationKey

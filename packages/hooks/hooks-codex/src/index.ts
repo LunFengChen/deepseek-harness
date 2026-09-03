@@ -6,7 +6,7 @@
  * blocking decisions are honored. Shared execution and parsing live in
  * `dsh-hook-protocol`; see the
  * [hook-bridges Agent Note](../../../../.agents/notes/implemented/feature/2026-06-30-hook-bridges.md).
- * @module @xfcodeai/dsh-hooks-codex
+ * @module @x1a0f3n9/dsh-hooks-codex
  */
 
 // Each dialect bridge keeps its complete dependency list visible at the entry
@@ -15,13 +15,13 @@
 import { readFileSync } from 'node:fs'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { Agent, PreStepDecision } from '@xfcodeai/dsh-agent'
-import type {} from '@xfcodeai/dsh-session-projection'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import type { ContentBlock, MessageSource } from '@xfcodeai/dsh-llm'
-import type { UserMessage } from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-session-persistence'
-import type { PostToolDecision, PreToolDecision, ToolExecution, ToolExecutionResult } from '@xfcodeai/dsh-tools'
+import type { Agent, PreStepDecision } from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, MessageSource } from '@x1a0f3n9/dsh-llm'
+import type { UserMessage } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-session-persistence'
+import type { PostToolDecision, PreToolDecision, ToolExecution, ToolExecutionResult } from '@x1a0f3n9/dsh-tools'
 import {
   appendHookInvoked,
   appendHookResult,
@@ -34,7 +34,7 @@ import {
   type HookOutput,
   type MatcherGroup,
   type MergedHookOutcome,
-} from '@xfcodeai/dsh-hook-protocol'
+} from '@x1a0f3n9/dsh-hook-protocol'
 import { parseCodexConfig, type CodexHookConfig } from './config.ts'
 /* jscpd:ignore-end */
 

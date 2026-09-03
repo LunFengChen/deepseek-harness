@@ -1,12 +1,12 @@
 /**
  * Durable storage-domain declaration for lifecycle-bound message feedback.
- * @module @xfcodeai/dsh-message-feedback/src/spec
+ * @module @x1a0f3n9/dsh-message-feedback/src/spec
  */
 
 import { z } from 'zod'
-import type { MessageId } from '@xfcodeai/dsh-llm/brand'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { defineDomain, domainTable } from '@xfcodeai/dsh-storage-domain'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { defineDomain, domainTable } from '@x1a0f3n9/dsh-storage-domain'
 import type { MessageFeedbackItem, MessageFeedbackRating, MessageFeedbackVersion } from './types.ts'
 
 const nonNegativeSafeInteger = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER)

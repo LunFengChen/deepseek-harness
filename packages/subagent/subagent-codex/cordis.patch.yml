@@ -2,4 +2,4 @@
 # Agent Presets grant the model-facing tool independently.
 - insert:
     - id: subagent-codex
-      name: '@xfcodeai/dsh-subagent-codex'
+      name: '@x1a0f3n9/dsh-subagent-codex'

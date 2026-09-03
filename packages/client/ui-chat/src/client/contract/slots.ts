@@ -1,17 +1,17 @@
 /** Chat-owned Slot declarations and composed component props. */
-import type { MessageId } from '@xfcodeai/dsh-llm/brand'
-import type { SessionSeq } from '@xfcodeai/dsh-session/types'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import type { SessionSeq } from '@x1a0f3n9/dsh-session/types'
 import type {
   ConversationLocationDataStore, ConversationTurnDataMap,
   MessageImageLoader, MessageImagesOwnerProps, RenderMessageImages, TurnLocation,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   InjectFace, KeyedSnapshotSelectorHook, PropsLocale, PropsRenderSlots, PropsRuntime, PropsStore,
   SlotHookFactory, SnapshotSelectorHook,
-} from '@xfcodeai/dsh-client-ui-slots'
-import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { MarkdownFileMentions } from '@xfcodeai/dsh-client-ui-primitives'
-import type {} from '@xfcodeai/dsh-client-ui-layout/client'
+} from '@x1a0f3n9/dsh-client-ui-slots'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { MarkdownFileMentions } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type {} from '@x1a0f3n9/dsh-client-ui-layout/client'
 import type { createChatStore } from '../stores.ts'
 import type { ToolCallId, SelectionTarget } from './store.ts'
 import type { ChatConversationViewNode, ChatNode, ChatNodeKind } from './chat-nodes.ts'
@@ -172,7 +172,7 @@ export type DetailsSlotProps =
   & InjectFace<DetailsInjected>
   & PropsLocale<'chat'>
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface SessionStandardProps {
     /** Selector hook over the current Conversation binding's Chat target. */
     useChat: UseChat

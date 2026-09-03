@@ -6,9 +6,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import TypertRegistry from '@xfcodeai/dsh-typert-registry'
-import * as typertLoader from '@xfcodeai/dsh-typert-loader'
-import { validateTypertManifest } from '@xfcodeai/dsh-typert-loader'
+import TypertRegistry from '@x1a0f3n9/dsh-typert-registry'
+import * as typertLoader from '@x1a0f3n9/dsh-typert-loader'
+import { validateTypertManifest } from '@x1a0f3n9/dsh-typert-loader'
 import { z } from 'zod'
 
 let root: string | undefined

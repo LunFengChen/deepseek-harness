@@ -11,11 +11,11 @@
  * VFS as well would pass either way.
  */
 import { describe, expect, it } from 'vitest'
-import { runShellCommand } from '@xfcodeai/dsh-experimental-webworker-runtime/src/shell/interpret.ts'
-import { filesystemError } from '@xfcodeai/dsh-experimental-webworker-runtime/src/shell/fs-access.ts'
+import { runShellCommand } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/interpret.ts'
+import { filesystemError } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/fs-access.ts'
 import type {
   ShellDirent, ShellFileSystem, ShellRunOutcome, ShellStats,
-} from '@xfcodeai/dsh-experimental-webworker-runtime/src/shell/types.ts'
+} from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/types.ts'
 
 const WORKSPACE = '/dsh/workspace'
 

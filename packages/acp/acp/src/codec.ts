@@ -1,10 +1,10 @@
 /**
  * Pure translation between the harness lifecycle and the automation-only ACP wire.
- * @module @xfcodeai/dsh-acp/codec
+ * @module @x1a0f3n9/dsh-acp/codec
  */
 
 import type { StopReason } from '@agentclientprotocol/sdk'
-import type { TurnEndReason } from '@xfcodeai/dsh-session'
+import type { TurnEndReason } from '@x1a0f3n9/dsh-session'
 
 /**
  * Map a harness turn ending to ACP's terminal reason vocabulary.

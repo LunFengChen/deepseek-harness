@@ -3,7 +3,7 @@ description: "面向用户与维护者的持久会话存储 seam 说明，用于
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-persistence
+# @x1a0f3n9/dsh-session-persistence
 
 [English](README.md) | 中文
 

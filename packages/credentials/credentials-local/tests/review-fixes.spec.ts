@@ -3,7 +3,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { credentialKey, credentialRef } from '@xfcodeai/dsh-credentials'
+import { credentialKey, credentialRef } from '@x1a0f3n9/dsh-credentials'
 import { LocalCredentialProvider } from '../src/index.ts'
 
 function writeCredentials(file: string, text: string): Promise<void> {

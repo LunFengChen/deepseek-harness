@@ -1,11 +1,11 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type {
   ConversationMatch, ConversationNodeContext, ConversationNodeDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type { CompactionCheckpointSource } from '@xfcodeai/dsh-compaction/checkpoint'
-import type {} from '@xfcodeai/dsh-compaction/types'
-import type {} from '@xfcodeai/dsh-commands/types'
-import { isReplacementSurfaceEvent } from '@xfcodeai/dsh-session/surface'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { CompactionCheckpointSource } from '@x1a0f3n9/dsh-compaction/checkpoint'
+import type {} from '@x1a0f3n9/dsh-compaction/types'
+import type {} from '@x1a0f3n9/dsh-commands/types'
+import { isReplacementSurfaceEvent } from '@x1a0f3n9/dsh-session/surface'
 import type { ManualCompactionChatData } from '../contract/chat-nodes.ts'
 import type { CommandNode, CompactionSummaryNode } from '../contract/snapshot.ts'
 import { chatNode } from './common.ts'

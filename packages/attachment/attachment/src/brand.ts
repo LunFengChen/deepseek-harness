@@ -1,6 +1,6 @@
-/** Attachment identifier brand. @module @xfcodeai/dsh-attachment/brand */
+/** Attachment identifier brand. @module @x1a0f3n9/dsh-attachment/brand */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /** Opaque content-addressed identifier for one immutable attachment object. */
 export type AttachmentId = Branded<'AttachmentId'>

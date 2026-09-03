@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import type { StreamChunk } from '@xfcodeai/dsh-api-remotes/client'
+import type { StreamChunk } from '@x1a0f3n9/dsh-api-remotes/client'
 import { PartialAccumulator } from '../src/client/conversation-nodes/partial.ts'
 
 const chunk = (c: Record<string, unknown>): StreamChunk => c as unknown as StreamChunk

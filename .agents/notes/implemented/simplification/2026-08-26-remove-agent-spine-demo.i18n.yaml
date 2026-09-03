@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/simplification/2026-08-26-remove-agent-spine-demo.md
-2026-08-26-remove-agent-spine-demo.md: 9f6d1972bfa61da53b092ac1b18d6e0387bd31fe
-2026-08-26-remove-agent-spine-demo.zh.md: 6265b90d52123fc55209d76d2c68c4b74be567c7
+2026-08-26-remove-agent-spine-demo.md: ca7da9ea7abdeb5a838f18dfd7c1f71ed44a0ca9
+2026-08-26-remove-agent-spine-demo.zh.md: 3a53c93e73a4afa451b2fa5822634a012219e53e

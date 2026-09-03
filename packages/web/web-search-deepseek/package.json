@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-web-search-deepseek",
+  "name": "@x1a0f3n9/dsh-web-search-deepseek",
   "description": "DeepSeek-backed search provider (native web_search via the Anthropic-compatible API) for the DeepSeek Harness web capability seam (ctx.web)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -27,25 +27,25 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-credentials": "workspace:^",
-    "@xfcodeai/dsh-launch-environment": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-web": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-credentials": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-web": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^"
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-credentials": "workspace:^",
-    "@xfcodeai/dsh-credentials-local": "workspace:^",
-    "@xfcodeai/dsh-launch-environment": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-web": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-credentials": "workspace:^",
+    "@x1a0f3n9/dsh-credentials-local": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-web": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^"
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   }
 }

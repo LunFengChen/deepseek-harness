@@ -3,7 +3,7 @@ description: "供需要不含共享 base bundle 的极简跨平台 coding agent 
 kind: "package-bundle"
 ---
 
-# `@xfcodeai/dsh-sdk-minimal`
+# `@x1a0f3n9/dsh-sdk-minimal`
 
 [English](README.md) | 中文
 

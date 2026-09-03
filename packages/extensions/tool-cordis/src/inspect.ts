@@ -4,14 +4,14 @@
  * `api-catalog.ts`. This module owns the join of the two plus presentation: which
  * lines a section prints, how compact the default report stays, and what an exact
  * `name` adds.
- * @module @xfcodeai/dsh-tool-cordis/inspect
+ * @module @x1a0f3n9/dsh-tool-cordis/inspect
  */
 
 import type { Context, Fiber } from '@deepseek-ai/cordis'
-import type { ScopeKey } from '@xfcodeai/dsh-scope'
-import type { Agent } from '@xfcodeai/dsh-agent'
+import type { ScopeKey } from '@x1a0f3n9/dsh-scope'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 // Type-only: resolves `ctx.dynamicCordisRunner` (the registry this report reads).
-import type {} from '@xfcodeai/dsh-cordis-host-runner'
+import type {} from '@x1a0f3n9/dsh-cordis-host-runner'
 import { EVENT_API, INHERITED_CTX_API, SERVICE_API, TYPE_API } from './api-catalog.ts'
 import type { EventApiEntry, InheritedApiEntry, ServiceApiEntry, ServiceApiMethod, TypeApiEntry } from './api-catalog.ts'
 import { FiberState, STATE_LABELS } from './fiber-state.ts'

@@ -1,14 +1,14 @@
 /** Workspace command implementation and stable Remote failure mapping. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { Workspace } from '@xfcodeai/dsh-workspace'
+import type { Workspace } from '@x1a0f3n9/dsh-workspace'
 import {
   WorkspaceId,
   WorkspaceMoveInvalidError,
   WorkspaceOrderInvalidError,
   WorkspaceUnknownSessionError,
-} from '@xfcodeai/dsh-workspace'
-import { RemoteError, remoteErrorOf } from '@xfcodeai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-workspace'
+import { RemoteError, remoteErrorOf } from '@x1a0f3n9/dsh-typert-protocol'
 import { workspaceView } from './feed.ts'
 import type {
   WorkspaceArchiveSessionRequest,

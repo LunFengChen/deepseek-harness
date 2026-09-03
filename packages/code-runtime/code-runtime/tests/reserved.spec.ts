@@ -4,7 +4,7 @@ import {
   PORTABLE_RESERVED_WORDS,
   RESERVED_BINDING_GLOBALS,
   RESERVED_ERROR_MEMBERS,
-} from '@xfcodeai/dsh-code-runtime'
+} from '@x1a0f3n9/dsh-code-runtime'
 
 /**
  * The Service Definition owns the portable-identifier exclusion sets so every backend

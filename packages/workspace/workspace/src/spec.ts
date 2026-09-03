@@ -2,13 +2,13 @@
  * The workspace domain declaration: record schema and the `defineDomain` spec
  * the registry opens. The zod schema validates the shipped format at the
  * durability boundary and is the direct source of a future RPC wire projection.
- * @module @xfcodeai/dsh-workspace/src/spec
+ * @module @x1a0f3n9/dsh-workspace/src/spec
  */
 
 import { z } from 'zod'
-import { brandString } from '@xfcodeai/dsh-brand'
-import type { SessionId } from '@xfcodeai/dsh-session'
-import { defineDomain, domainTable } from '@xfcodeai/dsh-storage-domain'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
+import { defineDomain, domainTable } from '@x1a0f3n9/dsh-storage-domain'
 import type { WorkspaceId } from './types.ts'
 
 /** Workspace id schema at the durable boundary; branding has no runtime representation. */

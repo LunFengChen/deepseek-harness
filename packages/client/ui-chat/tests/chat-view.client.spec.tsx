@@ -9,21 +9,21 @@ import type {
   LegacyConversationSlice, ModelRetryNode, RunningToolCall, SelectionTarget, SteeringMessageNode,
   ToolCallBlock, ToolResultNode, TurnErrorNode, TurnMaxTokensNode, UseChatNodeTurnData,
   TranscriptViewMode, UserMessageNode,
-} from '@xfcodeai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
 import type {
   SessionListState, SessionSnapshot,
-} from '@xfcodeai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   ConversationLocationDataStore, ConversationTurnDataMap,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type { WorkspaceSnapshot } from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { SessionPendingInteractionSnapshot } from '@xfcodeai/dsh-client-ui-session/client'
-import type { KeyedSnapshotSelectorHook, SnapshotSelectorHook } from '@xfcodeai/dsh-client-ui-slots'
-import { bindSnapshotSelector, makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
-import { createSnapshotStore, type ObservableSnapshot } from '@xfcodeai/dsh-client-store'
-import { EMPTY_CONVERSATION_SNAPSHOT } from '@xfcodeai/dsh-client-ui-conversation/client'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SessionPendingInteractionSnapshot } from '@x1a0f3n9/dsh-client-ui-session/client'
+import type { KeyedSnapshotSelectorHook, SnapshotSelectorHook } from '@x1a0f3n9/dsh-client-ui-slots'
+import { bindSnapshotSelector, makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { createSnapshotStore, type ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import { EMPTY_CONVERSATION_SNAPSHOT } from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import { createChatStore } from '../src/client/stores.ts'
 import { ChatView } from '../src/client/chat/ChatView.tsx'
 import { ChatNodeSeat } from '../src/client/chat/ChatNodeSeat.tsx'

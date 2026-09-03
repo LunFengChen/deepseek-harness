@@ -68,7 +68,7 @@ editText(target: FsTarget, edit: FsEditRequest, expected?: { version: FsVersion 
 
 ## 事件词汇（由 `dsh-fs` 拥有）
 
-事件定义在 `@xfcodeai/dsh-fs` 中，而非 `dsh-fs-observation-policy` 中。这是解耦约定所迫：`dsh-tool-fs` 是发射方，因此它必须引用事件类型，且即使 `dsh-fs-observation-policy` 不再提供方法服务，它也必须能编译通过。`dsh-fs` 是 `dsh-tool-fs` 和 `dsh-fs-observation-policy` 都已依赖的包，因此它是唯一能让发射方和策略监听方共享词汇而不让发射方依赖策略插件的归属地。
+事件定义在 `@x1a0f3n9/dsh-fs` 中，而非 `dsh-fs-observation-policy` 中。这是解耦约定所迫：`dsh-tool-fs` 是发射方，因此它必须引用事件类型，且即使 `dsh-fs-observation-policy` 不再提供方法服务，它也必须能编译通过。`dsh-fs` 是 `dsh-tool-fs` 和 `dsh-fs-observation-policy` 都已依赖的包，因此它是唯一能让发射方和策略监听方共享词汇而不让发射方依赖策略插件的归属地。
 
 这些事件携带既有的 `dsh-fs` 词汇（`FsTarget`、`FsVersion`、`FsObservation`、`FsWriteIntent`）加一个不透明的 actor——不携带面向模型的概念（行窗口、行号或渲染后的页脚不会泄漏到此层）。
 
@@ -77,7 +77,7 @@ editText(target: FsTarget, edit: FsEditRequest, expected?: { version: FsVersion 
 actor 在 `dsh-fs` 中类型为 `object`——一个纯粹的不透明载体，提供方约定从不读取或收窄它。owner 的推导（`actor.agent?.session`）和 `{ agent?: { session? } }` 结构形状完全留在 `dsh-fs-observation-policy` 内部，由其在监听器中将 `object` actor 收窄为该形状。`dsh-fs` 拥有事件名和 fs 词汇；它不拥有策略层的运行时 owner 结构。
 
 ```ts
-import type { FsObservation, FsTarget, FsVersion, FsWriteIntent } from '@xfcodeai/dsh-fs'
+import type { FsObservation, FsTarget, FsVersion, FsWriteIntent } from '@x1a0f3n9/dsh-fs'
 
 interface Events {
   /**

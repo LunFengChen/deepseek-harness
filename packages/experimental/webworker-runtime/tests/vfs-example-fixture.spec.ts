@@ -1,9 +1,9 @@
 import { readFileSync, readdirSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { Session, SessionId, type SessionEvent } from '@xfcodeai/dsh-session'
-import { scanLog } from '@xfcodeai/dsh-session-persistence-jsonl/src/format.ts'
-import { foldSubagentDescriptor } from '@xfcodeai/dsh-subagent'
+import { Session, SessionId, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import { scanLog } from '@x1a0f3n9/dsh-session-persistence-jsonl/src/format.ts'
+import { foldSubagentDescriptor } from '@x1a0f3n9/dsh-subagent'
 import {
   buildVfsExampleFiles,
   VFS_EXAMPLE_OLDEST_MESSAGE,

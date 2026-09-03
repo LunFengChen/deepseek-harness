@@ -23,7 +23,7 @@ Two consequences fell out and are load-bearing:
 
 The SDK prompt section is registered globally by a ptc deployment (unchanged) and additionally per scope by `presentAs`, where it shadows by name. Its body renders empty for a native scope, which the prompt renderer drops — that is what keeps an agent opting OUT of a ptc deployment free of an SDK section.
 
-The preset expresses the choice through one row, `@xfcodeai/dsh-agent-tool-presentation`, whose whole body is a `presentAs` call. A PTC mode waits for `ctx.codeRuntime` through `ctx.inject` rather than assuming it: the runtime is host-plane, and a pending row is what `dsh-agent-presets` already reports as an unusable mount, naming the row — so a preset selecting PTC mode against a runtime-less deployment fails where an operator can act.
+The preset expresses the choice through one row, `@x1a0f3n9/dsh-agent-tool-presentation`, whose whole body is a `presentAs` call. A PTC mode waits for `ctx.codeRuntime` through `ctx.inject` rather than assuming it: the runtime is host-plane, and a pending row is what `dsh-agent-presets` already reports as an unusable mount, naming the row — so a preset selecting PTC mode against a runtime-less deployment fails where an operator can act.
 
 ## Alternatives considered
 

@@ -1,10 +1,10 @@
 import type { Context } from '@deepseek-ai/cordis'
-import type { ChunkRowEvent } from '@xfcodeai/dsh-api-session-controller/types'
+import type { ChunkRowEvent } from '@x1a0f3n9/dsh-api-session-controller/types'
 import type {
   ConversationLocation, ConversationMatch, ConversationNodeContext, ConversationNodeDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type {} from '@xfcodeai/dsh-llm-retry/types'
-import { isAppendSurfaceEvent } from '@xfcodeai/dsh-session/surface'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-llm-retry/types'
+import { isAppendSurfaceEvent } from '@x1a0f3n9/dsh-session/surface'
 import type { AssistantChatData } from '../contract/chat-nodes.ts'
 import type { AssistantBlock, AssistantMessageNode } from '../contract/snapshot.ts'
 import { CHAT_SYNTHETIC_SEQ_OFFSETS, chatNode } from './common.ts'
@@ -19,7 +19,7 @@ declare module '../contract/chat-nodes.ts' {
   }
 }
 
-declare module '@xfcodeai/dsh-client-ui-conversation/client' {
+declare module '@x1a0f3n9/dsh-client-ui-conversation/client' {
   interface ConversationStepDataMap {
     /** Streaming, settled, or interrupted Assistant material for this Step. */
     'assistant-step': AssistantChatData

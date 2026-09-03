@@ -35,8 +35,8 @@ The extensions group lets a running agent modify the runtime it runs inside: the
 ## Related documentation
 
 - [Extensions subsystem](../../docs/subsystems/extensions.md) — the generated `ctx.cordisInspect` and `ctx.dynamicCordisRunner` service API.
-- [Generated tool catalog](../../docs/tool-catalog.md#xfcodeaidsh-tool-cordis) — the seven model-facing tool schemas.
-- [Generated configuration catalog](../../docs/config-catalog.md#xfcodeaidsh-cordis-host-runner) — the runner's accepted config fields.
+- [Generated tool catalog](../../docs/tool-catalog.md#x1a0f3n9dsh-tool-cordis) — the seven model-facing tool schemas.
+- [Generated configuration catalog](../../docs/config-catalog.md#x1a0f3n9dsh-cordis-host-runner) — the runner's accepted config fields.
 - [Self-referential Cordis toolset Agent Note](../../.agents/notes/implemented/feature/2026-07-08-self-referential-cordis-toolset.md) — design home for sandbox semantics, lifecycle, and composition.
 - [Client shells and dynamic packages Agent Note](../../.agents/notes/implemented/architecture/2026-08-15-client-shells-and-dynamic-packages.md) — package placement and build faces for the client halves.
 

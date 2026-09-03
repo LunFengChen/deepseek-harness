@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest'
 import type {
   ChatConversationViewNode, ChatSnapshot,
-} from '@xfcodeai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
 import type {
   SessionEventLikeEntry, SessionLiveEventEntry,
-} from '@xfcodeai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   ChunkRowEvent,
-} from '@xfcodeai/dsh-api-session-controller/types'
+} from '@x1a0f3n9/dsh-api-session-controller/types'
 import {
   ConversationNodeAssembler,
   type ConversationNodeDefinition,
   type ConversationViewDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import { isChunkRow, packChunkRuns, type ChunkRow } from '@xfcodeai/dsh-session/chunk-rows'
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { isChunkRow, packChunkRuns, type ChunkRow } from '@x1a0f3n9/dsh-session/chunk-rows'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 import { hasAssistantReplyContent } from '../src/client/contract/assistant-content.ts'
 import { assistantDefinition } from '../src/client/conversation-nodes/assistant.ts'
 import { chatViewDefinition } from '../src/client/conversation-nodes/chat-snapshot-builder.ts'
@@ -23,7 +23,7 @@ import { compactionDefinition } from '../src/client/conversation-nodes/compactio
 import { unknownFallbackDefinition } from '../src/client/conversation-nodes/fallback.ts'
 import { nextStepInboxDefinition } from '../src/client/conversation-nodes/inbox.ts'
 import { messageDefinition } from '../src/client/conversation-nodes/message.ts'
-import { inspectRequestPrompt } from '@xfcodeai/dsh-client-ui-conversation/client'
+import { inspectRequestPrompt } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { requestPromptDefinition } from '../src/client/conversation-nodes/request-prompt.ts'
 import { retryDefinition } from '../src/client/conversation-nodes/retry.ts'
 import { toolDefinition } from '../src/client/conversation-nodes/tool.ts'
@@ -1427,7 +1427,7 @@ describe('built-in conversation node Definitions', () => {
       at(3, 'user/message', textMessage('direct-user', 'prompt'), { surfaceOp: 'append' }),
       at(4, 'user/message', {
         ...textMessage('runtime-context', 'runtime facts'),
-        source: { kind: 'plugin', plugin: '@xfcodeai/dsh-system-prompt', form: 'snapshot' },
+        source: { kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt', form: 'snapshot' },
       }, { surfaceOp: 'append' }),
       at(5, 'request/header', {
         reason: 'initial',

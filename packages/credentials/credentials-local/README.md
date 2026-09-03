@@ -3,7 +3,7 @@ description: "The file-backed credentials provider for users and maintainers cho
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-credentials-local
+# @x1a0f3n9/dsh-credentials-local
 
 English | [中文](README.zh.md)
 
@@ -34,7 +34,7 @@ Use it as the default local store: the product's base composition loads it, and 
 ### Setting it up
 
 ```yaml
-- name: '@xfcodeai/dsh-credentials-local'
+- name: '@x1a0f3n9/dsh-credentials-local'
   config:
     path: /absolute/path/to/.credentials.yaml
 ```
@@ -46,7 +46,7 @@ Use it as the default local store: the product's base composition loads it, and 
 | `watch` | `true` | Reload the file automatically when it changes on disk |
 | `debounceMs` | `100` | Wait this long after a change before reloading, in milliseconds |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-credentials-local) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-credentials-local) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Storing and removing keys
 
@@ -54,7 +54,7 @@ Save a key with `set`, remove it with `unset`, and check whether a key is config
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialRef } from '@xfcodeai/dsh-credentials'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 

@@ -3,7 +3,7 @@ description: "面向把已认证 JSON 事件路由到 webhook 运行时的部署
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-webhook-github
+# @x1a0f3n9/dsh-webhook-github
 
 [English](README.md) | 中文
 

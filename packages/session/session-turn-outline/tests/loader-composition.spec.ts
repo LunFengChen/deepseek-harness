@@ -13,10 +13,10 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import { createAssistantMessage, createUserMessage } from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import * as SessionTurnOutlinePlugin from '@xfcodeai/dsh-session-turn-outline'
+import { createAssistantMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import * as SessionTurnOutlinePlugin from '@x1a0f3n9/dsh-session-turn-outline'
 
 let root: string | undefined
 let context: Context | undefined
@@ -38,9 +38,9 @@ async function loadYaml(lines: readonly string[]): Promise<Context> {
   await context.plugin(Loader)
   context.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['@xfcodeai/dsh-session', SessionStore],
-    ['@xfcodeai/dsh-session-projection', SessionProjectionRegistry],
-    ['@xfcodeai/dsh-session-turn-outline', SessionTurnOutlinePlugin],
+    ['@x1a0f3n9/dsh-session', SessionStore],
+    ['@x1a0f3n9/dsh-session-projection', SessionProjectionRegistry],
+    ['@x1a0f3n9/dsh-session-turn-outline', SessionTurnOutlinePlugin],
   ])
   context.loader.internal = {
     version: 'v2',
@@ -60,9 +60,9 @@ async function loadYaml(lines: readonly string[]): Promise<Context> {
 describe('real Loader composition', () => {
   it('loads the shipped session-turn-outline YAML shape and serves the outline', async () => {
     const loaded = await loadYaml([
-      "- name: '@xfcodeai/dsh-session'",
-      "- name: '@xfcodeai/dsh-session-projection'",
-      "- name: '@xfcodeai/dsh-session-turn-outline'",
+      "- name: '@x1a0f3n9/dsh-session'",
+      "- name: '@x1a0f3n9/dsh-session-projection'",
+      "- name: '@x1a0f3n9/dsh-session-turn-outline'",
     ])
 
     const unloaded = [...loaded.loader.entries()]

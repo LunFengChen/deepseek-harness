@@ -32,7 +32,7 @@ async function loadComposition(port = 0, gzip = false): Promise<Context> {
   root = await mkdtemp(join(tmpdir(), 'dsh-webserver-loader-'))
   const configPath = join(root, 'cordis.yml')
   await writeFile(configPath, [
-    "- name: '@xfcodeai/dsh-host-webserver'",
+    "- name: '@x1a0f3n9/dsh-host-webserver'",
     '  config:',
     "    host: '127.0.0.1'",
     `    port: ${String(port)}`,
@@ -51,7 +51,7 @@ async function loadComposition(port = 0, gzip = false): Promise<Context> {
   await context.plugin(Loader)
   context.loader.builtins.include = Include
   const modules = new Map<string, unknown>([
-    ['@xfcodeai/dsh-host-webserver', HttpServer],
+    ['@x1a0f3n9/dsh-host-webserver', HttpServer],
   ])
   context.loader.internal = {
     version: 'v2',

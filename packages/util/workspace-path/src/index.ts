@@ -1,6 +1,6 @@
 /**
  * Browser-safe Workspace path and display helpers.
- * @module @xfcodeai/dsh-util-workspace-path
+ * @module @x1a0f3n9/dsh-util-workspace-path
  */
 
 /** Whether a path uses a Windows drive or UNC prefix. */

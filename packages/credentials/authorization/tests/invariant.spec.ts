@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { credentialKey } from '@xfcodeai/dsh-credentials'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
-import AuthorizationService from '@xfcodeai/dsh-authorization'
+import { credentialKey } from '@x1a0f3n9/dsh-credentials'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import AuthorizationService from '@x1a0f3n9/dsh-authorization'
 import * as AuthorizationInvariant from '../src/invariant.ts'
 import { MemoryCredentials } from './memory.ts'
 
@@ -81,7 +81,7 @@ describe('authorization invariant companion', () => {
     await ctx.plugin(AuthorizationInvariant)
 
     expect(() => {
-      ctx.invariants.register('@xfcodeai/dsh-authorization', () => {})
+      ctx.invariants.register('@x1a0f3n9/dsh-authorization', () => {})
     }).toThrow(/already registered/)
   })
 })

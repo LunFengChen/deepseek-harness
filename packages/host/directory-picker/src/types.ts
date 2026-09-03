@@ -4,7 +4,7 @@
  * a Host-only symbol, so a Client compilation face reads exactly the signatures
  * the Host emits.
  *
- * @module @xfcodeai/dsh-host-directory-picker/types
+ * @module @x1a0f3n9/dsh-host-directory-picker/types
  */
 
 /** One directory row: a listing child or a breadcrumb ancestor. */

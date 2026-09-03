@@ -32,8 +32,8 @@ The todo group gives agents a session-level task list to plan with: add tasks, m
 ## Related documentation
 
 - [Todo subsystem](../../docs/subsystems/todo.md) — the `todo/write` event payload, ownership rules, and `TodoItem`.
-- [Generated tool catalog](../../docs/tool-catalog.md#xfcodeaidsh-tool-todo) — the `todo_write` schema the model receives.
-- [Generated configuration catalog](../../docs/config-catalog.md#xfcodeaidsh-tool-todo) — every accepted config field.
+- [Generated tool catalog](../../docs/tool-catalog.md#x1a0f3n9dsh-tool-todo) — the `todo_write` schema the model receives.
+- [Generated configuration catalog](../../docs/config-catalog.md#x1a0f3n9dsh-tool-todo) — every accepted config field.
 - [todo_write tool Agent Note](../../.agents/notes/implemented/feature/2026-06-29-todo-write-tool.md) — the original design and its alternatives.
 
 -----

@@ -3,7 +3,7 @@ description: "面向交互式 UI 的人类斜杠命令注册表：插件拥有�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-commands
+# @x1a0f3n9/dsh-commands
 
 [English](README.md) | 中文
 

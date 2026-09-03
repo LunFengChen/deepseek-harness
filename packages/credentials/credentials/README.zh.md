@@ -3,7 +3,7 @@ description: "面向用户与维护者的凭据 seam：在不把机密值写进�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-credentials
+# @x1a0f3n9/dsh-credentials
 
 [English](README.md) | 中文
 
@@ -36,18 +36,18 @@ kind: "package-reference"
 加载本地存储包并给出文档路径：
 
 ```yaml
-- name: '@xfcodeai/dsh-credentials-local'
+- name: '@x1a0f3n9/dsh-credentials-local'
   config:
     path: /absolute/path/to/.credentials.yaml
 ```
 
-本地存储 README 拥有完整配置面；生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-credentials-local)是穷尽式字段清单。
+本地存储 README 拥有完整配置面；生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-credentials-local)是穷尽式字段清单。
 
 ### 存储、检查与移除密钥
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialRef } from '@xfcodeai/dsh-credentials'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 
@@ -66,7 +66,7 @@ await ctx.credentials.unset(ref)                       // no-op when absent; sam
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialKey } from '@xfcodeai/dsh-credentials'
+import { credentialKey } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 

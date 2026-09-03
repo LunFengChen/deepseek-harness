@@ -2,12 +2,12 @@
 
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry, { Inbox } from '@xfcodeai/dsh-agent'
-import type { Agent, AgentHandle, CreateAgentOptions } from '@xfcodeai/dsh-agent'
-import AgentDefaultModelConfig from '@xfcodeai/dsh-agent-default-model'
-import { createAssistantMessage } from '@xfcodeai/dsh-llm'
-import SessionStore from '@xfcodeai/dsh-session'
-import type { Session, UserMessage } from '@xfcodeai/dsh-session'
+import AgentRegistry, { Inbox } from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentHandle, CreateAgentOptions } from '@x1a0f3n9/dsh-agent'
+import AgentDefaultModelConfig from '@x1a0f3n9/dsh-agent-default-model'
+import { createAssistantMessage } from '@x1a0f3n9/dsh-llm'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import type { Session, UserMessage } from '@x1a0f3n9/dsh-session'
 import { apply, Config, internals } from '../src/index.ts'
 
 const originalInternals = { ...internals }

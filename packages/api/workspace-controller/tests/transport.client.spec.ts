@@ -5,10 +5,10 @@ import {
   RemoteStreamCarrierError,
   type ClientRemote,
   type RemoteStreamOptions,
-} from '@xfcodeai/dsh-api-gateway/client'
-import type { ConnectionHandle } from '@xfcodeai/dsh-client-connection/client'
-import { SessionId } from '@xfcodeai/dsh-session/types'
-import { RemoteError, type RemoteFailure, type RemoteResult } from '@xfcodeai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-api-gateway/client'
+import type { ConnectionHandle } from '@x1a0f3n9/dsh-client-connection/client'
+import { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { RemoteError, type RemoteFailure, type RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import * as WorkspaceClientPlugin from '../src/client/index.ts'
 import {
   ClientWorkspaceModel,

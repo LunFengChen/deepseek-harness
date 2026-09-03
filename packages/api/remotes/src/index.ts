@@ -7,25 +7,25 @@ import type {
   TypertRemoteEventInvocation,
   TypertRemoteEventOutcome,
   TypertRemoteEventSource,
-} from '@xfcodeai/dsh-api-gateway'
-import { Deque } from '@xfcodeai/dsh-deque'
-import { carrierKeyOf } from '@xfcodeai/dsh-scope'
-import { isJsonValue, type JsonValue } from '@xfcodeai/dsh-util-values'
+} from '@x1a0f3n9/dsh-api-gateway'
+import { Deque } from '@x1a0f3n9/dsh-deque'
+import { carrierKeyOf } from '@x1a0f3n9/dsh-scope'
+import { isJsonValue, type JsonValue } from '@x1a0f3n9/dsh-util-values'
 import { API_REMOTE_FORWARDED_EVENTS } from './remote-events.ts'
 
 // The owner packages' client-safe `./types` exports carry the cordis `Events`
 // declarations for every allowlisted event. Pulling them into this face is what
 // makes the shape assertion below judge real signatures rather than an empty
 // event vocabulary.
-import type {} from '@xfcodeai/dsh-commands/types'
-import type {} from '@xfcodeai/dsh-cordis-host-runner/types'
-import type {} from '@xfcodeai/dsh-credentials/types'
-import type {} from '@xfcodeai/dsh-llm/types'
-import type {} from '@xfcodeai/dsh-agent-presets/types'
-import type {} from '@xfcodeai/dsh-settings/types'
-import type {} from '@xfcodeai/dsh-user-approval'
-import type {} from '@xfcodeai/dsh-user-questions'
-export type {} from '@xfcodeai/dsh-api-session-controller/types'
+import type {} from '@x1a0f3n9/dsh-commands/types'
+import type {} from '@x1a0f3n9/dsh-cordis-host-runner/types'
+import type {} from '@x1a0f3n9/dsh-credentials/types'
+import type {} from '@x1a0f3n9/dsh-llm/types'
+import type {} from '@x1a0f3n9/dsh-agent-presets/types'
+import type {} from '@x1a0f3n9/dsh-settings/types'
+import type {} from '@x1a0f3n9/dsh-user-approval'
+import type {} from '@x1a0f3n9/dsh-user-questions'
+export type {} from '@x1a0f3n9/dsh-api-session-controller/types'
 
 export { API_REMOTE_FORWARDED_EVENTS } from './remote-events.ts'
 export type { ApiRemoteForwardedEvent } from './types.ts'

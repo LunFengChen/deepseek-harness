@@ -12,7 +12,7 @@ The affected streams have different wake-up, failure, cancellation, and disposal
 
 ## Decision
 
-`@xfcodeai/dsh-deque` owns one zero-dependency circular array for Host and browser consumers. `pushBack()`, `pushFront()`, and `popFront()` change indices instead of moving the live range. A removal clears its slot immediately. The backing array doubles when full and halves when a non-empty deque reaches one quarter of capacity, so growth and compaction copy work remains amortized constant time and vacant storage stays bounded over interleaved queue use.
+`@x1a0f3n9/dsh-deque` owns one zero-dependency circular array for Host and browser consumers. `pushBack()`, `pushFront()`, and `popFront()` change indices instead of moving the live range. A removal clears its slot immediately. The backing array doubles when full and halves when a non-empty deque reaches one quarter of capacity, so growth and compaction copy work remains amortized constant time and vacant storage stays bounded over interleaved queue use.
 
 The package has no singleton state, symbols, or class identity shared between consumers. Each consumer constructs and confines its own deque, so duplicate npm copies preserve runtime behavior and the published dependency policy treats `Deque` as a safe Host export. The Client bundle purity rule also treats the package as an inline-safe library. The Gateway browser artifact carries its deque implementation without introducing a module-table entry or a Cordis service.
 

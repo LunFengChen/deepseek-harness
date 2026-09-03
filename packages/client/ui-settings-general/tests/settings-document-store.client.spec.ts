@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
-import { RemoteError } from '@xfcodeai/dsh-client-test-runtime'
-import type { RemoteResult } from '@xfcodeai/dsh-api-remotes/client'
-import { SettingsDescribeMirror } from '@xfcodeai/dsh-client-ui-settings/src/client/settings-mirror.ts'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { RemoteResult } from '@x1a0f3n9/dsh-api-remotes/client'
+import { SettingsDescribeMirror } from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
 import { SettingsDocumentStore } from '../src/client/settings-document-store.ts'
 
 /** Store over a real mirror derived from the same scripted context. */

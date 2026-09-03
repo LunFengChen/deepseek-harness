@@ -1,9 +1,9 @@
 /**
  * Bounded per-session write batching for the shared persistence coordinator.
- * @module @xfcodeai/dsh-session-persistence/write-behind
+ * @module @x1a0f3n9/dsh-session-persistence/write-behind
  */
 
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 
 /** Dependencies and scheduling policy for one live session's write controller. */
 export interface SessionWriteBehindOptions {

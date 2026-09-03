@@ -6,7 +6,7 @@ English | [中文](2026-08-26-remove-agent-spine-demo.zh.md)
 
 ## Problem
 
-`@xfcodeai/dsh-agent-spine-demo` was named and located as an example but exposed a public composition plugin with a large merged configuration. Its only shipped consumer was `dsh-sdk-minimal`, where one plugin row hid the mandatory agent runtime from a bundle whose purpose is a complete explicit tree. Every other consumer was a test. The package also duplicated composition policy already owned by `dsh-base` without providing a capability that could evolve independently.
+`@x1a0f3n9/dsh-agent-spine-demo` was named and located as an example but exposed a public composition plugin with a large merged configuration. Its only shipped consumer was `dsh-sdk-minimal`, where one plugin row hid the mandatory agent runtime from a bundle whose purpose is a complete explicit tree. Every other consumer was a test. The package also duplicated composition policy already owned by `dsh-base` without providing a capability that could evolve independently.
 
 ## Decision
 

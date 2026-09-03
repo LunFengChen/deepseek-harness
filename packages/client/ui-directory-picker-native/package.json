@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-directory-picker-native",
+  "name": "@x1a0f3n9/dsh-client-ui-directory-picker-native",
   "description": "Native directory-picker surface: the renderless workspace directory-flow occupant driving the host's OS chooser",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -28,8 +28,8 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-client-ui-renderer",
-        "@xfcodeai/dsh-client-ui-workspace"
+        "@x1a0f3n9/dsh-client-ui-renderer",
+        "@x1a0f3n9/dsh-client-ui-workspace"
       ],
       "platform": "web"
     }
@@ -43,8 +43,8 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-workspace": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:^",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",

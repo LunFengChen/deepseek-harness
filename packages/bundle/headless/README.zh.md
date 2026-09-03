@@ -3,7 +3,7 @@ description: "dsh 的一次性任务模式：从命令行运行单个任务并�
 kind: "package-bundle"
 ---
 
-# @xfcodeai/dsh-headless
+# @x1a0f3n9/dsh-headless
 
 [English](README.md) | 中文
 
@@ -39,7 +39,7 @@ agent（智能体）会完成该任务，把提供方的每个非空推理增量
 |---|---|---|
 | `task` | 必填 | 单次运行的任务文本 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-headless)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-headless)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 何时使用
 
@@ -99,7 +99,7 @@ patch 叠加在 `dsh-base` 之上：继承投影缓存，在基础 `system-promp
 - [dsh-base](../base/README.zh.md)——headless 运行其上的共享核心。
 - [dsh-web-app](../web-app/README.zh.md)——用于多轮工作的交互式浏览器兄弟表层。
 - [dsh-cmdline](../../boot/cmdline/README.zh.md)——启动器如何把命令行交给应用。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-headless)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-headless)——每个受支持配置字段及其源声明。
 
 -----
 

@@ -1,9 +1,9 @@
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import type { SettingsNamespaceView } from '@xfcodeai/dsh-api-remotes/client'
-import { SettingsSchemaService } from '@xfcodeai/dsh-client-ui-settings/src/client/schema.ts'
-import { SettingsDescribeMirror } from '@xfcodeai/dsh-client-ui-settings/src/client/settings-mirror.ts'
-import { RemoteError } from '@xfcodeai/dsh-client-test-runtime'
+import type { SettingsNamespaceView } from '@x1a0f3n9/dsh-api-remotes/client'
+import { SettingsSchemaService } from '@x1a0f3n9/dsh-client-ui-settings/src/client/schema.ts'
+import { SettingsDescribeMirror } from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import {
   PermissionPresetSettingsController, permissionDefaultOf,
 } from '../src/client/settings-store.ts'

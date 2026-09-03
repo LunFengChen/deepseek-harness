@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest'
-import { stubSettingsScope } from '@xfcodeai/dsh-client-test-runtime'
+import { stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
 import {
   ComposerSubmissionPolicy, DEFAULT_BUSY_ENTER_BEHAVIOR,
 } from '../src/client/input/submission-policy.ts'

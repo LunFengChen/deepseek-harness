@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { execa } from 'execa'
 import { describe, expect, it } from 'vitest'
-import { resolveExampleLaunch } from '@xfcodeai/dsh-loader-smoke'
+import { resolveExampleLaunch } from '@x1a0f3n9/dsh-loader-smoke'
 
 const dshBinScript = fileURLToPath(new URL('../src/bin.ts', import.meta.url))
 const tsconfigPath = fileURLToPath(new URL('../../../tsconfig.json', import.meta.url))
@@ -28,14 +28,14 @@ describe('dsh run with Agent Teams enabled', () => {
         name: 'dsh-profile-headless',
         private: true,
         dependencies: {
-          '@xfcodeai/dsh-experimental-agent-team-profile': 'workspace:^',
+          '@x1a0f3n9/dsh-experimental-agent-team-profile': 'workspace:^',
         },
         dsh: {
           profile: {
             bundles: [
-              '@xfcodeai/dsh-base',
-              '@xfcodeai/dsh-headless',
-              '@xfcodeai/dsh-experimental-agent-team-profile',
+              '@x1a0f3n9/dsh-base',
+              '@x1a0f3n9/dsh-headless',
+              '@x1a0f3n9/dsh-experimental-agent-team-profile',
             ],
           },
         },

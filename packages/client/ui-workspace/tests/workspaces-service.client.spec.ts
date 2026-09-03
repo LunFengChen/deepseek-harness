@@ -2,14 +2,14 @@ import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type {
   ISessions, SessionListState, SessionSummary,
-} from '@xfcodeai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   IWorkspaces, WorkspaceId, WorkspaceSnapshot, WorkspaceView,
-} from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { ClientRemote, DirectoryListing } from '@xfcodeai/dsh-api-remotes/client'
-import { RemoteError } from '@xfcodeai/dsh-client-test-runtime'
-import type { RemoteResult } from '@xfcodeai/dsh-api-remotes/client'
-import { SessionId } from '@xfcodeai/dsh-session/types'
+} from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { ClientRemote, DirectoryListing } from '@x1a0f3n9/dsh-api-remotes/client'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { RemoteResult } from '@x1a0f3n9/dsh-api-remotes/client'
+import { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { DirectoryBrowseError, UiWorkspaceService } from '../src/client/navigation.ts'
 
 const sid = (id: string): SessionId => SessionId(id)

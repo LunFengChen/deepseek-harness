@@ -4,7 +4,7 @@
  * consume `register` alone.
  */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { ClientSessionContext } from '@xfcodeai/dsh-client-ui-input-trigger/client'
+import type { ClientSessionContext } from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
 
 /** Copy for an option that must be acknowledged before onSelect can run. */
 export interface SelectConfirmation {

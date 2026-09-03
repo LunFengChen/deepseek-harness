@@ -140,5 +140,5 @@ export const zh: Record<AgentPresetSettingsKey, string> = {
 // The resolution itself is the shared fold in `dsh-agent-presets/display`,
 // re-exported here so every surface in this plugin reads one path; the
 // Settings plugin list inlines the same fold over this plugin's dictionaries.
-export { presetDisplayText } from '@xfcodeai/dsh-agent-presets/display'
-export type { PresetDisplaySource, PresetDisplayText } from '@xfcodeai/dsh-agent-presets/display'
+export { presetDisplayText } from '@x1a0f3n9/dsh-agent-presets/display'
+export type { PresetDisplaySource, PresetDisplayText } from '@x1a0f3n9/dsh-agent-presets/display'

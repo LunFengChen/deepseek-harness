@@ -3,7 +3,7 @@ description: "面向部署方与维护者的默认 POSIX Bash 执行器说明，
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-bash-local
+# @x1a0f3n9/dsh-bash-local
 
 [English](README.md) | 中文
 
@@ -33,7 +33,7 @@ kind: "package-reference"
 
 ```yaml
 - id: bash
-  name: '@xfcodeai/dsh-bash-local'
+  name: '@x1a0f3n9/dsh-bash-local'
   config:
     cwd: /path/to/workspace
     timeoutMs: 120000
@@ -48,7 +48,7 @@ kind: "package-reference"
 | `maxSpillBytes` | `67,108,864` | 每流完整输出的 spill 上限 |
 | `graceMs` | `3,000` | 终止升级与退出后管道排空的宽限时间 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-bash-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-bash-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 运行命令
 

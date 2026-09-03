@@ -9,17 +9,17 @@
 
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry from '@xfcodeai/dsh-agent'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import SessionStore from '@xfcodeai/dsh-session'
-import type { Session } from '@xfcodeai/dsh-session'
-import type { TodoItem } from '@xfcodeai/dsh-tool-todo'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime from '@xfcodeai/dsh-tools'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import UserQuestionService from '@xfcodeai/dsh-user-questions'
-import * as ToolTodo from '@xfcodeai/dsh-tool-todo'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import type { Session } from '@x1a0f3n9/dsh-session'
+import type { TodoItem } from '@x1a0f3n9/dsh-tool-todo'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import UserQuestionService from '@x1a0f3n9/dsh-user-questions'
+import * as ToolTodo from '@x1a0f3n9/dsh-tool-todo'
 
 interface Bench {
   ctx: Context

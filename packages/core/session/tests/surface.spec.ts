@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { SessionEvent, SurfaceEvent, SurfaceEventType } from '@xfcodeai/dsh-session'
+import type { SessionEvent, SurfaceEvent, SurfaceEventType } from '@x1a0f3n9/dsh-session'
 import {
   Session,
   SessionId,
@@ -10,8 +10,8 @@ import {
   isReplacementSurfaceEvent,
   isSurfaceEligibleType,
   isSurfaceEvent,
-} from '@xfcodeai/dsh-session'
-import { SurfaceManager } from '@xfcodeai/dsh-session/surface'
+} from '@x1a0f3n9/dsh-session'
+import { SurfaceManager } from '@x1a0f3n9/dsh-session/surface'
 import {
   createMessage,
   createToolResultMessage,
@@ -19,7 +19,7 @@ import {
   freezeMessage,
   ToolCallId,
   MessageId,
-} from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 
 type TestSurfaceOp = 'append' | { op: 'replace'; start: number; end: number }
 

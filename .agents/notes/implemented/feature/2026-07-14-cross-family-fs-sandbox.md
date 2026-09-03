@@ -18,7 +18,7 @@ Three coordinated pieces, all composed from the leaf `cordis.yml`, none touching
 
 ### `ctx.sandboxPolicy` — one home for mode and workspace root
 
-`packages/sandbox/sandbox-policy/` (`@xfcodeai/dsh-sandbox-policy`) registers `ctx.sandboxPolicy`, the single owner of the deployment's sandbox policy:
+`packages/sandbox/sandbox-policy/` (`@x1a0f3n9/dsh-sandbox-policy`) registers `ctx.sandboxPolicy`, the single owner of the deployment's sandbox policy:
 
 - `Config`: `mode` (the closed `SandboxMode` union, default `read-only`) and `workspaceRoot` (default the process cwd, resolved absolute). Misconfiguration fails loud at load.
 - The per-session override event `sandbox/mode`, folded by the `sandboxMode` projection unit this package registers on the required `ctx.sessionProjections` registry (`stateVersion` 1, host-only; `stateOf(session, 'sandboxMode')` is the host read), its write path (`setSandboxMode(session, mode)`), and `SANDBOX_MODES`. The event is policy state — consumed by two families — so it lives here, not in either capability's seam. Its shape and log-only semantics match the `approval/*` precedent, and contributors and readers both require `sessionProjections` ([the mandatory projection seam](../architecture/2026-08-19-session-projection-mandatory-seam.md)).
@@ -29,7 +29,7 @@ Three coordinated pieces, all composed from the leaf `cordis.yml`, none touching
 
 ### `dsh-fs-sandbox` — enforcement inside the provider
 
-`packages/fs/fs-sandbox/` (`@xfcodeai/dsh-fs-sandbox`) mirrors the `bash-local`/`bash-sandbox` split: `SandboxedFileSystem extends LocalFileSystem`, registered as `ctx.fs`, injecting `sandboxPolicy`. Reads (`resolve`/`stat`/`readText`/`streamText`/`listDir`) pass through untouched — every mode permits reading. The two mutations enforce by mode before delegating to the inherited atomic write:
+`packages/fs/fs-sandbox/` (`@x1a0f3n9/dsh-fs-sandbox`) mirrors the `bash-local`/`bash-sandbox` split: `SandboxedFileSystem extends LocalFileSystem`, registered as `ctx.fs`, injecting `sandboxPolicy`. Reads (`resolve`/`stat`/`readText`/`streamText`/`listDir`) pass through untouched — every mode permits reading. The two mutations enforce by mode before delegating to the inherited atomic write:
 
 - `read-only` denies `writeText`/`editText` outright.
 - `workspace-write` fences the canonicalized target against the writable-root set — `writableRoots(policy)` in `dsh-sandbox`: the workspace root plus the platform temp areas (`/tmp`, `os.tmpdir()`), each realpathed — the SAME set the Seatbelt profile grants, so the fs fence is the fourth dialect of one mode meaning alongside the bwrap/Landlock/Seatbelt profiles, and "the write tool cannot write `/tmp` but bash can" asymmetries cannot arise. Canonical spellings take a lexical containment fast path; when Windows exposes one directory through different casing or long-name/8.3 spellings, an ancestor walk compares filesystem identity rather than weakening the boundary to textual prefix guesses. The target is re-canonicalized (`resolve` realpaths the deepest existing ancestor) immediately before delegating, so an ancestor symlink swapped since the tool resolved it is caught.

@@ -9,7 +9,7 @@ Reference for the contracts a model-facing tool must satisfy. For an ordered fir
 ```ts
 import { readFile } from 'node:fs/promises'
 import type { Context } from '@deepseek-ai/cordis'
-import { defineTool } from '@xfcodeai/dsh-tools'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
 
 export const name = 'my-tool'
 export const inject = ['tools']

@@ -1,4 +1,4 @@
-import { createUserMessage, createMessage } from '@xfcodeai/dsh-llm'
+import { createUserMessage, createMessage } from '@x1a0f3n9/dsh-llm'
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import SessionStore, {
@@ -6,12 +6,12 @@ import SessionStore, {
   SessionId,
   SessionLogOffset,
   SessionSeq,
-} from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import type { Session, SessionEvent, SessionHeader, SessionId as SessionIdType } from '@xfcodeai/dsh-session'
-import SessionPersistence from '@xfcodeai/dsh-session-persistence'
-import type { SessionEventSuffix, SessionInspection } from '@xfcodeai/dsh-session-persistence'
-import { type SessionQueryErrorCode } from '@xfcodeai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { Session, SessionEvent, SessionHeader, SessionId as SessionIdType } from '@x1a0f3n9/dsh-session'
+import SessionPersistence from '@x1a0f3n9/dsh-session-persistence'
+import type { SessionEventSuffix, SessionInspection } from '@x1a0f3n9/dsh-session-persistence'
+import { type SessionQueryErrorCode } from '@x1a0f3n9/dsh-session-query'
 import { TestSessionQueryEngine } from './test-service.ts'
 
 type MutableSessionHeader = { -readonly [K in keyof SessionHeader]: SessionHeader[K] }

@@ -3,7 +3,7 @@ description: "Web GUI 的权限预设表面：通用设置中的默认行与切�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-permission-presets
+# @x1a0f3n9/dsh-client-ui-permission-presets
 
 [English](README.md) | 中文
 

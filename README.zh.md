@@ -8,7 +8,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 
 文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
 
-分支说明：这个 fork 发布的是 `@xfcodeai/dsh` 和 `xfdsh` 启动器，可以和上游 `dsh` 并存。下面表格概览这个 fork 相对上游的主要改动。
+分支说明：这个 fork 发布的是 `@x1a0f3n9/dsh` 和 `xfdsh` 启动器，可以和上游 `dsh` 并存。下面表格概览这个 fork 相对上游的主要改动。
 
 ## Fork 概览
 
@@ -16,7 +16,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 
 | 领域 | 改动 | 结果 |
 | --- | --- | --- |
-| 包命名空间 | 工作区包从 `@deepseek-ai/dsh-*` 改为 `@xfcodeai/dsh-*`；vendor 和 native 包保留上游命名空间。 | fork 拥有自己的发布包线。 |
+| 包命名空间 | 工作区包从 `@deepseek-ai/dsh-*` 改为 `@x1a0f3n9/dsh-*`；vendor 和 native 包保留上游命名空间。 | fork 拥有自己的发布包线。 |
 | 启动器与发布 | 发布出来的可执行命令是 `xfdsh`；release 校验、pack 布局和入口检查都已跟着调整。 | fork 可以和上游 `dsh` 并装并用，不会冲突。 |
 | 会话历史 | Web UI 可以对当前会话做“真删除”：删掉某个问题/回答以及后面的所有历史，并且有双重确认。session controller 会把删除请求下发给持久化层，JSONL 后端会重写落盘日志，projection cache 也同步升级了版本。 | 不满意的回答可以直接从会话里和磁盘里一起移除。 |
 | 会话工具 | 工作区列表里增加了复制 session id。 | 方便分享、排障和定位会话。 |
@@ -29,14 +29,14 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 ### 安装这个 fork
 
 ```sh
-npm install --global @xfcodeai/dsh
+npm install --global @x1a0f3n9/dsh
 xfdsh web
 ```
 
 一次性运行：
 
 ```sh
-npx @xfcodeai/dsh web
+npx @x1a0f3n9/dsh web
 ```
 
 ## 开发者预览
@@ -54,13 +54,13 @@ DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来
 安装 `Node.js`，然后运行：
 
 ```sh
-npx @xfcodeai/dsh web
+npx @x1a0f3n9/dsh web
 ```
 
 如需重复使用，可全局安装启动器：
 
 ```sh
-npm install --global @xfcodeai/dsh
+npm install --global @x1a0f3n9/dsh
 xfdsh web
 ```
 

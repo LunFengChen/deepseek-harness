@@ -2,15 +2,15 @@
  * Named wire types for the DeepSeek Harness SDK runtime protocol: the three
  * request/result pairs and the four server-to-client notification payloads
  * exchanged over the newline-delimited JSON-RPC stdio transport. The server
- * plugin (`@xfcodeai/dsh-sdk-jsonrpc-server`) and SDK clients share these shapes;
+ * plugin (`@x1a0f3n9/dsh-sdk-jsonrpc-server`) and SDK clients share these shapes;
  * `serverInfo.name` stays the wire-stable `deepseek-harness-sdk-runtime`.
  *
- * @module @xfcodeai/dsh-sdk-protocol/types
+ * @module @x1a0f3n9/dsh-sdk-protocol/types
  */
 
-import type { ContentBlock, ReasoningEffortId } from '@xfcodeai/dsh-llm'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
-import type { SubagentStopReason } from '@xfcodeai/dsh-subagent'
+import type { ContentBlock, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
+import type { SubagentStopReason } from '@x1a0f3n9/dsh-subagent'
 
 /** Parameters for the process-wide SDK handshake. */
 export interface InitializeParams {

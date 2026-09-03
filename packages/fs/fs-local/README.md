@@ -3,7 +3,7 @@ description: "The host-filesystem backend for ctx.fs for deployments and maintai
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-fs-local
+# @x1a0f3n9/dsh-fs-local
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Choose `fs-local` for ordinary host-file access in a single process. Choose [`fs
 Load the backend with a base directory; relative paths resolve against it, and absolute paths ignore it.
 
 ```yaml
-- name: '@xfcodeai/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-fs-local'
   config:
     cwd: /absolute/path/to/workspace
 ```
@@ -46,7 +46,7 @@ Load the backend with a base directory; relative paths resolve against it, and a
 | `cwd` | `process.cwd()` | Base directory for relative paths |
 | `diffBasisMaxBytes` | `10 MiB` | UTF-8 byte limit per overwrite-diff side; larger overwrites return `before: null` |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-fs-local) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-fs-local) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What you can do
 

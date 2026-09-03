@@ -3,7 +3,7 @@ description: "编辑前读取的文件系统策略插件：面向选择或排查
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-fs-observation-policy
+# @x1a0f3n9/dsh-fs-observation-policy
 
 [English](README.md) | 中文
 
@@ -32,9 +32,9 @@ kind: "package-reference"
 先加载后端，再加载本插件，最后加载工具。策略监听器应当是 `fs/*` 意图槽位上第一个注册的决策器。
 
 ```yaml
-- name: '@xfcodeai/dsh-fs-local'
-- name: '@xfcodeai/dsh-fs-observation-policy'
-- name: '@xfcodeai/dsh-tool-fs'
+- name: '@x1a0f3n9/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-fs-observation-policy'
+- name: '@x1a0f3n9/dsh-tool-fs'
 ```
 
 ### 对模型而言的变化

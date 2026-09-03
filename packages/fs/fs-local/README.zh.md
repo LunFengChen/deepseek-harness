@@ -3,7 +3,7 @@ description: "`ctx.fs` 的宿主文件系统后端：面向选择或排查本地
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-fs-local
+# @x1a0f3n9/dsh-fs-local
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 加载后端并给出基准目录；相对路径以它为基准解析，绝对路径忽略它。
 
 ```yaml
-- name: '@xfcodeai/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-fs-local'
   config:
     cwd: /absolute/path/to/workspace
 ```
@@ -46,7 +46,7 @@ kind: "package-reference"
 | `cwd` | `process.cwd()` | 相对路径的基准目录 |
 | `diffBasisMaxBytes` | `10 MiB` | 每次覆写 diff 一侧的 UTF-8 字节上限；更大的覆写返回 `before: null` |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-fs-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-fs-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 你能做什么
 

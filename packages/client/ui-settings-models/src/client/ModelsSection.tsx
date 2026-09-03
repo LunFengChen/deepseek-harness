@@ -14,8 +14,8 @@
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { Button, IconPlusOutline16, Modal } from '@xfcodeai/dsh-client-ui-primitives'
-import type { InjectFace, PropsRenderSlots } from '@xfcodeai/dsh-client-ui-slots'
+import { Button, IconPlusOutline16, Modal } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { InjectFace, PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 // Type-only: pulls this package's SlotMap merge (the two Models child slots).
 import type {} from './slot-contract.ts'
 import { CustomProviderCard } from './CustomProviderCard.tsx'

@@ -1,6 +1,6 @@
 /**
  * Ownership of one unpublished Session before registry publication.
- * @module @xfcodeai/dsh-session/preparation
+ * @module @x1a0f3n9/dsh-session/preparation
  */
 
 import type { Session } from './index.ts'

@@ -9,12 +9,12 @@ import {
   normalizeStdout,
   scrubRequestHeaders,
   type NormalizeContext,
-} from '@xfcodeai/dsh-session-snapshot'
-import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@xfcodeai/dsh-loader-smoke'
+} from '@x1a0f3n9/dsh-session-snapshot'
+import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@x1a0f3n9/dsh-loader-smoke'
 import {
   decompressZstdFrame,
   scanZstdFrames,
-} from '@xfcodeai/dsh-session-persistence-jsonl/src/zstd.ts'
+} from '@x1a0f3n9/dsh-session-persistence-jsonl/src/zstd.ts'
 import { describe, expect, it } from 'vitest'
 
 const goldensDir = fileURLToPath(new URL('./expected/', import.meta.url))

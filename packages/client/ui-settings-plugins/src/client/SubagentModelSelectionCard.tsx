@@ -1,7 +1,7 @@
 /** User control for model-selectable subagent delegation in new sessions. */
 
 import clsx from 'clsx'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type {
   SubagentModelCandidate,
   SubagentModelSelectionCardFace,

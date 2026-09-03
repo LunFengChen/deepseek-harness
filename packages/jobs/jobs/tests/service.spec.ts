@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import { JobId, JobRegistry } from '@xfcodeai/dsh-jobs'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { JobId, JobRegistry } from '@x1a0f3n9/dsh-jobs'
 import type {
   JobDoneListener, JobRead, JobSnapshot, JobStart, JobsChangedListener,
-} from '@xfcodeai/dsh-jobs'
+} from '@x1a0f3n9/dsh-jobs'
 
 /**
  * Minimal concrete registry: one canned record. The Service Definition owns the contract
  * only (ids, snapshots, authorization-shaped signatures); the registry
- * behavior suite lives with `@xfcodeai/dsh-jobs-local`.
+ * behavior suite lives with `@x1a0f3n9/dsh-jobs-local`.
  */
 class StubJobRegistry extends JobRegistry {
   snapshotOf(id: JobId): JobSnapshot {

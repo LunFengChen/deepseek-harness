@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-The `client/` group runs the browser half of the dsh web GUI: it boots the web shell, loads browser-side plugin modules, keeps browser-to-host RPC and event delivery alive, and provides the shared client services and UI feature plugins that render the application. UI features compose through the slot system — each plugin fills declared extension slots with typed props and stores, and the shell renders the assembled tree. All packages here are product packages named `@xfcodeai/dsh-client-<name>`; the host half that serves the page lives in [`host/`](../host/README.md). Authoring rules live in [AGENTS.md](AGENTS.md), and the module graph, slot model, and object layer are documented in the related notes below.
+The `client/` group runs the browser half of the dsh web GUI: it boots the web shell, loads browser-side plugin modules, keeps browser-to-host RPC and event delivery alive, and provides the shared client services and UI feature plugins that render the application. UI features compose through the slot system — each plugin fills declared extension slots with typed props and stores, and the shell renders the assembled tree. All packages here are product packages named `@x1a0f3n9/dsh-client-<name>`; the host half that serves the page lives in [`host/`](../host/README.md). Authoring rules live in [AGENTS.md](AGENTS.md), and the module graph, slot model, and object layer are documented in the related notes below.
 
 ## Table of Contents
 

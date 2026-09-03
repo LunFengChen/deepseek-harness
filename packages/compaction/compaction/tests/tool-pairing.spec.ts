@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { createUserMessage, ToolCallId , createMessage, createToolResultMessage } from '@xfcodeai/dsh-llm'
-import { toolPairingBalancedAfter, toolPairingBalancedBefore } from '@xfcodeai/dsh-compaction'
-import { Session, SessionId, SessionSeq } from '@xfcodeai/dsh-session'
-import type { SessionEvent, SessionSeq as SessionSeqType } from '@xfcodeai/dsh-session'
+import { createUserMessage, ToolCallId , createMessage, createToolResultMessage } from '@x1a0f3n9/dsh-llm'
+import { toolPairingBalancedAfter, toolPairingBalancedBefore } from '@x1a0f3n9/dsh-compaction'
+import { Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
 
 const SURFACE = { surfaceOp: 'append' as const }
 

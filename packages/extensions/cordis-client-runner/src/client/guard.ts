@@ -14,9 +14,9 @@
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import type { DynamicCordisPackage } from '@xfcodeai/dsh-api-remotes/client'
-import type { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
-import type { ThemeRuntime } from '@xfcodeai/dsh-client-ui-theme/client'
+import type { DynamicCordisPackage } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type { ThemeRuntime } from '@x1a0f3n9/dsh-client-ui-theme/client'
 
 /** Facade verbs beyond declared services (host CTX_VERBS twin). */
 const CTX_VERBS = new Set([

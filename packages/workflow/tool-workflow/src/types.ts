@@ -2,13 +2,13 @@
  * Browser-safe durable workflow-record events written by the model-facing
  * workflow tool into its calling parent Session.
  *
- * @module @xfcodeai/dsh-tool-workflow/types
+ * @module @x1a0f3n9/dsh-tool-workflow/types
  */
 
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {
   WorkflowAgentOutcome, WorkflowRunId, WorkflowStopReason,
-} from '@xfcodeai/dsh-workflow/types'
+} from '@x1a0f3n9/dsh-workflow/types'
 
 /** Opens one durable top-level workflow run record. */
 export interface ToolWorkflowRunStartData {
@@ -38,7 +38,7 @@ export interface ToolWorkflowRunEndData {
   readonly stopReason: WorkflowStopReason
 }
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * Opens one top-level workflow record.

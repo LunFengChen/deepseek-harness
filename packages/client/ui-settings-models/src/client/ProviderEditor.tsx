@@ -25,8 +25,8 @@ import { useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type {
   CredentialInfo, SettingsNamespaceView, SettingsPathOpView,
-} from '@xfcodeai/dsh-api-remotes/client'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
+} from '@x1a0f3n9/dsh-api-remotes/client'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import {
   DeepSeekModelsEditor, modelDrafts, validateDeepSeekModels,
 } from './DeepSeekModelsEditor.tsx'

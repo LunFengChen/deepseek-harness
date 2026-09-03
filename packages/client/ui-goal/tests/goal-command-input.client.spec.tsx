@@ -1,19 +1,19 @@
 // @vitest-environment jsdom
 import { cleanup, render, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
-import type { SessionLiveEventEntry } from '@xfcodeai/dsh-api-session-controller/client'
+import type { SessionLiveEventEntry } from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   ConversationNodeDefinition, ConversationViewDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import { ConversationNodeAssembler } from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { ConversationNodeAssembler } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ChatConversationViewNode, ChatSnapshot,
-} from '@xfcodeai/dsh-client-ui-chat/client'
-import { makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
-import { commandDefinition } from '@xfcodeai/dsh-client-ui-chat/src/client/conversation-nodes/command.ts'
-import { chatViewDefinition } from '@xfcodeai/dsh-client-ui-chat/src/client/conversation-nodes/chat-snapshot-builder.ts'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
+import { commandDefinition } from '@x1a0f3n9/dsh-client-ui-chat/src/client/conversation-nodes/command.ts'
+import { chatViewDefinition } from '@x1a0f3n9/dsh-client-ui-chat/src/client/conversation-nodes/chat-snapshot-builder.ts'
 import { GoalCommandInputView } from '../src/client/GoalCommandInputView.tsx'
 import {
   goalCommandInputDefinition, goalCommandText,

@@ -5,14 +5,14 @@
  */
 import {
   type SessionListState, type SessionSearchResultItem, type SessionSummary,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { WorkspaceId, WorkspaceView } from '@xfcodeai/dsh-api-workspace-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { WorkspaceId, WorkspaceView } from '@x1a0f3n9/dsh-api-workspace-controller/client'
 import type {
   SessionPendingInteractionBase,
-} from '@xfcodeai/dsh-client-ui-session/client'
-import type {} from '@xfcodeai/dsh-schedule/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { workspaceTitleOf } from '@xfcodeai/dsh-util-workspace-path'
+} from '@x1a0f3n9/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-schedule/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { workspaceTitleOf } from '@x1a0f3n9/dsh-util-workspace-path'
 import {
   indexSubagentDescendants, type SubagentDescendantSummary,
 } from './subagent-lineage.ts'

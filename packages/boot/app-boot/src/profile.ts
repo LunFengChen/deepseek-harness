@@ -20,7 +20,7 @@
  * dependency closure through Node's ordinary parent-walk. Plain Node uses
  * symlinks for that shared fallback; packaged executables use ESM proxies so
  * external plugins retain the installation's module instances.
- * @module @xfcodeai/dsh-app-boot/profile
+ * @module @x1a0f3n9/dsh-app-boot/profile
  */
 
 import { createRequire } from 'node:module'
@@ -30,10 +30,10 @@ import {
 } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { withFileLock } from '@xfcodeai/dsh-atomic-write'
+import { withFileLock } from '@x1a0f3n9/dsh-atomic-write'
 import type { EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import { applyEntryPatches, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
-import { resolveDshHome } from '@xfcodeai/dsh-home-paths'
+import { resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
 import { resolve as resolvePackage, type Package as ResolvePackageManifest } from 'resolve.exports'
 import { loadOverlayPatches } from './index.ts'
 
@@ -136,34 +136,58 @@ export function resolveProfileDir(name: string, home: string = resolveDshHome())
 /** The shipped profile templates auto-initialized on first use, by name. */
 export const PROFILE_TEMPLATES: Record<string, ProfileTemplate> = {
   acp: {
-    bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-acp-app'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-acp-app'],
     patchReload: 'startup',
   },
   web: {
-    bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app'],
     patchReload: 'live',
   },
   headless: {
-    bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-headless'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-headless'],
     patchReload: 'startup',
   },
   sdk: {
-    bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-sdk-app'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-sdk-app'],
     patchReload: 'startup',
   },
   'sdk-minimal': {
-    bundles: ['@xfcodeai/dsh-sdk-minimal'],
+    bundles: ['@x1a0f3n9/dsh-sdk-minimal'],
     patchReload: 'startup',
   },
 }
 
 /** Installation-owned bundle tuples normalized to the shipped template. */
-const INSTALLATION_OWNED_PROFILE_TUPLES: Record<string, readonly string[]> = {
-  headless: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app', '@xfcodeai/dsh-headless'],
+const INSTALLATION_OWNED_PROFILE_TUPLES: Record<string, readonly (readonly string[])[]> = {
+  // The fork keeps the existing ~/.dsh home so users retain sessions and
+  // settings. Migrate the exact upstream shipped tuples before resolving them.
+  web: [
+    ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app'],
+    ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app'],
+  ],
+  acp: [
+    ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-acp-app'],
+    ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-acp-app'],
+  ],
+  headless: [
+    ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless'],
+    ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-headless'],
+    ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', '@deepseek-ai/dsh-headless'],
+    ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-headless'],
+    ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless'],
+  ],
+  sdk: [
+    ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-sdk-app'],
+    ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-sdk-app'],
+  ],
+  'sdk-minimal': [
+    ['@deepseek-ai/dsh-sdk-minimal'],
+    ['@x1a0f3n9/dsh-sdk-minimal'],
+  ],
 }
 
 /** The bundle list a `dsh plugin` init uses for a name with no shipped template. */
-export const DEFAULT_PROFILE_BUNDLES: readonly string[] = ['@xfcodeai/dsh-base']
+export const DEFAULT_PROFILE_BUNDLES: readonly string[] = ['@x1a0f3n9/dsh-base']
 
 /** Custom profiles retain the historical live patch-file behavior. */
 export const DEFAULT_PROFILE_PATCH_RELOAD: ProfilePatchReload = 'live'
@@ -723,7 +747,7 @@ function normalizeShippedProfile(name: string, dir: string, manifest: ProfileMan
   const template = PROFILE_TEMPLATES[name]
   const bundles = manifest.dsh?.profile?.bundles
   if (template === undefined || bundles === undefined) return manifest
-  const isRetiredTuple = installationOwned !== undefined && sameBundles(bundles, installationOwned)
+  const isRetiredTuple = installationOwned?.some(tuple => sameBundles(bundles, tuple)) ?? false
   const isCurrentTuple = sameBundles(bundles, template.bundles)
   const needsReloadDefault = manifest.dsh?.profile?.patchReload === undefined && isCurrentTuple
   if (!isRetiredTuple && !needsReloadDefault) return manifest
@@ -766,7 +790,7 @@ function packageDirFromAnchor(
 /**
  * Resolve one bundle package's directory: installation anchor first, then the
  * profile directory. The installation-first order is the contract that
- * `@xfcodeai/dsh-base` (and every other in-box bundle) always comes from
+ * `@x1a0f3n9/dsh-base` (and every other in-box bundle) always comes from
  * the same installation as the running dsh, never from a profile-local copy.
  * Resolution does not require the package to export `./package.json`.
  * @param binName - the diagnostic prefix on the thrown error.

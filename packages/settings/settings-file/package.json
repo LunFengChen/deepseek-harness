@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-settings-file",
+  "name": "@x1a0f3n9/dsh-settings-file",
   "description": "File-backed settings provider (settings.yaml) for the DeepSeek Harness",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -28,20 +28,20 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-atomic-write": "workspace:^",
-    "@xfcodeai/dsh-home-paths": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^"
+    "@x1a0f3n9/dsh-atomic-write": "workspace:^",
+    "@x1a0f3n9/dsh-home-paths": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   },
   "dependencies": {
-    "@xfcodeai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "chokidar": "^4.0.3",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-atomic-write": "workspace:^",
-    "@xfcodeai/dsh-home-paths": "workspace:^",
-    "@xfcodeai/dsh-settings": "workspace:^"
+    "@x1a0f3n9/dsh-atomic-write": "workspace:^",
+    "@x1a0f3n9/dsh-home-paths": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   }
 }

@@ -4,13 +4,13 @@ import { tmpdir } from 'node:os'
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import * as workspaceContext from '@xfcodeai/dsh-agent-instructions'
-import LlmRuntime, { createUserMessage, ToolCallId, type Message, type StreamChunk } from '@xfcodeai/dsh-llm'
-import SessionStore, { Session, SessionId, SessionSeq, SESSION_FORMAT_VERSION, type SessionEvent, type UserMessage } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import AgentRegistry, { agentEvents, Inbox, type Agent } from '@xfcodeai/dsh-agent'
-import AgentLoop, { turnBoundaryProjectionDefinition } from '@xfcodeai/dsh-agent-loop'
-import { FileSystem, FsTargetKey, FsVersion } from '@xfcodeai/dsh-fs'
+import * as workspaceContext from '@x1a0f3n9/dsh-agent-instructions'
+import LlmRuntime, { createUserMessage, ToolCallId, type Message, type StreamChunk } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, SessionSeq, SESSION_FORMAT_VERSION, type SessionEvent, type UserMessage } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import AgentRegistry, { agentEvents, Inbox, type Agent } from '@x1a0f3n9/dsh-agent'
+import AgentLoop, { turnBoundaryProjectionDefinition } from '@x1a0f3n9/dsh-agent-loop'
+import { FileSystem, FsTargetKey, FsVersion } from '@x1a0f3n9/dsh-fs'
 import type {
   FsDirEntry,
   FsEditOutcome,
@@ -20,20 +20,20 @@ import type {
   FsTarget,
   FsWriteIntent,
   FsWriteOutcome,
-} from '@xfcodeai/dsh-fs'
-import LocalFileSystem from '@xfcodeai/dsh-fs-local'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { defineContentToolFixture } from '@xfcodeai/dsh-tools'
+} from '@x1a0f3n9/dsh-fs'
+import LocalFileSystem from '@x1a0f3n9/dsh-fs-local'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
 import type {
   ToolExecution,
   ToolExecutionToken,
-} from '@xfcodeai/dsh-tools'
-import * as ToolFs from '@xfcodeai/dsh-tool-fs'
+} from '@x1a0f3n9/dsh-tools'
+import * as ToolFs from '@x1a0f3n9/dsh-tool-fs'
 import {
   discoverBaselineInstructionFiles,
   loadBaselineInstructions,
   renderWorkspaceContext,
-} from '@xfcodeai/dsh-agent-instructions'
+} from '@x1a0f3n9/dsh-agent-instructions'
 import {
   applyInstructionVersionUpdates,
   baselineInstructionState,
@@ -639,7 +639,7 @@ describe('workspace context instruction discovery', () => {
       vi.stubEnv('DSH_HOME', '')
       vi.resetModules()
       vi.doMock('node:os', () => ({ homedir: () => home }))
-      const isolated = await import('@xfcodeai/dsh-agent-instructions')
+      const isolated = await import('@x1a0f3n9/dsh-agent-instructions')
       const files = await isolated.discoverBaselineInstructionFiles({ cwd: root })
 
       expect(files.map(file => file.displayPath)).toEqual(['~/.dsh/AGENTS.md'])
@@ -660,7 +660,7 @@ describe('workspace context instruction discovery', () => {
 
       vi.resetModules()
       vi.doMock('node:os', () => ({ homedir: () => home }))
-      const isolated = await import('@xfcodeai/dsh-agent-instructions')
+      const isolated = await import('@x1a0f3n9/dsh-agent-instructions')
       const files = await isolated.discoverBaselineInstructionFiles({ cwd: root, dshHome: '~/.dsh' })
 
       expect(files).toEqual([{ absolutePath: join(home, '.dsh/AGENTS.md'), displayPath: '~/.dsh/AGENTS.md' }])
@@ -2471,7 +2471,7 @@ describe('workspace context request injection', () => {
           },
         }
       })
-      const isolated = await import('@xfcodeai/dsh-agent-instructions')
+      const isolated = await import('@x1a0f3n9/dsh-agent-instructions')
       await isolated.loadBaselineInstructions({ cwd: root, dshHome: home, maxBytes: 65536 })
       observedStats.clear()
       await isolated.loadBaselineInstructions({ cwd: root, dshHome: home, maxBytes: 65536 })
@@ -2504,7 +2504,7 @@ describe('workspace context request injection', () => {
           },
         }
       })
-      const isolated = await import('@xfcodeai/dsh-agent-instructions')
+      const isolated = await import('@x1a0f3n9/dsh-agent-instructions')
 
       const rendered = await isolated.loadBaselineInstructions({ cwd: root, dshHome: home, maxBytes: 65536 })
 

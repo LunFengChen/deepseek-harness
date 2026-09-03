@@ -1,12 +1,12 @@
 /** Browser plugin owning Session export download state and its shared modal. */
 
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type {} from '@xfcodeai/dsh-client-locale/client'
-import type {} from '@xfcodeai/dsh-client-ui-commands/client'
-import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
-import type {} from '@xfcodeai/dsh-client-ui-session/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-commands/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
 import { SessionLogDownloadController } from './controller.ts'
 import type { SessionLogDownloadDialogInjected } from './Dialog.tsx'
 import { SessionLogDownloadHeaderAction } from './HeaderAction.tsx'
@@ -18,7 +18,7 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     'session-log-download': SessionLogDownloadKey
   }

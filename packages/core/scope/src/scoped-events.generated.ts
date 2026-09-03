@@ -2,7 +2,7 @@
  * Generated scoped-event routing-subject resolvers for dsh-scope invariants.
  * Do not edit by hand; run `pnpm run gen-scoped-events`.
  *
- * @module @xfcodeai/dsh-scope/scoped-events.generated
+ * @module @x1a0f3n9/dsh-scope/scoped-events.generated
  */
 
 type ScopedSubjectResolver = (args: readonly unknown[]) => unknown

@@ -1,19 +1,19 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { AttachmentId } from '@xfcodeai/dsh-attachment'
-import BasicCompactionEngine from '@xfcodeai/dsh-compaction-basic'
-import type { BasicCompactionConfig } from '@xfcodeai/dsh-compaction-basic'
-import { selectCompactableRange } from '@xfcodeai/dsh-compaction-basic/src/region.ts'
-import { frameSummary } from '@xfcodeai/dsh-compaction-basic/src/summarizer.ts'
-import type { SummarizationInput, SummaryResult } from '@xfcodeai/dsh-compaction-basic/src/summarizer.ts'
-import { CompactionId, toolPairingBalancedAfter, toolPairingBalancedBefore } from '@xfcodeai/dsh-compaction'
+import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
+import BasicCompactionEngine from '@x1a0f3n9/dsh-compaction-basic'
+import type { BasicCompactionConfig } from '@x1a0f3n9/dsh-compaction-basic'
+import { selectCompactableRange } from '@x1a0f3n9/dsh-compaction-basic/src/region.ts'
+import { frameSummary } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
+import type { SummarizationInput, SummaryResult } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
+import { CompactionId, toolPairingBalancedAfter, toolPairingBalancedBefore } from '@x1a0f3n9/dsh-compaction'
 import {
   resolveCompactSpec,
   resolveConfig,
   resolveTargetPolicy,
-} from '@xfcodeai/dsh-compaction-basic/src/config.ts'
-import type { CompactionResult } from '@xfcodeai/dsh-compaction'
-import LlmRuntime, { createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, createToolResultMessage, LlmAdapter , createMessage } from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-compaction-basic/src/config.ts'
+import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
+import LlmRuntime, { createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, createToolResultMessage, LlmAdapter , createMessage } from '@x1a0f3n9/dsh-llm'
 import type {
   ContentBlock,
   GenerateOptions,
@@ -22,12 +22,12 @@ import type {
   Message,
   StreamChunk,
   TokenUsage,
-} from '@xfcodeai/dsh-llm'
-import SessionStore, { Session, SessionId, SessionSeq } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import TokenMeter from '@xfcodeai/dsh-token-meter'
-import { agentEvents, type Agent, type RequestErrorAction } from '@xfcodeai/dsh-agent'
-import ToolResultPruner from '@xfcodeai/dsh-compaction-tool-result-pruner'
+} from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import { agentEvents, type Agent, type RequestErrorAction } from '@x1a0f3n9/dsh-agent'
+import ToolResultPruner from '@x1a0f3n9/dsh-compaction-tool-result-pruner'
 
 const SIGNAL = new AbortController().signal
 const MODEL = 'test-model'

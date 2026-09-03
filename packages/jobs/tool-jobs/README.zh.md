@@ -3,7 +3,7 @@ description: "面向模型的背景任务控制，供选择、配置或排查 jo
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-jobs
+# @x1a0f3n9/dsh-tool-jobs
 
 [English](README.md) | 中文
 
@@ -46,7 +46,7 @@ kind: "package-reference"
 不带配置加载插件是常用路径；`waitTimeoutMs` 高于 `maxWaitTimeoutMs` 时会在加载时失败。
 
 ```yaml
-- name: '@xfcodeai/dsh-tool-jobs'
+- name: '@x1a0f3n9/dsh-tool-jobs'
 ```
 
 | 字段 | 默认值 | 含义 |
@@ -56,7 +56,7 @@ kind: "package-reference"
 | `completionDelivery` | `wakeup` | `wakeup` 为空闲所有者开启一轮；`quiet` 让通知继续待领 |
 | `maxConsecutiveWakes` | `3` | 一个所有者可由唤醒开启的轮数，超出后通知降级为注入 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-tool-jobs)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-tool-jobs)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 可能出什么问题
 
@@ -106,8 +106,8 @@ kind: "package-reference"
 - [jobs 组映射](../README.zh.md)——同级组页面及其包表格。
 - [注册表约定](../jobs/README.zh.md)——工具背后的抽象 `ctx.jobs` 服务。
 - [进程本地注册表](../jobs-local/README.zh.md)——任务在本进程中的运行位置。
-- [生成的工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-jobs)——`job_output`、`job_list` 与 `job_kill` 的确切 schema。
-- [生成的配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-tool-jobs)——每个受支持配置字段及其源声明。
+- [生成的工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-jobs)——`job_output`、`job_list` 与 `job_kill` 的确切 schema。
+- [生成的配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-tool-jobs)——每个受支持配置字段及其源声明。
 - [任务注册表 seam Agent Note](../../../.agents/notes/implemented/architecture/2026-07-26-job-registry-seam.zh.md)——按所有者隔离的注册表约定及其理由。
 
 -----
@@ -139,7 +139,7 @@ Track every background job id you start. You are notified in-session when a job 
 
 #### 模型看到什么
 
-该工具集可见时，会看到生成的 [`job_output`、`job_list` 和 `job_kill` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-jobs)。
+该工具集可见时，会看到生成的 [`job_output`、`job_list` 和 `job_kill` schema](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-jobs)。
 
 #### Token 影响
 

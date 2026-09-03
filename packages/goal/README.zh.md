@@ -35,8 +35,8 @@ goal 组为 agent 会话提供一个持久的完成目标，在重启、resume�
 ## 相关文档
 
 - [goal 子系统](../../docs/subsystems/goal.zh.md)——goal 类型、持久的 `goal/change` 事件与生成的服务 API。
-- [生成的工具目录](../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-goal)——模型接收的三个 goal 工具 schema。
-- [生成的配置目录](../../docs/config-catalog.zh.md#xfcodeaidsh-goal)——goal 服务的每个受支持配置字段。
+- [生成的工具目录](../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-goal)——模型接收的三个 goal 工具 schema。
+- [生成的配置目录](../../docs/config-catalog.zh.md#x1a0f3n9dsh-goal)——goal 服务的每个受支持配置字段。
 - [goal 领域 Agent Note](../../.agents/notes/implemented/feature/2026-07-19-persisted-same-session-goal-domain.zh.md)——领域设计及其决策。
 - [同会话驱动器 Agent Note](../../.agents/notes/implemented/feature/2026-07-19-same-session-goal-round-driver.zh.md)——续行竞态与生命周期理由。
 

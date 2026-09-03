@@ -1,10 +1,10 @@
 /**
  * Durable and model-facing Schedule value types.
- * @module @xfcodeai/dsh-schedule
+ * @module @x1a0f3n9/dsh-schedule
  */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
-import type {} from '@xfcodeai/dsh-session/types'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
+import type {} from '@x1a0f3n9/dsh-session/types'
 
 /** Stable reminder identity that is unique and never reused within one session. */
 export type ScheduleId = Branded<'ScheduleId'>
@@ -210,7 +210,7 @@ export type ScheduleDeleteResult =
 /** Canonical `schedule_delete` value. */
 export type ScheduleDeleteValue = ScheduleDeleteResult | ScheduleToolError
 
-declare module '@xfcodeai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * Versioned Schedule mutation. The owning package validates the complete
@@ -220,7 +220,7 @@ declare module '@xfcodeai/dsh-session/types' {
   }
 }
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionMap {
     /** Complete active reminders owned by this Session's post-fork suffix. */
     schedule: readonly ScheduleRecord[]

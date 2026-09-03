@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { ReactNode } from 'react'
-import type { ConvViewProps } from '@xfcodeai/dsh-client-ui-conversation/client'
+import type { ConvViewProps } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { ChatViewSlotProps } from '../src/client/contract/slots.ts'
 
 describe('Chat View type chain', () => {

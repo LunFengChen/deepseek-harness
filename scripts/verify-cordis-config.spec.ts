@@ -19,7 +19,7 @@ import {
 describe('verify-cordis-config metadata expressions', () => {
   it('accepts a disabled !!js expression', () => {
     const problems = metadataExpressionErrors(
-      { id: 'tool-bash', name: '@xfcodeai/dsh-tool-bash', disabled: { __jsExpr: "process.platform === 'win32'" } },
+      { id: 'tool-bash', name: '@x1a0f3n9/dsh-tool-bash', disabled: { __jsExpr: "process.platform === 'win32'" } },
       '[0]',
     )
     expect(problems).toEqual([])
@@ -56,11 +56,11 @@ describe('workspace Bundle discovery and product dependency closures', () => {
       mkdirSync(bundleDir, { recursive: true })
       mkdirSync(plainDir, { recursive: true })
       writeFileSync(join(bundleDir, 'package.json'), JSON.stringify({
-        name: '@xfcodeai/dsh-subagent-example',
+        name: '@x1a0f3n9/dsh-subagent-example',
         dsh: { bundle: { patch: './cordis.patch.yml' } },
       }))
       writeFileSync(join(plainDir, 'package.json'), JSON.stringify({
-        name: '@xfcodeai/dsh-plain',
+        name: '@x1a0f3n9/dsh-plain',
       }))
 
       expect(bundleManifestPaths(fixture)).toEqual([
@@ -75,16 +75,16 @@ describe('workspace Bundle discovery and product dependency closures', () => {
     const manifestPath = 'packages/subagent/example/package.json'
     const file = 'packages/subagent/example/cordis.patch.yml'
     const manifest = {
-      name: '@xfcodeai/dsh-subagent-example',
+      name: '@x1a0f3n9/dsh-subagent-example',
       dependencies: {},
     }
-    const self = { file, name: '@xfcodeai/dsh-subagent-example' }
+    const self = { file, name: '@x1a0f3n9/dsh-subagent-example' }
     expect(bundlePluginDependencyErrors(manifestPath, manifest, [self])).toEqual([])
     expect(bundlePluginDependencyErrors(manifestPath, manifest, [
       self,
-      { file, name: '@xfcodeai/dsh-missing-plugin' },
+      { file, name: '@x1a0f3n9/dsh-missing-plugin' },
     ])).toEqual([
-      `${file}: @xfcodeai/dsh-missing-plugin must be declared in ${manifestPath} dependencies`,
+      `${file}: @x1a0f3n9/dsh-missing-plugin must be declared in ${manifestPath} dependencies`,
     ])
   })
 })
@@ -94,18 +94,18 @@ describe('package-owned Loader test dependency closures', () => {
     const manifestPath = 'packages/example/owner/package.json'
     const file = 'packages/example/owner/tests/fixtures/cordis.yml'
     const manifest = {
-      name: '@xfcodeai/dsh-owner',
+      name: '@x1a0f3n9/dsh-owner',
       dependencies: {},
       devDependencies: {
-        '@xfcodeai/dsh-declared': 'workspace:^',
+        '@x1a0f3n9/dsh-declared': 'workspace:^',
       },
     }
     expect(packageTestPluginDependencyErrors(manifestPath, manifest, [
-      { file, name: '@xfcodeai/dsh-owner' },
-      { file, name: '@xfcodeai/dsh-declared' },
-      { file, name: '@xfcodeai/dsh-missing' },
+      { file, name: '@x1a0f3n9/dsh-owner' },
+      { file, name: '@x1a0f3n9/dsh-declared' },
+      { file, name: '@x1a0f3n9/dsh-missing' },
     ])).toEqual([
-      `${file}: @xfcodeai/dsh-missing must be declared in ${manifestPath} dependencies or devDependencies`,
+      `${file}: @x1a0f3n9/dsh-missing must be declared in ${manifestPath} dependencies or devDependencies`,
     ])
   })
 
@@ -116,25 +116,25 @@ describe('package-owned Loader test dependency closures', () => {
       const driverDir = join(packageDir, 'tests/fixtures/loader')
       mkdirSync(driverDir, { recursive: true })
       writeFileSync(join(packageDir, 'package.json'), JSON.stringify({
-        name: '@xfcodeai/dsh-owner',
+        name: '@x1a0f3n9/dsh-owner',
         devDependencies: {
-          '@xfcodeai/dsh-declared': 'workspace:^',
+          '@x1a0f3n9/dsh-declared': 'workspace:^',
         },
       }))
       writeFileSync(join(driverDir, 'driver.ts'), [
-        "import '@xfcodeai/dsh-owner'",
-        "import '@xfcodeai/dsh-declared'",
-        "import '@xfcodeai/dsh-missing'",
+        "import '@x1a0f3n9/dsh-owner'",
+        "import '@x1a0f3n9/dsh-declared'",
+        "import '@x1a0f3n9/dsh-missing'",
       ].join('\n'))
       writeFileSync(join(driverDir, 'cordis.yml'), '[]\n')
-      writeFileSync(join(driverDir, 'fixture.mjs'), "import '@xfcodeai/dsh-declared'\n")
+      writeFileSync(join(driverDir, 'fixture.mjs'), "import '@x1a0f3n9/dsh-declared'\n")
       const unrelatedDir = join(packageDir, 'tests/fixtures/unrelated')
       mkdirSync(unrelatedDir, { recursive: true })
-      writeFileSync(join(unrelatedDir, 'driver.ts'), "import '@xfcodeai/dsh-unrelated'\n")
+      writeFileSync(join(unrelatedDir, 'driver.ts'), "import '@x1a0f3n9/dsh-unrelated'\n")
 
       expect(packageTestFixtureDependencyErrors(fixture)).toEqual([
         'packages/example/owner/tests/fixtures/loader/driver.ts: '
-        + '@xfcodeai/dsh-missing must be declared in '
+        + '@x1a0f3n9/dsh-missing must be declared in '
         + 'packages/example/owner/package.json dependencies or devDependencies',
       ])
     } finally {

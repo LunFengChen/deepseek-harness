@@ -7,7 +7,7 @@ import type {
   SlotRendererHost,
   SnapshotSelectorHook,
   StandardSourceBinding,
-} from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 import { bindSnapshotSelector } from './bind.ts'
 
 /** Missing renderer assembly dependency. */

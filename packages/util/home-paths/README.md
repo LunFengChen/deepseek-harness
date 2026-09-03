@@ -3,7 +3,7 @@ description: "Shared resolution of the DeepSeek Harness home and user-data paths
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-home-paths
+# @x1a0f3n9/dsh-home-paths
 
 English | [中文](README.zh.md)
 
@@ -29,7 +29,7 @@ Use these helpers wherever a package must agree with the rest of the harness abo
 ### Resolving the home
 
 ```ts
-import { resolveDshHome, dshHomePath } from '@xfcodeai/dsh-home-paths'
+import { resolveDshHome, dshHomePath } from '@x1a0f3n9/dsh-home-paths'
 
 const home = resolveDshHome()                // configured path, else $DSH_HOME, else ~/.dsh
 const settings = dshHomePath('settings')     // join one child onto the resolved home

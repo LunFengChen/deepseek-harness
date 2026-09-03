@@ -5,12 +5,12 @@ import { join } from 'node:path'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import { MessageId } from '@xfcodeai/dsh-llm'
+import { MessageId } from '@x1a0f3n9/dsh-llm'
 import {
   SESSION_FORMAT_VERSION, SessionId as sessionId, SessionLogOffset, SessionSeq, type SessionEvent, type SessionHeader, type SessionId,
-} from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-agent'
-import { snapshotSubagentDescriptor } from '@xfcodeai/dsh-subagent'
+} from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-agent'
+import { snapshotSubagentDescriptor } from '@x1a0f3n9/dsh-subagent'
 import {
   acknowledgeReloadConnectionLoss, captureExpandedTurnProcessAria, captureStableAria,
   compareOrRefreshGolden,

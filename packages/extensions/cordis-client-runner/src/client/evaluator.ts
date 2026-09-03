@@ -8,7 +8,7 @@
  */
 
 import * as React from 'react'
-import type { CordisDynamicPluginId } from '@xfcodeai/dsh-api-remotes/client'
+import type { CordisDynamicPluginId } from '@x1a0f3n9/dsh-api-remotes/client'
 
 /** A mountable plugin as the closure must return it (FUNCTION or OBJECT form). */
 export interface DynamicCordisEvaluatedPlugin {

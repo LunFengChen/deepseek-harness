@@ -1,27 +1,27 @@
 # Minimal tool-pwsh composition: real app boot path, real pwsh executor, real
 # foreground + background tool calls; driven by the package's loader.spec.ts.
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
 
 - id: tools
-  name: '@xfcodeai/dsh-tools'
+  name: '@x1a0f3n9/dsh-tools'
 
 - id: subprocess
-  name: '@xfcodeai/dsh-subprocess-local'
+  name: '@x1a0f3n9/dsh-subprocess-local'
 
 - id: bash
-  name: '@xfcodeai/dsh-pwsh-local'
+  name: '@x1a0f3n9/dsh-pwsh-local'
   config:
     graceMs: 200
 
 - id: shell-env
-  name: '@xfcodeai/dsh-shell-env'
+  name: '@x1a0f3n9/dsh-shell-env'
 
 - id: tasks
-  name: '@xfcodeai/dsh-jobs-local'
+  name: '@x1a0f3n9/dsh-jobs-local'
 
 - id: tool-jobs
-  name: '@xfcodeai/dsh-tool-jobs'
+  name: '@x1a0f3n9/dsh-tool-jobs'
 
 - id: tool-pwsh
-  name: '@xfcodeai/dsh-tool-pwsh'
+  name: '@x1a0f3n9/dsh-tool-pwsh'

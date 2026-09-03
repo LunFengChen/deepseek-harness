@@ -35,9 +35,9 @@ workflow 组让 agent 可以运行一段由模型编写的编排脚本，把工�
 ## 相关文档
 
 - [工作流子系统](../../docs/subsystems/workflow.zh.md)——seam 的类型、启动请求与 `workflow/*` 事件。
-- [生成的工具目录](../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-workflow)——模型接收的 `workflow` 工具 schema。
-- [生成的工具目录](../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-ralph)——模型接收的 `ralph` 工具 schema。
-- [生成的配置目录](../../docs/config-catalog.zh.md#xfcodeaidsh-workflow-worker-thread)——每个受支持的引擎配置字段。
+- [生成的工具目录](../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-workflow)——模型接收的 `workflow` 工具 schema。
+- [生成的工具目录](../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-ralph)——模型接收的 `ralph` 工具 schema。
+- [生成的配置目录](../../docs/config-catalog.zh.md#x1a0f3n9dsh-workflow-worker-thread)——每个受支持的引擎配置字段。
 - [动态工作流 Agent Note](../../.agents/notes/implemented/feature/2026-07-05-dynamic-workflows.zh.md)——seam 设计及其决策。
 - [Ralph 工具 Agent Note](../../.agents/notes/implemented/feature/2026-07-19-fresh-agent-ralph-workflow-tool.zh.md)——固定全新 agent 循环的设计与暂缓事项。
 

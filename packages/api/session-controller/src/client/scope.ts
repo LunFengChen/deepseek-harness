@@ -17,9 +17,9 @@
  */
 import { Context as CordisContext } from '@deepseek-ai/cordis'
 import type { Context, Fiber } from '@deepseek-ai/cordis'
-import type { ClientRemote } from '@xfcodeai/dsh-api-gateway/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { TypertRemoteScopeApi } from '@xfcodeai/dsh-typert-protocol'
+import type { ClientRemote } from '@x1a0f3n9/dsh-api-gateway/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { TypertRemoteScopeApi } from '@x1a0f3n9/dsh-typert-protocol'
 
 /** Client Cordis Context carrying one Agent identity and its scoped Remote namespaces. */
 export type AgentContext = Omit<Context, 'remote'> & {

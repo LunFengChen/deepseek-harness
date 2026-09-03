@@ -8,19 +8,19 @@
  * the owning view renders an empty chain and inert prose at zero cost.
  */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type {} from '@xfcodeai/dsh-api-remotes/client'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { ChatFileMentions } from '@xfcodeai/dsh-client-ui-chat/client'
-import type {} from '@xfcodeai/dsh-client-locale/client'
-import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { ChatFileMentions } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import { ProducedFiles } from './ProducedFiles.tsx'
 import { en, NS, zh, type DeliverablesKey } from './locales.ts'
 import {
   deliverablesDefinition, producedFileMentions, selectProducedFiles,
 } from './turn-deliverables.ts'
 
-declare module '@xfcodeai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Produced-files row copy. */
     'deliverables': DeliverablesKey

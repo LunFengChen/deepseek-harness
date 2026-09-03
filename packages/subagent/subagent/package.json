@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-subagent",
+  "name": "@x1a0f3n9/dsh-subagent",
   "description": "Abstract subagent seam (ctx.subagents): named-provider registry for delegating to child agents",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -53,84 +53,84 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^",
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
-    "@xfcodeai/dsh-jobs": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
-    "@xfcodeai/dsh-scope": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
-    "@xfcodeai/dsh-session-query": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^",
-    "@xfcodeai/dsh-user-approval": "workspace:^",
-    "@xfcodeai/dsh-util-time": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-jobs": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
+    "@x1a0f3n9/dsh-util-time": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-agent-presets": {
+    "@x1a0f3n9/dsh-agent-presets": {
       "optional": true
     },
-    "@xfcodeai/dsh-sandbox": {
+    "@x1a0f3n9/dsh-sandbox": {
       "optional": true
     },
-    "@xfcodeai/dsh-sandbox-policy": {
+    "@x1a0f3n9/dsh-sandbox-policy": {
       "optional": true
     },
-    "@xfcodeai/dsh-session-persistence": {
+    "@x1a0f3n9/dsh-session-persistence": {
       "optional": true
     },
-    "@xfcodeai/dsh-session-projection": {
+    "@x1a0f3n9/dsh-session-projection": {
       "optional": true
     },
-    "@xfcodeai/dsh-session-projection-cache": {
+    "@x1a0f3n9/dsh-session-projection-cache": {
       "optional": true
     },
-    "@xfcodeai/dsh-session-query": {
+    "@x1a0f3n9/dsh-session-query": {
       "optional": true
     },
-    "@xfcodeai/dsh-jobs": {
+    "@x1a0f3n9/dsh-jobs": {
       "optional": true
     },
-    "@xfcodeai/dsh-user-approval": {
+    "@x1a0f3n9/dsh-user-approval": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^",
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-invariants": "workspace:^",
-    "@xfcodeai/dsh-jobs": "workspace:^",
-    "@xfcodeai/dsh-llm": "workspace:^",
-    "@xfcodeai/dsh-sandbox": "workspace:^",
-    "@xfcodeai/dsh-sandbox-policy": "workspace:^",
-    "@xfcodeai/dsh-scope": "workspace:^",
-    "@xfcodeai/dsh-session": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-projection": "workspace:^",
-    "@xfcodeai/dsh-session-projection-cache": "workspace:^",
-    "@xfcodeai/dsh-session-query": "workspace:^",
-    "@xfcodeai/dsh-storage": "workspace:^",
-    "@xfcodeai/dsh-storage-domain": "workspace:^",
-    "@xfcodeai/dsh-storage-json": "workspace:^",
-    "@xfcodeai/dsh-system-prompt": "workspace:^",
-    "@xfcodeai/dsh-tools": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^",
-    "@xfcodeai/dsh-user-approval": "workspace:^",
-    "@xfcodeai/dsh-util-time": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-jobs": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-storage": "workspace:^",
+    "@x1a0f3n9/dsh-storage-domain": "workspace:^",
+    "@x1a0f3n9/dsh-storage-json": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
+    "@x1a0f3n9/dsh-util-time": "workspace:^"
   }
 }

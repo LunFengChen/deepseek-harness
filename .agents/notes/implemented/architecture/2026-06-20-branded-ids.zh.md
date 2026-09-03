@@ -6,7 +6,7 @@ Status: implemented
 
 ## 问题
 
-harness 使用 `Branded<B> = string & { readonly [BRAND]: B }` 以及 `@xfcodeai/dsh-brand` 中的无状态 `brandString<T>()` 构造函数，为 `ToolCallId`（`packages/llm/llm/src/brand.ts`）和 agent（智能体）/会话共享的 `SessionId`（`packages/core/session/src/types.ts`）做 brand 处理；该包位于 `packages/util/brand/`，见其 [README](../../../../packages/util/brand/README.zh.md)。`dsh-brand` 还声明了治理策略：*「Branding 用于跨包边界且可能被混淆的 id；不是每个 string 都需要 brand。」* 这条策略是正确的；问题在于它只落实了一半。两处缺口使得结构相同但语义错误的 string 仍能通过类型检查器。
+harness 使用 `Branded<B> = string & { readonly [BRAND]: B }` 以及 `@x1a0f3n9/dsh-brand` 中的无状态 `brandString<T>()` 构造函数，为 `ToolCallId`（`packages/llm/llm/src/brand.ts`）和 agent（智能体）/会话共享的 `SessionId`（`packages/core/session/src/types.ts`）做 brand 处理；该包位于 `packages/util/brand/`，见其 [README](../../../../packages/util/brand/README.zh.md)。`dsh-brand` 还声明了治理策略：*「Branding 用于跨包边界且可能被混淆的 id；不是每个 string 都需要 brand。」* 这条策略是正确的；问题在于它只落实了一半。两处缺口使得结构相同但语义错误的 string 仍能通过类型检查器。
 
 **缺口 1：bash seam 中未 brand 的跨边界 ID。** 后台 job id 是普通 `string`：`BashTask.id: string`（`packages/shell/shell/src/types.ts`），作为 `string` 贯穿整个执行器 seam（`packages/shell/shell/src/index.ts` 中的 `ShellExecutor.get`/`ownerOf`/`readOutput`/`kill(id: string)`），再由面向模型的工具以 `string` 校验并传递（`validateJobId`、`assertTaskAccess`、`packages/shell/tool-bash/src/index.ts` 中 `job_id` 的 schema 参数）。它由每执行器计数器生成——`packages/shell/bash-local/src/index.ts` 中的 `` `bash-${this.nextTaskId++}` ``——其形状与 `SessionId` 的默认值**完全相同，都是 `name-N`**（`packages/core/session/src/index.ts` 中的 `` `session-${++counter}` ``）。bash job id 和会话 id 在调用点轻易就能互换，而编译器毫无反应。它是面向模型的 id（模型会把 `job_id` 传回 `bash_output`/`bash_kill`），所以该混淆可由不受信任的输入触达。
 
@@ -18,7 +18,7 @@ bash **owner token** 是相关的子情形：`ShellExecRequest.owner?: string` �
 
 Brand 仍是普通字符串；`brandString<T>()` 原样返回输入，因此序列化、比较与协议格式（wire format）均不改变。该决策分三部分，全部遵循既有的「不是每个 string 都需要」策略。
 
-- **为 bash job id 加 brand。** 在 `packages/shell/shell/src/types.ts`（*拥有*该 id 的包）中添加 `BashTaskId = Branded<'BashTaskId'>`，从 `@xfcodeai/dsh-brand` 导入 `Branded` 并用 `brandString<BashTaskId>()` 构造值。brand 工具包让 `dsh-shell` 只依赖它就能为自己的 id 加 brand，而无需为了原语引入 `dsh-llm` 或 `dsh-session`。将该类型贯穿 `BashTask.id`、`ShellExecutor` Service Definition 方法（`get`/`ownerOf`/`readOutput`/`kill`）、`dsh-bash-local` 中的生成点，以及 `dsh-tool-bash` 的校验/访问面。
+- **为 bash job id 加 brand。** 在 `packages/shell/shell/src/types.ts`（*拥有*该 id 的包）中添加 `BashTaskId = Branded<'BashTaskId'>`，从 `@x1a0f3n9/dsh-brand` 导入 `Branded` 并用 `brandString<BashTaskId>()` 构造值。brand 工具包让 `dsh-shell` 只依赖它就能为自己的 id 加 brand，而无需为了原语引入 `dsh-llm` 或 `dsh-session`。将该类型贯穿 `BashTask.id`、`ShellExecutor` Service Definition 方法（`get`/`ownerOf`/`readOutput`/`kill`）、`dsh-bash-local` 中的生成点，以及 `dsh-tool-bash` 的校验/访问面。
 
 - **铸造独立的 `OwnerToken` brand。** 在 `packages/shell/shell/src/types.ts` 中添加 `OwnerToken = Branded<'OwnerToken'>`；将 `ShellExecRequest.owner` / `ShellExecSpec.owner` / `ShellExecutor.ownerOf` 的类型标注为 `OwnerToken | undefined`。`dsh-tool-bash` 消费方在两套词汇唯一交汇的位置，对 agent 共享的 `id`（`SessionId`）应用 `brandString<OwnerToken>()`。bash Service Definition 从不导入 `dsh-session`。（理由见下一节。）
 
@@ -27,7 +27,7 @@ Brand 仍是普通字符串；`brandString<T>()` 原样返回输入，因此序�
 示意形状：
 
 ```ts ignore-check
-import { brandString, type Branded } from '@xfcodeai/dsh-brand'
+import { brandString, type Branded } from '@x1a0f3n9/dsh-brand'
 
 /** A background bash task handle (generated `bash-N` by the local executor). */
 export type BashTaskId = Branded<'BashTaskId'>

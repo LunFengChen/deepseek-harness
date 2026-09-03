@@ -11,7 +11,7 @@
  *
  * ```yaml
  * - id: llm
- *   name: '@xfcodeai/dsh-llm-pi-ai'
+ *   name: '@x1a0f3n9/dsh-llm-pi-ai'
  *   config:
  *     providers:
  *       # Catalog route: everything but the credential comes from pi-ai.
@@ -52,16 +52,16 @@
  *               max: ultra
  * ```
  *
- * @module @xfcodeai/dsh-llm-pi-ai
+ * @module @x1a0f3n9/dsh-llm-pi-ai
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { launchEnvironmentOf } from '@xfcodeai/dsh-launch-environment'
-import { assertUsableApiKey, LlmError, resolveImageAttachmentAccess } from '@xfcodeai/dsh-llm'
-import type { AdapterRegistrationHandle, DirectoryRegistrationHandle, LlmConfigurableProvider } from '@xfcodeai/dsh-llm'
-import type {} from '@xfcodeai/dsh-fs'
-import type {} from '@xfcodeai/dsh-settings'
-import { deepEqualJson } from '@xfcodeai/dsh-util-values'
+import { launchEnvironmentOf } from '@x1a0f3n9/dsh-launch-environment'
+import { assertUsableApiKey, LlmError, resolveImageAttachmentAccess } from '@x1a0f3n9/dsh-llm'
+import type { AdapterRegistrationHandle, DirectoryRegistrationHandle, LlmConfigurableProvider } from '@x1a0f3n9/dsh-llm'
+import type {} from '@x1a0f3n9/dsh-fs'
+import type {} from '@x1a0f3n9/dsh-settings'
+import { deepEqualJson } from '@x1a0f3n9/dsh-util-values'
 import { PiAiAdapter } from './adapter.ts'
 import { authContextFrom, credentialStoreFrom } from './auth.ts'
 import { catalogProviderIds } from './catalog.ts'

@@ -1,5 +1,5 @@
 /** The General section: one column rendering feature-owned item contributions. */
-import type { PropsRenderSlots, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type { PropsRenderSlots, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import css from './GeneralSection.module.css'
 
 /** Full component props: section owner share plus item render share. */

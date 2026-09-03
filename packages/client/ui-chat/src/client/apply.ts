@@ -1,19 +1,19 @@
 /** Register the Chat Conversation target, renderers, stats, and details surface. */
 import type { Context } from '@deepseek-ai/cordis'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
-import type {} from '@xfcodeai/dsh-api-remotes/client'
-import type { SessionBinding } from '@xfcodeai/dsh-api-session-controller/client'
-import type { BoundActions, ObservableSnapshot } from '@xfcodeai/dsh-client-store'
-import { SessionSeq, type SessionId } from '@xfcodeai/dsh-session/types'
-import { resolveWorkspacePath } from '@xfcodeai/dsh-util-workspace-path'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
+import type { SessionBinding } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { BoundActions, ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import { SessionSeq, type SessionId } from '@x1a0f3n9/dsh-session/types'
+import { resolveWorkspacePath } from '@x1a0f3n9/dsh-util-workspace-path'
 // Type-only service and declaration merges used by the apply world.
-import type {} from '@xfcodeai/dsh-client-locale/client'
-import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type {} from '@xfcodeai/dsh-client-ui-layout/client'
-import type {} from '@xfcodeai/dsh-client-ui-renderer/client'
-import type {} from '@xfcodeai/dsh-client-ui-session/client'
-import type {} from '@xfcodeai/dsh-client-ui-settings/client'
-import type {} from '@xfcodeai/dsh-client-ui-workspace/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-layout/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-settings/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-workspace/client'
 import type {
   ChatNodeTurnDataInjected, ChatScrollPosition, ChatViewInjected, DetailsInjected,
   TurnTailOwnerProps,

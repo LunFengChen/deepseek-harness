@@ -3,7 +3,7 @@ description: "应用内目录浏览表面：填充工作区目录流程的 Mille
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-directory-picker-browse
+# @x1a0f3n9/dsh-client-ui-directory-picker-browse
 
 [English](README.md) | 中文
 

@@ -6,13 +6,13 @@
       name: './web-fetch-fixture-server.mjs'
 
 - id: web
-  name: '@xfcodeai/dsh-web'
+  name: '@x1a0f3n9/dsh-web'
 
 - id: web-fetch-http
-  name: '@xfcodeai/dsh-web-fetch-http'
+  name: '@x1a0f3n9/dsh-web-fetch-http'
   disabled: true
 
 - id: tool-web
-  name: '@xfcodeai/dsh-tool-web'
+  name: '@x1a0f3n9/dsh-tool-web'
   config:
     search: false

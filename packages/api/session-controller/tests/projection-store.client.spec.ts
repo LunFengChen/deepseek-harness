@@ -8,8 +8,8 @@
  * list rows' title projection).
  */
 import { describe, expect, it } from 'vitest'
-import type { SessionId } from '@xfcodeai/dsh-api-remotes/client'
-import { SessionSeq } from '@xfcodeai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-api-remotes/client'
+import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
 import { ProjectionValueStore } from '../src/client/sessions/projection-store.ts'
 import { Session } from '../src/client/sessions/session.ts'
 import { SessionManager } from '../src/client/sessions/manager.ts'
@@ -18,7 +18,7 @@ import { entries, plainTurn } from './event-script.client.ts'
 
 // Test-domain keys merged into the projection map (the Service Definition package's
 // pure-type outlet), the same way domain host plugins merge theirs.
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionMap {
     'test/marks': { marks: string[] }
   }

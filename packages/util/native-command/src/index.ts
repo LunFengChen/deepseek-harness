@@ -1,6 +1,6 @@
 /**
  * Host-native command execution and path-opening utilities.
- * @module @xfcodeai/dsh-native-command
+ * @module @x1a0f3n9/dsh-native-command
  */
 
 export { runNativeCommand } from './runner.ts'

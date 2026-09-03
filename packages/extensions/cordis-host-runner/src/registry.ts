@@ -1,10 +1,10 @@
 /**
  * Process-local dynamic Plugin registry and its opaque identity mints.
- * @module @xfcodeai/dsh-cordis-host-runner/registry
+ * @module @x1a0f3n9/dsh-cordis-host-runner/registry
  */
 
 import type { Fiber } from '@deepseek-ai/cordis'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {
   ApprovalRequestId, CordisDynamicPackageId, CordisDynamicPluginId, CordisDynamicPluginRunId,
   CordisDynamicRunMode, DynamicCordisRenderFailure, DynamicCordisRunAttempt,

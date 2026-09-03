@@ -3,7 +3,7 @@ description: "Development-only hot reload for browser client plugins: rebuilding
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-hmr
+# @x1a0f3n9/dsh-client-hmr
 
 English | [中文](README.zh.md)
 
@@ -41,7 +41,7 @@ Each reload re-executes the plugin bundle and remounts the plugin with fresh sta
 |---|---|---|
 | `pollIntervalMs` | `500` | Bundle stat-poll interval in milliseconds |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-client-hmr) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-client-hmr) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Observing success
 
@@ -93,7 +93,7 @@ Read these when the reload contract is not enough: the module system that serves
 - [Client module system](../modules/README.md) — the lazy-CJS module table and `invalidate`/`prefetch` hooks this driver drives.
 - [Web boot kernel](../web/README.md) — the shell that boots the plugin tree and shows entry status.
 - [Client group map](../README.md) — the browser half this package reloads.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-client-hmr) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-client-hmr) — every accepted config field and its source declaration.
 
 -----
 

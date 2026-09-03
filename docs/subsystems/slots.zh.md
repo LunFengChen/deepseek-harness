@@ -18,9 +18,9 @@ Slots 是 Web Client 的类型化 React 组合系统。[`dsh-client-ui-slots`](.
 
 ```tsx ignore-check
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type {} from '@xfcodeai/dsh-client-ui-session/client'
-import type { PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
+import type { PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 
 type HeaderActionProps = PropsRuntime<'conversation.session.header.actions'>
 

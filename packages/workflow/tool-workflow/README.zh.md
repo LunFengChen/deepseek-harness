@@ -3,7 +3,7 @@ description: "面向模型的 workflow 工具：运行扇出 subagent 的 JavaSc
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-workflow
+# @x1a0f3n9/dsh-tool-workflow
 
 [English](README.md) | 中文
 
@@ -44,7 +44,7 @@ kind: "package-reference"
 | `toolName` | `workflow` | 要注册的面向模型工具名称。 |
 | `maxResultChars` | `50000` | 渲染结果上限；更长的 JSON 会被截断并附上提示。 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-tool-workflow)是每个受支持字段的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-tool-workflow)是每个受支持字段的穷尽式真源。
 
 -----
 
@@ -125,7 +125,7 @@ Use the <toolName> tool ONLY when the user explicitly asks for a workflow or for
 
 #### 模型看到什么
 
-工具可见时，已生成的默认 [`workflow` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-workflow) 包含完整的 JavaScript 钩子与元数据约定；`toolName` 可以重命名该定义，模型会提交脚本、元数据与可选 args。
+工具可见时，已生成的默认 [`workflow` schema](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-workflow) 包含完整的 JavaScript 钩子与元数据约定；`toolName` 可以重命名该定义，模型会提交脚本、元数据与可选 args。
 
 #### Token 影响
 

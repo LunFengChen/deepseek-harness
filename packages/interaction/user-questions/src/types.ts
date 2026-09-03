@@ -1,7 +1,7 @@
-/** Client-safe question, answer, and event types. @module @xfcodeai/dsh-user-questions/types */
+/** Client-safe question, answer, and event types. @module @x1a0f3n9/dsh-user-questions/types */
 
-import type { Scoped } from '@xfcodeai/dsh-scope'
-import type { Agent } from '@xfcodeai/dsh-agent/types'
+import type { Scoped } from '@x1a0f3n9/dsh-scope'
+import type { Agent } from '@x1a0f3n9/dsh-agent/types'
 
 /** One selectable answer offered to the user. */
 export interface AskUserQuestionOption {
@@ -78,7 +78,7 @@ declare module '@deepseek-ai/cordis' {
     /**
      * Ask composed answerers for structured user input. Return an answer to
      * claim the request or call `next()` to delegate. Scope-filtered dispatch
-     * (`@xfcodeai/dsh-scope`): agent-scoped listeners receive only that agent.
+     * (`@x1a0f3n9/dsh-scope`): agent-scoped listeners receive only that agent.
      * @param request - pending user-question request.
      * @mode waterfall
      */

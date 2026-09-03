@@ -1,18 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PassThrough } from 'node:stream'
-import { LocalPtySession } from '@xfcodeai/dsh-terminal-bash/src/session.ts'
-import type { ResolvedConfig } from '@xfcodeai/dsh-terminal-bash/src/config.ts'
-import type { TerminalSendOperation, TerminalSessionStatus, TerminalSignal } from '@xfcodeai/dsh-terminal'
+import { LocalPtySession } from '@x1a0f3n9/dsh-terminal-bash/src/session.ts'
+import type { ResolvedConfig } from '@x1a0f3n9/dsh-terminal-bash/src/config.ts'
+import type { TerminalSendOperation, TerminalSessionStatus, TerminalSignal } from '@x1a0f3n9/dsh-terminal'
 import type {
   SubprocessOutcome,
   SubprocessTerminalHandle,
   SubprocessTerminalSignal,
-} from '@xfcodeai/dsh-subprocess'
-import { TerminalError } from '@xfcodeai/dsh-terminal'
+} from '@x1a0f3n9/dsh-subprocess'
+import { TerminalError } from '@x1a0f3n9/dsh-terminal'
 import type {
   ProcessIdentity,
   ProcessInspector,
-} from '@xfcodeai/dsh-subprocess-local/src/process-inspector.ts'
+} from '@x1a0f3n9/dsh-subprocess-local/src/process-inspector.ts'
 
 class FakeInspector implements ProcessInspector {
   pgid: number | undefined = 456

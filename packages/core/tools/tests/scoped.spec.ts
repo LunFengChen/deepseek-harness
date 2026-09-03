@@ -1,15 +1,15 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import type { Events } from '@deepseek-ai/cordis'
-import { bindScopeParent, createScope } from '@xfcodeai/dsh-scope'
-import type { Scope } from '@xfcodeai/dsh-scope'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime from '@xfcodeai/dsh-tools'
-import type { PreToolDecision, ToolDefinition, ToolExecution, ToolExecutionInput, ToolExecutionToken } from '@xfcodeai/dsh-tools'
-import type { Agent } from '@xfcodeai/dsh-agent'
+import { bindScopeParent, createScope } from '@x1a0f3n9/dsh-scope'
+import type { Scope } from '@x1a0f3n9/dsh-scope'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import type { PreToolDecision, ToolDefinition, ToolExecution, ToolExecutionInput, ToolExecutionToken } from '@x1a0f3n9/dsh-tools'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 
-import { ToolCallId } from '@xfcodeai/dsh-llm'
-import type { SessionId } from '@xfcodeai/dsh-session'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
 
 const testToolSignal = new AbortController().signal
 

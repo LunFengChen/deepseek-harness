@@ -8,10 +8,10 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime from '@xfcodeai/dsh-tools'
-import WebRuntime from '@xfcodeai/dsh-web'
-import * as toolWeb from '@xfcodeai/dsh-tool-web'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import WebRuntime from '@x1a0f3n9/dsh-web'
+import * as toolWeb from '@x1a0f3n9/dsh-tool-web'
 
 describe('dsh-tool-web real-load-path guard', () => {
   it('has no default export and keeps name/inject/Config through unwrapExports', () => {

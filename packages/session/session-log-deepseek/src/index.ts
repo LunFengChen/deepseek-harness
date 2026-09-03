@@ -2,14 +2,14 @@
  * Incremental session-log contribution for official DeepSeek LLM API requests.
  * Accepted sequence watermarks live in the canonical log, so restart recovery
  * can conservatively resend uncertain tails without maintaining another store.
- * @module @xfcodeai/dsh-session-log-deepseek
+ * @module @x1a0f3n9/dsh-session-log-deepseek
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { brandString } from '@xfcodeai/dsh-brand'
-import type {} from '@xfcodeai/dsh-deepseek-llm-api-extensions'
-import { isSurfaceEvent, SessionLogOffset, SessionSeq } from '@xfcodeai/dsh-session'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type {} from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import { isSurfaceEvent, SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type {
   Session,
   SessionEvent,
@@ -17,8 +17,8 @@ import type {
   SessionLogOffset as SessionLogOffsetType,
   SessionSeq as SessionSeqType,
   SessionSeqCursor,
-} from '@xfcodeai/dsh-session'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
+} from '@x1a0f3n9/dsh-session'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import type {
   DeepSeekSessionLogExtension,
   DeepSeekSessionLogWireEvent,

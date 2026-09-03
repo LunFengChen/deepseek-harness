@@ -3,13 +3,13 @@ description: "Host half of dynamic Cordis packages for agents and maintainers ch
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-cordis-host-runner
+# @x1a0f3n9/dsh-cordis-host-runner
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-cordis-host-runner` makes dynamic packages runnable in this process: definitions the model records with `cordis_define` stay here, host halves run in a `node:vm` sandbox, a package with a browser half waits for a person to approve or decline it on a page, and the model can inspect the live runtime and its definitions here. The model-facing tools live in `@xfcodeai/dsh-tool-cordis`, and the browser half loads through `@xfcodeai/dsh-cordis-client-runner`. Definitions live only in process memory, so a DSH restart clears them and nothing is written to disk. One config field, `vmTimeoutMs`, bounds synchronous sandbox evaluation.
+`dsh-cordis-host-runner` makes dynamic packages runnable in this process: definitions the model records with `cordis_define` stay here, host halves run in a `node:vm` sandbox, a package with a browser half waits for a person to approve or decline it on a page, and the model can inspect the live runtime and its definitions here. The model-facing tools live in `@x1a0f3n9/dsh-tool-cordis`, and the browser half loads through `@x1a0f3n9/dsh-cordis-client-runner`. Definitions live only in process memory, so a DSH restart clears them and nothing is written to disk. One config field, `vmTimeoutMs`, bounds synchronous sandbox evaluation.
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ Mount this plugin in any composition that should support dynamic packages — it
 ### Minimal configuration
 
 ```yaml
-- name: '@xfcodeai/dsh-cordis-host-runner'
+- name: '@x1a0f3n9/dsh-cordis-host-runner'
   config:
     vmTimeoutMs: 5000
 ```
@@ -39,7 +39,7 @@ Mount this plugin in any composition that should support dynamic packages — it
 |---|---|---|
 | `vmTimeoutMs` | `5000` | Milliseconds the synchronous portion of a host half may run in the vm before evaluation is aborted |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-cordis-host-runner) is the exhaustive source for every accepted field.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-cordis-host-runner) is the exhaustive source for every accepted field.
 
 ### What a run does
 
@@ -81,7 +81,7 @@ The runner is built on two separations. **Registry and sandbox are one service.*
 
 ### How a run flows
 
-`define` trims and requires the metadata, prechecks each half's syntax by compiling it (running nothing), mints the plugin and package ids, and records the definition against the session that asked. `run` resolves the target against `currentPackageId` and `nextPackageId`; a host-only package evaluates in the sandbox and commits immediately, while a browser-half package arms an approval request, emits `cordis/request-run`, and suspends. The answering page walks `runHostHalf`, `getClientCode`, then `resolveRequestRun`; a success naming the live revision commits the activation and sets `currentPackageId`, and `cordis/request-run-resolved` drops the pending affordance on every other page. `stop` retracts the live dispatch — handler disposers, fiber dispose, and the `cordis/dynamic-retract` broadcast — and leaves the definition runnable. Four forwarded events (`cordis/request-run`, `cordis/request-run-resolved`, `cordis/dynamic-package`, `cordis/dynamic-retract`) are declared on the client-safe `./types` subpath and allowlisted for delivery by `@xfcodeai/dsh-api-remotes`, which is what lets a browser reach them through `ctx.remote.$on`.
+`define` trims and requires the metadata, prechecks each half's syntax by compiling it (running nothing), mints the plugin and package ids, and records the definition against the session that asked. `run` resolves the target against `currentPackageId` and `nextPackageId`; a host-only package evaluates in the sandbox and commits immediately, while a browser-half package arms an approval request, emits `cordis/request-run`, and suspends. The answering page walks `runHostHalf`, `getClientCode`, then `resolveRequestRun`; a success naming the live revision commits the activation and sets `currentPackageId`, and `cordis/request-run-resolved` drops the pending affordance on every other page. `stop` retracts the live dispatch — handler disposers, fiber dispose, and the `cordis/dynamic-retract` broadcast — and leaves the definition runnable. Four forwarded events (`cordis/request-run`, `cordis/request-run-resolved`, `cordis/dynamic-package`, `cordis/dynamic-retract`) are declared on the client-safe `./types` subpath and allowlisted for delivery by `@x1a0f3n9/dsh-api-remotes`, which is what lets a browser reach them through `ctx.remote.$on`.
 
 </details>
 
@@ -95,7 +95,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Tool package](../tool-cordis/README.md) — the model-facing tools that call this service.
 - [Client runner](../cordis-client-runner/README.md) — the browser half that answers run requests and loads browser-half code.
 - [UI package](../ui-cordis/README.md) — the panel users approve and operate runs with.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-cordis-host-runner) — every accepted config field.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-cordis-host-runner) — every accepted config field.
 - [Extensions subsystem](../../../docs/subsystems/extensions.md) — the generated `ctx.cordisInspect` and `ctx.dynamicCordisRunner` API and `cordis/*` events.
 - [Self-referential Cordis toolset Agent Note](../../../.agents/notes/implemented/feature/2026-07-08-self-referential-cordis-toolset.md) — sandbox semantics, lifecycle, and composition rationale.
 

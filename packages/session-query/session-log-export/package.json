@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-session-log-export",
+  "name": "@x1a0f3n9/dsh-session-log-export",
   "description": "Web Session-log export command and shared download dialog",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -38,7 +38,7 @@
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^",
     "fflate": "^0.8.2",
-    "@xfcodeai/dsh-brand": "workspace:^"
+    "@x1a0f3n9/dsh-brand": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^"
@@ -46,32 +46,32 @@
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-agent": "workspace:^",
-    "@xfcodeai/dsh-attachment": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-store": "workspace:^",
-    "@xfcodeai/dsh-client-ui-commands": "workspace:^",
-    "@xfcodeai/dsh-client-ui-conversation": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-session": "workspace:^",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
-    "@xfcodeai/dsh-commands": "workspace:^",
-    "@xfcodeai/dsh-session-persistence": "workspace:^",
-    "@xfcodeai/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-commands": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-commands": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
     "@types/react": "~18.3.1",
     "react": "^18.2.0",
-    "@xfcodeai/dsh-session": "workspace:^"
+    "@x1a0f3n9/dsh-session": "workspace:^"
   },
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-commands",
-        "@xfcodeai/dsh-client-ui-conversation",
-        "@xfcodeai/dsh-client-ui-renderer",
-        "@xfcodeai/dsh-client-ui-session"
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-commands",
+        "@x1a0f3n9/dsh-client-ui-conversation",
+        "@x1a0f3n9/dsh-client-ui-renderer",
+        "@x1a0f3n9/dsh-client-ui-session"
       ],
       "platform": "web"
     }

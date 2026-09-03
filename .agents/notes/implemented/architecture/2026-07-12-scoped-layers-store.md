@@ -20,7 +20,7 @@ The shared part is lifecycle and insertion-ordered storage, not registry policy.
 
 ## Decision
 
-`@xfcodeai/dsh-scope` provides a key-agnostic `store.ts` implementation module. The package continues to peer on Cordis and `@xfcodeai/dsh-invariants`, and its invariant companion remains unchanged. The package root exports four storage symbols: `ScopeLayer`, `ScopedLayers`, `NamedEntries`, and `AnonymousEntries`. `EntryValues` remains internal, and `store.ts` is not a package subpath.
+`@x1a0f3n9/dsh-scope` provides a key-agnostic `store.ts` implementation module. The package continues to peer on Cordis and `@x1a0f3n9/dsh-invariants`, and its invariant companion remains unchanged. The package root exports four storage symbols: `ScopeLayer`, `ScopedLayers`, `NamedEntries`, and `AnonymousEntries`. `EntryValues` remains internal, and `store.ts` is not a package subpath.
 
 `ScopeLayer` keeps the aggregate concept explicit while requiring only whole-layer emptiness. A service defines one concrete layer whose tables and domain helpers fit that service; `ScopedLayers` owns construction, selection, lifecycle attachment, notification, and aggregate reclamation.
 

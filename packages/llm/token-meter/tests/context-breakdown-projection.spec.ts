@@ -3,14 +3,14 @@
 
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createMessage, createUserMessage } from '@xfcodeai/dsh-llm'
-import type { ContentBlock, ToolSchema } from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionSeq } from '@xfcodeai/dsh-session'
-import type { Session, SessionEvent, SessionSeq as SessionSeqType } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import TokenMeter from '@xfcodeai/dsh-token-meter'
-import type { ContextBreakdownProjection } from '@xfcodeai/dsh-token-meter/client'
-import { CompactionId } from '@xfcodeai/dsh-compaction'
+import { createMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, ToolSchema } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import type { ContextBreakdownProjection } from '@x1a0f3n9/dsh-token-meter/client'
+import { CompactionId } from '@x1a0f3n9/dsh-compaction'
 import { contextBreakdownProjectionDefinition } from '../src/breakdown-projection.ts'
 import {
   estimateContent,

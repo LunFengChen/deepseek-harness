@@ -14,9 +14,9 @@ import {
   type TypertForwardableEventEntry,
   type TypertLookup,
   type TypertRemoteEvent,
-} from '@xfcodeai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-typert-protocol'
 
-const REMOTE_METHOD_DESCRIPTOR_KEY = '@xfcodeai/dsh-typert-protocol/remote-methods'
+const REMOTE_METHOD_DESCRIPTOR_KEY = '@x1a0f3n9/dsh-typert-protocol/remote-methods'
 
 interface MetaFixtureSubject {
   readonly subjectId: string
@@ -61,7 +61,7 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface TypertLookupMap {
     metaFixture: TypertLookup<MetaFixtureSubject, string>
   }

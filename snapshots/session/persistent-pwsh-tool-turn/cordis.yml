@@ -1,87 +1,87 @@
 # Minimal live counterpart for the persistent-pwsh-tool-turn snapshot composition.
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     models:
       - id: deepseek-v4-pro
 
 - id: sandbox-policy
-  name: '@xfcodeai/dsh-sandbox-policy'
+  name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: danger-full-access
     workspaceRoot: !!js process.cwd()
 
 - id: subprocess
-  name: '@xfcodeai/dsh-subprocess-local'
+  name: '@x1a0f3n9/dsh-subprocess-local'
 
 - insert:
     - id: terminal
-      name: '@xfcodeai/dsh-terminal'
+      name: '@x1a0f3n9/dsh-terminal'
 
 - insert:
     - id: terminal-pwsh
-      name: '@xfcodeai/dsh-terminal-bash'
+      name: '@x1a0f3n9/dsh-terminal-bash'
       config:
         shellDialect: pwsh
         timeoutMs: 30000
 
 - id: agent-default-model
-  name: '@xfcodeai/dsh-agent-default-model'
+  name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: deepseek-official
     model: deepseek-v4-pro
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: !!js 'process.env.DSH_SNAPSHOT === undefined ? ''zstd'' : ''none'''
 
 - id: agent-instructions
-  name: '@xfcodeai/dsh-agent-instructions'
+  name: '@x1a0f3n9/dsh-agent-instructions'
   disabled: true
 
 - id: system-prompt
-  name: '@xfcodeai/dsh-system-prompt'
+  name: '@x1a0f3n9/dsh-system-prompt'
   config:
     persona: You are a concise snapshot agent working in {{cwd}}.
 
 - id: tool-jobs
-  name: '@xfcodeai/dsh-tool-jobs'
+  name: '@x1a0f3n9/dsh-tool-jobs'
   disabled: true
 
 - id: goal
-  name: '@xfcodeai/dsh-goal'
+  name: '@x1a0f3n9/dsh-goal'
   disabled: true
 
 - id: goal-round-driver
-  name: '@xfcodeai/dsh-goal-round-driver'
+  name: '@x1a0f3n9/dsh-goal-round-driver'
   disabled: true
 
 - id: command-goal
-  name: '@xfcodeai/dsh-command-goal'
+  name: '@x1a0f3n9/dsh-command-goal'
   disabled: true
 
 - id: tool-goal
-  name: '@xfcodeai/dsh-tool-goal'
+  name: '@x1a0f3n9/dsh-tool-goal'
   disabled: true
 
 - id: skill
-  name: '@xfcodeai/dsh-skill'
+  name: '@x1a0f3n9/dsh-skill'
   disabled: true
 
 - id: skill-filesystem
-  name: '@xfcodeai/dsh-skill-filesystem'
+  name: '@x1a0f3n9/dsh-skill-filesystem'
   disabled: true
 
 - id: tool-skill
-  name: '@xfcodeai/dsh-tool-skill'
+  name: '@x1a0f3n9/dsh-tool-skill'
   disabled: true
 
 - id: tool-bash
-  name: '@xfcodeai/dsh-tool-bash'
+  name: '@x1a0f3n9/dsh-tool-bash'
   disabled: true
 
 - insert:
     - id: tool-pwsh-persistent
-      name: '@xfcodeai/dsh-tool-pwsh-persistent'
+      name: '@x1a0f3n9/dsh-tool-pwsh-persistent'

@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-session-projection",
+  "name": "@x1a0f3n9/dsh-session-projection",
   "description": "Session-projection seam: the merge-extensible projection type table, the provider contract, and the ctx.sessionProjections registry serving whole current values of log-derived per-session state",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -35,11 +35,11 @@
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@xfcodeai/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@xfcodeai/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

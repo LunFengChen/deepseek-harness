@@ -1,14 +1,14 @@
 // @vitest-environment jsdom
 import type { Context } from '@deepseek-ai/cordis'
-import * as modulesClient from '@xfcodeai/dsh-client-modules/client'
+import * as modulesClient from '@x1a0f3n9/dsh-client-modules/client'
 import type {
   ClientBundleRegistration, ClientModuleCreateOptions, ClientModuleLoaderTarget, DshWindow,
   WebBootEntry,
-} from '@xfcodeai/dsh-client-modules/client'
+} from '@x1a0f3n9/dsh-client-modules/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppWebEntry } from '../src/boot.ts'
 
-const MODULES_ID = '@xfcodeai/dsh-client-modules'
+const MODULES_ID = '@x1a0f3n9/dsh-client-modules'
 const PROVIDER_CLIENT_ID = 'provider/client'
 const RUNTIME_CLIENT_ID = 'runtime/client'
 const win = globalThis as DshWindow

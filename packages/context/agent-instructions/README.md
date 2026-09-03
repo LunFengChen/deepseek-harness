@@ -3,7 +3,7 @@ description: "Workspace-instruction context for users and maintainers enabling, 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-agent-instructions
+# @x1a0f3n9/dsh-agent-instructions
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ The first request includes one durable baseline message with the user-global `$D
 The defaults suit a typical checkout: `.git` marks the project root, `AGENTS.md` and `CLAUDE.md` are the base candidates, and `AGENTS.local.md` and `CLAUDE.local.md` are additive local overlays. Only `maxBytes` is required — it caps the complete rendered baseline so each deployment chooses its prompt budget explicitly.
 
 ```yaml
-- name: '@xfcodeai/dsh-agent-instructions'
+- name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 ```
@@ -63,7 +63,7 @@ export interface Config {
 | `localInstructionFileCandidates` | `['AGENTS.local.md', 'CLAUDE.local.md']` | Local overlay file names loaded after the base files |
 | `dshHome` | `$DSH_HOME` or `~/.dsh` | Directory containing the user-global `AGENTS.md` |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-agent-instructions) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-agent-instructions) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Observing the budget
 
@@ -115,7 +115,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Documentation standard](../../../docs/AGENTS.md) — what `AGENTS.md` instruction files contain and how they are maintained.
 - [Workspace-context decision record](../../../.agents/notes/implemented/feature/2026-06-24-workspace-context.md) — per-agent/session isolation and lifecycle rationale.
 - [Context group map](../README.md) — sibling request-context packages.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-agent-instructions) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-agent-instructions) — every accepted config field and its source declaration.
 
 -----
 

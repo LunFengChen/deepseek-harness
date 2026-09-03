@@ -10,7 +10,7 @@
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { defineTool } from '@xfcodeai/dsh-tools'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
 
 export const name = 'greet-tool'
 export const inject = ['tools']

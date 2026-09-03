@@ -3,7 +3,7 @@ description: "Browser-worker harness hosting for maintainers building or debuggi
 kind: "package-library"
 ---
 
-# `@xfcodeai/dsh-experimental-webworker-runtime`
+# `@x1a0f3n9/dsh-experimental-webworker-runtime`
 
 English | [中文](README.zh.md)
 

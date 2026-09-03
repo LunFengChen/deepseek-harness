@@ -3,7 +3,7 @@ description: "Incremental canonical session-log upload for deployments enabling 
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-session-log-deepseek
+# @x1a0f3n9/dsh-session-log-deepseek
 
 English | [中文](README.zh.md)
 

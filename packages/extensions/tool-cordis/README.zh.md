@@ -3,13 +3,13 @@ description: "面向 agent 与维护者的 Cordis 运行时工具说明，用于
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-cordis
+# @x1a0f3n9/dsh-tool-cordis
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-tool-cordis` 给模型提供七个作用于当前 DSH 进程实时 Cordis 运行时的工具：检查已加载的内容与动态包可用之物，定义包含 host 半、浏览器半或两者的包，运行它、停止它并移除它。包带版本——插件持有若干不可变的包版本，模型在失败后可以追加修正版并更新过去。定义只存在于进程内存中，DSH 重启即消失；本包不写仓库文件、不安装任何包、不改 `cordis.yml`。它还增加一个教这套工作流的系统提示词章节；把它与 `@xfcodeai/dsh-cordis-host-runner` 一同组合，后者负责沙箱与运行往返。
+`dsh-tool-cordis` 给模型提供七个作用于当前 DSH 进程实时 Cordis 运行时的工具：检查已加载的内容与动态包可用之物，定义包含 host 半、浏览器半或两者的包，运行它、停止它并移除它。包带版本——插件持有若干不可变的包版本，模型在失败后可以追加修正版并更新过去。定义只存在于进程内存中，DSH 重启即消失；本包不写仓库文件、不安装任何包、不改 `cordis.yml`。它还增加一个教这套工作流的系统提示词章节；把它与 `@x1a0f3n9/dsh-cordis-host-runner` 一同组合，后者负责沙箱与运行往返。
 
 ## 目录
 
@@ -30,10 +30,10 @@ kind: "package-reference"
 ### 最小组合
 
 ```yaml
-- name: '@xfcodeai/dsh-cordis-host-runner'
+- name: '@x1a0f3n9/dsh-cordis-host-runner'
   config:
     vmTimeoutMs: 5000
-- name: '@xfcodeai/dsh-tool-cordis'
+- name: '@x1a0f3n9/dsh-tool-cordis'
 ```
 
 CLI 示例 [`apps/cli/config/examples/cordis/cordis.yml`](../../../apps/cli/config/examples/cordis/cordis.yml) 同时组合了这两者。带浏览器半的包还额外需要客户端组合里的浏览器 runner 与 UI 包；纯 host 包则两者都不需要。
@@ -99,7 +99,7 @@ CLI 示例 [`apps/cli/config/examples/cordis/cordis.yml`](../../../apps/cli/conf
 - [Host runner](../cordis-host-runner/README.zh.md)——这些工具委托的注册表、沙箱与运行往返。
 - [Client runner](../cordis-client-runner/README.zh.md)——应答运行请求并装载浏览器半代码的浏览器半。
 - [UI 包](../ui-cordis/README.zh.md)——用户操作定义所用的面板与工具卡片。
-- [生成的工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-cordis)——模型收到的确切 schema。
+- [生成的工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-cordis)——模型收到的确切 schema。
 - [extensions 子系统](../../../docs/subsystems/extensions.zh.md)——生成的 `ctx.cordisInspect` 与 `ctx.dynamicCordisRunner` API。
 - [自引用 Cordis 工具集 Agent Note](../../../.agents/notes/implemented/feature/2026-07-08-self-referential-cordis-toolset.zh.md)——设计居所：沙箱语义、动态包生命周期与组合。
 
@@ -112,7 +112,7 @@ CLI 示例 [`apps/cli/config/examples/cordis/cordis.yml`](../../../apps/cli/conf
 
 #### 模型看到的内容
 
-该插件可见时，会话模型会看到生成的 [`cordis_inspect_list`、`cordis_inspect_query`、`cordis_inspect_self`、`cordis_define`、`cordis_run`、`cordis_stop` 和 `cordis_undefine` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-cordis)。
+该插件可见时，会话模型会看到生成的 [`cordis_inspect_list`、`cordis_inspect_query`、`cordis_inspect_self`、`cordis_define`、`cordis_run`、`cordis_stop` 和 `cordis_undefine` schema](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-cordis)。
 
 #### Token 影响
 

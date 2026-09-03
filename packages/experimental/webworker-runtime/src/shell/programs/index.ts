@@ -3,7 +3,7 @@
  * spawns no processes, so this table IS the machine's `/bin` — a name that is
  * not here reports `command not found`, exactly as a real shell would for a
  * binary that is not installed.
- * @module @xfcodeai/dsh-experimental-webworker-runtime/src/shell/programs
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/programs
  */
 
 import type { ShellProgram } from '../types.ts'

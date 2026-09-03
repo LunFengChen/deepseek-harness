@@ -14,7 +14,7 @@ kind: "package-reference"
 ## Skeleton
 
 ```markdown
-# @xfcodeai/dsh-<name>
+# @x1a0f3n9/dsh-<name>
 
 English | [中文](README.zh.md)
 
@@ -50,7 +50,7 @@ The smallest mount that works, as a `cordis.yml` snippet, plus the config table:
 |---|---|---|
 | `<field>` | `<default>` or `required` | One-line meaning |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-<name>) is the exhaustive source for every accepted field.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-<name>) is the exhaustive source for every accepted field.
 
 -----
 

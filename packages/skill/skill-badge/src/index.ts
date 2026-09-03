@@ -1,7 +1,7 @@
 /**
  * Bundled `dsh-badge` skill provider.
  *
- * @module @xfcodeai/dsh-skill-badge
+ * @module @x1a0f3n9/dsh-skill-badge
  */
 
 import { readFile } from 'node:fs/promises'
@@ -12,7 +12,7 @@ import {
   type SkillCandidate,
   type SkillDefinition,
   type SkillProvider,
-} from '@xfcodeai/dsh-skill'
+} from '@x1a0f3n9/dsh-skill'
 
 const PROVIDER_NAME = 'dsh-badge'
 const SKILL_BODY_URL = new URL('../assets/dsh-badge.md', import.meta.url)

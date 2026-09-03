@@ -3,13 +3,13 @@ description: "面向以子进程方式启动 DeepSeek Harness 运行时、并通
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-sdk-client
+# @x1a0f3n9/dsh-sdk-client
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-sdk-client` 让 TypeScript 程序以子进程方式、通过 stdio JSON-RPC 驱动 DeepSeek Harness 运行时。使用 `DeepSeekHarness` 你可以启动运行时、打开会话、发送提示词，并收集最终响应以及事件与通知流；`HarnessClient` 提供对协议层的显式控制。它是 [Python SDK](../../../python/README.zh.md) 的设计孪生，共享同一个运行时对端与协议。启动说明是显式的——调用方可通过 `dshBin` 指定运行时可执行文件，省略时解析同版本 `@xfcodeai/dsh` 包的 bin，参数由客户端构造——因此本客户端适合仓库近旁的 TypeScript 消费方，如 SDK subagent 后端和知道自己要启动哪个运行时的自动化。它是纯库：不在任何 Cordis 上下文注册，而且它启动的运行时是一个完整 harness，其组成由自己的 `cordis.yml` 决定。
+`dsh-sdk-client` 让 TypeScript 程序以子进程方式、通过 stdio JSON-RPC 驱动 DeepSeek Harness 运行时。使用 `DeepSeekHarness` 你可以启动运行时、打开会话、发送提示词，并收集最终响应以及事件与通知流；`HarnessClient` 提供对协议层的显式控制。它是 [Python SDK](../../../python/README.zh.md) 的设计孪生，共享同一个运行时对端与协议。启动说明是显式的——调用方可通过 `dshBin` 指定运行时可执行文件，省略时解析同版本 `@x1a0f3n9/dsh` 包的 bin，参数由客户端构造——因此本客户端适合仓库近旁的 TypeScript 消费方，如 SDK subagent 后端和知道自己要启动哪个运行时的自动化。它是纯库：不在任何 Cordis 上下文注册，而且它启动的运行时是一个完整 harness，其组成由自己的 `cordis.yml` 决定。
 
 ## 目录
 
@@ -30,8 +30,8 @@ kind: "package-library"
 ### 用 DeepSeekHarness 运行 agent 轮次
 
 ```ts
-import { DeepSeekHarness } from '@xfcodeai/dsh-sdk-client'
-import { ReasoningEffortId } from '@xfcodeai/dsh-llm'
+import { DeepSeekHarness } from '@x1a0f3n9/dsh-sdk-client'
+import { ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 
 await using harness = new DeepSeekHarness({
   profile: 'sdk',
@@ -119,7 +119,7 @@ client 进程中无影响。子进程的 profile、patch、provider、model 与�
 
 这些限制说明本客户端何时不合适或需要特别注意。它们是当前包约束，不是与其他 SDK 客户端的对比或任务积压。
 
-- **无捆绑运行时解析**——客户端解析同版本 `@xfcodeai/dsh` 包（或调用方提供的 `dshBin`）；打包可执行文件的发现留在 Python 侧，直到出现 TypeScript 发行版消费方。
+- **无捆绑运行时解析**——客户端解析同版本 `@x1a0f3n9/dsh` 包（或调用方提供的 `dshBin`）；打包可执行文件的发现留在 Python 侧，直到出现 TypeScript 发行版消费方。
 - **无轮次中取消**——协议层没有提示词取消方法；放弃轮次意味着关闭运行时（见[协议限制](../protocol/README.zh.md#known-limitations-and-deferred-work)）。
 - **没有逐提示词结果**——低层 `prompt()` 只返回入队回执；高层 `run()` 负责从回收到 idle 的收集，放弃该过程意味着关闭运行时。
 - **客户端→服务端通知与服务端→客户端请求**在协议两端都未实现；传输层为未来审批流程保留了承载能力。

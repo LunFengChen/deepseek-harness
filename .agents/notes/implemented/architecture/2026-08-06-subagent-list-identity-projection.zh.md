@@ -39,7 +39,7 @@ export type SubagentIdentityProjection =
   | { mode: 'one-shot'; label?: string; seq: SessionSeq }
   | { mode: 'continuable'; label: string; seq: SessionSeq }
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     subagent: { identity?: SubagentIdentityProjection }
   }

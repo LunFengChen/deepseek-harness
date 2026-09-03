@@ -1,13 +1,13 @@
 /**
  * Model-facing UTF-8 read. It performs one provider stat for type, routing, and observed version,
  * streams large or size-unknown files, renders a bounded window, then emits the observation.
- * @module @xfcodeai/dsh-tool-fs/src/read
+ * @module @x1a0f3n9/dsh-tool-fs/src/read
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { defineTool } from '@xfcodeai/dsh-tools'
-import type { GenericCallView, ReadResultView, ToolResult } from '@xfcodeai/dsh-tools'
-import type {} from '@xfcodeai/dsh-fs'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { GenericCallView, ReadResultView, ToolResult } from '@x1a0f3n9/dsh-tools'
+import type {} from '@x1a0f3n9/dsh-fs'
 import { buildWindow, formatReadOutput, langFromPath, readMetaFromMeta } from './read-render.ts'
 import { resolveRegularReadTarget } from './read-target.ts'
 

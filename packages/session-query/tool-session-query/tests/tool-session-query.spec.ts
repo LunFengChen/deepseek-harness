@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context, type Fiber } from '@deepseek-ai/cordis'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import { createUserMessage, ToolCallId, HarnessError , createMessage } from '@xfcodeai/dsh-llm'
-import { MAX_TIMER_DELAY_MS, TimeoutReason } from '@xfcodeai/dsh-timeout'
-import * as TimeoutPolicy from '@xfcodeai/dsh-tool-call-timeout-policy'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, ToolCallId, HarnessError , createMessage } from '@x1a0f3n9/dsh-llm'
+import { MAX_TIMER_DELAY_MS, TimeoutReason } from '@x1a0f3n9/dsh-timeout'
+import * as TimeoutPolicy from '@x1a0f3n9/dsh-tool-call-timeout-policy'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   SessionId,
@@ -12,9 +12,9 @@ import SessionStore, {
   type SessionEvent,
   type SessionHeader,
   type SessionId as SessionIdValue,
-} from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import { turnBoundaryProjectionDefinition } from '@xfcodeai/dsh-agent-loop'
+} from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { turnBoundaryProjectionDefinition } from '@x1a0f3n9/dsh-agent-loop'
 import SessionQueryEngine, {
   SessionQueryError,
   SessionSearchCursor,
@@ -27,10 +27,10 @@ import SessionQueryEngine, {
   type SessionSearchPage,
   type SessionSearchRequest,
   type SessionTitleObservationResult,
-} from '@xfcodeai/dsh-session-query'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { type ToolExecutionResult } from '@xfcodeai/dsh-tools'
-import * as ToolSessionQuery from '@xfcodeai/dsh-tool-session-query'
+} from '@x1a0f3n9/dsh-session-query'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { type ToolExecutionResult } from '@x1a0f3n9/dsh-tools'
+import * as ToolSessionQuery from '@x1a0f3n9/dsh-tool-session-query'
 
 const activeContexts: Context[] = []
 

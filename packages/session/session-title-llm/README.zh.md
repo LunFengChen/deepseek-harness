@@ -3,7 +3,7 @@ description: "面向用户与维护者的共享模型标题生成策略说明，
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-session-title-llm
+# @x1a0f3n9/dsh-session-title-llm
 
 [English](README.md) | 中文
 

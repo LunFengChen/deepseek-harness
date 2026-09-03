@@ -76,7 +76,7 @@ jobs:
       - name: Build the preview page and pack the VFS image
         env:
           DSH_CLIENT_TITLE: DSH preview pr-${{ github.event.pull_request.number }}
-        run: pnpm --filter @xfcodeai/dsh-web-frontend run build:preview
+        run: pnpm --filter @x1a0f3n9/dsh-web-frontend run build:preview
 
       # Sourcemaps carry complete sources and stay off the deployment platform.
       # index.html is the served page, which cannot boot without a host

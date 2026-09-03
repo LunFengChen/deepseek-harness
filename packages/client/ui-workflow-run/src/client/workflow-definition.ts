@@ -1,12 +1,12 @@
 import type {
   ConversationLocation, ConversationNodeContext, ConversationNodeDefinition,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type { ChatConversationViewNode } from '@xfcodeai/dsh-client-ui-chat/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { ChatConversationViewNode } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {
   ToolWorkflowAgentEndData, ToolWorkflowAgentStartData,
-} from '@xfcodeai/dsh-tool-workflow/types'
-import type { WorkflowAgentOutcome, WorkflowStopReason } from '@xfcodeai/dsh-workflow/types'
+} from '@x1a0f3n9/dsh-tool-workflow/types'
+import type { WorkflowAgentOutcome, WorkflowStopReason } from '@x1a0f3n9/dsh-workflow/types'
 
 /** Status shown for a workflow, phase, or member. */
 export type WorkflowRunStatus = 'running' | 'completed' | 'failed' | 'cancelled' | 'interrupted'
@@ -34,7 +34,7 @@ export interface WorkflowRunChatData {
   readonly phases: readonly WorkflowRunPhaseData[]
 }
 
-declare module '@xfcodeai/dsh-client-ui-chat/client' {
+declare module '@x1a0f3n9/dsh-client-ui-chat/client' {
   interface ChatNodeDataMap {
     /** Durable top-level workflow run and all members that actually started. */
     'workflow-run': WorkflowRunChatData

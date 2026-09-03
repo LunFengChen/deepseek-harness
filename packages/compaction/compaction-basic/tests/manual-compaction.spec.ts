@@ -1,37 +1,37 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentLoop from '@xfcodeai/dsh-agent-loop'
-import { mountAgentLoopTestDependencies } from '@xfcodeai/dsh-agent-loop-testkit'
-import InvariantRegistry from '@xfcodeai/dsh-invariants'
-import { CommandId } from '@xfcodeai/dsh-commands/brand'
-import * as SessionInvariant from '@xfcodeai/dsh-session/invariant'
-import * as AgentInvariant from '@xfcodeai/dsh-agent/invariant'
-import * as AgentLoopInvariant from '@xfcodeai/dsh-agent-loop/invariant'
-import * as CompactionInvariant from '@xfcodeai/dsh-compaction/invariant'
-import { BasicCompactionEngine } from '@xfcodeai/dsh-compaction-basic'
-import { CompactionId, isCompactCheckpointSource, ManualCompactionError } from '@xfcodeai/dsh-compaction'
-import type { CompactionResult } from '@xfcodeai/dsh-compaction'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import { CommandId } from '@x1a0f3n9/dsh-commands/brand'
+import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
+import * as AgentInvariant from '@x1a0f3n9/dsh-agent/invariant'
+import * as AgentLoopInvariant from '@x1a0f3n9/dsh-agent-loop/invariant'
+import * as CompactionInvariant from '@x1a0f3n9/dsh-compaction/invariant'
+import { BasicCompactionEngine } from '@x1a0f3n9/dsh-compaction-basic'
+import { CompactionId, isCompactCheckpointSource, ManualCompactionError } from '@x1a0f3n9/dsh-compaction'
+import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
 import {
   createAssistantMessage,
   createUserMessage,
   LlmAdapter,
-} from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 import type {
   ContentBlock,
   LlmResolvedModelInfo,
   Message,
   StreamChunk,
   TokenUsage,
-} from '@xfcodeai/dsh-llm'
-import SessionStore, { Session, SessionId, type SessionEvent } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import LlmRuntime from '@xfcodeai/dsh-llm'
-import TokenMeter from '@xfcodeai/dsh-token-meter'
-import type { Agent } from '@xfcodeai/dsh-agent'
+} from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import LlmRuntime from '@x1a0f3n9/dsh-llm'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 import type {
   SummarizationInput,
   SummaryResult,
-} from '@xfcodeai/dsh-compaction-basic/src/summarizer.ts'
+} from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
 
 const MODEL = 'mock'
 const SIGNAL = new AbortController().signal

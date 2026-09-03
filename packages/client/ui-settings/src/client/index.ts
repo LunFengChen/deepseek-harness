@@ -14,12 +14,12 @@
 import type { Context } from '@deepseek-ai/cordis'
 // Type-only: the ctx.remote merge, the fixed Host facts, and the carrier's
 // `connection/reset` lifecycle event, all through the assembly package.
-import type {} from '@xfcodeai/dsh-api-remotes/client'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
 // Type-only pair supplying `$on` and its key face without dragging a build
 // artifact into the Host graph (rationale beside the same pair in
 // settings-scope.ts).
-import type {} from '@xfcodeai/dsh-api-remotes/types'
-import type {} from '@xfcodeai/dsh-settings/types'
+import type {} from '@x1a0f3n9/dsh-api-remotes/types'
+import type {} from '@x1a0f3n9/dsh-settings/types'
 import { SettingsSchemaService } from './schema.ts'
 import { SettingsScopeBinder } from './settings-scope.ts'
 import { SettingsDescribeMirror } from './settings-mirror.ts'

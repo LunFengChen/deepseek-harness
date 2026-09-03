@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-const THEME_PACKAGE = '@xfcodeai/dsh-client-ui-theme'
+const THEME_PACKAGE = '@x1a0f3n9/dsh-client-ui-theme'
 const baseCss = readFileSync(fileURLToPath(new URL('../src/base.css', import.meta.url)), 'utf8')
 
 /**

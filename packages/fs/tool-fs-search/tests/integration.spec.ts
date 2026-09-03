@@ -15,11 +15,11 @@ import { mkdir, mkdtemp, rm, utimes, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { ToolCallId } from '@xfcodeai/dsh-llm'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { TOOL_ABORTED_BEFORE_DISPATCH } from '@xfcodeai/dsh-tools'
-import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
-import * as ToolFsSearch from '@xfcodeai/dsh-tool-fs-search'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { TOOL_ABORTED_BEFORE_DISPATCH } from '@x1a0f3n9/dsh-tools'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import * as ToolFsSearch from '@x1a0f3n9/dsh-tool-fs-search'
 
 const testToolSignal = new AbortController().signal
 

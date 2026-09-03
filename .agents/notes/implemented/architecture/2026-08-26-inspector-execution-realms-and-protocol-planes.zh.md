@@ -60,7 +60,7 @@ Worker 继续作为唯一的 Chrome CDP wire 与状态 owner。Client 代码模�
 
 `worker/realms/` 与 `worker/inspection/` 可以导入共享接口，但不导入 `worker/cdp/`；规范化 backend result 和已存 observation 不能包含 Chrome connection state。`worker/cdp/` 可以消费 realm 与 inspection interface 来生成 CDP projection。`worker/bridge/` 路由共享 message 并调用 Worker service，但不成为 Cordis、network、Runtime 或 Chrome 状态的 owner。
 
-本能力继续保留在同一个 `@xfcodeai/dsh-experimental-inspector` 包中，并使用显式 Client 与 Host compiler face。目录分隔是执行与依赖规则，不是拆包方案。
+本能力继续保留在同一个 `@x1a0f3n9/dsh-experimental-inspector` 包中，并使用显式 Client 与 Host compiler face。目录分隔是执行与依赖规则，不是拆包方案。
 
 ## Verification
 

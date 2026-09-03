@@ -1,6 +1,6 @@
 /**
  * Error vocabulary of the domain data form.
- * @module @xfcodeai/dsh-storage-domain/src/error
+ * @module @x1a0f3n9/dsh-storage-domain/src/error
  */
 
 /** Discriminant codes carried by every {@link DomainError}. */

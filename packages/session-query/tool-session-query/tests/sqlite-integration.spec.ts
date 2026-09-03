@@ -3,21 +3,21 @@ import { Context } from '@deepseek-ai/cordis'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import { createUserMessage, ToolCallId  } from '@xfcodeai/dsh-llm'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, ToolCallId  } from '@x1a0f3n9/dsh-llm'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   SessionId,
   SessionSeq,
   type Session,
-} from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import { turnBoundaryProjectionDefinition } from '@xfcodeai/dsh-agent-loop'
-import JsonlSessionPersistence from '@xfcodeai/dsh-session-persistence-jsonl'
-import SqliteSessionQueryEngine from '@xfcodeai/dsh-session-query-sqlite'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime from '@xfcodeai/dsh-tools'
-import * as ToolSessionQuery from '@xfcodeai/dsh-tool-session-query'
+} from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { turnBoundaryProjectionDefinition } from '@x1a0f3n9/dsh-agent-loop'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import SqliteSessionQueryEngine from '@x1a0f3n9/dsh-session-query-sqlite'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import * as ToolSessionQuery from '@x1a0f3n9/dsh-tool-session-query'
 
 const temporaryDirectories: string[] = []
 const contexts: Context[] = []

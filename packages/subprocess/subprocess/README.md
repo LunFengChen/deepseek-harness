@@ -3,7 +3,7 @@ description: "The subprocess service (ctx.subprocess) for composition authors an
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-subprocess
+# @x1a0f3n9/dsh-subprocess
 
 English | [中文](README.zh.md)
 
@@ -32,8 +32,8 @@ Mount a subprocess provider in any composition that must run child processes, an
 One provider registers `ctx.subprocess` per composition; load it beside the consumers that spawn through it — the bash executors, the LSP host, the PTY shell backend, or an out-of-process subagent backend. Loading a second provider fails loudly (one service per context, cordis standard).
 
 ```yaml
-- name: '@xfcodeai/dsh-subprocess-local'
-- name: '@xfcodeai/dsh-bash-local'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-bash-local'
 ```
 
 ### Starting a managed process

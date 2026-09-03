@@ -1,6 +1,6 @@
 /**
  * Workspace-level discovery and model-driven Typert generation.
- * @module @xfcodeai/dsh-typert-generator/workspace
+ * @module @x1a0f3n9/dsh-typert-generator/workspace
  */
 
 import { readFileSync } from 'node:fs'

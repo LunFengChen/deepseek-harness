@@ -3,7 +3,7 @@
  * One DNS answer set is validated before Undici receives it through a custom lookup,
  * so the connection cannot resolve the hostname again to a private address.
  *
- * @module @xfcodeai/dsh-web-fetch-http/network
+ * @module @x1a0f3n9/dsh-web-fetch-http/network
  */
 
 import { lookup as systemLookup } from 'node:dns/promises'
@@ -11,7 +11,7 @@ import type { LookupAddress, LookupOptions } from 'node:dns'
 import { isIP } from 'node:net'
 import type { Response } from 'undici'
 import ipaddr from 'ipaddr.js'
-import { WebError } from '@xfcodeai/dsh-web'
+import { WebError } from '@x1a0f3n9/dsh-web'
 
 /** One address resolved and retained for the subsequent pinned connection. */
 export interface PublicAddress {

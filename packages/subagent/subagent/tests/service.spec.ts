@@ -1,9 +1,9 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { type Agent } from '@xfcodeai/dsh-agent'
+import { type Agent } from '@x1a0f3n9/dsh-agent'
 
-import { HarnessError, ReasoningEffortId } from '@xfcodeai/dsh-llm'
-import { carrierKeyOf } from '@xfcodeai/dsh-scope'
+import { HarnessError, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import { carrierKeyOf } from '@x1a0f3n9/dsh-scope'
 import SubagentRuntime, {
   foldSubagentDescriptor,
   snapshotSubagentDescriptor,
@@ -17,9 +17,9 @@ import SubagentRuntime, {
   type SubagentRun,
   type SubagentRunEndInfo,
   type SubagentStartRequest,
-} from '@xfcodeai/dsh-subagent'
-import { SessionId, type SessionEvent } from '@xfcodeai/dsh-session'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
+} from '@x1a0f3n9/dsh-subagent'
+import { SessionId, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 
 function fakeParent(id = 'parent-1'): Agent {
   return { id: SessionId(id) } as unknown as Agent

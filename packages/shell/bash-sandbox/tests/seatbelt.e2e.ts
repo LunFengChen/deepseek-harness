@@ -5,18 +5,18 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { LocalSandboxProvider } from '@xfcodeai/dsh-sandbox-local'
-import { SandboxPolicyService } from '@xfcodeai/dsh-sandbox-policy'
-import SessionProjectionRegistry from '@xfcodeai/dsh-session-projection'
-import { seatbeltProfileArgs } from '@xfcodeai/dsh-sandbox-local/src/profiles.ts'
-import { SandboxBashExecutor } from '@xfcodeai/dsh-bash-sandbox'
-import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
+import { LocalSandboxProvider } from '@x1a0f3n9/dsh-sandbox-local'
+import { SandboxPolicyService } from '@x1a0f3n9/dsh-sandbox-policy'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { seatbeltProfileArgs } from '@x1a0f3n9/dsh-sandbox-local/src/profiles.ts'
+import { SandboxBashExecutor } from '@x1a0f3n9/dsh-bash-sandbox'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
 
 /**
  * Keyless macOS integration of the real provider and executor through public run/start paths.
  * Linux rungs are forced off so Seatbelt is selected. The tests check world effects and stamped
  * facts, including EPERM classification through the wrap-carried dialect; backend-only
- * confinement is covered by `@xfcodeai/dsh-sandbox-local`. Skips off macOS or when
+ * confinement is covered by `@x1a0f3n9/dsh-sandbox-local`. Skips off macOS or when
  * `sandbox-exec` rejects the profile.
  */
 

@@ -6,7 +6,7 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@xfcodeai/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-system-prompt'
 
 /** Services required for the model guidance paired with the browser renderer. */
 export const inject = ['systemPrompt']

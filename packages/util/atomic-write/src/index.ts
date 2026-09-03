@@ -7,7 +7,7 @@
  * writers of one file through a `wx`-created `<file>.lock` sibling, so a
  * read-modify-write cycle can never resurrect a state another writer just
  * replaced; readers stay lock-free because the rename commit is atomic.
- * @module @xfcodeai/dsh-atomic-write
+ * @module @x1a0f3n9/dsh-atomic-write
  */
 
 import { randomBytes } from 'node:crypto'

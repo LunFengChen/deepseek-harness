@@ -2,7 +2,7 @@
  * Provider-private wire types for DeepSeek's Anthropic-compatible Messages API. Citeable
  * result items and citation excerpts arrive in separate blocks; the provider joins them by
  * URL. These types do not create a dependency on `ctx.llm`.
- * @module @xfcodeai/dsh-web-search-deepseek/types
+ * @module @x1a0f3n9/dsh-web-search-deepseek/types
  */
 
 /** A `web_search_result` item inside a `web_search_tool_result` block. */

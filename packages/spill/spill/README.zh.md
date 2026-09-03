@@ -3,7 +3,7 @@ description: "spill 存储服务：部署方与插件作者如何保存过大的
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-spill
+# @x1a0f3n9/dsh-spill
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 把后端与策略一起挂载；设置 `maxInlineBytes` 后，任何过大的纯文本工具结果都会自动变成预览加定位信息。
 
 ```yaml
-- name: '@xfcodeai/dsh-spill-local'
-- name: '@xfcodeai/dsh-spill-policy'
+- name: '@x1a0f3n9/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: 50000
 ```

@@ -5,8 +5,8 @@
  * stays process-local here.
  */
 
-import { createSnapshotStore, type SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { SettingsScope } from '@xfcodeai/dsh-client-ui-settings/client'
+import { createSnapshotStore, type SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SettingsScope } from '@x1a0f3n9/dsh-client-ui-settings/client'
 import {
   WELCOME_NOTICE_ACK_FIELD, WELCOME_NOTICE_VERSION,
 } from '../onboarding-copy.ts'

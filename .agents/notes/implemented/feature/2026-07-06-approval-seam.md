@@ -20,7 +20,7 @@ One `cordis.yml` entry mounts the seam. Not loading it is the fail-closed opt-ou
 
 ```yaml
 - id: approval
-  name: '@xfcodeai/dsh-user-approval'
+  name: '@x1a0f3n9/dsh-user-approval'
   # config:
   #   policy: never   # deployment default for sessions without an override; 'ask' when omitted
 ```

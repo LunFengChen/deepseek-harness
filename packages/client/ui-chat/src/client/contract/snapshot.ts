@@ -1,6 +1,6 @@
 import type {
   ConversationNode, ConversationTimelineSnapshot, PartialAssistant, RunningToolCall,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { ChatConversationViewNode } from './chat-nodes.ts'
 import type { TurnProcessSpec } from './turn-process.ts'
 
@@ -10,7 +10,7 @@ export type {
   ModelRetryNode, PartialAssistant, RunningToolCall, SteeringMessageNode, TodoItem,
   ToolCallBlock, ToolResultNode, TurnErrorNode, TurnMaxTokensNode, UnknownSurfaceNode,
   UserMessageNode,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 /** Per-key observable used by one mounted Chat Node Seat. */
 export interface ChatNodeSource {
@@ -98,7 +98,7 @@ export interface ChatSnapshot {
   readonly legacy: LegacyConversationSlice
 }
 
-declare module '@xfcodeai/dsh-client-ui-conversation/client' {
+declare module '@x1a0f3n9/dsh-client-ui-conversation/client' {
   interface ConversationViewSnapshotMap {
     chat: ChatSnapshot
   }

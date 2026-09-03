@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-07-06-tool-result-retention-library.md
-2026-07-06-tool-result-retention-library.md: 6ce49f853fece974b43e6de288bf10c338b3f083
-2026-07-06-tool-result-retention-library.zh.md: a15d70ea9150bce4756dc6efd7105044e4ceca72
+2026-07-06-tool-result-retention-library.md: 45f3b18e6bec253758dc7af55e11d5138d56b9f5
+2026-07-06-tool-result-retention-library.zh.md: 4763f3f0603716a6ccc168d309d43d731412cbec

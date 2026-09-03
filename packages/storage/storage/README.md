@@ -3,7 +3,7 @@ description: "Storage hub (ctx.storage) for compositions and maintainers choosin
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-storage
+# @x1a0f3n9/dsh-storage
 
 English | [中文](README.zh.md)
 
@@ -34,11 +34,11 @@ Mount the hub whenever any package in the composition persists data that is not 
 ### A minimal composition
 
 ```yaml
-- name: '@xfcodeai/dsh-storage'
-- name: '@xfcodeai/dsh-storage-json'
+- name: '@x1a0f3n9/dsh-storage'
+- name: '@x1a0f3n9/dsh-storage-json'
   config:
     root: /var/lib/dsh/data
-- name: '@xfcodeai/dsh-storage-domain'
+- name: '@x1a0f3n9/dsh-storage-domain'
   config:
     backend: json
 ```

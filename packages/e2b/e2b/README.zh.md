@@ -3,7 +3,7 @@ description: "E2B 文件与命令工作的共享远程 Linux 沙箱：配置、�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-e2b
+# @x1a0f3n9/dsh-e2b
 
 [English](README.md) | 中文
 
@@ -36,14 +36,14 @@ kind: "package-reference"
 三个设置很重要：API 密钥（或 `E2B_API_KEY` 环境变量）、绝对远程工作目录与沙箱生命周期。密钥错误、相对工作目录或无效生命周期都会在任何远程工作开始前拒绝启动。
 
 ```yaml
-- name: '@xfcodeai/dsh-e2b'
+- name: '@x1a0f3n9/dsh-e2b'
   config:
     apiKey: <E2B API key>
     cwd: /home/user/workspace
     timeoutMs: 300000
 
-- name: '@xfcodeai/dsh-subprocess-e2b'
-- name: '@xfcodeai/dsh-fs-e2b'
+- name: '@x1a0f3n9/dsh-subprocess-e2b'
+- name: '@x1a0f3n9/dsh-fs-e2b'
 ```
 
 | 字段 | 默认值 | 含义 |
@@ -52,7 +52,7 @@ kind: "package-reference"
 | `cwd` | `/home/user/workspace` | 家族共享的远程工作目录；必须是绝对 POSIX 路径 |
 | `timeoutMs` | `300,000` | 沙箱生命周期（毫秒）；到期后沙箱被删除 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-e2b)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-e2b)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 你能得到什么
 
@@ -105,7 +105,7 @@ kind: "package-reference"
 - [E2B 提供方家族地图](../README.zh.md)——三个包与可选组合。
 - [子进程子系统](../../../docs/subsystems/subprocess.zh.md)——子进程 seam 约定与生成的 Cordis 表面，包括 `ctx.e2b`。
 - [可移植执行世界决策](../../../.agents/notes/implemented/architecture/2026-07-28-portable-execution-world-consumers.zh.md)——消费方为何委托给 `ctx.fs` 与 `ctx.subprocess`，以及留在宿主中的内容。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-e2b)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-e2b)——每个受支持配置字段及其源声明。
 
 -----
 

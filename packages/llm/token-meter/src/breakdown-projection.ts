@@ -6,14 +6,14 @@
  */
 
 import { z } from 'zod'
-import { canonicalHeader, SessionSeq } from '@xfcodeai/dsh-session'
-import type { ProjectionDefinition } from '@xfcodeai/dsh-session-projection'
+import { canonicalHeader, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import { estimateSystemTokens, estimateToolsTokens } from './estimate.ts'
 import { foldSurfaceProjection } from './surface-projection.ts'
 // Import for the `contextBreakdown` SessionProjectionStateMap key merge.
 import type {} from './projection.ts'
 
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     contextBreakdown: ContextBreakdownState
   }

@@ -8,9 +8,9 @@
  * @module dsh-llm-pi-ai/stream
  */
 
-import { brandString } from '@xfcodeai/dsh-brand'
-import { CONTEXT_WINDOW_EXCEEDED_CODE, EMPTY_RESPONSE_CODE, isContextWindowExceededError, isQuotaExceededError, LlmError, QUOTA_EXCEEDED_CODE } from '@xfcodeai/dsh-llm'
-import type { FinishReason, StreamChunk, TokenUsage, ToolCallId } from '@xfcodeai/dsh-llm'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { CONTEXT_WINDOW_EXCEEDED_CODE, EMPTY_RESPONSE_CODE, isContextWindowExceededError, isQuotaExceededError, LlmError, QUOTA_EXCEEDED_CODE } from '@x1a0f3n9/dsh-llm'
+import type { FinishReason, StreamChunk, TokenUsage, ToolCallId } from '@x1a0f3n9/dsh-llm'
 import { isContextOverflow } from '@earendil-works/pi-ai'
 import type { AssistantMessage, AssistantMessageEvent, Usage as PiUsage } from '@earendil-works/pi-ai'
 import { toPiReplayState } from './replay.ts'

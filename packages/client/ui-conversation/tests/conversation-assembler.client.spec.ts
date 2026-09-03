@@ -1,19 +1,19 @@
 import { describe, expect, it, vi } from 'vitest'
 import type {
   SessionEventLike, SessionEventLikeEntry, SessionLiveEventEntry,
-} from '@xfcodeai/dsh-api-session-controller/client'
-import type { ChunkRowEvent } from '@xfcodeai/dsh-api-session-controller/types'
-import type { ChunkRow } from '@xfcodeai/dsh-session/chunk-rows'
-import { SessionSeq } from '@xfcodeai/dsh-session/types'
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { ChunkRowEvent } from '@x1a0f3n9/dsh-api-session-controller/types'
+import type { ChunkRow } from '@x1a0f3n9/dsh-session/chunk-rows'
+import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 import {
   ConversationLocationIndex,
   ConversationNodeAssembler as RuntimeConversationNodeAssembler,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ConversationMatch, ConversationNodeContext,
   ConversationNodeDefinition, ConversationViewDefinition, ConversationViewNode,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 interface ScopeProbeStepData {
   readonly value: number
@@ -23,7 +23,7 @@ interface ScopeProbeTurnData {
   readonly valueSeenFromStep: number
 }
 
-declare module '@xfcodeai/dsh-client-ui-conversation/client' {
+declare module '@x1a0f3n9/dsh-client-ui-conversation/client' {
   interface ConversationStepDataMap {
     'scope-probe': ScopeProbeStepData
   }

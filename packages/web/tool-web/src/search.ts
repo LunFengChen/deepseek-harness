@@ -6,10 +6,10 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { defineTool } from '@xfcodeai/dsh-tools'
-import type { GenericCallView, ToolResult, WebSearchResultView, WebSource } from '@xfcodeai/dsh-tools'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
-import type { WebSearchResult, WebSearchSource } from '@xfcodeai/dsh-web'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { GenericCallView, ToolResult, WebSearchResultView, WebSource } from '@x1a0f3n9/dsh-tools'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
+import type { WebSearchResult, WebSearchSource } from '@x1a0f3n9/dsh-web'
 import { EXTERNAL_WEB_CONTENT_NOTICE } from './trust.ts'
 
 /**
@@ -301,7 +301,7 @@ function mergeSearchResults(
  *   request's `maxResults`.
  * @param maxQueries - the deployment's query cap enforced before provider calls.
  * @param timeoutMs - the cooperative tool-call budget (ms) attached as the tool's
- *   `ToolDefinition.timeoutMs` for `@xfcodeai/dsh-tool-call-timeout-policy` to enforce.
+ *   `ToolDefinition.timeoutMs` for `@x1a0f3n9/dsh-tool-call-timeout-policy` to enforce.
  * @param fetchEnabled - whether the same composition exposes `web_fetch`, which
  *   controls whether search guidance may recommend that follow-up tool.
  */

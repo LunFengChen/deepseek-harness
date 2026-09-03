@@ -36,7 +36,7 @@ kind: "package-library"
 ## API
 
 ```ts
-import { canonicalClientTimeZone } from '@xfcodeai/dsh-util-time'
+import { canonicalClientTimeZone } from '@x1a0f3n9/dsh-util-time'
 ```
 
 | 导出 | 职责 |

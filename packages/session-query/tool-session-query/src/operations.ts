@@ -1,21 +1,21 @@
 /**
  * Tool operation orchestration over session-query service capabilities.
  *
- * @module @xfcodeai/dsh-tool-session-query/operations
+ * @module @x1a0f3n9/dsh-tool-session-query/operations
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { HarnessError } from '@xfcodeai/dsh-llm'
-import { SessionSeq } from '@xfcodeai/dsh-session'
-import type { SessionId } from '@xfcodeai/dsh-session'
+import { HarnessError } from '@x1a0f3n9/dsh-llm'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
 import {
   SessionQueryError,
   type SessionEventSearchPage,
   type SessionEventSurface,
   type SessionRecord,
   type SessionSearchCursor,
-} from '@xfcodeai/dsh-session-query'
-import type { ToolRunContext } from '@xfcodeai/dsh-tools'
+} from '@x1a0f3n9/dsh-session-query'
+import type { ToolRunContext } from '@x1a0f3n9/dsh-tools'
 import { toolInput } from './input.ts'
 import { presentation } from './presentation.ts'
 import { serviceBoundary } from './service-boundary.ts'

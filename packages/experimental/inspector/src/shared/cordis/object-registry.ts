@@ -1,6 +1,6 @@
 /** Realm-local retention and identity for live objects referenced by Inspector snapshots. */
 
-import { randomUUID } from '@xfcodeai/dsh-util-crypto'
+import { randomUUID } from '@x1a0f3n9/dsh-util-crypto'
 import { inspectorId } from '../identity.ts'
 import {
   type InspectorObjectHandle,

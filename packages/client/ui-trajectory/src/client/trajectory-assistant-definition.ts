@@ -1,10 +1,10 @@
 import type { Context } from '@deepseek-ai/cordis'
-import type { ChunkRowEvent } from '@xfcodeai/dsh-api-session-controller/types'
+import type { ChunkRowEvent } from '@x1a0f3n9/dsh-api-session-controller/types'
 import type {
   AssistantBlock, AssistantMessageNode, ConversationLocation,
   ConversationMatch, ConversationNodeContext, ConversationNodeDefinition,
   PartialAssistant, RequestView,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { trajectoryNode } from './trajectory-definition-common.ts'
 import {
   displayFailure, emptyAssistantBlock, isTokenDelta, toAssistantBlock, toAssistantBlocks,

@@ -37,7 +37,7 @@ Status: implemented
 
 ## 后续命名决策
 
-[仓库命名约定](2026-08-11-repository-naming-contract-and-rename-ledger.zh.md)解决了本次移动有意推迟的两个名称。`@xfcodeai/dsh-sdk-jsonrpc-server` 表示运行时 SDK 协议的 JSON-RPC 服务器一侧。`@xfcodeai/dsh-tool-call-timeout-policy` 准确表示策略所限制的操作，同时保留其 `guard/timeout-policy/` 归属。这些重命名会一并移除阻塞发布的 `FIXME` 标记。
+[仓库命名约定](2026-08-11-repository-naming-contract-and-rename-ledger.zh.md)解决了本次移动有意推迟的两个名称。`@x1a0f3n9/dsh-sdk-jsonrpc-server` 表示运行时 SDK 协议的 JSON-RPC 服务器一侧。`@x1a0f3n9/dsh-tool-call-timeout-policy` 准确表示策略所限制的操作，同时保留其 `guard/timeout-policy/` 归属。这些重命名会一并移除阻塞发布的 `FIXME` 标记。
 
 ## 移动触及了什么
 

@@ -3,7 +3,7 @@ description: "Opt-in per-step clock context with the current time, browser zone,
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-time-context
+# @x1a0f3n9/dsh-time-context
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Each injected reading has three lines: an ISO-shaped timestamp with numeric offs
 The minimal mount needs no configuration. A positive `refreshIntervalMs` suppresses injections that fall within that many milliseconds of the latest one; omission or `0` injects at every eligible entering pre-step whose signal is not already aborted.
 
 ```yaml
-- name: '@xfcodeai/dsh-time-context'
+- name: '@x1a0f3n9/dsh-time-context'
   config:
     timeZone: Asia/Shanghai
 ```
@@ -46,7 +46,7 @@ The minimal mount needs no configuration. A positive `refreshIntervalMs` suppres
 | `timeZone` | process zone | Fallback display zone when the open turn has no unique browser zone |
 | `refreshIntervalMs` | `0` (every eligible step) | Minimum milliseconds between durable injections in one session |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-time-context) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-time-context) is the exhaustive source for every accepted field and its JSDoc.
 
 ### Choosing the zone
 
@@ -91,7 +91,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Durable per-step time-context decision record](../../../.agents/notes/implemented/feature/2026-07-16-durable-per-step-time-context.md) — design rationale for the durable reading.
 - [Schedule user guide](../../../docs/user/guide/schedule.md) — the official configuration path for mounting this plugin.
 - [Context group map](../README.md) — sibling request-context packages.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-time-context) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-time-context) — every accepted config field and its source declaration.
 
 -----
 

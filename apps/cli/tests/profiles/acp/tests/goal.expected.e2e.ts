@@ -8,9 +8,9 @@ import {
   type AgentUnderTest,
   type InputScript,
   type NormalizeContext,
-} from '@xfcodeai/dsh-session-snapshot'
-import { foldGoal } from '@xfcodeai/dsh-goal'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+} from '@x1a0f3n9/dsh-session-snapshot'
+import { foldGoal } from '@x1a0f3n9/dsh-goal'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import { describe, expect, it } from 'vitest'
 
 // This lifecycle proof has goal-specific timestamp normalization and semantic

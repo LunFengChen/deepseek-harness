@@ -3,7 +3,7 @@ description: "In-app browsing backend of the directory-picker seam: one-level di
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-host-directory-picker-browse
+# @x1a0f3n9/dsh-host-directory-picker-browse
 
 English | [中文](README.zh.md)
 
@@ -45,7 +45,7 @@ Both primitives refuse a path that is not fully qualified — relative forms, an
 |---|---|---|
 | `maxEntries` | `1,000` | Complete-result bound of one listing level; hidden rows count toward it |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-host-directory-picker-browse) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-host-directory-picker-browse) is the exhaustive source for every accepted field and its JSDoc.
 
 -----
 
@@ -87,7 +87,7 @@ Read these when the backend contract is not enough: the seam definition first, t
 - [Directory-picker capability seam decision](../../../.agents/notes/implemented/architecture/2026-07-28-directory-picker-capability-seam.md) — the policy decisions behind listing and creation.
 - [Native backend](../directory-picker-native/README.md) — the OS-chooser alternative for local operators.
 - [Adaptive chooser](../directory-picker-auto/README.md) — boot-time resolution between the two backends.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-host-directory-picker-browse) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-host-directory-picker-browse) — every accepted config field and its source declaration.
 
 -----
 

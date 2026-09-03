@@ -2,12 +2,12 @@
  * Public type vocabulary of the workspace entity: the `WorkspaceId` brand and
  * the `Workspace` consumer interface. Types only — the `WorkspaceId` factory
  * lives in `index.ts` (this file carries no runtime code).
- * @module @xfcodeai/dsh-workspace/src/types
+ * @module @x1a0f3n9/dsh-workspace/src/types
  */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type {} from '@xfcodeai/dsh-typert-protocol'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type {} from '@x1a0f3n9/dsh-typert-protocol'
 
 /**
  * Identifies one workspace record. A generated uuid, never the path: path
@@ -15,7 +15,7 @@ import type {} from '@xfcodeai/dsh-typert-protocol'
  */
 export type WorkspaceId = Branded<'WorkspaceId'>
 
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
     /** No registration carries that Workspace identity. */
     'workspace/not-found': { readonly workspaceId: WorkspaceId }

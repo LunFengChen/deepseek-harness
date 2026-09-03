@@ -16,7 +16,7 @@ kind: "package-bundle"
 ## Skeleton
 
 ```markdown
-# @xfcodeai/dsh-<name>
+# @x1a0f3n9/dsh-<name>
 
 English | [中文](README.zh.md)
 
@@ -43,8 +43,8 @@ Three to five sentences: what a profile gains from this layer, which profiles al
 The verified install path — run it against the current checkout before writing:
 
 ```text
-dsh plugin --profile <name> add @xfcodeai/dsh-<name>
-dsh plugin --profile <name> remove @xfcodeai/dsh-<name>
+dsh plugin --profile <name> add @x1a0f3n9/dsh-<name>
+dsh plugin --profile <name> remove @x1a0f3n9/dsh-<name>
 ```
 
 State where in-box bundles resolve from, what the reconcile step activates, and what fails when the patch declaration is missing.

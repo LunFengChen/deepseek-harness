@@ -7,8 +7,8 @@ import type {
   SubprocessOutcome,
   SubprocessTerminalForeground,
   SubprocessTerminalHandle,
-} from '@xfcodeai/dsh-subprocess'
-import { TerminalError } from '@xfcodeai/dsh-terminal'
+} from '@x1a0f3n9/dsh-subprocess'
+import { TerminalError } from '@x1a0f3n9/dsh-terminal'
 import type {
   TerminalBackendSession,
   TerminalReadRequest,
@@ -21,7 +21,7 @@ import type {
   TerminalSignal,
   TerminalSignalResult,
   TerminalWaitReason,
-} from '@xfcodeai/dsh-terminal'
+} from '@x1a0f3n9/dsh-terminal'
 import type { ResolvedConfig } from './config.ts'
 import { CONTROLLED_PROMPT, TerminalSanitizer } from './sanitize.ts'
 

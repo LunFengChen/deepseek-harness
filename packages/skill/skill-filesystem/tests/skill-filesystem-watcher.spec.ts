@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SkillRegistry from '@xfcodeai/dsh-skill'
+import SkillRegistry from '@x1a0f3n9/dsh-skill'
 
 interface FakeWatcherControl {
   emitter: EventEmitter

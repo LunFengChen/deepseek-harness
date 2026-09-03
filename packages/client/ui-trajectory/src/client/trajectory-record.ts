@@ -1,8 +1,8 @@
 /** Shared trajectory record data and formatting contracts. */
 
 import type { HTMLAttributes } from 'react'
-import type { ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
-import type { ConversationPromptSnapshot } from '@xfcodeai/dsh-client-ui-conversation/client'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { ConversationPromptSnapshot } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { TrajectoryTranslate } from './locales.ts'
 
 /** Closed set of trajectory record kinds. */

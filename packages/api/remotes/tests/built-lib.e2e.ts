@@ -162,10 +162,10 @@ describe.skipIf(!requiredArtifacts)('Goal Remote built LIB chain', () => {
       }
       const client = new Context()
       for (const id of [
-        '@xfcodeai/dsh-typert-registry',
-        '@xfcodeai/dsh-client-connection',
-        '@xfcodeai/dsh-api-gateway',
-        '@xfcodeai/dsh-api-remotes',
+        '@x1a0f3n9/dsh-typert-registry',
+        '@x1a0f3n9/dsh-client-connection',
+        '@x1a0f3n9/dsh-api-gateway',
+        '@x1a0f3n9/dsh-api-remotes',
       ]) {
         const plugin = instantiate(id)
         await client.plugin({ inject: plugin.inject, apply: plugin.apply })

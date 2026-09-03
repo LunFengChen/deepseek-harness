@@ -5,7 +5,7 @@
  * to the same append-only / contiguous-seq / lazy-materialization / crash
  * semantics. The JSONL backend's own spec adds file-specific tests on top.
  *
- * @module @xfcodeai/dsh-session-persistence/tests/contract
+ * @module @x1a0f3n9/dsh-session-persistence/tests/contract
  */
 
 import { describe, expect, it } from 'vitest'
@@ -17,15 +17,15 @@ import {
   SessionSeq,
   TOOL_NOT_STARTED,
   TOOL_OUTCOME_UNKNOWN,
-} from '@xfcodeai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import type {
   SessionEvent,
   SessionHeader,
   SessionLogOffset as SessionLogOffsetType,
   SurfaceEventType,
   SurfaceIntent,
-} from '@xfcodeai/dsh-session'
-import { ToolCallId, MessageId, createMessage, freezeMessage } from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-session'
+import { ToolCallId, MessageId, createMessage, freezeMessage } from '@x1a0f3n9/dsh-llm'
 import type { SessionPersistence } from '../src/index.ts'
 
 /** A backend under test plus its teardown. */

@@ -20,7 +20,7 @@ Vendor CLI、仅用于构建和测试的可执行文件、进程内直接挂载�
 
 ### Profile 应用
 
-`@xfcodeai/dsh-sdk-app` 与 `@xfcodeai/dsh-acp-app` 在 `@xfcodeai/dsh-base` 之上组合完整协议应用。SDK 组合包增加 JSON-RPC 服务器、应用自有帮助和 stdio 生命周期；ACP 组合包增加仅用于自动化的 ACP 服务器与相同的应用职责。两者都采用 base 层的模型、工具、持久化、settings、credentials、策略和环境行为。[独立 sdk-minimal profile](2026-08-24-standalone-sdk-minimal-profile.zh.md)复用 SDK 启动与 JSON-RPC 服务，但刻意拥有不含 `dsh-base` 的完整显式配置树。
+`@x1a0f3n9/dsh-sdk-app` 与 `@x1a0f3n9/dsh-acp-app` 在 `@x1a0f3n9/dsh-base` 之上组合完整协议应用。SDK 组合包增加 JSON-RPC 服务器、应用自有帮助和 stdio 生命周期；ACP 组合包增加仅用于自动化的 ACP 服务器与相同的应用职责。两者都采用 base 层的模型、工具、持久化、settings、credentials、策略和环境行为。[独立 sdk-minimal profile](2026-08-24-standalone-sdk-minimal-profile.zh.md)复用 SDK 启动与 JSON-RPC 服务，但刻意拥有不含 `dsh-base` 的完整显式配置树。
 
 Profile manifest 负责 patch 重载：
 
@@ -38,17 +38,17 @@ Profile manifest 负责 patch 重载：
 
 ### TypeScript SDK 自定义
 
-`@xfcodeai/dsh-sdk-client` 依赖同版本的 `@xfcodeai/dsh` 包，解析其已安装 CLI 模块，通过当前 Node 可执行文件运行该模块，并默认选择 `sdk`。两层客户端都暴露 `dshBin`、`profile`、有序 `patches`、`dshHome`、进程 cwd、环境和超时；任意 command/argv 启动只保留为 fake-runtime 测试的内部适配器。
+`@x1a0f3n9/dsh-sdk-client` 依赖同版本的 `@x1a0f3n9/dsh` 包，解析其已安装 CLI 模块，通过当前 Node 可执行文件运行该模块，并默认选择 `sdk`。两层客户端都暴露 `dshBin`、`profile`、有序 `patches`、`dshHome`、进程 cwd、环境和超时；任意 command/argv 启动只保留为 fake-runtime 测试的内部适配器。
 
-SDK 用户通过 profile 自定义插件。`dsh plugin --profile <name> ...` 管理持久依赖与组合包顺序，profile 的 `cordis.patch.yml` 负责持久配置项变更，启动时 `patches` 提供有序临时覆盖。自定义 profile 必须保留 `@xfcodeai/dsh-sdk-app` 或另一个 SDK 服务器配置项。相对 CLI 模块、patch、显式 home 与进程 cwd 路径会在 spawn 前变为绝对路径；初始化具有有限时限，诊断会写明所选 profile。
+SDK 用户通过 profile 自定义插件。`dsh plugin --profile <name> ...` 管理持久依赖与组合包顺序，profile 的 `cordis.patch.yml` 负责持久配置项变更，启动时 `patches` 提供有序临时覆盖。自定义 profile 必须保留 `@x1a0f3n9/dsh-sdk-app` 或另一个 SDK 服务器配置项。相对 CLI 模块、patch、显式 home 与进程 cwd 路径会在 spawn 前变为绝对路径；初始化具有有限时限，诊断会写明所选 profile。
 
 直接使用 SDK 时遵循普通 Harness home 解析：显式 `dshHome`、继承的 `DSH_HOME`，最后是 `~/.dsh`。`subagent-dsh-sdk` 则要求显式绝对 home，因此嵌套运行时不会通过操作系统 home 发现个人 profile、已安装插件、凭据或会话。DSH 专用 ACP 子进程示例同样传入隔离 home；ACP 后端自身继续适用于非 DSH agent。
 
 ### Python 运行时
 
-Python 运行时 wheel 通过私有 `dsh-python-runtime-closure` 部署 manifest，打包来自 `node_modules/@xfcodeai/dsh/lib/bin.js` 的普通 `@xfcodeai/dsh` CLI。Python 客户端默认选择 `dsh --profile sdk`、有序 patch 文件与显式 Harness home；`python/sdk/examples` 下的可运行示例选择 `sdk-minimal`。安装的 `dsh` 控制台命令暴露相同 profile 语法与单独打包的 `web` 应用。
+Python 运行时 wheel 通过私有 `dsh-python-runtime-closure` 部署 manifest，打包来自 `node_modules/@x1a0f3n9/dsh/lib/bin.js` 的普通 `@x1a0f3n9/dsh` CLI。Python 客户端默认选择 `dsh --profile sdk`、有序 patch 文件与显式 Harness home；`python/sdk/examples` 下的可运行示例选择 `sdk-minimal`。安装的 `dsh` 控制台命令暴露相同 profile 语法与单独打包的 `web` 应用。
 
-可执行文件族是 `deepseek-harness-sdk-runtime-<platform>-<arch>`。SDK 协议格式、wheel 与 import 分发名称、伴随文件名称，以及协议 identity `deepseek-harness-sdk-runtime` 保持稳定。SDK 包族是 `@xfcodeai/dsh-sdk-client`、`@xfcodeai/dsh-sdk-protocol` 与 `@xfcodeai/dsh-sdk-jsonrpc-server`；`@xfcodeai/dsh-acp` 继续作为 ACP 协议插件。仓库不保留 Python 专用 Node 应用、检入的完整配置、兼容包、转发可执行文件、后备解析器或 SDK／ACP 启动别名。[Python profile 运行时决策](2026-08-23-python-sdk-dsh-profile-runtime.zh.md)负责该启动方式，[Windows x64 运行时决策](2026-08-23-python-sdk-windows-x64-runtime.zh.md)负责第四个载体。
+可执行文件族是 `deepseek-harness-sdk-runtime-<platform>-<arch>`。SDK 协议格式、wheel 与 import 分发名称、伴随文件名称，以及协议 identity `deepseek-harness-sdk-runtime` 保持稳定。SDK 包族是 `@x1a0f3n9/dsh-sdk-client`、`@x1a0f3n9/dsh-sdk-protocol` 与 `@x1a0f3n9/dsh-sdk-jsonrpc-server`；`@x1a0f3n9/dsh-acp` 继续作为 ACP 协议插件。仓库不保留 Python 专用 Node 应用、检入的完整配置、兼容包、转发可执行文件、后备解析器或 SDK／ACP 启动别名。[Python profile 运行时决策](2026-08-23-python-sdk-dsh-profile-runtime.zh.md)负责该启动方式，[Windows x64 运行时决策](2026-08-23-python-sdk-windows-x64-runtime.zh.md)负责第四个载体。
 
 ### 强制校验
 
@@ -93,6 +93,6 @@ Python 运行时 wheel 通过私有 `dsh-python-runtime-closure` 部署 manifest
 - 用户通过具名 profile 与有序 patch 更改 SDK 应用的插件组合，使用与其他所有 dsh 应用相同的安装与解析模型。
 - 自定义 profile 可以在不启用服务器模块 HMR 的情况下获得实时配置监视，只有显式覆盖配置项才会启用源码模块替换。
 - 完整 SDK 与 ACP profile 共享完整 base 应用和同一份策略与工具；`sdk-minimal` 拥有自己的显式独立清单，快照会呈现这些刻意采用的组装差异。
-- 增加 `@xfcodeai/dsh` 会扩大 TypeScript 客户端的安装体积，换来确定的同版本运行时。
+- 增加 `@x1a0f3n9/dsh` 会扩大 TypeScript 客户端的安装体积，换来确定的同版本运行时。
 - 受信任用户 patch 可以增加写入 stdout 的插件并破坏自己的协议流；随附 profile 保证纯净，不为任意第三方组合提供保证。
 - Python 打包普通 `dsh` profile 启动器，同时保留封闭原生运行时，wheel 用户无需系统 Node。

@@ -6,15 +6,15 @@ Status: implemented
 
 ## 问题
 
-在 [`dsh --profile headless`](../architecture/2026-08-06-app-owned-command-line.zh.md) 成为产品的一次性命令后，`@xfcodeai/dsh-cli-demo` 仍是承担同一工作的第二个应用包。它另行拥有一套可执行文件、参数语法、应用组装、取消生命周期、文本／JSON／stream-JSON 输出约定、构建产物、配套文档和测试套件。两个入口组装的树也不相同，因此 demo 成功不能证明已交付的 `headless` profile 可用，用户还必须在功能重叠的命令之间作出选择。
+在 [`dsh --profile headless`](../architecture/2026-08-06-app-owned-command-line.zh.md) 成为产品的一次性命令后，`@x1a0f3n9/dsh-cli-demo` 仍是承担同一工作的第二个应用包。它另行拥有一套可执行文件、参数语法、应用组装、取消生命周期、文本／JSON／stream-JSON 输出约定、构建产物、配套文档和测试套件。两个入口组装的树也不相同，因此 demo 成功不能证明已交付的 `headless` profile 可用，用户还必须在功能重叠的命令之间作出选择。
 
 回放套件仍需要规范会话事件来固定组装后的后端行为。这一测试需求不需要已发布命令或兼容性约定。
 
 ## 决策
 
-彻底删除 `@xfcodeai/dsh-cli-demo`：包括它的包、bin、解析器、应用插件、输出格式、测试、workspace 引用、生成目录条目和现行文档。不保留别名或兼容包。源码用户通过 `pnpm dsh --profile headless` 调用产品命令；stdout 上的最终文本、stderr 上的失败诊断、持久化、退出状态和关闭行为均由该命令负责。
+彻底删除 `@x1a0f3n9/dsh-cli-demo`：包括它的包、bin、解析器、应用插件、输出格式、测试、workspace 引用、生成目录条目和现行文档。不保留别名或兼容包。源码用户通过 `pnpm dsh --profile headless` 调用产品命令；stdout 上的最终文本、stderr 上的失败诊断、持久化、退出状态和关闭行为均由该命令负责。
 
-`apps/cli/tests/profiles/headless` 加载已交付的 `base` 与 `headless` 组合包层，然后只对回放或模拟提供方、隔离持久化及被测行为应用窄 overlay。支持层的 `@xfcodeai/dsh-loader-smoke` 包负责交付 profile 组装 helper、共享的直接 agent 轮次 helper 与仅限测试的 driver；该 driver 将规范事件渲染为 JSONL，但不定义受支持的产品输出格式。
+`apps/cli/tests/profiles/headless` 加载已交付的 `base` 与 `headless` 组合包层，然后只对回放或模拟提供方、隔离持久化及被测行为应用窄 overlay。支持层的 `@x1a0f3n9/dsh-loader-smoke` 包负责交付 profile 组装 helper、共享的直接 agent 轮次 helper 与仅限测试的 driver；该 driver 将规范事件渲染为 JSONL，但不定义受支持的产品输出格式。
 
 ## 考虑过的替代方案
 
@@ -25,7 +25,7 @@ Status: implemented
 
 ## 后果
 
-这是有意为之的破坏性变更。`dsh-cli-demo`、它的 `--output-format` 选项以及对 `@xfcodeai/dsh-cli-demo/src/cli.ts` 的导入都不再可解析。本变更不提供公开的事件流替代接口；调用方使用 `dsh --profile headless` 执行一次性任务，需要结构化自动化时则必须选择现有的协议接口。
+这是有意为之的破坏性变更。`dsh-cli-demo`、它的 `--output-format` 选项以及对 `@x1a0f3n9/dsh-cli-demo/src/cli.ts` 的导入都不再可解析。本变更不提供公开的事件流替代接口；调用方使用 `dsh --profile headless` 执行一次性任务，需要结构化自动化时则必须选择现有的协议接口。
 
 仓库通过仅供测试的基础设施保留后端回放覆盖，产品冒烟测试和 built-bin 验收则运行 `dsh --profile headless`。只有当独立的一次性包负责一套真正独立、带版本且不能归产品启动器所有的协议时，它才可以重新引入；第二种命令写法或输出 shim 并不足以构成理由。
 

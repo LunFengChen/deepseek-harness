@@ -2,11 +2,11 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import Schema from '@deepseek-ai/schemastery'
-import { brandString } from '@xfcodeai/dsh-brand'
-import type {} from '@xfcodeai/dsh-attachment'
-import type { CommandResult } from '@xfcodeai/dsh-commands'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { SessionRawArtifact } from '@xfcodeai/dsh-session-persistence'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type {} from '@x1a0f3n9/dsh-attachment'
+import type { CommandResult } from '@x1a0f3n9/dsh-commands'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SessionRawArtifact } from '@x1a0f3n9/dsh-session-persistence'
 import {
   DEFAULT_SESSION_LOG_COMPRESSION_LEVEL,
   flushLiveSessionLog,

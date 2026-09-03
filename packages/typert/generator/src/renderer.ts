@@ -1,7 +1,7 @@
 /**
  * Rendering and traversal over the compiler-independent TypeGraph. Emitters
  * use this module instead of reaching back into TypeScript AST nodes.
- * @module @xfcodeai/dsh-typert-generator/renderer
+ * @module @x1a0f3n9/dsh-typert-generator/renderer
  */
 
 import { childTypeNodeIds } from './model.ts'

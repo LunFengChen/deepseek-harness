@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-timeout",
+  "name": "@x1a0f3n9/dsh-timeout",
   "description": "Zero-dependency timeout/deadline primitive: clampTimeout, deadline, timeoutOf, TimeoutReason (timing + classification only, no termination)",
   "version": "0.1.2-alpha.4",
   "publishConfig": {

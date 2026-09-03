@@ -18,7 +18,7 @@ const root = resolve(import.meta.dirname, '..')
 /** The closure manifest whose dependencies define the executable. */
 const DEPLOY_ROOT_PACKAGE = 'dsh-python-runtime-closure'
 /** The sole application launcher inside the deployed closure. */
-const ENTRY_BIN = 'node_modules/@xfcodeai/dsh/lib/bin.js'
+const ENTRY_BIN = 'node_modules/@x1a0f3n9/dsh/lib/bin.js'
 /** Python-visible executable basename. */
 const OUTPUT_BASENAME = 'deepseek-harness-sdk-runtime'
 /** Default Node major; SEA mode requires at least Node 22. */
@@ -58,9 +58,9 @@ const ASSET_GLOBS = [
   'node_modules/**/*.yaml',
   'node_modules/**/*.yml',
   // web-app builds this path dynamically, so pkg cannot discover the static frontend.
-  'node_modules/@xfcodeai/dsh-web-frontend/dist/**/*',
+  'node_modules/@x1a0f3n9/dsh-web-frontend/dist/**/*',
   // skill-badge resolves both Markdown and image resources through import.meta.url.
-  'node_modules/@xfcodeai/dsh-skill-badge/assets/**/*',
+  'node_modules/@x1a0f3n9/dsh-skill-badge/assets/**/*',
 ]
 
 const PLATFORMS = ['linux', 'macos', 'win'] as const

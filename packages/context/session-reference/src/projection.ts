@@ -1,11 +1,11 @@
 /** Current-surface projection and byte-bounded rendering. */
 
-import { isCompactCheckpointSource } from '@xfcodeai/dsh-compaction'
-import type { SessionSurfaceSnapshot } from '@xfcodeai/dsh-session-query'
-import { TextRetainer } from '@xfcodeai/dsh-output-retention'
-import { assertNever } from '@xfcodeai/dsh-util-values'
-import { SessionSeq } from '@xfcodeai/dsh-session'
-import type { OptionalSessionSeq } from '@xfcodeai/dsh-session'
+import { isCompactCheckpointSource } from '@x1a0f3n9/dsh-compaction'
+import type { SessionSurfaceSnapshot } from '@x1a0f3n9/dsh-session-query'
+import { TextRetainer } from '@x1a0f3n9/dsh-output-retention'
+import { assertNever } from '@x1a0f3n9/dsh-util-values'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { OptionalSessionSeq } from '@x1a0f3n9/dsh-session'
 import { stringifyTagSafeJson } from './serialization.ts'
 import type { ReferencedConversationItem } from './types.ts'
 

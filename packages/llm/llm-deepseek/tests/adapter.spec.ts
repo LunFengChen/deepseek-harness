@@ -3,9 +3,9 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { AttachmentId, ImageVariantId } from '@xfcodeai/dsh-attachment'
-import type { AttachmentStore, ImageAttachmentRef, RequestImageAttachment } from '@xfcodeai/dsh-attachment'
-import { createLaunchEnvironmentSnapshot } from '@xfcodeai/dsh-launch-environment'
+import { AttachmentId, ImageVariantId } from '@x1a0f3n9/dsh-attachment'
+import type { AttachmentStore, ImageAttachmentRef, RequestImageAttachment } from '@x1a0f3n9/dsh-attachment'
+import { createLaunchEnvironmentSnapshot } from '@x1a0f3n9/dsh-launch-environment'
 import LlmRuntime, { ToolCallId, createUserMessage,
   CONTEXT_WINDOW_EXCEEDED_CODE,
   LlmError,
@@ -13,14 +13,14 @@ import LlmRuntime, { ToolCallId, createUserMessage,
   QUOTA_EXCEEDED_CODE,
   ReasoningEffortId,
   userAgent,
-} from '@xfcodeai/dsh-llm'
-import { MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
-import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@xfcodeai/dsh-anonymous-user-id'
-import { SessionId } from '@xfcodeai/dsh-session'
-import DeepSeekLlmApiExtensionRegistry from '@xfcodeai/dsh-deepseek-llm-api-extensions'
-import type { PreparedDeepSeekLlmApiExtensions } from '@xfcodeai/dsh-deepseek-llm-api-extensions'
-import * as LlmDeepSeek from '@xfcodeai/dsh-llm-deepseek'
-import { DeepSeekAdapter, resolveAdapterOptions } from '@xfcodeai/dsh-llm-deepseek'
+} from '@x1a0f3n9/dsh-llm'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
+import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
+import { SessionId } from '@x1a0f3n9/dsh-session'
+import DeepSeekLlmApiExtensionRegistry from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import type { PreparedDeepSeekLlmApiExtensions } from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import { DeepSeekAdapter, resolveAdapterOptions } from '@x1a0f3n9/dsh-llm-deepseek'
 import { httpErrorCode } from '../src/adapter.ts'
 import { resolveRequestImagePolicy } from '../src/request-pricing.ts'
 import { assemble } from './assemble.ts'

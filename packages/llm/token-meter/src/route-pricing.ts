@@ -5,10 +5,10 @@
  * actually sends. Without declared pricing every node keeps its fixed
  * heuristic price, so provider-neutral behavior is unchanged.
  *
- * @module @xfcodeai/dsh-token-meter/route-pricing
+ * @module @x1a0f3n9/dsh-token-meter/route-pricing
  */
 
-import type { LlmImageRequestPricing } from '@xfcodeai/dsh-llm'
+import type { LlmImageRequestPricing } from '@x1a0f3n9/dsh-llm'
 import { estimateContent } from './estimate.ts'
 import type { MeterSurfaceNode } from './surface-fold.ts'
 import type { TokenSurfaceNode } from './types.ts'

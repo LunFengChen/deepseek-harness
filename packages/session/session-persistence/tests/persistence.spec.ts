@@ -5,13 +5,13 @@ import SessionStore, {
   SessionId,
   SessionLogOffset,
   SessionSeq,
-} from '@xfcodeai/dsh-session'
-import { isJsonValue } from '@xfcodeai/dsh-util-values'
+} from '@x1a0f3n9/dsh-session'
+import { isJsonValue } from '@x1a0f3n9/dsh-util-values'
 import type {
   SessionEvent,
   SessionHeader,
   SessionLogOffset as SessionLogOffsetType,
-} from '@xfcodeai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import {
   DEFAULT_PREPARED_SESSION_CACHE_SIZE, DEFAULT_WRITE_BATCH_MAX_DELAY_MS, MAX_WRITE_BATCH_DELAY_MS,
   SessionPersistence, SessionPersistenceRevision, PersistenceCoordinator,

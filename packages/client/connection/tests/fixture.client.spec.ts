@@ -7,9 +7,9 @@ import type {
   SessionId,
 } from '../src/client/api.ts'
 import { RpcId } from '../src/client/api.ts'
-import { decodeStorageRecord } from '@xfcodeai/dsh-session/chunk-rows'
-import type { ChunkRow } from '@xfcodeai/dsh-session/chunk-rows'
-import { SessionSeq } from '@xfcodeai/dsh-session/types'
+import { decodeStorageRecord } from '@x1a0f3n9/dsh-session/chunk-rows'
+import type { ChunkRow } from '@x1a0f3n9/dsh-session/chunk-rows'
+import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
 import {
   createFixtureConnectionRpc,
   createFixtureFaces,
@@ -18,9 +18,9 @@ import {
 import type {
   ClientConnectionRpc, ConnectionRpcResult,
 } from '../src/rpc.ts'
-import type { DirectoryListing } from '@xfcodeai/dsh-host-directory-picker/types'
-import type { ModelCatalog } from '@xfcodeai/dsh-api-session-controller/types'
-import type { ModelSelection } from '@xfcodeai/dsh-api-session-controller/types'
+import type { DirectoryListing } from '@x1a0f3n9/dsh-host-directory-picker/types'
+import type { ModelCatalog } from '@x1a0f3n9/dsh-api-session-controller/types'
+import type { ModelSelection } from '@x1a0f3n9/dsh-api-session-controller/types'
 
 const sid = (id: string): SessionId => id as SessionId
 type WorkspaceId = string & { readonly __fixtureWorkspaceId: 'WorkspaceId' }

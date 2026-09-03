@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-cordis-client-runner",
+  "name": "@x1a0f3n9/dsh-cordis-client-runner",
   "description": "Browser half of dynamic dual-half plugin packages: event subscription, closure evaluation, guard facade, and loader entries",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -28,10 +28,10 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-client-ui-renderer",
-        "@xfcodeai/dsh-api-remotes",
-        "@xfcodeai/dsh-client-modules",
-        "@xfcodeai/dsh-client-ui-theme"
+        "@x1a0f3n9/dsh-client-ui-renderer",
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-modules",
+        "@x1a0f3n9/dsh-client-ui-theme"
       ],
       "platform": "web"
     }
@@ -46,14 +46,14 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-client-modules": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-theme": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-modules": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-theme": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",
     "react": "^18.2.0",
-    "@xfcodeai/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
   },
   "files": [
     "lib/index.js",

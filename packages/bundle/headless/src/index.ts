@@ -1,28 +1,28 @@
 /**
- * @xfcodeai/dsh-headless — one-shot direct Agent driver. The bundle patch
+ * @x1a0f3n9/dsh-headless — one-shot direct Agent driver. The bundle patch
  * rides over dsh-base without Host, HTTP, or browser plugins; this runner
  * creates one Agent through the core registry, drives the task to quiescence,
  * streams provider reasoning to stderr, flushes its Session, prints the final
  * assistant text to stdout, and exits.
  *
- * @module @xfcodeai/dsh-headless
+ * @module @x1a0f3n9/dsh-headless
  */
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { brandString } from '@xfcodeai/dsh-brand'
-import { installModelSelection } from '@xfcodeai/dsh-agent'
-import type { Agent, ModelSelectionRef } from '@xfcodeai/dsh-agent'
-import type {} from '@xfcodeai/dsh-agent-default-model'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
-import { assertNever } from '@xfcodeai/dsh-util-values'
-import { SessionSeq } from '@xfcodeai/dsh-session'
-import type { Session, SessionEvent, SessionId, SessionLogOffset } from '@xfcodeai/dsh-session'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { installModelSelection } from '@x1a0f3n9/dsh-agent'
+import type { Agent, ModelSelectionRef } from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-agent-default-model'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import { assertNever } from '@x1a0f3n9/dsh-util-values'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionEvent, SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
 // Empty type imports carry the loader Context merge for the settlement await
 // and the cmdline Context merge for the appExit host value.
 import type {} from '@deepseek-ai/cordis-plugin-loader'
-import type {} from '@xfcodeai/dsh-cmdline'
+import type {} from '@x1a0f3n9/dsh-cmdline'
 
 /** Stable Cordis plugin name. */
 export const name = 'headless-runner'
@@ -179,7 +179,7 @@ async function run(ctx: Context, task: string, io: HeadlessIo): Promise<void> {
   // This bundle composes no preset roster, so the model-facing rows sit in the
   // host plane and the agent reads them from the global layer. A deployment
   // that DOES configure one has to join it here first
-  // (@xfcodeai/dsh-agent-presets README, "Composing a child agent").
+  // (@x1a0f3n9/dsh-agent-presets README, "Composing a child agent").
   const { agent } = await agents.create({
     sessionId: brandString<SessionId>(`session-${randomUUID()}`),
     meta: { cwd: process.cwd() },

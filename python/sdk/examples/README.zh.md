@@ -19,7 +19,7 @@ python python/sdk/examples/minimal.py \
 
 兼容代理使用 `DEEPSEEK_BASE_URL`，脚本默认模型使用 `DSH_MODEL`，deployment persona 使用 `DSH_SYSTEM_PROMPT`。`--model` 是唯一运行时模型选择，不要求匹配的环境变量；`--profile` 可以选择另一个提供 SDK 服务的 profile。所选 home 保存生成的 `sdk-minimal` profile，并在 `sessions/` 下保存未压缩 JSONL 会话日志；脚本绝不会隐式读取 `~/.dsh`。
 
-随附的 [`@xfcodeai/dsh-sdk-minimal` 组合包](../../../packages/bundle/sdk-minimal/README.zh.md)是该模式完整且显式的 Cordis 配置树。它只暴露：
+随附的 [`@x1a0f3n9/dsh-sdk-minimal` 组合包](../../../packages/bundle/sdk-minimal/README.zh.md)是该模式完整且显式的 Cordis 配置树。它只暴露：
 
 - Linux／macOS 上 agent 所有的持久 `bash`，或 Windows 上的 `pwsh`
 - 支持 `view`、`create`、`str_replace` 与 `insert` 的 `str_replace_editor`
@@ -37,7 +37,7 @@ export DSH_HOME=/absolute/path/to/example-dsh-home
 dsh plugin --profile sdk-minimal add file:/absolute/path/to/my-plugin-bundle
 ```
 
-在该命令中使用 `sdk-minimal` 可扩展本示例，使用 `sdk` 则扩展基于完整 base 的 SDK profile。Python 调用也可以在 `patches=(...)` 中传入更多绝对 patch 路径；后面的文件优先。所选 profile 必须保留 `@xfcodeai/dsh-sdk-app` 或另一个 JSON-RPC server 配置项。该示例不接受完整 Cordis 文件或任意进程 argv。
+在该命令中使用 `sdk-minimal` 可扩展本示例，使用 `sdk` 则扩展基于完整 base 的 SDK profile。Python 调用也可以在 `patches=(...)` 中传入更多绝对 patch 路径；后面的文件优先。所选 profile 必须保留 `@x1a0f3n9/dsh-sdk-app` 或另一个 JSON-RPC server 配置项。该示例不接受完整 Cordis 文件或任意进程 argv。
 
 同一个运行时 wheel 还为直接 CLI 使用打包 `web` profile 及其前端产物：`dsh web` 会启动这个独立应用。Python SDK client 不能选择 `web`，因为其中没有 JSON-RPC server 配置项。
 

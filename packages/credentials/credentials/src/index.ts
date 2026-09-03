@@ -5,11 +5,11 @@
  * operation, so a changed credential reaches the next operation without any
  * plugin restart, and configuration surfaces describe a reference without
  * ever seeing its value.
- * @module @xfcodeai/dsh-credentials
+ * @module @x1a0f3n9/dsh-credentials
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import { brandString } from '@xfcodeai/dsh-brand'
+import { brandString } from '@x1a0f3n9/dsh-brand'
 import type { CredentialInfo, CredentialKey, CredentialRecord, CredentialRef } from './types.ts'
 
 export type {

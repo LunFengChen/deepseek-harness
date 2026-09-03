@@ -3,7 +3,7 @@ description: "本次运行环境的不可变快照，记住每个值来自哪一
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-launch-environment
+# @x1a0f3n9/dsh-launch-environment
 
 [English](README.md) | 中文
 
@@ -29,7 +29,7 @@ kind: "package-library"
 ### 解析一个值
 
 ```ts
-import { launchEnvironmentOf } from '@xfcodeai/dsh-launch-environment'
+import { launchEnvironmentOf } from '@x1a0f3n9/dsh-launch-environment'
 
 declare const ctx: import('@deepseek-ai/cordis').Context
 const endpoint = launchEnvironmentOf(ctx).get('DEEPSEEK_BASE_URL')?.value

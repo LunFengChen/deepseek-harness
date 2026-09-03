@@ -5,11 +5,11 @@
  * restated: a browser consumer reads the very declaration the backend answers.
  */
 
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import type { WorkspaceId } from '@xfcodeai/dsh-workspace/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { WorkspaceId } from '@x1a0f3n9/dsh-workspace/types'
 
-export type { WorkspaceId } from '@xfcodeai/dsh-workspace/types'
-export type { DirectoryEntry, DirectoryListing } from '@xfcodeai/dsh-host-directory-picker/types'
+export type { WorkspaceId } from '@x1a0f3n9/dsh-workspace/types'
+export type { DirectoryEntry, DirectoryListing } from '@x1a0f3n9/dsh-host-directory-picker/types'
 
 /** One durable Workspace projected for browser consumers. */
 export interface WorkspaceView {
@@ -26,7 +26,7 @@ export interface WorkspaceView {
   readonly updatedAt: string
 }
 
-declare module '@xfcodeai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
     /** The requested directory cannot back a Workspace. */
     'workspace/invalid-path': { readonly path: string }

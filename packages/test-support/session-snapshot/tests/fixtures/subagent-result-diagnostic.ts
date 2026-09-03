@@ -5,8 +5,8 @@ import {
   NO_START_CAPABILITIES,
   type ResolvedSubagentStartRequest,
   type SubagentProvider,
-} from '@xfcodeai/dsh-subagent'
-import { SessionId } from '@xfcodeai/dsh-session'
+} from '@x1a0f3n9/dsh-subagent'
+import { SessionId } from '@x1a0f3n9/dsh-session'
 
 export const name = 'subagent-result-diagnostic'
 export const inject = ['subagents']

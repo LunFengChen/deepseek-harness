@@ -5,12 +5,12 @@ import type {
   ConnectionGenerationSource,
   ConnectionHostInfo,
   ConnectionHandle,
-} from '@xfcodeai/dsh-client-connection/client'
+} from '@x1a0f3n9/dsh-client-connection/client'
 import type {
   TypertClientEventListener,
   TypertRemoteEvent,
-} from '@xfcodeai/dsh-typert-protocol'
-import { randomUUID } from '@xfcodeai/dsh-util-crypto'
+} from '@x1a0f3n9/dsh-typert-protocol'
+import { randomUUID } from '@x1a0f3n9/dsh-util-crypto'
 import {
   REMOTE_EVENT_RESULT_ENDPOINT,
   REMOTE_EVENT_STREAM_ENDPOINT,

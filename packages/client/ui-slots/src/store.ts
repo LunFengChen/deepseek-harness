@@ -14,4 +14,4 @@ export type {
   StoreHandle,
   StoreInstance,
   StoreSpec,
-} from '@xfcodeai/dsh-client-store'
+} from '@x1a0f3n9/dsh-client-store'

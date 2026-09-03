@@ -3,7 +3,7 @@ description: "动态 Cordis 包的浏览器半说明，供选择、组合或排�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-cordis-client-runner
+# @x1a0f3n9/dsh-cordis-client-runner
 
 [English](README.md) | 中文
 

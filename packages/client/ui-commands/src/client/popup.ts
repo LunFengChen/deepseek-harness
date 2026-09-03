@@ -9,9 +9,9 @@
  * Input side owns the span/bare-token CAS guard) and focuses the composer;
  * the controller never touches the input machine.
  */
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { TokenSpan } from '@xfcodeai/dsh-client-ui-input-trigger/client'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { TokenSpan } from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
 import type { SelectOption } from './contract.ts'
 
 /**

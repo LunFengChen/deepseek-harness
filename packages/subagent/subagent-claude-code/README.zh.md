@@ -3,7 +3,7 @@ description: "面向用户与维护者的一次性 Claude Code subagent 提供�
 kind: "package-bundle"
 ---
 
-# @xfcodeai/dsh-subagent-claude-code
+# @x1a0f3n9/dsh-subagent-claude-code
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-bundle"
 把包安装进目标 Profile，然后重启该 Profile。安装会把锁定的 Agent SDK 与一个兼容的平台 CLI 载荷带入 Profile；声明的 patch 层只注册休眠的提供方，不启动任何 Claude 进程。
 
 ```sh
-dsh plugin --profile <name> add @xfcodeai/dsh-subagent-claude-code
-dsh plugin --profile <name> remove @xfcodeai/dsh-subagent-claude-code
+dsh plugin --profile <name> add @x1a0f3n9/dsh-subagent-claude-code
+dsh plugin --profile <name> remove @x1a0f3n9/dsh-subagent-claude-code
 dsh --profile <name>
 ```
 
@@ -57,7 +57,7 @@ dsh --profile <name>
 | `plan` | 使用原生规划模式，拒绝执行审批，并把完整计划作为最终答案返回 |
 | `bypassPermissions` | 显式设置 SDK 的危险确认并跳过权限检查 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-subagent-claude-code)是每个受支持字段及其 JSDoc 的穷尽式真源。已配置的 `model` 会原样传给该提供方实例的每次 query；省略时保留原生模型选择。具有凭证特征的环境变量会在显式 `env` 覆盖生效前被移除，因此供子进程使用的 API 密钥必须在该配置中显式提供。提供方省略 SDK 的 `settingSources` 选项，因此 Claude Code 会相对于父会话 cwd 读取宿主机常规的用户、项目与本地设置。它不会复制或过滤这些文件、创建或修改登录状态、检查 `PATH`，也不会回退到宿主 `claude` 可执行文件。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-subagent-claude-code)是每个受支持字段及其 JSDoc 的穷尽式真源。已配置的 `model` 会原样传给该提供方实例的每次 query；省略时保留原生模型选择。具有凭证特征的环境变量会在显式 `env` 覆盖生效前被移除，因此供子进程使用的 API 密钥必须在该配置中显式提供。提供方省略 SDK 的 `settingSources` 选项，因此 Claude Code 会相对于父会话 cwd 读取宿主机常规的用户、项目与本地设置。它不会复制或过滤这些文件、创建或修改登录状态、检查 `PATH`，也不会回退到宿主 `claude` 可执行文件。
 
 ### 暴露工具
 
@@ -65,11 +65,11 @@ dsh --profile <name>
 
 ```yaml
 - id: jobs
-  name: '@xfcodeai/dsh-jobs-local'
+  name: '@x1a0f3n9/dsh-jobs-local'
 - id: tool-jobs
-  name: '@xfcodeai/dsh-tool-jobs'
+  name: '@x1a0f3n9/dsh-tool-jobs'
 - id: tool-subagent-claude
-  name: '@xfcodeai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: claude-code
     toolName: subagent_claude_code
@@ -129,7 +129,7 @@ dsh --profile <name>
 - [dsh-subagent seam](../subagent/README.zh.md)——本提供方注册于其上的注册表与启动 API。
 - [Codex subagent 提供方](../subagent-codex/README.zh.md)——经官方 app-server 协议的兄弟产品后端。
 - [Claude Code 与 Codex 后端](../../../.agents/notes/implemented/feature/2026-08-04-claude-code-and-codex-subagent-backends.zh.md)——产品提供方的设计记录。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-subagent-claude-code)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-subagent-claude-code)——每个受支持配置字段及其源声明。
 
 -----
 

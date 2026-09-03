@@ -3,7 +3,7 @@ description: "The Agent handle, live registry, process-local initiator scope, an
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-agent
+# @x1a0f3n9/dsh-agent
 
 English | [中文](README.zh.md)
 

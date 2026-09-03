@@ -7,11 +7,11 @@
  */
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { createSnapshotStore } from '@xfcodeai/dsh-client-store'
-import { bindSnapshotSelector, makeTranslate } from '@xfcodeai/dsh-client-test-runtime'
-import type { PlanProjection } from '@xfcodeai/dsh-plan-mode/client'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import { bindSnapshotSelector, makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { PlanProjection } from '@x1a0f3n9/dsh-plan-mode/client'
 import { PlanChip, type PlanChipProps } from '../src/client/PlanModeControl.tsx'
-import { zh as commonZh } from '@xfcodeai/dsh-client-locale/src/locales/zh.ts'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import { zh } from '../src/client/locales.ts'
 
 afterEach(cleanup)

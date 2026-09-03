@@ -3,7 +3,7 @@ description: "File operations inside the shared remote sandbox: what the agent c
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-fs-e2b
+# @x1a0f3n9/dsh-fs-e2b
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose it when a composition already uses the E2B sandbox and you want file oper
 Load the sandbox owner first, then this package; after that, file features operate on the sandbox:
 
 ```yaml
-- name: '@xfcodeai/dsh-e2b'
-- name: '@xfcodeai/dsh-fs-e2b'
+- name: '@x1a0f3n9/dsh-e2b'
+- name: '@x1a0f3n9/dsh-fs-e2b'
 ```
 
 Mounting it does not copy or mirror your local files — the sandbox's working directory starts empty and fills as the agent works.

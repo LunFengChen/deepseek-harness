@@ -1,7 +1,7 @@
 # Depth-limit snapshot overlay: keep the default composition and allow two
 # generations of spawn children before runtime enforcement rejects another.
 - id: tool-subagent
-  name: '@xfcodeai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: spawn
     toolName: subagent

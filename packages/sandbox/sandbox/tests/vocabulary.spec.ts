@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import { SANDBOX_UNAVAILABLE, SandboxUnavailableError } from '@xfcodeai/dsh-sandbox'
+import { SANDBOX_UNAVAILABLE, SandboxUnavailableError } from '@x1a0f3n9/dsh-sandbox'
 
 describe('SandboxUnavailableError', () => {
   it('carries the structured { name, code } identity consumers key on', () => {

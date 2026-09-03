@@ -1,8 +1,8 @@
 /** Browser-session authentication for the Host Connection carrier. */
 
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
-import { credentialKey } from '@xfcodeai/dsh-credentials'
-import type { CredentialProvider, CredentialRecord } from '@xfcodeai/dsh-credentials'
+import { credentialKey } from '@x1a0f3n9/dsh-credentials'
+import type { CredentialProvider, CredentialRecord } from '@x1a0f3n9/dsh-credentials'
 import type {
   ConnectionIndexRequest,
   ConnectionIndexResponse,

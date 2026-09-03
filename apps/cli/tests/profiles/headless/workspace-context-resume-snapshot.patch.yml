@@ -20,7 +20,7 @@
 
 - insert:
     - id: replay
-      name: '@xfcodeai/dsh-llm-replay'
+      name: '@x1a0f3n9/dsh-llm-replay'
       config:
         file: !!js process.env.DSH_SNAPSHOT_FILE
         overrideFile: !!js process.env.DSH_SNAPSHOT_OVERRIDE

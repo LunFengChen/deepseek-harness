@@ -3,7 +3,7 @@ description: "Automation-only ACP stdio application profile for users and mainta
 kind: "package-bundle"
 ---
 
-# `@xfcodeai/dsh-acp-app`
+# `@x1a0f3n9/dsh-acp-app`
 
 English | [中文](README.zh.md)
 

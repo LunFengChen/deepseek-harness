@@ -1,7 +1,7 @@
 /**
  * Service Definition for the code-execution capability seam that runs one model-written program against host async bindings.
  * Runtimes know nothing about tools or sessions; consumers own those concerns.
- * @module @xfcodeai/dsh-code-runtime
+ * @module @x1a0f3n9/dsh-code-runtime
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'

@@ -1,11 +1,11 @@
 /**
  * Public configuration and measurement vocabulary for replay token metering.
  *
- * @module @xfcodeai/dsh-token-meter/types
+ * @module @x1a0f3n9/dsh-token-meter/types
  */
 
-import type { TokenUsage } from '@xfcodeai/dsh-llm'
-import type { SessionLogOffset, SessionSeq } from '@xfcodeai/dsh-session/types'
+import type { TokenUsage } from '@x1a0f3n9/dsh-llm'
+import type { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session/types'
 
 export type { ContextBreakdownProjection, ContextPressureProjection, TokenUsageProjection } from './projection.ts'
 

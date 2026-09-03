@@ -2,19 +2,19 @@
 # a separate SDK child runtime. Both runtimes persist their request headers.
 
 - id: llm-deepseek
-  name: '@xfcodeai/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek'
   disabled: true
 
 - id: tool-subagent
-  name: '@xfcodeai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   disabled: true
 
 - id: sdk-jsonrpc-server
-  name: '@xfcodeai/dsh-sdk-jsonrpc-server'
+  name: '@x1a0f3n9/dsh-sdk-jsonrpc-server'
   disabled: true
 
 - id: session-persistence-jsonl
-  name: '@xfcodeai/dsh-session-persistence-jsonl'
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: !!js dshHomePath('sessions')
     compression: none
@@ -25,7 +25,7 @@
       disabled: !!js process.env.DSH_SNAPSHOT !== 'record'
 
     - id: subagent-dsh-sdk
-      name: '@xfcodeai/dsh-subagent-dsh-sdk'
+      name: '@x1a0f3n9/dsh-subagent-dsh-sdk'
       config:
         profile: sdk
         patches: !!js JSON.parse(process.env.DSH_TEST_CHILD_PATCHES ?? '[]')
@@ -36,7 +36,7 @@
           DSH_TELEMETRY_DISABLED: '1'
 
     - id: subagent-model-selection-settings
-      name: '@xfcodeai/dsh-tool-subagent/model-selection-settings'
+      name: '@x1a0f3n9/dsh-tool-subagent/model-selection-settings'
       config:
         enabled: true
         allowedModels:
@@ -54,7 +54,7 @@
         maxDepth: 'provider-managed'
 
     - id: sdk-jsonrpc-server-dynamic-live
-      name: '@xfcodeai/dsh-sdk-jsonrpc-server'
+      name: '@x1a0f3n9/dsh-sdk-jsonrpc-server'
       inject: [sdkAppStartup, loader]
       disabled: !!js process.env.DSH_SNAPSHOT !== 'record'
       config:

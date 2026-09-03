@@ -1,6 +1,6 @@
 /** Deterministic keyless Agent Teams adapter shared by profile snapshot and CLI e2e. */
 
-import { ToolCallId, LlmAdapter } from '@xfcodeai/dsh-llm'
+import { ToolCallId, LlmAdapter } from '@x1a0f3n9/dsh-llm'
 
 let nextCall = 0
 

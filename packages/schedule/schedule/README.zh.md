@@ -3,7 +3,7 @@ description: "面向用户与维护者的会话本地持久提醒说明：schedu
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-schedule
+# @x1a0f3n9/dsh-schedule
 
 [English](README.md) | 中文
 
@@ -49,7 +49,7 @@ dsh web --patch apps/cli/config/examples/schedule/cordis.yml
 
 创建成功会返回带 id、目标时间、状态与交付模式的提醒；`schedule_list` 按创建顺序显示所有待处理提醒；按 id 取消会移除待处理提醒，未知或已结束的 id 会报告 `schedule_not_found` 且不改变任何内容。
 
-无法成为提醒的输入——空提示词、多于一个 selector、无效时区、非未来或超出范围的时间、低于 5 分钟的重复间隔——会返回稳定的错误代码而不是成功。生成的[工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-schedule)拥有每个工具接受的精确参数。
+无法成为提醒的输入——空提示词、多于一个 selector、无效时区、非未来或超出范围的时间、低于 5 分钟的重复间隔——会返回稳定的错误代码而不是成功。生成的[工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-schedule)拥有每个工具接受的精确参数。
 
 ### 提醒何时触发
 
@@ -69,9 +69,9 @@ dsh web --patch apps/cli/config/examples/schedule/cordis.yml
 
 插件声明 `inject = ['agents', 'sessions', 'tools', 'sessionPersistence']`，因此缺少持久化服务会直接构成组合错误。它只观察加载后发布的 `agent/created` 事件，在这些根 agent 上安装，并通过完全相同的 `agent.ctx` 注册全部三个工具；加载时已经 live 的 agent 与运行时子 agent 永远不会获得 Schedule。
 
-Time-context 不是 Schedule 的依赖。官方 Web overlay 挂载 `@xfcodeai/dsh-time-context`，让模型能够按浏览器请求本地时区解释自然语言；但模型仍必须向 `schedule_create` 传入显式偏移量或 `time_zone`；Schedule 绝不会从模型上下文导入或推断该值。
+Time-context 不是 Schedule 的依赖。官方 Web overlay 挂载 `@x1a0f3n9/dsh-time-context`，让模型能够按浏览器请求本地时区解释自然语言；但模型仍必须向 `schedule_create` 传入显式偏移量或 `time_zone`；Schedule 绝不会从模型上下文导入或推断该值。
 
-Session projection 是可选能力。`ctx.sessionProjections` 存在时，插件会注册严格的 `schedule` 单元并公开完整的活动 `ScheduleRecord[]`；不带注册表的 headless 组合仍保留相同工具与 runtime。浏览器安全的记录词汇由纯类型出口 `@xfcodeai/dsh-schedule/client` 提供。随附 Web bundle 通过 disabled row 解析 `ui-schedule`，显式 Schedule overlay 再与 Host Schedule 服务一起启用该 row。
+Session projection 是可选能力。`ctx.sessionProjections` 存在时，插件会注册严格的 `schedule` 单元并公开完整的活动 `ScheduleRecord[]`；不带注册表的 headless 组合仍保留相同工具与 runtime。浏览器安全的记录词汇由纯类型出口 `@x1a0f3n9/dsh-schedule/client` 提供。随附 Web bundle 通过 disabled row 解析 `ui-schedule`，显式 Schedule overlay 再与 Host Schedule 服务一起启用该 row。
 
 ### 设计理念
 
@@ -132,7 +132,7 @@ owner 把长等待拆分为有界的 timer 段，并在每次唤醒后重新读�
 当包级约定不够用时阅读以下页面。它们从共享子系统约定逐步进入精确工具 schema，以及交付设计背后的决策证据。
 
 - [仅限会话内的 Schedule 子系统](../../../docs/subsystems/schedule.zh.md)——带精确类型定义的持久记录、转换、视图与交付约定。
-- [生成的工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-schedule)——模型接收的 `schedule_create`、`schedule_list` 与 `schedule_delete` 完整 schema。
+- [生成的工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-schedule)——模型接收的 `schedule_create`、`schedule_list` 与 `schedule_delete` 完整 schema。
 - [持久 Web Schedule 决策](../../../.agents/notes/implemented/feature/2026-08-05-durable-web-schedule.zh.md)——本包背后的持久化与生命周期决策。
 - [对话式交付决策](../../../.agents/notes/implemented/simplification/2026-08-09-conversational-schedule-delivery.zh.md)——无回执边界与 follow-up 交付。
 - [显式时区边界](../../../.agents/notes/implemented/simplification/2026-08-09-explicit-schedule-time-zone.zh.md)——为什么模型必须始终传入显式时区。
@@ -148,7 +148,7 @@ owner 把长等待拆分为有界的 timer 段，并在每次唤醒后重新读�
 
 #### 模型看到什么
 
-只有在此插件加载后创建的 live 根 agent 中，模型才会看到三个生成的工具 schema；[生成的工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-schedule)拥有精确的参数与结果 schema。工具结果包含上文所述的规范 JSON 值。
+只有在此插件加载后创建的 live 根 agent 中，模型才会看到三个生成的工具 schema；[生成的工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-schedule)拥有精确的参数与结果 schema。工具结果包含上文所述的规范 JSON 值。
 
 #### Token 影响
 

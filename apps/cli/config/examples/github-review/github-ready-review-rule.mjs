@@ -1,5 +1,5 @@
 import z from '@deepseek-ai/schemastery'
-import { WebhookRuleId } from '@xfcodeai/dsh-webhook'
+import { WebhookRuleId } from '@x1a0f3n9/dsh-webhook'
 
 export const name = 'github-ready-review-rule'
 export const inject = ['webhookRuntime']

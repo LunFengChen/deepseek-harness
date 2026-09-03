@@ -7,8 +7,8 @@ import type {
   SessionHeader,
   SessionId,
   SessionLogOffset,
-} from '@xfcodeai/dsh-session'
-import type SessionPersistence from '@xfcodeai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session'
+import type SessionPersistence from '@x1a0f3n9/dsh-session-persistence'
 import type { SessionRecord } from './types.ts'
 import { SessionQueryError } from './config.ts'
 import { assertSessionHeadersCompatible } from './sources.ts'

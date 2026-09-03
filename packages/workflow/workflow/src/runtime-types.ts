@@ -3,10 +3,10 @@
  * vocabulary remains in `./types` so Client programs never import Agent or
  * host Cordis context declarations.
  *
- * @module @xfcodeai/dsh-workflow
+ * @module @x1a0f3n9/dsh-workflow
  */
 
-import type { Agent } from '@xfcodeai/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 import type {
   WorkflowMeta, WorkflowResult, WorkflowRunId,
 } from './types.ts'

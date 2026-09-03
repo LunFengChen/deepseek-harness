@@ -1,5 +1,5 @@
 /**
- * Integration tests: the REAL `@xfcodeai/dsh-pwsh-local` executor plus the
+ * Integration tests: the REAL `@x1a0f3n9/dsh-pwsh-local` executor plus the
  * `pwsh` tool, exercised through `ctx.tools.execute()` with a real PowerShell
  * process. These verify the world — actual commands run, stdout/stderr come
  * back, exit codes render, timeouts abort, background jobs settle through the
@@ -15,15 +15,15 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { Context } from '@deepseek-ai/cordis'
-import { ToolCallId } from '@xfcodeai/dsh-llm'
-import SystemPrompt from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { TOOL_ABORTED } from '@xfcodeai/dsh-tools'
-import LocalJobRegistry from '@xfcodeai/dsh-jobs-local'
-import * as ToolTasks from '@xfcodeai/dsh-tool-jobs'
-import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
-import { PwshLocalExecutor, resolvePwshPath } from '@xfcodeai/dsh-pwsh-local'
-import * as ToolPwsh from '@xfcodeai/dsh-tool-pwsh'
-import * as BashEnvPlugin from '@xfcodeai/dsh-shell-env'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { TOOL_ABORTED } from '@x1a0f3n9/dsh-tools'
+import LocalJobRegistry from '@x1a0f3n9/dsh-jobs-local'
+import * as ToolTasks from '@x1a0f3n9/dsh-tool-jobs'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import { PwshLocalExecutor, resolvePwshPath } from '@x1a0f3n9/dsh-pwsh-local'
+import * as ToolPwsh from '@x1a0f3n9/dsh-tool-pwsh'
+import * as BashEnvPlugin from '@x1a0f3n9/dsh-shell-env'
 
 const testToolSignal = new AbortController().signal
 

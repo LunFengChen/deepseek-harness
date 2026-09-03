@@ -2,15 +2,15 @@
  * dsh-commands' owned branded id: command lifecycle pairing across the
  * session log, the wire admission response, and client-side flow pairing.
  *
- * The `Branded<B>` primitive lives in `@xfcodeai/dsh-brand`; this module
+ * The `Branded<B>` primitive lives in `@x1a0f3n9/dsh-brand`; this module
  * is a pure type/constructor outlet (no cordis imports, no module
  * augmentation) so wire and client programs can name the brand without
  * loading the host plugin's Context merges — the `dsh-llm/brand` shape.
  *
- * @module @xfcodeai/dsh-commands/brand
+ * @module @x1a0f3n9/dsh-commands/brand
  */
 
-import type { Branded } from '@xfcodeai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /**
  * Pairs one command execution's `command/run`/`command/done` lifecycle

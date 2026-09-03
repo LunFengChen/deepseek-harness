@@ -6,7 +6,7 @@ English | [中文](2026-08-28-ctx-remote-failure-vocabulary.zh.md)
 
 ## Problem
 
-Every Remote owner package maintained its own failure surface: an `XxxErrorDetailsMap` interface, an `XxxError` union derived from it, and an exit mapping function that translated domain error classes (`UnknownPresetError`, `PresetMountError`, `SessionTitleInvalidError`, and their peers) into a wire failure value. `@xfcodeai/dsh-typert-protocol` carried two failure classes at once — `TypertRemoteFailure` for a failure an owner reported and `TypertLookupFailure` for one a lookup resolver produced — while `@xfcodeai/dsh-client-connection` kept a second typed view, `RpcErrorDetailsMap`, that hardcoded domain codes such as `agent-preset-not-found` and `session-not-found` into the carrier.
+Every Remote owner package maintained its own failure surface: an `XxxErrorDetailsMap` interface, an `XxxError` union derived from it, and an exit mapping function that translated domain error classes (`UnknownPresetError`, `PresetMountError`, `SessionTitleInvalidError`, and their peers) into a wire failure value. `@x1a0f3n9/dsh-typert-protocol` carried two failure classes at once — `TypertRemoteFailure` for a failure an owner reported and `TypertLookupFailure` for one a lookup resolver produced — while `@x1a0f3n9/dsh-client-connection` kept a second typed view, `RpcErrorDetailsMap`, that hardcoded domain codes such as `agent-preset-not-found` and `session-not-found` into the carrier.
 
 One code therefore existed in three places: the owner's table, the carrier's typed view, and whatever union or cast a consumer wrote to narrow it (`result.error as SessionError`). Adding a domain code meant editing all three, and relaying another domain's code meant copying that code into your own table — `SessionErrorDetailsMap` had absorbed five foreign codes this way, across `agent-preset-*`, `subagent-*`, and `workspace-not-found`.
 
@@ -16,7 +16,7 @@ Fixed Host facts bypassed `ctx.remote` too: the Host home came from `(ctx.get('c
 
 ## Decision
 
-`@xfcodeai/dsh-typert-protocol` exports one failure class, `RemoteError<Code>`: a real `Error` carrying readonly `code` and `details`, the structural marker `isDSHRemoteError`, and standard `ErrorOptions` (`cause` holds in-process only). The correspondence between codes and details lives in one merge-extensible `RemoteErrorDetailsMap`; `RemoteFailure` is the code-distributed union of instances, and `RemoteResult<T>` keeps its shape.
+`@x1a0f3n9/dsh-typert-protocol` exports one failure class, `RemoteError<Code>`: a real `Error` carrying readonly `code` and `details`, the structural marker `isDSHRemoteError`, and standard `ErrorOptions` (`cause` holds in-process only). The correspondence between codes and details lives in one merge-extensible `RemoteErrorDetailsMap`; `RemoteFailure` is the code-distributed union of instances, and `RemoteResult<T>` keeps its shape.
 
 ```text
 export class RemoteError<Code extends RemoteErrorCode = RemoteErrorCode> extends Error {
@@ -38,10 +38,10 @@ A code has exactly one declaration site, and the site follows from both who prod
 
 - **Carrier codes**: `gateway/bad-request`, `gateway/cancelled`, and `gateway/internal` are declared by the protocol and reachable everywhere.
 - **Gateway assembly codes**: the 17 `gateway/*` codes are declared in `packages/api/gateway/src/remote-error-codes.ts` with the uniform `TypertGatewayFaultDetails { endpoint, field? }` details; that module is face-neutral and each face imports it, so both programs see the same entries.
-- **Produced by several packages**: when two or more packages throw the same code, the declaration lands in the lowest layer both already depend on. `session/not-found` lands in `@xfcodeai/dsh-session` (session-controller and workspace-controller both depend on it), and `workspace/not-found` lands in `@xfcodeai/dsh-workspace` (no dependency edge exists between the two API packages, so the capability package is their only shared layer).
+- **Produced by several packages**: when two or more packages throw the same code, the declaration lands in the lowest layer both already depend on. `session/not-found` lands in `@x1a0f3n9/dsh-session` (session-controller and workspace-controller both depend on it), and `workspace/not-found` lands in `@x1a0f3n9/dsh-workspace` (no dependency edge exists between the two API packages, so the capability package is their only shared layer).
 - **Single producer**: a code only one package throws lands in that producer. `subagent/not-found` and `agent-preset/conflict` therefore live in session-controller — it is their only thrower in the repository, and neither the subagent nor the agent-presets table declares them.
 
-What two domains share is validation logic, not a code. `session/invalid-time-zone` and `subagent/invalid-time-zone` are two codes each declared and thrown by its own domain, and both endpoints canonicalize through `canonicalClientTimeZone()` from `@xfcodeai/dsh-util-time`; no client branches on this code, so splitting it costs nothing while merging it would recreate the reachability problem.
+What two domains share is validation logic, not a code. `session/invalid-time-zone` and `subagent/invalid-time-zone` are two codes each declared and thrown by its own domain, and both endpoints canonicalize through `canonicalClientTimeZone()` from `@x1a0f3n9/dsh-util-time`; no client branches on this code, so splitting it costs nothing while merging it would recreate the reachability problem.
 
 ## Discrimination by code
 
@@ -49,13 +49,13 @@ Discrimination always reads `code` and never uses `instanceof`. Client and Host 
 
 Business code usually needs neither function: the `ok: false` branch of `RemoteResult` is already a typed `RemoteFailure`, so `if (result.error.code === 'session/not-found')` narrows `details` to that code's shape with no cast. A site that must propagate the failure writes `throw result.error` — it is a real `Error`, with a working stack and `message`.
 
-The client plane does not construct `RemoteError`; the one exception is the Gateway's own client face, which rebuilds an instance from wire data in `invoke()` and folds carrier throws at stream boundaries into the same vocabulary. A test double that needs a failure value takes `RemoteError` from `@xfcodeai/dsh-client-test-runtime` instead of making a client package import the protocol as a value. Assertions match the code (plus details fields where they matter) with `toMatchObject`: `RemoteError` is an `Error`, its own-key set differs from the former literal, and `toEqual` fails on it.
+The client plane does not construct `RemoteError`; the one exception is the Gateway's own client face, which rebuilds an instance from wire data in `invoke()` and folds carrier throws at stream boundaries into the same vocabulary. A test double that needs a failure value takes `RemoteError` from `@x1a0f3n9/dsh-client-test-runtime` instead of making a client package import the protocol as a value. Assertions match the code (plus details fields where they matter) with `toMatchObject`: `RemoteError` is an `Error`, its own-key set differs from the former literal, and `toEqual` fails on it.
 
 ## Fixed Host facts
 
 `ctx.remote.$host` exposes two fixed facts: `home: string | undefined` and `isLoopback: boolean`. It is a getter on the Client Remote service reading the connection handle captured at service construction — `home` comes from the ready frame in the generation snapshot (`undefined` before ready), `isLoopback` from the carrier. There is no store, no subscription, and no generation counter.
 
-Refresh after a reconnect rides the existing signal: the Client Remote emits `connection/reset` when it connects, and a consumer that must re-read listens for that or for its own domain's remote event rather than turning `$host` into a subscribable object. Consumers therefore no longer inject `connection`: the `@xfcodeai/dsh-client-connection` consumer allowlist shrinks to hmr, frontend-static, bundle/web-app, session-log-export, webworker-runtime, and the gateway and api-remotes assemblies.
+Refresh after a reconnect rides the existing signal: the Client Remote emits `connection/reset` when it connects, and a consumer that must re-read listens for that or for its own domain's remote event rather than turning `$host` into a subscribable object. Consumers therefore no longer inject `connection`: the `@x1a0f3n9/dsh-client-connection` consumer allowlist shrinks to hmr, frontend-static, bundle/web-app, session-log-export, webworker-runtime, and the gateway and api-remotes assemblies.
 
 ## What the wire carries
 
@@ -63,7 +63,7 @@ The envelope is unchanged: the wire still carries `{ code, message, details }` d
 
 Three wire-visible behaviors follow. The Gateway's 17 assembly codes travel as themselves, so a client can handle "method not mounted" separately from a business refusal. Owners do not pre-fold unrelated exceptions: an unclassified throw reaches the Gateway, which folds it into `gateway/internal` once and keeps the diagnostic chain in `message`. A client unary call aborted by its caller answers `gateway/cancelled`, matching the code the Host would have produced even when the local throw wins the race against the wire round-trip.
 
-The carrier keeps only the open wire shape. `ConnectionRpcFailure` and `ConnectionRpcResult` in `@xfcodeai/dsh-client-connection` carry no domain-code knowledge, and its `transportError()` produces `gateway/internal`; the only home for the typed view is now the protocol's `RemoteFailure`.
+The carrier keeps only the open wire shape. `ConnectionRpcFailure` and `ConnectionRpcResult` in `@x1a0f3n9/dsh-client-connection` carry no domain-code knowledge, and its `transportError()` produces `gateway/internal`; the only home for the typed view is now the protocol's `RemoteFailure`.
 
 ## Alternatives considered
 
@@ -77,7 +77,7 @@ The carrier keeps only the open wire shape. `ConnectionRpcFailure` and `Connecti
 
 ## Consequences
 
-Adding a domain code is one declaration merge plus one throw: no mapping function, error class, and carrier typed view to keep in step. The cost is that the home now requires a judgment — it must be reachable from every producer — and that judgment only surfaces once a second producer appears; `workspace/not-found` moved from workspace-controller to the capability package exactly that way, which also gave `@xfcodeai/dsh-workspace` a type-only protocol dependency.
+Adding a domain code is one declaration merge plus one throw: no mapping function, error class, and carrier typed view to keep in step. The cost is that the home now requires a judgment — it must be reachable from every producer — and that judgment only surfaces once a second producer appears; `workspace/not-found` moved from workspace-controller to the capability package exactly that way, which also gave `@x1a0f3n9/dsh-workspace` a type-only protocol dependency.
 
 Prefixing the code strings changes the wire strings wholesale, so codes embedded in connection fixtures, assertions on both the Host and Client sides, and spec-local declarations all move in one pass. The pre-release stance accepts that single cut; the same rename after a release would need a compatibility window.
 

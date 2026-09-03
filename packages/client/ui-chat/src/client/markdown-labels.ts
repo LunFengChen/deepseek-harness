@@ -1,6 +1,6 @@
 /** Localized copy adapters for Cordis-free Markdown primitives. */
 
-import type { MarkdownLabels } from '@xfcodeai/dsh-client-ui-primitives'
+import type { MarkdownLabels } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { ChatViewSlotProps } from './contract/slots.ts'
 
 /**

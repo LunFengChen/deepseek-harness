@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { DirectoryPicker, DirectoryPickerError } from '@xfcodeai/dsh-host-directory-picker'
-import type { DirectoryPickerCapability } from '@xfcodeai/dsh-host-directory-picker'
-import { remoteErrorOf } from '@xfcodeai/dsh-typert-protocol'
+import { DirectoryPicker, DirectoryPickerError } from '@x1a0f3n9/dsh-host-directory-picker'
+import type { DirectoryPickerCapability } from '@x1a0f3n9/dsh-host-directory-picker'
+import { remoteErrorOf } from '@x1a0f3n9/dsh-typert-protocol'
 import { DirectoryPickerController } from '../src/directory-picker.ts'
 
 const roots: Context[] = []

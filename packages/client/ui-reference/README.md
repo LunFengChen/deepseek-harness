@@ -3,7 +3,7 @@ description: "Web @file and @session reference source for the composer: candidat
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-reference
+# @x1a0f3n9/dsh-client-ui-reference
 
 English | [中文](README.zh.md)
 

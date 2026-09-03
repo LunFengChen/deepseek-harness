@@ -3,7 +3,7 @@ description: "Web GUI 的 plan 模式状态徽章：显示 plan 模式已开启�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-plan
+# @x1a0f3n9/dsh-client-ui-plan
 
 [English](README.md) | 中文
 
@@ -56,7 +56,7 @@ kind: "package-reference"
 
 - [dsh-plan-mode](../../plan/plan-mode/README.zh.md)——拥有 plan 模式、`/plan` 命令、投影与 policy 段。
 - [ui-conversation](../ui-conversation/README.zh.md)——声明 composer 的 `conversation.input.plan` 座位与 placeholder locale 键。
-- [工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-plan-mode)——模型退出 plan 模式所用的 `exit_plan_mode` 工具 schema。
+- [工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-plan-mode)——模型退出 plan 模式所用的 `exit_plan_mode` 工具 schema。
 - [客户端包映射](../README.zh.md)——相邻的浏览器 UI 包。
 
 -----

@@ -1,17 +1,17 @@
 /**
  * Execution types for the bash executor seam. Background job semantics belong
- * to `@xfcodeai/dsh-jobs`; this seam exposes only process handles. The
+ * to `@x1a0f3n9/dsh-jobs`; this seam exposes only process handles. The
  * managed-environment and captured-output vocabulary is owned by the
  * subprocess seam and re-exported here so bash consumers keep one import
  * root.
  * @module dsh-shell/types
  */
 
-import type { SandboxEnforcement, SandboxExecutionPolicy, SandboxMode } from '@xfcodeai/dsh-sandbox'
-import type { CollectedOutput, DshEnvironment } from '@xfcodeai/dsh-subprocess'
+import type { SandboxEnforcement, SandboxExecutionPolicy, SandboxMode } from '@x1a0f3n9/dsh-sandbox'
+import type { CollectedOutput, DshEnvironment } from '@x1a0f3n9/dsh-subprocess'
 
-export { DSH_ENV_PREFIX } from '@xfcodeai/dsh-subprocess'
-export type { CollectedOutput, DshEnvironment, DshEnvironmentKey } from '@xfcodeai/dsh-subprocess'
+export { DSH_ENV_PREFIX } from '@x1a0f3n9/dsh-subprocess'
+export type { CollectedOutput, DshEnvironment, DshEnvironmentKey } from '@x1a0f3n9/dsh-subprocess'
 
 /**
  * Sandbox facts for one run, present iff a sandboxing executor handled it.

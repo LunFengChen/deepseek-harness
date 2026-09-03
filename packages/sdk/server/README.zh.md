@@ -3,7 +3,7 @@ description: "面向让进程外 SDK 客户端在 DeepSeek Harness 运行时中�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-sdk-jsonrpc-server
+# @x1a0f3n9/dsh-sdk-jsonrpc-server
 
 [English](README.md) | 中文
 
@@ -37,7 +37,7 @@ kind: "package-reference"
 |---|---|---|
 | `maxTokensAsSuccess` | `false` | 把 max-token 轮次/subagent 终止报告为成功的 SDK 结果 |
 
-profile 组合拥有每个根 agent 的工具。`input`、`output` 与 `exit` 是仅供测试的运行时传输钩子；生产环境使用进程 stdio 与 `process.exit`。生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-sdk-jsonrpc-server)是每个受支持字段的穷尽式真源。
+profile 组合拥有每个根 agent 的工具。`input`、`output` 与 `exit` 是仅供测试的运行时传输钩子；生产环境使用进程 stdio 与 `process.exit`。生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-sdk-jsonrpc-server)是每个受支持字段的穷尽式真源。
 
 ### stdout 即协议
 

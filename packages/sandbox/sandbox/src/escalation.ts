@@ -1,6 +1,6 @@
 /**
  * The escalation vocabulary and choreography shared by every sandbox-enforcing
- * tool family (`@xfcodeai/dsh-tool-bash`, `@xfcodeai/dsh-tool-fs`): the
+ * tool family (`@x1a0f3n9/dsh-tool-bash`, `@x1a0f3n9/dsh-tool-fs`): the
  * strictly-wider ladder, the argument-pairing validation, the model-facing
  * denial/hint markers, and {@link approveEscalation} — the ordered fail-closed
  * sequence that resolves a `sandbox_permissions` request through a
@@ -16,7 +16,7 @@
  * @module dsh-sandbox/escalation
  */
 
-import { assertNever } from '@xfcodeai/dsh-util-values'
+import { assertNever } from '@x1a0f3n9/dsh-util-values'
 import type { SandboxMode } from './index.ts'
 
 /**

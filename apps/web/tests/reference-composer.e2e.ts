@@ -7,15 +7,15 @@ import { join } from 'node:path'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 import {
   SESSION_FORMAT_VERSION,
   Session,
   SessionId,
   SessionSeq,
-} from '@xfcodeai/dsh-session'
-import type {} from '@xfcodeai/dsh-session-reference/types'
-import type {} from '@xfcodeai/dsh-session-title'
+} from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-session-reference/types'
+import type {} from '@x1a0f3n9/dsh-session-title'
 import {
   assertFixtureInventory,
   captureStableAria,

@@ -8,8 +8,8 @@
  * @module dsh-llm-pi-ai/replay
  */
 
-import { LlmError } from '@xfcodeai/dsh-llm'
-import type { Message, ModelMessageSource, ReplayEnvelope } from '@xfcodeai/dsh-llm'
+import { LlmError } from '@x1a0f3n9/dsh-llm'
+import type { Message, ModelMessageSource, ReplayEnvelope } from '@x1a0f3n9/dsh-llm'
 import type { Api, AssistantMessage, Usage as PiUsage } from '@earendil-works/pi-ai'
 
 /** Per-block half of the pi-ai replay envelope, one entry per content block. */

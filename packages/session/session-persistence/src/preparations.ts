@@ -1,9 +1,9 @@
 /**
  * Bounded sharing and exclusive reservation of unpublished Sessions.
- * @module @xfcodeai/dsh-session-persistence/preparations
+ * @module @x1a0f3n9/dsh-session-persistence/preparations
  */
 
-import type { Session, SessionId } from '@xfcodeai/dsh-session'
+import type { Session, SessionId } from '@x1a0f3n9/dsh-session'
 
 interface PreparedSource {
   readonly session: Session

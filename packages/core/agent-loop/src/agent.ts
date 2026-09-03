@@ -14,24 +14,24 @@ import type {
   InboxTarget,
   PreStepDecision,
   RequestErrorAction,
-} from '@xfcodeai/dsh-agent'
-import { Inbox, agentEvents, assembleContextFor } from '@xfcodeai/dsh-agent'
-import type { GenerateOptions, LlmCallConfig, Message, PreparedLlmCall } from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-agent'
+import { Inbox, agentEvents, assembleContextFor } from '@x1a0f3n9/dsh-agent'
+import type { GenerateOptions, LlmCallConfig, Message, PreparedLlmCall } from '@x1a0f3n9/dsh-llm'
 import {
   BlockAssembler,
   LlmError,
   createAssistantMessage,
   errorChain,
   markAgentLoopRequest,
-} from '@xfcodeai/dsh-llm'
-import { deepFreeze } from '@xfcodeai/dsh-util-values'
-import type { Scope } from '@xfcodeai/dsh-scope'
-import { createScope } from '@xfcodeai/dsh-scope'
-import type { EpochHeader, RequestContext, Session, SessionId, SessionSeq, TurnEndReason, UserMessage } from '@xfcodeai/dsh-session'
-import { canonicalHeader, headerEquals } from '@xfcodeai/dsh-session'
-import { joinContextSections, renderContextSections, renderPrompt } from '@xfcodeai/dsh-system-prompt'
-import type { PromptAssembly } from '@xfcodeai/dsh-system-prompt'
-import type {} from '@xfcodeai/dsh-session-projection'
+} from '@x1a0f3n9/dsh-llm'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
+import type { Scope } from '@x1a0f3n9/dsh-scope'
+import { createScope } from '@x1a0f3n9/dsh-scope'
+import type { EpochHeader, RequestContext, Session, SessionId, SessionSeq, TurnEndReason, UserMessage } from '@x1a0f3n9/dsh-session'
+import { canonicalHeader, headerEquals } from '@x1a0f3n9/dsh-session'
+import { joinContextSections, renderContextSections, renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
+import type { PromptAssembly } from '@x1a0f3n9/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-session-projection'
 import type { Context } from '@deepseek-ai/cordis'
 import { RuntimeContextProjection } from './runtime-context.ts'
 import { executeToolCalls } from './tool-calls.ts'

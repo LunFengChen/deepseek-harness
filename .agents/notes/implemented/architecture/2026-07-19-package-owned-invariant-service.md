@@ -16,7 +16,7 @@ Published ownership must be mechanically complete. Without a repository rule, a 
 
 ### One registry service, package-owned contributions
 
-`@xfcodeai/dsh-invariants` is a product-independent Cordis service plugin that registers `ctx.invariants`. It owns configuration, registration uniqueness, child-fiber lifecycle, and package-attributed failures. It imports no session, agent, scope, or agent-loop package and contains none of their checks.
+`@x1a0f3n9/dsh-invariants` is a product-independent Cordis service plugin that registers `ctx.invariants`. It owns configuration, registration uniqueness, child-fiber lifecycle, and package-attributed failures. It imports no session, agent, scope, or agent-loop package and contains none of their checks.
 
 A workspace package publishes a `./invariant` companion plugin only when it owns an independently observable event or mutable-data relationship. The companion registers its exact full npm name. Packages without such a relationship omit the companion and publication wiring and record the reason in their README; generated placeholders, empty installers, and synthetic API-shape assertions are forbidden by the [runtime-contract Agent Note](2026-07-19-package-invariant-runtime-contracts.md) and [omission decision](../simplification/2026-08-28-omit-unneeded-invariant-companions.md). Package root entrypoints do not import or register diagnostics implicitly, so loading a root package does not change runtime checking or require the invariant service.
 
@@ -59,10 +59,10 @@ The former functional-plugin entry point and one-argument `InvariantError` const
 
 | Companion entry | Registration name | Owned checks |
 |---|---|---|
-| `@xfcodeai/dsh-session/invariant` | `@xfcodeai/dsh-session` | session sequence, turn/step enclosure, and same-step call/result trace |
-| `@xfcodeai/dsh-agent/invariant` | `@xfcodeai/dsh-agent` | agent-status transitions |
-| `@xfcodeai/dsh-scope/invariant` | `@xfcodeai/dsh-scope` | scoped-event carrier presence and subject consistency |
-| `@xfcodeai/dsh-agent-loop/invariant` | `@xfcodeai/dsh-agent-loop` | model-request reconstruction |
+| `@x1a0f3n9/dsh-session/invariant` | `@x1a0f3n9/dsh-session` | session sequence, turn/step enclosure, and same-step call/result trace |
+| `@x1a0f3n9/dsh-agent/invariant` | `@x1a0f3n9/dsh-agent` | agent-status transitions |
+| `@x1a0f3n9/dsh-scope/invariant` | `@x1a0f3n9/dsh-scope` | scoped-event carrier presence and subject consistency |
+| `@x1a0f3n9/dsh-agent-loop/invariant` | `@x1a0f3n9/dsh-agent-loop` | model-request reconstruction |
 
 These four owners supplied the initial stateful checks. Later owners add companions for real event or mutable-data relationships, while packages without one omit the companion and document why. Every published companion is a separately bundled `./invariant` export with its own declarations and Loader-safe namespace plugin shape.
 

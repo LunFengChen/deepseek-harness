@@ -13,16 +13,16 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { join, sep } from 'node:path'
-import { createUserMessage, ToolCallId } from '@xfcodeai/dsh-llm'
-import SystemPrompt, { renderPrompt } from '@xfcodeai/dsh-system-prompt'
-import ToolRuntime, { TOOL_ABORTED_BEFORE_DISPATCH, type ToolExecution, type ToolExecutionToken } from '@xfcodeai/dsh-tools'
-import { SubprocessRuntime } from '@xfcodeai/dsh-subprocess'
-import type { SubprocessCollectedOutputs, SubprocessHandle, SubprocessOutcome, SubprocessOutputRead, SubprocessOutputReader, SubprocessSpawnSpec } from '@xfcodeai/dsh-subprocess'
-import { MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
+import { createUserMessage, ToolCallId } from '@x1a0f3n9/dsh-llm'
+import SystemPrompt, { renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { TOOL_ABORTED_BEFORE_DISPATCH, type ToolExecution, type ToolExecutionToken } from '@x1a0f3n9/dsh-tools'
+import { SubprocessRuntime } from '@x1a0f3n9/dsh-subprocess'
+import type { SubprocessCollectedOutputs, SubprocessHandle, SubprocessOutcome, SubprocessOutputRead, SubprocessOutputReader, SubprocessSpawnSpec } from '@x1a0f3n9/dsh-subprocess'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
 import { rgPath } from '@vscode/ripgrep'
-import { SpillLocator, SpillStore } from '@xfcodeai/dsh-spill'
-import type { SaveTextSpill, SpillRef } from '@xfcodeai/dsh-spill'
-import * as ToolFsSearch from '@xfcodeai/dsh-tool-fs-search'
+import { SpillLocator, SpillStore } from '@x1a0f3n9/dsh-spill'
+import type { SaveTextSpill, SpillRef } from '@x1a0f3n9/dsh-spill'
+import * as ToolFsSearch from '@x1a0f3n9/dsh-tool-fs-search'
 import {
   buildGlobCommand,
   buildGrepCommand,
@@ -37,7 +37,7 @@ import {
   runRipgrep,
   sampleAcrossTopLevel,
   toWorkdirRelative,
-} from '@xfcodeai/dsh-tool-fs-search'
+} from '@x1a0f3n9/dsh-tool-fs-search'
 
 const testToolSignal = new AbortController().signal
 

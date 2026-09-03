@@ -3,7 +3,7 @@ description: "The model-facing ralph tool: a fixed foreground fresh-agent loop t
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-ralph
+# @x1a0f3n9/dsh-tool-ralph
 
 English | [中文](README.zh.md)
 
@@ -44,7 +44,7 @@ Each child receives only the immutable objective, its current round and cap, a s
 | `maxHandoffChars` | `16384` | Maximum serialized characters in one round report. |
 | `maxResultChars` | `16384` | Maximum characters in the complete successful parent result. |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-tool-ralph) is the exhaustive source for every accepted field. The configured provider must exist, support structured output, and report `inheritsParentContext: false`; a call against a provider that violates this fails loud before any round starts.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-tool-ralph) is the exhaustive source for every accepted field. The configured provider must exist, support structured output, and report `inheritsParentContext: false`; a call against a provider that violates this fails loud before any round starts.
 
 -----
 
@@ -128,7 +128,7 @@ Prefix-stable while the plugin scope and guidance text are unchanged. Activation
 
 #### What the model sees
 
-The generated [`ralph` schema](../../../docs/tool-catalog.md#xfcodeaidsh-tool-ralph) exposes one required `objective` string and one optional `maxRounds` number. Provider choice, handoff size, report schema, workflow script, and orchestration behavior are deployment-owned and absent from the call schema.
+The generated [`ralph` schema](../../../docs/tool-catalog.md#x1a0f3n9dsh-tool-ralph) exposes one required `objective` string and one optional `maxRounds` number. Provider choice, handoff size, report schema, workflow script, and orchestration behavior are deployment-owned and absent from the call schema.
 
 #### Token effect
 

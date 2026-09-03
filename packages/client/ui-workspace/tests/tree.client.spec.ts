@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import type { SessionListState, SessionSummary } from '@xfcodeai/dsh-api-session-controller/client'
-import type { WorkspaceId, WorkspaceView } from '@xfcodeai/dsh-api-workspace-controller/client'
-import type { SessionPendingInteractionBase } from '@xfcodeai/dsh-client-ui-session/client'
-import type { ScheduleId, ScheduleRecord } from '@xfcodeai/dsh-schedule/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { SessionListState, SessionSummary } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { WorkspaceId, WorkspaceView } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { SessionPendingInteractionBase } from '@x1a0f3n9/dsh-client-ui-session/client'
+import type { ScheduleId, ScheduleRecord } from '@x1a0f3n9/dsh-schedule/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import {
   deriveFlat, deriveGroups, deriveSearchResults, workspaceLabel,
   UNGROUPED_KEY,

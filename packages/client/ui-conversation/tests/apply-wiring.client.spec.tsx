@@ -2,11 +2,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   SlotTestRuntime, stubSettingsScope, usePinnedBrowserLanguages,
-} from '@xfcodeai/dsh-client-test-runtime'
-import { LocaleRuntime } from '@xfcodeai/dsh-client-locale/client'
-import type { ObservableSnapshot } from '@xfcodeai/dsh-client-store'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
-import { apply, inject, type ViewTab } from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { apply, inject, type ViewTab } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 usePinnedBrowserLanguages('zh-CN')
 

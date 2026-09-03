@@ -3,7 +3,7 @@ description: "基于用户交互 seam 的模型侧 ask_user_question 工具；�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-tool-ask-user
+# @x1a0f3n9/dsh-tool-ask-user
 
 [English](README.md) | 中文
 
@@ -94,7 +94,7 @@ kind: "package-reference"
 当包级约定不够用时阅读以下页面。它们从工具表面逐步进入 seam 约定及其 answerer waterfall。
 
 - [用户交互子系统参考](../../../docs/subsystems/user-questions.zh.md)——此工具背后的服务约定、问题词汇与 answerer waterfall。
-- [工具目录](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-ask-user)——生成的 `ask_user_question` schema。
+- [工具目录](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-ask-user)——生成的 `ask_user_question` schema。
 - [user-questions 包](../user-questions/README.zh.md)——本工具消费的 seam。
 - [交互组映射](../README.zh.md)——相邻的审批与命令表面。
 
@@ -107,7 +107,7 @@ kind: "package-reference"
 
 #### 模型看到的内容
 
-模型会看到生成的 [`ask_user_question` schema](../../../docs/tool-catalog.zh.md#xfcodeaidsh-tool-ask-user)，其中包含问题 id、提示语、标题、选项与多选标志。
+模型会看到生成的 [`ask_user_question` schema](../../../docs/tool-catalog.zh.md#x1a0f3n9dsh-tool-ask-user)，其中包含问题 id、提示语、标题、选项与多选标志。
 
 #### Token 影响
 

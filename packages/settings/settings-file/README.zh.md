@@ -3,7 +3,7 @@ description: "面向用户与维护者的文件型设置提供方：选择、配
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-settings-file
+# @x1a0f3n9/dsh-settings-file
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@xfcodeai/dsh-settings-file'
+- name: '@x1a0f3n9/dsh-settings-file'
   config:
     path: /absolute/path/to/settings.yaml
 ```
@@ -46,7 +46,7 @@ kind: "package-reference"
 | `watch` | `true` | 监听文档并热发布外部编辑 |
 | `debounceMs` | `100` | watcher 写入稳定窗口（毫秒） |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-settings-file)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-settings-file)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
 ### 编辑文档
 
@@ -114,7 +114,7 @@ YAML 渲染把缓存文本解析成可变的保留注释树，再对一个 names
 - [设置包映射](../README.zh.md)——用户设置能力的两个包。
 - [原子写入](../../util/atomic-write/README.zh.md)——每次写入都使用的写锁与原子替换。
 - [主目录路径](../../util/home-paths/README.zh.md)——`$DSH_HOME` 解析与规范化监听路径。
-- [生成配置目录](../../../docs/config-catalog.zh.md#xfcodeaidsh-settings-file)——每个受支持配置字段及其源声明。
+- [生成配置目录](../../../docs/config-catalog.zh.md#x1a0f3n9dsh-settings-file)——每个受支持配置字段及其源声明。
 
 -----
 

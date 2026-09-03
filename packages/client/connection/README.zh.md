@@ -3,7 +3,7 @@ description: "Web GUI 的浏览器-Host 线层：Remote RPC、带重连的事件
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-connection
+# @x1a0f3n9/dsh-client-connection
 
 [English](README.md) | 中文
 

@@ -1,7 +1,7 @@
 /** The agent-loop card's staged form over the `agent-loop` settings namespace. */
 
-import type { SnapshotStore } from '@xfcodeai/dsh-client-store'
-import type { SettingsScope } from '@xfcodeai/dsh-client-ui-settings/client'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SettingsScope } from '@x1a0f3n9/dsh-client-ui-settings/client'
 import { CardForm, numberField, type CardActions, type CardFieldState, type CardShell } from './card-form.ts'
 
 /**

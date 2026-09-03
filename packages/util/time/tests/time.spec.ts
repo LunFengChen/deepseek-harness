@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { canonicalClientTimeZone } from '@xfcodeai/dsh-util-time'
+import { canonicalClientTimeZone } from '@x1a0f3n9/dsh-util-time'
 
 describe('canonicalClientTimeZone', () => {
   it('accepts UTC and Area/Location names unchanged', () => {

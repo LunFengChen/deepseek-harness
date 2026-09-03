@@ -3,7 +3,7 @@ description: "Session-telemetry capture seam for deployments and backend authors
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-session-telemetry
+# @x1a0f3n9/dsh-session-telemetry
 
 English | [中文](README.zh.md)
 

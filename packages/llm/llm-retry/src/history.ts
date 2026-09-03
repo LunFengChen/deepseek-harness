@@ -1,6 +1,6 @@
-/** Durable request-route lookup for one open model step. @module @xfcodeai/dsh-llm-retry/history */
+/** Durable request-route lookup for one open model step. @module @x1a0f3n9/dsh-llm-retry/history */
 
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 
 /**
  * Find the provider in force for one currently open step.

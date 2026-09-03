@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { indexSubagentDescendants } from '../src/client/subagent-lineage.ts'
 
 const sid = (id: string): SessionId => id as SessionId

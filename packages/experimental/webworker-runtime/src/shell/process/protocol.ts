@@ -6,7 +6,7 @@
  * channel. Blocking the child on a reply is impossible here (that would need
  * `SharedArrayBuffer`, which requires a cross-origin isolation this deployment
  * cannot have), so the filesystem face is asynchronous end to end.
- * @module @xfcodeai/dsh-experimental-webworker-runtime/src/shell/process/protocol
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/process/protocol
  */
 
 /** The first frame a process worker receives; it also selects its role. */

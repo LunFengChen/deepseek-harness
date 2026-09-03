@@ -18,9 +18,9 @@ function fixture(packages: Readonly<Record<string, readonly string[]>>): string 
     const directory = join(root, 'packages', 'client', name)
     mkdirSync(directory, { recursive: true })
     writeFileSync(join(directory, 'package.json'), `${JSON.stringify({
-      name: `@xfcodeai/dsh-${name}`,
+      name: `@x1a0f3n9/dsh-${name}`,
       peerDependencies: Object.fromEntries(dependencies.map(dependency => [
-        `@xfcodeai/dsh-${dependency}`,
+        `@x1a0f3n9/dsh-${dependency}`,
         'workspace:^',
       ])),
     }, null, 2)}\n`)
@@ -47,15 +47,15 @@ describe('collectPackageGraph', () => {
     const root = fixture({ consumer: ['missing'] })
 
     expect(() => collectPackageGraph(root, ['client'], 'fixture'))
-      .toThrow('fixture: @xfcodeai/dsh-consumer references missing in-repo peer @xfcodeai/dsh-missing')
+      .toThrow('fixture: @x1a0f3n9/dsh-consumer references missing in-repo peer @x1a0f3n9/dsh-missing')
   })
 })
 
 describe('renderModuleGraph', () => {
   it('renders the same peer edge in both generated languages', () => {
     const packages = [
-      { short: 'provider', name: '@xfcodeai/dsh-provider', group: 'core', rel: 'packages/core/provider', deps: [] },
-      { short: 'consumer', name: '@xfcodeai/dsh-consumer', group: 'core', rel: 'packages/core/consumer', deps: ['provider'] },
+      { short: 'provider', name: '@x1a0f3n9/dsh-provider', group: 'core', rel: 'packages/core/provider', deps: [] },
+      { short: 'consumer', name: '@x1a0f3n9/dsh-consumer', group: 'core', rel: 'packages/core/consumer', deps: ['provider'] },
     ]
 
     const english = renderModuleGraph(packages, 'en')

@@ -1,4 +1,4 @@
-import SessionQueryEngine from '@xfcodeai/dsh-session-query'
+import SessionQueryEngine from '@x1a0f3n9/dsh-session-query'
 import type {
   SessionEventSearchPage,
   SessionEventSearchRequest,
@@ -6,7 +6,7 @@ import type {
   SessionSearchHit,
   SessionSearchPage,
   SessionSearchRequest,
-} from '@xfcodeai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-query'
 
 /** Test-only concrete query service for backend-independent behavior. */
 export class TestSessionQueryEngine extends SessionQueryEngine {

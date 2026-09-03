@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-client-ui-tool",
+  "name": "@x1a0f3n9/dsh-client-ui-tool",
   "description": "Client Tool call-tree renderer and keyed per-tool presentation slot",
   "version": "0.1.2-alpha.4",
   "publishConfig": {
@@ -28,10 +28,10 @@
   "dsh": {
     "client": {
       "inject": [
-        "@xfcodeai/dsh-api-workspace-controller",
-        "@xfcodeai/dsh-client-connection",
-        "@xfcodeai/dsh-client-locale",
-        "@xfcodeai/dsh-client-ui-conversation"
+        "@x1a0f3n9/dsh-api-workspace-controller",
+        "@x1a0f3n9/dsh-client-connection",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-conversation"
       ],
       "platform": "web"
     }
@@ -49,22 +49,22 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@xfcodeai/dsh-api-remotes": "workspace:^",
-    "@xfcodeai/dsh-client-connection": "workspace:^",
-    "@xfcodeai/dsh-client-locale": "workspace:^",
-    "@xfcodeai/dsh-client-test-runtime": "workspace:^",
-    "@xfcodeai/dsh-client-ui-conversation": "workspace:^",
-    "@xfcodeai/dsh-client-ui-primitives": "workspace:^",
-    "@xfcodeai/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@xfcodeai/dsh-api-workspace-controller": "workspace:^",
-    "@xfcodeai/dsh-client-ui-chat": "workspace:^",
-    "@xfcodeai/dsh-client-ui-renderer": "workspace:^",
-    "@xfcodeai/dsh-client-ui-session": "workspace:^",
-    "@xfcodeai/dsh-util-workspace-path": "workspace:^"
+    "@x1a0f3n9/dsh-api-workspace-controller": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-chat": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
+    "@x1a0f3n9/dsh-util-workspace-path": "workspace:^"
   },
   "files": [
     "lib/index.js",

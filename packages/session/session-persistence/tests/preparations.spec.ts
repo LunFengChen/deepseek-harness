@@ -1,7 +1,7 @@
 /** Unit coverage for unpublished Session preparation ownership and sharing. */
 
 import { describe, expect, it, vi } from 'vitest'
-import { Session, SessionId } from '@xfcodeai/dsh-session'
+import { Session, SessionId } from '@x1a0f3n9/dsh-session'
 import { observeQueuedAbort, SessionPreparations } from '../src/preparations.ts'
 
 interface PreparedSource {

@@ -15,16 +15,16 @@
  * absent `ctx.shell`, or a failed query is a no-op, never an error: an executor
  * rejection is contained and logged as a warning so the turn continues.
  *
- * @module @xfcodeai/dsh-tmux-context
+ * @module @x1a0f3n9/dsh-tmux-context
  */
 
 import type { Context, LoggerService } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { z as zod } from 'zod'
-import type { PreStepDecision } from '@xfcodeai/dsh-agent'
-import type {} from '@xfcodeai/dsh-session-projection'
-import type { ShellExecutor, ShellRunResult } from '@xfcodeai/dsh-shell'
-import { createUserMessage } from '@xfcodeai/dsh-llm'
+import type { PreStepDecision } from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import type { ShellExecutor, ShellRunResult } from '@x1a0f3n9/dsh-shell'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 
 /** Cordis plugin name used by loader diagnostics. */
 export const name = 'tmux-context'
@@ -205,7 +205,7 @@ type TmuxContextState = zod.infer<typeof tmuxContextStateSchema>
  * @param config - durable refresh scheduling configuration.
  * @throws when the refresh interval is invalid.
  */
-declare module '@xfcodeai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     /** The stable state block of this plugin's latest durable injection, or null. */
     tmuxContext: TmuxContextState

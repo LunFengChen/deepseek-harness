@@ -1,4 +1,4 @@
-import type { ContextPressureProjection } from '@xfcodeai/dsh-token-meter/client'
+import type { ContextPressureProjection } from '@x1a0f3n9/dsh-token-meter/client'
 
 /** Context usage rendered by conversation and Chat status surfaces. */
 export interface ContextOccupancy {

@@ -1,7 +1,7 @@
 # Context-overflow composition used by the headless compaction session.
 
 - id: compaction-basic
-  name: '@xfcodeai/dsh-compaction-basic'
+  name: '@x1a0f3n9/dsh-compaction-basic'
   config:
     thresholdRatio: 0.99
     retainTokens: 20

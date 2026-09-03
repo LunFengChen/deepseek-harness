@@ -20,14 +20,14 @@
  * per-record documents. Any new document path, including one whose contents
  * are unreadable or stale, suppresses the bootstrap for the whole unit. The
  * legacy file is never changed or deleted.
- * @module @xfcodeai/dsh-storage-json/src/per-record-unit
+ * @module @x1a0f3n9/dsh-storage-json/src/per-record-unit
  */
 
 import { mkdir, readFile, readdir, rm } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import type { Dirent } from 'node:fs'
-import { StorageError } from '@xfcodeai/dsh-storage'
-import type { KvUnit, KvUnitDescriptor } from '@xfcodeai/dsh-storage'
+import { StorageError } from '@x1a0f3n9/dsh-storage'
+import type { KvUnit, KvUnitDescriptor } from '@x1a0f3n9/dsh-storage'
 import { writeAtomic } from './atomic.ts'
 import { parseRecord, serializeRecord } from './format.ts'
 import type { UnitState } from './format.ts'

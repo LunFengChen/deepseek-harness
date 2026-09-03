@@ -60,26 +60,26 @@ function facts(manifest: PackageDependencyManifest): PackageDependencyFacts {
     manifest,
     workspaceNames: new Set([
       CORDIS,
-      '@xfcodeai/dsh-runtime',
-      '@xfcodeai/dsh-types',
-      '@xfcodeai/dsh-stale',
+      '@x1a0f3n9/dsh-runtime',
+      '@x1a0f3n9/dsh-types',
+      '@x1a0f3n9/dsh-stale',
       '@deepseek-ai/schemastery',
     ]),
     allSourceUses: new Map([
-      ['@xfcodeai/dsh-runtime', ['packages/core/probe/src/index.ts']],
-      ['@xfcodeai/dsh-types', ['packages/core/probe/src/types.ts']],
+      ['@x1a0f3n9/dsh-runtime', ['packages/core/probe/src/index.ts']],
+      ['@x1a0f3n9/dsh-types', ['packages/core/probe/src/types.ts']],
     ]),
     hostRuntimeSourceUses: new Map([
-      ['@xfcodeai/dsh-runtime', ['packages/core/probe/src/index.ts']],
+      ['@x1a0f3n9/dsh-runtime', ['packages/core/probe/src/index.ts']],
     ]),
     hostRuntimeExportUses: [{
-      packageName: '@xfcodeai/dsh-runtime',
-      specifier: '@xfcodeai/dsh-runtime',
+      packageName: '@x1a0f3n9/dsh-runtime',
+      specifier: '@x1a0f3n9/dsh-runtime',
       exportName: 'runtimeValue',
       sourcePath: 'packages/core/probe/src/index.ts',
       line: 1,
       column: 10,
-      sourceLine: "import { runtimeValue } from '@xfcodeai/dsh-runtime'",
+      sourceLine: "import { runtimeValue } from '@x1a0f3n9/dsh-runtime'",
     }],
     peerRequiredHostDependencies: new Set(),
     configurationOnlyDevDependencies: new Set(),
@@ -123,39 +123,39 @@ function hostRuntimeFixture(): {
 describe('package dependency scope', () => {
   it('keeps the measured Host relay roster explicit', () => {
     expect(PACKAGE_DEPENDENCY_POLICY.clientFaceExclude).toEqual([
-      '@xfcodeai/dsh-api-session-controller',
-      '@xfcodeai/dsh-api-workspace-controller',
+      '@x1a0f3n9/dsh-api-session-controller',
+      '@x1a0f3n9/dsh-api-workspace-controller',
     ])
     expect(PACKAGE_DEPENDENCY_POLICY.hostPackages).toEqual([
-      '@xfcodeai/dsh-llm',
-      '@xfcodeai/dsh-session',
+      '@x1a0f3n9/dsh-llm',
+      '@x1a0f3n9/dsh-session',
     ])
     expect(PACKAGE_DEPENDENCY_POLICY.configurationOnlyDevDependencies).toEqual({
-      '@xfcodeai/dsh-client-locale': ['@xfcodeai/dsh-api-remotes'],
-      '@xfcodeai/dsh-client-ui-conversation': [
-        '@xfcodeai/dsh-api-remotes',
-        '@xfcodeai/dsh-client-ui-workspace',
+      '@x1a0f3n9/dsh-client-locale': ['@x1a0f3n9/dsh-api-remotes'],
+      '@x1a0f3n9/dsh-client-ui-conversation': [
+        '@x1a0f3n9/dsh-api-remotes',
+        '@x1a0f3n9/dsh-client-ui-workspace',
       ],
-      '@xfcodeai/dsh-client-ui-model-selection': ['@xfcodeai/dsh-client-ui-input-trigger'],
-      '@xfcodeai/dsh-client-ui-sidebar': ['@xfcodeai/dsh-client-ui-workspace'],
-      '@xfcodeai/dsh-client-ui-subagent': ['@xfcodeai/dsh-client-ui-input-trigger'],
-      '@xfcodeai/dsh-client-ui-theme': ['@xfcodeai/dsh-api-remotes'],
-      '@xfcodeai/dsh-client-ui-tool': ['@xfcodeai/dsh-api-remotes'],
+      '@x1a0f3n9/dsh-client-ui-model-selection': ['@x1a0f3n9/dsh-client-ui-input-trigger'],
+      '@x1a0f3n9/dsh-client-ui-sidebar': ['@x1a0f3n9/dsh-client-ui-workspace'],
+      '@x1a0f3n9/dsh-client-ui-subagent': ['@x1a0f3n9/dsh-client-ui-input-trigger'],
+      '@x1a0f3n9/dsh-client-ui-theme': ['@x1a0f3n9/dsh-api-remotes'],
+      '@x1a0f3n9/dsh-client-ui-tool': ['@x1a0f3n9/dsh-api-remotes'],
     })
     expect(PACKAGE_DEPENDENCY_POLICY.duplicateSafePackages).toEqual([
-      '@xfcodeai/dsh-brand',
-      '@xfcodeai/dsh-typert-protocol',
-      '@xfcodeai/dsh-util-crypto',
-      '@xfcodeai/dsh-util-values',
+      '@x1a0f3n9/dsh-brand',
+      '@x1a0f3n9/dsh-typert-protocol',
+      '@x1a0f3n9/dsh-util-crypto',
+      '@x1a0f3n9/dsh-util-values',
     ])
-    expect(PACKAGE_DEPENDENCY_POLICY.safeHostDependencyExports['@xfcodeai/dsh-deque']).toEqual(['Deque'])
+    expect(PACKAGE_DEPENDENCY_POLICY.safeHostDependencyExports['@x1a0f3n9/dsh-deque']).toEqual(['Deque'])
     expect(PACKAGE_DEPENDENCY_POLICY.safeHostDependencyExports['@deepseek-ai/schemastery']).toEqual(['default'])
-    expect(PACKAGE_DEPENDENCY_POLICY.safeHostDependencyExports['@xfcodeai/dsh-session/types']).toBeUndefined()
-    expect(PACKAGE_DEPENDENCY_POLICY.safeHostDependencyExports['@xfcodeai/dsh-typert-protocol']).toBeUndefined()
-    expect(PACKAGE_DEPENDENCY_POLICY.peerRequiredHostExports['@xfcodeai/dsh-scope']).toEqual([
+    expect(PACKAGE_DEPENDENCY_POLICY.safeHostDependencyExports['@x1a0f3n9/dsh-session/types']).toBeUndefined()
+    expect(PACKAGE_DEPENDENCY_POLICY.safeHostDependencyExports['@x1a0f3n9/dsh-typert-protocol']).toBeUndefined()
+    expect(PACKAGE_DEPENDENCY_POLICY.peerRequiredHostExports['@x1a0f3n9/dsh-scope']).toEqual([
       'carrierKeyOf', 'scopeOf', 'scopeTarget',
     ])
-    expect(PACKAGE_DEPENDENCY_POLICY.peerRequiredHostExports['@xfcodeai/dsh-typert-protocol']).toBeUndefined()
+    expect(PACKAGE_DEPENDENCY_POLICY.peerRequiredHostExports['@x1a0f3n9/dsh-typert-protocol']).toBeUndefined()
   })
 
   it('discovers the Client directory, dsh.client declarations, and configured Host packages', () => {
@@ -351,15 +351,15 @@ describe('face-aware source classification', () => {
 describe('dependency sections', () => {
   it('does not leak repository configuration into captured dependency facts', () => {
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-client-locale',
-      dependencies: { '@xfcodeai/dsh-runtime': 'workspace:^' },
-      devDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-types': 'workspace:^' },
+      name: '@x1a0f3n9/dsh-client-locale',
+      dependencies: { '@x1a0f3n9/dsh-runtime': 'workspace:^' },
+      devDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-types': 'workspace:^' },
       peerDependencies: { [CORDIS]: 'workspace:^' },
     }
     const base = facts(manifest)
     const subject: PackageDependencyFacts = {
       ...base,
-      workspaceNames: new Set([...base.workspaceNames, '@xfcodeai/dsh-api-remotes']),
+      workspaceNames: new Set([...base.workspaceNames, '@x1a0f3n9/dsh-api-remotes']),
     }
 
     expect(collectPackageDependencyViolations({
@@ -369,15 +369,15 @@ describe('dependency sections', () => {
 
   it('requires non-workspace Host runtime imports in dependencies', () => {
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-probe',
-      dependencies: { '@xfcodeai/dsh-runtime': 'workspace:^' },
-      devDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-types': 'workspace:^', external: '^1.0.0' },
+      name: '@x1a0f3n9/dsh-probe',
+      dependencies: { '@x1a0f3n9/dsh-runtime': 'workspace:^' },
+      devDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-types': 'workspace:^', external: '^1.0.0' },
       peerDependencies: { [CORDIS]: 'workspace:^' },
     }
     const subject: PackageDependencyFacts = {
       ...facts(manifest),
       hostRuntimeSourceUses: new Map([
-        ['@xfcodeai/dsh-runtime', ['packages/core/probe/src/index.ts']],
+        ['@x1a0f3n9/dsh-runtime', ['packages/core/probe/src/index.ts']],
         ['external', ['packages/core/probe/src/index.ts']],
       ]),
     }
@@ -402,14 +402,14 @@ describe('dependency sections', () => {
 
   it('accepts Host dependencies, development-only inputs, and shared Cordis', () => {
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-probe',
+      name: '@x1a0f3n9/dsh-probe',
       dependencies: {
-        '@xfcodeai/dsh-runtime': 'workspace:^',
+        '@x1a0f3n9/dsh-runtime': 'workspace:^',
         '@deepseek-ai/schemastery': 'workspace:^',
         external: '^1.0.0',
       },
       devDependencies: {
-        '@xfcodeai/dsh-types': 'workspace:^',
+        '@x1a0f3n9/dsh-types': 'workspace:^',
         [CORDIS]: 'workspace:^',
       },
       peerDependencies: { [CORDIS]: 'workspace:^' },
@@ -420,20 +420,20 @@ describe('dependency sections', () => {
   })
 
   it('lists managed Host runtime dependencies for fix review', () => {
-    const subject = facts({ name: '@xfcodeai/dsh-probe' })
+    const subject = facts({ name: '@x1a0f3n9/dsh-probe' })
     expect(formatManagedRuntimeDependencies({
       facts: [subject], packages: [], policyViolations: [], workspaceNames: subject.workspaceNames,
     })).toEqual([
       'verify-package-dependencies: 1 managed Host runtime edge(s) remain in dependencies across 1 package(s):',
-      '  @xfcodeai/dsh-probe -> @xfcodeai/dsh-runtime: @xfcodeai/dsh-runtime#runtimeValue',
+      '  @x1a0f3n9/dsh-probe -> @x1a0f3n9/dsh-runtime: @x1a0f3n9/dsh-runtime#runtimeValue',
     ])
   })
 
   it('reports an unapproved Host runtime export without rewriting its dependency section', () => {
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-probe',
-      dependencies: { '@xfcodeai/dsh-runtime': 'workspace:^' },
-      devDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-types': 'workspace:^' },
+      name: '@x1a0f3n9/dsh-probe',
+      dependencies: { '@x1a0f3n9/dsh-runtime': 'workspace:^' },
+      devDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-types': 'workspace:^' },
       peerDependencies: { [CORDIS]: 'workspace:^' },
     }
     const subject = facts(manifest)
@@ -447,23 +447,23 @@ describe('dependency sections', () => {
     }
 
     expect(safetyViolations).toEqual([
-      'packages/core/probe/src/index.ts:1:10: @xfcodeai/dsh-runtime#runtimeValue is not classified as '
-      + 'safe or peer-required — import { runtimeValue } from \'@xfcodeai/dsh-runtime\'',
+      'packages/core/probe/src/index.ts:1:10: @x1a0f3n9/dsh-runtime#runtimeValue is not classified as '
+      + 'safe or peer-required — import { runtimeValue } from \'@x1a0f3n9/dsh-runtime\'',
     ])
     expect(fixPackageDependencies('/unused', state)).toEqual([])
-    expect(manifest.dependencies).toEqual({ '@xfcodeai/dsh-runtime': 'workspace:^' })
+    expect(manifest.dependencies).toEqual({ '@x1a0f3n9/dsh-runtime': 'workspace:^' })
   })
 
   it('keeps an edge as a peer when one imported export requires shared identity', () => {
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-probe',
-      dependencies: { '@xfcodeai/dsh-runtime': 'workspace:^' },
-      devDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-types': 'workspace:^' },
+      name: '@x1a0f3n9/dsh-probe',
+      dependencies: { '@x1a0f3n9/dsh-runtime': 'workspace:^' },
+      devDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-types': 'workspace:^' },
       peerDependencies: { [CORDIS]: 'workspace:^' },
     }
     const subject: PackageDependencyFacts = {
       ...facts(manifest),
-      peerRequiredHostDependencies: new Set(['@xfcodeai/dsh-runtime']),
+      peerRequiredHostDependencies: new Set(['@x1a0f3n9/dsh-runtime']),
     }
     expect(collectHostDependencyExportPolicyViolations(
       [subject],
@@ -471,7 +471,7 @@ describe('dependency sections', () => {
       {
         safeHostDependencyExports: {},
         peerRequiredHostExports: {
-          '@xfcodeai/dsh-runtime': ['runtimeValue'],
+          '@x1a0f3n9/dsh-runtime': ['runtimeValue'],
         },
       },
     )).toEqual([])
@@ -480,38 +480,38 @@ describe('dependency sections', () => {
     expect(manifest.dependencies).toBeUndefined()
     expect(manifest.peerDependencies).toMatchObject({
       [CORDIS]: 'workspace:^',
-      '@xfcodeai/dsh-runtime': 'workspace:^',
+      '@x1a0f3n9/dsh-runtime': 'workspace:^',
     })
     expect(manifest.devDependencies).toMatchObject({
       [CORDIS]: 'workspace:^',
-      '@xfcodeai/dsh-runtime': 'workspace:^',
+      '@x1a0f3n9/dsh-runtime': 'workspace:^',
     })
     expect(formatPeerRequiredRuntimeDependencies({
       facts: [subject], packages: [], policyViolations: [], workspaceNames: subject.workspaceNames,
     })).toEqual([
       'verify-package-dependencies: 1 Host runtime edge(s) remain in peerDependencies because their exports require shared identity across 1 package(s):',
-      '  @xfcodeai/dsh-probe -> @xfcodeai/dsh-runtime: @xfcodeai/dsh-runtime#runtimeValue',
+      '  @x1a0f3n9/dsh-probe -> @x1a0f3n9/dsh-runtime: @x1a0f3n9/dsh-runtime#runtimeValue',
     ])
   })
 
   it('reports wrong sections, workspace ranges, and stale peer metadata', () => {
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-probe',
-      dependencies: { '@xfcodeai/dsh-types': 'workspace:*' },
-      devDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-runtime': 'workspace:^' },
-      peerDependencies: { [CORDIS]: 'workspace:*', '@xfcodeai/dsh-runtime': 'workspace:^' },
-      peerDependenciesMeta: { '@xfcodeai/dsh-missing': { optional: true } },
+      name: '@x1a0f3n9/dsh-probe',
+      dependencies: { '@x1a0f3n9/dsh-types': 'workspace:*' },
+      devDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-runtime': 'workspace:^' },
+      peerDependencies: { [CORDIS]: 'workspace:*', '@x1a0f3n9/dsh-runtime': 'workspace:^' },
+      peerDependenciesMeta: { '@x1a0f3n9/dsh-missing': { optional: true } },
     }
     const state = {
       facts: [facts(manifest)], packages: [], policyViolations: [], workspaceNames: facts(manifest).workspaceNames,
     }
     const violations = collectPackageDependencyViolations(state)
     expect(violations).toEqual(expect.arrayContaining([
-      expect.stringContaining('@xfcodeai/dsh-runtime'),
-      expect.stringContaining('@xfcodeai/dsh-types'),
+      expect.stringContaining('@x1a0f3n9/dsh-runtime'),
+      expect.stringContaining('@x1a0f3n9/dsh-types'),
       expect.stringContaining(`${CORDIS} must be matching peerDependencies + devDependencies`),
-      expect.stringContaining('dependencies.@xfcodeai/dsh-types must use workspace:^'),
-      expect.stringContaining('peerDependenciesMeta.@xfcodeai/dsh-missing has no matching'),
+      expect.stringContaining('dependencies.@x1a0f3n9/dsh-types must use workspace:^'),
+      expect.stringContaining('peerDependenciesMeta.@x1a0f3n9/dsh-missing has no matching'),
     ]))
   })
 
@@ -520,15 +520,15 @@ describe('dependency sections', () => {
     roots.push(root)
     const manifestPath = 'package.json'
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-probe',
+      name: '@x1a0f3n9/dsh-probe',
       dependencies: { '@deepseek-ai/schemastery': 'workspace:*', external: '^1.0.0' },
-      devDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-runtime': 'workspace:^' },
+      devDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-runtime': 'workspace:^' },
       peerDependencies: {
         [CORDIS]: 'workspace:^',
-        '@xfcodeai/dsh-runtime': 'workspace:^',
-        '@xfcodeai/dsh-stale': 'workspace:^',
+        '@x1a0f3n9/dsh-runtime': 'workspace:^',
+        '@x1a0f3n9/dsh-stale': 'workspace:^',
       },
-      peerDependenciesMeta: { '@xfcodeai/dsh-stale': { optional: true } },
+      peerDependenciesMeta: { '@x1a0f3n9/dsh-stale': { optional: true } },
     }
     writeFileSync(join(root, manifestPath), `${JSON.stringify(manifest, null, 2)}\n`)
     const subject = { ...facts(manifest), manifestPath }
@@ -539,12 +539,12 @@ describe('dependency sections', () => {
     expect(fixed.dependencies).toEqual({
       '@deepseek-ai/schemastery': 'workspace:^',
       external: '^1.0.0',
-      '@xfcodeai/dsh-runtime': 'workspace:^',
+      '@x1a0f3n9/dsh-runtime': 'workspace:^',
     })
     expect(fixed.devDependencies).toEqual({
       [CORDIS]: 'workspace:^',
-      '@xfcodeai/dsh-types': 'workspace:^',
-      '@xfcodeai/dsh-stale': 'workspace:^',
+      '@x1a0f3n9/dsh-types': 'workspace:^',
+      '@x1a0f3n9/dsh-stale': 'workspace:^',
     })
     expect(fixed.peerDependencies).toEqual({ [CORDIS]: 'workspace:^' })
     expect(fixed.peerDependenciesMeta).toBeUndefined()
@@ -552,12 +552,12 @@ describe('dependency sections', () => {
 
   it('repairs an in-memory manifest for benchmark simulation', () => {
     const manifest: PackageDependencyManifest = {
-      name: '@xfcodeai/dsh-probe',
-      peerDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-runtime': 'workspace:^' },
-      devDependencies: { [CORDIS]: 'workspace:^', '@xfcodeai/dsh-runtime': 'workspace:^' },
+      name: '@x1a0f3n9/dsh-probe',
+      peerDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-runtime': 'workspace:^' },
+      devDependencies: { [CORDIS]: 'workspace:^', '@x1a0f3n9/dsh-runtime': 'workspace:^' },
     }
     repairPackageDependencyManifest(facts(manifest))
-    expect(manifest.dependencies).toEqual({ '@xfcodeai/dsh-runtime': 'workspace:^' })
+    expect(manifest.dependencies).toEqual({ '@x1a0f3n9/dsh-runtime': 'workspace:^' })
     expect(manifest.peerDependencies).toEqual({ [CORDIS]: 'workspace:^' })
   })
 })

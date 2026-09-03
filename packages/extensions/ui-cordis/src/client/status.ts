@@ -1,6 +1,6 @@
 /** Shared status derivation over Host inventory and this page's Client live set. */
 
-import type { DynamicCordisLivePackage } from '@xfcodeai/dsh-cordis-client-runner/client'
+import type { DynamicCordisLivePackage } from '@x1a0f3n9/dsh-cordis-client-runner/client'
 import type {
   CordisDynamicPackageId, DynamicCordisInventoryRow,
 } from './events.ts'

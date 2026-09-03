@@ -3,7 +3,7 @@ description: "随包附带的「powered by dsh」徽章 skill，供启用、使�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-skill-badge
+# @x1a0f3n9/dsh-skill-badge
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ agent（智能体）可以通过该内置提供方加载官方「powered by dsh�
 该插件没有配置。把它的组合行加入组合即可；随附 CLI 组合以 `disabled: true` 携带该行，因此在那里需要显式启用。
 
 ```yaml
-- name: '@xfcodeai/dsh-skill-badge'
+- name: '@x1a0f3n9/dsh-skill-badge'
 ```
 
 启用后，`dsh-badge` 会出现在会话目录的可用 skill 中。该 skill 覆盖远程 Markdown 徽章（基于 Shields.io）和随包分发的 PNG 徽章资源，后者用于无法可靠获取远程图片的目标环境。

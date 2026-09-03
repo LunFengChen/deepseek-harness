@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render } from '@testing-library/react'
 import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { afterEach, describe, expect, it } from 'vitest'
-import { useDismissOnOutsidePointer } from '@xfcodeai/dsh-client-ui-primitives'
+import { useDismissOnOutsidePointer } from '@x1a0f3n9/dsh-client-ui-primitives'
 
 afterEach(cleanup)
 

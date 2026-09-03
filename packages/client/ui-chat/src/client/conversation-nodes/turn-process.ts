@@ -1,11 +1,11 @@
 import type { Context } from '@deepseek-ai/cordis'
-import type { ChunkRowEvent } from '@xfcodeai/dsh-api-session-controller/types'
+import type { ChunkRowEvent } from '@x1a0f3n9/dsh-api-session-controller/types'
 import type {
   ConversationLocation, ConversationNodeContext, ConversationNodeDefinition, TurnLocation,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import type {} from '@xfcodeai/dsh-llm-retry/types'
-import { isAppendSurfaceEvent } from '@xfcodeai/dsh-session/surface'
-import type {} from '@xfcodeai/dsh-tools/types'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-llm-retry/types'
+import { isAppendSurfaceEvent } from '@x1a0f3n9/dsh-session/surface'
+import type {} from '@x1a0f3n9/dsh-tools/types'
 import { hasAssistantReplyContent } from '../contract/assistant-content.ts'
 import type { AssistantChatData, ChatNode, FinalAssistantChatData } from '../contract/chat-nodes.ts'
 import {
@@ -21,7 +21,7 @@ declare module '../contract/chat-nodes.ts' {
   }
 }
 
-declare module '@xfcodeai/dsh-client-ui-conversation/client' {
+declare module '@x1a0f3n9/dsh-client-ui-conversation/client' {
   interface ConversationTurnDataMap {
     /** Process range and finalized answer boundary for this Turn. */
     'turn-process': TurnProcessSpec

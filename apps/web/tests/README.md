@@ -18,13 +18,13 @@ not make a file part of the Client program — the two faces merge cordis
 both. Moving these files into the Client aggregate makes every Host-service
 access fail to compile.
 
-## Do not import `@xfcodeai/dsh-client-*` here
+## Do not import `@x1a0f3n9/dsh-client-*` here
 
 Importing a Client package — a value or a type — pulls its whole TypeScript
 project, and every project it references, into the **Host build graph**. That has
 bitten this lane once already: four Client consumer packages reference
 `api/remotes`' Client face, which cannot compile until Host tsdown has generated
-`@xfcodeai/dsh-goal/remote`, so the Host build phase ended up waiting on an
+`@x1a0f3n9/dsh-goal/remote`, so the Host build phase ended up waiting on an
 artifact it produces itself.
 
 When a scenario needs a Client-owned constant or pure function, mirror it here
@@ -34,8 +34,8 @@ never a silent pass. `scaffold.ts` follows this rule for the welcome-notice
 namespace, acknowledgement field, version, and asserted Chinese copy.
 
 One kind of Client import stands. `assembled-boot.ts` drives the shell itself, so
-it imports `AppWebEntry` from `@xfcodeai/dsh-client-web` and the boot-manifest
-type from `@xfcodeai/dsh-client-modules/client`: booting the real shell is what
+it imports `AppWebEntry` from `@x1a0f3n9/dsh-client-web` and the boot-manifest
+type from `@x1a0f3n9/dsh-client-modules/client`: booting the real shell is what
 that harness is for, and both packages are already in the Host graph. The chat
 scenarios mirror `conversationContextKey` in `support.ts` instead of importing
 its Client owner.

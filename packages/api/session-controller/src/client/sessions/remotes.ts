@@ -2,16 +2,16 @@
  * Remote namespaces the Session cluster calls. One parameter for one concept:
  * the generated surface a Session and its manager reach the Host through.
  *
- * @module @xfcodeai/dsh-api-session-controller/client/sessions/remotes
+ * @module @x1a0f3n9/dsh-api-session-controller/client/sessions/remotes
  */
 
-import type { EncodedImageAttachment } from '@xfcodeai/dsh-attachment/types'
-import type { ClientRemote } from '@xfcodeai/dsh-api-gateway/client'
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { EncodedImageAttachment } from '@x1a0f3n9/dsh-attachment/types'
+import type { ClientRemote } from '@x1a0f3n9/dsh-api-gateway/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {
   SubagentCatalog, SubagentInterruptReceipt, SubagentPromptReceipt, SubagentPromptRequest,
-} from '@xfcodeai/dsh-subagent/client'
-import type { RemoteResult } from '@xfcodeai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-subagent/client'
+import type { RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import type { SessionRemote } from '../transport.ts'
 
 /** Narrow Commands namespace consumed by a Client Session. */

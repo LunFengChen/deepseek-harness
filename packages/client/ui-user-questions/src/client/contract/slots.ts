@@ -1,13 +1,13 @@
 /** Question composer props and one pending Remote waterfall response. */
-import type { PropsLocale, PropsRuntime, PropsStore } from '@xfcodeai/dsh-client-ui-slots'
+import type { PropsLocale, PropsRuntime, PropsStore } from '@x1a0f3n9/dsh-client-ui-slots'
 // The client module declares the conversation.composer SlotMap entry required by PropsRuntime.
-import type { SessionId } from '@xfcodeai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {
   AskUserQuestionAnswer, AskUserQuestionItem,
-} from '@xfcodeai/dsh-user-questions'
+} from '@x1a0f3n9/dsh-user-questions'
 import type { createQuestionDraftStore } from '../draft-store.ts'
 
-declare module '@xfcodeai/dsh-client-ui-session/client' {
+declare module '@x1a0f3n9/dsh-client-ui-session/client' {
   interface SessionPendingInteractionMap {
     /** Pending question or plan-review request. */
     question: PendingQuestion

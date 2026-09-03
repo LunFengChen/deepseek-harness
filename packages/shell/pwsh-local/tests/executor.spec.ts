@@ -1,5 +1,5 @@
 /**
- * Real-process tests for `@xfcodeai/dsh-pwsh-local`: the LOCAL subprocess
+ * Real-process tests for `@x1a0f3n9/dsh-pwsh-local`: the LOCAL subprocess
  * service plus a REAL pwsh executable, exercised through the executor seam
  * (`resolve` → `run`/`start`). These verify the world — actual PowerShell
  * runs, output capture, truncation and spill, deadlines, kill escalation, and
@@ -15,12 +15,12 @@ import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { PwshLocalExecutor, ENCODING_PREAMBLE, candidatePwshPaths, resolvePwshPath } from '@xfcodeai/dsh-pwsh-local'
-import LocalSubprocessRuntime from '@xfcodeai/dsh-subprocess-local'
-import SubprocessRuntime from '@xfcodeai/dsh-subprocess'
-import type { SubprocessHandle, SubprocessOutputReader, SubprocessSpawnSpec } from '@xfcodeai/dsh-subprocess'
-import { MAX_TIMER_DELAY_MS } from '@xfcodeai/dsh-timeout'
-import type { ShellProcess } from '@xfcodeai/dsh-shell'
+import { PwshLocalExecutor, ENCODING_PREAMBLE, candidatePwshPaths, resolvePwshPath } from '@x1a0f3n9/dsh-pwsh-local'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import SubprocessRuntime from '@x1a0f3n9/dsh-subprocess'
+import type { SubprocessHandle, SubprocessOutputReader, SubprocessSpawnSpec } from '@x1a0f3n9/dsh-subprocess'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
+import type { ShellProcess } from '@x1a0f3n9/dsh-shell'
 
 const spillDir = mkdtempSync(join(tmpdir(), 'dsh-pwsh-exec-spec-'))
 

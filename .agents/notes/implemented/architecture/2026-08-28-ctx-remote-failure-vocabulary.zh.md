@@ -6,7 +6,7 @@ Status: implemented
 
 ## Problem
 
-每个 Remote owner 包各自维护一套失败面：一个 `XxxErrorDetailsMap` 接口、由它派生的 `XxxError` union，以及一个出口映射函数，把域内错误类（`UnknownPresetError`、`PresetMountError`、`SessionTitleInvalidError` 等）翻译成 wire 失败值。`@xfcodeai/dsh-typert-protocol` 同时携带两个失败类——owner 主动上报用 `TypertRemoteFailure`，lookup resolver 产生的用 `TypertLookupFailure`——而 `@xfcodeai/dsh-client-connection` 又保留了第二份 typed 视图 `RpcErrorDetailsMap`，把 `agent-preset-not-found`、`session-not-found` 这类域码硬编码进载体层。
+每个 Remote owner 包各自维护一套失败面：一个 `XxxErrorDetailsMap` 接口、由它派生的 `XxxError` union，以及一个出口映射函数，把域内错误类（`UnknownPresetError`、`PresetMountError`、`SessionTitleInvalidError` 等）翻译成 wire 失败值。`@x1a0f3n9/dsh-typert-protocol` 同时携带两个失败类——owner 主动上报用 `TypertRemoteFailure`，lookup resolver 产生的用 `TypertLookupFailure`——而 `@x1a0f3n9/dsh-client-connection` 又保留了第二份 typed 视图 `RpcErrorDetailsMap`，把 `agent-preset-not-found`、`session-not-found` 这类域码硬编码进载体层。
 
 于是一个码同时存在三处：owner 的表、载体的 typed 视图、以及消费方为窄化而写的 union 或 cast（`result.error as SessionError`）。新增一个域码要改三处，跨域转述一个别人的码则要把对方的码复制进自己的表——`SessionErrorDetailsMap` 就收编了 `agent-preset-*`、`subagent-*`、`workspace-not-found` 五个他域码。
 
@@ -16,7 +16,7 @@ Host 固定事实同样绕过了 `ctx.remote`：Host home 取自 `(ctx.get('conn
 
 ## Decision
 
-`@xfcodeai/dsh-typert-protocol` 导出唯一的失败类 `RemoteError<Code>`：一个真 `Error`，带只读 `code` 与 `details`、结构标记 `isDSHRemoteError`，以及标准 `ErrorOptions`（`cause` 只在进程内有效）。码与 details 的对应关系收进一张 merge-extensible 的 `RemoteErrorDetailsMap`；`RemoteFailure` 是按码分布的实例 union，`RemoteResult<T>` 形状不变。
+`@x1a0f3n9/dsh-typert-protocol` 导出唯一的失败类 `RemoteError<Code>`：一个真 `Error`，带只读 `code` 与 `details`、结构标记 `isDSHRemoteError`，以及标准 `ErrorOptions`（`cause` 只在进程内有效）。码与 details 的对应关系收进一张 merge-extensible 的 `RemoteErrorDetailsMap`；`RemoteFailure` 是按码分布的实例 union，`RemoteResult<T>` 形状不变。
 
 ```text
 export class RemoteError<Code extends RemoteErrorCode = RemoteErrorCode> extends Error {
@@ -38,10 +38,10 @@ export type RemoteResult<T> = { ok: true; value: T } | { ok: false; error: Remot
 
 - **载体码**：`gateway/bad-request`、`gateway/cancelled`、`gateway/internal` 由 protocol 声明，人人可达。
 - **Gateway 装配码**：17 个 `gateway/*` 由 `packages/api/gateway/src/remote-error-codes.ts` 声明，details 统一为 `TypertGatewayFaultDetails { endpoint, field? }`；该模块 face-neutral，Host 与 Client 两面各自 import，因此两个 program 看到同一批条目。
-- **跨包共产**：两个及以上不同包抛同一个码时，声明落到双方都已依赖的最低层。`session/not-found` 落 `@xfcodeai/dsh-session`（session-controller 与 workspace-controller 都依赖它），`workspace/not-found` 落 `@xfcodeai/dsh-workspace`（session-controller 与 workspace-controller 之间没有依赖边，能力包是唯一共同下层）。
+- **跨包共产**：两个及以上不同包抛同一个码时，声明落到双方都已依赖的最低层。`session/not-found` 落 `@x1a0f3n9/dsh-session`（session-controller 与 workspace-controller 都依赖它），`workspace/not-found` 落 `@x1a0f3n9/dsh-workspace`（session-controller 与 workspace-controller 之间没有依赖边，能力包是唯一共同下层）。
 - **单一生产者**：只有一个包抛的码落生产者包。`subagent/not-found` 与 `agent-preset/conflict` 因此落 session-controller——全仓只有它抛这两个码，subagent 与 agent-presets 的码表里都没有它们。
 
-共享的是校验逻辑，不是码。`session/invalid-time-zone` 与 `subagent/invalid-time-zone` 是两个域各自声明、各自抛出的两个码，两个端点共用 `@xfcodeai/dsh-util-time` 的 `canonicalClientTimeZone()` 做规范化；client 对这个码没有分支语义，拆码的成本是零，而合成一个码就会重新制造可达性问题。
+共享的是校验逻辑，不是码。`session/invalid-time-zone` 与 `subagent/invalid-time-zone` 是两个域各自声明、各自抛出的两个码，两个端点共用 `@x1a0f3n9/dsh-util-time` 的 `canonicalClientTimeZone()` 做规范化；client 对这个码没有分支语义，拆码的成本是零，而合成一个码就会重新制造可达性问题。
 
 ## Discrimination by code
 
@@ -49,13 +49,13 @@ export type RemoteResult<T> = { ok: true; value: T } | { ok: false; error: Remot
 
 业务代码通常连这两个函数都不需要：`RemoteResult` 的 `ok: false` 分支已经是类型化的 `RemoteFailure`，`if (result.error.code === 'session/not-found')` 就把 `details` 窄化到该码的形状，无需 cast。需要向上抛的站点直接 `throw result.error`——它是真 `Error`，栈与 `message` 都成立。
 
-client 面不构造 `RemoteError`：唯一例外是 Gateway 的 client face 本身，它在 `invoke()` 里按 wire 数据重建实例、在流边界把载体 throw 折进同一词汇。测试替身要构造失败值时从 `@xfcodeai/dsh-client-test-runtime` 取 `RemoteError`，而不是让 client 包值引入 protocol。断言用 `toMatchObject` 判 code（必要时加 details 字段）：`RemoteError` 是 `Error`，own key 集合与旧字面量不同，`toEqual` 会失败。
+client 面不构造 `RemoteError`：唯一例外是 Gateway 的 client face 本身，它在 `invoke()` 里按 wire 数据重建实例、在流边界把载体 throw 折进同一词汇。测试替身要构造失败值时从 `@x1a0f3n9/dsh-client-test-runtime` 取 `RemoteError`，而不是让 client 包值引入 protocol。断言用 `toMatchObject` 判 code（必要时加 details 字段）：`RemoteError` 是 `Error`，own key 集合与旧字面量不同，`toEqual` 会失败。
 
 ## Fixed Host facts
 
 `ctx.remote.$host` 暴露两条固定事实：`home: string | undefined` 与 `isLoopback: boolean`。它是 Client Remote service 上的 getter，读的是 service 构造期取得的 connection 句柄——`home` 来自 generation 快照的 ready frame（ready 之前是 `undefined`），`isLoopback` 来自载体。没有 store、没有订阅、没有 generation 计数器。
 
-重连后的刷新走既有信号：Client Remote 在连上时 emit `connection/reset`，需要重取的消费方监听它或各域自己的 remote event，而不是让 `$host` 变成一个可订阅对象。因此消费方不再注入 `connection`：`@xfcodeai/dsh-client-connection` 的消费白名单收缩到 hmr、frontend-static、bundle/web-app、session-log-export、webworker-runtime、gateway 与 api-remotes 装配。
+重连后的刷新走既有信号：Client Remote 在连上时 emit `connection/reset`，需要重取的消费方监听它或各域自己的 remote event，而不是让 `$host` 变成一个可订阅对象。因此消费方不再注入 `connection`：`@x1a0f3n9/dsh-client-connection` 的消费白名单收缩到 hmr、frontend-static、bundle/web-app、session-log-export、webworker-runtime、gateway 与 api-remotes 装配。
 
 ## What the wire carries
 
@@ -63,7 +63,7 @@ envelope 不变：wire 上仍是 `{ code, message, details }` 数据，`RemoteEr
 
 三条 wire 可见行为随之确定。Gateway 的 17 个装配码按语义上 wire，client 因此能把「方法未挂载」与「业务拒绝」分开处理。owner 不预折无关异常：未归类的 throw 交给 Gateway 折一次 `gateway/internal`，诊断串保留在 `message` 里。client 一元调用被调用方 abort 时答 `gateway/cancelled`，即使本地 throw 抢在 wire 往返之前赢得竞争，也与 Host 会给出的码一致。
 
-载体层只保留开放的 wire 形状。`@xfcodeai/dsh-client-connection` 的 `ConnectionRpcFailure`/`ConnectionRpcResult` 不含任何域码知识，其 `transportError()` 产出 `gateway/internal`；typed 视图的正家从此只有 protocol 的 `RemoteFailure`。
+载体层只保留开放的 wire 形状。`@x1a0f3n9/dsh-client-connection` 的 `ConnectionRpcFailure`/`ConnectionRpcResult` 不含任何域码知识，其 `transportError()` 产出 `gateway/internal`；typed 视图的正家从此只有 protocol 的 `RemoteFailure`。
 
 ## Alternatives considered
 
@@ -77,7 +77,7 @@ envelope 不变：wire 上仍是 `{ code, message, details }` 数据，`RemoteEr
 
 ## Consequences
 
-新增一个域码是一处 declaration merging 加一个 throw：不再有映射函数、错误类、载体 typed 视图三处联动。代价是落点需要判断——正家必须对每个生产者可达，而这条判断只有在真的出现第二个生产者时才显现；`workspace/not-found` 就是这样从 workspace-controller 迁到能力包的，并为此给 `@xfcodeai/dsh-workspace` 加了一条 type-only 的 protocol 依赖。
+新增一个域码是一处 declaration merging 加一个 throw：不再有映射函数、错误类、载体 typed 视图三处联动。代价是落点需要判断——正家必须对每个生产者可达，而这条判断只有在真的出现第二个生产者时才显现；`workspace/not-found` 就是这样从 workspace-controller 迁到能力包的，并为此给 `@x1a0f3n9/dsh-workspace` 加了一条 type-only 的 protocol 依赖。
 
 码字符串带前缀后，wire 字符串整体变化，connection fixture 内嵌的码、host 与 client 两侧断言、spec 本地 declare 一次性同步。发布前阶段接受这次一波切；发布后同样的改名需要一个兼容期。
 

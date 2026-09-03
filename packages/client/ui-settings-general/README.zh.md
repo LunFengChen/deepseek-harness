@@ -3,7 +3,7 @@ description: "dsh Web 客户端的设置外壳、无特定功能归属文案与�
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-client-ui-settings-general
+# @x1a0f3n9/dsh-client-ui-settings-general
 
 [English](README.md) | 中文
 

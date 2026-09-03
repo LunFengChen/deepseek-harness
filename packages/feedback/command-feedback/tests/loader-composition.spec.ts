@@ -6,12 +6,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import AgentRegistry, { Inbox } from '@xfcodeai/dsh-agent'
-import type { Agent, AgentStatus } from '@xfcodeai/dsh-agent'
-import CommandRuntime from '@xfcodeai/dsh-commands'
-import SessionStore, { SessionId } from '@xfcodeai/dsh-session'
-import * as CommandFeedback from '@xfcodeai/dsh-command-feedback'
-import { getOrCreateAnonymousUserId } from '@xfcodeai/dsh-anonymous-user-id'
+import AgentRegistry, { Inbox } from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentStatus } from '@x1a0f3n9/dsh-agent'
+import CommandRuntime from '@x1a0f3n9/dsh-commands'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import * as CommandFeedback from '@x1a0f3n9/dsh-command-feedback'
+import { getOrCreateAnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
 
 let root: string | undefined
 let context: Context | undefined
@@ -56,10 +56,10 @@ describe('/feedback real Loader composition through cordis.yml', () => {
     vi.stubEnv('DSH_HOME', root)
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
-      "- name: '@xfcodeai/dsh-agent'",
-      "- name: '@xfcodeai/dsh-session'",
-      "- name: '@xfcodeai/dsh-commands'",
-      "- name: '@xfcodeai/dsh-command-feedback'",
+      "- name: '@x1a0f3n9/dsh-agent'",
+      "- name: '@x1a0f3n9/dsh-session'",
+      "- name: '@x1a0f3n9/dsh-commands'",
+      "- name: '@x1a0f3n9/dsh-command-feedback'",
       '',
     ].join('\n'))
 
@@ -68,10 +68,10 @@ describe('/feedback real Loader composition through cordis.yml', () => {
     await context.plugin(Loader)
     context.loader.builtins.include = Include
     const modules = new Map<string, unknown>([
-      ['@xfcodeai/dsh-agent', AgentRegistry],
-      ['@xfcodeai/dsh-session', SessionStore],
-      ['@xfcodeai/dsh-commands', CommandRuntime],
-      ['@xfcodeai/dsh-command-feedback', CommandFeedback],
+      ['@x1a0f3n9/dsh-agent', AgentRegistry],
+      ['@x1a0f3n9/dsh-session', SessionStore],
+      ['@x1a0f3n9/dsh-commands', CommandRuntime],
+      ['@x1a0f3n9/dsh-command-feedback', CommandFeedback],
     ])
     context.loader.internal = {
       version: 'v2',

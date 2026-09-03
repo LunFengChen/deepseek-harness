@@ -1,17 +1,17 @@
 /**
  * Fresh-process SDK subagent client. Drives one child DeepSeek Harness
- * runtime over stdio JSON-RPC through `@xfcodeai/dsh-sdk-client` and owns
+ * runtime over stdio JSON-RPC through `@x1a0f3n9/dsh-sdk-client` and owns
  * cancellation and quiescent disposal. It publishes after the child
  * handshake, maps child failures to stop reasons, and tears down to
  * quiescence. The SDK client spawns the child rather than using
  * `ctx.subprocess` — the subprocess seam's documented exception for
  * SDK-managed transports — so this driver applies the seam's shared env scrub.
  *
- * @module @xfcodeai/dsh-subagent-dsh-sdk/run
+ * @module @x1a0f3n9/dsh-subagent-dsh-sdk/run
  */
 
 import { randomUUID } from 'node:crypto'
-import { brandString } from '@xfcodeai/dsh-brand'
+import { brandString } from '@x1a0f3n9/dsh-brand'
 import {
   DeepSeekHarness,
   type DeepSeekHarnessOptions,
@@ -19,12 +19,12 @@ import {
   JsonRpcResponseError,
   SdkProtocolError,
   TransportClosedError,
-} from '@xfcodeai/dsh-sdk-client'
-import type { ContentBlock, ReasoningEffortId } from '@xfcodeai/dsh-llm'
-import type { SessionEvent, SessionId, TurnEndReason } from '@xfcodeai/dsh-session'
-import type { SubagentResult, SubagentRun, SubagentStartRequest, SubagentStopReason } from '@xfcodeai/dsh-subagent'
-import { AssistantOutputFold, settleRunResult, subprocessRunHandle } from '@xfcodeai/dsh-subagent'
-import { scrubbedParentEnv } from '@xfcodeai/dsh-subprocess'
+} from '@x1a0f3n9/dsh-sdk-client'
+import type { ContentBlock, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type { SessionEvent, SessionId, TurnEndReason } from '@x1a0f3n9/dsh-session'
+import type { SubagentResult, SubagentRun, SubagentStartRequest, SubagentStopReason } from '@x1a0f3n9/dsh-subagent'
+import { AssistantOutputFold, settleRunResult, subprocessRunHandle } from '@x1a0f3n9/dsh-subagent'
+import { scrubbedParentEnv } from '@x1a0f3n9/dsh-subprocess'
 
 /** Resolved spawn spec for an SDK runtime child process (no defaults — see Config). */
 export interface SdkRunSpec {

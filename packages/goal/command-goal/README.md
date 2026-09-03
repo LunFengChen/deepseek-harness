@@ -3,7 +3,7 @@ description: "The human-facing /goal slash command for users and maintainers cho
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-command-goal
+# @x1a0f3n9/dsh-command-goal
 
 English | [中文](README.zh.md)
 
@@ -54,11 +54,11 @@ The command injects the commands registry and the goal service. A custom app mou
 
 ```yaml
 - id: commands
-  name: '@xfcodeai/dsh-commands'
+  name: '@x1a0f3n9/dsh-commands'
 - id: goal
-  name: '@xfcodeai/dsh-goal'
+  name: '@x1a0f3n9/dsh-goal'
 - id: command-goal
-  name: '@xfcodeai/dsh-command-goal'
+  name: '@x1a0f3n9/dsh-command-goal'
 ```
 
 The shipped `dsh` base enables the persisted-goal stack and this command. The Web bundle keeps the goal service and driver on the Host, disables the base command producer, and mounts the producer in the `standard`, `code`, and `cordis` agent presets; `minimal` omits it. The ACP automation app enables the domain and model tools without a command adapter. The standalone `sdk-minimal` profile omits the complete goal stack so its result API still settles one correlated physical turn.

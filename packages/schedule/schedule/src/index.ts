@@ -1,13 +1,13 @@
 /**
  * Agent-scoped durable one-shot and fixed-rate reminders over the session event log.
- * @module @xfcodeai/dsh-schedule
+ * @module @x1a0f3n9/dsh-schedule
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@xfcodeai/dsh-agent'
-import type {} from '@xfcodeai/dsh-session-persistence'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-session-persistence'
 // Type-only: resolves ctx.sessionProjections for the optional projection child.
-import type {} from '@xfcodeai/dsh-session-projection'
+import type {} from '@x1a0f3n9/dsh-session-projection'
 import { scheduleProjectionDefinition } from './projection.ts'
 import { ScheduleRuntime } from './runtime.ts'
 import { registerScheduleTools } from './tools.ts'

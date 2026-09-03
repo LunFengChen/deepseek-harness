@@ -5,12 +5,12 @@
  */
 
 import { Service } from '@deepseek-ai/cordis'
-import { RemoteError, remoteErrorOf } from '@xfcodeai/dsh-typert-protocol'
+import { RemoteError, remoteErrorOf } from '@x1a0f3n9/dsh-typert-protocol'
 export type { TypertGatewayFaultDetails } from '../remote-error-codes.ts'
 import type { Context } from '@deepseek-ai/cordis'
 import type {
   ConnectionHandle,
-} from '@xfcodeai/dsh-client-connection/client'
+} from '@x1a0f3n9/dsh-client-connection/client'
 import type {
   InvocationDescriptor,
   TypertClientEventListener,
@@ -21,7 +21,7 @@ import type {
   TypertDisposer,
   TypertRemoteContribution,
   TypertRemoteEvent,
-} from '@xfcodeai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-typert-protocol'
 import {
   RemoteStreamCarrierError,
   RemoteStreamMuxClient,

@@ -10,16 +10,16 @@
  * VM-realm schemas and canonical values are rebuilt as host objects, while rendered content and
  * presentation metadata are shape-checked before entering the registry. Common JSON-Schema spellings are normalized when they
  * have one meaning; invalid vocabulary fails during registration with a teaching error.
- * @module @xfcodeai/dsh-cordis-host-runner/guard
+ * @module @x1a0f3n9/dsh-cordis-host-runner/guard
  */
 
 import { Context } from '@deepseek-ai/cordis'
 import type { Plugin } from '@deepseek-ai/cordis'
-import { scopeOf } from '@xfcodeai/dsh-scope'
-import { assertSupportedJsonSchema, defineTool } from '@xfcodeai/dsh-tools'
-import type { ToolDefinition } from '@xfcodeai/dsh-tools'
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
-import type { JsonValue } from '@xfcodeai/dsh-util-values'
+import { scopeOf } from '@x1a0f3n9/dsh-scope'
+import { assertSupportedJsonSchema, defineTool } from '@x1a0f3n9/dsh-tools'
+import type { ToolDefinition } from '@x1a0f3n9/dsh-tools'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 
 const DYNAMIC_TOOL = Symbol('cordis-host-runner.dynamic-tool')
 const SCHEMA_TYPES = new Set<unknown>(['string', 'number', 'integer', 'boolean', 'null', 'object', 'array', 'json'])
@@ -744,7 +744,7 @@ function sandboxContext(ctx: Context, reportFailure: (error: Error) => void): Co
   }
   const get = (name: string): unknown => readService(name, false)
   // The browser half builds the same façade over its own Context
-  // (`@xfcodeai/dsh-cordis-client-runner`, whose CTX_VERBS names this one its
+  // (`@x1a0f3n9/dsh-cordis-client-runner`, whose CTX_VERBS names this one its
   // twin), and the sameness is the point: a package author meets ONE contract on
   // both halves. Folding them together is not available — the two halves compile
   // in separate programs where `Context` merges different service keys — so the

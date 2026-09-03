@@ -8,19 +8,19 @@
 import { Context } from '@deepseek-ai/cordis'
 import { cleanup, fireEvent, render, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { SessionLiveEventEntry } from '@xfcodeai/dsh-api-session-controller/client'
+import type { SessionLiveEventEntry } from '@x1a0f3n9/dsh-api-session-controller/client'
 import {
   ConversationNodeAssembler, UiConversation,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ConversationLocationDataSource, ConversationLocationDataStore, ConversationMatch, ConversationNodeDefinition,
   ConversationStartMatch, ConversationTimelineSnapshot, ConversationTurnDataMap, ConversationViewDefinition,
   ConversationViewNode, TurnLocation,
-} from '@xfcodeai/dsh-client-ui-conversation/client'
-import { SlotRegistry } from '@xfcodeai/dsh-client-ui-renderer/client'
-import { apply as applyLocale, inject as localeInject } from '@xfcodeai/dsh-client-locale/client'
-import type { ChatFileMentions, TurnTailOwnerProps } from '@xfcodeai/dsh-client-ui-chat/client'
-import { makeTranslate, RemoteError, stubSettingsScope } from '@xfcodeai/dsh-client-test-runtime'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import { apply as applyLocale, inject as localeInject } from '@x1a0f3n9/dsh-client-locale/client'
+import type { ChatFileMentions, TurnTailOwnerProps } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { makeTranslate, RemoteError, stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
 import { ProducedFiles, type ProducedFilesInjected, type ProducedFilesProps } from '../src/client/ProducedFiles.tsx'
 import {
   basename, deliverablesDefinition, producedFileMentions, producedForClosing, selectProducedFiles,
@@ -28,7 +28,7 @@ import {
 } from '../src/client/turn-deliverables.ts'
 import { apply, inject } from '../src/client/index.ts'
 import { en, zh } from '../src/client/locales.ts'
-import type { SessionEvent } from '@xfcodeai/dsh-session/types'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 
 afterEach(() => {
   cleanup()

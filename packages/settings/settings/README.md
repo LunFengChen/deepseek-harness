@@ -3,7 +3,7 @@ description: "The user-settings service for plugin authors and maintainers regis
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-settings
+# @x1a0f3n9/dsh-settings
 
 English | [中文](README.zh.md)
 
@@ -36,12 +36,12 @@ Choose settings when a plugin's configuration should be changeable at runtime �
 The service stores nothing by itself; mount a provider such as the shipped file-backed one:
 
 ```yaml
-- name: '@xfcodeai/dsh-settings-file'
+- name: '@x1a0f3n9/dsh-settings-file'
   config:
     path: /absolute/path/to/settings.yaml
 ```
 
-`ctx.settings` appears once the provider is live. The provider README owns the full configuration surface; the generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-settings-file) lists every accepted field.
+`ctx.settings` appears once the provider is live. The provider README owns the full configuration surface; the generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-settings-file) lists every accepted field.
 
 ### Registering a namespace
 

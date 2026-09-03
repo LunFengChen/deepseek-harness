@@ -3,7 +3,7 @@ description: "Keyless LLM replay plugin for snapshot tests, for test authors boo
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-llm-replay
+# @x1a0f3n9/dsh-llm-replay
 
 English | [中文](README.zh.md)
 
@@ -33,7 +33,7 @@ With `providers` configured, the plugin registers a replay-only adapter whose ca
 
 ```yaml
 - id: llm-replay
-  name: '@xfcodeai/dsh-llm-replay'
+  name: '@x1a0f3n9/dsh-llm-replay'
   config:
     providers:
       - id: deepseek-official
@@ -61,7 +61,7 @@ With `providers` configured, the plugin registers a replay-only adapter whose ca
 | `providers` | — | Optional replay-only provider and model catalog; a model may declare `contextWindow`, text/image modalities, and positive `imageRequestTokens` when image-capable; invalid values fail at load and routes never perform provider I/O |
 | `paceMs` | — (burst) | Optional per-chunk delay in ms for genuinely incremental delivery |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-llm-replay) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-llm-replay) is the exhaustive source for every accepted field and its JSDoc.
 
 ### How the fixture works
 

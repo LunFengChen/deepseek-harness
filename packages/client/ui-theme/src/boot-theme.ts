@@ -5,7 +5,7 @@
  * ui-layout's ThemePresenter owns after the client plugin tree activates.
  */
 
-import type { IndexInjection } from '@xfcodeai/dsh-host-webserver'
+import type { IndexInjection } from '@x1a0f3n9/dsh-host-webserver'
 import { DEFAULT_FONT_SIZE, DEFAULT_PREFERENCE, type ThemePreference } from './theme-settings.ts'
 
 /** Build the inline script body for one schema-validated durable theme section. */

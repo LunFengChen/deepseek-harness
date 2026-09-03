@@ -3,7 +3,7 @@ description: "One shared remote Linux sandbox for E2B-backed file and command wo
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-e2b
+# @x1a0f3n9/dsh-e2b
 
 English | [中文](README.zh.md)
 
@@ -36,14 +36,14 @@ Choose the E2B family when work should be isolated from the host machine — for
 Three settings matter: an API key (or the `E2B_API_KEY` environment variable), an absolute remote working directory, and the sandbox lifetime. A bad key, a relative working directory, or an invalid lifetime rejects startup before any remote work happens.
 
 ```yaml
-- name: '@xfcodeai/dsh-e2b'
+- name: '@x1a0f3n9/dsh-e2b'
   config:
     apiKey: <E2B API key>
     cwd: /home/user/workspace
     timeoutMs: 300000
 
-- name: '@xfcodeai/dsh-subprocess-e2b'
-- name: '@xfcodeai/dsh-fs-e2b'
+- name: '@x1a0f3n9/dsh-subprocess-e2b'
+- name: '@x1a0f3n9/dsh-fs-e2b'
 ```
 
 | Field | Default | Meaning |
@@ -52,7 +52,7 @@ Three settings matter: an API key (or the `E2B_API_KEY` environment variable), a
 | `cwd` | `/home/user/workspace` | Remote working directory the family shares; absolute POSIX path |
 | `timeoutMs` | `300,000` | Sandbox lifetime in milliseconds; the sandbox is deleted when it expires |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-e2b) is the exhaustive source for every accepted field and its JSDoc.
+The generated [configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-e2b) is the exhaustive source for every accepted field and its JSDoc.
 
 ### What you get
 
@@ -105,7 +105,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [E2B provider family map](../README.md) — the three packages and the opt-in composition.
 - [Subprocess subsystem](../../../docs/subsystems/subprocess.md) — the subprocess seam contract and the generated Cordis surface, including `ctx.e2b`.
 - [Portable execution-world decision](../../../.agents/notes/implemented/architecture/2026-07-28-portable-execution-world-consumers.md) — why consumers delegate to `ctx.fs` and `ctx.subprocess`, and what stays in the host.
-- [Generated configuration catalog](../../../docs/config-catalog.md#xfcodeaidsh-e2b) — every accepted config field and its source declaration.
+- [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-e2b) — every accepted config field and its source declaration.
 
 -----
 

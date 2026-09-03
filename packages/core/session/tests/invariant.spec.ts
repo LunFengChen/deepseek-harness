@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createScope, scopeTarget } from '@xfcodeai/dsh-scope'
-import { createUserMessage, ToolCallId, createMessage, createToolResultMessage, freezeMessage } from '@xfcodeai/dsh-llm'
-import SessionStore, { SessionId, SessionSeq, TOOL_NOT_STARTED } from '@xfcodeai/dsh-session'
-import * as SessionInvariant from '@xfcodeai/dsh-session/invariant'
-import InvariantRegistry, { InvariantError } from '@xfcodeai/dsh-invariants'
+import { createScope, scopeTarget } from '@x1a0f3n9/dsh-scope'
+import { createUserMessage, ToolCallId, createMessage, createToolResultMessage, freezeMessage } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId, SessionSeq, TOOL_NOT_STARTED } from '@x1a0f3n9/dsh-session'
+import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
+import InvariantRegistry, { InvariantError } from '@x1a0f3n9/dsh-invariants'
 
 async function setup(): Promise<{ ctx: Context; fiber: Awaited<ReturnType<Context['plugin']>> }> {
   const ctx = new Context()

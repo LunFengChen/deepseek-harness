@@ -1,6 +1,6 @@
 import { staticLinked } from '../tsdown.client.ts'
 
 export default staticLinked(
-  '@xfcodeai/dsh-client-web',
+  '@x1a0f3n9/dsh-client-web',
   ['lib/types/index.js'],
 )

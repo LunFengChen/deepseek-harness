@@ -7,11 +7,11 @@
  * select the accumulated assistant text. Selection is independent of the
  * run's stop reason.
  *
- * @module @xfcodeai/dsh-subagent/assistant-output
+ * @module @x1a0f3n9/dsh-subagent/assistant-output
  */
 
-import type { ContentBlock } from '@xfcodeai/dsh-llm'
-import type { SessionEvent } from '@xfcodeai/dsh-session'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 
 /**
  * Incremental fold of the selection rule, for backends that observe a child's

@@ -17,7 +17,7 @@
  * call or has the old host's rows published on top of it.
  */
 
-import type { HostObservable } from '@xfcodeai/dsh-client-ui-slots'
+import type { HostObservable } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { CordisDynamicPort, CordisInventoryRow } from './dynamic-port.ts'
 import type { CordisDynamicPluginId } from './events.ts'
 
