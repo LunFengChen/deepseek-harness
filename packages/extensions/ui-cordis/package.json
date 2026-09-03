@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-cordis",
   "description": "Cordis dynamic-plugin definition card: the keyed cordis_define tool row with its run/stop switch",
-  "version": "0.1.2-alpha.4",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-code-runtime-python",
   "description": "CPython subprocess implementation of the DeepSeek Harness code-execution seam",
-  "version": "0.1.2-alpha.4",
+  "version": "0.1.2-alpha.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-fs",
   "description": "Abstract filesystem capability seam (ctx.fs) for the DeepSeek Harness — vocabulary types, the FileSystem service (text IO + optional version-guarded atomic mutations), and the fs/* policy event vocabulary",
-  "version": "0.1.2-alpha.4",
+  "version": "0.1.2-alpha.6",
   "publishConfig": {
     "access": "public"
   },
