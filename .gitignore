@@ -41,3 +41,6 @@ apps/web/dist/
 worktrees/
 .agents/worktrees/
 .typert-*/
+
+# 发布流程生成的本地打包产物
+/dist/
