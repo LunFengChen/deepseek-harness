@@ -12,7 +12,6 @@ import {
   WIDER_MODES,
   isEscalationSatisfiedByStandingMode,
   approveEscalation,
-  isEscalationSatisfiedByStandingMode,
   escalationHintMarker,
   sandboxDenialMarker,
   validateEscalationArgs,
