@@ -444,6 +444,13 @@ export class SurfaceManager implements SessionSurface {
     }
   }
 
+  /** Reset incremental state after the owning event log is truncated. */
+  reset(): void {
+    this._state = createFoldState()
+    this._lastProcessedSeq = this.baseSeq === 0 ? -1 : SessionSeq(this.baseSeq - 1)
+    this._pendingPlan = undefined
+  }
+
   /** Monotonic count of folded positional replacements. */
   get replaceGeneration(): number {
     if (this._lastProcessedSeq < this.baseSeq + this.log.length - 1) this._processDelta()

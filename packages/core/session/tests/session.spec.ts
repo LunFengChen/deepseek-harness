@@ -60,6 +60,35 @@ describe('Session', () => {
     expect(messages[2]!.content[0]).toMatchObject({ type: 'tool-result', toolCallId: ToolCallId('c1') })
   })
 
+  it('truncates from a turn boundary and rebuilds derived state', () => {
+    const session = Session.create(SessionId('truncate-tail'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'first' }], source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    session.append('turn/start', { turn: 2 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'second' }], source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+
+    expect(session.deriveMessages().map(message => message.content)).toEqual([
+      [{ type: 'text', text: 'first' }],
+      [{ type: 'text', text: 'second' }],
+    ])
+    const secondTurn = session.snapshotEvents().find(event => event.type === 'turn/start' && event.data.turn === 2)!
+    const retainedLength = session.deletionStart(secondTurn.seq)
+    session.truncate(retainedLength)
+
+    expect(session.snapshotEvents().map(event => event.type)).toEqual([
+      'turn/start', 'user/message', 'turn/end',
+    ])
+    expect(session.deriveMessages().map(message => message.content)).toEqual([
+      [{ type: 'text', text: 'first' }],
+    ])
+    expect(() => session.deletionStart(SessionSeq(99))).toThrow(/outside the log/)
+  })
+
   it('accepts and round-trips a max-tokens turn/end reason', () => {
     // The max-tokens TurnEndReason variant carries no extra data, so it must
     // append and persist like any other reason (JSON-serializable, no fields).

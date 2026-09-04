@@ -112,11 +112,13 @@ declare module '@deepseek-ai/cordis' {
 }
 
 /**
- * Durable append-only session storage addressed through per-session handles.
+ * Durable session storage addressed through per-session handles. Normal
+ * writes append to a contiguous log; an explicit destructive tail truncation
+ * may rewrite the retained prefix when a backend supports it.
  *
- * Storage semantics shared by every backend: events are contiguous from seq 0
- * and never rewritten; a torn physical tail is never returned to a reader and
- * is truncated by the write path before its first append; reads validate
+ * Storage semantics shared by every backend: events are contiguous from seq 0;
+ * a torn physical tail is never returned to a reader and is truncated by the
+ * write path before its first append; reads validate
  * current-format records only and refuse unknown vocabulary fail-closed.
  * `append` persists best-effort; `flush` — per handle or service-wide — is
  * the durability barrier.
@@ -195,6 +197,18 @@ export abstract class SessionPersistence extends Service {
    * @returns one snapshot per stored session.
    */
   abstract list(options?: SessionPersistenceListOptions): Promise<readonly SessionPersistenceSnapshot[]>
+
+  /**
+   * Permanently replace one session's durable event log with an earlier prefix.
+   * The caller must apply the matching in-memory truncation only after this
+   * promise resolves. Backends that do not support rewriting reject loudly.
+   * @param _id - the live session whose durable log is being rewritten.
+   * @param _length - number of events to retain.
+   * @returns resolution after the retained prefix is durable.
+   */
+  truncate(_id: SessionId, _length: SessionLogOffset): Promise<void> {
+    return Promise.reject(new Error('this session persistence backend does not support destructive session deletion'))
+  }
 }
 
 export default SessionPersistence

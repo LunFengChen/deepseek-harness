@@ -446,6 +446,22 @@ describe('JsonlSessionPersistence: durability and crash semantics', () => {
     await handle.close()
   })
 
+  it('destructively rewrites the retained prefix and survives reopen', async () => {
+    const m = meta('truncate-tail', '/work')
+    const handle = await ctx.sessionPersistence.create(m)
+    const log = oneTurnLog()
+    await handle.append(log)
+
+    await ctx.sessionPersistence.truncate(m.id, SessionLogOffset(0))
+
+    expect(await handle.read()).toEqual([])
+    await handle.close()
+    await expect(readAll(ctx.sessionPersistence, m.id)).resolves.toMatchObject({
+      meta: m,
+      events: [],
+    })
+  })
+
   it('flush materializes an explicitly durable empty session without an event row', async () => {
     const m = meta('durable-empty', '/work')
     const handle = await ctx.sessionPersistence.create(m)

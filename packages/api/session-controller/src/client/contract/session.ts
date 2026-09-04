@@ -129,6 +129,12 @@ export interface ISession {
    */
   loadThrough(seq: SessionSeq): Promise<void>
   /**
+   * Permanently remove the turn containing `fromSeq` and every later event.
+   * @param fromSeq - visible event sequence in the turn to remove.
+   * @returns acknowledgement after durable history is rewritten.
+   */
+  deleteFrom(fromSeq: SessionSeq): Promise<RemoteResult<{ accepted: true }>>
+  /**
    * Execute one slash-command line against this session's agent — pure
    * admission semantics (the host executor durably logs the lifecycle).
    * @param line - the full command line, leading slash included.

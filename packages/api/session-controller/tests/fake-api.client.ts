@@ -201,6 +201,7 @@ export class FakeApiClient {
       },
       session: {
         canOpenWorkspacePath: () => Promise.resolve(ok(true)),
+        deleteFrom: () => Promise.resolve(ok({ accepted: true })),
         list: payload => this.record('session.list', payload, this.onList(payload)),
         modelCatalog: () => Promise.resolve({
           ok: true,

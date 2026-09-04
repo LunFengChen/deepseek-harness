@@ -343,6 +343,26 @@ export class Session implements SessionFace {
   }
 
   /**
+   * Permanently remove the selected turn and all later history, then rebuild
+   * this client's journal window so the next prompt uses the rewritten prefix.
+   * @param fromSeq - visible event sequence in the turn to remove.
+   * @returns acceptance after the local history window is resynchronized.
+   */
+  async deleteFrom(fromSeq: SessionSeq): Promise<RemoteResult<{ accepted: true }>> {
+    const result = await this.remote.session.deleteFrom({
+      sessionId: this.sessionId,
+      fromSeq,
+    })
+    if (!result.ok) {
+      this.promptError = { op: 'send', error: result.error }
+      this.notifier.markDirty()
+      return result
+    }
+    await this.resync()
+    return result
+  }
+
+  /**
    * Execute one slash-command line against this session's agent — pure
    * admission semantics (the host executor durably logs the lifecycle;
    * outcomes render as flow nodes, never as a response echo).

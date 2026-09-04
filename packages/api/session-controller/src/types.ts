@@ -287,6 +287,18 @@ export interface SessionRenameValue {
   readonly seq: number
 }
 
+/** Session destructive-deletion request. */
+export interface SessionDeleteFromRequest {
+  readonly sessionId: SessionId
+  /** Visible event sequence inside the turn to remove. */
+  readonly fromSeq: number
+}
+
+/** Receipt after the durable session prefix has been rewritten. */
+export interface SessionDeleteFromValue {
+  readonly accepted: true
+}
+
 /** Session fork request. */
 export interface SessionForkRequest {
   readonly sessionId: SessionId
