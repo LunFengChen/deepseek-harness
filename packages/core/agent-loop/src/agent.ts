@@ -384,7 +384,22 @@ export class ReactLoopAgent implements Agent {
               ...assembler.usage === undefined ? {} : { usage: assembler.usage },
             }, { surfaceOp: 'append', sourceEventSeqs: chunkSeqs })
           }
+          throw error
         }
+        if (!(error instanceof LlmError)) throw error
+        const action = await this.dispatch.waterfall(
+          'agent/request-error', {
+            turn,
+            step,
+            provider: request.provider,
+            failure: error.failure,
+            retryPolicy: preparedCall?.retryPolicy,
+            signal,
+          },
+          () => Promise.resolve<RequestErrorAction>(undefined),
+        )
+        signal.throwIfAborted()
+        if (action?.kind === 'retry') continue
         throw error
       }
       const finish = assembler.finish
