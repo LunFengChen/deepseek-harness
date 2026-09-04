@@ -1,0 +1,5 @@
+# Optional conversation/workspace rewind plugin. The package owns both the host
+# command and the browser button; the row name must match package.json.
+- insert:
+    - id: dsh-rewind
+      name: '@x1a0f3n9/dsh-rewind'

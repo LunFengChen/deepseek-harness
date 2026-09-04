@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": { "rootDir": "src", "outDir": "lib/types", "tsBuildInfoFile": "lib/tsconfig.host.tsbuildinfo" },
+  "files": [
+    "src/index.ts", "src/locales.ts", "src/rewind.ts", "src/session-cwd.ts", "src/session-events.ts", "src/settings-locale.ts", "src/snapshot-cleanup.ts", "src/snapshot.ts"
+  ],
+  "references": [
+    { "path": "../../../vendor/cordis" }, { "path": "../../../vendor/schemastery" },
+    { "path": "../../core/agent/tsconfig.json" }, { "path": "../../interaction/commands" },
+    { "path": "../../fs/fs" }, { "path": "../../util/home-paths" }, { "path": "../../llm/llm" },
+    { "path": "../../sandbox/sandbox" }, { "path": "../../core/session" }, { "path": "../../settings/settings" }, { "path": "../../core/tools" }
+  ]
+}

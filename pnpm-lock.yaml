@@ -1636,6 +1636,9 @@ importers:
       '@x1a0f3n9/dsh-message-feedback':
         specifier: workspace:^
         version: link:../../feedback/message-feedback
+      '@x1a0f3n9/dsh-rewind':
+        specifier: workspace:^
+        version: link:../../session/session-rewind
       '@x1a0f3n9/dsh-session-log-export':
         specifier: workspace:^
         version: link:../../session-query/session-log-export
@@ -7188,6 +7191,94 @@ importers:
       '@x1a0f3n9/dsh-storage-json':
         specifier: workspace:^
         version: link:../../storage/storage-json
+
+  packages/session/session-rewind:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
+      '@x1a0f3n9/dsh-home-paths':
+        specifier: workspace:^
+        version: link:../../util/home-paths
+      '@x1a0f3n9/dsh-llm':
+        specifier: workspace:^
+        version: link:../../llm/llm
+      '@x1a0f3n9/dsh-sandbox':
+        specifier: workspace:^
+        version: link:../../sandbox/sandbox
+      '@x1a0f3n9/dsh-session':
+        specifier: workspace:^
+        version: link:../../core/session
+    devDependencies:
+      '@deepseek-ai/cordis':
+        specifier: workspace:^
+        version: link:../../../vendor/cordis
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.13.3
+      '@types/react':
+        specifier: ~18.3.1
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ~18.3.0
+        version: 18.3.7(@types/react@18.3.31)
+      '@x1a0f3n9/dsh-agent':
+        specifier: workspace:^
+        version: link:../../core/agent
+      '@x1a0f3n9/dsh-api-session-controller':
+        specifier: workspace:^
+        version: link:../../api/session-controller
+      '@x1a0f3n9/dsh-client-connection':
+        specifier: workspace:^
+        version: link:../../client/connection
+      '@x1a0f3n9/dsh-client-locale':
+        specifier: workspace:^
+        version: link:../../client/locale
+      '@x1a0f3n9/dsh-client-test-runtime':
+        specifier: workspace:^
+        version: link:../../test-support/client-runtime
+      '@x1a0f3n9/dsh-client-ui-chat':
+        specifier: workspace:^
+        version: link:../../client/ui-chat
+      '@x1a0f3n9/dsh-client-ui-commands':
+        specifier: workspace:^
+        version: link:../../client/ui-commands
+      '@x1a0f3n9/dsh-client-ui-conversation':
+        specifier: workspace:^
+        version: link:../../client/ui-conversation
+      '@x1a0f3n9/dsh-client-ui-input-trigger':
+        specifier: workspace:^
+        version: link:../../client/ui-input-trigger
+      '@x1a0f3n9/dsh-client-ui-renderer':
+        specifier: workspace:^
+        version: link:../../client/ui-renderer
+      '@x1a0f3n9/dsh-client-ui-session':
+        specifier: workspace:^
+        version: link:../../client/ui-session
+      '@x1a0f3n9/dsh-client-ui-settings':
+        specifier: workspace:^
+        version: link:../../client/ui-settings
+      '@x1a0f3n9/dsh-client-ui-slots':
+        specifier: workspace:^
+        version: link:../../client/ui-slots
+      '@x1a0f3n9/dsh-commands':
+        specifier: workspace:^
+        version: link:../../interaction/commands
+      '@x1a0f3n9/dsh-fs':
+        specifier: workspace:^
+        version: link:../../fs/fs
+      '@x1a0f3n9/dsh-settings':
+        specifier: workspace:^
+        version: link:../../settings/settings
+      '@x1a0f3n9/dsh-tools':
+        specifier: workspace:^
+        version: link:../../core/tools
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
 
   packages/session/session-stats:
     dependencies:
@@ -12791,6 +12882,9 @@ packages:
   '@types/node@22.20.0':
     resolution: {integrity: sha512-QWlFW2wf3nTjC13/DqRnBpR4ZO36VJH/JVBkA/vcnmbTBNQIlnObqyqZE1tUR7+Ni23Lda8R1BxMfbXRpCUx5g==}
 
+  '@types/node@24.13.3':
+    resolution: {integrity: sha512-Dh8vAsV36ig5wa9OX4pXvMc9D3Veibfw2wix0CUwYODLD8nkj9UsLjASr49nPg+2eKzxhBV+v7L8pXvT4e639Q==}
+
   '@types/node@25.9.3':
     resolution: {integrity: sha512-603BddQMv3pUcr4U2dhujk83N2tTDVr/34wII2B6bJy6g+8WD6yUb11jszNs0gdi4PesVWl7ABt8nYMVpnLUcg==}
 
@@ -15769,6 +15863,9 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
+  undici-types@7.18.2:
+    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
+
   undici-types@7.24.6:
     resolution: {integrity: sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==}
 
@@ -18449,6 +18546,10 @@ snapshots:
   '@types/node@22.20.0':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/node@24.13.3':
+    dependencies:
+      undici-types: 7.18.2
 
   '@types/node@25.9.3':
     dependencies:
@@ -21880,6 +21981,8 @@ snapshots:
       quansync: 1.0.0
 
   undici-types@6.21.0: {}
+
+  undici-types@7.18.2: {}
 
   undici-types@7.24.6: {}
 

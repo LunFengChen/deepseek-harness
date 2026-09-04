@@ -1,0 +1,34 @@
+{
+  "extends": "../../../tsconfig.base.client.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.client.tsbuildinfo"
+  },
+  "files": [
+    "src/client/index.ts",
+    "src/client/build-info.ts",
+    "src/client/candidates.ts",
+    "src/client/hidden.ts",
+    "src/client/locales.ts",
+    "src/client/log.ts",
+    "src/client/pending.ts",
+    "src/client/popover.ts",
+    "src/client/portals.tsx",
+    "src/client/settings-card.tsx",
+    "src/client/styles.ts"
+  ],
+  "references": [
+    { "path": "../../../vendor/cordis" },
+    { "path": "../../client/connection/tsconfig.client.json" },
+    { "path": "../../client/locale" },
+    { "path": "../../client/ui-chat" },
+    { "path": "../../client/ui-commands" },
+    { "path": "../../client/ui-conversation" },
+    { "path": "../../client/ui-input-trigger" },
+    { "path": "../../client/ui-renderer" },
+    { "path": "../../client/ui-settings" },
+    { "path": "../../client/ui-session" },
+    { "path": "../../client/ui-slots" }
+  ]
+}

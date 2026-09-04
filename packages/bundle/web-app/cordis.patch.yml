@@ -265,6 +265,13 @@
       name: '@x1a0f3n9/dsh-client-ui-schedule'
       disabled: true
 
+    # Conversation and workspace recovery is prebundled but opt-in. The
+    # profile plugin catalog applies the same entry id when the user enables it
+    # from Settings → Plugins.
+    - id: session-rewind
+      name: '@x1a0f3n9/dsh-rewind'
+      disabled: true
+
     # Background jobs: the session-header list over the jobsBySession mirror.
     - id: ui-jobs
       name: '@x1a0f3n9/dsh-client-ui-jobs'

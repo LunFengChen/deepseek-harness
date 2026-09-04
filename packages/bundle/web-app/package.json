@@ -44,6 +44,14 @@
           "title": "Schedule",
           "description": "Schedule management UI and runtime",
           "defaultEnabled": false
+        },
+        {
+          "id": "workspace-rewind",
+          "entryId": "session-rewind",
+          "packageName": "@x1a0f3n9/dsh-rewind",
+          "title": "Workspace rewind",
+          "description": "Rewind a conversation and optionally restore its workspace files",
+          "defaultEnabled": false
         }
       ]
     }
@@ -113,6 +121,7 @@
     "@x1a0f3n9/dsh-session-log-export": "workspace:^",
     "@x1a0f3n9/dsh-session-stats": "workspace:^",
     "@x1a0f3n9/dsh-session-turn-outline": "workspace:^",
+    "@x1a0f3n9/dsh-rewind": "workspace:^",
     "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
     "@x1a0f3n9/dsh-api-settings-controller": "workspace:^",
     "@x1a0f3n9/dsh-api-workspace-controller": "workspace:^",
