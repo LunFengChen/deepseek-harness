@@ -24,6 +24,8 @@
 import { createModels, getSupportedThinkingLevels } from '@earendil-works/pi-ai'
 import type {
   Api,
+  AuthContext,
+  CredentialStore,
   Model,
   Models,
   ModelThinkingLevel,
@@ -37,18 +39,19 @@ import {
   LlmAdapter,
   LlmError,
   ReasoningEffortId,
-} from '@deepseek-ai/dsh-llm'
+} from '@xfcodeai/dsh-llm'
 import type {
   GenerateOptions,
+  ImageAttachmentAccess,
   LlmModelInfo,
   LlmProviderInfo,
   LlmResolvedModelInfo,
   ReasoningEffortId as ReasoningEffortIdType,
   ResolvedRetryPolicy,
   StreamChunk,
-} from '@deepseek-ai/dsh-llm'
-import type { AttachmentStore } from '@deepseek-ai/dsh-attachment'
-import { idleWatchdog, timeoutOf } from '@deepseek-ai/dsh-timeout'
+} from '@xfcodeai/dsh-llm'
+import type { AttachmentStore, ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
+import { idleWatchdog, timeoutOf } from '@xfcodeai/dsh-timeout'
 import type { ResolvedPiAiProviderProfile } from './config.ts'
 import { toPiContext } from './context.ts'
 import { toStreamChunks, type PiAiStreamDiagnostics } from './stream.ts'
@@ -74,8 +77,25 @@ export interface PiAiAdapterOptions {
    * `MISSING_CREDENTIAL` rather than falling back.
    */
   resolveApiKey: (provider: string, profile: ResolvedPiAiProviderProfile) => Promise<string | undefined>
+  /**
+   * Auth state shared by every pi-ai collection built by this adapter.
+   * Keeping it outside the model snapshot preserves credentials across config reloads.
+   */
+  auth: PiAiAuthInjection
   /** Resolve the optional durable attachment service at request time. */
   resolveAttachments?: () => AttachmentStore | undefined
+  /** Resolve a durable image reference in the current tool execution world. */
+  resolveImageAccess?: (attachments: AttachmentStore, ref: ImageAttachmentRef) => ImageAttachmentAccess | undefined
+  /** Observe assistant history that had to fall back to provider-neutral content. */
+  onReplayDegrade?: (detail: { provider: string; model: string; reason: string }) => void
+}
+
+/** Auth services injected into each pi-ai model collection. */
+export interface PiAiAuthInjection {
+  /** Durable credential storage used by pi-ai login and refresh flows. */
+  credentials: CredentialStore
+  /** Ambient auth lookups used while resolving provider-native auth. */
+  authContext: AuthContext
 }
 
 /** Copy profile stream knobs into pi-ai's common option vocabulary. */
@@ -210,7 +230,10 @@ export class PiAiAdapter extends LlmAdapter {
   private current(): PiAiSnapshot {
     const profiles = this.config.profiles()
     if (this.snapshot?.profiles === profiles) return this.snapshot
-    const models: MutableModels = createModels()
+    const models: MutableModels = createModels({
+      credentials: this.config.auth.credentials,
+      authContext: this.config.auth.authContext,
+    })
     for (const profile of profiles.values()) models.setProvider(profile.piProvider)
     this.snapshot = { profiles, models }
     return this.snapshot
@@ -321,16 +344,29 @@ export class PiAiAdapter extends LlmAdapter {
 
     try {
       const containsImage = options.messages.some(message => contentHasImage(message.content))
-      if (containsImage && !model.input.includes('image')) {
-        throw new LlmError(`pi-ai model "${model.id}" does not support image input`, 'UNSUPPORTED_CONTENT')
-      }
       const attachments = containsImage ? this.config.resolveAttachments?.() : undefined
       if (containsImage && attachments === undefined) {
         throw new LlmError('pi-ai image input requires the durable attachment service', 'UNSUPPORTED_CONTENT')
       }
       const context = attachments === undefined
-        ? toPiContext(options)
-        : await toPiContext(options, attachments)
+        ? toPiContext(options, undefined, reason => this.config.onReplayDegrade?.({
+          provider: options.provider,
+          model: model.id,
+          reason,
+        }))
+        : await toPiContext(options, {
+          attachments,
+          resolveImageAccess: ref => this.config.resolveImageAccess?.(attachments, ref),
+          maxRequestImageBytes: profile.maxRequestImageBytes,
+          requestImagePolicy: {
+            maxPixels: profile.requestImagePixelBudget,
+            maxBytes: profile.requestImageMaxBytes,
+          },
+        }, reason => this.config.onReplayDegrade?.({
+          provider: options.provider,
+          model: model.id,
+          reason,
+        }))
       const events = snapshot.models.streamSimple(model, context, {
         ...profileOptions(profile, reasoning, apiKey),
         ...options.temperature === undefined ? {} : { temperature: options.temperature },

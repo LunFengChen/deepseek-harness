@@ -583,7 +583,7 @@ describe('toPiContext', () => {
         role: 'assistant',
         content: [
           { type: 'reasoning', text: '' },
-          { type: 'tool-call', id: CallId('c1'), name: 'glob', arguments: '{\"pattern\":\"**/*\"}' },
+          { type: 'tool-call', id: ToolCallId('c1'), name: 'glob', arguments: '{\"pattern\":\"**/*\"}' },
         ],
         source: {
           kind: 'model',

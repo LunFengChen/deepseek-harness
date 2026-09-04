@@ -67,7 +67,7 @@ Examples:
   xfdsh --profile headless "run the tests"     answer one task, print the result, and exit
   xfdsh --profile tui --patch ./extra.yml      boot a custom profile with one extra overlay
   xfdsh --profile tui --resume <session>       arguments after the launcher flags reach the app
-  xfxfdsh --profile web --help                   the web app's own flags and help
+  xfdsh --profile web --help                   the web app's own flags and help
   xfdsh plugin --profile tui add <package>     install a plugin into the tui profile
 `
 
