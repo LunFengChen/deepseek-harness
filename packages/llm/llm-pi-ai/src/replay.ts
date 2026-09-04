@@ -8,8 +8,8 @@
  * @module dsh-llm-pi-ai/replay
  */
 
-import { LlmError } from '@deepseek-ai/dsh-llm'
-import type { Message, ModelMessageSource } from '@deepseek-ai/dsh-llm'
+import { LlmError } from '@xfcodeai/dsh-llm'
+import type { Message, ModelMessageSource, ReplayEnvelope } from '@xfcodeai/dsh-llm'
 import type { Api, AssistantMessage, Usage as PiUsage } from '@earendil-works/pi-ai'
 
 type PiAiReplayBlock =
@@ -18,15 +18,20 @@ type PiAiReplayBlock =
   | { type: 'tool-call'; thoughtSignature?: string }
 
 /** Versioned adapter-private projection required to replay a pi-ai response. */
-export interface PiAiReplayState {
+export interface PiAiReplayResponse {
   kind: 'pi-ai'
-  version: 1
+  version: 2
   api: Api
   provider: string
   model: string
   responseModel?: string
   responseId?: string
   stopReason: AssistantMessage['stopReason']
+}
+
+/** Current replay metadata split into response and block-aligned halves. */
+export interface PiAiReplayState {
+  response: PiAiReplayResponse
   blocks: PiAiReplayBlock[]
 }
 
@@ -79,16 +84,19 @@ function emptyPiUsage(): PiUsage {
  * @param message - completed native pi-ai assistant response.
  * @returns the versioned lossless-JSON replay projection.
  */
-export function toPiReplayState(message: AssistantMessage): PiAiReplayState {
-  return {
+export function toPiReplayState(message: AssistantMessage): ReplayEnvelope {
+  const response: PiAiReplayResponse = {
     kind: 'pi-ai',
-    version: 1,
+    version: 2,
     api: message.api,
     provider: message.provider,
     model: message.model,
     ...message.responseModel === undefined ? {} : { responseModel: message.responseModel },
     ...message.responseId === undefined ? {} : { responseId: message.responseId },
     stopReason: message.stopReason,
+  }
+  return {
+    response,
     blocks: message.content.map((block): PiAiReplayBlock => {
       switch (block.type) {
         case 'text': return {
@@ -142,42 +150,30 @@ function validateReplayBlocks(blocks: unknown): void {
 }
 
 function normalizeWrappedReplayState(state: Record<string, unknown>): PiAiReplayState | undefined {
-  if (!isRecord(state['response'])) return undefined
-  const response = state['response']
+  const responseValue = state['response']
+  if (responseValue === undefined) return invalidReplay('expected a response object')
+  if (!isRecord(responseValue)) return invalidReplay('expected a response object')
+  const response = responseValue
   // Replay metadata is adapter-private: if another adapter's wrapped state
   // reaches pi-ai, treat it as absent instead of crashing the whole chat replay
   // path.
   if (response['kind'] !== 'pi-ai') return undefined
-  if (response['version'] !== 2) return invalidReplay(`unsupported wrapped version ${String(response['version'])}`)
+  if (response['version'] !== 2) return invalidReplay(`unsupported version ${String(response['version'])}`)
   validateReplayCore(response)
   validateReplayBlocks(state['blocks'])
   const wrapped = state as unknown as WrappedPiAiReplayStateV2
   return {
-    kind: 'pi-ai',
-    version: 1,
-    api: wrapped.response.api,
-    provider: wrapped.response.provider,
-    model: wrapped.response.model,
-    ...wrapped.response.responseModel === undefined ? {} : { responseModel: wrapped.response.responseModel },
-    ...wrapped.response.responseId === undefined ? {} : { responseId: wrapped.response.responseId },
-    stopReason: wrapped.response.stopReason,
+    response: wrapped.response,
     blocks: wrapped.blocks,
   }
 }
 
 /** Validate the adapter-private state before it reaches pi-ai. */
 function readReplayState(value: unknown): PiAiReplayState | undefined {
-  if (!isRecord(value)) return invalidReplay('expected an object')
-  const state = value
-  // Replay metadata is adapter-private: if another adapter's state reaches pi-ai,
-  // treat it as absent instead of crashing the whole chat replay path.
-  const wrapped = normalizeWrappedReplayState(state)
-  if (wrapped !== undefined) return wrapped
-  if (state['kind'] !== 'pi-ai') return undefined
-  if (state['version'] !== 1) return invalidReplay(`unsupported version ${String(state['version'])}`)
-  validateReplayCore(state)
-  validateReplayBlocks(state['blocks'])
-  return state as unknown as PiAiReplayState
+  if (!isRecord(value)) return invalidReplay('expected a replay envelope')
+  // Only the response-envelope format is current. Flat pre-envelope records
+  // are intentionally degraded instead of replayed with incomplete metadata.
+  return normalizeWrappedReplayState(value)
 }
 
 /** Convert provider-neutral blocks without trusting them as same-model replay. */
@@ -219,8 +215,8 @@ function foreignAssistant(message: Message): AssistantMessage {
 function replayedAssistant(message: Message, source: ModelMessageSource, rawState: unknown): AssistantMessage {
   const state = readReplayState(rawState)
   if (state === undefined) return foreignAssistant(message)
-  if (state.provider !== source.provider) return invalidReplay('provider does not match assistant source')
-  if (state.model !== source.model) return invalidReplay('model does not match assistant source')
+  if (state.response.provider !== source.provider) return invalidReplay('provider does not match assistant source')
+  if (state.response.model !== source.model) return invalidReplay('model does not match assistant source')
   if (state.blocks.length !== message.content.length) return invalidReplay('block count does not match assistant content')
   const content: AssistantMessage['content'] = message.content.map((block, index) => {
     const replay = state.blocks[index]
@@ -251,13 +247,13 @@ function replayedAssistant(message: Message, source: ModelMessageSource, rawStat
   return {
     role: 'assistant',
     content,
-    api: state.api,
-    provider: state.provider,
-    model: state.model,
-    ...state.responseModel === undefined ? {} : { responseModel: state.responseModel },
-    ...state.responseId === undefined ? {} : { responseId: state.responseId },
+    api: state.response.api,
+    provider: state.response.provider,
+    model: state.response.model,
+    ...state.response.responseModel === undefined ? {} : { responseModel: state.response.responseModel },
+    ...state.response.responseId === undefined ? {} : { responseId: state.response.responseId },
     usage: emptyPiUsage(),
-    stopReason: state.stopReason,
+    stopReason: state.response.stopReason,
     timestamp: 0,
   }
 }
@@ -265,6 +261,7 @@ function replayedAssistant(message: Message, source: ModelMessageSource, rawStat
 /**
  * Convert one durable Harness assistant message into pi-ai history.
  * @param message - assistant content with required source and optional adapter-owned replay metadata.
+ * @param onDegrade - optional callback notified when invalid adapter replay falls back to foreign history.
  * @returns a native pi-ai assistant message reconstructed from durable content.
  */
 export function toPiAssistant(message: Message, onDegrade?: (reason: string) => void): AssistantMessage {
