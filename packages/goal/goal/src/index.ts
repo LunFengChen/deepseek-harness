@@ -370,12 +370,6 @@ export class GoalService extends TypertRemoteService {
     if (current.phase === 'active' && runtime.activation === 'armed') {
       throw new GoalError(`goal "${current.id}" is already active and armed`, 'GOAL_INVALID_TRANSITION')
     }
-    if (currentState.roundsStarted >= current.maxGoalRounds) {
-      throw new GoalError(
-        `goal "${current.id}" exhausted ${current.maxGoalRounds} goal rounds; increase maxGoalRounds before resuming`,
-        'GOAL_INVALID_TRANSITION',
-      )
-    }
     return this.commitCurrent(agent, currentState, runtime, 'resume', this.withPhase(current, 'active'), 'armed')
   }
 

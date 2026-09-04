@@ -163,14 +163,6 @@ export function apply(ctx: Context): void {
 
     const goal = currentGoal(state)
     if (goal === undefined || goal.phase !== 'active' || goal.activation !== 'armed') return
-    if (goal.roundsStarted >= goal.maxGoalRounds) {
-      ctx.goals.block(agent, goalRef(goal), {
-        code: 'round-limit',
-        message: `Goal reached its configured limit of ${goal.maxGoalRounds} rounds.`,
-      })
-      return
-    }
-
     const round = goal.roundsStarted + 1
     const content = renderGoalRoundPrompt(goal, round)
     const message = createUserMessage({
