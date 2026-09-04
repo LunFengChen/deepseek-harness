@@ -41,9 +41,12 @@ const DUPLICATE_SAFE_PACKAGES: readonly string[] = [
  * Runtime exports whose values remain valid when npm installs another package copy.
  */
 const SAFE_HOST_DEPENDENCY_EXPORTS = {
+  '@x1a0f3n9/dsh-home-paths': ['resolveDshHome'],
+  '@x1a0f3n9/dsh-sandbox': ['canonicalPath'],
+  '@x1a0f3n9/dsh-session': ['SessionSeq'],
   '@x1a0f3n9/dsh-credentials': ['credentialKey'],
   '@x1a0f3n9/dsh-deque': ['Deque'],
-  '@x1a0f3n9/dsh-llm': ['callConfigEquals'],
+  '@x1a0f3n9/dsh-llm': ['callConfigEquals', 'createAssistantMessage'],
   '@x1a0f3n9/dsh-timeout': ['MAX_TIMER_DELAY_MS'],
   '@deepseek-ai/schemastery': ['default'],
 } as const satisfies HostDependencyExports

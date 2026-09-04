@@ -227,6 +227,9 @@
       // util/ folders are role-named without the util- prefix their npm names carry,
       // so these aliases stay hand-written like dsh-util-crypto above.
       "@x1a0f3n9/dsh-util-time": ["./packages/util/time/src"],
+      // session-rewind is a role-named package whose directory includes the
+      // group prefix, so its source alias stays hand-written.
+      "@x1a0f3n9/dsh-rewind": ["./packages/session/session-rewind/src"],
       // BEGIN generated package aliases — pnpm run gen-tsconfig-paths
       "@x1a0f3n9/dsh-acp": ["./packages/acp/acp/src"],
       "@x1a0f3n9/dsh-acp-app": ["./packages/bundle/acp-app/src"],

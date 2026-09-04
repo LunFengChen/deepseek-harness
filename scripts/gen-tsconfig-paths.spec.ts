@@ -65,6 +65,18 @@ describe('generated tsconfig package aliases', () => {
     expect(() => writeRegion('{}', '')).toThrow('missing the generated-region markers')
   })
 
+  it('recognizes the development and stable fork scopes', () => {
+    expect(mappedSpecifiers([
+      '  \"@x1a0f3n9/dsh-rewind\": [\"./packages/session/session-rewind/src\"]',
+      '  \"@xfcodeai/dsh-rewind\": [\"./packages/session/session-rewind/src\"]',
+      '  \"@deepseek-ai/dsh-rewind\": [\"./packages/session/session-rewind/src\"]',
+    ].join('\n'))).toEqual(new Set([
+      '@x1a0f3n9/dsh-rewind',
+      '@xfcodeai/dsh-rewind',
+      '@deepseek-ai/dsh-rewind',
+    ]))
+  })
+
   it('names a package that no alias covers', () => {
     // Deleting the group wildcards removed the fallback that used to resolve a
     // package nobody had aliased. A package whose name does not match its
