@@ -12,8 +12,11 @@ import {
 import type { MessageSource } from '@x1a0f3n9/dsh-llm'
 import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@x1a0f3n9/dsh-session'
-import type { SessionPersistence } from '@x1a0f3n9/dsh-session-persistence'
 import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
+
+type SessionPersistenceForDeletion = {
+  truncate(id: SessionId, length: SessionLogOffset): Promise<void>
+}
 import { SessionTitleInvalidError } from '@x1a0f3n9/dsh-session-title'
 import { canonicalClientTimeZone } from '@x1a0f3n9/dsh-util-time'
 import { RemoteError, remoteErrorOf } from '@x1a0f3n9/dsh-typert-protocol'
@@ -479,7 +482,7 @@ export class SessionCommandController {
         {},
       )
     }
-    const persistence = this.ctx.get('sessionPersistence') as SessionPersistence | undefined
+    const persistence = this.ctx.get('sessionPersistence') as SessionPersistenceForDeletion | undefined
     if (persistence === undefined) {
       throw new RemoteError(
         'gateway/internal',
