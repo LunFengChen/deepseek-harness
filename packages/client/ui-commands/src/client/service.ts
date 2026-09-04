@@ -310,11 +310,10 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
    * bare host commands act on the bare token only; leadingInput claims
    * args-tolerant.
    *
-   * Envelope policy: an enter submission carrying images resolves only
-   * through a command declaring image acceptance. Every other command route —
-   * popup, non-accepting claim, bare detached execute — throws the refusal
-   * so the machine surfaces one composer notice and the draft and images
-   * stay in place; nothing executes and nothing is dropped.
+   * Envelope policy: an enter submission carrying images may resolve through
+   * every command route. A route that does not declare image acceptance gets
+   * an informational notice, executes its text, and leaves the draft images
+   * in the composer; only routes declaring acceptance receive serialized images.
    */
   private async matchEnter(
     session: ClientSessionContext,
@@ -329,13 +328,13 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
     const bare = ws === -1
     const name = token.slice(1)
     if (name === '') return undefined
-    const refuseImages = (): never => {
-      throw new Error(this.t('notice.imagesUnsupported', { command: name }))
+    const notifyImagesIgnored = (): void => {
+      this.noticeFor(session.sessionId, 'info', this.t('notice.imagesUnsupported', { command: name }))
     }
     const contribution = this.live.contributions.get(name)
     if (contribution !== undefined && contribution.available(session)) {
       if (!bare) return undefined
-      if (envelope.images > 0) refuseImages()
+      if (envelope.images > 0) notifyImagesIgnored()
       this.openPopup(name, contribution.ui, session, { via: 'enter', token })
       return 'handled'
     }
@@ -347,17 +346,17 @@ export class CommandUiRuntime extends Service implements CommandUiContract {
     if (bare) {
       const decoration = this.live.decorations.get(name)
       if (decoration !== undefined && decoration.available(session)) {
-        if (envelope.images > 0) refuseImages()
+        if (envelope.images > 0) notifyImagesIgnored()
         this.openPopup(name, decoration.ui, session, { via: 'enter', token })
         return 'handled'
       }
     }
     if (desc.input !== undefined) {
-      if (envelope.images > 0 && desc.input.images !== true) refuseImages()
+      if (envelope.images > 0 && desc.input.images !== true) notifyImagesIgnored()
       return { claim: this.leadingClaim(desc, session) }
     }
     if (!bare) return undefined
-    if (envelope.images > 0) refuseImages()
+    if (envelope.images > 0) notifyImagesIgnored()
     this.consumeVia(session.sessionId, { via: 'enter', token })
     this.runDetached(desc, session, trimmed)
     return 'handled'

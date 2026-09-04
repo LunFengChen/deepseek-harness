@@ -100,9 +100,6 @@ export class InputHub implements SessionInputResolver {
           const conversation = this.rootCtx.get('conversation') as ConversationAttachmentFace | undefined
           for (const imageId of ids) conversation?.releaseDraftImage(imageId)
         },
-        unsupportedNotice: token => this.t('command.imagesUnsupported', {
-          command: token.trim().replace(/^\//u, ''),
-        }),
       },
     })
     this.shells.set(id, shell)

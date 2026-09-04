@@ -8,6 +8,37 @@ It is built on an **everything-is-a-plugin** architecture and powered by [Cordis
 
 Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
 
+Fork note: this branch publishes `@xfcodeai/dsh` and the `xfdsh` launcher so it can coexist with upstream `dsh`. The table below summarizes the main fork changes.
+
+## Fork summary
+
+The rows below summarize the fork's user-visible and release-impacting changes; merge commits only integrate upstream work and are not listed separately.
+
+| Area | What changed | Result |
+| --- | --- | --- |
+| Package namespace | Workspace packages were rescoped from `@deepseek-ai/dsh-*` to `@xfcodeai/dsh-*`; vendor and native packages keep their upstream scopes. | The fork owns its own published package line. |
+| Launcher and release | The published executable is `xfdsh`; release verification, pack layout, and entrypoint checks were updated to match. | The fork installs and runs beside upstream `dsh` without command collisions. |
+| Session history | The web UI can delete a turn and every later event in the same session, with destructive confirmation. The session controller forwards the request to persistence, the JSONL backend rewrites durable logs, and the projection cache schema was bumped. | Unwanted answers can be removed from the live session and from disk. |
+| Session utilities | Workspace rows include a copy-session-id action. | Session ids are easier to share and debug. |
+| Memory and continuation | Session persistence now bounds in-memory reads; context overflow triggers compaction; handshake failures resume; goal rounds can continue past the old hard stop; compaction retry defaults were raised. | Long sessions and long tasks are less likely to stall or get killed early. |
+| LLM and replay | `PI_AI_ERROR` gets default retries; finish-reason truncation is classified as non-retryable; wrapped replay state and foreign replay metadata are handled correctly; provider-scoped env reach is asserted in tests. | Fewer false failures, fewer replay mismatches, and clearer retry behavior. |
+| Model and attachment compatibility | Commands that do not accept images continue with text and keep the image draft; text-only model routes project historical and new images to stable text placeholders before dispatch. | Switching to a text-only model does not strand a session that already contains images. |
+| Sandbox and permissions | Stale full-access escalation targets are ignored. | Old permission artifacts stop triggering the wrong escalation path. |
+| Docs and examples | README, CLI help, release notes, and session-controller API docs were synchronized with the fork behavior. | The fork is documented the same way it behaves. |
+
+### Install this fork
+
+```sh
+npm install --global @xfcodeai/dsh
+xfdsh web
+```
+
+For one-off use:
+
+```sh
+npx @xfcodeai/dsh web
+```
+
 ## Developer preview
 
 DeepSeek Harness is in _developer preview_ and iterating rapidly. **THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**
