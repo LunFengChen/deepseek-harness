@@ -3,14 +3,14 @@
 # separate sequences with their own workflows and version lines.
 #
 # Pack and dependency-layout verification run without credentials on every pull
-# request and master push. The fork publishes the dsh family automatically from
-# a successful master push; release-publish.yml remains the reviewed tag fallback.
+# request and dev-x1a0f3n9 push. This branch publishes the dsh family automatically from
+# a successful dev push; release-publish.yml remains the reviewed tag fallback.
 name: Release (dsh)
 
 on:
   pull_request:
   push:
-    branches: [master]
+    branches: [dev-x1a0f3n9]
   workflow_dispatch:
 
 permissions:
@@ -104,8 +104,8 @@ jobs:
 
       - name: Verify release version
         env:
-          RELEASE_PUBLISH: ${{ github.ref == 'refs/heads/master' && 'true' || 'false' }}
-          RELEASE_PUBLISH_ALLOW_MASTER: ${{ github.ref == 'refs/heads/master' && 'true' || 'false' }}
+          RELEASE_PUBLISH: ${{ github.ref == 'refs/heads/dev-x1a0f3n9' && 'true' || 'false' }}
+          RELEASE_PUBLISH_ALLOW_REF: ${{ github.ref == 'refs/heads/dev-x1a0f3n9' && 'refs/heads/dev-x1a0f3n9' || '' }}
         run: pnpm run release:verify --family dsh
 
       - name: Build
@@ -144,12 +144,12 @@ jobs:
 
 
   publish:
-    name: Publish to npm (master)
-    if: github.ref == 'refs/heads/master'
+    name: Publish to npm (dev-x1a0f3n9)
+    if: github.ref == 'refs/heads/dev-x1a0f3n9'
     needs: [dependencies, pack]
     runs-on: ubuntu-24.04
     # The environment keeps the npm token behind the repository's publication
-    # policy. If it has required reviewers, master publication waits for them.
+    # policy. If it has required reviewers, development publication waits for them.
     environment: npm-publish
     concurrency:
       group: Release-publish
