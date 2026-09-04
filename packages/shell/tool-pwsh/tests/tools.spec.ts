@@ -656,6 +656,16 @@ describe('sandbox escalation through ctx.approval', () => {
     expect(bash.modes).toEqual([])
   })
 
+  it.each(['workspace-write', 'danger-full-access'] as const)(
+    'does not re-escalate a full-access session for the stale %s target',
+    async (requestedMode) => {
+      const { ctx, bash } = await setupSandboxed()
+      const result = await call(ctx, 'pwsh', { ...escalate, sandbox_permissions: requestedMode }, sandboxAgent('danger-full-access'))
+      expect(result.isError).toBe(false)
+      expect(bash.modes).toEqual(['danger-full-access'])
+    },
+  )
+
   it('runs a granted foreground or background call under the approved mode', async () => {
     const { ctx, bash } = await setupSandboxed(true)
     ctx.on('approval/request', () => Promise.resolve<ApprovalOutcome>('allowed-once'))

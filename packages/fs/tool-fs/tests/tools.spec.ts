@@ -920,6 +920,22 @@ describe('sandbox escalation API (write/edit)', () => {
     expect(text(result)).not.toContain('[sandbox:')
   })
 
+  it.each(['workspace-write', 'danger-full-access'] as const)(
+    'uses the full standing policy for the stale %s target without approval',
+    async (requestedMode) => {
+      const { ctx, fs } = await setupConfining()
+      const agent = escalationAgent([{ type: 'sandbox/mode', data: { mode: 'danger-full-access' } }])
+      const result = await call(ctx, 'write', {
+        file_path: 'a.txt',
+        content: 'x',
+        sandbox_permissions: requestedMode,
+        justification: 'the model retained a retry argument',
+      }, agent)
+      expect(result.isError).toBe(false)
+      expect(fs.stamped).toEqual([{ mode: 'danger-full-access', workspaceRoot: resolve('/session-project') }])
+    },
+  )
+
   it('an approved escalation stamps the granted mode onto that write', async () => {
     const { ctx, fs } = await setupConfining({ approval: true })
     ctx.on('approval/request', () => Promise.resolve('allowed-once' as const))
