@@ -400,6 +400,7 @@ function makeHarness(
     chatScroll,
     forkAt,
     deleteFrom: () => {},
+    regenerate: () => {},
     // Absent-service default; mention tests override with a real resolver.
     fileMentions: () => undefined,
     t,

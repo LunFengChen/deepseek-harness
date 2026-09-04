@@ -1,6 +1,7 @@
 /** Register the Chat Conversation target, renderers, stats, and details surface. */
 import type { Context } from '@deepseek-ai/cordis'
-import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+import type { AttachmentIdType, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+import type { PromptContentPart } from '@deepseek-ai/dsh-api-session-controller/types'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
 import type { SessionBinding } from '@deepseek-ai/dsh-api-session-controller/client'
 import type { BoundActions, ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
@@ -76,6 +77,36 @@ export function apply(ctx: Context): void {
   const t = ctx.locale.bind(NS)
   const chatStore = createChatStore()
   const chatScrollPositions = new Map<SessionId, ChatScrollPosition>()
+
+  /** Re-encode durable history content for the browser prompt admission API. */
+  const historyPromptContent = async (session: SessionBinding['session'], content: readonly unknown[]): Promise<PromptContentPart[]> => {
+    const result: PromptContentPart[] = []
+    for (const block of content) {
+      const value = block as { type?: unknown; text?: unknown; attachment?: unknown }
+      if (value.type === 'text' && typeof value.text === 'string') {
+        result.push({ type: 'text', text: value.text })
+        continue
+      }
+      if (value.type !== 'image' || value.attachment === null || typeof value.attachment !== 'object') continue
+      const attachment = value.attachment as { attachmentId?: unknown; mediaType?: unknown; name?: unknown }
+      if (typeof attachment.attachmentId !== 'string' || typeof attachment.mediaType !== 'string') continue
+      const loaded = await session.readAttachment(attachment.attachmentId as AttachmentIdType)
+      if (!loaded.ok) throw new Error(`regenerate: image ${attachment.attachmentId} could not be loaded: ${loaded.error.message}`)
+      let binary = ''
+      const bytes = loaded.value.data
+      for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+        binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000))
+      }
+      result.push({
+        type: 'image',
+        mediaType: loaded.value.attachment.mediaType,
+        data: btoa(binary),
+        ...(loaded.value.attachment.name === undefined ? {} : { name: loaded.value.attachment.name }),
+      })
+    }
+    return result
+  }
+
   const transcriptView = new TranscriptViewPolicy(
     ctx.settingsScope.bind<ChatSettings>({ namespace: CHAT_SETTINGS_NAMESPACE }),
   )
@@ -148,6 +179,16 @@ export function apply(ctx: Context): void {
           },
           deleteFrom: (seq) => {
             void session.deleteFrom(SessionSeq(seq))
+          },
+          regenerate: (seq, content) => {
+            void (async () => {
+              const prompt = await historyPromptContent(session, content)
+              const deleted = await session.deleteFrom(SessionSeq(seq))
+              if (!deleted.ok) return
+              await session.prompt(prompt, 'queue')
+            })().catch((error: unknown) => {
+              console.error('ui-chat: regenerate failed', error)
+            })
           },
         }
       },

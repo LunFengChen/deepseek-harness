@@ -78,6 +78,7 @@ export interface ChatNodeOwnerProps {
   inspectCall: (callId: ToolCallId) => void
   forkAt: (seq: number) => void
   deleteFrom: (seq: number) => void
+  regenerate: (seq: number, content: readonly unknown[]) => void
   /**
    * Session-authorized image loader, down-threaded from the Chat view so a
    * chat-node renderer can render the attachment presentation slot directly
@@ -152,6 +153,7 @@ export interface ChatViewInjected {
   }
   forkAt: (seq: number) => void
   deleteFrom: (seq: number) => void
+  regenerate: (seq: number, content: readonly unknown[]) => void
   fileMentions: (owner: TurnTailOwnerProps) => MarkdownFileMentions | undefined
 }
 
