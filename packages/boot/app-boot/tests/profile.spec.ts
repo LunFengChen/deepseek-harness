@@ -351,25 +351,25 @@ describe('fork plugin compatibility', () => {
     const module = await import(pathToFileURL(join(dir, '.pnpmfile.cjs')).href)
     const pkg = {
       dependencies: {
-        '@x1a0f3n9/dsh-agent': '^1.2.3',
+        '@deepseek-ai/dsh-agent': '^1.2.3',
         '@deepseek-ai/cordis': '^2.0.0',
       },
-      peerDependencies: { '@x1a0f3n9/dsh-llm': 'npm:@x1a0f3n9/dsh-llm@^1.0.0' },
-      optionalDependencies: { '@x1a0f3n9/dsh-web': 'workspace:*' },
+      peerDependencies: { '@deepseek-ai/dsh-llm': 'npm:@deepseek-ai/dsh-llm@^1.0.0' },
+      optionalDependencies: { '@deepseek-ai/dsh-web': 'workspace:*' },
     }
     expect(() => module.hooks.readPackage(pkg)).toThrow(
-      'official dsh dependency @x1a0f3n9/dsh-web uses unsupported spec workspace:*',
+      'official dsh dependency @deepseek-ai/dsh-web uses unsupported spec workspace:*',
     )
     const transformed = module.hooks.readPackage({
       dependencies: {
-        '@x1a0f3n9/dsh-agent': '^1.2.3',
+        '@deepseek-ai/dsh-agent': '^1.2.3',
         '@deepseek-ai/cordis': '^2.0.0',
       },
-      peerDependencies: { '@x1a0f3n9/dsh-llm': 'npm:@x1a0f3n9/dsh-llm@^1.0.0' },
+      peerDependencies: { '@deepseek-ai/dsh-llm': 'npm:@deepseek-ai/dsh-llm@^1.0.0' },
     })
-    expect(transformed.dependencies['@x1a0f3n9/dsh-agent']).toBe('npm:@x1a0f3n9/dsh-agent@^1.2.3')
+    expect(transformed.dependencies['@deepseek-ai/dsh-agent']).toBe('npm:@x1a0f3n9/dsh-agent@^1.2.3')
     expect(transformed.dependencies['@deepseek-ai/cordis']).toBe('^2.0.0')
-    expect(transformed.peerDependencies['@x1a0f3n9/dsh-llm']).toBe('npm:@x1a0f3n9/dsh-llm@^1.0.0')
+    expect(transformed.peerDependencies['@deepseek-ai/dsh-llm']).toBe('npm:@x1a0f3n9/dsh-llm@^1.0.0')
   })
 
   it('does not overwrite a user-owned pnpm hook', () => {
