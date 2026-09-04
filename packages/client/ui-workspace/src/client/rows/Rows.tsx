@@ -13,9 +13,9 @@ import {
   IconPlusOutline16, IconTrashOutline16, IconTriangleRightFill14, Menu, relativeTime, StateDot,
   writeClipboard,
 
-} from '@deepseek-ai/dsh-client-ui-primitives'
-import type { StateDotState } from '@deepseek-ai/dsh-client-ui-primitives'
-import { abbreviateHomePath } from '@deepseek-ai/dsh-util-workspace-path'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { StateDotState } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { abbreviateHomePath } from '@x1a0f3n9/dsh-util-workspace-path'
 import type { WorkspaceBrowserProps } from '../contract/slots.ts'
 import type { GroupNode, SearchResultNode, SessionNode } from '../tree.ts'
 import css from './Rows.module.css'

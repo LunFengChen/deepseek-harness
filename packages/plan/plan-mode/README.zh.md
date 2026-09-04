@@ -3,7 +3,7 @@ description: "面向用户与维护者的计划模式说明：用于选择、配
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-plan-mode
+# @x1a0f3n9/dsh-plan-mode
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 唯一必需的配置是 agent 规划期间遵循的引导文本；添加任何其他内容都会在加载时失败。
 
 ```yaml
-- name: '@deepseek-ai/dsh-plan-mode'
+- name: '@x1a0f3n9/dsh-plan-mode'
   config:
     section: |
       You are in plan mode. Explore and design before presenting the complete

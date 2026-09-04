@@ -3,7 +3,7 @@ description: "The local filesystem skill provider for users and maintainers auth
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-skill-filesystem
+# @x1a0f3n9/dsh-skill-filesystem
 
 English | [中文](README.zh.md)
 
@@ -58,8 +58,8 @@ The project root is the nearest ancestor containing `.git`; without one, the cur
 Load the plugin alongside the skill registry; it requires `ctx.skills`.
 
 ```yaml
-- name: '@deepseek-ai/dsh-skill'
-- name: '@deepseek-ai/dsh-skill-filesystem'
+- name: '@x1a0f3n9/dsh-skill'
+- name: '@x1a0f3n9/dsh-skill-filesystem'
 ```
 
 | Field | Default | Meaning |

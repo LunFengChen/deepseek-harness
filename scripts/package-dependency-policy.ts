@@ -5,53 +5,53 @@ const CLIENT_FACE_INCLUDE: readonly string[] = []
 
 /** Packages exempted from automatic Client/Host treatment despite declaring `dsh.client`. */
 const CLIENT_FACE_EXCLUDE: readonly string[] = [
-  '@deepseek-ai/dsh-api-session-controller',
-  '@deepseek-ai/dsh-api-workspace-controller',
+  '@x1a0f3n9/dsh-api-session-controller',
+  '@x1a0f3n9/dsh-api-workspace-controller',
 ]
 
 /** Host-only packages whose peer relays are deliberately flattened. */
 const HOST_DEPENDENCY_PACKAGES: readonly string[] = [
-  '@deepseek-ai/dsh-llm',
-  '@deepseek-ai/dsh-session',
+  '@x1a0f3n9/dsh-llm',
+  '@x1a0f3n9/dsh-session',
 ]
 
 /** Development-only package relationships not represented by source imports. */
 const CONFIGURATION_ONLY_DEV_DEPENDENCIES = {
-  '@deepseek-ai/dsh-client-locale': ['@deepseek-ai/dsh-api-remotes'],
-  '@deepseek-ai/dsh-client-ui-conversation': [
-    '@deepseek-ai/dsh-api-remotes',
-    '@deepseek-ai/dsh-client-ui-workspace',
+  '@x1a0f3n9/dsh-client-locale': ['@x1a0f3n9/dsh-api-remotes'],
+  '@x1a0f3n9/dsh-client-ui-conversation': [
+    '@x1a0f3n9/dsh-api-remotes',
+    '@x1a0f3n9/dsh-client-ui-workspace',
   ],
-  '@deepseek-ai/dsh-client-ui-model-selection': ['@deepseek-ai/dsh-client-ui-input-trigger'],
-  '@deepseek-ai/dsh-client-ui-sidebar': ['@deepseek-ai/dsh-client-ui-workspace'],
-  '@deepseek-ai/dsh-client-ui-subagent': ['@deepseek-ai/dsh-client-ui-input-trigger'],
-  '@deepseek-ai/dsh-client-ui-theme': ['@deepseek-ai/dsh-api-remotes'],
-  '@deepseek-ai/dsh-client-ui-tool': ['@deepseek-ai/dsh-api-remotes'],
+  '@x1a0f3n9/dsh-client-ui-model-selection': ['@x1a0f3n9/dsh-client-ui-input-trigger'],
+  '@x1a0f3n9/dsh-client-ui-sidebar': ['@x1a0f3n9/dsh-client-ui-workspace'],
+  '@x1a0f3n9/dsh-client-ui-subagent': ['@x1a0f3n9/dsh-client-ui-input-trigger'],
+  '@x1a0f3n9/dsh-client-ui-theme': ['@x1a0f3n9/dsh-api-remotes'],
+  '@x1a0f3n9/dsh-client-ui-tool': ['@x1a0f3n9/dsh-api-remotes'],
 } as const satisfies Readonly<Record<string, readonly string[]>>
 
 /** Workspace packages whose complete runtime surface is safe across duplicate installations. */
 const DUPLICATE_SAFE_PACKAGES: readonly string[] = [
-  '@deepseek-ai/dsh-brand',
-  '@deepseek-ai/dsh-typert-protocol',
-  '@deepseek-ai/dsh-util-crypto',
-  '@deepseek-ai/dsh-util-values',
+  '@x1a0f3n9/dsh-brand',
+  '@x1a0f3n9/dsh-typert-protocol',
+  '@x1a0f3n9/dsh-util-crypto',
+  '@x1a0f3n9/dsh-util-values',
 ]
 
 /**
  * Runtime exports whose values remain valid when npm installs another package copy.
  */
 const SAFE_HOST_DEPENDENCY_EXPORTS = {
-  '@deepseek-ai/dsh-credentials': ['credentialKey'],
-  '@deepseek-ai/dsh-deque': ['Deque'],
-  '@deepseek-ai/dsh-llm': ['callConfigEquals'],
-  '@deepseek-ai/dsh-timeout': ['MAX_TIMER_DELAY_MS'],
+  '@x1a0f3n9/dsh-credentials': ['credentialKey'],
+  '@x1a0f3n9/dsh-deque': ['Deque'],
+  '@x1a0f3n9/dsh-llm': ['callConfigEquals'],
+  '@x1a0f3n9/dsh-timeout': ['MAX_TIMER_DELAY_MS'],
   '@deepseek-ai/schemastery': ['default'],
 } as const satisfies HostDependencyExports
 
 /** Runtime exports that require every consumer to resolve the provider's shared peer instance. */
 const PEER_REQUIRED_HOST_EXPORTS = {
-  '@deepseek-ai/dsh-scope': ['carrierKeyOf', 'scopeOf', 'scopeTarget'],
-  '@deepseek-ai/dsh-session-persistence': ['SessionPersistenceNotFoundError'],
+  '@x1a0f3n9/dsh-scope': ['carrierKeyOf', 'scopeOf', 'scopeTarget'],
+  '@x1a0f3n9/dsh-session-persistence': ['SessionPersistenceNotFoundError'],
 } as const satisfies HostDependencyExports
 
 /** Exact import specifier to reviewed runtime exports. */

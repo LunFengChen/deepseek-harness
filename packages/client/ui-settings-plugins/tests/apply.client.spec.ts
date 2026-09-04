@@ -2,15 +2,15 @@
 
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import { resolveSlotLabel } from '@deepseek-ai/dsh-client-ui-slots'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
-import { RemoteError, TestRemote } from '@deepseek-ai/dsh-client-test-runtime'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
-import { apply as settingsApply, inject as settingsInject } from '@deepseek-ai/dsh-client-ui-settings/client'
-import { apply, inject } from '@deepseek-ai/dsh-client-ui-settings-plugins/client'
+import { resolveSlotLabel } from '@x1a0f3n9/dsh-client-ui-slots'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import { RemoteError, TestRemote } from '@x1a0f3n9/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import { apply as settingsApply, inject as settingsInject } from '@x1a0f3n9/dsh-client-ui-settings/client'
+import { apply, inject } from '@x1a0f3n9/dsh-client-ui-settings-plugins/client'
 import type {
   ConfigurablePluginsTabFace, PluginsSettingsSectionInjected,
-} from '@deepseek-ai/dsh-client-ui-settings-plugins/client'
+} from '@x1a0f3n9/dsh-client-ui-settings-plugins/client'
 import { SubagentModelSelectionCardController } from '../src/client/subagent-model-selection-card-controller.ts'
 import { apply as hostApply } from '../src/index.ts'
 

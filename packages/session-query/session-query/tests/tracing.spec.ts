@@ -1,20 +1,20 @@
-import { createUserMessage, createMessage } from '@deepseek-ai/dsh-llm'
+import { createUserMessage, createMessage } from '@x1a0f3n9/dsh-llm'
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { SessionLogOffset, SessionSeq, SESSION_FORMAT_VERSION, SessionId } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { Session, SessionEvent, SessionHeader, SessionId as SessionIdType } from '@deepseek-ai/dsh-session'
+import SessionStore, { SessionLogOffset, SessionSeq, SESSION_FORMAT_VERSION, SessionId } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { Session, SessionEvent, SessionHeader, SessionId as SessionIdType } from '@x1a0f3n9/dsh-session'
 import SessionPersistence, {
   SessionPersistenceNotFoundError,
   SessionPersistenceRevision,
   SessionReadOnlyError,
-} from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-persistence'
 import type {
   SessionAccess,
   SessionHandle,
   SessionPersistenceSnapshot,
-} from '@deepseek-ai/dsh-session-persistence'
-import { type SessionQueryErrorCode } from '@deepseek-ai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-persistence'
+import { type SessionQueryErrorCode } from '@x1a0f3n9/dsh-session-query'
 import { TestSessionQueryEngine } from './test-service.ts'
 
 type MutableSessionHeader = { -readonly [K in keyof SessionHeader]: SessionHeader[K] }

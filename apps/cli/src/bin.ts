@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
  * Command-line entry for dsh.
- * @module @deepseek-ai/dsh/bin
+ * @module @x1a0f3n9/dsh/bin
  */
 
 /* v8 ignore file -- built-bin acceptance exercises this self-executing dispatch. */
 
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { loadLayeredEnv } from '@deepseek-ai/dsh-app-boot'
+import { loadLayeredEnv } from '@x1a0f3n9/dsh-app-boot'
 import { parseDshArgs } from './args.ts'
 
 // Both the source tree (apps/cli/src) and the bundled bin (apps/cli/lib) sit

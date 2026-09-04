@@ -14,18 +14,18 @@
  * carry the complete post-change state, never a bare delta — it keeps every
  * unit's transition trivially cheap and every served value self-describing.
  *
- * @module @deepseek-ai/dsh-session-projection
+ * @module @x1a0f3n9/dsh-session-projection
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import type { ZodType } from 'zod'
-import { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
+import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type {
   Session,
   SessionEvent,
   SessionHeader,
   SessionSeqCursor,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {

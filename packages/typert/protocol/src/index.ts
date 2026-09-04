@@ -2,7 +2,7 @@
  * Remote decorators and explicit Gateway bindings backed by versioned
  * descriptors carried on decorated class prototypes. Strict reflection
  * remains a Typert compiler responsibility.
- * @module @deepseek-ai/dsh-typert-protocol
+ * @module @x1a0f3n9/dsh-typert-protocol
  */
 
 import { Service, type Context } from '@deepseek-ai/cordis'
@@ -131,7 +131,7 @@ interface RemoteMethodDescriptorV1 {
   readonly methods: readonly StoredRemoteMethod[]
 }
 
-const REMOTE_METHOD_DESCRIPTOR = '@deepseek-ai/dsh-typert-protocol/remote-methods'
+const REMOTE_METHOD_DESCRIPTOR = '@x1a0f3n9/dsh-typert-protocol/remote-methods'
 
 /**
  * Bind one visible Service field to a Cordis key and Remote namespace.

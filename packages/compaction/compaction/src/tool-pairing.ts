@@ -2,10 +2,10 @@
  * Tool-pairing balance over a session surface. Compaction changes surface
  * positions, so safe cuts are derived from tool-call/result content in current
  * surface order rather than step markers.
- * @module @deepseek-ai/dsh-compaction/tool-pairing
+ * @module @x1a0f3n9/dsh-compaction/tool-pairing
  */
 
-import type { Session, SessionEvent, SessionSeq } from '@deepseek-ai/dsh-session'
+import type { Session, SessionEvent, SessionSeq } from '@x1a0f3n9/dsh-session'
 
 /** Incremental balance state for one session surface generation. */
 interface BalanceCache {

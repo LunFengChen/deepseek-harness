@@ -3,7 +3,7 @@ description: "针对已完成 assistant 消息的逐消息评分与备注，供�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-message-feedback
+# @x1a0f3n9/dsh-message-feedback
 
 [English](README.md) | 中文
 
@@ -35,7 +35,7 @@ kind: "package-reference"
 
 ```yaml
 - id: message-feedback
-  name: '@deepseek-ai/dsh-message-feedback'
+  name: '@x1a0f3n9/dsh-message-feedback'
   config:
     maxNoteBytes: 8192
 ```

@@ -2,8 +2,8 @@ import type {
   AssistantMessageNode, ConversationLocation, ConversationNode, ConversationPromptSnapshot,
   ConversationViewNode, MessageImagesOwnerProps, PartialAssistant, RequestPromptChange,
   RequestView, RunningToolCall, ToolCallBlock,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type { SnapshotSelectorHook } from '@deepseek-ai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { SnapshotSelectorHook } from '@x1a0f3n9/dsh-client-ui-slots'
 
 /** Request-header facts retained by the Trajectory target. */
 export interface TrajectoryRequestHeaderState {
@@ -72,14 +72,14 @@ export interface TrajectorySnapshot {
 /** Selector hook over the current Conversation binding's Trajectory target. */
 export type UseTrajectory = SnapshotSelectorHook<TrajectorySnapshot>
 
-declare module '@deepseek-ai/dsh-client-ui-conversation/client' {
+declare module '@x1a0f3n9/dsh-client-ui-conversation/client' {
   interface ConversationViewSnapshotMap {
     /** Independently assembled data consumed by the Trajectory view. */
     trajectory: TrajectorySnapshot
   }
 }
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface SessionStandardProps {
     /** Selector hook over the current Conversation binding's Trajectory target. */
     useTrajectory: UseTrajectory

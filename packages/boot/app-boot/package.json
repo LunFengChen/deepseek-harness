@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-app-boot",
+  "name": "@x1a0f3n9/dsh-app-boot",
   "description": "Shared boot glue for the app bins: .env loading, fail-loud Loader guards, snapshot-aware config resolution, and the Loader boot sequence",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -27,7 +27,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-atomic-write": "workspace:^",
+    "@x1a0f3n9/dsh-atomic-write": "workspace:^",
     "js-yaml": "^4.2.0",
     "resolve.exports": "^2.0.3"
   },
@@ -36,9 +36,9 @@
     "@deepseek-ai/cordis-plugin-hmr": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@deepseek-ai/dsh-launch-environment": "workspace:^",
-    "@deepseek-ai/dsh-home-paths": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-home-paths": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "peerDependenciesMeta": {
@@ -52,9 +52,9 @@
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
     "@deepseek-ai/cordis-plugin-timer": "workspace:^",
-    "@deepseek-ai/dsh-launch-environment": "workspace:^",
-    "@deepseek-ai/dsh-home-paths": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-home-paths": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@types/js-yaml": "^4.0.9",
     "@deepseek-ai/cordis": "workspace:^"
   }

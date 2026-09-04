@@ -3,7 +3,7 @@ description: "强制沙箱的 `ctx.fs` 后端：面向把模型文件变更限�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-fs-sandbox
+# @x1a0f3n9/dsh-fs-sandbox
 
 [English](README.md) | 中文
 
@@ -32,11 +32,11 @@ kind: "package-reference"
 先加载共享策略服务，再加载此后端，最后加载工具；编辑前读取策略插件仍为可选。
 
 ```yaml
-- name: '@deepseek-ai/dsh-sandbox-policy'
-- name: '@deepseek-ai/dsh-fs-sandbox'
+- name: '@x1a0f3n9/dsh-sandbox-policy'
+- name: '@x1a0f3n9/dsh-fs-sandbox'
   config:
     cwd: /absolute/path/to/workspace
-- name: '@deepseek-ai/dsh-tool-fs'
+- name: '@x1a0f3n9/dsh-tool-fs'
 ```
 
 后端的配置与本地后端完全相同（`cwd` 解析默认值与 `diffBasisMaxBytes` 覆写上限）；[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-fs-sandbox)是穷尽式真源。

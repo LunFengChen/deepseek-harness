@@ -3,7 +3,7 @@ description: "The model-facing goal tools for users and maintainers choosing, co
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-goal
+# @x1a0f3n9/dsh-tool-goal
 
 English | [中文](README.zh.md)
 
@@ -43,7 +43,7 @@ Call `get_goal` before `update_goal` and copy the exact `goal_id` and `revision`
 
 ```yaml
 - id: tool-goal
-  name: '@deepseek-ai/dsh-tool-goal'
+  name: '@x1a0f3n9/dsh-tool-goal'
   config:
     blockedAfterConsecutiveRounds: 3
 ```

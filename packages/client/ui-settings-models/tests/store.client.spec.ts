@@ -1,8 +1,8 @@
 /** Page-store join: directory × namespaces × credentials, with last-good rows on failure. */
 import { describe, expect, it } from 'vitest'
-import type { RpcResponse } from '@deepseek-ai/dsh-api-remotes/client'
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
-import { SettingsDescribeMirror } from '@deepseek-ai/dsh-client-ui-settings/src/client/settings-mirror.ts'
+import type { RpcResponse } from '@x1a0f3n9/dsh-api-remotes/client'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
+import { SettingsDescribeMirror } from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
 import { settingsSchema } from './settings-schema.client.ts'
 import { ModelsSettingsStore } from '../src/client/store.ts'
 

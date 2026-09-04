@@ -8,7 +8,7 @@ It is built on an **everything-is-a-plugin** architecture and powered by [Cordis
 
 Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
 
-Fork note: this branch publishes `@xfcodeai/dsh` and the `xfdsh` launcher so it can coexist with upstream `dsh`. The table below summarizes the main fork changes.
+Fork note: this branch publishes `@x1a0f3n9/dsh` and the `xfdsh` launcher so it can coexist with upstream `dsh`. The table below summarizes the main fork changes.
 
 ## Fork summary
 
@@ -16,7 +16,7 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 
 | Area | What changed | Result |
 | --- | --- | --- |
-| Package namespace | Workspace packages were rescoped from `@xfcodeai/dsh-*` to `@xfcodeai/dsh-*`; vendor and native packages keep their upstream scopes. | The fork owns its own published package line. |
+| Package namespace | Workspace packages were rescoped from `@deepseek-ai/dsh-*` to `@x1a0f3n9/dsh-*`; vendor and native packages keep their upstream scopes. | The fork owns its own published package line. |
 | Launcher and release | The published executable is `xfdsh`; release verification, pack layout, and entrypoint checks were updated to match. | The fork installs and runs beside upstream `dsh` without command collisions. |
 | Session history | The web UI can delete a turn and every later event in the same session, with destructive confirmation. The session controller forwards the request to persistence, the JSONL backend rewrites durable logs, and the projection cache schema was bumped. | Unwanted answers can be removed from the live session and from disk. |
 | Session utilities | Workspace rows include a copy-session-id action. | Session ids are easier to share and debug. |
@@ -29,14 +29,14 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 ### Install this fork
 
 ```sh
-npm install --global @xfcodeai/dsh
-xfxfdsh web
+npm install --global @x1a0f3n9/dsh
+xfdsh web
 ```
 
 For one-off use:
 
 ```sh
-npx @xfcodeai/xfdsh web
+npx --package @x1a0f3n9/dsh xfdsh web
 ```
 
 ## Developer preview
@@ -52,7 +52,7 @@ Review the [safety notice](SAFETY.md) before running the project.
 Install `Node.js`, then run:
 
 ```sh
-npx @xfcodeai/xfdsh web
+npx --package @x1a0f3n9/dsh xfdsh web
 ```
 
 The command starts the Web UI at `http://127.0.0.1:3080` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).
@@ -66,10 +66,10 @@ git clone https://github.com/deepseek-ai/deepseek-harness.git
 cd deepseek-harness
 pnpm install
 pnpm run build
-pnpm xfdsh web
+pnpm exec xfdsh web
 ```
 
-`pnpm run build` prepares the repository artifacts. `pnpm xfdsh web` uses those built artifacts without rebuilding.
+`pnpm run build` prepares the repository artifacts. `pnpm exec xfdsh web` uses those built artifacts without rebuilding.
 
 ## Community and support
 

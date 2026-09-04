@@ -11,8 +11,8 @@
  * @module dsh-tools/json-schema
  */
 
-import { HarnessError } from '@deepseek-ai/dsh-llm'
-import { assertNever, isJsonValue, type JsonValue } from '@deepseek-ai/dsh-util-values'
+import { HarnessError } from '@x1a0f3n9/dsh-llm'
+import { assertNever, isJsonValue, type JsonValue } from '@x1a0f3n9/dsh-util-values'
 
 /** Scalar JSON values supported by `enum` and `const`. */
 export type JsonSchemaScalar = string | number | boolean | null

@@ -3,7 +3,7 @@ description: "dsh Web 客户端的共享 Workspace 浏览器与选择器插件�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-workspace
+# @x1a0f3n9/dsh-client-ui-workspace
 
 [English](README.md) | 中文
 
@@ -65,7 +65,7 @@ Session 行渲染运行时的实时 `pendingInteraction` 分类：审批显示**
 
 ### 视图状态
 
-Workspace 列表基线就绪后，浏览器持久化的展开状态与 Session 顺序记录只保留当前 Workspace id、Ungrouped 与单列表记账。真实 Workspace 从 `WorkspaceView.sessionIds` 初始化，Ungrouped 与跨 Workspace 单列表从最近更新时间顺序初始化。共享侧边栏投影会隐藏持久化 Session 摘要中带有 `origin: 'subagent'` 的行；每个可见普通行都会在经不间断的 subagent 谱系可达的任一后代运行时继承蓝色活动指示器。同一份纯派生还会为分组、平铺与搜索节点读取列表 projection value 中的 Schedule key；本包只使用纯类型依赖 `@deepseek-ai/dsh-schedule/client`，不会导入 Schedule runtime 或 `ui-schedule`。
+Workspace 列表基线就绪后，浏览器持久化的展开状态与 Session 顺序记录只保留当前 Workspace id、Ungrouped 与单列表记账。真实 Workspace 从 `WorkspaceView.sessionIds` 初始化，Ungrouped 与跨 Workspace 单列表从最近更新时间顺序初始化。共享侧边栏投影会隐藏持久化 Session 摘要中带有 `origin: 'subagent'` 的行；每个可见普通行都会在经不间断的 subagent 谱系可达的任一后代运行时继承蓝色活动指示器。同一份纯派生还会为分组、平铺与搜索节点读取列表 projection value 中的 Schedule key；本包只使用纯类型依赖 `@x1a0f3n9/dsh-schedule/client`，不会导入 Schedule runtime 或 `ui-schedule`。
 
 ### 悬浮卡片
 

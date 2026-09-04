@@ -3,7 +3,7 @@ description: "DSH_HOME 下附加图片的本地存储，供用户与维护者选
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-attachment-local
+# @x1a0f3n9/dsh-attachment-local
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 挂载插件，无需任何必填配置。下表默认值定义你可以附加什么；生成的配置目录是每个字段的穷尽式真源。
 
 ```yaml
-- name: '@deepseek-ai/dsh-attachment-local'
+- name: '@x1a0f3n9/dsh-attachment-local'
 ```
 
 | 字段 | 默认值 | 含义 |

@@ -3,7 +3,7 @@ description: "dsh Web 客户端共享的 React UI 原子组件：控件、图标
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-ui-primitives
+# @x1a0f3n9/dsh-client-ui-primitives
 
 [English](README.md) | 中文
 

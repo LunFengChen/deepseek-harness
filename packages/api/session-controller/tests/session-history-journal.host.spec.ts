@@ -2,18 +2,18 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import SessionStore, { SessionSeq } from '@deepseek-ai/dsh-session'
-import { decodeStorageRecord, type ChunkRow } from '@deepseek-ai/dsh-session/chunk-rows'
-import { ToolCallId, createMessage, createToolResultMessage, createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { Session, SessionEvent, SessionId } from '@deepseek-ai/dsh-session'
-import { SessionHistoryController } from '@deepseek-ai/dsh-api-session-controller/src/history.ts'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import SessionStore, { SessionSeq } from '@x1a0f3n9/dsh-session'
+import { decodeStorageRecord, type ChunkRow } from '@x1a0f3n9/dsh-session/chunk-rows'
+import { ToolCallId, createMessage, createToolResultMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { Session, SessionEvent, SessionId } from '@x1a0f3n9/dsh-session'
+import { SessionHistoryController } from '@x1a0f3n9/dsh-api-session-controller/src/history.ts'
 import type {
   ChunkRowEvent,
   SessionFollowFrame,
   SessionPage,
   SessionWireEvent,
-} from '@deepseek-ai/dsh-api-session-controller/types'
+} from '@x1a0f3n9/dsh-api-session-controller/types'
 import { createSessionTestRemote, installSessionReadTestServices } from './test-remote.ts'
 
 /** Append a production-shaped human prompt to the session surface. */

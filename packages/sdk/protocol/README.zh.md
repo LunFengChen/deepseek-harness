@@ -3,7 +3,7 @@ description: "面向客户端与服务端实现者的 SDK 协议格式说明：H
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-sdk-protocol
+# @x1a0f3n9/dsh-sdk-protocol
 
 [English](README.md) | 中文
 

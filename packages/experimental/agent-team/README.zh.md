@@ -3,7 +3,7 @@ description: "在一个会话中运行一个小型具名 agent 团队：成员�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-experimental-agent-team
+# @x1a0f3n9/dsh-experimental-agent-team
 
 [English](README.md) | 中文
 
@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-当一个 agent 应该在自己的工作目录中运行一支小型具名助手团队、且消息与任务状态需要挺过崩溃与重启时，把本包加入组合。它本身不带工具：请与 `@deepseek-ai/dsh-experimental-tool-agent-team` 一起挂载，让模型能够创建 teammate、给它们发消息并使用任务板。
+当一个 agent 应该在自己的工作目录中运行一支小型具名助手团队、且消息与任务状态需要挺过崩溃与重启时，把本包加入组合。它本身不带工具：请与 `@x1a0f3n9/dsh-experimental-tool-agent-team` 一起挂载，让模型能够创建 teammate、给它们发消息并使用任务板。
 
 ### 何时选择
 
@@ -39,9 +39,9 @@ kind: "package-reference"
 
 ```yaml
 # smallest team setup — durable storage plus both Team packages
-- name: '@deepseek-ai/dsh-session-persistence-jsonl'
-- name: '@deepseek-ai/dsh-experimental-agent-team'
-- name: '@deepseek-ai/dsh-experimental-tool-agent-team'
+- name: '@x1a0f3n9/dsh-session-persistence-jsonl'
+- name: '@x1a0f3n9/dsh-experimental-agent-team'
+- name: '@x1a0f3n9/dsh-experimental-tool-agent-team'
 ```
 
 工具安装后，模型会按请求完成其余工作——例如先「创建一个名为 reviewer 的 teammate 检查 diff」，再「把变更摘要发给 reviewer」。所有限制都是可选的，并在启动时校验：
@@ -181,7 +181,7 @@ dispose 会关闭准入、中止并等待已获准的创建与 mailbox dispatch 
 
 #### Token 影响
 
-每次 peer 投递都会把发送者前缀与消息内容加入 target 历史。任务与 roster 变更不增加模型 token；其面向模型的呈现属于 `@deepseek-ai/dsh-experimental-tool-agent-team` 结果。
+每次 peer 投递都会把发送者前缀与消息内容加入 target 历史。任务与 roster 变更不增加模型 token；其面向模型的呈现属于 `@x1a0f3n9/dsh-experimental-tool-agent-team` 结果。
 
 #### KV Cache 影响
 

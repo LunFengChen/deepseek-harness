@@ -1,7 +1,7 @@
 /**
  * Shared ownership of one E2B sandbox. Capability adapters await the same SDK
  * handle, so filesystem and process operations inhabit one remote Linux world.
- * @module @deepseek-ai/dsh-e2b
+ * @module @x1a0f3n9/dsh-e2b
  */
 
 import { randomUUID } from 'node:crypto'
@@ -9,7 +9,7 @@ import { posix } from 'node:path'
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { FileType, Sandbox, SandboxNotFoundError } from 'e2b'
-import { proxyRouteFor } from '@deepseek-ai/dsh-http-proxy'
+import { proxyRouteFor } from '@x1a0f3n9/dsh-http-proxy'
 import { e2bApiUrl } from './api-url.ts'
 
 export {

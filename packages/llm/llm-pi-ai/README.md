@@ -1,4 +1,4 @@
-# @deepseek-ai/dsh-llm-pi-ai
+# @x1a0f3n9/dsh-llm-pi-ai
 
 English | [中文](README.zh.md)
 
@@ -12,7 +12,7 @@ Configure credentials, the model catalog, and deployment-specific transport sett
 
 ```yaml
 - id: llm
-  name: '@deepseek-ai/dsh-llm-pi-ai'
+  name: '@x1a0f3n9/dsh-llm-pi-ai'
   config:
     providers:
       # Catalog route: endpoint, protocol, and models all come from pi-ai.

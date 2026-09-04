@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PROTOCOL_VERSION } from '@agentclientprotocol/sdk'
-import { createUserMessage, ToolCallId, type StreamChunk  } from '@deepseek-ai/dsh-llm'
-import { SessionId } from '@deepseek-ai/dsh-session'
-import { defineContentToolFixture } from '@deepseek-ai/dsh-tools'
+import { createUserMessage, ToolCallId, type StreamChunk  } from '@x1a0f3n9/dsh-llm'
+import { SessionId } from '@x1a0f3n9/dsh-session'
+import { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
 import { makeBridgeHarness, textResponse, type BridgeHarness } from './harness.ts'
 
 function toolCallResponse(): StreamChunk[] {

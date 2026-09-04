@@ -3,7 +3,7 @@ description: "Model selection for the Web GUI: the /model popup and the composer
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-model-selection
+# @x1a0f3n9/dsh-client-ui-model-selection
 
 English | [中文](README.zh.md)
 

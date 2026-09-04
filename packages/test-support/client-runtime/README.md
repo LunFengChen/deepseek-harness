@@ -3,7 +3,7 @@ description: "jsdom slot test runtime for browser feature specs, for test author
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-test-runtime
+# @x1a0f3n9/dsh-client-test-runtime
 
 English | [中文](README.zh.md)
 
@@ -53,7 +53,7 @@ A registered snapshot serializer folds CSS-module class hashes (`_frame_a1b2c3` 
 Script a failure by the code the Host would answer with, and assert the same way production code discriminates — on `code`, never on the class:
 
 ```text
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 
 remote.goals.create.mockResolvedValue({
   ok: false,

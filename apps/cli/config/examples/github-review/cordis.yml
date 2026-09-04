@@ -3,7 +3,7 @@
 
 - insert:
     - id: webhook-runtime
-      name: '@deepseek-ai/dsh-webhook'
+      name: '@x1a0f3n9/dsh-webhook'
 
     - id: github-ready-review-rule
       name: './github-ready-review-rule.mjs'
@@ -21,13 +21,13 @@
         webServer: true
       config:
         - id: github-webhook-server
-          name: '@deepseek-ai/dsh-host-webserver'
+          name: '@x1a0f3n9/dsh-host-webserver'
           config:
             host: '127.0.0.1'
             port: !!js Number(process.env.DSH_GITHUB_WEBHOOK_PORT ?? 3081)
 
         - id: github-webhook-adapter
-          name: '@deepseek-ai/dsh-webhook-github'
+          name: '@x1a0f3n9/dsh-webhook-github'
           config:
             source: primary-github
             path: /github

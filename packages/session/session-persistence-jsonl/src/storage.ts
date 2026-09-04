@@ -10,8 +10,8 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { errorChain } from '@deepseek-ai/dsh-llm'
-import type { Session, SessionEvent, SessionHeader, SessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
+import { errorChain } from '@x1a0f3n9/dsh-llm'
+import type { Session, SessionEvent, SessionHeader, SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import {
   assertContiguous,
   materializeAppendBatch,
@@ -21,14 +21,14 @@ import {
   SessionPersistenceNotFoundError,
   SessionPersistenceRevision,
   SessionReadOnlyError,
-} from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-persistence'
 import type {
   SessionAccess,
   SessionHandle,
   SessionHandleAppendOptions,
   SessionHandleFlushOptions,
   SessionHandleReadOptions,
-} from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-persistence'
 
 /** Maximum intentional wait before a routed live session batch starts writing. */
 export const LIVE_WRITE_BATCH_MAX_DELAY_MS = 200

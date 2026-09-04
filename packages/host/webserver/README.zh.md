@@ -3,7 +3,7 @@ description: "web GUI 宿主的 HTTP 服务器：具名路由与 upgrade 注册�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-webserver
+# @x1a0f3n9/dsh-host-webserver
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-host-webserver'
+- name: '@x1a0f3n9/dsh-host-webserver'
   config:
     host: 127.0.0.1
     port: 3000

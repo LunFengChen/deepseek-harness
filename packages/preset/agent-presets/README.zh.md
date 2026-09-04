@@ -3,7 +3,7 @@ description: "按 preset cordis.yml 文件进行按会话的 agent 组装，供�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-presets
+# @x1a0f3n9/dsh-agent-presets
 
 [English](README.md) | 中文
 
@@ -38,7 +38,7 @@ kind: "package-reference"
 插件需要一个 `default` preset id，并在 `roots` 中扫描 preset：
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-presets'
+- name: '@x1a0f3n9/dsh-agent-presets'
   config:
     default: standard
     roots:

@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-command-goal",
+  "name": "@x1a0f3n9/dsh-command-goal",
   "description": "Human-facing slash command for persisted same-session goals",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -27,19 +27,19 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-commands": "workspace:^",
-    "@deepseek-ai/dsh-goal": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-commands": "workspace:^",
+    "@x1a0f3n9/dsh-goal": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-commands": "workspace:^",
-    "@deepseek-ai/dsh-goal": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-commands": "workspace:^",
+    "@x1a0f3n9/dsh-goal": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-session-projection": "workspace:^"
   }
 }

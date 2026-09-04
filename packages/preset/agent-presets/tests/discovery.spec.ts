@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { COMPOSITION_FILE, discoverPresets, scanRoot } from '@deepseek-ai/dsh-agent-presets'
+import { COMPOSITION_FILE, discoverPresets, scanRoot } from '@x1a0f3n9/dsh-agent-presets'
 
 const fsHarness = vi.hoisted(() => ({
   nextReadError: undefined as NodeJS.ErrnoException | undefined,
@@ -245,8 +245,8 @@ describe('rows naming a plugin that cannot be resolved', () => {
     // The way an authored preset actually rots: it named a package that a
     // later release renamed, so the composition still parses and still cannot
     // compose a session.
-    expect(await scanned('- id: stale\n  name: \'@deepseek-ai/dsh-no-such-package\'\n'))
-      .toBe('row "stale" names a plugin that cannot be resolved: @deepseek-ai/dsh-no-such-package')
+    expect(await scanned('- id: stale\n  name: \'@x1a0f3n9/dsh-no-such-package\'\n'))
+      .toBe('row "stale" names a plugin that cannot be resolved: @x1a0f3n9/dsh-no-such-package')
   })
 
   it('names every unresolvable row rather than only the first', async () => {

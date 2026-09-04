@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-03-client-platform-namespace.md
-2026-09-03-client-platform-namespace.md: 69e6b77999c79d07c29c09d1f67f1ab6005c83f9
-2026-09-03-client-platform-namespace.zh.md: 93d748422b336b4c51d68e686f41482d8cc88e39
+2026-09-03-client-platform-namespace.md: e63200931d1a774c78eee5fd5c2882eecac1bbf0
+2026-09-03-client-platform-namespace.zh.md: 22b37762b4cf40b721ab9adb94a39f9df8802d4c

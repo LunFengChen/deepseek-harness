@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-subagent",
+  "name": "@x1a0f3n9/dsh-subagent",
   "description": "Abstract subagent seam (ctx.subagents): named-provider registry for delegating to child agents",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -53,84 +53,84 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-agent-presets": "workspace:^",
-    "@deepseek-ai/dsh-attachment": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
-    "@deepseek-ai/dsh-jobs": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-sandbox": "workspace:^",
-    "@deepseek-ai/dsh-sandbox-policy": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
-    "@deepseek-ai/dsh-tools": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-user-approval": "workspace:^",
-    "@deepseek-ai/dsh-util-time": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-jobs": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
+    "@x1a0f3n9/dsh-util-time": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/dsh-agent-presets": {
+    "@x1a0f3n9/dsh-agent-presets": {
       "optional": true
     },
-    "@deepseek-ai/dsh-sandbox": {
+    "@x1a0f3n9/dsh-sandbox": {
       "optional": true
     },
-    "@deepseek-ai/dsh-sandbox-policy": {
+    "@x1a0f3n9/dsh-sandbox-policy": {
       "optional": true
     },
-    "@deepseek-ai/dsh-session-persistence": {
+    "@x1a0f3n9/dsh-session-persistence": {
       "optional": true
     },
-    "@deepseek-ai/dsh-session-projection": {
+    "@x1a0f3n9/dsh-session-projection": {
       "optional": true
     },
-    "@deepseek-ai/dsh-session-projection-cache": {
+    "@x1a0f3n9/dsh-session-projection-cache": {
       "optional": true
     },
-    "@deepseek-ai/dsh-session-query": {
+    "@x1a0f3n9/dsh-session-query": {
       "optional": true
     },
-    "@deepseek-ai/dsh-jobs": {
+    "@x1a0f3n9/dsh-jobs": {
       "optional": true
     },
-    "@deepseek-ai/dsh-user-approval": {
+    "@x1a0f3n9/dsh-user-approval": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-agent-presets": "workspace:^",
-    "@deepseek-ai/dsh-attachment": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
-    "@deepseek-ai/dsh-jobs": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-sandbox": "workspace:^",
-    "@deepseek-ai/dsh-sandbox-policy": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-session-projection-cache": "workspace:^",
-    "@deepseek-ai/dsh-session-query": "workspace:^",
-    "@deepseek-ai/dsh-storage": "workspace:^",
-    "@deepseek-ai/dsh-storage-domain": "workspace:^",
-    "@deepseek-ai/dsh-storage-json": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
-    "@deepseek-ai/dsh-tools": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-user-approval": "workspace:^",
-    "@deepseek-ai/dsh-util-time": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-jobs": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
+    "@x1a0f3n9/dsh-session-query": "workspace:^",
+    "@x1a0f3n9/dsh-storage": "workspace:^",
+    "@x1a0f3n9/dsh-storage-domain": "workspace:^",
+    "@x1a0f3n9/dsh-storage-json": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
+    "@x1a0f3n9/dsh-util-time": "workspace:^"
   }
 }

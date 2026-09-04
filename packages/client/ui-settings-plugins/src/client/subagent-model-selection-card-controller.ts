@@ -1,9 +1,9 @@
 /** Staged editor for the Host-owned subagent model allowlist. */
 
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { ModelProviderGroup } from '@deepseek-ai/dsh-api-remotes/client'
-import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { SettingsScope } from '@deepseek-ai/dsh-client-ui-settings/client'
+import type { ModelProviderGroup } from '@x1a0f3n9/dsh-api-remotes/client'
+import { createSnapshotStore, type SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SettingsScope } from '@x1a0f3n9/dsh-client-ui-settings/client'
 import type { CardShell } from './card-form.ts'
 
 /** Namespace of the Host-owned subagent model-selection preference. */

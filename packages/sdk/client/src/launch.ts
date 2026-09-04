@@ -1,6 +1,6 @@
 /**
  * Resolve the public SDK launch configuration to one dsh subprocess.
- * @module @deepseek-ai/dsh-sdk-client/launch
+ * @module @x1a0f3n9/dsh-sdk-client/launch
  */
 
 import { existsSync, readFileSync } from 'node:fs'
@@ -71,7 +71,7 @@ export function resolveDshBinFromManifests(dshManifestUrl: string, clientManifes
  */
 export function installedDshBin(): string {
   return resolveDshBinFromManifests(
-    import.meta.resolve('@deepseek-ai/dsh/package.json'),
+    import.meta.resolve('@x1a0f3n9/dsh/package.json'),
     new URL('../package.json', import.meta.url).href,
   )
 }
@@ -114,7 +114,7 @@ export function resolveDshNodeLaunchFromManifests(
  */
 function installedDshNodeLaunch(): DshNodeLaunch {
   return resolveDshNodeLaunchFromManifests(
-    import.meta.resolve('@deepseek-ai/dsh/package.json'),
+    import.meta.resolve('@x1a0f3n9/dsh/package.json'),
     new URL('../package.json', import.meta.url).href,
   )
 }

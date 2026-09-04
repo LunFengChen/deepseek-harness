@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-client-ui-settings-general",
+  "name": "@x1a0f3n9/dsh-client-ui-settings-general",
   "description": "Settings ownerless-copy and product onboarding plugin: the General section, shell trigger/header chrome content, settings dictionaries, and the versioned welcome notice",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -28,11 +28,11 @@
   "dsh": {
     "client": {
       "inject": [
-        "@deepseek-ai/dsh-client-ui-settings",
-        "@deepseek-ai/dsh-client-locale",
-        "@deepseek-ai/dsh-client-connection",
-        "@deepseek-ai/dsh-api-remotes",
-        "@deepseek-ai/dsh-client-ui-sidebar"
+        "@x1a0f3n9/dsh-client-ui-settings",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-connection",
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-ui-sidebar"
       ],
       "platform": "web"
     }
@@ -50,21 +50,21 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-api-remotes": "workspace:^",
-    "@deepseek-ai/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/dsh-client-locale": "workspace:^",
-    "@deepseek-ai/dsh-client-store": "workspace:^",
-    "@deepseek-ai/dsh-client-test-runtime": "workspace:^",
-    "@deepseek-ai/dsh-client-ui-primitives": "workspace:^",
-    "@deepseek-ai/dsh-client-ui-settings": "workspace:^",
-    "@deepseek-ai/dsh-client-ui-sidebar": "workspace:^",
-    "@deepseek-ai/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:^",
+    "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-sidebar": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
     "@types/react": "~18.3.1",
     "react": "^18.2.0",
-    "@deepseek-ai/dsh-client-ui-renderer": "workspace:^",
-    "@deepseek-ai/dsh-client-ui-session": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^"
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   },
   "files": [
     "lib/index.js",

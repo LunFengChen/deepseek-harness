@@ -1,6 +1,6 @@
 /** Provider-neutral webhook deliveries, rules, and Session requests. */
 
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import type { WebhookDeliveryId, WebhookRuleId, WebhookSourceId } from './brand.ts'
 
 /** Provider adapters add their normalized event type through declaration merging. */
@@ -68,7 +68,7 @@ export interface WebhookRule<K extends string = string> {
   ): WebhookSessionRequest | null | Promise<WebhookSessionRequest | null>
 }
 
-declare module '@deepseek-ai/dsh-llm' {
+declare module '@x1a0f3n9/dsh-llm' {
   interface MessageSourceMap {
     /** Programmatic input admitted from one verified webhook rule. */
     webhook: {

@@ -3,7 +3,7 @@ description: "In-process fork subagent backend for users and maintainers choosin
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-fork-in-process
+# @x1a0f3n9/dsh-subagent-fork-in-process
 
 English | [中文](README.zh.md)
 
@@ -40,9 +40,9 @@ The seed ends at the parent's last completed turn. A parent's current tool-calli
 Load the subagent service and this backend, then configure a delegation tool. This composition exposes a `subagent` tool backed by fork:
 
 ```yaml
-- name: '@deepseek-ai/dsh-subagent'
-- name: '@deepseek-ai/dsh-subagent-fork-in-process'
-- name: '@deepseek-ai/dsh-tool-subagent'
+- name: '@x1a0f3n9/dsh-subagent'
+- name: '@x1a0f3n9/dsh-subagent-fork-in-process'
+- name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: fork
 ```

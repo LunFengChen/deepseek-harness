@@ -1,5 +1,5 @@
 /**
- * @deepseek-ai/dsh-web-app — the browser-surface bundle's runtime glue plugin
+ * @x1a0f3n9/dsh-web-app — the browser-surface bundle's runtime glue plugin
  * plus the bundle patch (`cordis.patch.yml`, declared by the `dsh.bundle.patch`
  * manifest field). The plugin owns the browser-surface glue: it resolves
  * the built frontend dist (workspace knowledge of this bundle, never user
@@ -8,7 +8,7 @@
  * variable, the process-token URL line, and the default-browser handoff. The
  * model and shell retain the clean URL. App command-line values arrive through
  * the `webStartup` service expressions in the bundle patch.
- * @module @deepseek-ai/dsh-web-app
+ * @module @x1a0f3n9/dsh-web-app
  */
 
 import { spawn, type ChildProcess } from 'node:child_process'
@@ -18,14 +18,14 @@ import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { addHarnessSourceSection } from '@deepseek-ai/dsh-app-boot'
-import type {} from '@deepseek-ai/dsh-client-connection'
-import * as FrontendStatic from '@deepseek-ai/dsh-host-frontend-static'
-import { launchEnvironmentOf } from '@deepseek-ai/dsh-launch-environment'
-import { scrubbedParentEnv } from '@deepseek-ai/dsh-subprocess'
+import { addHarnessSourceSection } from '@x1a0f3n9/dsh-app-boot'
+import type {} from '@x1a0f3n9/dsh-client-connection'
+import * as FrontendStatic from '@x1a0f3n9/dsh-host-frontend-static'
+import { launchEnvironmentOf } from '@x1a0f3n9/dsh-launch-environment'
+import { scrubbedParentEnv } from '@x1a0f3n9/dsh-subprocess'
 import type {} from '@deepseek-ai/cordis-plugin-loader'
-import type {} from '@deepseek-ai/dsh-host-webserver'
-import type {} from '@deepseek-ai/dsh-shell-env'
+import type {} from '@x1a0f3n9/dsh-host-webserver'
+import type {} from '@x1a0f3n9/dsh-shell-env'
 
 /** Stable Cordis plugin name. */
 export const name = 'web-app'
@@ -171,10 +171,10 @@ function localWebUrl(ctx: Context): string {
 function resolveDistIndex(): string {
   const require = createRequire(import.meta.url)
   try {
-    return join(dirname(require.resolve('@deepseek-ai/dsh-web-frontend/package.json')), 'dist', 'index.html')
+    return join(dirname(require.resolve('@x1a0f3n9/dsh-web-frontend/package.json')), 'dist', 'index.html')
   } catch {
     /* v8 ignore next 2 -- reachable only when the frontend package is absent from the checkout */
-    throw new Error('web-app: @deepseek-ai/dsh-web-frontend is not resolvable from this composition')
+    throw new Error('web-app: @x1a0f3n9/dsh-web-frontend is not resolvable from this composition')
   }
 }
 

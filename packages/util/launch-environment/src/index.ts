@@ -3,7 +3,7 @@
  * supplied each value. Harness consumers resolve through it instead of a flattened
  * `process.env`; launchers may still materialize accepted values for config
  * expressions and third-party libraries.
- * @module @deepseek-ai/dsh-launch-environment
+ * @module @x1a0f3n9/dsh-launch-environment
  */
 
 import type { Context } from '@deepseek-ai/cordis'

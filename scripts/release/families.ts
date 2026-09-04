@@ -34,7 +34,7 @@ const INSTALL_SECTIONS = ['dependencies', 'optionalDependencies'] as const
 const PEER_SECTIONS = ['peerDependencies'] as const
 
 /** The workspace root manifest, which is never a release member. */
-const WORKSPACE_ROOT_PACKAGE = '@xfcodeai/dsh-root'
+const WORKSPACE_ROOT_PACKAGE = '@x1a0f3n9/dsh-root'
 
 /** One peer declaration the publish order leaves unordered. */
 interface DroppedPeerEdge {
@@ -365,7 +365,7 @@ class DshFamily extends ReleaseFamily {
     validateTarballPayload(files, member.name)
   }
 
-  readonly installedEntry = { packageName: '@xfcodeai/dsh', binPath: 'lib/bin.js' }
+  readonly installedEntry = { packageName: '@x1a0f3n9/dsh', binPath: 'lib/bin.js' }
 }
 
 /** `vendor/*`: every package keeps its own version line, so every package has its own tag. */

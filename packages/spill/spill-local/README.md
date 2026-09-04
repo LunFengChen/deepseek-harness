@@ -3,7 +3,7 @@ description: "The local filesystem spill backend: how spilled tool output is sav
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-spill-local
+# @x1a0f3n9/dsh-spill-local
 
 English | [中文](README.zh.md)
 
@@ -32,7 +32,7 @@ Mount this backend in a composition that spills tool output to the local filesys
 Loading the plugin with no config is safe: files land in a lazily-created private (0700) per-process directory under the OS temp directory. Set `root` when the files must live under a known location.
 
 ```yaml
-- name: '@deepseek-ai/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-local'
   config:
     root: /absolute/path/to/spill
     cleanupPeriodDays: 30

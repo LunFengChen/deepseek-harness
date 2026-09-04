@@ -3,7 +3,7 @@ description: "In-app browsing backend of the directory-picker seam: one-level di
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-directory-picker-browse
+# @x1a0f3n9/dsh-host-directory-picker-browse
 
 English | [中文](README.zh.md)
 

@@ -13,26 +13,26 @@
  * next cold read) and a `ver` mismatch discards the row instead of migrating
  * it. Design authority: the session-projection RFC
  * (.agents/notes/proposed/architecture/2026-07-27-session-projection-and-command-log.md).
- * @module @deepseek-ai/dsh-session-projection-cache
+ * @module @x1a0f3n9/dsh-session-projection-cache
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { snapshotJsonValue } from '@deepseek-ai/dsh-util-values'
-import { SessionLogOffset } from '@deepseek-ai/dsh-session'
+import { snapshotJsonValue } from '@x1a0f3n9/dsh-util-values'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import type {
   Session,
   SessionEvent,
   SessionHeader,
   SessionId,
   SessionSeqCursor,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import type {
   ProjectionCheckpoint,
   ProjectionSnapshot,
   SessionProjectionMap,
-} from '@deepseek-ai/dsh-session-projection'
-import type { KvTable } from '@deepseek-ai/dsh-storage-domain'
+} from '@x1a0f3n9/dsh-session-projection'
+import type { KvTable } from '@x1a0f3n9/dsh-storage-domain'
 import { projectionCacheDomainSpec } from './spec.ts'
 import type { CheckpointIdentity, CheckpointRecord } from './spec.ts'
 

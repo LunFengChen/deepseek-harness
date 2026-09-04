@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-subagent-codex",
+  "name": "@x1a0f3n9/dsh-subagent-codex",
   "description": "One-shot Codex subagent provider over the official app-server protocol",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -34,35 +34,35 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-subagent": "workspace:^",
-    "@deepseek-ai/dsh-subprocess": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^"
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^"
   },
   "dependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-sdk-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-sdk-protocol": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "@openai/codex": "0.149.1"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-app-boot": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-loader-smoke": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-checkpoint-policy": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence-jsonl": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-subagent": "workspace:^",
-    "@deepseek-ai/dsh-subprocess": "workspace:^",
-    "@deepseek-ai/dsh-subprocess-local": "workspace:^",
-    "@deepseek-ai/dsh-timeout": "workspace:^",
-    "@deepseek-ai/dsh-tool-jobs": "workspace:^",
-    "@deepseek-ai/dsh-tool-subagent": "workspace:^",
-    "@deepseek-ai/dsh-tools": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-app-boot": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-loader-smoke": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-checkpoint-policy": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
+    "@x1a0f3n9/dsh-timeout": "workspace:^",
+    "@x1a0f3n9/dsh-tool-jobs": "workspace:^",
+    "@x1a0f3n9/dsh-tool-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^"
   }
 }

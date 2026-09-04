@@ -8,7 +8,7 @@
 
 `xfdsh --profile <name>` 启动位于 `$DSH_HOME/profiles/<name>` 的 profile。生效配置树以空根节点为起点，依次叠加 profile manifest（元数据清单）的 `dsh.profile.bundles` 列表中指定的各组合包 patch、profile 自身的 `cordis.patch.yml`、home 级的 `$DSH_HOME/cordis.patch.yml`（这是各 profile 共享的机器本地偏好，因此优先于逐 profile 配置层），以及按 argv 顺序指定的各个 `--patch <path>` 覆盖层。对同一配置行，后应用的层优先。patch 会替换目标行的整个 `config` 值，而不是深度合并其中的键；patch 也可以插入新行。`dsh.profile.patchReload` 可选择 `live` patch 文件监视或 `startup` 单次加载；自定义 profile 省略该值时默认使用 `live`。配置解析、schema 校验、模块解析或插件启动失败时，系统会报告错误并以非零状态退出。收到 SIGINT 或 SIGTERM 时，挂载的根节点会先 dispose（资源释放）再退出。
 
-组合包名称先从 dsh 安装目录解析，再从 profile 目录解析。因此，内置组合包（`@xfcodeai/dsh-base`、`@xfcodeai/dsh-web-app`、`@xfcodeai/dsh-headless`、`@xfcodeai/dsh-sdk-app`、`@xfcodeai/dsh-sdk-minimal`、`@xfcodeai/dsh-acp-app`）始终来自当前运行的 `dsh` 所属的安装；树外组合包则来自 profile 中由 pnpm 管理的 `node_modules`。patch 行中的裸插件 `name` 会从 profile 目录开始，按照 Node 的模块解析规则逐级向父目录查找，直至由 dsh 维护的安装后备目录 `$DSH_HOME/profiles/node_modules`。普通 Node 安装会为依赖闭包中的每个包放置并修复一个符号链接。pkg 可执行程序则放置真实 ESM 代理，镜像显式 exports 并重新导出虚拟包 URL，因为操作系统符号链接无法进入 pkg 的 `/snapshot` 文件系统。每次启动还会把仅由所选外部 bundle 携带的包经 dsh 自有目录链接到当前 profile 的 `node_modules`；已有 pnpm 条目优先，且每个 profile 独立拥有自己的链接。
+组合包名称先从 dsh 安装目录解析，再从 profile 目录解析。因此，内置组合包（`@x1a0f3n9/dsh-base`、`@x1a0f3n9/dsh-web-app`、`@x1a0f3n9/dsh-headless`、`@x1a0f3n9/dsh-sdk-app`、`@x1a0f3n9/dsh-sdk-minimal`、`@x1a0f3n9/dsh-acp-app`）始终来自当前运行的 `dsh` 所属的安装；树外组合包则来自 profile 中由 pnpm 管理的 `node_modules`。patch 行中的裸插件 `name` 会从 profile 目录开始，按照 Node 的模块解析规则逐级向父目录查找，直至由 dsh 维护的安装后备目录 `$DSH_HOME/profiles/node_modules`。普通 Node 安装会为依赖闭包中的每个包放置并修复一个符号链接。pkg 可执行程序则放置真实 ESM 代理，镜像显式 exports 并重新导出虚拟包 URL，因为操作系统符号链接无法进入 pkg 的 `/snapshot` 文件系统。每次启动还会把仅由所选外部 bundle 携带的包经 dsh 自有目录链接到当前 profile 的 `node_modules`；已有 pnpm 条目优先，且每个 profile 独立拥有自己的链接。
 
 `web`、`headless`、`sdk`、`sdk-minimal` 和 `acp` profile 首次使用时会从随附模板自动初始化（`web`：base + web-app，实时应用 patch；`headless`：base + headless，只在启动时应用 patch；`sdk`：base + sdk-app，只在启动时应用 patch；`sdk-minimal`：独立组合包，只在启动时应用 patch；`acp`：base + acp-app，只在启动时应用 patch）。其他缺失的 profile 会显式报错，并提示运行 `xfdsh plugin --profile <name> add <package>`。
 
@@ -43,16 +43,16 @@ xfdsh --profile web --patch ./extra.yml --dump-config
 
 ## 插件管理
 
-`xfdsh plugin --profile <name> <args...>` 在 profile 缺失时先初始化它（有随附模板的用模板，其他名称只装 `@xfcodeai/dsh-base`），然后以 profile 目录为工作目录，把 `<args...>` 转发给 `pnpm`：`add`、`remove`、`why`、`update` 及其他所有 pnpm 子命令都照常可用；pnpm 必须在 PATH 上。相对路径 spec（`.`、`../plugin` 及其 `file:`/`link:` 形式）会先锚定到调用目录，因此在插件 checkout 中执行 `add .` 安装的是该 checkout，而不是 profile。每次成功运行后，系统都会根据当前安装状态更新 `dsh.profile.bundles`：如果某项依赖解析到的包在 manifest 中声明了 `"dsh": { "bundle": { "patch": "./cordis.patch.yml" } }`，该依赖就会加入配置层栈；如果某项依赖在 `update` 后获得该声明，也会随即激活。没有组合包声明的依赖仍作为普通依赖保留，并显示一次性警告；已移除的依赖则从配置层栈中删除。
+`xfdsh plugin --profile <name> <args...>` 在 profile 缺失时先初始化它（有随附模板的用模板，其他名称只装 `@x1a0f3n9/dsh-base`），然后以 profile 目录为工作目录，把 `<args...>` 转发给 `pnpm`：`add`、`remove`、`why`、`update` 及其他所有 pnpm 子命令都照常可用；pnpm 必须在 PATH 上。相对路径 spec（`.`、`../plugin` 及其 `file:`/`link:` 形式）会先锚定到调用目录，因此在插件 checkout 中执行 `add .` 安装的是该 checkout，而不是 profile。每次成功运行后，系统都会根据当前安装状态更新 `dsh.profile.bundles`：如果某项依赖解析到的包在 manifest 中声明了 `"dsh": { "bundle": { "patch": "./cordis.patch.yml" } }`，该依赖就会加入配置层栈；如果某项依赖在 `update` 后获得该声明，也会随即激活。没有组合包声明的依赖仍作为普通依赖保留，并显示一次性警告；已移除的依赖则从配置层栈中删除。
 
 Codex 与 Claude Code subagent provider 是两个彼此独立的可选 Bundle。可以只添加一个包、在同一命令中添加两个包，或独立移除任一包：
 
 ```sh
-xfdsh plugin --profile <name> add @xfcodeai/dsh-subagent-codex
-xfdsh plugin --profile <name> add @xfcodeai/dsh-subagent-claude-code
-xfdsh plugin --profile <name> add @xfcodeai/dsh-subagent-codex @xfcodeai/dsh-subagent-claude-code
-xfdsh plugin --profile <name> remove @xfcodeai/dsh-subagent-codex
-xfdsh plugin --profile <name> remove @xfcodeai/dsh-subagent-claude-code
+xfdsh plugin --profile <name> add @x1a0f3n9/dsh-subagent-codex
+xfdsh plugin --profile <name> add @x1a0f3n9/dsh-subagent-claude-code
+xfdsh plugin --profile <name> add @x1a0f3n9/dsh-subagent-codex @x1a0f3n9/dsh-subagent-claude-code
+xfdsh plugin --profile <name> remove @x1a0f3n9/dsh-subagent-codex
+xfdsh plugin --profile <name> remove @x1a0f3n9/dsh-subagent-claude-code
 ```
 
 pnpm 操作成功后只会改变磁盘上的 Profile manifest 与 Bundle 列表；正在运行的 Profile 会保留本次启动时的 Bundle 集合。添加、移除或更新 Bundle 后须重启该 Profile。这个启动边界只适用于 Bundle 成员变化，Profile 或 home 中普通 `cordis.patch.yml` 的编辑通过热重载生效。下一次启动时，每个已安装 Bundle 只注册自己的休眠 Host provider；还须在复制出的 Preset 中单独启用对应工具行，新 Agent 才能看到该工具。[Codex provider README](../../../packages/subagent/subagent-codex/README.zh.md)与 [Claude Code provider README](../../../packages/subagent/subagent-claude-code/README.zh.md)负责可执行文件、身份验证、载荷与失败细节；[base Bundle 参考](../../../packages/bundle/base/README.zh.md)负责默认依赖闭包。
@@ -93,7 +93,7 @@ xfdsh web --help
 
 会话遥测默认按反馈门控共享：在用户记录 `/feedback` 之前不上传任何数据，每条已记录的反馈通过该事件上传尚未共享的会话记录；恢复的会话只共享当前生命周期。`DSH_TELEMETRY_MODE=FULL` 改为将每条已投影会话事件作为 OTLP/HTTP 日志流式发送，`DSH_TELEMETRY_MODE=DISABLED` 让全部数据留在本地，任何非空的 `DSH_TELEMETRY_DISABLED` 仍是具有最终效力的遥测强制关闭开关。`DSH_TELEMETRY_OTLP_URL` 选择其他 collector。随附基础配置没有遥测脱敏规则，因此释放的导出可能包含消息文本、工具参数和结果，以及 workspace 路径；相关部署决策见[反馈门控默认值 Agent Note](../../../.agents/notes/implemented/feature/2026-08-25-feedback-gated-telemetry-default.zh.md)。
 
-通过 `xfdsh plugin --profile <name> add <package-or-git-spec>` 安装外部插件组合包。安装的包拥有其依赖，并贡献其声明的 `cordis.patch.yml` 层。官方组合包可以继续声明 `@deepseek-ai/dsh-*`；profile 的 `.pnpmfile.cjs` 会把这些依赖 spec 转成对应 `@xfcodeai/dsh-*` 包的别名，同时保留包原本的导入名。升级已有 profile 后，请执行一次 `xfdsh plugin --profile <name> install`，让 pnpm 重建这些别名；如果对应的 fork 包不可用，安装会明确失败，不会加载第二套官方运行时。CLI 还随附 `@xfcodeai/dsh-mcp-client` 作为供 patch 层使用的依赖，但默认不启用 MCP 服务器，因为每条服务器命令都是 agent（智能体）沙箱之外的受信任可执行代码。
+通过 `xfdsh plugin --profile <name> add <package-or-git-spec>` 安装外部插件组合包。安装的包拥有其依赖，并贡献其声明的 `cordis.patch.yml` 层。官方组合包可以继续声明 `@x1a0f3n9/dsh-*`；profile 的 `.pnpmfile.cjs` 会把这些依赖 spec 转成对应 `@x1a0f3n9/dsh-*` 包的别名，同时保留包原本的导入名。升级已有 profile 后，请执行一次 `xfdsh plugin --profile <name> install`，让 pnpm 重建这些别名；如果对应的 fork 包不可用，安装会明确失败，不会加载第二套官方运行时。CLI 还随附 `@x1a0f3n9/dsh-mcp-client` 作为供 patch 层使用的依赖，但默认不启用 MCP 服务器，因为每条服务器命令都是 agent（智能体）沙箱之外的受信任可执行代码。
 
 <a id="source-execution"></a>
 ## 源码执行

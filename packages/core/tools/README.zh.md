@@ -3,7 +3,7 @@ description: "面向工具作者与维护者的工具注册表与执行流水线
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tools
+# @x1a0f3n9/dsh-tools
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ```ts
 import { readFile } from 'node:fs/promises'
 import type { Context } from '@deepseek-ai/cordis'
-import { defineTool } from '@deepseek-ai/dsh-tools'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
 
 declare const ctx: Context
 
@@ -64,7 +64,7 @@ ctx.tools.register(defineTool({
 `mode` 配置决定模型看到什么：`native`（每个可见 schema）、`ptc`（只有 `run_code` 加一份生成 SDK）或 `both`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-tools'
+- name: '@x1a0f3n9/dsh-tools'
   config:
     mode: native
 ```
@@ -221,7 +221,7 @@ Program-only SDK bindings:
 - **并发策略不是事件门禁**：`executionMode()` 直接读取已解析的工具定义；插件只能在自身拥有的定义上声明分类器。
 - **`tools/pre-execute` 有意不允许改写 `exec.arguments`**：否则日志记录与呈现的参数会与实际运行内容失去同步；改写设计记录在[拟议的 Agent Note](../../../.agents/notes/proposed/feature/2026-06-30-pre-tool-input-rewrite.zh.md)中。
 - **调用方定义的 subagent 与工作流结构化输出仍要求对象根**：这是消费方层面的守卫；共享 schema 词汇与工具输出支持任意 JSON 根。
-- **定义中的 `timeoutMs` 仅作声明之用**：注册表绝不会强制执行截止时间；要强制执行，必须使用 `@deepseek-ai/dsh-tool-call-timeout-policy` 包装层。
+- **定义中的 `timeoutMs` 仅作声明之用**：注册表绝不会强制执行截止时间；要强制执行，必须使用 `@x1a0f3n9/dsh-tool-call-timeout-policy` 包装层。
 - **PTC mode 的 SDK 语言由当前加载的运行时决定，且呈现方式按 agent 而非按工具**：`mode: ptc`/`both` 会拒绝组装提示词，除非 `ctx.codeRuntime.language` 有已注册的 SDK 渲染器；同一个 agent 内不能让一个工具仅使用 Native，而另一个仅使用 PTC。
 - **PTC mode 中间值只存在于执行局部，且没有字节上限**：它们无法从会话回放重建，并可能耗尽进程或 worker 内存；只有外层 `run_code` 输出受 worker 可配置的硬上限约束。
 - **每次运行都会获得全新的 `run_code` 状态**：MVP 不采用持久 REPL 风格内核，因为跨调用状态不会出现在日志中。

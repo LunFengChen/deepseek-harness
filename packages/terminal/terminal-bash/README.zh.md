@@ -3,7 +3,7 @@ description: "持久终端会话的随附 shell 后端：在共享沙箱策略�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-terminal-bash
+# @x1a0f3n9/dsh-terminal-bash
 
 [English](README.md) | 中文
 
@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-当组合需要持久 shell 会话时挂载此后端——cwd、导出的变量、函数或正在运行的交互式子进程等状态必须跨工具调用存活。它是默认的 `shell` 类型：组合只挂载 `@deepseek-ai/dsh-terminal` 而不挂载它时，将没有任何会话可打开。
+当组合需要持久 shell 会话时挂载此后端——cwd、导出的变量、函数或正在运行的交互式子进程等状态必须跨工具调用存活。它是默认的 `shell` 类型：组合只挂载 `@x1a0f3n9/dsh-terminal` 而不挂载它时，将没有任何会话可打开。
 
 ### 何时选择
 
@@ -36,12 +36,12 @@ kind: "package-reference"
 挂载终端服务、子进程提供方、沙箱与策略服务、此后端以及一个工具包：
 
 ```yaml
-- name: '@deepseek-ai/dsh-terminal'
-- name: '@deepseek-ai/dsh-subprocess-local'
-- name: '@deepseek-ai/dsh-sandbox-local'
-- name: '@deepseek-ai/dsh-sandbox-policy'
-- name: '@deepseek-ai/dsh-terminal-bash'
-- name: '@deepseek-ai/dsh-tool-terminal'
+- name: '@x1a0f3n9/dsh-terminal'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-sandbox-local'
+- name: '@x1a0f3n9/dsh-sandbox-policy'
+- name: '@x1a0f3n9/dsh-terminal-bash'
+- name: '@x1a0f3n9/dsh-tool-terminal'
 ```
 
 `danger-full-access` 直接启动 shell。受限模式要求同一执行世界中存在 `ctx.sandbox` 提供方：缺少时，spawn 会在 shell 启动前失败。
@@ -131,7 +131,7 @@ shell 在整个生命周期内运行在有效的沙箱边界之下。当所有�
 
 #### 模型看到什么
 
-此包不注册提示词或工具。模型通过 `@deepseek-ai/dsh-tool-terminal` 或其他 PTY 消费方可能收到有界的启动输出、发送增量、scrollback 页、就绪原因与清理错误。
+此包不注册提示词或工具。模型通过 `@x1a0f3n9/dsh-tool-terminal` 或其他 PTY 消费方可能收到有界的启动输出、发送增量、scrollback 页、就绪原因与清理错误。
 
 #### Token 影响
 

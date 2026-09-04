@@ -3,13 +3,13 @@ description: "面向宿主驱动 UI 的文件引用发现与 @file mention 语�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-file-reference
+# @x1a0f3n9/dsh-file-reference
 
 [English](README.md) | 中文
 
 ## 概述
 
-宿主驱动 UI 使用 `dsh-file-reference` 提供 `@file` 补全：UI 为指定 agent 请求路径候选，模型输入 `@path` 或 `@"path with spaces"`，选中候选后，匹配的 mention 作为普通提示词文本插入。seam 本身不拥有文件系统访问——具体提供方（如 `@deepseek-ai/dsh-file-reference-local`）负责提供候选、排序、缓存与失效。选中候选绝不读取或附带文件内容；模型必须调用文件系统工具才能查看文件。Session Controller 通过 `fileReferences/list` Remote 向浏览器消费方暴露同一发现能力。
+宿主驱动 UI 使用 `dsh-file-reference` 提供 `@file` 补全：UI 为指定 agent 请求路径候选，模型输入 `@path` 或 `@"path with spaces"`，选中候选后，匹配的 mention 作为普通提示词文本插入。seam 本身不拥有文件系统访问——具体提供方（如 `@x1a0f3n9/dsh-file-reference-local`）负责提供候选、排序、缓存与失效。选中候选绝不读取或附带文件内容；模型必须调用文件系统工具才能查看文件。Session Controller 通过 `fileReferences/list` Remote 向浏览器消费方暴露同一发现能力。
 
 ## 目录
 
@@ -37,7 +37,7 @@ kind: "package-reference"
 
 ### 搭配提供方
 
-本地文件系统请挂载 `@deepseek-ai/dsh-file-reference-local`；其他命名空间（远程或虚拟文件系统）需要发现能力与生效工具一致的提供方。当指定 agent 可以调用 `read` 时，提供方可以安装稳定的 `FILE_REFERENCE_PROMPT` 指引，告诉模型先读取被引用文件、再声称检查过它。
+本地文件系统请挂载 `@x1a0f3n9/dsh-file-reference-local`；其他命名空间（远程或虚拟文件系统）需要发现能力与生效工具一致的提供方。当指定 agent 可以调用 `read` 时，提供方可以安装稳定的 `FILE_REFERENCE_PROMPT` 指引，告诉模型先读取被引用文件、再声称检查过它。
 
 -----
 

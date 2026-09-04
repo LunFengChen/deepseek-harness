@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-tool-ask-user",
+  "name": "@x1a0f3n9/dsh-tool-ask-user",
   "description": "Model-facing ask_user_question tool over the ctx.userQuestions seam",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -27,17 +27,17 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-tools": "workspace:^",
-    "@deepseek-ai/dsh-user-questions": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-user-questions": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
-    "@deepseek-ai/dsh-tools": "workspace:^",
-    "@deepseek-ai/dsh-user-questions": "workspace:^",
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-user-questions": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

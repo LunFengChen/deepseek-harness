@@ -3,7 +3,7 @@ description: "Per-session agent composition from preset cordis.yml files, for us
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-presets
+# @x1a0f3n9/dsh-agent-presets
 
 English | [中文](README.zh.md)
 
@@ -38,7 +38,7 @@ The presets you can choose from come from two places: the presets shipped inside
 The plugin needs a `default` preset id and scans `roots` for presets:
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-presets'
+- name: '@x1a0f3n9/dsh-agent-presets'
   config:
     default: standard
     roots:

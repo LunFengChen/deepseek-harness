@@ -3,12 +3,12 @@
 // active conversation scrollport (see ConversationRoot data-conversation-scroll).
 
 import { Fragment, memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { Tooltip } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { UseProjection } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { SnapshotSelectorHook } from '@deepseek-ai/dsh-client-ui-slots'
+import { Tooltip } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { UseProjection } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SnapshotSelectorHook } from '@x1a0f3n9/dsh-client-ui-slots'
 // Type-only: merges the sessionStats key into SessionProjectionMap for useProjection.
-import type {} from '@deepseek-ai/dsh-session-stats/client'
-import type { TokenUsageProjection } from '@deepseek-ai/dsh-token-meter/client'
+import type {} from '@x1a0f3n9/dsh-session-stats/client'
+import type { TokenUsageProjection } from '@x1a0f3n9/dsh-token-meter/client'
 import type { ChatViewSlotProps } from '../contract/slots.ts'
 import type { ChatSnapshot } from '../contract/snapshot.ts'
 import { formatTokensPerSecond } from './message-chrome.ts'

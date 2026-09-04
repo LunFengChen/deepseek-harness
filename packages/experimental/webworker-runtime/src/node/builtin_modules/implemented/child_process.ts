@@ -12,7 +12,7 @@
  *
  * What stays impossible is what needs a real process: synchronous execution
  * (`execSync`, and `spawnSync` for a known program) and `fork`.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/child_process
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/child_process
  */
 
 import { Buffer } from 'buffer'

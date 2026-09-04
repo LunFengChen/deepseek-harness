@@ -3,7 +3,7 @@ description: "面向以子进程方式启动 DeepSeek Harness 运行时、并通
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-sdk-client
+# @x1a0f3n9/dsh-sdk-client
 
 [English](README.md) | 中文
 
@@ -30,8 +30,8 @@ kind: "package-library"
 ### 用 DeepSeekHarness 运行 agent 轮次
 
 ```ts
-import { DeepSeekHarness } from '@deepseek-ai/dsh-sdk-client'
-import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
+import { DeepSeekHarness } from '@x1a0f3n9/dsh-sdk-client'
+import { ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 
 await using harness = new DeepSeekHarness({
   profile: 'sdk',

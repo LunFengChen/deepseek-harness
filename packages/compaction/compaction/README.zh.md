@@ -3,7 +3,7 @@ description: "面向后端实现者与部署方的共享压缩约定：会话压
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-compaction
+# @x1a0f3n9/dsh-compaction
 
 [English](README.md) | 中文
 
@@ -40,8 +40,8 @@ kind: "package-reference"
 挂载随附后端以注册压缩服务，并添加 `dsh-command-compact` 获得按需命令：
 
 ```yaml
-- name: '@deepseek-ai/dsh-compaction-basic'
-- name: '@deepseek-ai/dsh-command-compact'
+- name: '@x1a0f3n9/dsh-compaction-basic'
+- name: '@x1a0f3n9/dsh-command-compact'
 ```
 
 有了这两行配置，功能即已开启：会话增长时自动压缩，`/compact` 收到请求后立即压缩并报告替换了多少历史项。如果未挂载后端，什么都不会压缩，`/compact` 也会失败；随附后端的完整依赖链见其自身 README。

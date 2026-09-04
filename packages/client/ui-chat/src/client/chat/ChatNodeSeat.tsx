@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo } from 'react'
-import { JsonBlock } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { ConversationLocationDataStore, ConversationTurnDataMap } from '@deepseek-ai/dsh-client-ui-conversation/client'
+import { JsonBlock } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { ConversationLocationDataStore, ConversationTurnDataMap } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { ChatNodeOwnerProps, ChatViewSlotProps } from '../contract/slots.ts'
 import type { ChatNode } from '../contract/chat-nodes.ts'
 import { TURN_PROCESS_INDEPENDENT_KINDS } from '../contract/turn-process.ts'

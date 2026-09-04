@@ -16,8 +16,8 @@ import {
   ConnectionIndicator,
   IconAgentPresetOutline16, IconCloseOutline16, IconDataOutline16,
   IconPersonalizationOutline16, IconSettingsOutline16,
-} from '@deepseek-ai/dsh-client-ui-primitives'
-import type { ConnectionIndicatorState } from '@deepseek-ai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { ConnectionIndicatorState } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { SettingsRootComponentProps, SettingsSectionRow } from './shell-contract.ts'
 import css from './SettingsRoot.module.css'
 

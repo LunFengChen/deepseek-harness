@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-e2b",
+  "name": "@x1a0f3n9/dsh-e2b",
   "description": "Shared E2B sandbox lifecycle for DeepSeek Harness provider adapters",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -28,7 +28,7 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-http-proxy": "workspace:^"
+    "@x1a0f3n9/dsh-http-proxy": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^",
@@ -36,20 +36,20 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent": "workspace:^",
-    "@deepseek-ai/dsh-app-boot": "workspace:^",
-    "@deepseek-ai/dsh-bash-local": "workspace:^",
-    "@deepseek-ai/dsh-fs-e2b": "workspace:^",
-    "@deepseek-ai/dsh-loader-smoke": "workspace:^",
-    "@deepseek-ai/dsh-lsp": "workspace:^",
-    "@deepseek-ai/dsh-lsp-stdio": "workspace:^",
-    "@deepseek-ai/dsh-sandbox-policy": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-projection": "workspace:^",
-    "@deepseek-ai/dsh-subprocess-e2b": "workspace:^",
-    "@deepseek-ai/dsh-terminal": "workspace:^",
-    "@deepseek-ai/dsh-terminal-bash": "workspace:^",
-    "@deepseek-ai/dsh-http-proxy": "workspace:^",
-    "@deepseek-ai/dsh-launch-environment": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-app-boot": "workspace:^",
+    "@x1a0f3n9/dsh-bash-local": "workspace:^",
+    "@x1a0f3n9/dsh-fs-e2b": "workspace:^",
+    "@x1a0f3n9/dsh-loader-smoke": "workspace:^",
+    "@x1a0f3n9/dsh-lsp": "workspace:^",
+    "@x1a0f3n9/dsh-lsp-stdio": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess-e2b": "workspace:^",
+    "@x1a0f3n9/dsh-terminal": "workspace:^",
+    "@x1a0f3n9/dsh-terminal-bash": "workspace:^",
+    "@x1a0f3n9/dsh-http-proxy": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^"
   }
 }

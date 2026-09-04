@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { createConversationStore, readConversationViewPreference } from '../src/client/stores.ts'
 
 const KEY = 'dsh.conversation'

@@ -3,7 +3,7 @@ description: "进程本地后台任务注册表，供组合、容量评估或排
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-jobs-local
+# @x1a0f3n9/dsh-jobs-local
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 加载插件即注册 `ctx.jobs`；`maxConcurrentJobsPerOwner` 可选，默认为 `10`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-jobs-local'
+- name: '@x1a0f3n9/dsh-jobs-local'
 ```
 
 | 字段 | 默认值 | 含义 |

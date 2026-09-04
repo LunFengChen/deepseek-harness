@@ -93,8 +93,8 @@ export function renderModuleGraph(pkgs: readonly Pkg[], locale: Locale): string 
     '',
     ...(chinese ? ['[English](module-graph.md) | 中文', ''] : []),
     chinese
-      ? '`@deepseek-ai/dsh-*` harness 包之间的 peer 依赖关系。peer 表示消费端需要提供共享实例，不包括普通运行时 dependency 或仅开发期关系。该图按 `packages/<group>/<pkg>` 层级分组；边 `a --> b` 表示包 `a` peer 依赖包 `b`。名称中的 `@deepseek-ai/dsh-` 前缀已移除。'
-      : 'Peer dependencies among the `@deepseek-ai/dsh-*` harness packages. A peer means the consumer requires a shared instance; ordinary runtime dependencies and development-only relationships are not shown. The graph is grouped by the `packages/<group>/<pkg>` hierarchy. An edge `a --> b` means package `a` has package `b` as a peer. Names omit the `@deepseek-ai/dsh-` prefix.',
+      ? '`@x1a0f3n9/dsh-*` harness 包之间的 peer 依赖关系。peer 表示消费端需要提供共享实例，不包括普通运行时 dependency 或仅开发期关系。该图按 `packages/<group>/<pkg>` 层级分组；边 `a --> b` 表示包 `a` peer 依赖包 `b`。名称中的 `@x1a0f3n9/dsh-` 前缀已移除。'
+      : 'Peer dependencies among the `@x1a0f3n9/dsh-*` harness packages. A peer means the consumer requires a shared instance; ordinary runtime dependencies and development-only relationships are not shown. The graph is grouped by the `packages/<group>/<pkg>` hierarchy. An edge `a --> b` means package `a` has package `b` as a peer. Names omit the `@x1a0f3n9/dsh-` prefix.',
     '',
     '```mermaid',
     'flowchart TD',

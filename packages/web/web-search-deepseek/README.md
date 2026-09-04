@@ -3,7 +3,7 @@ description: "The DeepSeek-backed search provider for ctx.web: how deployments m
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-deepseek
+# @x1a0f3n9/dsh-web-search-deepseek
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose this backend when a deployment wants DeepSeek's native server-side web se
 Load the web service and the provider; the key resolves from `ctx.credentials` when that service is mounted, otherwise from the process environment. The search endpoint uses the Anthropic-compatible base (`https://api.deepseek.com/anthropic/v1`), distinct from the chat-completions base the LLM adapter uses — never reuse `$DEEPSEEK_BASE_URL`.
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-deepseek'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY
     baseURL: https://gateway.internal/anthropic/v1

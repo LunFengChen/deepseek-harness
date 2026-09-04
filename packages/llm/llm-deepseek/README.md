@@ -3,13 +3,13 @@ description: "The DeepSeek chat-completions adapter for users and maintainers co
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm-deepseek
+# @x1a0f3n9/dsh-llm-deepseek
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`@deepseek-ai/dsh-llm-deepseek` is the direct DeepSeek adapter for the harness LLM service: it owns the `deepseek-official` provider route and translates DeepSeek's chat-completions wire format into the harness stream-chunk protocol. With it a composition can stream DeepSeek models with configurable thinking and reasoning effort, send images to vision models, and browse an advisory model catalog. Connection facts — endpoint, catalog, key, thinking policy — resolve per request, so editing the user settings document changes the next request without a restart. It is one of two structurally different adapters for DeepSeek: the pi-ai twin serves its own route names through a library and additional providers, and both can be mounted side by side.
+`@x1a0f3n9/dsh-llm-deepseek` is the direct DeepSeek adapter for the harness LLM service: it owns the `deepseek-official` provider route and translates DeepSeek's chat-completions wire format into the harness stream-chunk protocol. With it a composition can stream DeepSeek models with configurable thinking and reasoning effort, send images to vision models, and browse an advisory model catalog. Connection facts — endpoint, catalog, key, thinking policy — resolve per request, so editing the user settings document changes the next request without a restart. It is one of two structurally different adapters for DeepSeek: the pi-ai twin serves its own route names through a library and additional providers, and both can be mounted side by side.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ Choose this adapter when the deployment targets DeepSeek's official API, optiona
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-llm-deepseek'
+- name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY  # credential reference, resolved per request
     baseURL: https://api.deepseek.com # optional; $DEEPSEEK_BASE_URL then this default

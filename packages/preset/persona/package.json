@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-persona",
+  "name": "@x1a0f3n9/dsh-persona",
   "description": "Composition-authored deployment persona section for the DeepSeek Harness",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -27,15 +27,15 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

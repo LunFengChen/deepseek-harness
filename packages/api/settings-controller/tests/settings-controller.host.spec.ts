@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { SettingsDescriptor } from '@deepseek-ai/dsh-settings'
-import { RemoteError, remoteErrorOf, remoteMethods } from '@deepseek-ai/dsh-typert-protocol'
+import type { SettingsDescriptor } from '@x1a0f3n9/dsh-settings'
+import { RemoteError, remoteErrorOf, remoteMethods } from '@x1a0f3n9/dsh-typert-protocol'
 import SettingsController from '../src/index.ts'
 import { MemorySettings } from '../../../settings/settings/tests/memory.ts'
 
@@ -99,7 +99,7 @@ describe('the settings Remote namespace a configuration page calls', () => {
       const failure = await Promise.resolve().then(call).catch((error: unknown) => error)
       expect(remoteErrorOf(failure)).toMatchObject({
         code: 'gateway/internal',
-        message: 'settings service is absent: this deployment does not mount a settings provider (e.g. @deepseek-ai/dsh-settings-file) in its composition',
+        message: 'settings service is absent: this deployment does not mount a settings provider (e.g. @x1a0f3n9/dsh-settings-file) in its composition',
         details: {},
       })
     }

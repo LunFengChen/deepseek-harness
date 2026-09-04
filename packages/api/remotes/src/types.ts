@@ -6,7 +6,7 @@
  * and the consumer `ctx.remote.$on` key face read one declaration instead of
  * two copies that could drift.
  *
- * @module @deepseek-ai/dsh-api-remotes/types
+ * @module @x1a0f3n9/dsh-api-remotes/types
  */
 
 import type { API_REMOTE_FORWARDED_EVENTS } from './remote-events.ts'
@@ -14,6 +14,6 @@ import type { API_REMOTE_FORWARDED_EVENTS } from './remote-events.ts'
 /** Type projection of the allowlist; the consumer and the Host read this one. */
 export type ApiRemoteForwardedEvent = typeof API_REMOTE_FORWARDED_EVENTS[number]['event']
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface TypertRemoteEventSelection extends Record<ApiRemoteForwardedEvent, true> {}
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-experimental-agent-team-profile",
+  "name": "@x1a0f3n9/dsh-experimental-agent-team-profile",
   "description": "Private profile bundle enabling Agent Teams over dsh-base",
   "version": "0.1.2-rc.1",
   "private": true,
@@ -32,8 +32,8 @@
     }
   },
   "dependencies": {
-    "@deepseek-ai/dsh-experimental-agent-team": "workspace:^",
-    "@deepseek-ai/dsh-experimental-tool-agent-team": "workspace:^"
+    "@x1a0f3n9/dsh-experimental-agent-team": "workspace:^",
+    "@x1a0f3n9/dsh-experimental-tool-agent-team": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^"

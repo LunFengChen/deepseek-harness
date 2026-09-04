@@ -1,18 +1,18 @@
 /**
  * Durable, lifecycle-bound feedback for finalized assistant messages.
- * @module @deepseek-ai/dsh-message-feedback
+ * @module @x1a0f3n9/dsh-message-feedback
  */
 
 import { Buffer } from 'node:buffer'
 import { randomUUID } from 'node:crypto'
 import { Context, Service } from '@deepseek-ai/cordis'
 import s from '@deepseek-ai/schemastery'
-import { deriveEventMessage, isAppendSurfaceEvent } from '@deepseek-ai/dsh-session/surface'
-import type { SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session/types'
-import type {} from '@deepseek-ai/dsh-session'
-import type {} from '@deepseek-ai/dsh-session-persistence'
-import type { KvTable } from '@deepseek-ai/dsh-storage-domain'
-import { TypertRemoteService, Remote } from '@deepseek-ai/dsh-typert-protocol'
+import { deriveEventMessage, isAppendSurfaceEvent } from '@x1a0f3n9/dsh-session/surface'
+import type { SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session/types'
+import type {} from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-session-persistence'
+import type { KvTable } from '@x1a0f3n9/dsh-storage-domain'
+import { TypertRemoteService, Remote } from '@x1a0f3n9/dsh-typert-protocol'
 import { messageFeedbackDomainSpec } from './spec.ts'
 import type { MessageFeedbackRow, MessageFeedbackSessionIdentity } from './spec.ts'
 import type {

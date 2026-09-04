@@ -3,7 +3,7 @@ description: "Web 壳的 SPA dist 服务器：占据 webserver 回退席位，�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-frontend-static
+# @x1a0f3n9/dsh-host-frontend-static
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-host-frontend-static'
+- name: '@x1a0f3n9/dsh-host-frontend-static'
   config:
     distIndex: /absolute/path/to/dist/index.html
 ```

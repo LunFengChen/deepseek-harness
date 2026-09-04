@@ -3,7 +3,7 @@ description: "构建于 ctx.web 之上的面向模型 web 工具（web_search、
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-web
+# @x1a0f3n9/dsh-tool-web
 
 [English](README.md) | 中文
 
@@ -36,9 +36,9 @@ kind: "package-reference"
 加载 web 服务、至少一个后端与本包；两个工具默认都会注册。
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-exa'
-- name: '@deepseek-ai/dsh-tool-web'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-exa'
+- name: '@x1a0f3n9/dsh-tool-web'
 ```
 
 | 字段 | 默认值 | 含义 |
@@ -51,7 +51,7 @@ kind: "package-reference"
 | `searchTimeoutMs` | `30000` | `web_search` 的协作式工具调用超时预算（ms） |
 | `fetchMaxOutputChars` | `200000` | 同步转换的源字符数与单次完整 `web_fetch` 输出的上限 |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-tool-web)是每个受支持字段及其 JSDoc 的穷尽式真源。`searchMaxQueries` 在完全相同的字符串去重与提供方请求扇出之前限制可接受的数组；校验会在任何搜索开始前拒绝超限数组。超时预算附加到每个工具定义，由 [`@deepseek-ai/dsh-tool-call-timeout-policy`](../../guard/timeout-policy/README.zh.md) 强制执行；面向模型的 schema 不公开超时参数。
+生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-tool-web)是每个受支持字段及其 JSDoc 的穷尽式真源。`searchMaxQueries` 在完全相同的字符串去重与提供方请求扇出之前限制可接受的数组；校验会在任何搜索开始前拒绝超限数组。超时预算附加到每个工具定义，由 [`@x1a0f3n9/dsh-tool-call-timeout-policy`](../../guard/timeout-policy/README.zh.md) 强制执行；面向模型的 schema 不公开超时参数。
 
 ### 使用 web_search
 

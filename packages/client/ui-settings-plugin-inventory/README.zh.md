@@ -3,7 +3,7 @@ description: "dsh Web 客户端设置中按作用域分组的插件清单与预�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-settings-plugin-inventory
+# @x1a0f3n9/dsh-client-ui-settings-plugin-inventory
 
 [English](README.md) | 中文
 

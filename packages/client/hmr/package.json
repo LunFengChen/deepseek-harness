@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-client-hmr",
+  "name": "@x1a0f3n9/dsh-client-hmr",
   "description": "Dev-only hot-reload driver for script-loaded client entries: SSE rebuilt frames → invalidate/prefetch → fiber swap through the vendored Loader entry",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -45,9 +45,9 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@deepseek-ai/dsh-client-modules": "workspace:^",
-    "@deepseek-ai/dsh-host-webserver": "workspace:^",
-    "@deepseek-ai/dsh-invariants": "workspace:^",
+    "@x1a0f3n9/dsh-client-modules": "workspace:^",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
+    "@x1a0f3n9/dsh-invariants": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "files": [

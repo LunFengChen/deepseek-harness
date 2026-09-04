@@ -3,7 +3,7 @@ description: "面向模型的 bash 工具，供选择、配置或排查一次性
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-bash
+# @x1a0f3n9/dsh-tool-bash
 
 [English](README.md) | 中文
 
@@ -32,13 +32,13 @@ kind: "package-reference"
 常用路径是执行器提供方、环境注册表与本工具；当 agent 需要后台运行命令时，再添加任务运行时。
 
 ```yaml
-- name: '@deepseek-ai/dsh-bash-local'
-- name: '@deepseek-ai/dsh-shell-env'
-- name: '@deepseek-ai/dsh-tool-bash'
+- name: '@x1a0f3n9/dsh-bash-local'
+- name: '@x1a0f3n9/dsh-shell-env'
+- name: '@x1a0f3n9/dsh-tool-bash'
 
 # Optional: background jobs
-- name: '@deepseek-ai/dsh-jobs-local'
-- name: '@deepseek-ai/dsh-tool-jobs'
+- name: '@x1a0f3n9/dsh-jobs-local'
+- name: '@x1a0f3n9/dsh-tool-jobs'
 ```
 
 唯一的配置字段用于开关后台支持。
@@ -63,7 +63,7 @@ kind: "package-reference"
 
 ### 可能出什么问题
 
-没有执行器提供方的组合永远不会激活该工具。没有任务运行时的后台调用会以 `background jobs unavailable: load @deepseek-ai/dsh-jobs and @deepseek-ai/dsh-tool-jobs` 失败；没有沙箱执行器时的 `sandbox_permissions` 会以 `sandbox_permissions is not available in this composition (no sandboxing executor to escalate)` 失败。`enableRunInBackground: false` 会移除该参数，并在执行时拒绝强制后台调用。
+没有执行器提供方的组合永远不会激活该工具。没有任务运行时的后台调用会以 `background jobs unavailable: load @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs` 失败；没有沙箱执行器时的 `sandbox_permissions` 会以 `sandbox_permissions is not available in this composition (no sandboxing executor to escalate)` 失败。`enableRunInBackground: false` 会移除该参数，并在执行时拒绝强制后台调用。
 
 -----
 
@@ -188,7 +188,7 @@ renderer 输出依数据而定的 stdout 尾部，再输出可选的 `[stderr]` 
 
 #### 模型看到什么
 
-验证与策略失败统一为 `Error: <message>`。本包的稳定消息包括 `invalid command: expected a non-empty string`、`invalid description: expected a non-empty string`、`invalid timeoutMs: expected a positive number, got <value>`、升权配对失败、`run_in_background is disabled for this deployment (enableRunInBackground: false)`、`background jobs unavailable: load @deepseek-ai/dsh-jobs and @deepseek-ai/dsh-tool-jobs`、`sandbox_permissions is not available in this composition (no sandboxing executor to escalate)`、审批不可用／拒绝／取消变体，以及 `tool call aborted`。
+验证与策略失败统一为 `Error: <message>`。本包的稳定消息包括 `invalid command: expected a non-empty string`、`invalid description: expected a non-empty string`、`invalid timeoutMs: expected a positive number, got <value>`、升权配对失败、`run_in_background is disabled for this deployment (enableRunInBackground: false)`、`background jobs unavailable: load @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs`、`sandbox_permissions is not available in this composition (no sandboxing executor to escalate)`、审批不可用／拒绝／取消变体，以及 `tool call aborted`。
 
 #### Token 影响
 

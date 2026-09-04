@@ -3,7 +3,7 @@ description: "面向用户与维护者的系统提示词组装说明，用于添
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-system-prompt
+# @x1a0f3n9/dsh-system-prompt
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 配置拥有固定开场白、runtime 上下文、部署 persona 与工具顺序；其余一切来自已注册的贡献。
 
 ```yaml
-- name: '@deepseek-ai/dsh-system-prompt'
+- name: '@x1a0f3n9/dsh-system-prompt'
   config:
     includeHarnessIdentity: true
     includeRuntimeContext: true

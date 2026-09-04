@@ -3,7 +3,7 @@ description: "面向程序化客户端与维护者的仅自动化 Agent Client P
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-acp
+# @x1a0f3n9/dsh-acp
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 服务器创建的每个会话都使用此处配置的提供方与模型。两个字段都是可选的，以便由另一个 agent/request 监听器提供；可运行的演示组合会同时设置两者。Stdout 只承载协议流量，因此请让日志远离它。
 
 ```yaml
-- name: '@deepseek-ai/dsh-acp'
+- name: '@x1a0f3n9/dsh-acp'
   config:
     provider: deepseek-official
     model: deepseek-v4-pro
@@ -52,7 +52,7 @@ kind: "package-reference"
 
 ### 启动服务器
 
-`pnpm dsh --profile acp` 会启动随附的 stdio 服务器。`acp` profile 会挂载会话持久化，因此客户端可以列出、恢复和关闭持久会话。[`@deepseek-ai/dsh-subagent-acp`](../../subagent/subagent-acp/README.zh.md) 会启动同一 profile 来执行进程外委派。
+`pnpm dsh --profile acp` 会启动随附的 stdio 服务器。`acp` profile 会挂载会话持久化，因此客户端可以列出、恢复和关闭持久会话。[`@x1a0f3n9/dsh-subagent-acp`](../../subagent/subagent-acp/README.zh.md) 会启动同一 profile 来执行进程外委派。
 
 <a id="protocol-contract"></a><a id="standard-acp-v1-surface"></a>
 ### 协议约定

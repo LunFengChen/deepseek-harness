@@ -3,12 +3,12 @@
  * API. Exports the `LlmRuntime` default, the abstract `LlmAdapter` for
  * provider backends, and `BlockAssembler` for chunk assembly.
  *
- * @module @deepseek-ai/dsh-llm
+ * @module @x1a0f3n9/dsh-llm
  */
 
 import { Context } from '@deepseek-ai/cordis'
-import { Remote, RemoteError, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
-import { deepFreeze } from '@deepseek-ai/dsh-util-values'
+import { Remote, RemoteError, TypertRemoteService } from '@x1a0f3n9/dsh-typert-protocol'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
 import type {
   GenerateOptions,
   LlmConfigurableProvider,

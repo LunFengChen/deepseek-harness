@@ -3,7 +3,7 @@ description: "为配合取消的工具调用设置协作式时间上限，并在
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-call-timeout-policy
+# @x1a0f3n9/dsh-tool-call-timeout-policy
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 无需任何配置即可挂载插件：
 
 ```yaml
-- name: '@deepseek-ai/dsh-tool-call-timeout-policy'
+- name: '@x1a0f3n9/dsh-tool-call-timeout-policy'
 ```
 
 限时在配置工具的位置设置。例如，`dsh-tool-web` 的 `fetchTimeoutMs`／`searchTimeoutMs` 设置（默认 30,000 ms）把限时放到 `web_fetch` 与 `web_search` 上。没有限时的工具——随附的 `bash`、`read`、`write`、`edit`——绝不会被切断。生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-tool-web)列出会产生限时的工具设置。
@@ -130,6 +130,6 @@ kind: "package-reference"
 
 本开发备注是维护者的工作上下文：开放问题与尚未决定的探索方向。它明确不具权威性——已交付的行为、限制与既定理由以上文、包代码和相关 Agent Note 为准。
 
-`src/index.ts` 中的 FIXME 要求确定 `@deepseek-ai/dsh-timeout-guard` 改名；[改名台账](../../../.agents/notes/implemented/architecture/2026-08-11-repository-naming-contract-and-rename-ledger.zh.md) 已把 `@deepseek-ai/dsh-tool-call-timeout-policy` 记录为既定名称，因此该 FIXME 已陈旧，待代码清理。
+`src/index.ts` 中的 FIXME 要求确定 `@x1a0f3n9/dsh-timeout-guard` 改名；[改名台账](../../../.agents/notes/implemented/architecture/2026-08-11-repository-naming-contract-and-rename-ledger.zh.md) 已把 `@x1a0f3n9/dsh-tool-call-timeout-policy` 记录为既定名称，因此该 FIXME 已陈旧，待代码清理。
 
 </details>

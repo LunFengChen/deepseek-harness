@@ -11,8 +11,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { SessionId as sessionId, type SessionId } from '@deepseek-ai/dsh-session'
-import type {} from '@deepseek-ai/dsh-agent'
+import { SessionId as sessionId, type SessionId } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-agent'
 import { launchWebScaffold, readPersistedEvents, webSnapshotMode, type WebScaffold } from './scaffold.ts'
 
 const MODE = webSnapshotMode()

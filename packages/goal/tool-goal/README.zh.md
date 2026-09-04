@@ -3,7 +3,7 @@ description: "面向选择、组合或排查 get_goal、create_goal 与 update_g
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-goal
+# @x1a0f3n9/dsh-tool-goal
 
 [English](README.md) | 中文
 
@@ -43,7 +43,7 @@ kind: "package-reference"
 
 ```yaml
 - id: tool-goal
-  name: '@deepseek-ai/dsh-tool-goal'
+  name: '@x1a0f3n9/dsh-tool-goal'
   config:
     blockedAfterConsecutiveRounds: 3
 ```

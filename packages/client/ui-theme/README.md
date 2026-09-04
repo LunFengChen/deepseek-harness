@@ -3,7 +3,7 @@ description: "Theme and content-font-size settings for the dsh web client: --dsw
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-theme
+# @x1a0f3n9/dsh-client-ui-theme
 
 English | [中文](README.zh.md)
 

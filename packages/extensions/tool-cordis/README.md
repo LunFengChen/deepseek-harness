@@ -3,13 +3,13 @@ description: "Model-facing Cordis runtime tools for agents and maintainers choos
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-cordis
+# @x1a0f3n9/dsh-tool-cordis
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-tool-cordis` gives the model seven tools over the live Cordis runtime of the current DSH process: inspect what is loaded and what a dynamic package may use, define a package with a host half, a browser half, or both, run it, stop it, and remove it. Packages are versioned — a plugin holds immutable package versions, and the model can append a corrected package and update to it after a failure. Definitions live only in process memory and vanish on DSH restart; nothing here writes repository files, installs packages, or changes `cordis.yml`. It also adds a system-prompt section that teaches the workflow; compose it with `@deepseek-ai/dsh-cordis-host-runner`, the package that runs the sandbox and the run round trip.
+`dsh-tool-cordis` gives the model seven tools over the live Cordis runtime of the current DSH process: inspect what is loaded and what a dynamic package may use, define a package with a host half, a browser half, or both, run it, stop it, and remove it. Packages are versioned — a plugin holds immutable package versions, and the model can append a corrected package and update to it after a failure. Definitions live only in process memory and vanish on DSH restart; nothing here writes repository files, installs packages, or changes `cordis.yml`. It also adds a system-prompt section that teaches the workflow; compose it with `@x1a0f3n9/dsh-cordis-host-runner`, the package that runs the sandbox and the run round trip.
 
 ## Table of Contents
 
@@ -30,10 +30,10 @@ Mount this plugin when a session should be able to extend its own runtime tempor
 ### Minimal composition
 
 ```yaml
-- name: '@deepseek-ai/dsh-cordis-host-runner'
+- name: '@x1a0f3n9/dsh-cordis-host-runner'
   config:
     vmTimeoutMs: 5000
-- name: '@deepseek-ai/dsh-tool-cordis'
+- name: '@x1a0f3n9/dsh-tool-cordis'
 ```
 
 The CLI example [`apps/cli/config/examples/cordis/cordis.yml`](../../../apps/cli/config/examples/cordis/cordis.yml) composes both. A package with a browser half additionally needs the browser runner and the UI package in the client composition; a host-only package needs none of them.

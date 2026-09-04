@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import type { SessionListState } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { WorkspaceSnapshot } from '@deepseek-ai/dsh-api-workspace-controller/client'
-import type { SessionPendingInteractionSnapshot } from '@deepseek-ai/dsh-client-ui-session/client'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
-import { bindSnapshotSelector, makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
+import type { SessionListState } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { SessionPendingInteractionSnapshot } from '@x1a0f3n9/dsh-client-ui-session/client'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import { bindSnapshotSelector, makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
 import { TranscriptViewRow, type TranscriptViewRowProps } from '../src/client/settings/TranscriptViewRow.tsx'
 import { en } from '../src/client/locale.ts'
 

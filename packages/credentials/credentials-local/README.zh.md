@@ -3,7 +3,7 @@ description: "面向用户与维护者的文件型凭据提供方：选择、配
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-credentials-local
+# @x1a0f3n9/dsh-credentials-local
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 设置
 
 ```yaml
-- name: '@deepseek-ai/dsh-credentials-local'
+- name: '@x1a0f3n9/dsh-credentials-local'
   config:
     path: /absolute/path/to/.credentials.yaml
 ```
@@ -54,7 +54,7 @@ kind: "package-reference"
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialRef } from '@deepseek-ai/dsh-credentials'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 

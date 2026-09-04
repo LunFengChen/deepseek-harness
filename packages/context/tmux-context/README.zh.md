@@ -3,7 +3,7 @@ description: "可选的按轮次 tmux 位置上下文，供启用或调优 agent
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tmux-context
+# @x1a0f3n9/dsh-tmux-context
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 最小挂载无需任何配置。正的 `refreshIntervalMs` 会额外抑制距最近一次注入不足该毫秒数的注入；省略或设为 `0` 时，只要 tmux 状态自上次注入以来发生变化就注入。
 
 ```yaml
-- name: '@deepseek-ai/dsh-tmux-context'
+- name: '@x1a0f3n9/dsh-tmux-context'
   config:
     refreshIntervalMs: 60000
 ```

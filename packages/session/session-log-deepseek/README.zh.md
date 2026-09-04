@@ -3,7 +3,7 @@ description: "面向启用官方 DeepSeek 请求元数据的部署，说明规�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-log-deepseek
+# @x1a0f3n9/dsh-session-log-deepseek
 
 [English](README.md) | 中文
 

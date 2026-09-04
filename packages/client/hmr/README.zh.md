@@ -3,7 +3,7 @@ description: "面向开发者的浏览器客户端插件热重载说明：重建
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-hmr
+# @x1a0f3n9/dsh-client-hmr
 
 [English](README.md) | 中文
 

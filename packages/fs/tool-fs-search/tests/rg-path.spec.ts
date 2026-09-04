@@ -8,9 +8,9 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { ToolCallId } from '@deepseek-ai/dsh-llm'
-import type { ToolExecution } from '@deepseek-ai/dsh-tools'
-import { resolveRgPath, runRipgrep } from '@deepseek-ai/dsh-tool-fs-search'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import type { ToolExecution } from '@x1a0f3n9/dsh-tools'
+import { resolveRgPath, runRipgrep } from '@x1a0f3n9/dsh-tool-fs-search'
 
 // Any access to the mocked module's surface throws — the shape a missing
 // platform package produces at module evaluation.

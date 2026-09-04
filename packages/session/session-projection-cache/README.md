@@ -3,7 +3,7 @@ description: "The persisted session-projection cache for deployments and maintai
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-projection-cache
+# @x1a0f3n9/dsh-session-projection-cache
 
 English | [中文](README.zh.md)
 
@@ -39,7 +39,7 @@ The cache opens its domain through the storage stack, so base mounts `storage`, 
 
 ```yaml
 - id: session-projection-cache
-  name: '@deepseek-ai/dsh-session-projection-cache'
+  name: '@x1a0f3n9/dsh-session-projection-cache'
   config:
     writeEveryEvents: 200
     writeIntervalMs: 5000

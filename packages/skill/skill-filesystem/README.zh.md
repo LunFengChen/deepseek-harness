@@ -3,7 +3,7 @@ description: "本地文件系统 skill 提供方，供编写本地 skill、或�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-skill-filesystem
+# @x1a0f3n9/dsh-skill-filesystem
 
 [English](README.md) | 中文
 
@@ -58,8 +58,8 @@ skill 可以是被扫描根目录顶层的目录 bundle `<name>/SKILL.md`，也�
 与 skill 注册表一起加载该插件；它需要 `ctx.skills`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-skill'
-- name: '@deepseek-ai/dsh-skill-filesystem'
+- name: '@x1a0f3n9/dsh-skill'
+- name: '@x1a0f3n9/dsh-skill-filesystem'
 ```
 
 | 字段 | 默认值 | 含义 |

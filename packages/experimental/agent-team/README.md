@@ -3,7 +3,7 @@ description: "Run a small team of named agents in one session: durable messages 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-experimental-agent-team
+# @x1a0f3n9/dsh-experimental-agent-team
 
 English | [中文](README.zh.md)
 
@@ -25,7 +25,7 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Add this package to a composition when one agent should run a small team of named helpers in its own working directory, with messages and task state that survive crashes and restarts. It ships no tools of its own: mount it together with `@deepseek-ai/dsh-experimental-tool-agent-team` so the model can create teammates, message them, and use the task board.
+Add this package to a composition when one agent should run a small team of named helpers in its own working directory, with messages and task state that survive crashes and restarts. It ships no tools of its own: mount it together with `@x1a0f3n9/dsh-experimental-tool-agent-team` so the model can create teammates, message them, and use the task board.
 
 ### When to choose it
 
@@ -39,9 +39,9 @@ The smallest addition to an existing composition is durable session storage plus
 
 ```yaml
 # smallest team setup — durable storage plus both Team packages
-- name: '@deepseek-ai/dsh-session-persistence-jsonl'
-- name: '@deepseek-ai/dsh-experimental-agent-team'
-- name: '@deepseek-ai/dsh-experimental-tool-agent-team'
+- name: '@x1a0f3n9/dsh-session-persistence-jsonl'
+- name: '@x1a0f3n9/dsh-experimental-agent-team'
+- name: '@x1a0f3n9/dsh-experimental-tool-agent-team'
 ```
 
 With the tools installed, the model does the rest on request — for example, "create a teammate named reviewer to check the diff", then "send reviewer the change summary". All limits are optional and validated at startup:
@@ -181,7 +181,7 @@ Each delivered peer message is a user-role message. A short first text block nam
 
 #### Token effect
 
-Each peer delivery adds the sender prefix plus message content to the target history. Task and roster mutations add no model tokens; their model-facing representation belongs to `@deepseek-ai/dsh-experimental-tool-agent-team` results.
+Each peer delivery adds the sender prefix plus message content to the target history. Task and roster mutations add no model tokens; their model-facing representation belongs to `@x1a0f3n9/dsh-experimental-tool-agent-team` results.
 
 #### KV Cache effect
 

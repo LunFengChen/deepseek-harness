@@ -3,7 +3,7 @@ description: "面向 agent 开发者与维护者的工作区授权模型会话�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-session-query
+# @x1a0f3n9/dsh-tool-session-query
 
 [English](README.md) | 中文
 
@@ -54,7 +54,7 @@ kind: "package-reference"
 
 ### 失败与恢复
 
-每个可信查询服务调用都经过一个错误净化器：调用方取消被精确保留，语料库与提供方诊断进入内部日志，不安全或不可打印的失败回退到固定 `SESSION_QUERY_TOOL_FAILED` 代码与消息。本地参数校验与授权错误保留精确的工具自有消息（目标在调用方工作区之外时为 `SESSION_QUERY_TOOL_UNAUTHORIZED`）。本包不执行字节或字符截断，也不导入 spill 后端；需要限制内联输出的部署应挂载 `@deepseek-ai/dsh-spill-policy`，它可以在保留完整结果的同时替换过大的已渲染文本。
+每个可信查询服务调用都经过一个错误净化器：调用方取消被精确保留，语料库与提供方诊断进入内部日志，不安全或不可打印的失败回退到固定 `SESSION_QUERY_TOOL_FAILED` 代码与消息。本地参数校验与授权错误保留精确的工具自有消息（目标在调用方工作区之外时为 `SESSION_QUERY_TOOL_UNAUTHORIZED`）。本包不执行字节或字符截断，也不导入 spill 后端；需要限制内联输出的部署应挂载 `@x1a0f3n9/dsh-spill-policy`，它可以在保留完整结果的同时替换过大的已渲染文本。
 
 -----
 

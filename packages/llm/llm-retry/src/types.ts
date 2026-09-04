@@ -1,9 +1,9 @@
-import type { LlmFailure } from '@deepseek-ai/dsh-llm/types'
+import type { LlmFailure } from '@x1a0f3n9/dsh-llm/types'
 import type { RetryId } from './brand.ts'
 
 export type { RetryId }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /** Durable, non-surface record of one provider-routed retry scheduled after a failed request attempt. */
     'llm/retry': LlmRetryEventData

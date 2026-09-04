@@ -1,4 +1,4 @@
-/** Durable attachment storage seam (`ctx.attachments`). @module @deepseek-ai/dsh-attachment */
+/** Durable attachment storage seam (`ctx.attachments`). @module @x1a0f3n9/dsh-attachment */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import { AttachmentError } from './error.ts'

@@ -3,7 +3,7 @@ description: "Browser half of dynamic Cordis packages for users and maintainers 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-cordis-client-runner
+# @x1a0f3n9/dsh-cordis-client-runner
 
 English | [中文](README.zh.md)
 

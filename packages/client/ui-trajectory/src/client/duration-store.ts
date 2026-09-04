@@ -1,6 +1,6 @@
 import {
   createSnapshotStore, type SnapshotStore,
-} from '@deepseek-ai/dsh-client-store'
+} from '@x1a0f3n9/dsh-client-store'
 
 /**
  * Create the browser-wide trajectory duration preference source.

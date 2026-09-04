@@ -5,9 +5,9 @@ import { homedir, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import type { SandboxPolicy } from '@deepseek-ai/dsh-sandbox'
+import type { SandboxPolicy } from '@x1a0f3n9/dsh-sandbox'
 import { launcherPath } from '@deepseek-ai/node-addon-landlock-run'
-import { LocalSandboxProvider } from '@deepseek-ai/dsh-sandbox-local'
+import { LocalSandboxProvider } from '@x1a0f3n9/dsh-sandbox-local'
 
 /**
  * Keyless backend integration through `confine()` and the workspace `landlock-run` launcher, with

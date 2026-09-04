@@ -3,7 +3,7 @@ description: "与通道无关的一次性审批 seam；供组合应答者、设�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-user-approval
+# @x1a0f3n9/dsh-user-approval
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 有效策略取会话中已设置的策略，并回退到配置的默认值。`ask`（默认）委托给已组合的应答者；`never` 在交互式分发之前确定性地拒绝每个请求——这是 CI 与无人值守运行的严格无头姿态。
 
 ```yaml
-- name: '@deepseek-ai/dsh-user-approval'
+- name: '@x1a0f3n9/dsh-user-approval'
   config:
     policy: ask
 ```

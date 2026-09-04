@@ -1,6 +1,6 @@
 import { runInNewContext } from 'node:vm'
 import { describe, expect, it } from 'vitest'
-import { isJsonValue, snapshotJsonValue, type JsonValue } from '@deepseek-ai/dsh-util-values'
+import { isJsonValue, snapshotJsonValue, type JsonValue } from '@x1a0f3n9/dsh-util-values'
 
 function objectWithForgedIntrinsicPrototype(revoked = false): Record<string, unknown> {
   const prototype = Object.create(null) as Record<string, unknown>

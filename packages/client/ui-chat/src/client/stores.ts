@@ -1,5 +1,5 @@
 /** Per-Session Chat selection store shared by the transcript and details panel. */
-import { defineStore, type EngineStoreHandle } from '@deepseek-ai/dsh-client-store'
+import { defineStore, type EngineStoreHandle } from '@x1a0f3n9/dsh-client-store'
 import type { ChatStoreState, SelectionTarget, TurnProcessViewEntry } from './contract/store.ts'
 
 type ChatActions = {

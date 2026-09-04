@@ -2,13 +2,13 @@
 
 import type { Context, FiberState } from '@deepseek-ai/cordis'
 import type { Entry } from '@deepseek-ai/cordis-plugin-loader'
-import { RemoteError } from '@xfcodeai/dsh-typert-protocol'
-import { writeProfilePluginOverride, type DshPluginCatalogEntry } from '@xfcodeai/dsh-app-boot'
-import type {} from '@xfcodeai/dsh-app-boot'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import { writeProfilePluginOverride, type DshPluginCatalogEntry } from '@x1a0f3n9/dsh-app-boot'
+import type {} from '@x1a0f3n9/dsh-app-boot'
 import type {} from '@deepseek-ai/cordis-plugin-loader'
 // Type-only: the optional agent-preset roster resolved through `ctx.get`.
-import type {} from '@deepseek-ai/dsh-agent-presets'
-import { TypertRemoteService, Remote } from '@deepseek-ai/dsh-typert-protocol'
+import type {} from '@x1a0f3n9/dsh-agent-presets'
+import { TypertRemoteService, Remote } from '@x1a0f3n9/dsh-typert-protocol'
 // Typert-generated ./typert and ./remote artifacts import Zod at runtime.
 import type {} from 'zod'
 import type {

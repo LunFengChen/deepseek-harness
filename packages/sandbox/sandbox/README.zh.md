@@ -3,7 +3,7 @@ description: "进程沙箱服务约定：面向组合、使用或扩展同世界
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-sandbox
+# @x1a0f3n9/dsh-sandbox
 
 [English](README.md) | 中文
 
@@ -37,14 +37,14 @@ kind: "package-reference"
 
 ```yaml
 - id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'     # the per-platform backend provider (ctx.sandbox)
+  name: '@x1a0f3n9/dsh-sandbox-local'     # the per-platform backend provider (ctx.sandbox)
 - id: sandbox-policy
-  name: '@deepseek-ai/dsh-sandbox-policy'    # the deployment default mode and workspace-write root
+  name: '@x1a0f3n9/dsh-sandbox-policy'    # the deployment default mode and workspace-write root
   config:
     mode: workspace-write                    # the deployment default every session starts from
     workspaceRoot: !!js process.cwd()        # the boundary workspace-write may write under
 - id: bash
-  name: '@deepseek-ai/dsh-bash-sandbox'      # the confined executor behind ctx.shell
+  name: '@x1a0f3n9/dsh-bash-sandbox'      # the confined executor behind ctx.shell
 ```
 
 使用该组合时，bash 调用在 `workspace-write` 下受限运行：工作区内写入成功，工作区外写入被拒绝，模型可以通过下面的升权流程恢复。

@@ -16,9 +16,9 @@ import type { Loader } from '@deepseek-ai/cordis-plugin-loader'
 import { describe, expect, it, vi } from 'vitest'
 import type {
   CordisDynamicPackageId, CordisDynamicPluginId, CordisDynamicPluginRunId, SessionId,
-} from '@deepseek-ai/dsh-api-remotes/client'
-import type { ClientModuleSystem } from '@deepseek-ai/dsh-client-modules/client'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
+} from '@x1a0f3n9/dsh-api-remotes/client'
+import type { ClientModuleSystem } from '@x1a0f3n9/dsh-client-modules/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import { DYNAMIC_CLIENT_REDIRECTS } from '../src/client/evaluator.ts'
 import { DynamicCordisPackageRunner } from '../src/client/runtime.ts'
 import type { DynamicCordisClientHalf, DynamicCordisRenderFailure } from '../src/client/runtime.ts'

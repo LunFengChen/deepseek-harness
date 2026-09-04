@@ -3,7 +3,7 @@ description: "面向 Windows 上选择、配置或排查受限令牌进程隔离
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-sandbox-windows-acl
+# @x1a0f3n9/dsh-sandbox-windows-acl
 
 [English](README.md) | 中文
 
@@ -39,7 +39,7 @@ kind: "package-library"
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { AclSandbox, tempWriteSid, workspaceWriteSid } from '@deepseek-ai/dsh-sandbox-windows-acl'
+import { AclSandbox, tempWriteSid, workspaceWriteSid } from '@x1a0f3n9/dsh-sandbox-windows-acl'
 
 const workspaceRoot = process.cwd()
 const tempDir = mkdtempSync(join(tmpdir(), 'dsh-'))
@@ -121,7 +121,7 @@ seam 先把确定性工作区 SID 的 ACE 常驻物化（每个工作区每服�
 
 ### 头部验证与源码地图
 
-沙箱拥有的 SID、ACL、令牌、文件与锁声明由 [`verify/abi-probe.cpp`](verify/abi-probe.cpp) 对照 Windows 头文件检查。共享进程、stdio 与 Job ABI 由 [`@deepseek-ai/dsh-win32-process`](../../subprocess/win32-process/README.zh.md#header-verification) 归属并验证。
+沙箱拥有的 SID、ACL、令牌、文件与锁声明由 [`verify/abi-probe.cpp`](verify/abi-probe.cpp) 对照 Windows 头文件检查。共享进程、stdio 与 Job ABI 由 [`@x1a0f3n9/dsh-win32-process`](../../subprocess/win32-process/README.zh.md#header-verification) 归属并验证。
 
 | 文件 | 职责 |
 |---|---|

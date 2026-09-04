@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-message-feedback",
+  "name": "@x1a0f3n9/dsh-message-feedback",
   "description": "Lifecycle-bound per-message rating and note sidecar for the DeepSeek Harness",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -44,12 +44,12 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-storage-domain": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-storage-domain": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -59,15 +59,15 @@
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@deepseek-ai/dsh-brand": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence-jsonl": "workspace:^",
-    "@deepseek-ai/dsh-storage": "workspace:^",
-    "@deepseek-ai/dsh-storage-domain": "workspace:^",
-    "@deepseek-ai/dsh-storage-json": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:^",
+    "@x1a0f3n9/dsh-storage": "workspace:^",
+    "@x1a0f3n9/dsh-storage-domain": "workspace:^",
+    "@x1a0f3n9/dsh-storage-json": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

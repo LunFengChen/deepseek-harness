@@ -3,7 +3,7 @@ description: "ctx.lsp 的 stdio 语言服务器提供方：配置好的服务器
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-lsp-stdio
+# @x1a0f3n9/dsh-lsp-stdio
 
 [English](README.md) | 中文
 
@@ -32,10 +32,10 @@ kind: "package-reference"
 `servers` 记录把每个稳定的提供方 id 映射到一条服务器命令。提供方会在清理 credential 后于加载时解析每个可执行文件，因此一个坏配置项会阻止所有提供方注册；进程在第一次匹配查询时惰性启动。
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
-- name: '@deepseek-ai/dsh-subprocess-local'
-- name: '@deepseek-ai/dsh-lsp'
-- name: '@deepseek-ai/dsh-lsp-stdio'
+- name: '@x1a0f3n9/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-lsp'
+- name: '@x1a0f3n9/dsh-lsp-stdio'
   config:
     servers:
       typescript:
@@ -43,7 +43,7 @@ kind: "package-reference"
         args: ['--stdio']
         extensionToLanguage:
           '.ts': typescript
-- name: '@deepseek-ai/dsh-tool-lsp'
+- name: '@x1a0f3n9/dsh-tool-lsp'
 ```
 
 | 字段 | 默认值 | 含义 |

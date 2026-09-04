@@ -3,7 +3,7 @@ description: "面向用户与维护者的一次性 Codex subagent 提供方，�
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-subagent-codex
+# @x1a0f3n9/dsh-subagent-codex
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-bundle"
 把包安装进目标 Profile，然后重启该 Profile。安装会把官方 wrapper 与一个兼容的原生平台载荷带入 Profile；声明的 patch 层只注册休眠的提供方，不启动任何 Codex 进程。
 
 ```sh
-dsh plugin --profile <name> add @deepseek-ai/dsh-subagent-codex
-dsh plugin --profile <name> remove @deepseek-ai/dsh-subagent-codex
+dsh plugin --profile <name> add @x1a0f3n9/dsh-subagent-codex
+dsh plugin --profile <name> remove @x1a0f3n9/dsh-subagent-codex
 dsh --profile <name>
 ```
 
@@ -63,11 +63,11 @@ dsh --profile <name>
 
 ```yaml
 - id: jobs
-  name: '@deepseek-ai/dsh-jobs-local'
+  name: '@x1a0f3n9/dsh-jobs-local'
 - id: tool-jobs
-  name: '@deepseek-ai/dsh-tool-jobs'
+  name: '@x1a0f3n9/dsh-tool-jobs'
 - id: tool-subagent-codex
-  name: '@deepseek-ai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: codex
     toolName: subagent_codex

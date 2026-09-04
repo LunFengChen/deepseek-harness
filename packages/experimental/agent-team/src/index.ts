@@ -2,9 +2,9 @@
 
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type {} from '@deepseek-ai/dsh-session-persistence'
-import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-session-persistence'
+import { Remote, TypertRemoteService } from '@x1a0f3n9/dsh-typert-protocol'
 import { TeamActivity } from './activity.ts'
 import { errorMessage, TeamError } from './error.ts'
 import { TeamJournal } from './journal.ts'

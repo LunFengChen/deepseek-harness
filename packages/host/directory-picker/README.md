@@ -3,7 +3,7 @@ description: "Workspace-directory picking seam for the web GUI host: the service
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-directory-picker
+# @x1a0f3n9/dsh-host-directory-picker
 
 English | [中文](README.zh.md)
 

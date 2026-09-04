@@ -3,7 +3,7 @@ description: "宿主原生命令与路径打开工具，提供无 shell 执行�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-native-command
+# @x1a0f3n9/dsh-native-command
 
 [English](README.md) | 中文
 
@@ -30,7 +30,7 @@ kind: "package-library"
 ### 运行一条命令
 
 ```ts
-import { runNativeCommand } from '@deepseek-ai/dsh-native-command'
+import { runNativeCommand } from '@x1a0f3n9/dsh-native-command'
 
 declare const script: string
 declare const signal: AbortSignal

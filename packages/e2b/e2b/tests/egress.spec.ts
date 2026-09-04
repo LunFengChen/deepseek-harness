@@ -1,7 +1,7 @@
 import { createServer, type Server } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { installProxyFromEnvironment } from '@deepseek-ai/dsh-http-proxy'
+import { installProxyFromEnvironment } from '@x1a0f3n9/dsh-http-proxy'
 
 let seen: string[] = []
 let proxy: Server
@@ -58,8 +58,8 @@ describe('e2b control-plane URL', () => {
 
   it('keeps the loopback debug plane direct instead of sending its API key to a proxy', async () => {
     const { e2bApiUrl } = await import('../src/api-url.ts')
-    const { proxyRouteFor } = await import('@deepseek-ai/dsh-http-proxy')
-    const { createLaunchEnvironmentSnapshot } = await import('@deepseek-ai/dsh-launch-environment')
+    const { proxyRouteFor } = await import('@x1a0f3n9/dsh-http-proxy')
+    const { createLaunchEnvironmentSnapshot } = await import('@x1a0f3n9/dsh-launch-environment')
     // A real launch installs from the environment, and the resolved policy always bypasses loopback.
     const dispose = await installProxyFromEnvironment(
       createLaunchEnvironmentSnapshot([{ source: 'process', values: { HTTP_PROXY: proxyUrl } }]),

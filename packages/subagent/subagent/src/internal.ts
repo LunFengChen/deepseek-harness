@@ -1,13 +1,13 @@
 /**
  * Continuation integration markers and host adapters outside the public
  * Service Definition and model-facing Agent messaging contract.
- * @module @deepseek-ai/dsh-subagent/internal
+ * @module @x1a0f3n9/dsh-subagent/internal
  */
 
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type { ContentBlock, MessageId, MessageSource } from '@deepseek-ai/dsh-llm'
-import type { SessionId } from '@deepseek-ai/dsh-session'
-import type { ToolDefinition } from '@deepseek-ai/dsh-tools'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type { ContentBlock, MessageId, MessageSource } from '@x1a0f3n9/dsh-llm'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
+import type { ToolDefinition } from '@x1a0f3n9/dsh-tools'
 import type SubagentRuntime from './index.ts'
 
 /** Process-stable identity carried only by the standard adjacent-Agent messaging tool. */

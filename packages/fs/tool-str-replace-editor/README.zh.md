@@ -3,7 +3,7 @@ description: "基于 `ctx.fs` 的独立 str_replace_editor 工具：供组合 Cl
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-str-replace-editor
+# @x1a0f3n9/dsh-tool-str-replace-editor
 
 [English](README.md) | 中文
 
@@ -32,9 +32,9 @@ kind: "package-reference"
 一个后端、可选地加策略插件，然后是工具；编辑器可与任何终端接口组合。
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
-- name: '@deepseek-ai/dsh-fs-observation-policy'
-- name: '@deepseek-ai/dsh-tool-str-replace-editor'
+- name: '@x1a0f3n9/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-fs-observation-policy'
+- name: '@x1a0f3n9/dsh-tool-str-replace-editor'
 ```
 
 ### 配置

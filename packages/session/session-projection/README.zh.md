@@ -3,7 +3,7 @@ description: "面向开发者与维护者的会话投影注册表说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-projection
+# @x1a0f3n9/dsh-session-projection
 
 [English](README.md) | 中文
 

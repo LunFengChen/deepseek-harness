@@ -3,7 +3,7 @@ description: "The model-facing skill catalog and loader tool for users and maint
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-skill
+# @x1a0f3n9/dsh-tool-skill
 
 English | [中文](README.zh.md)
 
@@ -36,9 +36,9 @@ Use it when agents should discover and load skills during a session. Skip it whe
 Load the plugin together with the skill registry and at least one provider. The only configuration caps the normalized description length rendered in the catalog.
 
 ```yaml
-- name: '@deepseek-ai/dsh-skill'
-- name: '@deepseek-ai/dsh-skill-filesystem'
-- name: '@deepseek-ai/dsh-tool-skill'
+- name: '@x1a0f3n9/dsh-skill'
+- name: '@x1a0f3n9/dsh-skill-filesystem'
+- name: '@x1a0f3n9/dsh-tool-skill'
 ```
 
 | Field | Default | Meaning |
@@ -111,7 +111,7 @@ Read these pages when the package-level contract is not enough. They move from t
 
 #### What the model sees
 
-If model-invocable skills exist and this exact `skill` tool is visible, the agent receives the catalog template below as a durable user-role message before the first request, with one data-dependent entry per sorted skill. Later membership, description, or visibility changes append a complete replacement using the same `<available_skills>` envelope; deleting every skill appends an empty envelope with an explicit instruction not to use older names. The template's closing sentence is the rule against double-loading: the user-explicit gesture boundary (the pre-step listener below) injects the same `renderSkillContent` output (shared from `@deepseek-ai/dsh-skill`) inline, and the catalog tells the model to follow that block instead of re-loading the skill through the tool; the replacement-catalog template carries the same anti-double-loading rule in both arms, including the emptied catalog.
+If model-invocable skills exist and this exact `skill` tool is visible, the agent receives the catalog template below as a durable user-role message before the first request, with one data-dependent entry per sorted skill. Later membership, description, or visibility changes append a complete replacement using the same `<available_skills>` envelope; deleting every skill appends an empty envelope with an explicit instruction not to use older names. The template's closing sentence is the rule against double-loading: the user-explicit gesture boundary (the pre-step listener below) injects the same `renderSkillContent` output (shared from `@x1a0f3n9/dsh-skill`) inline, and the catalog tells the model to follow that block instead of re-loading the skill through the tool; the replacement-catalog template carries the same anti-double-loading rule in both arms, including the emptied catalog.
 
 ##### Skill catalog template
 

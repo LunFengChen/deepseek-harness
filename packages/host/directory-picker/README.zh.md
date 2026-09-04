@@ -3,7 +3,7 @@ description: "面向 web GUI 宿主的工作区目录选择 seam：原生与浏�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-directory-picker
+# @x1a0f3n9/dsh-host-directory-picker
 
 [English](README.md) | 中文
 

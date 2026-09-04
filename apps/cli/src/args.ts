@@ -5,14 +5,14 @@
  * patch overlays to apply, and the config dumps — and hands **everything after
  * its own flags** to the booted tree verbatim, where injected app plugins parse
  * their own flag families and print their own `--help` (see
- * `@xfcodeai/dsh-cmdline`). Launcher flags therefore come first: the first
+ * `@x1a0f3n9/dsh-cmdline`). Launcher flags therefore come first: the first
  * token this parser does not recognize starts the inner arguments, so
  * `xfdsh --profile tui --resume abc` boots the tui profile with `--resume abc`,
  * and `xfdsh --profile web -h` prints the web app's help, not this one's.
  *
  * `web` is a hardcoded alias for `--profile web`; `plugin` manages a profile's
  * plugin dependencies by forwarding to pnpm.
- * @module @xfcodeai/dsh/args
+ * @module @x1a0f3n9/dsh/args
  */
 
 import { Command, CommanderError } from 'commander'

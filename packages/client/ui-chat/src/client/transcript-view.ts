@@ -1,7 +1,7 @@
 /** Host-backed completed-Turn transcript presentation policy. */
 
-import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { SettingsScope } from '@deepseek-ai/dsh-client-ui-settings/client'
+import { createSnapshotStore, type SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SettingsScope } from '@x1a0f3n9/dsh-client-ui-settings/client'
 import {
   DEFAULT_TRANSCRIPT_VIEW_MODE, TRANSCRIPT_VIEW_FIELD,
   type ChatSettings, type TranscriptViewMode,

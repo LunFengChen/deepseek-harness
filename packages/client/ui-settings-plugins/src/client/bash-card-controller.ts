@@ -1,7 +1,7 @@
 /** The shell card's staged form over the `bash` settings namespace. */
 
-import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { SettingsScope } from '@deepseek-ai/dsh-client-ui-settings/client'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SettingsScope } from '@x1a0f3n9/dsh-client-ui-settings/client'
 import { CardForm, numberField, type CardActions, type CardFieldState, type CardShell } from './card-form.ts'
 
 /**

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { AttachmentId, ImageVariantId } from '@deepseek-ai/dsh-attachment'
-import type { AttachmentStore, ImageMediaType } from '@deepseek-ai/dsh-attachment'
+import { AttachmentId, ImageVariantId } from '@x1a0f3n9/dsh-attachment'
+import type { AttachmentStore, ImageMediaType } from '@x1a0f3n9/dsh-attachment'
 import {
   ToolCallId,
   createUserMessage,

@@ -71,11 +71,11 @@ describe('npm resolution benchmark', () => {
     writeJson(root, 'apps/cli/package.json', {
       name: '@deepseek-ai/dsh',
       version: '0.1.0',
-      dependencies: { '@deepseek-ai/dsh-child': 'workspace:^', external: '^2.0.0' },
+      dependencies: { '@x1a0f3n9/dsh-child': 'workspace:^', external: '^2.0.0' },
       devDependencies: { ignored: 'workspace:^' },
     })
     writeJson(root, 'packages/core/child/package.json', {
-      name: '@deepseek-ai/dsh-child',
+      name: '@x1a0f3n9/dsh-child',
       version: '0.1.0',
     })
 
@@ -85,7 +85,7 @@ describe('npm resolution benchmark', () => {
     expect(index.get('@deepseek-ai/dsh')?.get('0.1.0')).toEqual({
       name: '@deepseek-ai/dsh',
       version: '0.1.0',
-      dependencies: { '@deepseek-ai/dsh-child': '^0.1.0', external: '^2.0.0' },
+      dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0', external: '^2.0.0' },
     })
   })
 
@@ -142,10 +142,10 @@ describe('npm resolution benchmark', () => {
         ['@deepseek-ai/dsh', new Map([['0.1.0', {
           name: '@deepseek-ai/dsh',
           version: '0.1.0',
-          peerDependencies: { '@deepseek-ai/dsh-peer': '1.0.0' },
+          peerDependencies: { '@x1a0f3n9/dsh-peer': '1.0.0' },
         }]])],
-        ['@deepseek-ai/dsh-peer', new Map([['1.0.0', {
-          name: '@deepseek-ai/dsh-peer',
+        ['@x1a0f3n9/dsh-peer', new Map([['1.0.0', {
+          name: '@x1a0f3n9/dsh-peer',
           version: '1.0.0',
         }]])],
       ])
@@ -153,7 +153,7 @@ describe('npm resolution benchmark', () => {
       const result = await resolveNpmPackageLock(index, { '@deepseek-ai/dsh': '0.1.0' }, 10_000)
 
       expect(result.archiveRequests).toBe(0)
-      expect(result.packageLock.packages['node_modules/@deepseek-ai/dsh-peer']?.version).toBe('1.0.0')
+      expect(result.packageLock.packages['node_modules/@x1a0f3n9/dsh-peer']?.version).toBe('1.0.0')
     } finally {
       if (previous.userConfig === undefined) delete process.env.npm_config_userconfig
       else process.env.npm_config_userconfig = previous.userConfig

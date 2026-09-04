@@ -6,11 +6,11 @@
 
 ## 问题
 
-浏览器页面可能把过期的外壳，与刚提供的 `@xfcodeai/dsh-*` 客户端 bundle 混在一起。这样外壳和 bundle 会使用不同的模块表，renderer 可能 require 一个外壳没有预加载的平台包。
+浏览器页面可能把过期的外壳，与刚提供的 `@x1a0f3n9/dsh-*` 客户端 bundle 混在一起。这样外壳和 bundle 会使用不同的模块表，renderer 可能 require 一个外壳没有预加载的平台包。
 
 ## 决策
 
-客户端模块系统只按精确的 `@xfcodeai/dsh-*` 名称解析平台 seed。动态插件 entry id 仍保持精确的 graph key，不会被重写。前端 HTML 使用 `cache-control: no-store`，让后续导航获取同一代的外壳和启动图。
+客户端模块系统只按精确的 `@x1a0f3n9/dsh-*` 名称解析平台 seed。动态插件 entry id 仍保持精确的 graph key，不会被重写。前端 HTML 使用 `cache-control: no-store`，让后续导航获取同一代的外壳和启动图。
 
 fork 不在浏览器中为其他产品命名空间提供别名。服务端更新后，旧页面必须刷新；缺少平台 entry 时仍明确报错。profile loader 仍会拒绝声明上游产品运行时依赖的 bundle。
 

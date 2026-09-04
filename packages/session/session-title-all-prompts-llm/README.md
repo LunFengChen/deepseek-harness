@@ -3,7 +3,7 @@ description: "All-messages LLM session-title provider for users and maintainers 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-title-all-prompts-llm
+# @x1a0f3n9/dsh-session-title-all-prompts-llm
 
 English | [中文](README.zh.md)
 

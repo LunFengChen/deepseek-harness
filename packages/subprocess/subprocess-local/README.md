@@ -3,7 +3,7 @@ description: "The local host provider for the subprocess service: run managed pr
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subprocess-local
+# @x1a0f3n9/dsh-subprocess-local
 
 English | [中文](README.zh.md)
 
@@ -32,8 +32,8 @@ Mount the provider beside its consumers and start processes exactly as the subpr
 Load the provider in the same composition as its consumers. It has no config fields: every choice arrives on the spawn request, so deployment-varying decisions stay with the caller's configuration.
 
 ```yaml
-- name: '@deepseek-ai/dsh-subprocess-local'
-- name: '@deepseek-ai/dsh-bash-local'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-bash-local'
 ```
 
 ### Resolving executables

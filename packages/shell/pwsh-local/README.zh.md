@@ -3,7 +3,7 @@ description: "面向部署方与维护者的本地 PowerShell 执行器说明，
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-pwsh-local
+# @x1a0f3n9/dsh-pwsh-local
 
 [English](README.md) | 中文
 
@@ -37,7 +37,7 @@ kind: "package-reference"
 
 ```yaml
 - id: bash
-  name: '@deepseek-ai/dsh-pwsh-local'
+  name: '@x1a0f3n9/dsh-pwsh-local'
   config:
     cwd: C:\path\to\workspace
     timeoutMs: 120000

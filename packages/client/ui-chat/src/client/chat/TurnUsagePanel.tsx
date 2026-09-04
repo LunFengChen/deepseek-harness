@@ -7,7 +7,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MutableRefObject 
 import { createPortal } from 'react-dom'
 import {
   IconClockOutline16, IconDatabaseOutline16, useAnchoredPosition, useDismissOnOutsidePointer,
-} from '@deepseek-ai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { TurnTokenUsage } from '../contract/chat-nodes.ts'
 import type { ChatViewSlotProps } from '../contract/slots.ts'
 import { formatLatencySeconds, formatRunDuration, formatTokensPerSecond } from './message-chrome.ts'

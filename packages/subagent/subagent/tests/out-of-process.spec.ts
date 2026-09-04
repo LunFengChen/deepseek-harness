@@ -8,7 +8,7 @@ import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, relative, resolve } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
-import { SessionId } from '@deepseek-ai/dsh-session'
+import { SessionId } from '@x1a0f3n9/dsh-session'
 import {
   assertPositiveFinite,
   assertUsableCwd,

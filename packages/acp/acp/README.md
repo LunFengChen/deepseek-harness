@@ -3,7 +3,7 @@ description: "Automation-only Agent Client Protocol server for programmatic clie
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-acp
+# @x1a0f3n9/dsh-acp
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Choose it when automation should own the interaction: an out-of-process subagent
 Every session the server creates uses the provider and model configured here. Both fields are optional so another agent or request listener can supply them; the runnable demo composition sets both. Stdout carries only protocol traffic, so keep logging off it.
 
 ```yaml
-- name: '@deepseek-ai/dsh-acp'
+- name: '@x1a0f3n9/dsh-acp'
   config:
     provider: deepseek-official
     model: deepseek-v4-pro
@@ -52,7 +52,7 @@ The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-a
 
 ### Start a server
 
-`pnpm dsh --profile acp` starts the shipped stdio server. The `acp` profile mounts session persistence, so clients can list, resume, and close persistent sessions. [`@deepseek-ai/dsh-subagent-acp`](../../subagent/subagent-acp/README.md) starts the same profile for out-of-process delegation.
+`pnpm dsh --profile acp` starts the shipped stdio server. The `acp` profile mounts session persistence, so clients can list, resume, and close persistent sessions. [`@x1a0f3n9/dsh-subagent-acp`](../../subagent/subagent-acp/README.md) starts the same profile for out-of-process delegation.
 
 <a id="protocol-contract"></a><a id="standard-acp-v1-surface"></a>
 ### Protocol contract

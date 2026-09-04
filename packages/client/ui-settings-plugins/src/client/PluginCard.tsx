@@ -16,7 +16,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import clsx from 'clsx'
-import { IconChevronDownOutline14 } from '@deepseek-ai/dsh-client-ui-primitives'
+import { IconChevronDownOutline14 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { CardShell } from './card-form.ts'
 import type { PluginsSettingsLocaleKey } from './locales.ts'
 import css from './PluginCard.module.css'

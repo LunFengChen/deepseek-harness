@@ -10,7 +10,7 @@ Official dsh plugin bundles can retain `@deepseek-ai/dsh-*` dependency names and
 
 ## Decision
 
-Profile initialization writes a profile-local `.pnpmfile.cjs`. Its `readPackage` hook rewrites official dsh dependency specs in `dependencies`, `optionalDependencies`, and `peerDependencies` to npm aliases for the matching `@xfcodeai/dsh-*` package. The dependency key remains the official name, so existing plugin imports continue to resolve while Node receives the fork implementation. Non-registry specs are left unchanged and an unavailable matching fork package remains an explicit pnpm installation failure.
+Profile initialization writes a profile-local `.pnpmfile.cjs`. Its `readPackage` hook rewrites official dsh dependency specs in `dependencies`, `optionalDependencies`, and `peerDependencies` to npm aliases for the matching `@x1a0f3n9/dsh-*` package. The dependency key remains the official name, so existing plugin imports continue to resolve while Node receives the fork implementation. Non-registry specs are left unchanged and an unavailable matching fork package remains an explicit pnpm installation failure.
 
 The browser client module system applies the same mapping to official dsh module requests, but only when the matching fork seed, graph row, or registered factory is present. This lets official client bundles request their original names while materializing the single fork module instance; unrelated official rows remain resolvable when no fork counterpart is served.
 

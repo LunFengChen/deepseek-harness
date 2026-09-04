@@ -3,7 +3,7 @@ description: "面向部署方与维护者的随产品交付 JSONL 会话持久�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-persistence-jsonl
+# @x1a0f3n9/dsh-session-persistence-jsonl
 
 [English](README.md) | 中文
 
@@ -34,8 +34,8 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-persistence-jsonl'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: /absolute/path/to/session-logs
 ```

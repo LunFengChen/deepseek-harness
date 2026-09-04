@@ -2,15 +2,15 @@
  * Concrete agent-loop plugin: creates scoped ReactLoopAgents, publishes them
  * through the agent/session registries, and owns their ordered teardown.
  *
- * @module @deepseek-ai/dsh-agent-loop
+ * @module @x1a0f3n9/dsh-agent-loop
  */
 
 import { Context, FiberState, Service } from '@deepseek-ai/cordis'
 import { randomUUID } from 'node:crypto'
 import z from '@deepseek-ai/schemastery'
 import { z as zod } from 'zod'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import { emitAgentEvent } from '@deepseek-ai/dsh-agent'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { emitAgentEvent } from '@x1a0f3n9/dsh-agent'
 import type {
   Agent,
   AgentFactory,
@@ -21,17 +21,17 @@ import type {
   ResumeAgentOptions,
   SessionStartSource,
   TurnBoundaryProjection,
-} from '@deepseek-ai/dsh-agent'
-import { errorChain, ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type {} from '@deepseek-ai/dsh-settings'
-import { interruptedTurnClosers, SessionLogOffset, SessionPreparation, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
-import type {} from '@deepseek-ai/dsh-system-prompt'
-import type {} from '@deepseek-ai/dsh-tools'
-import type {} from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
-import { SessionPersistenceNotFoundError } from '@deepseek-ai/dsh-session-persistence'
-import type { SessionHandle, SessionPersistence } from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-agent'
+import { errorChain, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type {} from '@x1a0f3n9/dsh-settings'
+import { interruptedTurnClosers, SessionLogOffset, SessionPreparation, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-tools'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
+import { SessionPersistenceNotFoundError } from '@x1a0f3n9/dsh-session-persistence'
+import type { SessionHandle, SessionPersistence } from '@x1a0f3n9/dsh-session-persistence'
 import { ReactLoopAgent } from './agent.ts'
 import { DEFAULT_MAX_PARALLEL_TOOL_CALLS } from './constants.ts'
 

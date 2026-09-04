@@ -3,13 +3,13 @@ description: "The provider-neutral model-call service for users and maintainers 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm
+# @x1a0f3n9/dsh-llm
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`@deepseek-ai/dsh-llm` is the provider-neutral model-call service at the center of the harness's LLM capability. Every composition that streams a request to a model provider goes through it, and it owns the shared vocabulary — messages, content blocks, and raw stream chunks — that the agent loop, session log, and every plugin speak. With it you can register provider adapters, stream one model call, list and discover models, resolve exact-model metadata and call defaults, and capture each provider's retry policy; every request is logged so it stays reconstructable from the session log. It executes no retries and owns no provider wire logic: adapters translate their provider's format, and the optional `dsh-llm-retry` package re-runs failed requests at durable step boundaries. Requests are deep-frozen before dispatch, so middleware and adapters can read them but never rewrite them.
+`@x1a0f3n9/dsh-llm` is the provider-neutral model-call service at the center of the harness's LLM capability. Every composition that streams a request to a model provider goes through it, and it owns the shared vocabulary — messages, content blocks, and raw stream chunks — that the agent loop, session log, and every plugin speak. With it you can register provider adapters, stream one model call, list and discover models, resolve exact-model metadata and call defaults, and capture each provider's retry policy; every request is logged so it stays reconstructable from the session log. It executes no retries and owns no provider wire logic: adapters translate their provider's format, and the optional `dsh-llm-retry` package re-runs failed requests at durable step boundaries. Requests are deep-frozen before dispatch, so middleware and adapters can read them but never rewrite them.
 
 ## Table of Contents
 
@@ -36,8 +36,8 @@ Choose this package whenever a plugin or composition needs to call a model: it i
 Mount the service and at least one adapter, then select the provider by name in every request:
 
 ```yaml
-- name: '@deepseek-ai/dsh-llm'
-- name: '@deepseek-ai/dsh-llm-deepseek'
+- name: '@x1a0f3n9/dsh-llm'
+- name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY
 ```
@@ -145,7 +145,7 @@ Reasoning-effort materialization preserves the assembled request prefix. Image i
 
 These limits define where this service stops and other packages or future work begin. They are current package constraints, not a task backlog.
 
-- **No retry execution, caching, or rate limiting ships in this service** — provider registration stores the retry policy, but a stream remains a single provider attempt; `@deepseek-ai/dsh-llm-retry` executes the policy at durable agent-step boundaries.
+- **No retry execution, caching, or rate limiting ships in this service** — provider registration stores the retry policy, but a stream remains a single provider attempt; `@x1a0f3n9/dsh-llm-retry` executes the policy at durable agent-step boundaries.
 - **`GenerateOptions` sampling is `temperature`/`maxTokens`/`stop` only** — no `tool_choice`, `top_p`, or penalty fields; the vocabulary grows when a producer lands ([dropped inert knobs](../../../.agents/notes/archived/simplification/2026-07-04-drop-inert-request-knobs.md)).
 - **Producer-gated variants stay out until produced** — `prefill`, per-tool `strict`, block `cache` hints, and the `agent` message-source variant have no producer ([Agent Note](../../../.agents/notes/archived/simplification/2026-07-04-prune-producerless-vocabulary-variants.md)).
 - **`BlockAssembler` handles core block kinds only** — a plugin-added block type whose stream is never closed by `block-end` makes `blocks()` throw.

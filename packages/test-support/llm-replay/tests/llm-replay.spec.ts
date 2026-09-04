@@ -3,11 +3,11 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { SessionSeq } from '@deepseek-ai/dsh-session'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
-import { CompactionId } from '@deepseek-ai/dsh-compaction'
-import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
-import LlmRuntime, { ToolCallId, createUserMessage, GenerateOptions, LlmAdapter, StreamChunk } from '@deepseek-ai/dsh-llm'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
+import { CompactionId } from '@x1a0f3n9/dsh-compaction'
+import DeepSeekLlmApiExtensionRegistry from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import LlmRuntime, { ToolCallId, createUserMessage, GenerateOptions, LlmAdapter, StreamChunk } from '@x1a0f3n9/dsh-llm'
 import {
   type Config,
   type ReplayEntry,
@@ -24,7 +24,7 @@ import {
   resolveScriptedEntry,
 } from '../src/index.ts'
 
-declare module '@deepseek-ai/dsh-deepseek-llm-api-extensions/types' {
+declare module '@x1a0f3n9/dsh-deepseek-llm-api-extensions/types' {
   interface DeepSeekLlmApiExtensionMap {
     test_replay: { readonly version: 1 }
   }

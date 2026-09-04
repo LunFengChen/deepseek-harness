@@ -6,18 +6,18 @@
  * 404, missing descendant → errored stream).
  */
 
-import { SessionSeq } from '@deepseek-ai/dsh-session'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
 import { randomBytes } from 'node:crypto'
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { unzipSync, strFromU8 } from 'fflate'
-import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import type { SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionLineageNode } from '@deepseek-ai/dsh-session-query'
-import { SessionPersistenceNotFoundError } from '@deepseek-ai/dsh-session-persistence'
-import type { SessionAccess, SessionHandle } from '@deepseek-ai/dsh-session-persistence'
-import { HostConnectionService } from '@deepseek-ai/dsh-client-connection'
-import type { BrowserAuth } from '@deepseek-ai/dsh-client-connection/src/browser-auth.ts'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionLineageNode } from '@x1a0f3n9/dsh-session-query'
+import { SessionPersistenceNotFoundError } from '@x1a0f3n9/dsh-session-persistence'
+import type { SessionAccess, SessionHandle } from '@x1a0f3n9/dsh-session-persistence'
+import { HostConnectionService } from '@x1a0f3n9/dsh-client-connection'
+import type { BrowserAuth } from '@x1a0f3n9/dsh-client-connection/src/browser-auth.ts'
 import * as SessionLogExport from '../src/index.ts'
 
 const sid = (id: string): SessionId => id as SessionId

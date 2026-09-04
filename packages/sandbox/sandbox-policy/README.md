@@ -3,7 +3,7 @@ description: "The shared per-call sandbox policy resolver and current model cont
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-sandbox-policy
+# @x1a0f3n9/dsh-sandbox-policy
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Choose it for every composition with confined capabilities (bash, filesystem, te
 Load the package with a default mode; the fail-safe default is `read-only`, and a deployment that wants a workspace-writable agent opts into `workspace-write` explicitly.
 
 ```yaml
-- name: '@deepseek-ai/dsh-sandbox-policy'
+- name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: workspace-write
     workspaceRoot: /absolute/path/to/workspace

@@ -3,7 +3,7 @@ description: "The Exa-backed search provider for ctx.web: how deployments mount 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-exa
+# @x1a0f3n9/dsh-web-search-exa
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose this backend when a deployment holds an Exa API key and wants Exa's keywo
 Load the web service and the provider; the API key falls back to `$EXA_API_KEY` from the launch environment, and all other settings have safe defaults.
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-exa'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-exa'
   config:
     apiKey: !!js process.env.EXA_API_KEY
 ```

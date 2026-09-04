@@ -46,7 +46,7 @@ describe('release families', () => {
     const members = releaseFamily('dsh').members(resolve(import.meta.dirname, '../..'))
 
     expect(members.some(member => member.directory.startsWith('packages/experimental/'))).toBe(false)
-    expect(members.map(member => member.name)).not.toContain('@xfcodeai/dsh-experimental-agent-team')
+    expect(members.map(member => member.name)).not.toContain('@x1a0f3n9/dsh-experimental-agent-team')
   })
 
   it('bumps private dsh packages without adding release tags', () => {
@@ -57,7 +57,7 @@ describe('release families', () => {
     write(join(root, 'packages/core/unselected/package.json'), '{"version":"0.0.1"}\n')
 
     const dsh = releaseFamily('dsh')
-    const published = member('packages/core/published', '@xfcodeai/dsh-published')
+    const published = member('packages/core/published', '@x1a0f3n9/dsh-published')
     const { planned } = planShared(dsh, root, [published], '0.0.2')
 
     expect(planned.map(entry => ({ path: entry.manifestPath, tag: entry.tag }))).toEqual([
@@ -75,7 +75,7 @@ describe('release families', () => {
       write(join(root, 'package.json'), '{"version":"0.0.1"}\n')
 
       const dsh = releaseFamily('dsh')
-      const published = member('packages/core/published', '@xfcodeai/dsh-published')
+      const published = member('packages/core/published', '@x1a0f3n9/dsh-published')
       const plan = planShared(dsh, root, [published], version)
 
       expect(plan.version).toBe(version)
@@ -86,7 +86,7 @@ describe('release families', () => {
   it('names one tag for the whole dsh family and one per vendored package', () => {
     const dsh = releaseFamily('dsh')
     const vendor = releaseFamily('vendor')
-    const cli = member('apps/cli', '@xfcodeai/dsh')
+    const cli = member('apps/cli', '@x1a0f3n9/dsh')
     const cordis = { ...member('vendor/cordis', '@deepseek-ai/cordis'), version: '4.0.1' }
 
     expect(dsh.tagFor(cli)).toBe('dsh-v0.0.1')
@@ -111,7 +111,7 @@ describe('release families', () => {
 
   it('rejects a family whose members disagree on the shared version', () => {
     const dsh = releaseFamily('dsh')
-    const members = [member('apps/cli', '@xfcodeai/dsh'), { ...member('apps/web', '@xfcodeai/dsh-web-frontend'), version: '0.0.2' }]
+    const members = [member('apps/cli', '@x1a0f3n9/dsh'), { ...member('apps/web', '@x1a0f3n9/dsh-web-frontend'), version: '0.0.2' }]
 
     expect(() => { dsh.verifyVersions(members) }).toThrow(/must share one version/)
     expect(() => { dsh.verifyVersions([members[0]!]) }).not.toThrow()
@@ -150,23 +150,23 @@ describe('release families', () => {
   it('publishes a dependency before its consumer, and orders ties by name', () => {
     const dsh = releaseFamily('dsh')
     const members = [
-      member('packages/a/consumer', '@xfcodeai/dsh-consumer', { dependencies: { '@xfcodeai/dsh-library': 'workspace:^' } }),
-      member('packages/a/library', '@xfcodeai/dsh-library'),
-      member('packages/a/zebra', '@xfcodeai/dsh-zebra'),
+      member('packages/a/consumer', '@x1a0f3n9/dsh-consumer', { dependencies: { '@x1a0f3n9/dsh-library': 'workspace:^' } }),
+      member('packages/a/library', '@x1a0f3n9/dsh-library'),
+      member('packages/a/zebra', '@x1a0f3n9/dsh-zebra'),
     ]
 
     expect(dsh.publishOrder(members).order.map(entry => entry.name)).toEqual([
-      '@xfcodeai/dsh-library',
-      '@xfcodeai/dsh-consumer',
-      '@xfcodeai/dsh-zebra',
+      '@x1a0f3n9/dsh-library',
+      '@x1a0f3n9/dsh-consumer',
+      '@x1a0f3n9/dsh-zebra',
     ])
   })
 
   it('reports a runtime dependency cycle instead of emitting an arbitrary order', () => {
     const dsh = releaseFamily('dsh')
     const members = [
-      member('packages/a/left', '@xfcodeai/dsh-left', { dependencies: { '@xfcodeai/dsh-right': 'workspace:^' } }),
-      member('packages/a/right', '@xfcodeai/dsh-right', { dependencies: { '@xfcodeai/dsh-left': 'workspace:^' } }),
+      member('packages/a/left', '@x1a0f3n9/dsh-left', { dependencies: { '@x1a0f3n9/dsh-right': 'workspace:^' } }),
+      member('packages/a/right', '@x1a0f3n9/dsh-right', { dependencies: { '@x1a0f3n9/dsh-left': 'workspace:^' } }),
     ]
 
     expect(() => { dsh.publishOrder(members) }).toThrow(/dependency cycle/)
@@ -175,44 +175,44 @@ describe('release families', () => {
   it('publishes a peer before its consumer', () => {
     const dsh = releaseFamily('dsh')
     const members = [
-      member('packages/a/consumer', '@xfcodeai/dsh-consumer', { peerDependencies: { '@xfcodeai/dsh-zebra': 'workspace:^' } }),
-      member('packages/a/zebra', '@xfcodeai/dsh-zebra'),
+      member('packages/a/consumer', '@x1a0f3n9/dsh-consumer', { peerDependencies: { '@x1a0f3n9/dsh-zebra': 'workspace:^' } }),
+      member('packages/a/zebra', '@x1a0f3n9/dsh-zebra'),
     ]
 
     // Name order alone would place the consumer first; the peer edge moves it.
     expect(dsh.publishOrder(members).order.map(entry => entry.name)).toEqual([
-      '@xfcodeai/dsh-zebra',
-      '@xfcodeai/dsh-consumer',
+      '@x1a0f3n9/dsh-zebra',
+      '@x1a0f3n9/dsh-consumer',
     ])
   })
 
   it('orders around a peer cycle rather than refusing to publish, and reports the edge it dropped', () => {
     const dsh = releaseFamily('dsh')
     const members = [
-      member('packages/a/left', '@xfcodeai/dsh-left', { peerDependencies: { '@xfcodeai/dsh-right': 'workspace:^' } }),
-      member('packages/a/right', '@xfcodeai/dsh-right', { peerDependencies: { '@xfcodeai/dsh-left': 'workspace:^' } }),
+      member('packages/a/left', '@x1a0f3n9/dsh-left', { peerDependencies: { '@x1a0f3n9/dsh-right': 'workspace:^' } }),
+      member('packages/a/right', '@x1a0f3n9/dsh-right', { peerDependencies: { '@x1a0f3n9/dsh-left': 'workspace:^' } }),
     ]
 
     // Sibling packages declare each other as peers, and npm treats an unmet peer
     // as a warning, so this pair has to publish rather than fail the release.
     const plan = dsh.publishOrder(members)
     expect(plan.order.map(entry => entry.name)).toEqual([
-      '@xfcodeai/dsh-right',
-      '@xfcodeai/dsh-left',
+      '@x1a0f3n9/dsh-right',
+      '@x1a0f3n9/dsh-left',
     ])
     // One of the two edges has to give, and which one it is belongs in the log.
     expect(plan.droppedPeerEdges).toEqual([
-      { consumer: '@xfcodeai/dsh-right', peer: '@xfcodeai/dsh-left' },
+      { consumer: '@x1a0f3n9/dsh-right', peer: '@x1a0f3n9/dsh-left' },
     ])
   })
 
   it('honours an install edge even when a peer cycle surrounds it', () => {
     const dsh = releaseFamily('dsh')
     const members = [
-      member('packages/a/base', '@xfcodeai/dsh-base', { peerDependencies: { '@xfcodeai/dsh-consumer': 'workspace:^' } }),
-      member('packages/a/consumer', '@xfcodeai/dsh-consumer', {
-        dependencies: { '@xfcodeai/dsh-base': 'workspace:^' },
-        peerDependencies: { '@xfcodeai/dsh-base': 'workspace:^' },
+      member('packages/a/base', '@x1a0f3n9/dsh-base', { peerDependencies: { '@x1a0f3n9/dsh-consumer': 'workspace:^' } }),
+      member('packages/a/consumer', '@x1a0f3n9/dsh-consumer', {
+        dependencies: { '@x1a0f3n9/dsh-base': 'workspace:^' },
+        peerDependencies: { '@x1a0f3n9/dsh-base': 'workspace:^' },
       }),
     ]
 
@@ -220,20 +220,20 @@ describe('release families', () => {
     // would reverse it is the one dropped.
     const plan = dsh.publishOrder(members)
     expect(plan.order.map(entry => entry.name)).toEqual([
-      '@xfcodeai/dsh-base',
-      '@xfcodeai/dsh-consumer',
+      '@x1a0f3n9/dsh-base',
+      '@x1a0f3n9/dsh-consumer',
     ])
     expect(plan.droppedPeerEdges).toEqual([
-      { consumer: '@xfcodeai/dsh-base', peer: '@xfcodeai/dsh-consumer' },
+      { consumer: '@x1a0f3n9/dsh-base', peer: '@x1a0f3n9/dsh-consumer' },
     ])
   })
 
   it('refuses an order that would publish a consumer before a dependency it installs', () => {
     const dsh = releaseFamily('dsh')
     const members = [
-      member('packages/a/alpha', '@xfcodeai/dsh-alpha', { peerDependencies: { '@xfcodeai/dsh-bravo': 'workspace:^' } }),
-      member('packages/a/bravo', '@xfcodeai/dsh-bravo', { peerDependencies: { '@xfcodeai/dsh-charlie': 'workspace:^' } }),
-      member('packages/a/charlie', '@xfcodeai/dsh-charlie', { dependencies: { '@xfcodeai/dsh-alpha': 'workspace:^' } }),
+      member('packages/a/alpha', '@x1a0f3n9/dsh-alpha', { peerDependencies: { '@x1a0f3n9/dsh-bravo': 'workspace:^' } }),
+      member('packages/a/bravo', '@x1a0f3n9/dsh-bravo', { peerDependencies: { '@x1a0f3n9/dsh-charlie': 'workspace:^' } }),
+      member('packages/a/charlie', '@x1a0f3n9/dsh-charlie', { dependencies: { '@x1a0f3n9/dsh-alpha': 'workspace:^' } }),
     ]
 
     // A cycle of two peer edges closed by one install edge: dropping a peer edge
@@ -246,22 +246,22 @@ describe('release families', () => {
   it('ignores devDependencies when ordering', () => {
     const dsh = releaseFamily('dsh')
     const members = [
-      member('packages/a/alpha', '@xfcodeai/dsh-alpha', { devDependencies: { '@xfcodeai/dsh-zebra': 'workspace:^' } }),
-      member('packages/a/zebra', '@xfcodeai/dsh-zebra'),
+      member('packages/a/alpha', '@x1a0f3n9/dsh-alpha', { devDependencies: { '@x1a0f3n9/dsh-zebra': 'workspace:^' } }),
+      member('packages/a/zebra', '@x1a0f3n9/dsh-zebra'),
     ]
 
     // A dev dependency is absent from the published package, so it must not move
     // the consumer behind it.
     expect(dsh.publishOrder(members).order.map(entry => entry.name)).toEqual([
-      '@xfcodeai/dsh-alpha',
-      '@xfcodeai/dsh-zebra',
+      '@x1a0f3n9/dsh-alpha',
+      '@x1a0f3n9/dsh-zebra',
     ])
   })
 
   it('applies the harness payload policy to dsh and keeps upstream payloads for vendored packages', () => {
     const dsh = releaseFamily('dsh')
     const vendor = releaseFamily('vendor')
-    const harness = member('packages/a/library', '@xfcodeai/dsh-library')
+    const harness = member('packages/a/library', '@x1a0f3n9/dsh-library')
     const vendored = member('vendor/cordis', '@deepseek-ai/cordis')
 
     expect(() => { dsh.validatePayload(harness, ['package/lib/index.js', 'package/src/index.ts']) })
@@ -271,7 +271,7 @@ describe('release families', () => {
   })
 
   it('drives the installed entry only for the family that publishes one', () => {
-    expect(releaseFamily('dsh').installedEntry).toEqual({ packageName: '@xfcodeai/dsh', binPath: 'lib/bin.js' })
+    expect(releaseFamily('dsh').installedEntry).toEqual({ packageName: '@x1a0f3n9/dsh', binPath: 'lib/bin.js' })
     expect(releaseFamily('vendor').installedEntry).toBeUndefined()
   })
 
@@ -360,7 +360,7 @@ describe('payload change judgement', () => {
     // unnecessary patch bump, while under-reporting fails the next publish on a
     // version whose bytes moved.
     expect(reachesPayload(sourceShipping, 'vendor/cosmokit/README.i18n.yaml')).toBe(true)
-    expect(reachesPayload(member('packages/a/library', '@xfcodeai/dsh-library', { files: ['lib/index.js'] }),
+    expect(reachesPayload(member('packages/a/library', '@x1a0f3n9/dsh-library', { files: ['lib/index.js'] }),
       'packages/a/library/tests/library.spec.ts')).toBe(false)
   })
 })

@@ -1,4 +1,4 @@
-# `@xfcodeai/dsh`
+# `@x1a0f3n9/dsh`
 
 [English](README.md) | 中文
 
@@ -40,13 +40,13 @@ profile 目录包含一个 `package.json`，其中记录树外插件依赖，以
 - profile 自身的 `cordis.patch.yml`，然后是$DSH_HOME 下的 home 级 `cordis.patch.yml`
 - `--patch` 指定的覆盖层
 
-`dsh.profile.bundles` 中列出的组合包先从 dsh 安装目录解析（`@xfcodeai/dsh-base`、`@xfcodeai/dsh-web-app`、`@xfcodeai/dsh-headless`、`@xfcodeai/dsh-sdk-app`、`@xfcodeai/dsh-sdk-minimal`、`@xfcodeai/dsh-acp-app`），再从 profile 自身的 `node_modules` 解析；pnpm 会将树外插件安装到该目录。
+`dsh.profile.bundles` 中列出的组合包先从 dsh 安装目录解析（`@x1a0f3n9/dsh-base`、`@x1a0f3n9/dsh-web-app`、`@x1a0f3n9/dsh-headless`、`@x1a0f3n9/dsh-sdk-app`、`@x1a0f3n9/dsh-sdk-minimal`、`@x1a0f3n9/dsh-acp-app`），再从 profile 自身的 `node_modules` 解析；pnpm 会将树外插件安装到该目录。
 
 使用 `--dump-default-config` 和 `--dump-config` 可在不启动的情况下检查组合后的配置树。
 
 ### 插件兼容性
 
-`xfdsh plugin --profile <name> add <package>` 会把包安装到共用的 `$DSH_HOME/profiles/<name>` 目录；因此 `dsh` 和 `xfdsh` 使用同一个 home 时会看到相同的 profile 与历史记录。`@xfcodeai/dsh-*` 命名空间中的 fork 包，以及声明 `@deepseek-ai/dsh-*` 依赖的官方组合包都受支持。profile 安装会把每个官方 dsh 依赖映射到对应的 fork 包，同时保留官方导入名，因此运行时只使用一套 xfdsh。对应的 fork 包无法安装时，pnpm 会明确失败，而不是混载官方与 fork 两套运行时；升级后，已有 profile 请执行一次 `xfdsh plugin --profile <name> install`。
+`xfdsh plugin --profile <name> add <package>` 会把包安装到共用的 `$DSH_HOME/profiles/<name>` 目录；因此 `dsh` 和 `xfdsh` 使用同一个 home 时会看到相同的 profile 与历史记录。`@x1a0f3n9/dsh-*` 命名空间中的 fork 包，以及声明 `@x1a0f3n9/dsh-*` 依赖的官方组合包都受支持。profile 安装会把每个官方 dsh 依赖映射到对应的 fork 包，同时保留官方导入名，因此运行时只使用一套 xfdsh。对应的 fork 包无法安装时，pnpm 会明确失败，而不是混载官方与 fork 两套运行时；升级后，已有 profile 请执行一次 `xfdsh plugin --profile <name> install`。
 
 层的确切优先级、flag、关闭行为、部署默认值和源码执行方式，以 [CLI（命令行界面）行为参考](reference/README.zh.md)为准。
 

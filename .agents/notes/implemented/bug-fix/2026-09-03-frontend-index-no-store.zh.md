@@ -6,7 +6,7 @@ Status: implemented
 
 ## 问题
 
-Web 壳的 index 是按请求生成的，其中包含当前客户端插件图、带版本标识的 bundle URL 和启动注入行。浏览器如果复用旧的 index 缓存，就可能把旧壳和新的 `@xfcodeai` 客户端 bundle 配在一起。此时模块加载器会报告缺少 `@xfcodeai/dsh-client-ui-slots` 之类的平台 seed，尽管当前壳实际上提供了它。
+Web 壳的 index 是按请求生成的，其中包含当前客户端插件图、带版本标识的 bundle URL 和启动注入行。浏览器如果复用旧的 index 缓存，就可能把旧壳和新的 `@xfcodeai` 客户端 bundle 配在一起。此时模块加载器会报告缺少 `@x1a0f3n9/dsh-client-ui-slots` 之类的平台 seed，尽管当前壳实际上提供了它。
 
 ## 决策
 

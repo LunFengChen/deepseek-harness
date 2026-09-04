@@ -23,7 +23,7 @@ function fixture(options: {
   const packageDir = join(root, 'packages/core/probe')
   mkdirSync(join(packageDir, 'lib'), { recursive: true })
   writeFileSync(join(packageDir, 'package.json'), `${JSON.stringify({
-    name: '@deepseek-ai/dsh-probe',
+    name: '@x1a0f3n9/dsh-probe',
     version: '0.0.1',
     type: 'module',
     license: 'MIT',

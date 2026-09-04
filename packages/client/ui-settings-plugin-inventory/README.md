@@ -3,7 +3,7 @@ description: "Scope-grouped plugin inventory and prebundled feature management t
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-settings-plugin-inventory
+# @x1a0f3n9/dsh-client-ui-settings-plugin-inventory
 
 English | [中文](README.zh.md)
 

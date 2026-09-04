@@ -6,17 +6,17 @@ import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import * as yaml from 'js-yaml'
 import { describe, expect, it, vi } from 'vitest'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import SubagentRuntime from '@deepseek-ai/dsh-subagent'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
 import type {
   SubprocessHandle,
   SubprocessOutcome,
   SubprocessSpawnSpec,
-} from '@deepseek-ai/dsh-subprocess'
-import LocalSubprocessRuntime from '@deepseek-ai/dsh-subprocess-local'
+} from '@x1a0f3n9/dsh-subprocess'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
 import * as codex from '../src/index.ts'
 import {
   CODEX_PERMISSION_MODES,
@@ -367,11 +367,11 @@ describe('task admission and package contracts', () => {
     expect(manifest.dsh?.bundle?.patch).toBe('./cordis.patch.yml')
     expect(manifest.files).toContain('cordis.patch.yml')
     expect(manifest.dependencies).toHaveProperty(
-      '@deepseek-ai/dsh-sdk-protocol',
+      '@x1a0f3n9/dsh-sdk-protocol',
       'workspace:^',
     )
     expect(manifest.dependencies).toHaveProperty('@openai/codex', CODEX_VERSION)
-    expect(manifest.dependencies).not.toHaveProperty('@deepseek-ai/dsh-subagent-claude-code')
+    expect(manifest.dependencies).not.toHaveProperty('@x1a0f3n9/dsh-subagent-claude-code')
 
     const codexPackageJson = fileURLToPath(import.meta.resolve('@openai/codex/package.json'))
     const codexManifest = JSON.parse(readFileSync(codexPackageJson, 'utf8')) as {
@@ -409,7 +409,7 @@ describe('task admission and package contracts', () => {
       : []
     expect(rows).toEqual([{
       id: 'subagent-codex',
-      name: '@deepseek-ai/dsh-subagent-codex',
+      name: '@x1a0f3n9/dsh-subagent-codex',
     }])
     expect(JSON.stringify(rows)).not.toContain('tool-subagent')
   })

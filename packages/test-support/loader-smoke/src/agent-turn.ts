@@ -1,12 +1,12 @@
 /**
  * Test-only direct-agent turn driver shared by assembled Loader fixtures.
- * @module @deepseek-ai/dsh-loader-smoke/agent-turn
+ * @module @x1a0f3n9/dsh-loader-smoke/agent-turn
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { createUserMessage, type TokenUsage } from '@deepseek-ai/dsh-llm'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, type TokenUsage } from '@x1a0f3n9/dsh-llm'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 
 /** Result envelope consumed only by snapshot and composition tests. */
 export interface FixtureTurnResult {

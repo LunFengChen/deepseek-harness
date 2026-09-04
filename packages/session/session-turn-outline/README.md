@@ -3,7 +3,7 @@ description: "Whole-log turn outline for clients and maintainers composing or de
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-turn-outline
+# @x1a0f3n9/dsh-session-turn-outline
 
 English | [中文](README.zh.md)
 
@@ -30,9 +30,9 @@ Mount the plugin beside the session store and the projection registry when clien
 ### Composition
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-projection'
-- name: '@deepseek-ai/dsh-session-turn-outline'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-projection'
+- name: '@x1a0f3n9/dsh-session-turn-outline'
 ```
 
 ### What an entry means

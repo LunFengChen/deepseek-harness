@@ -20,7 +20,7 @@
  * dependency closure through Node's ordinary parent-walk. Plain Node uses
  * symlinks for that shared fallback; packaged executables use ESM proxies so
  * external plugins retain the installation's module instances.
- * @module @deepseek-ai/dsh-app-boot/profile
+ * @module @x1a0f3n9/dsh-app-boot/profile
  */
 
 import { createRequire } from 'node:module'
@@ -30,10 +30,10 @@ import {
 } from 'node:fs'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { withFileLock } from '@deepseek-ai/dsh-atomic-write'
+import { withFileLock } from '@x1a0f3n9/dsh-atomic-write'
 import type { EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import { applyEntryPatches, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
-import { resolveDshHome } from '@deepseek-ai/dsh-home-paths'
+import { resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
 import { resolve as resolvePackage, type Package as ResolvePackageManifest } from 'resolve.exports'
 import { loadOverlayPatches } from './index.ts'
 
@@ -117,7 +117,7 @@ export interface ProfileManifest {
 export const OFFICIAL_DSH_PACKAGE_PREFIX = '@deepseek-ai/dsh-'
 
 /** The package namespace shipped by this fork. */
-export const FORK_DSH_PACKAGE_PREFIX = '@xfcodeai/dsh-'
+export const FORK_DSH_PACKAGE_PREFIX = '@x1a0f3n9/dsh-'
 
 /**
  * Return the fork package corresponding to an official dsh package name.
@@ -160,7 +160,7 @@ function remap(specifier, packageName) {
   }
   if (/^(?:workspace:|file:|link:|git:|github:|https?:)/.test(specifier)) {
     throw new Error('xfdsh: official dsh dependency ' + packageName + ' uses unsupported spec ' + specifier
-      + '; install a release with a registry version or a matching @xfcodeai package')
+      + '; install a release with a registry version or a matching @x1a0f3n9 package')
   }
   return 'npm:' + FORK_PREFIX + packageName.slice(OFFICIAL_PREFIX.length) + '@' + specifier
 }
@@ -249,34 +249,34 @@ export function resolveProfileDir(name: string, home: string = resolveDshHome())
 /** The shipped profile templates auto-initialized on first use, by name. */
 export const PROFILE_TEMPLATES: Record<string, ProfileTemplate> = {
   acp: {
-    bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-acp-app'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-acp-app'],
     patchReload: 'startup',
   },
   web: {
-    bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app'],
     patchReload: 'live',
   },
   headless: {
-    bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-headless'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-headless'],
     patchReload: 'startup',
   },
   sdk: {
-    bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-sdk-app'],
+    bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-sdk-app'],
     patchReload: 'startup',
   },
   'sdk-minimal': {
-    bundles: ['@deepseek-ai/dsh-sdk-minimal'],
+    bundles: ['@x1a0f3n9/dsh-sdk-minimal'],
     patchReload: 'startup',
   },
 }
 
 /** Installation-owned bundle tuples normalized to the shipped template. */
 const INSTALLATION_OWNED_PROFILE_TUPLES: Record<string, readonly string[]> = {
-  headless: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', '@deepseek-ai/dsh-headless'],
+  headless: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless'],
 }
 
 /** The bundle list a `dsh plugin` init uses for a name with no shipped template. */
-export const DEFAULT_PROFILE_BUNDLES: readonly string[] = ['@deepseek-ai/dsh-base']
+export const DEFAULT_PROFILE_BUNDLES: readonly string[] = ['@x1a0f3n9/dsh-base']
 
 /** Custom profiles retain the historical live patch-file behavior. */
 export const DEFAULT_PROFILE_PATCH_RELOAD: ProfilePatchReload = 'live'
@@ -904,7 +904,7 @@ function packageDirFromAnchor(
 /**
  * Resolve one bundle package's directory: installation anchor first, then the
  * profile directory. The installation-first order is the contract that
- * `@deepseek-ai/dsh-base` (and every other in-box bundle) always comes from
+ * `@x1a0f3n9/dsh-base` (and every other in-box bundle) always comes from
  * the same installation as the running dsh, never from a profile-local copy.
  * Resolution does not require the package to export `./package.json`. The
  * listed package name is resolved exactly, so a profile cannot silently select

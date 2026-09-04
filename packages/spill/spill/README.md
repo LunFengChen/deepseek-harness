@@ -3,7 +3,7 @@ description: "The spill storage service: how deployments and plugin authors save
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-spill
+# @x1a0f3n9/dsh-spill
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose spill storage when a deployment needs to keep oversized tool output retri
 Mount a backend and the policy together; with `maxInlineBytes` set, any oversized plain-text tool result becomes a preview plus a locator automatically.
 
 ```yaml
-- name: '@deepseek-ai/dsh-spill-local'
-- name: '@deepseek-ai/dsh-spill-policy'
+- name: '@x1a0f3n9/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: 50000
 ```

@@ -3,7 +3,7 @@ description: "面向用户与维护者的工作区指令上下文说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-instructions
+# @x1a0f3n9/dsh-agent-instructions
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 默认设置适合典型检出：`.git` 标记项目根目录，`AGENTS.md` 与 `CLAUDE.md` 是基础候选，`AGENTS.local.md` 与 `CLAUDE.local.md` 是叠加的本地 overlay。只有 `maxBytes` 必填——它限制完整渲染后的基线，让每个部署显式选择自己的提示词预算。
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-instructions'
+- name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 ```

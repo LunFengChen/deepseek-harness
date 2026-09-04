@@ -3,7 +3,7 @@ description: "Opt-in per-step clock context with the current time, browser zone,
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-time-context
+# @x1a0f3n9/dsh-time-context
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Each injected reading has three lines: an ISO-shaped timestamp with numeric offs
 The minimal mount needs no configuration. A positive `refreshIntervalMs` suppresses injections that fall within that many milliseconds of the latest one; omission or `0` injects at every eligible entering pre-step whose signal is not already aborted.
 
 ```yaml
-- name: '@deepseek-ai/dsh-time-context'
+- name: '@x1a0f3n9/dsh-time-context'
   config:
     timeZone: Asia/Shanghai
 ```

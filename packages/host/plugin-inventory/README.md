@@ -3,7 +3,7 @@ description: "Projection of current Cordis Loader state and profile plugin catal
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-plugin-inventory
+# @x1a0f3n9/dsh-host-plugin-inventory
 
 English | [中文](README.zh.md)
 

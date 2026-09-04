@@ -3,7 +3,7 @@ description: "dsh 的一次性任务模式：从命令行运行单个任务并�
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-headless
+# @x1a0f3n9/dsh-headless
 
 [English](README.md) | 中文
 

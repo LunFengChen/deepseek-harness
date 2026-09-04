@@ -3,7 +3,7 @@ description: "The model-facing persistent pwsh tool for users and maintainers ch
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-pwsh-persistent
+# @x1a0f3n9/dsh-tool-pwsh-persistent
 
 English | [中文](README.zh.md)
 
@@ -36,11 +36,11 @@ Choose the persistent tool when work depends on cross-call PowerShell state, and
 The default `shell` backend starts a PowerShell shell through a `dsh-terminal-bash` instance configured with `shellDialect: pwsh`; deployments may register another pwsh-dialect PTY backend and select it by name.
 
 ```yaml
-- name: '@deepseek-ai/dsh-terminal'
-- name: '@deepseek-ai/dsh-terminal-bash'
+- name: '@x1a0f3n9/dsh-terminal'
+- name: '@x1a0f3n9/dsh-terminal-bash'
   config:
     shellDialect: pwsh
-- name: '@deepseek-ai/dsh-tool-pwsh-persistent'
+- name: '@x1a0f3n9/dsh-tool-pwsh-persistent'
 ```
 
 | Field | Default | Meaning |

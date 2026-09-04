@@ -3,7 +3,7 @@ description: "dsh profile 与临时 Python SDK 运行时的共享 Loader 启动�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-app-boot
+# @x1a0f3n9/dsh-app-boot
 
 [English](README.md) | 中文
 
@@ -45,7 +45,7 @@ const ctx = await boot('dsh', resolveConfigPath(argv[2], process.env.DSH_SNAPSHO
 <a id="profiles"></a>
 ### Profile
 
-profile 是同一套 dsh 安装提供不同应用界面的方式：`web`、`headless`、`acp`、`sdk` 与 `sdk-minimal` 从同一 launcher 启动不同组合。profile 位于 `$DSH_HOME/profiles/<name>`，由可安装 bundle、自身 `cordis.patch.yml` 与 `patchReload: live | startup` 组成；自定义 profile 省略 reload 策略时保留历史 `live` 默认值。随产品交付的 `web` 模板实时重载，其他随附模板只在启动时应用 patch。`sdk-minimal` 只列出自身的独立 bundle，其他模板保留 base 加模式 bundle 的栈。`dsh plugin` 创建自定义 profile；缺失 bundle 或未声明 patch 的 bundle 会让启动明确失败。 官方与 fork 插件组合包都受支持。profile 安装期间，声明的 `@deepseek-ai/dsh-*` 运行时、peer 和 optional 依赖会以别名安装到对应的 `@xfcodeai/dsh-*` 包，同时保留插件原本的导入名；如果对应的 fork 包不可用，pnpm 会明确报告安装失败，launcher 不会混载官方 dsh 与 fork 两套运行时。已有 profile 会在下一次启动时生成这个安装 hook；升级后请执行一次 `xfdsh plugin --profile <name> install` 来重建依赖别名。
+profile 是同一套 dsh 安装提供不同应用界面的方式：`web`、`headless`、`acp`、`sdk` 与 `sdk-minimal` 从同一 launcher 启动不同组合。profile 位于 `$DSH_HOME/profiles/<name>`，由可安装 bundle、自身 `cordis.patch.yml` 与 `patchReload: live | startup` 组成；自定义 profile 省略 reload 策略时保留历史 `live` 默认值。随产品交付的 `web` 模板实时重载，其他随附模板只在启动时应用 patch。`sdk-minimal` 只列出自身的独立 bundle，其他模板保留 base 加模式 bundle 的栈。`dsh plugin` 创建自定义 profile；缺失 bundle 或未声明 patch 的 bundle 会让启动明确失败。 官方与 fork 插件组合包都受支持。profile 安装期间，声明的 `@x1a0f3n9/dsh-*` 运行时、peer 和 optional 依赖会以别名安装到对应的 `@x1a0f3n9/dsh-*` 包，同时保留插件原本的导入名；如果对应的 fork 包不可用，pnpm 会明确报告安装失败，launcher 不会混载官方 dsh 与 fork 两套运行时。已有 profile 会在下一次启动时生成这个安装 hook；升级后请执行一次 `xfdsh plugin --profile <name> install` 来重建依赖别名。
 
 你的机器本地偏好同样位于 harness home 中：
 

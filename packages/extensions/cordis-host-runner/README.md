@@ -3,13 +3,13 @@ description: "Host half of dynamic Cordis packages for agents and maintainers ch
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-cordis-host-runner
+# @x1a0f3n9/dsh-cordis-host-runner
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-cordis-host-runner` makes dynamic packages runnable in this process: definitions the model records with `cordis_define` stay here, host halves run in a `node:vm` sandbox, a package with a browser half waits for a person to approve or decline it on a page, and the model can inspect the live runtime and its definitions here. The model-facing tools live in `@deepseek-ai/dsh-tool-cordis`, and the browser half loads through `@deepseek-ai/dsh-cordis-client-runner`. Definitions live only in process memory, so a DSH restart clears them and nothing is written to disk. One config field, `vmTimeoutMs`, bounds synchronous sandbox evaluation.
+`dsh-cordis-host-runner` makes dynamic packages runnable in this process: definitions the model records with `cordis_define` stay here, host halves run in a `node:vm` sandbox, a package with a browser half waits for a person to approve or decline it on a page, and the model can inspect the live runtime and its definitions here. The model-facing tools live in `@x1a0f3n9/dsh-tool-cordis`, and the browser half loads through `@x1a0f3n9/dsh-cordis-client-runner`. Definitions live only in process memory, so a DSH restart clears them and nothing is written to disk. One config field, `vmTimeoutMs`, bounds synchronous sandbox evaluation.
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ Mount this plugin in any composition that should support dynamic packages — it
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-cordis-host-runner'
+- name: '@x1a0f3n9/dsh-cordis-host-runner'
   config:
     vmTimeoutMs: 5000
 ```
@@ -81,7 +81,7 @@ The runner is built on two separations. **Registry and sandbox are one service.*
 
 ### How a run flows
 
-`define` trims and requires the metadata, prechecks each half's syntax by compiling it (running nothing), mints the plugin and package ids, and records the definition against the session that asked. `run` resolves the target against `currentPackageId` and `nextPackageId`; a host-only package evaluates in the sandbox and commits immediately, while a browser-half package arms an approval request, emits `cordis/request-run`, and suspends. The answering page walks `runHostHalf`, `getClientCode`, then `resolveRequestRun`; a success naming the live revision commits the activation and sets `currentPackageId`, and `cordis/request-run-resolved` drops the pending affordance on every other page. `stop` retracts the live dispatch — handler disposers, fiber dispose, and the `cordis/dynamic-retract` broadcast — and leaves the definition runnable. Four forwarded events (`cordis/request-run`, `cordis/request-run-resolved`, `cordis/dynamic-package`, `cordis/dynamic-retract`) are declared on the client-safe `./types` subpath and allowlisted for delivery by `@deepseek-ai/dsh-api-remotes`, which is what lets a browser reach them through `ctx.remote.$on`.
+`define` trims and requires the metadata, prechecks each half's syntax by compiling it (running nothing), mints the plugin and package ids, and records the definition against the session that asked. `run` resolves the target against `currentPackageId` and `nextPackageId`; a host-only package evaluates in the sandbox and commits immediately, while a browser-half package arms an approval request, emits `cordis/request-run`, and suspends. The answering page walks `runHostHalf`, `getClientCode`, then `resolveRequestRun`; a success naming the live revision commits the activation and sets `currentPackageId`, and `cordis/request-run-resolved` drops the pending affordance on every other page. `stop` retracts the live dispatch — handler disposers, fiber dispose, and the `cordis/dynamic-retract` broadcast — and leaves the definition runnable. Four forwarded events (`cordis/request-run`, `cordis/request-run-resolved`, `cordis/dynamic-package`, `cordis/dynamic-retract`) are declared on the client-safe `./types` subpath and allowlisted for delivery by `@x1a0f3n9/dsh-api-remotes`, which is what lets a browser reach them through `ctx.remote.$on`.
 
 </details>
 

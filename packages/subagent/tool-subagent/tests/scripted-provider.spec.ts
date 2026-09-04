@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { type Agent } from '@deepseek-ai/dsh-agent'
-import SubagentRuntime, { type SubagentStartRequest } from '@deepseek-ai/dsh-subagent'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { SessionId } from '@deepseek-ai/dsh-session'
+import { type Agent } from '@x1a0f3n9/dsh-agent'
+import SubagentRuntime, { type SubagentStartRequest } from '@x1a0f3n9/dsh-subagent'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { SessionId } from '@x1a0f3n9/dsh-session'
 import * as scripted from './scripted-provider.ts'
 
 /** A minimal parent; the scripted provider only reads its id. */

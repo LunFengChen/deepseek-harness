@@ -9,12 +9,12 @@
  * `Worker` to cross. The real browser Worker boundary is not exercised here.
  */
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
-import { MemoryVfs } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/storage/memory.ts'
-import { setActiveVfs } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/storage/active.ts'
-import { startProcess } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/shell/process/host.ts'
-import { runShellProcess } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/shell/process/child.ts'
-import { isShellStartFrame } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/shell/process/protocol.ts'
-import type { FromProcessFrame, ToProcessFrame } from '@deepseek-ai/dsh-experimental-webworker-runtime/src/shell/process/protocol.ts'
+import { MemoryVfs } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/memory.ts'
+import { setActiveVfs } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/active.ts'
+import { startProcess } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/process/host.ts'
+import { runShellProcess } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/process/child.ts'
+import { isShellStartFrame } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/process/protocol.ts'
+import type { FromProcessFrame, ToProcessFrame } from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/process/protocol.ts'
 
 const WORKSPACE = '/dsh/workspace'
 const WORKER_URL = 'https://example.test/assets/worker.js'

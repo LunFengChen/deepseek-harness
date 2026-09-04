@@ -102,7 +102,7 @@ jobs:
       # The persistent VM image owns Playwright's Linux system packages; this
       # step also proves that browser provisioning remains usable for failover.
       - name: Install Playwright Chromium
-        run: pnpm --filter @deepseek-ai/dsh-web-frontend exec playwright install chromium
+        run: pnpm --filter @x1a0f3n9/dsh-web-frontend exec playwright install chromium
 
       - name: Prepare bubblewrap (unrestrict userns)
         run: bash scripts/prepare-ci-bubblewrap.sh

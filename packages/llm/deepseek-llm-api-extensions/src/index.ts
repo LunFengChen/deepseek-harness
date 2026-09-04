@@ -1,7 +1,7 @@
 /**
  * DeepSeek LLM API extension registry: plugins own independent top-level request
  * fields while the official adapter performs one preparation and acceptance transaction.
- * @module @deepseek-ai/dsh-deepseek-llm-api-extensions
+ * @module @x1a0f3n9/dsh-deepseek-llm-api-extensions
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'

@@ -1,6 +1,6 @@
 /** Runtime constructors and protocol constants for the goal domain. */
 
-import { HarnessError } from '@deepseek-ai/dsh-llm'
+import { HarnessError } from '@x1a0f3n9/dsh-llm'
 import type { GoalId as GoalIdType } from './types.ts'
 import type { GoalErrorCode } from './domain.ts'
 

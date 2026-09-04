@@ -23,12 +23,12 @@
  * })
  * ```
  *
- * @module @deepseek-ai/dsh-authorization
+ * @module @x1a0f3n9/dsh-authorization
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import type { CredentialKey } from '@deepseek-ai/dsh-credentials'
-import { HarnessError } from '@deepseek-ai/dsh-llm'
+import type { CredentialKey } from '@x1a0f3n9/dsh-credentials'
+import { HarnessError } from '@x1a0f3n9/dsh-llm'
 
 import type {
   AuthorizationEntry, AuthorizationMethod, AuthorizationNotice, AuthorizationOutcome, AuthorizationPrompt,

@@ -8,7 +8,7 @@ kind: "package-reference"
 
 ## 概述
 
-`@deepseek-ai/dsh-api-settings-controller` 为浏览器配置界面提供生成的 `ctx.remote.settings` 与 `ctx.remote.credentials` namespace。它返回脱敏的 settings 与凭据元数据，支持 settings 与凭据写入而不返回密钥值，并在 Host 桌面打开由 provider 持有的 settings 或 Agent preset 位置。provider 缺失时，namespace 仍会注册，并返回可操作的配置错误。
+`@x1a0f3n9/dsh-api-settings-controller` 为浏览器配置界面提供生成的 `ctx.remote.settings` 与 `ctx.remote.credentials` namespace。它返回脱敏的 settings 与凭据元数据，支持 settings 与凭据写入而不返回密钥值，并在 Host 桌面打开由 provider 持有的 settings 或 Agent preset 位置。provider 缺失时，namespace 仍会注册，并返回可操作的配置错误。
 
 ## 目录
 

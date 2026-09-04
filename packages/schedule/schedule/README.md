@@ -3,7 +3,7 @@ description: "Session-local durable reminders: the schedule_create, schedule_lis
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-schedule
+# @x1a0f3n9/dsh-schedule
 
 English | [中文](README.zh.md)
 
@@ -69,9 +69,9 @@ This section explains the design decisions behind the plugin and points at the c
 
 The plugin declares `inject = ['agents', 'sessions', 'tools', 'sessionPersistence']`, so a missing persistence service is a composition error. It observes only `agent/created` events published after it loads, installs on those root Agents, and registers all three tools through the exact `agent.ctx`; Agents already live at load time and runtime children never receive Schedule.
 
-Time-context is not a Schedule dependency. The official Web overlay mounts `@deepseek-ai/dsh-time-context` so the model can interpret natural language in the browser's request-local zone, but the model must still pass an explicit offset or `time_zone` to `schedule_create`; Schedule never imports or infers from model context.
+Time-context is not a Schedule dependency. The official Web overlay mounts `@x1a0f3n9/dsh-time-context` so the model can interpret natural language in the browser's request-local zone, but the model must still pass an explicit offset or `time_zone` to `schedule_create`; Schedule never imports or infers from model context.
 
-Session projection is optional. When `ctx.sessionProjections` exists, the plugin registers the strict `schedule` unit and exposes the complete active `ScheduleRecord[]`; a headless composition without the registry keeps the same tools and runtime. The browser-safe record vocabulary is available from the type-only `@deepseek-ai/dsh-schedule/client` export. The shipped Web bundle resolves `ui-schedule` through a disabled row, and the explicit Schedule overlay enables that row alongside the Host Schedule services.
+Session projection is optional. When `ctx.sessionProjections` exists, the plugin registers the strict `schedule` unit and exposes the complete active `ScheduleRecord[]`; a headless composition without the registry keeps the same tools and runtime. The browser-safe record vocabulary is available from the type-only `@x1a0f3n9/dsh-schedule/client` export. The shipped Web bundle resolves `ui-schedule` through a disabled row, and the explicit Schedule overlay enables that row alongside the Host Schedule services.
 
 ### Design philosophy
 

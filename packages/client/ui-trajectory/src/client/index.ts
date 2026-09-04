@@ -3,17 +3,17 @@
  * slot without defining a service.
  */
 import type { Context } from '@deepseek-ai/cordis'
-import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import type { SessionBinding } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { SessionBinding } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
-import type {} from '@deepseek-ai/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
 // Type-only: the 'conversation.view' SlotMap row (declared by the slot's
 // owning package) must be in the program for the register calls to type.
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
-import type {} from '@deepseek-ai/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
 import { createTrajectoryDurationStore } from './duration-store.ts'
 import { en, NS, zh } from './locales.ts'
 import { registerTrajectoryAssistantDefinition } from './trajectory-assistant-definition.ts'

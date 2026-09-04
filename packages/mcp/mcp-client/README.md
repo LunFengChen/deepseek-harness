@@ -3,7 +3,7 @@ description: "MCP client bridge for deployments and maintainers choosing, config
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-mcp-client
+# @x1a0f3n9/dsh-mcp-client
 
 English | [中文](README.zh.md)
 
@@ -33,7 +33,7 @@ Add one entry per server; nothing else is required. After the harness starts, th
 
 ```yaml
 - id: mcp-github
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: '@x1a0f3n9/dsh-mcp-client'
   config:
     serverName: github
     transport: stdio
@@ -43,7 +43,7 @@ Add one entry per server; nothing else is required. After the harness starts, th
       GITHUB_TOKEN: !!js process.env.GITHUB_TOKEN
 
 - id: mcp-web
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: '@x1a0f3n9/dsh-mcp-client'
   config:
     serverName: web
     transport: streamable-http

@@ -3,7 +3,7 @@ description: "面向部署方的自动会话压缩：选择、调优或排查随
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-compaction-basic
+# @x1a0f3n9/dsh-compaction-basic
 
 [English](README.md) | 中文
 
@@ -36,17 +36,17 @@ kind: "package-reference"
 挂载会话存储、token 测量、可选修剪器、本后端，以及可选的按需命令：
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-token-meter'
-- name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
-- name: '@deepseek-ai/dsh-compaction-basic'
-- name: '@deepseek-ai/dsh-command-compact'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-token-meter'
+- name: '@x1a0f3n9/dsh-compaction-tool-result-pruner'
+- name: '@x1a0f3n9/dsh-compaction-basic'
+- name: '@x1a0f3n9/dsh-command-compact'
 ```
 
 你可以通过观察会话越过本来会溢出的位置继续工作、以及运行 `/compact` 立即压缩一次来确认成功。如果组合缺少 LLM、会话存储或 token 测量，插件会加载失败。同一个后端可以服务上下文大小不同的模型；用按模型覆盖为每条路由设置各自的阈值与保留：
 
 ```yaml
-- name: '@deepseek-ai/dsh-compaction-basic'
+- name: '@x1a0f3n9/dsh-compaction-basic'
   config:
     thresholdRatio: 0.8
     retainRatio: 0.16

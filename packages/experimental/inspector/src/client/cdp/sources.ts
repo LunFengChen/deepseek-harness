@@ -1,6 +1,6 @@
 /** Browser-side catalog for the Inspector Client bundle and its source map. */
 
-import { bytesToBase64 } from '@deepseek-ai/dsh-util-crypto'
+import { bytesToBase64 } from '@x1a0f3n9/dsh-util-crypto'
 import type {
   ClientScriptDescriptor,
   ClientSourceCommand,
@@ -11,7 +11,7 @@ import type {
 import { inspectorId } from '../../shared/identity.ts'
 import type { RuntimeScriptKey } from '../../shared/cdp/ids.ts'
 
-const PACKAGE_ID = '@deepseek-ai/dsh-experimental-inspector'
+const PACKAGE_ID = '@x1a0f3n9/dsh-experimental-inspector'
 const CLIENT_SCRIPT_KEY = inspectorId<'RuntimeScriptKey'>('client-bundle', 'scriptKey')
 
 /**

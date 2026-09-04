@@ -2,7 +2,7 @@
  * Runtime registry for generated Typert reflection, Remote invocations, and
  * dependency-inverted lookup/Context providers. It performs no TypeScript
  * analysis or schema generation.
- * @module @deepseek-ai/dsh-typert-registry
+ * @module @x1a0f3n9/dsh-typert-registry
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
@@ -29,7 +29,7 @@ import type {
   TypertRegistryChange,
   TypertRegistryListener,
   TypertRegistryContract,
-} from '@deepseek-ai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-typert-protocol'
 import type {
   TypertContribution,
   TypertFace,

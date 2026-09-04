@@ -3,7 +3,7 @@ description: "面向模型的背景任务控制，供选择、配置或排查 jo
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-jobs
+# @x1a0f3n9/dsh-tool-jobs
 
 [English](README.md) | 中文
 
@@ -46,7 +46,7 @@ kind: "package-reference"
 不带配置加载插件是常用路径；`waitTimeoutMs` 高于 `maxWaitTimeoutMs` 时会在加载时失败。
 
 ```yaml
-- name: '@deepseek-ai/dsh-tool-jobs'
+- name: '@x1a0f3n9/dsh-tool-jobs'
 ```
 
 | 字段 | 默认值 | 含义 |

@@ -1,21 +1,21 @@
 /** Host plugin inventory and prebundled feature settings in Web Settings. */
 
-import type {} from '@deepseek-ai/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
-import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-settings/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 // Type-only: pulls the 'settings.agentPreset' LocaleNamespaceMap merge, whose
 // dictionaries the shipped-preset name resolution below reads.
-import type {} from '@deepseek-ai/dsh-client-ui-agent-preset/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-agent-preset/client'
 // Inline-safe shared fold: shipped ids map to dictionary keys in one home.
-import { presetDisplayText } from '@deepseek-ai/dsh-agent-presets/display'
+import { presetDisplayText } from '@x1a0f3n9/dsh-agent-presets/display'
 import { PluginInventorySettingsTab, type PluginInventorySettingsTabInjected } from './PluginInventorySettingsTab.tsx'
 import { en, zh, type PluginInventoryLocaleKey } from './locales.ts'
 
 export type { PluginInventorySettingsTabInjected, PluginInventorySettingsTabProps } from './PluginInventorySettingsTab.tsx'
 export type { PluginInventoryLocaleKey } from './locales.ts'
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Host plugin inventory and profile feature settings copy. */
     'settings.pluginInventory': PluginInventoryLocaleKey

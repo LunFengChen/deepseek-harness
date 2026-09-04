@@ -3,7 +3,7 @@ description: "面向用户与维护者的本地工作区 @file 补全提供方�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-file-reference-local
+# @x1a0f3n9/dsh-file-reference-local
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ agent（智能体）及其宿主 UI 获得 `@file` mention 的排序路径候选
 默认设置适合典型工作区，因此最小挂载无需任何配置：
 
 ```yaml
-- name: '@deepseek-ai/dsh-file-reference-local'
+- name: '@x1a0f3n9/dsh-file-reference-local'
   config:
     maxResults: 20
 ```

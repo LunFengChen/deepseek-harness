@@ -161,7 +161,7 @@ export function stripClientSuffix(spec: string): string {
 export function forkDshSpecifier(spec: string): string {
   const officialPrefix = '@deepseek-ai/dsh-'
   return spec.startsWith(officialPrefix)
-    ? '@xfcodeai/dsh-' + spec.slice(officialPrefix.length)
+    ? '@x1a0f3n9/dsh-' + spec.slice(officialPrefix.length)
     : spec
 }
 

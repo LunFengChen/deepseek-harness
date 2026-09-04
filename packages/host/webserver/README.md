@@ -3,7 +3,7 @@ description: "The web GUI host's HTTP server: named-route and upgrade registrati
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-webserver
+# @x1a0f3n9/dsh-host-webserver
 
 English | [中文](README.zh.md)
 
@@ -30,7 +30,7 @@ Compose the webserver as the HTTP transport of a browser-facing host, then let t
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-host-webserver'
+- name: '@x1a0f3n9/dsh-host-webserver'
   config:
     host: 127.0.0.1
     port: 3000

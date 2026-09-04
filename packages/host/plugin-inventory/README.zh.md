@@ -3,7 +3,7 @@ description: "当前 Cordis Loader 插件状态与 profile 预置插件管理：
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-plugin-inventory
+# @x1a0f3n9/dsh-host-plugin-inventory
 
 [English](README.md) | 中文
 

@@ -9,14 +9,14 @@
 
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import SessionStore from '@deepseek-ai/dsh-session'
-import type { Session } from '@deepseek-ai/dsh-session'
-import { CommandId } from '@deepseek-ai/dsh-commands/brand'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import type { Session } from '@x1a0f3n9/dsh-session'
+import { CommandId } from '@x1a0f3n9/dsh-commands/brand'
 // Side-effect type imports: the configuration-event SessionEventMap merges.
-import type {} from '@deepseek-ai/dsh-permission-presets'
-import type {} from '@deepseek-ai/dsh-sandbox-policy'
+import type {} from '@x1a0f3n9/dsh-permission-presets'
+import type {} from '@x1a0f3n9/dsh-sandbox-policy'
 import { createSessionTestRemote, type TestSessionRemote } from './test-remote.ts'
 
 async function harness(): Promise<{ ctx: Context; remote: TestSessionRemote; attach: (session: Session) => void }> {

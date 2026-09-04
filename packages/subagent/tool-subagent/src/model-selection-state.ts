@@ -1,12 +1,12 @@
 /** Durable per-session state for the user-controlled model-selection opt-in. */
 
 import { z as zod } from 'zod'
-import type { Session } from '@deepseek-ai/dsh-session'
-import type SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
+import type { Session } from '@x1a0f3n9/dsh-session'
+import type SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import { assertAllowedModelRoutes, type AllowedModelRoute } from './model-selection.ts'
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * Records that this session's delegation tool exposes child provider,
@@ -21,7 +21,7 @@ declare module '@deepseek-ai/dsh-session/types' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     /** Exact routes authorized for child LLM selection, or null when disabled. */
     subagentModelSelectionPolicy: AllowedModelRoute[] | null

@@ -3,20 +3,20 @@ import { join, posix } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
-import { Inbox } from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { runLoaderSmoke } from '@deepseek-ai/dsh-loader-smoke'
+import { Inbox } from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { runLoaderSmoke } from '@x1a0f3n9/dsh-loader-smoke'
 import {
   FileNotFoundError,
   Sandbox,
   SandboxNotFoundError,
-} from '@deepseek-ai/dsh-e2b'
-import TerminalSessionService, { TerminalSessionId } from '@deepseek-ai/dsh-terminal'
-import { BashTerminalBackend } from '@deepseek-ai/dsh-terminal-bash'
-import SandboxPolicyService from '@deepseek-ai/dsh-sandbox-policy'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { Session, SessionId } from '@deepseek-ai/dsh-session'
-import E2BSubprocessRuntime from '@deepseek-ai/dsh-subprocess-e2b'
+} from '@x1a0f3n9/dsh-e2b'
+import TerminalSessionService, { TerminalSessionId } from '@x1a0f3n9/dsh-terminal'
+import { BashTerminalBackend } from '@x1a0f3n9/dsh-terminal-bash'
+import SandboxPolicyService from '@x1a0f3n9/dsh-sandbox-policy'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { Session, SessionId } from '@x1a0f3n9/dsh-session'
+import E2BSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-e2b'
 
 const fixtureRoot = fileURLToPath(new URL('./fixtures/composition/', import.meta.url))
 const binScript = join(fixtureRoot, 'bin.ts')

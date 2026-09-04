@@ -3,7 +3,7 @@ description: "ctx.web 的 Perplexity 搜索提供方：部署方如何挂载 Ope
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-perplexity
+# @x1a0f3n9/dsh-web-search-perplexity
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 加载 web 服务与本提供方；API 密钥回退到启动环境中的 `$PERPLEXITY_API_KEY`，其余设置都有安全默认值。
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-perplexity'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-perplexity'
   config:
     apiKey: !!js process.env.PERPLEXITY_API_KEY
 ```

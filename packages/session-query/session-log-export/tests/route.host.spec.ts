@@ -1,8 +1,8 @@
 import { Context } from '@deepseek-ai/cordis'
-import { HostConnectionService } from '@deepseek-ai/dsh-client-connection'
-import type { BrowserAuth } from '@deepseek-ai/dsh-client-connection/src/browser-auth.ts'
-import type { SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionHandle } from '@deepseek-ai/dsh-session-persistence'
+import { HostConnectionService } from '@x1a0f3n9/dsh-client-connection'
+import type { BrowserAuth } from '@x1a0f3n9/dsh-client-connection/src/browser-auth.ts'
+import type { SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionHandle } from '@x1a0f3n9/dsh-session-persistence'
 import { strFromU8, unzipSync } from 'fflate'
 import { describe, expect, it } from 'vitest'
 import {

@@ -4,7 +4,7 @@
  * `.agents/notes/implemented/architecture/2026-06-21-mandatory-app-attribution-headers.md`.
  *
  * App-attribution vocabulary for provider requests.
- * @module @deepseek-ai/dsh-llm/attribution
+ * @module @x1a0f3n9/dsh-llm/attribution
  */
 
 import { createRequire } from 'node:module'

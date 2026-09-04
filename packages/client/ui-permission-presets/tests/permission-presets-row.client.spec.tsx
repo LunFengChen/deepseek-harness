@@ -2,12 +2,12 @@
 import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { bindSnapshotSelector, RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
-import type { SettingsNamespaceView } from '@deepseek-ai/dsh-api-remotes/client'
-import { SettingsSchemaService } from '@deepseek-ai/dsh-client-ui-settings/src/client/schema.ts'
+import { bindSnapshotSelector, RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { SettingsNamespaceView } from '@x1a0f3n9/dsh-api-remotes/client'
+import { SettingsSchemaService } from '@x1a0f3n9/dsh-client-ui-settings/src/client/schema.ts'
 import { PermissionRow, type PermissionRowProps } from '../src/client/PermissionRow.tsx'
 import { zh } from '../src/client/locales.ts'
-import { SettingsDescribeMirror } from '@deepseek-ai/dsh-client-ui-settings/src/client/settings-mirror.ts'
+import { SettingsDescribeMirror } from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
 import { PermissionPresetSettingsController } from '../src/client/settings-store.ts'
 
 const schema = new SettingsSchemaService(new Context())

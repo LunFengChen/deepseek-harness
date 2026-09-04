@@ -3,7 +3,7 @@ description: "Local-workspace @file completion provider for users and maintainer
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-file-reference-local
+# @x1a0f3n9/dsh-file-reference-local
 
 English | [中文](README.zh.md)
 
@@ -32,7 +32,7 @@ Mount this provider when `@file` completion should discover the Harness host's o
 The defaults suit a typical workspace, so the minimal mount needs no configuration:
 
 ```yaml
-- name: '@deepseek-ai/dsh-file-reference-local'
+- name: '@x1a0f3n9/dsh-file-reference-local'
   config:
     maxResults: 20
 ```

@@ -3,7 +3,7 @@ description: "建议性循环卫生 guard：当 agent 重复完全相同的工�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-repeat-tool-reminder
+# @x1a0f3n9/dsh-repeat-tool-reminder
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 想改变提醒何时触发或覆盖哪些工具时，用配置挂载插件：
 
 ```yaml
-- name: '@deepseek-ai/dsh-repeat-tool-reminder'
+- name: '@x1a0f3n9/dsh-repeat-tool-reminder'
   config:
     thresholds: [3, 5, 8]        # remind at 3, 5, and 8 consecutive repeats
     include: []                  # track every tool; list patterns to track only some

@@ -3,7 +3,7 @@ description: "The one-shot Codex subagent provider for users and maintainers cho
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-subagent-codex
+# @x1a0f3n9/dsh-subagent-codex
 
 English | [中文](README.zh.md)
 
@@ -32,8 +32,8 @@ Mount this provider when a delegation should run as a real Codex session in the 
 Install the package into the target Profile, then restart that Profile. The installation brings the official wrapper and one compatible native platform payload into the Profile; the declared patch layer registers only the dormant provider and starts no Codex process.
 
 ```sh
-dsh plugin --profile <name> add @deepseek-ai/dsh-subagent-codex
-dsh plugin --profile <name> remove @deepseek-ai/dsh-subagent-codex
+dsh plugin --profile <name> add @x1a0f3n9/dsh-subagent-codex
+dsh plugin --profile <name> remove @x1a0f3n9/dsh-subagent-codex
 dsh --profile <name>
 ```
 
@@ -63,11 +63,11 @@ Each delegation tool row names one provider and needs its own `toolName`, so the
 
 ```yaml
 - id: jobs
-  name: '@deepseek-ai/dsh-jobs-local'
+  name: '@x1a0f3n9/dsh-jobs-local'
 - id: tool-jobs
-  name: '@deepseek-ai/dsh-tool-jobs'
+  name: '@x1a0f3n9/dsh-tool-jobs'
 - id: tool-subagent-codex
-  name: '@deepseek-ai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: codex
     toolName: subagent_codex

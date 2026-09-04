@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-client-store",
+  "name": "@x1a0f3n9/dsh-client-store",
   "description": "React-free observable and snapshot-store contracts with the shared Zustand/Immer engine",
   "version": "0.1.2-rc.1",
   "publishConfig": {

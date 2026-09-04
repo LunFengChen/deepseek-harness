@@ -9,13 +9,13 @@ import { pathToFileURL } from 'node:url'
 import { runInNewContext } from 'node:vm'
 import { Context, type Fiber } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { renderIndexInjections, type WebServer, type WebRoute } from '@deepseek-ai/dsh-host-webserver'
+import { renderIndexInjections, type WebServer, type WebRoute } from '@x1a0f3n9/dsh-host-webserver'
 import * as modulesClient from '../src/client/index.ts'
 import { ClientModuleRegistry, bootInjections, orderByModuleGraph } from '../src/index.ts'
 import type { ClientModuleLoaderTarget, WebBootEntry, WebBootGraph } from '../src/client/index.ts'
 
-const MODULES_ID = '@deepseek-ai/dsh-client-modules'
-const UI_RENDERER_ID = '@deepseek-ai/dsh-client-ui-renderer'
+const MODULES_ID = '@x1a0f3n9/dsh-client-modules'
+const UI_RENDERER_ID = '@x1a0f3n9/dsh-client-ui-renderer'
 
 const comboUrl = (ids: readonly string[], rev: string): string =>
   `/plugins/??${ids.map(id => `${id}/client.js`).join(',')}&rev=${rev}`
@@ -806,9 +806,9 @@ describe('module graph order', () => {
 
   it('resolves an official dsh request onto the matching fork package row', () => {
     expect(ids(orderByModuleGraph([
-      entry('ui', { external: ['@deepseek-ai/dsh-client-ui-slots/client'] }),
-      entry('@xfcodeai/dsh-client-ui-slots'),
-    ]))).toEqual(['@xfcodeai/dsh-client-ui-slots', 'ui'])
+      entry('ui', { external: ['@x1a0f3n9/dsh-client-ui-slots/client'] }),
+      entry('@x1a0f3n9/dsh-client-ui-slots'),
+    ]))).toEqual(['@x1a0f3n9/dsh-client-ui-slots', 'ui'])
   })
 
   it('leaves a request no row answers to the static assembly channel', () => {

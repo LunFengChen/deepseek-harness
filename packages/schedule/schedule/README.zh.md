@@ -3,7 +3,7 @@ description: "面向用户与维护者的会话本地持久提醒说明：schedu
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-schedule
+# @x1a0f3n9/dsh-schedule
 
 [English](README.md) | 中文
 
@@ -69,9 +69,9 @@ dsh web --patch apps/cli/config/examples/schedule/cordis.yml
 
 插件声明 `inject = ['agents', 'sessions', 'tools', 'sessionPersistence']`，因此缺少持久化服务会直接构成组合错误。它只观察加载后发布的 `agent/created` 事件，在这些根 agent 上安装，并通过完全相同的 `agent.ctx` 注册全部三个工具；加载时已经 live 的 agent 与运行时子 agent 永远不会获得 Schedule。
 
-Time-context 不是 Schedule 的依赖。官方 Web overlay 挂载 `@deepseek-ai/dsh-time-context`，让模型能够按浏览器请求本地时区解释自然语言；但模型仍必须向 `schedule_create` 传入显式偏移量或 `time_zone`；Schedule 绝不会从模型上下文导入或推断该值。
+Time-context 不是 Schedule 的依赖。官方 Web overlay 挂载 `@x1a0f3n9/dsh-time-context`，让模型能够按浏览器请求本地时区解释自然语言；但模型仍必须向 `schedule_create` 传入显式偏移量或 `time_zone`；Schedule 绝不会从模型上下文导入或推断该值。
 
-Session projection 是可选能力。`ctx.sessionProjections` 存在时，插件会注册严格的 `schedule` 单元并公开完整的活动 `ScheduleRecord[]`；不带注册表的 headless 组合仍保留相同工具与 runtime。浏览器安全的记录词汇由纯类型出口 `@deepseek-ai/dsh-schedule/client` 提供。随附 Web bundle 通过 disabled row 解析 `ui-schedule`，显式 Schedule overlay 再与 Host Schedule 服务一起启用该 row。
+Session projection 是可选能力。`ctx.sessionProjections` 存在时，插件会注册严格的 `schedule` 单元并公开完整的活动 `ScheduleRecord[]`；不带注册表的 headless 组合仍保留相同工具与 runtime。浏览器安全的记录词汇由纯类型出口 `@x1a0f3n9/dsh-schedule/client` 提供。随附 Web bundle 通过 disabled row 解析 `ui-schedule`，显式 Schedule overlay 再与 Host Schedule 服务一起启用该 row。
 
 ### 设计理念
 

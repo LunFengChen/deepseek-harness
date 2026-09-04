@@ -4,7 +4,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import type { ComponentProps } from 'react'
-import type { RenderMessageImages } from '@deepseek-ai/dsh-client-ui-conversation/client'
+import type { RenderMessageImages } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { TrajectoryTable as LocalizedTrajectoryTable } from '../src/client/TrajectoryTable.tsx'
 import type { TrajectoryTurnModel } from '../src/client/layout.ts'
 import { trajectoryRecordId } from '../src/client/trajectory-record.ts'

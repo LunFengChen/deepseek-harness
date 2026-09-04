@@ -7,7 +7,7 @@ import {
   type ClientModuleLoader, type ClientModuleLoaderTarget, type DshWindow,
 } from '../src/client/index.ts'
 
-const MODULES_ID = '@deepseek-ai/dsh-client-modules'
+const MODULES_ID = '@x1a0f3n9/dsh-client-modules'
 
 const comboUrl = (ids: readonly string[], rev: string): string =>
   `/plugins/??${ids.map(id => `${id}/client.js`).join(',')}&rev=${rev}`
@@ -132,9 +132,9 @@ describe('lazy CJS arrival', () => {
   it('resolves the fork platform seed for fork bundles', async () => {
     const slots = { marker: 'shared-slots' }
     const b = bench([row('renderer')], {
-      renderer: require => ({ slots: require('@xfcodeai/dsh-client-ui-slots') }),
+      renderer: require => ({ slots: require('@x1a0f3n9/dsh-client-ui-slots') }),
     }, {
-      seed: { '@xfcodeai/dsh-client-ui-slots': slots },
+      seed: { '@x1a0f3n9/dsh-client-ui-slots': slots },
     })
 
     const exports = await b.loader.import('renderer', '', {}) as { slots: unknown }
@@ -144,9 +144,9 @@ describe('lazy CJS arrival', () => {
   it('resolves official dsh requests through the matching fork platform seed', async () => {
     const slots = { marker: 'shared-slots' }
     const b = bench([row('renderer')], {
-      renderer: require => ({ slots: require('@deepseek-ai/dsh-client-ui-slots') }),
+      renderer: require => ({ slots: require('@x1a0f3n9/dsh-client-ui-slots') }),
     }, {
-      seed: { '@xfcodeai/dsh-client-ui-slots': slots },
+      seed: { '@x1a0f3n9/dsh-client-ui-slots': slots },
     })
 
     const exports = await b.loader.import('renderer', '', {}) as { slots: unknown }
@@ -155,11 +155,11 @@ describe('lazy CJS arrival', () => {
 
   it('prefers a fork graph row when an official dsh client request names it', async () => {
     const b = bench([
-      row('consumer', { external: ['@deepseek-ai/dsh-client-ui-renderer/client'] }),
-      row('@xfcodeai/dsh-client-ui-renderer'),
+      row('consumer', { external: ['@x1a0f3n9/dsh-client-ui-renderer/client'] }),
+      row('@x1a0f3n9/dsh-client-ui-renderer'),
     ], {
-      consumer: require => ({ renderer: require('@deepseek-ai/dsh-client-ui-renderer/client') }),
-      '@xfcodeai/dsh-client-ui-renderer': () => ({ marker: 'fork-renderer' }),
+      consumer: require => ({ renderer: require('@x1a0f3n9/dsh-client-ui-renderer/client') }),
+      '@x1a0f3n9/dsh-client-ui-renderer': () => ({ marker: 'fork-renderer' }),
     })
 
     const exports = await b.loader.import('consumer', '', {}) as { renderer: { marker: string } }

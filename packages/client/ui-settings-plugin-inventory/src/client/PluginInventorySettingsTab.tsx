@@ -4,13 +4,13 @@ import type {
   PluginInventorySetEnabledRequest,
   PluginInventorySetEnabledValue,
   PluginInventorySnapshot,
-} from '@xfcodeai/dsh-api-remotes/client'
+} from '@x1a0f3n9/dsh-api-remotes/client'
 import {
   IconChevronDownOutline14,
   IconSearchOutline16,
   Menu,
-} from '@xfcodeai/dsh-client-ui-primitives'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@xfcodeai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { PluginInventoryLocaleKey } from './locales.ts'
 import css from './PluginInventorySettingsTab.module.css'
 

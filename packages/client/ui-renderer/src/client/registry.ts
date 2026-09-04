@@ -16,15 +16,15 @@
  * redundancy. */
 import { Service } from '@deepseek-ai/cordis'
 import type { Context } from '@deepseek-ai/cordis'
-import { SlotCore, standardHookPropName } from '@deepseek-ai/dsh-client-ui-slots'
+import { SlotCore, standardHookPropName } from '@x1a0f3n9/dsh-client-ui-slots'
 import type {
   HostObservable, LiveSlotNode, LocaleFace, OwnerOf, SlotEntryDef, SlotMap, SlotRenderer, SlotRendererHost,
   RootStandardSourceContribution, ScopedStandardSourceBinding, SlotScope, SlotScopeAdapter, SlotSpec,
   StandardSourceBinding,
   StoreDecl, StoreFactory, StoredEntry, StoreInstanceLike,
-} from '@deepseek-ai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface SlotMap {
     /**
      * The built-in render-tree root hole (seeded by SlotCore): the one slot the
@@ -493,7 +493,7 @@ export class SlotRegistry extends Service {
   /** Validate and atomically publish the current root contribution roster. */
   private rebuildRootBinding(): void {
     const hooks: Record<string, HostObservable<unknown>> = {}
-    const keyedHooks: Record<string, import('@deepseek-ai/dsh-client-ui-slots').KeyedStandardSource> = {}
+    const keyedHooks: Record<string, import('@x1a0f3n9/dsh-client-ui-slots').KeyedStandardSource> = {}
     const props: Record<string, unknown> = {}
     const finalProps = new Set<string>()
     for (const contribution of this._rootContributions) {

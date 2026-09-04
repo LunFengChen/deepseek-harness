@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import { agentEvents } from '@deepseek-ai/dsh-agent'
-import AgentLoop from '@deepseek-ai/dsh-agent-loop'
-import { mountAgentLoopTestDependencies } from '@deepseek-ai/dsh-agent-loop-testkit'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { ToolCallId } from '@deepseek-ai/dsh-llm'
-import { SessionLogOffset, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader } from '@deepseek-ai/dsh-session'
+import { agentEvents } from '@x1a0f3n9/dsh-agent'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import { SessionLogOffset, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader } from '@x1a0f3n9/dsh-session'
 import {
   SessionPersistence,
   SessionPersistenceNotFoundError,
   SessionPersistenceRevision,
-} from '@deepseek-ai/dsh-session-persistence'
-import type { SessionAccess, SessionHandle, SessionPersistenceSnapshot } from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-persistence'
+import type { SessionAccess, SessionHandle, SessionPersistenceSnapshot } from '@x1a0f3n9/dsh-session-persistence'
 import * as toolSchedule from '../src/index.ts'
 
 interface StoredProbeSession {

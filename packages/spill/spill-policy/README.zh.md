@@ -3,7 +3,7 @@ description: "工具结果 spill 策略：部署如何用预览和可检索的 s
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-spill-policy
+# @x1a0f3n9/dsh-spill-policy
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-reference"
 以 UTF-8 字节计的 `maxInlineBytes` 预算加载策略，并同时挂载 spill 后端：
 
 ```yaml
-- name: '@deepseek-ai/dsh-spill-local'
-- name: '@deepseek-ai/dsh-spill-policy'
+- name: '@x1a0f3n9/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: 50000
 ```

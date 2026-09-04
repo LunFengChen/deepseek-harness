@@ -3,7 +3,7 @@ description: "面向用户与维护者的首消息 LLM 会话标题提供方说�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-title-first-prompt-llm
+# @x1a0f3n9/dsh-session-title-first-prompt-llm
 
 [English](README.md) | 中文
 

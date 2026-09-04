@@ -27,7 +27,7 @@
 
 - insert:
     - id: replay
-      name: '@deepseek-ai/dsh-llm-replay'
+      name: '@x1a0f3n9/dsh-llm-replay'
 
     # Publish the persisted agent before the driver selects the single root.
     - id: resumed-agent

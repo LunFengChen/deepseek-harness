@@ -3,7 +3,7 @@ description: "The Perplexity-backed search provider for ctx.web: how deployments
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-perplexity
+# @x1a0f3n9/dsh-web-search-perplexity
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose this backend when a deployment holds a Perplexity API key and wants a mod
 Load the web service and the provider; the API key falls back to `$PERPLEXITY_API_KEY` from the launch environment, and all other settings have safe defaults.
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-perplexity'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-perplexity'
   config:
     apiKey: !!js process.env.PERPLEXITY_API_KEY
 ```

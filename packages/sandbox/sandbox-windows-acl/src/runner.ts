@@ -41,7 +41,7 @@
  * directories, token/grant/spawn errors) prints `windows-acl-run: <detail>`
  * to stderr and exits 127 — the seam's RUNNER_FAILURE_RULES matches that
  * signature. The child is NEVER spawned unrestricted.
- * @module @deepseek-ai/dsh-sandbox-windows-acl/runner
+ * @module @x1a0f3n9/dsh-sandbox-windows-acl/runner
  */
 
 import { existsSync, mkdtempSync, rmSync, statSync } from 'node:fs'

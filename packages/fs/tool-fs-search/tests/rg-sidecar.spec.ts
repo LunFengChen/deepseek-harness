@@ -36,7 +36,7 @@ describe('ripgrep resolution', () => {
     process.execPath = '/runtime/dsh'
     existsSync.mockReturnValue(true)
     const sidecar = '/runtime/dsh-rg'
-    const { resolveRgPath } = await import('@deepseek-ai/dsh-tool-fs-search')
+    const { resolveRgPath } = await import('@x1a0f3n9/dsh-tool-fs-search')
 
     await expect(resolveRgPath()).resolves.toBe(sidecar)
     expect(existsSync).toHaveBeenCalledWith(sidecar)
@@ -48,7 +48,7 @@ describe('ripgrep resolution', () => {
     process.execPath = 'C:\\runtime\\deepseek-harness-sdk-runtime-win-x64.exe'
     existsSync.mockReturnValue(true)
     const sidecar = 'C:\\runtime\\deepseek-harness-sdk-runtime-win-x64-rg.exe'
-    const { resolveRgPath } = await import('@deepseek-ai/dsh-tool-fs-search')
+    const { resolveRgPath } = await import('@x1a0f3n9/dsh-tool-fs-search')
 
     await expect(resolveRgPath()).resolves.toBe(sidecar)
     expect(existsSync).toHaveBeenCalledWith(sidecar)
@@ -56,7 +56,7 @@ describe('ripgrep resolution', () => {
 
   it('uses the dependency binary in an ordinary Node process', async () => {
     existsSync.mockReturnValue(true)
-    const { resolveRgPath } = await import('@deepseek-ai/dsh-tool-fs-search')
+    const { resolveRgPath } = await import('@x1a0f3n9/dsh-tool-fs-search')
 
     await expect(resolveRgPath()).resolves.toBe(dependencyRgPath)
     expect(existsSync).not.toHaveBeenCalled()
@@ -65,7 +65,7 @@ describe('ripgrep resolution', () => {
   it('uses the dependency binary when a packaged runtime has no sidecar', async () => {
     Reflect.defineProperty(process, 'pkg', { configurable: true, value: {} })
     existsSync.mockReturnValue(false)
-    const { resolveRgPath } = await import('@deepseek-ai/dsh-tool-fs-search')
+    const { resolveRgPath } = await import('@x1a0f3n9/dsh-tool-fs-search')
 
     await expect(resolveRgPath()).resolves.toBe(dependencyRgPath)
     const executable = parse(process.execPath)

@@ -7,7 +7,7 @@
  * (callbacks from inject, live state from useProjection).
  */
 
-import type { RemoteResult } from '@deepseek-ai/dsh-api-remotes/client'
+import type { RemoteResult } from '@x1a0f3n9/dsh-api-remotes/client'
 
 /**
  * The one failure the strip reports without a wire call: the session projects

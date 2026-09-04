@@ -3,7 +3,7 @@ description: "面向组合或调试 turnOutline 投影单元的客户端与维�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-turn-outline
+# @x1a0f3n9/dsh-session-turn-outline
 
 [English](README.md) | 中文
 
@@ -30,9 +30,9 @@ kind: "package-reference"
 ### 组合
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-projection'
-- name: '@deepseek-ai/dsh-session-turn-outline'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-projection'
+- name: '@x1a0f3n9/dsh-session-turn-outline'
 ```
 
 ### 各字段含义

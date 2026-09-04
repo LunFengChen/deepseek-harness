@@ -4,7 +4,7 @@ import { join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SystemPrompt, { renderPrompt } from '@deepseek-ai/dsh-system-prompt'
+import SystemPrompt, { renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
 import {
   addHarnessSourceSection, assertEntriesActivated, assertEntriesLoaded, boot,
   FAIL_LOUD_RELEASE_TIMEOUT_MS, HARNESS_SOURCE_SECTION,
@@ -645,7 +645,7 @@ describe('boot', () => {
     mkdirSync(shadow, { recursive: true })
     mkdirSync(harnessPlugin, { recursive: true })
     writeFileSync(join(shadow, 'package.json'), JSON.stringify({
-      name: '@deepseek-ai/dsh-system-prompt',
+      name: '@x1a0f3n9/dsh-system-prompt',
       type: 'module',
       exports: './index.mjs',
     }))
@@ -656,7 +656,7 @@ describe('boot', () => {
       '',
     ].join('\n'))
     writeFileSync(join(harnessPlugin, 'package.json'), JSON.stringify({
-      name: '@deepseek-ai/dsh-system-prompt',
+      name: '@x1a0f3n9/dsh-system-prompt',
       type: 'module',
       exports: './index.mjs',
     }))
@@ -670,7 +670,7 @@ describe('boot', () => {
     writeFileSync(absolutePlugin, 'export function apply(ctx) { ctx.provide("absolutePluginLoaded", true) }\n')
     const entries = [
       '- id: prompt',
-      "  name: '@deepseek-ai/dsh-system-prompt'",
+      "  name: '@x1a0f3n9/dsh-system-prompt'",
       '- id: relative',
       "  name: './relative.mjs'",
     ]

@@ -3,7 +3,7 @@ description: "The persisted same-session goal service for users and maintainers 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-goal
+# @x1a0f3n9/dsh-goal
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ A goal suits one long-running completion objective that should continue across a
 Load the package with a composition entry; the only deployment choice is the default round cap applied to creates that do not name their own.
 
 ```yaml
-- name: '@deepseek-ai/dsh-goal'
+- name: '@x1a0f3n9/dsh-goal'
   config:
     defaultMaxGoalRounds: 256
 ```
@@ -49,7 +49,7 @@ Load the package with a composition entry; the only deployment choice is the def
 
 ### Session projection
 
-`GoalService` requires `ctx.sessionProjections` ([`@deepseek-ai/dsh-session-projection`](../../session/session-projection/README.md)) and registers the `goal` projection unit at startup; a composition that omits the projection registry cannot activate `ctx.goals`. The unit's version 6 host state retains the latest valid current goal, every previously used goal id, and the first strict replay failure. Its client view exposes the current goal or `null` before the first create and after a clear tombstone. The key merges into both `SessionProjectionStateMap` and `SessionProjectionMap`; carriers serve the client value on the history tail page and the `session/projection` push frame.
+`GoalService` requires `ctx.sessionProjections` ([`@x1a0f3n9/dsh-session-projection`](../../session/session-projection/README.md)) and registers the `goal` projection unit at startup; a composition that omits the projection registry cannot activate `ctx.goals`. The unit's version 6 host state retains the latest valid current goal, every previously used goal id, and the first strict replay failure. Its client view exposes the current goal or `null` before the first create and after a clear tombstone. The key merges into both `SessionProjectionStateMap` and `SessionProjectionMap`; carriers serve the client value on the history tail page and the `session/projection` push frame.
 
 ### Drive the lifecycle
 

@@ -3,7 +3,7 @@ description: "Cooperative time limit for cancellation-aware tool calls, mapping 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-call-timeout-policy
+# @x1a0f3n9/dsh-tool-call-timeout-policy
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Choose it when the model calls tools that can take a long time, those tools hono
 Mount the plugin with no configuration:
 
 ```yaml
-- name: '@deepseek-ai/dsh-tool-call-timeout-policy'
+- name: '@x1a0f3n9/dsh-tool-call-timeout-policy'
 ```
 
 The limit is set where the tool is configured. For example, `dsh-tool-web`'s `fetchTimeoutMs`/`searchTimeoutMs` settings (default 30,000 ms) put the limit on `web_fetch` and `web_search`. Tools without a limit — the shipped `bash`, `read`, `write`, and `edit` — are never cut off. The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-tool-web) lists the tool settings that produce limits.
@@ -130,6 +130,6 @@ These limits define when the policy is a poor fit. They are current package cons
 
 This Dev Note is working context for maintainers: open questions and directions that are not decided. It is explicitly non-authoritative — shipped behavior, limits, and accepted rationale live in the sections above, the package code, and the linked Agent Notes.
 
-The `src/index.ts` FIXME asks to settle a `@deepseek-ai/dsh-timeout-guard` rename; the [naming ledger](../../../.agents/notes/implemented/architecture/2026-08-11-repository-naming-contract-and-rename-ledger.md) already records `@deepseek-ai/dsh-tool-call-timeout-policy` as the decided name, so the FIXME is stale pending a code cleanup.
+The `src/index.ts` FIXME asks to settle a `@x1a0f3n9/dsh-timeout-guard` rename; the [naming ledger](../../../.agents/notes/implemented/architecture/2026-08-11-repository-naming-contract-and-rename-ledger.md) already records `@x1a0f3n9/dsh-tool-call-timeout-policy` as the decided name, so the FIXME is stale pending a code cleanup.
 
 </details>

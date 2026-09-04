@@ -3,7 +3,7 @@ description: "面向部署方的 OpenTelemetry 会话遥测后端说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-telemetry-otel
+# @x1a0f3n9/dsh-session-telemetry-otel
 
 [English](README.md) | 中文
 
@@ -43,7 +43,7 @@ kind: "package-reference"
 
 ```yaml
 - id: sessionTelemetry-otel
-  name: '@deepseek-ai/dsh-session-telemetry-otel'
+  name: '@x1a0f3n9/dsh-session-telemetry-otel'
   config:
     mode: FULL                # explicit opt-in; default: DISABLED
     shutdownTimeoutMillis: 3000 # optional; defaults to 3000
@@ -83,7 +83,7 @@ kind: "package-reference"
 
 ### 设计理念
 
-后端是对 OTel JS SDK 的薄适配层：它拥有捕获模式、资源身份与一个外层关闭截止时间，其余全部原样透传。两个插桩作用域区分记录通道——ledger 记录挂在 `@deepseek-ai/dsh-session-telemetry-otel` 下，运维记录挂在 `@deepseek-ai/dsh-session-telemetry-otel/ops` 下——使接收端可以在不累加它们的情况下对运维记录告警。资源身份携带 `service.name`/`service.version`（来自 `dsh-llm` 的 `APP_IDENTITY`）以及本包的匿名 `user.id`（来自 `$DSH_HOME/.anonymous-user-id`），按导出批次携带一次，而非逐条记录。
+后端是对 OTel JS SDK 的薄适配层：它拥有捕获模式、资源身份与一个外层关闭截止时间，其余全部原样透传。两个插桩作用域区分记录通道——ledger 记录挂在 `@x1a0f3n9/dsh-session-telemetry-otel` 下，运维记录挂在 `@x1a0f3n9/dsh-session-telemetry-otel/ops` 下——使接收端可以在不累加它们的情况下对运维记录告警。资源身份携带 `service.name`/`service.version`（来自 `dsh-llm` 的 `APP_IDENTITY`）以及本包的匿名 `user.id`（来自 `$DSH_HOME/.anonymous-user-id`），按导出批次携带一次，而非逐条记录。
 
 ### 源码地图
 

@@ -3,7 +3,7 @@ description: "设置领域底座插件：设置命名空间 scope 服务、schem
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-settings
+# @x1a0f3n9/dsh-client-ui-settings
 
 [English](README.md) | 中文
 

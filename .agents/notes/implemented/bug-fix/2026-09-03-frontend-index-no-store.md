@@ -6,7 +6,7 @@ English | [中文](2026-09-03-frontend-index-no-store.zh.md)
 
 ## Problem
 
-The Web shell index is generated at request time: it contains the current client-plugin graph, revisioned bundle URLs, and boot injection rows. A browser that reuses an older cached index can pair an old shell with newer `@xfcodeai` client bundles. The module loader then reports a missing platform seed such as `@xfcodeai/dsh-client-ui-slots`, even though the current shell supplies it.
+The Web shell index is generated at request time: it contains the current client-plugin graph, revisioned bundle URLs, and boot injection rows. A browser that reuses an older cached index can pair an old shell with newer `@xfcodeai` client bundles. The module loader then reports a missing platform seed such as `@x1a0f3n9/dsh-client-ui-slots`, even though the current shell supplies it.
 
 ## Decision
 

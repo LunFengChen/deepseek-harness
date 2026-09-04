@@ -2,9 +2,9 @@ import { readFile, readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
-import { decodeGoalChange } from '@deepseek-ai/dsh-goal'
-import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@deepseek-ai/dsh-loader-smoke'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
+import { decodeGoalChange } from '@x1a0f3n9/dsh-goal'
+import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@x1a0f3n9/dsh-loader-smoke'
 
 const binScript = fileURLToPath(new URL('../../../test-support/loader-smoke/tests/fixtures/headless-driver.ts', import.meta.url))
 const configPath = fileURLToPath(new URL(

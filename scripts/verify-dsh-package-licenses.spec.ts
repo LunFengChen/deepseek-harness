@@ -20,7 +20,7 @@ function createWorkspace(): string {
   const root = mkdtempSync(join(tmpdir(), 'dsh-package-licenses-'))
   roots.push(root)
   writeManifest(root, 'package.json', {
-    name: '@deepseek-ai/dsh-root',
+    name: '@x1a0f3n9/dsh-root',
     license: 'MIT',
     workspaces: ['apps/*', 'packages/*/*', 'vendor/*'],
   })
@@ -32,7 +32,7 @@ describe('DSH package license gate', () => {
     const root = createWorkspace()
     writeManifest(root, 'apps/cli/package.json', { name: '@deepseek-ai/dsh', license: 'MIT' })
     writeManifest(root, 'packages/core/agent/package.json', {
-      name: '@deepseek-ai/dsh-agent',
+      name: '@x1a0f3n9/dsh-agent',
       license: 'BSD-3-Clause',
     })
     writeManifest(root, 'vendor/cordis/package.json', {
@@ -43,17 +43,17 @@ describe('DSH package license gate', () => {
     expect(inspectDshPackageLicenses(root)).toEqual({
       packageCount: 3,
       failures: [
-        'packages/core/agent/package.json: @deepseek-ai/dsh-agent must declare "license": "MIT"; found "BSD-3-Clause".',
+        'packages/core/agent/package.json: @x1a0f3n9/dsh-agent must declare "license": "MIT"; found "BSD-3-Clause".',
       ],
     })
   })
 
   it('rejects a missing license declaration', () => {
     const root = createWorkspace()
-    writeManifest(root, 'packages/core/agent/package.json', { name: '@deepseek-ai/dsh-agent' })
+    writeManifest(root, 'packages/core/agent/package.json', { name: '@x1a0f3n9/dsh-agent' })
 
     expect(inspectDshPackageLicenses(root).failures).toEqual([
-      'packages/core/agent/package.json: @deepseek-ai/dsh-agent must declare "license": "MIT"; found undefined.',
+      'packages/core/agent/package.json: @x1a0f3n9/dsh-agent must declare "license": "MIT"; found undefined.',
     ])
   })
 })

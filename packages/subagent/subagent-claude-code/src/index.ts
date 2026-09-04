@@ -3,12 +3,12 @@
  * invokes the official Agent SDK in the delegating Session's workspace and
  * places the SDK-spawned real CLI under the shared subprocess owner.
  *
- * @module @deepseek-ai/dsh-subagent-claude-code
+ * @module @x1a0f3n9/dsh-subagent-claude-code
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
 import {
   assertPositiveFinite,
   NO_START_CAPABILITIES,
@@ -16,7 +16,7 @@ import {
   type ResolvedSubagentStartRequest,
   type SubagentCapabilities,
   type SubagentProvider,
-} from '@deepseek-ai/dsh-subagent'
+} from '@x1a0f3n9/dsh-subagent'
 import {
   CLAUDE_CODE_PERMISSION_MODES,
   DEFAULT_CLAUDE_CODE_PERMISSION_MODE,

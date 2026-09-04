@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { SessionId, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionEventMap, SessionEventType } from '@deepseek-ai/dsh-session'
+import { SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionEventMap, SessionEventType } from '@x1a0f3n9/dsh-session'
 import { teamProjectionDefinition } from '../src/projection.ts'
 import type { TeamProjectionState, TeamState } from '../src/projection.ts'
 import { TeamId, TeamMessageId, TeamTaskId } from '../src/types.ts'

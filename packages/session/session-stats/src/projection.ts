@@ -20,12 +20,12 @@
  * time stays uncounted in every time figure — matching the window, which
  * renders it as an untimed interrupted node.
  *
- * @module @deepseek-ai/dsh-session-stats/projection
+ * @module @x1a0f3n9/dsh-session-stats/projection
  */
 
 import { z } from 'zod'
-import type { StreamChunk } from '@deepseek-ai/dsh-llm/types'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
+import type { StreamChunk } from '@x1a0f3n9/dsh-llm/types'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 
 /* jscpd:ignore-start -- Session Stats owns its whole-log timing projection independently. */
 
@@ -79,7 +79,7 @@ interface SessionStatsState extends SessionStatsTotals {
   pendingCalls: Record<string, number>
 }
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     sessionStats: SessionStatsState
   }

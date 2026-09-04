@@ -4,11 +4,11 @@ import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { Context, FiberState, type Plugin } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import { remoteMethods } from '@deepseek-ai/dsh-typert-protocol'
-import type { AgentPresets } from '@deepseek-ai/dsh-agent-presets'
+import { remoteMethods } from '@x1a0f3n9/dsh-typert-protocol'
+import type { AgentPresets } from '@x1a0f3n9/dsh-agent-presets'
 import PluginInventoryGateway from '../src/index.ts'
 import type { PluginEntryId } from '../src/types.ts'
-import type { DshProfileRuntime } from '@xfcodeai/dsh-app-boot'
+import type { DshProfileRuntime } from '@x1a0f3n9/dsh-app-boot'
 
 const contexts: Context[] = []
 
@@ -111,14 +111,14 @@ describe('PluginInventoryGateway', () => {
         name: 'web',
         dir: profileDir,
         layers: [{
-          packageName: '@xfcodeai/dsh-web-app',
+          packageName: '@x1a0f3n9/dsh-web-app',
           packageDir: profileDir,
           patchPath: join(profileDir, 'cordis.patch.yml'),
           patches: [],
           plugins: [{
             id: 'optional',
             entryId: catalogEntryId,
-            packageName: '@xfcodeai/dsh-client-optional',
+            packageName: '@x1a0f3n9/dsh-client-optional',
             title: 'Optional feature',
             description: 'A selectable feature',
             defaultEnabled: true,
@@ -135,7 +135,7 @@ describe('PluginInventoryGateway', () => {
     expect((await inventory.list()).catalog).toEqual([{
       id: 'optional',
       entryId: catalogEntryId,
-      packageName: '@xfcodeai/dsh-client-optional',
+      packageName: '@x1a0f3n9/dsh-client-optional',
       title: 'Optional feature',
       description: 'A selectable feature',
       required: false,

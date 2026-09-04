@@ -3,7 +3,7 @@ description: "skill 提供方注册表，供选择、配置或排查来自任意
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-skill
+# @x1a0f3n9/dsh-skill
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ agent（智能体）和用户可以通过单一查找使用可复用的任务专
 像任何 Cordis 插件一样加载即可。唯一配置项限制内存中保留的已完成提供方目录数量；其余都是提供方行为。
 
 ```yaml
-- name: '@deepseek-ai/dsh-skill'
+- name: '@x1a0f3n9/dsh-skill'
 ```
 
 | 字段 | 默认值 | 含义 |

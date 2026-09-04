@@ -2,12 +2,12 @@
  * Anonymous public HTTP(S) `WebFetchProvider` plugin. It contributes to the
  * `ctx.web` registry without owning the service.
  *
- * @module @deepseek-ai/dsh-web-fetch-http
+ * @module @x1a0f3n9/dsh-web-fetch-http
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type {} from '@deepseek-ai/dsh-web'
+import type {} from '@x1a0f3n9/dsh-web'
 import { HttpFetchProvider } from './provider.ts'
 import type { HttpFetchLimits } from './provider.ts'
 

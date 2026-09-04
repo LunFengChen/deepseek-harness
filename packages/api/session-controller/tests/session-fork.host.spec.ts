@@ -2,14 +2,14 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry, { agentEvents } from '@deepseek-ai/dsh-agent'
-import type { Agent, AgentHandle, CreateAgentOptions } from '@deepseek-ai/dsh-agent'
-import { createUserMessage, ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type { LlmCallConfig } from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import type { Workspace } from '@deepseek-ai/dsh-workspace'
+import AgentRegistry, { agentEvents } from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentHandle, CreateAgentOptions } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type { LlmCallConfig } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import type { Workspace } from '@x1a0f3n9/dsh-workspace'
 import {
   createSessionTestRemote, installSessionReadTestServices, testSessionPersistence,
 } from './test-remote.ts'

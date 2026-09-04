@@ -39,7 +39,7 @@ import {
   LlmAdapter,
   LlmError,
   ReasoningEffortId,
-} from '@xfcodeai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 import type {
   GenerateOptions,
   ImageAttachmentAccess,
@@ -49,9 +49,9 @@ import type {
   ReasoningEffortId as ReasoningEffortIdType,
   ResolvedRetryPolicy,
   StreamChunk,
-} from '@xfcodeai/dsh-llm'
-import type { AttachmentStore, ImageAttachmentRef } from '@xfcodeai/dsh-attachment'
-import { idleWatchdog, timeoutOf } from '@xfcodeai/dsh-timeout'
+} from '@x1a0f3n9/dsh-llm'
+import type { AttachmentStore, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import { idleWatchdog, timeoutOf } from '@x1a0f3n9/dsh-timeout'
 import type { ResolvedPiAiProviderProfile } from './config.ts'
 import { toPiContext } from './context.ts'
 import { toStreamChunks, type PiAiStreamDiagnostics } from './stream.ts'

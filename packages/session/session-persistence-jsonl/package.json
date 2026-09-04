@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-session-persistence-jsonl",
+  "name": "@x1a0f3n9/dsh-session-persistence-jsonl",
   "description": "JSONL durable session persistence backend for the DeepSeek Harness",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -27,8 +27,8 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
@@ -36,8 +36,8 @@
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-session-persistence": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

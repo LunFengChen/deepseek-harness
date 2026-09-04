@@ -4,8 +4,8 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import { SESSION_FORMAT_VERSION, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import { SESSION_FORMAT_VERSION, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import {
   SessionAlreadyExistsError,
   SessionAlreadyOwnedError,

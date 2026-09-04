@@ -4,7 +4,7 @@
  * no served HTML, so it executes the table directly. Rows execute strictly in
  * table order, so a global row lands before the scripts that read it.
  */
-import type { IndexInjection } from '@deepseek-ai/dsh-host-webserver'
+import type { IndexInjection } from '@x1a0f3n9/dsh-host-webserver'
 
 function assertNever(row: never): never {
   throw new Error(`webworker-runtime: unknown index injection row ${JSON.stringify(row)}`)

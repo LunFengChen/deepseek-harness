@@ -15,24 +15,24 @@ import { Context } from '@deepseek-ai/cordis'
 import { mkdtempSync, realpathSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve as resolvePath } from 'node:path'
-import { ToolCallId } from '@deepseek-ai/dsh-llm'
-import SystemPrompt, { renderPrompt } from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime, { TOOL_ABORTED, TOOL_ABORTED_BEFORE_DISPATCH } from '@deepseek-ai/dsh-tools'
-import LocalJobRegistry from '@deepseek-ai/dsh-jobs-local'
-import * as ToolTasks from '@deepseek-ai/dsh-tool-jobs'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { SessionId, SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import ApprovalService from '@deepseek-ai/dsh-user-approval'
-import type { ApprovalOutcome } from '@deepseek-ai/dsh-user-approval'
-import { ShellExecutor } from '@deepseek-ai/dsh-shell'
-import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } from '@deepseek-ai/dsh-shell'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { turnBoundaryProjectionDefinition } from '@deepseek-ai/dsh-agent-loop'
-import SandboxPolicyService from '@deepseek-ai/dsh-sandbox-policy'
-import * as ToolPwsh from '@deepseek-ai/dsh-tool-pwsh'
-import * as BashEnvPlugin from '@deepseek-ai/dsh-shell-env'
-import type { ShellProcessRead } from '@deepseek-ai/dsh-shell'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import SystemPrompt, { renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { TOOL_ABORTED, TOOL_ABORTED_BEFORE_DISPATCH } from '@x1a0f3n9/dsh-tools'
+import LocalJobRegistry from '@x1a0f3n9/dsh-jobs-local'
+import * as ToolTasks from '@x1a0f3n9/dsh-tool-jobs'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { SessionId, SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
+import ApprovalService from '@x1a0f3n9/dsh-user-approval'
+import type { ApprovalOutcome } from '@x1a0f3n9/dsh-user-approval'
+import { ShellExecutor } from '@x1a0f3n9/dsh-shell'
+import type { ShellExecRequest, ShellExecSpec, ShellProcess, ShellRunResult } from '@x1a0f3n9/dsh-shell'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { turnBoundaryProjectionDefinition } from '@x1a0f3n9/dsh-agent-loop'
+import SandboxPolicyService from '@x1a0f3n9/dsh-sandbox-policy'
+import * as ToolPwsh from '@x1a0f3n9/dsh-tool-pwsh'
+import * as BashEnvPlugin from '@x1a0f3n9/dsh-shell-env'
+import type { ShellProcessRead } from '@x1a0f3n9/dsh-shell'
 import { processOutcome } from '../src/background.ts'
 import { renderPwshProcessRead, renderPwshResult } from '../src/render.ts'
 
@@ -790,7 +790,7 @@ describe('background execution through the job runtime', () => {
     const { ctx } = await setup() // no LocalJobRegistry / ToolTasks
     const result = await call(ctx, 'pwsh', { command: 'Start-Sleep -Seconds 60', description: 'test command', run_in_background: true })
     expect(result.isError).toBe(true)
-    expect(text(result)).toContain('background jobs unavailable: load @deepseek-ai/dsh-jobs and @deepseek-ai/dsh-tool-jobs')
+    expect(text(result)).toContain('background jobs unavailable: load @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs')
   })
 
   it('a pre-aborted call is skipped before the process starts', async () => {

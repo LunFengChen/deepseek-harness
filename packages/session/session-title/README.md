@@ -3,7 +3,7 @@ description: "Log-backed session titles for users and maintainers choosing a tit
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-title
+# @x1a0f3n9/dsh-session-title
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Titles come from three sources, newest wins. The built-in fallback derives from 
 All limits are required; the library supplies no defaults. Mount the service with the three bounds:
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-title'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-title'
   config:
     fallbackMaxWords: 8
     fallbackMaxBytes: 96

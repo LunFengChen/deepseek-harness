@@ -23,7 +23,7 @@
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import { apiKeyFailure } from './apiKey.ts'
 import { EditorFooter } from './EditorFooter.tsx'
 import { validateDeepSeekModels } from './DeepSeekModelsEditor.tsx'

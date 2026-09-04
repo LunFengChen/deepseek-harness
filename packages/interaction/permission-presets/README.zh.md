@@ -3,7 +3,7 @@ description: "面向用户的权限预设：供选择、配置或排查把沙箱
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-permission-presets
+# @x1a0f3n9/dsh-permission-presets
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 插件配置定义预设表与新会话的默认值。每个预设名称把一个沙箱模式与一个审批策略捆绑为一组；`name` 与 `description` 是可选的客户端呈现。
 
 ```yaml
-- name: '@deepseek-ai/dsh-permission-presets'
+- name: '@x1a0f3n9/dsh-permission-presets'
   config:
     presets:
       workspace-write:

@@ -16,8 +16,8 @@
 
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
 // Type-only: pulls the ctx.remote merge into this program.
-import type {} from '@deepseek-ai/dsh-api-remotes/client'
-import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-store'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
+import { createSnapshotStore, type SnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import { beginRosterRead, writeDefaultPreset } from './settings-store.ts'
 
 /** Ids a preset directory may be named, mirroring the host's own rule. */

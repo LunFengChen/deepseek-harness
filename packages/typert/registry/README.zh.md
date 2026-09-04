@@ -3,7 +3,7 @@ description: "运行时 Typert 注册表：保存生成的包反射、实时 Zod
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-typert-registry
+# @x1a0f3n9/dsh-typert-registry
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 加载注册表插件；Client face 由 Client 运行时自身的元数据以同样方式安装，两个 face 运行同一实现：
 
 ```yaml
-- name: '@deepseek-ai/dsh-typert-registry'
+- name: '@x1a0f3n9/dsh-typert-registry'
 ```
 
 ### 查询 schema 与反射

@@ -6,9 +6,9 @@
  * @module dsh-llm-deepseek/serialize
  */
 
-import { contentHasImage, LlmError, offloadedImageText, offloadRequestImagesWithPolicy, requestImageHandleText } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, GenerateOptions, ImageAttachmentAccessResolver, Message } from '@deepseek-ai/dsh-llm'
-import type { ImageAttachmentRef, RequestImageAttachment } from '@deepseek-ai/dsh-attachment'
+import { contentHasImage, LlmError, offloadedImageText, offloadRequestImagesWithPolicy, requestImageHandleText } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, GenerateOptions, ImageAttachmentAccessResolver, Message } from '@x1a0f3n9/dsh-llm'
+import type { ImageAttachmentRef, RequestImageAttachment } from '@x1a0f3n9/dsh-attachment'
 import type {
   WireImageContentPart,
   WireMessage,

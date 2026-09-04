@@ -1,9 +1,9 @@
 /** Model-facing discovery of LLM routes available to child Agents. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type LlmRuntime from '@deepseek-ai/dsh-llm'
-import type { LlmProviderInfo } from '@deepseek-ai/dsh-llm'
-import { defineTool } from '@deepseek-ai/dsh-tools'
+import type LlmRuntime from '@x1a0f3n9/dsh-llm'
+import type { LlmProviderInfo } from '@x1a0f3n9/dsh-llm'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
 import type { ModelSelectionPolicy } from './model-selection.ts'
 
 interface ListSubagentModelsRequest {

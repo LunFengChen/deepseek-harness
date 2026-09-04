@@ -1,8 +1,8 @@
 /** General Settings row for the Composer's busy-state Enter preference. */
 import { useState } from 'react'
-import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
-import { IconChevronDownOutline14, Menu } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
+import { IconChevronDownOutline14, Menu } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { BusyEnterBehavior } from '../contract/composer-submission.ts'
 import type { ConversationKey } from '../locales.ts'
 import css from './EnterBehaviorRow.module.css'

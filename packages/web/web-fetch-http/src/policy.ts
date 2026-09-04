@@ -3,10 +3,10 @@
  * provider — the pure, network-free half. The provider's `fetch()` composes
  * these with transport (redirect following, byte caps, decoding).
  *
- * @module @deepseek-ai/dsh-web-fetch-http/policy
+ * @module @x1a0f3n9/dsh-web-fetch-http/policy
  */
 
-import { WebError } from '@deepseek-ai/dsh-web'
+import { WebError } from '@x1a0f3n9/dsh-web'
 
 /** Maximum accepted request URL length enforced by the public fetch provider. */
 export const WEB_FETCH_MAX_URL_LENGTH = 2048

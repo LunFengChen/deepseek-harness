@@ -55,7 +55,7 @@
  * the mode-aware example resolver (tsx in source mode, Node type stripping in
  * built mode). It imports no harness code or workspace paths.
  *
- * @module @deepseek-ai/dsh-subagent-acp/tests/mock-acp-server
+ * @module @x1a0f3n9/dsh-subagent-acp/tests/mock-acp-server
  */
 
 import { randomUUID } from 'node:crypto'

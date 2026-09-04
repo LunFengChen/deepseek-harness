@@ -2,7 +2,7 @@
 description: "面向 Session Controller 列表、交互状态与逐会话上下文的 React 与 Slot 适配器。"
 kind: "package-reference"
 ---
-# @deepseek-ai/dsh-client-ui-session
+# @x1a0f3n9/dsh-client-ui-session
 
 [English](README.md) | 中文
 

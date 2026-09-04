@@ -3,7 +3,7 @@ description: "The composable persona row presets mount to give one agent its own
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-persona
+# @x1a0f3n9/dsh-persona
 
 English | [中文](README.zh.md)
 
@@ -30,7 +30,7 @@ Mount this row inside a preset composition to give that preset's sessions their 
 ### Configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-persona'
+- name: '@x1a0f3n9/dsh-persona'
   config:
     text: You are a terse systems engineer who answers in short commands.
 ```

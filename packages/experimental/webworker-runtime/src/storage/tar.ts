@@ -8,7 +8,7 @@
  * would drag Node stream shims back in. The subset is plain ustar — regular
  * files and directories, names up to 255 bytes via the name-prefix split — and
  * anything outside it fails loud on either side.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/storage/tar
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/tar
  */
 
 const encoder = new TextEncoder()

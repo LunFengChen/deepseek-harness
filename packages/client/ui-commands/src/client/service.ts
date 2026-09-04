@@ -11,16 +11,16 @@ import { Service } from '@deepseek-ai/cordis'
 import type { Context } from '@deepseek-ai/cordis'
 // Type-only: pulls the ctx.remote merge and the forwarded-event key face
 // (`commands/change` rides the allowlist) into this program.
-import type {} from '@deepseek-ai/dsh-api-remotes/client'
-import type { CommandResult } from '@deepseek-ai/dsh-commands/types'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
+import type { CommandResult } from '@x1a0f3n9/dsh-commands/types'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { ISessions } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { TranslateNS } from '@deepseek-ai/dsh-client-locale/client'
+import type { ISessions } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { TranslateNS } from '@x1a0f3n9/dsh-client-locale/client'
 import type {
   CandidateRequest, ClientSessionContext, CommandClaim, PickOutcome, InputTriggerCandidate, InputTriggerPick,
   SubmitEnvelope, SubmitImageAttachment, SubmitOutcome,
-} from '@deepseek-ai/dsh-client-ui-input-trigger/client'
+} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
 import type { CommandContribution, CommandDecoration, CommandUiContract } from './contract.ts'
 import type { CommandDescriptor } from './directory.ts'
 import { CommandDirectory } from './directory.ts'

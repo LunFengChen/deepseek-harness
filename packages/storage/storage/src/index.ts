@@ -2,7 +2,7 @@
  * Storage hub (`ctx.storage`): a named backend registry plus mounted
  * data-form facilities. The hub itself performs no IO — backends own media,
  * data forms (the domain layer first) own semantics.
- * @module @deepseek-ai/dsh-storage
+ * @module @x1a0f3n9/dsh-storage
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'

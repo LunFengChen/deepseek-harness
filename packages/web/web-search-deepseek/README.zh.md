@@ -3,7 +3,7 @@ description: "ctx.web 的 DeepSeek 搜索提供方：部署方如何通过 Anthr
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-deepseek
+# @x1a0f3n9/dsh-web-search-deepseek
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 加载 web 服务与本提供方；密钥在已挂载 `ctx.credentials` 服务时从其解析，否则从进程环境解析。搜索端点使用 Anthropic 兼容基址（`https://api.deepseek.com/anthropic/v1`），不同于 LLM（大语言模型）适配器使用的 chat-completions 基址——绝不复用 `$DEEPSEEK_BASE_URL`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-deepseek'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY
     baseURL: https://gateway.internal/anthropic/v1

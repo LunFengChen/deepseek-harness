@@ -2,8 +2,8 @@ import { createServer, type Server } from 'node:http'
 import { spawn } from 'node:child_process'
 import type { AddressInfo } from 'node:net'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
-import { clearedProxyEnv, installProxyFromEnvironment } from '@deepseek-ai/dsh-http-proxy'
-import { createLaunchEnvironmentSnapshot } from '@deepseek-ai/dsh-launch-environment'
+import { clearedProxyEnv, installProxyFromEnvironment } from '@x1a0f3n9/dsh-http-proxy'
+import { createLaunchEnvironmentSnapshot } from '@x1a0f3n9/dsh-launch-environment'
 import { scrubbedParentEnv } from '../src/index.ts'
 
 /**

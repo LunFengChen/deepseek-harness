@@ -3,7 +3,7 @@ description: "System-prompt assembly for users and maintainers adding prompt sec
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-system-prompt
+# @x1a0f3n9/dsh-system-prompt
 
 English | [中文](README.zh.md)
 
@@ -32,7 +32,7 @@ Mount `dsh-system-prompt` wherever agents run: it provides `ctx.systemPrompt`, t
 The config owns the fixed opener, runtime context, deployment persona, and tool order; everything else comes from registered contributions.
 
 ```yaml
-- name: '@deepseek-ai/dsh-system-prompt'
+- name: '@x1a0f3n9/dsh-system-prompt'
   config:
     includeHarnessIdentity: true
     includeRuntimeContext: true

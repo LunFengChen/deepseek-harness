@@ -3,7 +3,7 @@ description: "面向模型的 ralph 工具：面向一个不可变目标的固�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-ralph
+# @x1a0f3n9/dsh-tool-ralph
 
 [English](README.md) | 中文
 

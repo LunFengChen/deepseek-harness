@@ -11,7 +11,7 @@
  * a facade over this module; measured over ~200 cases, the normalizing and
  * lexical forms diverge in 45, all in these three functions. The Node-facing
  * port is pinned separately by `../../tests/node/path-diff.spec.ts`.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/module-system/posix-path
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/module-system/posix-path
  */
 
 /** Path separator of the virtual filesystem. */

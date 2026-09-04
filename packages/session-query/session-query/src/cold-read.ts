@@ -1,8 +1,8 @@
 /** One-shot cold session read through the handle-based persistence seam. */
 
-import { interruptedTurnClosers } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader, SessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
-import type SessionPersistence from '@deepseek-ai/dsh-session-persistence'
+import { interruptedTurnClosers } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader, SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type SessionPersistence from '@x1a0f3n9/dsh-session-persistence'
 
 /** A stored session log balanced for read-only viewing. */
 export interface ColdSessionLog {

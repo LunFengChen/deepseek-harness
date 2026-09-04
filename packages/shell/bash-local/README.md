@@ -3,7 +3,7 @@ description: "The default POSIX Bash executor for deployments and maintainers ch
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-bash-local
+# @x1a0f3n9/dsh-bash-local
 
 English | [中文](README.zh.md)
 
@@ -33,7 +33,7 @@ Load the executor with the budgets you want; every field has a default, so the s
 
 ```yaml
 - id: bash
-  name: '@deepseek-ai/dsh-bash-local'
+  name: '@x1a0f3n9/dsh-bash-local'
   config:
     cwd: /path/to/workspace
     timeoutMs: 120000

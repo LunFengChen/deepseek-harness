@@ -3,7 +3,7 @@ description: "Run your existing Claude Code hooks.json or settings hook config d
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-hooks-claude-code
+# @x1a0f3n9/dsh-hooks-claude-code
 
 English | [中文](README.zh.md)
 
@@ -34,7 +34,7 @@ Use it when you own a Claude Code `hooks.json` (or a settings file whose `hooks`
 ### Smallest working setup
 
 ```yaml
-- name: '@deepseek-ai/dsh-hooks-claude-code'
+- name: '@x1a0f3n9/dsh-hooks-claude-code'
   config:
     configPath: ./.claude/hooks.json
     pluginRoot: ./.claude/plugins/my-plugin

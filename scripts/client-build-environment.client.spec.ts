@@ -232,12 +232,12 @@ describe('client build environment', () => {
   it('feeds the same build-process value to dynamic tsdown bundles and the Vite shell', async () => {
     process.env[PROBE_NAME] = 'shared-value'
 
-    const configs = clientBundle('@deepseek-ai/dsh-client-ui-sidebar', [
+    const configs = clientBundle('@x1a0f3n9/dsh-client-ui-sidebar', [
       'lib/types/index.js',
       'lib/types/invariant.js',
     ])({ env: { DSH_BUILD_FACE: 'client' } })
     if (!Array.isArray(configs)) throw new TypeError('client bundle config must be an array')
-    const dynamic = configs.find(config => config.name === '@deepseek-ai/dsh-client-ui-sidebar/client')
+    const dynamic = configs.find(config => config.name === '@x1a0f3n9/dsh-client-ui-sidebar/client')
     expect(dynamic?.define).toMatchObject({
       'process.env': '{}',
       [PROBE_KEY]: '"shared-value"',

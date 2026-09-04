@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-api-remotes",
+  "name": "@x1a0f3n9/dsh-api-remotes",
   "description": "Remote BFF assembly for application-selected Host capabilities",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -32,7 +32,7 @@
   "dsh": {
     "client": {
       "inject": [
-        "@deepseek-ai/dsh-api-gateway"
+        "@x1a0f3n9/dsh-api-gateway"
       ],
       "platform": "web",
       "immediately": true
@@ -50,36 +50,36 @@
     "lib/types/**/*.d.ts"
   ],
   "dependencies": {
-    "@deepseek-ai/dsh-deque": "workspace:^",
-    "@deepseek-ai/dsh-session": "workspace:^",
-    "@deepseek-ai/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-deque": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^"
+    "@x1a0f3n9/dsh-scope": "workspace:^"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-agent-presets": "workspace:^",
-    "@deepseek-ai/dsh-api-gateway": "workspace:^",
-    "@deepseek-ai/dsh-api-settings-controller": "workspace:^",
-    "@deepseek-ai/dsh-api-workspace-controller": "workspace:^",
-    "@deepseek-ai/dsh-commands": "workspace:^",
-    "@deepseek-ai/dsh-cordis-host-runner": "workspace:^",
-    "@deepseek-ai/dsh-credentials": "workspace:^",
-    "@deepseek-ai/dsh-file-reference": "workspace:^",
-    "@deepseek-ai/dsh-goal": "workspace:^",
-    "@deepseek-ai/dsh-host-plugin-inventory": "workspace:^",
-    "@deepseek-ai/dsh-llm": "workspace:^",
-    "@deepseek-ai/dsh-message-feedback": "workspace:^",
-    "@deepseek-ai/dsh-session-reference": "workspace:^",
-    "@deepseek-ai/dsh-settings": "workspace:^",
-    "@deepseek-ai/dsh-subagent": "workspace:^",
-    "@deepseek-ai/dsh-user-approval": "workspace:^",
-    "@deepseek-ai/dsh-user-questions": "workspace:^",
-    "@deepseek-ai/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/dsh-scope": "workspace:^",
-    "@deepseek-ai/dsh-api-session-controller": "workspace:^"
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-api-gateway": "workspace:^",
+    "@x1a0f3n9/dsh-api-settings-controller": "workspace:^",
+    "@x1a0f3n9/dsh-api-workspace-controller": "workspace:^",
+    "@x1a0f3n9/dsh-commands": "workspace:^",
+    "@x1a0f3n9/dsh-cordis-host-runner": "workspace:^",
+    "@x1a0f3n9/dsh-credentials": "workspace:^",
+    "@x1a0f3n9/dsh-file-reference": "workspace:^",
+    "@x1a0f3n9/dsh-goal": "workspace:^",
+    "@x1a0f3n9/dsh-host-plugin-inventory": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-message-feedback": "workspace:^",
+    "@x1a0f3n9/dsh-session-reference": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
+    "@x1a0f3n9/dsh-user-questions": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-scope": "workspace:^",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:^"
   }
 }

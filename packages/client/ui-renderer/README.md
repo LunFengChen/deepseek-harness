@@ -3,7 +3,7 @@ description: "Browser UI renderer: React slot bindings, ctx.uiRenderer, and the 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-renderer
+# @x1a0f3n9/dsh-client-ui-renderer
 
 English | [中文](README.zh.md)
 

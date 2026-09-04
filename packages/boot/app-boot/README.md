@@ -3,7 +3,7 @@ description: "Shared Loader boot support for dsh profiles and the temporary Pyth
 kind: "package-library"
 ---
 
-# @xfcodeai/dsh-app-boot
+# @x1a0f3n9/dsh-app-boot
 
 English | [中文](README.zh.md)
 
@@ -45,7 +45,7 @@ With that entry point, success looks like a running app with every plugin active
 <a id="profiles"></a>
 ### Profiles
 
-A profile is how one dsh installation ships different app surfaces: `web`, `headless`, `acp`, `sdk`, and `sdk-minimal` start distinct compositions from the same launcher. A profile lives at `$DSH_HOME/profiles/<name>` and combines installable bundles, its own `cordis.patch.yml`, and `patchReload: live | startup`; omitted reload policy keeps the historical `live` default for custom profiles. The shipped `web` template uses live reload, while the other shipped templates apply patches only at startup. `sdk-minimal` names only its standalone bundle; the other templates retain base-plus-mode stacks. `dsh plugin` creates custom profiles, and a missing bundle or one without a patch declaration fails startup loudly. The `xfdsh` fork keeps this home shared with `dsh`: `xfdsh plugin --profile <name> add <package>` writes the same profile directory and therefore shares its session history. Official and fork plugin bundles are both supported. During profile installation, declared `@deepseek-ai/dsh-*` runtime, peer, and optional dependencies are installed as aliases to the matching `@xfcodeai/dsh-*` packages, while the plugin keeps its original import names. If the matching fork package is unavailable, pnpm reports the installation failure; the launcher never mixes an official dsh runtime with the fork runtime. Existing profiles receive the hook on their next launch; run `xfdsh plugin --profile <name> install` once after upgrading to rebuild installed aliases.
+A profile is how one dsh installation ships different app surfaces: `web`, `headless`, `acp`, `sdk`, and `sdk-minimal` start distinct compositions from the same launcher. A profile lives at `$DSH_HOME/profiles/<name>` and combines installable bundles, its own `cordis.patch.yml`, and `patchReload: live | startup`; omitted reload policy keeps the historical `live` default for custom profiles. The shipped `web` template uses live reload, while the other shipped templates apply patches only at startup. `sdk-minimal` names only its standalone bundle; the other templates retain base-plus-mode stacks. `dsh plugin` creates custom profiles, and a missing bundle or one without a patch declaration fails startup loudly. The `xfdsh` fork keeps this home shared with `dsh`: `xfdsh plugin --profile <name> add <package>` writes the same profile directory and therefore shares its session history. Official and fork plugin bundles are both supported. During profile installation, declared `@x1a0f3n9/dsh-*` runtime, peer, and optional dependencies are installed as aliases to the matching `@x1a0f3n9/dsh-*` packages, while the plugin keeps its original import names. If the matching fork package is unavailable, pnpm reports the installation failure; the launcher never mixes an official dsh runtime with the fork runtime. Existing profiles receive the hook on their next launch; run `xfdsh plugin --profile <name> install` once after upgrading to rebuild installed aliases.
 
 Your machine-local preferences also live in the Harness home:
 

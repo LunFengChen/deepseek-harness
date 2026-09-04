@@ -14,7 +14,7 @@
  * plain tar, a truncated download, or a proxy's HTML error page would reach
  * `parseTar` and fail as a corrupt header field, which says nothing about what
  * the deployment actually served.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/storage/image-gzip
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/storage/image-gzip
  */
 
 /** gzip member identification bytes (RFC 1952 §2.3.1). */

@@ -10,7 +10,7 @@
 
 ## 决策
 
-profile 初始化时写入 profile 本地的 `.pnpmfile.cjs`。其中的 `readPackage` hook 会把 `dependencies`、`optionalDependencies` 和 `peerDependencies` 中的官方 dsh 依赖 spec 改成对应 `@xfcodeai/dsh-*` 包的 npm 别名。依赖键仍保留官方名称，因此插件原有的导入名继续可用，而 Node 实际收到的是 fork 实现。非 registry spec 保持不变；对应的 fork 包不可用时，pnpm 会在安装阶段明确失败。
+profile 初始化时写入 profile 本地的 `.pnpmfile.cjs`。其中的 `readPackage` hook 会把 `dependencies`、`optionalDependencies` 和 `peerDependencies` 中的官方 dsh 依赖 spec 改成对应 `@x1a0f3n9/dsh-*` 包的 npm 别名。依赖键仍保留官方名称，因此插件原有的导入名继续可用，而 Node 实际收到的是 fork 实现。非 registry spec 保持不变；对应的 fork 包不可用时，pnpm 会在安装阶段明确失败。
 
 浏览器 client module system 对官方 dsh 模块请求使用同样的映射，但只有在对应 fork seed、graph row 或已注册 factory 存在时才映射。这样官方 client 组合包可以继续请求原始名称，同时只实例化一份 fork 模块；没有 fork 对应项的其他官方 row 仍可正常解析。
 

@@ -3,7 +3,7 @@ description: "面向部署方与维护者的子进程服务本地宿主提供方
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subprocess-local
+# @x1a0f3n9/dsh-subprocess-local
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-reference"
 在与消费方相同的组合中加载本提供方。它没有任何配置字段：每项选择都随 spawn 请求到达，因此随部署变化的决策留在调用方的配置里。
 
 ```yaml
-- name: '@deepseek-ai/dsh-subprocess-local'
-- name: '@deepseek-ai/dsh-bash-local'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-bash-local'
 ```
 
 ### 解析可执行文件

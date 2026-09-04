@@ -44,10 +44,10 @@ export type { ChatKey } from './locale.ts'
 export type { ConversationContext, ConversationContextOriginKind } from './model/conversation-context.ts'
 export type {
   ContextProvenanceView, ContextRole, KnownContextForm,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 export type {
   ConversationPromptSnapshot, RequestInspectionSnapshot, RequestPromptChange, RequestView,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 export { isRunningTool, isSettledTool } from './contract/chat-nodes.ts'
 export { EMPTY_CHAT_SNAPSHOT } from './contract/snapshot.ts'

@@ -8,7 +8,7 @@
  * its bootstrap export, which constructs the system and retains the same
  * exports for this package's graph row. The plugin face only enrolls that
  * pre-existing instance by providing it as `ctx.modules`.
- * @module @deepseek-ai/dsh-client-modules/client
+ * @module @x1a0f3n9/dsh-client-modules/client
  */
 import type { Context } from '@deepseek-ai/cordis'
 import { ClientModuleSystem } from './system.ts'

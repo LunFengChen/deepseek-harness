@@ -3,7 +3,7 @@ description: "web 访问服务（ctx.web）：部署方与插件作者如何通�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web
+# @x1a0f3n9/dsh-web
 
 [English](README.md) | 中文
 
@@ -36,9 +36,9 @@ kind: "package-reference"
 加载服务并让唯一挂载的后端自动选择，或用 `searchProvider`／`fetchProvider` 固定提供方 id。环境变量 `$DSH_WEB_SEARCH_PROVIDER` 与 `$DSH_WEB_FETCH_PROVIDER` 提供相同字段，不是另一条优先级链。
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-exa'
-- name: '@deepseek-ai/dsh-web-fetch-http'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-exa'
+- name: '@x1a0f3n9/dsh-web-fetch-http'
 ```
 
 | 字段 | 默认值 | 含义 |

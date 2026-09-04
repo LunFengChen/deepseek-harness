@@ -13,7 +13,7 @@
  *
  * A boot failure rejects the whole queue with 503 rather than leaving the page
  * waiting.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/transport/tunnel
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/transport/tunnel
  */
 import {
   parseInboundFrame, type TunnelOutboundFrame, type TunnelRequestFrame, type TunnelRequestId,

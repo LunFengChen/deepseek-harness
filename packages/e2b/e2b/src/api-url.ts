@@ -1,6 +1,6 @@
 /**
  * The E2B control-plane URL, derived the way the SDK derives it.
- * @module @deepseek-ai/dsh-e2b/src/api-url.ts
+ * @module @x1a0f3n9/dsh-e2b/src/api-url.ts
  */
 
 /** The SDK's own default control-plane domain; `E2B_DOMAIN` overrides it there and here alike. */

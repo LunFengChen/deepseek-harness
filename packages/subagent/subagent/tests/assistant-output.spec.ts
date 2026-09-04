@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import { AssistantOutputFold, finalAssistantOutput } from '../src/assistant-output.ts'
 
 function message(content: ContentBlock[]): SessionEvent {

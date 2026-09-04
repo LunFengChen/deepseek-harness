@@ -3,7 +3,7 @@ description: "面向用户与维护者的运行时不变量检查说明：选择
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-invariants
+# @x1a0f3n9/dsh-invariants
 
 [English](README.md) | 中文
 
@@ -36,11 +36,11 @@ kind: "package-reference"
 注册表默认启用，并在没有过滤器的情况下检查每个已注册的包。用 `enabled` 作全局开关，用 `package_allowlist` 只接纳指定包，用 `package_blocklist` 在 allowlist 匹配之后排除包——blocklist 匹配优先于 allowlist 匹配。模式是区分大小写的 JavaScript 正则表达式源（除非自带 `^` 与 `$`，否则不锚定）；无效、空白或重复的条目会使服务启动失败，而不是被跳过。
 
 ```yaml
-- name: '@deepseek-ai/dsh-invariants'
+- name: '@x1a0f3n9/dsh-invariants'
   config:
     enabled: true
     package_allowlist:
-      - '^@deepseek-ai/dsh-'
+      - '^@x1a0f3n9/dsh-'
 ```
 
 | 字段 | 默认值 | 含义 |
@@ -76,8 +76,8 @@ kind: "package-reference"
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import InvariantRegistry from '@deepseek-ai/dsh-invariants'
-import * as SessionInvariant from '@deepseek-ai/dsh-session/invariant'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
 
 declare const ctx: Context
 

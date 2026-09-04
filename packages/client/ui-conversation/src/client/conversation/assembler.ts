@@ -1,6 +1,6 @@
 import type {
   SessionEventLikeEntry, SessionLiveEventEntry,
-} from '@deepseek-ai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   ConversationContextReader, ConversationLocationData, ConversationMatch,
   ConversationNodeContext, ConversationNodeDefinition, ConversationPreviousContext,

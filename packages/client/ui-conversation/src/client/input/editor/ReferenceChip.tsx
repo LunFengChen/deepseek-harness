@@ -5,8 +5,8 @@
  */
 import clsx from 'clsx'
 import type { ReactNode } from 'react'
-import { ReferenceIcon } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { ReferenceIconKind } from '@deepseek-ai/dsh-client-ui-primitives'
+import { ReferenceIcon } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { ReferenceIconKind } from '@x1a0f3n9/dsh-client-ui-primitives'
 import css from './ReferenceChip.module.css'
 
 /** Display inputs of one chip (the node's cached owner projections). */

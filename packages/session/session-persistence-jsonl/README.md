@@ -3,7 +3,7 @@ description: "The shipped JSONL session-persistence backend for deployments and 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-persistence-jsonl
+# @x1a0f3n9/dsh-session-persistence-jsonl
 
 English | [中文](README.zh.md)
 
@@ -34,8 +34,8 @@ Choose this backend when consumers benefit from one artifact per session — nav
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-persistence-jsonl'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-persistence-jsonl'
   config:
     root: /absolute/path/to/session-logs
 ```

@@ -1,12 +1,12 @@
 /**
  * Internal platform-profile builders for the local sandbox provider.
  *
- * @module @deepseek-ai/dsh-sandbox-local/profiles
+ * @module @x1a0f3n9/dsh-sandbox-local/profiles
  */
 
 import { grantArgs as landlockGrantArgs } from '@deepseek-ai/node-addon-landlock-run'
-import { writableRoots } from '@deepseek-ai/dsh-sandbox'
-import type { SandboxPolicy } from '@deepseek-ai/dsh-sandbox'
+import { writableRoots } from '@x1a0f3n9/dsh-sandbox'
+import type { SandboxPolicy } from '@x1a0f3n9/dsh-sandbox'
 
 /**
  * Build the bwrap profile arguments for one file-effect policy.
@@ -44,7 +44,7 @@ function sbplString(path: string): string {
  * Build the sandbox-exec arguments and SBPL profile for one policy. The
  * writable roots come from the shared {@link writableRoots} helper (canonical,
  * deduplicated) so the Seatbelt grant and the in-process fs fence
- * (`@deepseek-ai/dsh-fs-sandbox`) can never drift apart.
+ * (`@x1a0f3n9/dsh-fs-sandbox`) can never drift apart.
  * @param policy - file-effect policy to express as an SBPL profile.
  * @returns sandbox-exec arguments before the trailing separator and command argv.
  */

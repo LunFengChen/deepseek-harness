@@ -12,19 +12,19 @@ import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import SubagentRuntime from '@deepseek-ai/dsh-subagent'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { Agent, AgentOptions } from '@deepseek-ai/dsh-agent'
+import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { Agent, AgentOptions } from '@x1a0f3n9/dsh-agent'
 import {
   DeepSeekHarness,
   HarnessClient,
   HarnessSession,
   SdkProtocolError,
-} from '@deepseek-ai/dsh-sdk-client'
+} from '@x1a0f3n9/dsh-sdk-client'
 import { createProcessDeepSeekHarness } from '../../../sdk/client/src/api.ts'
 import type { RuntimeProcessOptions } from '../../../sdk/client/src/launch.ts'
-import type { DeepSeekHarnessOptions } from '@deepseek-ai/dsh-sdk-client'
-import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
+import type { DeepSeekHarnessOptions } from '@x1a0f3n9/dsh-sdk-client'
+import { ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 import * as sdk from '../src/index.ts'
 import {
   DEFAULT_DISPOSE_EOF_GRACE_MS,
@@ -155,7 +155,7 @@ describe('sdkChildOutcome', () => {
 describe('dsh-subagent-dsh-sdk provider', () => {
   it('constructs the production dsh-backed harness lazily', async () => {
     const harness = defaultCreateHarness({})
-    expect(harness).toBeInstanceOf((await import('@deepseek-ai/dsh-sdk-client')).DeepSeekHarness)
+    expect(harness).toBeInstanceOf((await import('@x1a0f3n9/dsh-sdk-client')).DeepSeekHarness)
     await harness.close()
   })
 

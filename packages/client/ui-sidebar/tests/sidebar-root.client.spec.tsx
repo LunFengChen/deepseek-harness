@@ -8,7 +8,7 @@ import type {
 } from '../src/client/contract/slots.ts'
 import { SidebarRoot } from '../src/client/SidebarRoot.tsx'
 import { en } from '../src/client/locales.ts'
-import { en as commonEn } from '@deepseek-ai/dsh-client-locale/src/locales/en.ts'
+import { en as commonEn } from '@x1a0f3n9/dsh-client-locale/src/locales/en.ts'
 
 // English-dictionary translate stub: the shell renders the same copy the
 // assertions below query by accessible name.

@@ -3,7 +3,7 @@ description: "本地文件系统 spill 后端：spill 工具输出如何保存�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-spill-local
+# @x1a0f3n9/dsh-spill-local
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 不带配置加载插件是安全的：文件会落在操作系统临时目录下延迟创建的私有（0700）每进程目录中。当文件必须位于已知位置时，设置 `root`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-local'
   config:
     root: /absolute/path/to/spill
     cleanupPeriodDays: 30

@@ -3,7 +3,7 @@ description: "Workspace-instruction context for users and maintainers enabling, 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-instructions
+# @x1a0f3n9/dsh-agent-instructions
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ The first request includes one durable baseline message with the user-global `$D
 The defaults suit a typical checkout: `.git` marks the project root, `AGENTS.md` and `CLAUDE.md` are the base candidates, and `AGENTS.local.md` and `CLAUDE.local.md` are additive local overlays. Only `maxBytes` is required — it caps the complete rendered baseline so each deployment chooses its prompt budget explicitly.
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-instructions'
+- name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 ```

@@ -3,7 +3,7 @@ description: "Circular deque for Host and browser packages that need amortized c
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-deque
+# @x1a0f3n9/dsh-deque
 
 English | [中文](README.zh.md)
 
@@ -34,7 +34,7 @@ Use `Deque<T>` when entries can accumulate across asynchronous work and the cons
 Import the deque, append entries at the tail, and check `size` before removing an entry whose type may include `undefined`:
 
 ```ts
-import { Deque } from '@deepseek-ai/dsh-deque'
+import { Deque } from '@x1a0f3n9/dsh-deque'
 
 const frames = new Deque<string>()
 frames.pushBack('first')

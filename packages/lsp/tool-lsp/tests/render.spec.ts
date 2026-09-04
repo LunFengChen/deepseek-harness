@@ -10,8 +10,8 @@ import {
   parseLspArgs,
   presentLspCall,
   renderUri,
-} from '@deepseek-ai/dsh-tool-lsp'
-import type { LspLocation } from '@deepseek-ai/dsh-lsp'
+} from '@x1a0f3n9/dsh-tool-lsp'
+import type { LspLocation } from '@x1a0f3n9/dsh-lsp'
 
 const WS = resolve('/home/u/proj')
 const WS_URI = pathToFileURL(WS).href

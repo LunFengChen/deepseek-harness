@@ -3,7 +3,7 @@ description: "跨会话快照引用与持久的不受信任模型上下文，供
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-reference
+# @x1a0f3n9/dsh-session-reference
 
 [English](README.md) | 中文
 

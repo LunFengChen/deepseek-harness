@@ -3,7 +3,7 @@ description: "基于 waterfall 的问答服务，用于工具、权限插件、�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-user-questions
+# @x1a0f3n9/dsh-user-questions
 
 [English](README.md) | 中文
 
@@ -47,7 +47,7 @@ kind: "package-reference"
 <a id="role"></a>
 ## 职责
 
-这是 Service Definition 包。`@deepseek-ai/dsh-tool-ask-user` 等 Consumer 依赖此服务；Web Client 通过 Remote Events 贡献带 Agent scope 的回答者。循环保持不变：工具调用等待 waterfall 结果，该结果随后恢复正常的 agent loop（智能体循环）。
+这是 Service Definition 包。`@x1a0f3n9/dsh-tool-ask-user` 等 Consumer 依赖此服务；Web Client 通过 Remote Events 贡献带 Agent scope 的回答者。循环保持不变：工具调用等待 waterfall 结果，该结果随后恢复正常的 agent loop（智能体循环）。
 
 <a id="model-experience"></a>
 ## 模型体验

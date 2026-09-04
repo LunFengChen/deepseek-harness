@@ -1,4 +1,4 @@
-# `@xfcodeai/dsh`
+# `@x1a0f3n9/dsh`
 
 English | [中文](README.zh.md)
 
@@ -40,13 +40,13 @@ The tree composes over an empty root:
 - then the profile's `cordis.patch.yml`, then the home-level `$DSH_HOME/cordis.patch.yml`
 - then `--patch` overlays
 
-Bundles named in `dsh.profile.bundles` resolve from the dsh installation first (`@xfcodeai/dsh-base`, `@xfcodeai/dsh-web-app`, `@xfcodeai/dsh-headless`, `@xfcodeai/dsh-sdk-app`, `@xfcodeai/dsh-sdk-minimal`, `@xfcodeai/dsh-acp-app`), then from the profile's own `node_modules`, where pnpm installs out-of-tree plugins.
+Bundles named in `dsh.profile.bundles` resolve from the dsh installation first (`@x1a0f3n9/dsh-base`, `@x1a0f3n9/dsh-web-app`, `@x1a0f3n9/dsh-headless`, `@x1a0f3n9/dsh-sdk-app`, `@x1a0f3n9/dsh-sdk-minimal`, `@x1a0f3n9/dsh-acp-app`), then from the profile's own `node_modules`, where pnpm installs out-of-tree plugins.
 
 Use `--dump-default-config` and `--dump-config` to inspect the composed tree without booting it.
 
 ### Plugin compatibility
 
-`xfdsh plugin --profile <name> add <package>` installs the package into the shared `$DSH_HOME/profiles/<name>` directory, so `dsh` and `xfdsh` see the same profiles and history when they use the same home. Fork packages in the `@xfcodeai/dsh-*` namespace and official bundles that declare `@deepseek-ai/dsh-*` dependencies are supported. Profile installation maps each official dsh dependency to the matching fork package while preserving the official import name, so one xfdsh runtime is used. If a matching fork package cannot be installed, pnpm fails explicitly instead of mixing official and fork runtimes. Existing profiles should run `xfdsh plugin --profile <name> install` once after upgrading.
+`xfdsh plugin --profile <name> add <package>` installs the package into the shared `$DSH_HOME/profiles/<name>` directory, so `dsh` and `xfdsh` see the same profiles and history when they use the same home. Fork packages in the `@x1a0f3n9/dsh-*` namespace and official bundles that declare `@x1a0f3n9/dsh-*` dependencies are supported. Profile installation maps each official dsh dependency to the matching fork package while preserving the official import name, so one xfdsh runtime is used. If a matching fork package cannot be installed, pnpm fails explicitly instead of mixing official and fork runtimes. Existing profiles should run `xfdsh plugin --profile <name> install` once after upgrading.
 
 The [CLI behavior reference](reference/README.md) owns exact layer precedence, flags, shutdown behavior, deployment defaults, and source execution.
 

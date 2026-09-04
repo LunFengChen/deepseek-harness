@@ -3,7 +3,7 @@ description: "面向快照测试的无密钥 LLM 回放插件，供测试作者�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm-replay
+# @x1a0f3n9/dsh-llm-replay
 
 [English](README.md) | 中文
 
@@ -33,7 +33,7 @@ kind: "package-reference"
 
 ```yaml
 - id: llm-replay
-  name: '@deepseek-ai/dsh-llm-replay'
+  name: '@x1a0f3n9/dsh-llm-replay'
   config:
     providers:
       - id: deepseek-official

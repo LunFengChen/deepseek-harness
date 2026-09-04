@@ -3,7 +3,7 @@ description: "目录选择 seam 的应用内浏览后端：为 web GUI 宿主提
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-directory-picker-browse
+# @x1a0f3n9/dsh-host-directory-picker-browse
 
 [English](README.md) | 中文
 

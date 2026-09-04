@@ -12,8 +12,8 @@
  * route regardless of what any client disables.
  */
 
-import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import { createSnapshotStore, type SnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type { ComposerBlock, ComposerBlocks } from '../contract/composer-blocks.ts'
 
 /** The per-session composer-block registry (one instance per plugin fiber). */

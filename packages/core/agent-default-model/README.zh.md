@@ -3,7 +3,7 @@ description: "面向用户与维护者的部署默认模型选择说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-default-model
+# @x1a0f3n9/dsh-agent-default-model
 
 [English](README.md) | 中文
 
@@ -32,7 +32,7 @@ kind: "package-reference"
 组合配置项是默认值的基础：它要求提供方与模型，并且不依赖任何设置提供方也能使用。
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-default-model'
+- name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: deepseek
     model: deepseek-chat

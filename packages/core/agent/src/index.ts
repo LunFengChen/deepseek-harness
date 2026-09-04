@@ -2,16 +2,16 @@
  * Agent service: live registry, factory delegation, and process-local
  * initiator scope. Concrete creation and driving belong to the loop.
  *
- * @module @deepseek-ai/dsh-agent
+ * @module @x1a0f3n9/dsh-agent
  */
 
 import { Context, FiberState, getTraceable, Service, symbols } from '@deepseek-ai/cordis'
 import type { Fiber } from '@deepseek-ai/cordis'
 import { AsyncLocalStorage } from 'node:async_hooks'
 import { isPromise } from 'node:util/types'
-import { scopeTarget } from '@deepseek-ai/dsh-scope'
-import type { Scoped } from '@deepseek-ai/dsh-scope'
-import type { SessionEvent, SessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
+import { scopeTarget } from '@x1a0f3n9/dsh-scope'
+import type { Scoped } from '@x1a0f3n9/dsh-scope'
+import type { SessionEvent, SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import type { Agent } from './types.ts'
 import type { AgentOptions } from './runtime-types.ts'
 
@@ -239,7 +239,7 @@ interface FactorySlot {
  * Agent service (`ctx.agents`): tracks live agents and carries the initiating
  * Agent through one process-local asynchronous driver chain. Agent *creation*
  * is provided by whichever plugin implements the {@link AgentFactory}
- * (`@deepseek-ai/dsh-agent-loop`), registered via {@link setFactory}.
+ * (`@x1a0f3n9/dsh-agent-loop`), registered via {@link setFactory}.
  *
  * Initiator methods provide same-process causal attribution only. Ambient
  * presence is neither liveness proof nor authorization; subjects and owners
@@ -263,13 +263,13 @@ export class AgentRegistry extends Service {
       typeCtx.typert.lookups.register('agent', {
         parameter: 'agent',
         wire: 'agentId',
-        hostTypeSymbol: '@deepseek-ai/dsh-agent#Agent',
-        wireTypeSymbol: '@deepseek-ai/dsh-session/types#SessionId',
+        hostTypeSymbol: '@x1a0f3n9/dsh-agent#Agent',
+        wireTypeSymbol: '@x1a0f3n9/dsh-session/types#SessionId',
         resolve: sessionId => this.get(sessionId),
       })
       typeCtx.typert.contexts.registerHost('agent', {
         wire: 'agentId',
-        wireTypeSymbol: '@deepseek-ai/dsh-session/types#SessionId',
+        wireTypeSymbol: '@x1a0f3n9/dsh-session/types#SessionId',
         identity: candidate => candidate.agent?.id,
         resolve: sessionId => this.get(sessionId)?.ctx,
       })

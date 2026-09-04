@@ -1,5 +1,5 @@
 {
-  "name": "@deepseek-ai/dsh-web-search-exa",
+  "name": "@x1a0f3n9/dsh-web-search-exa",
   "description": "Exa-backed search provider for the DeepSeek Harness web capability seam (ctx.web)",
   "version": "0.1.2-rc.1",
   "publishConfig": {
@@ -27,17 +27,17 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/dsh-launch-environment": "workspace:^",
-    "@deepseek-ai/dsh-web": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-web": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:^"
   },
   "devDependencies": {
-    "@deepseek-ai/dsh-launch-environment": "workspace:^",
-    "@deepseek-ai/dsh-web": "workspace:^",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:^",
+    "@x1a0f3n9/dsh-web": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-http-proxy": "workspace:^"
+    "@x1a0f3n9/dsh-http-proxy": "workspace:^"
   }
 }

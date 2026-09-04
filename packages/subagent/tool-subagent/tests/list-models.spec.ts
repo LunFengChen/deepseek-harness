@@ -4,17 +4,17 @@ import LlmRuntime, {
   ToolCallId,
   LlmAdapter,
   ReasoningEffortId,
-} from '@deepseek-ai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 import type {
   GenerateOptions,
   LlmModelInfo,
   LlmResolvedModelInfo,
   StreamChunk,
-} from '@deepseek-ai/dsh-llm'
-import ToolRuntime from '@deepseek-ai/dsh-tools'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import SubagentRuntime from '@deepseek-ai/dsh-subagent'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
+} from '@x1a0f3n9/dsh-llm'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import * as tool from '../src/index.ts'
 import { registerListSubagentModels } from '../src/list-models.ts'
 import { testToolSignal, text } from './harness.ts'

@@ -3,7 +3,7 @@ description: "ctx.web 的匿名公共 HTTP(S) 抓取后端：部署方如何挂�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-fetch-http
+# @x1a0f3n9/dsh-web-fetch-http
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 加载 web 服务与本提供方；可配置上限都有安全默认值，并在插件构造时验证，因此无效值会响亮地失败，而不是构造出上限荒谬的提供方。URL 安全上限固定为 2,048 个字符。
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-fetch-http'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-fetch-http'
 ```
 
 | 字段 | 默认值 | 含义 |

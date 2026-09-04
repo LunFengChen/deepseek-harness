@@ -3,7 +3,7 @@ description: "全局 send_message、interrupt_agent 与 list_agents 工具，供
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-subagent-control
+# @x1a0f3n9/dsh-tool-subagent-control
 
 [English](README.md) | 中文
 
@@ -32,14 +32,14 @@ kind: "package-reference"
 先加载 subagent 服务、一个后端、委派工具与本包。加上独立的列表插件即可公开全部三个工具：
 
 ```yaml
-- name: '@deepseek-ai/dsh-subagent'
-- name: '@deepseek-ai/dsh-subagent-spawn-in-process'
-- name: '@deepseek-ai/dsh-tool-subagent'
+- name: '@x1a0f3n9/dsh-subagent'
+- name: '@x1a0f3n9/dsh-subagent-spawn-in-process'
+- name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: spawn
     backgroundMode: continuable
-- name: '@deepseek-ai/dsh-tool-subagent-control'
-- name: '@deepseek-ai/dsh-tool-subagent-control/list-agents'
+- name: '@x1a0f3n9/dsh-tool-subagent-control'
+- name: '@x1a0f3n9/dsh-tool-subagent-control/list-agents'
 ```
 
 本包不接收任何配置：根插件提供 `send_message` 与 `interrupt_agent`，列表插件提供 `list_agents`。

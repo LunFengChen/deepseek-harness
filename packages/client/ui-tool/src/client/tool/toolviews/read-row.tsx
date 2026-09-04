@@ -1,5 +1,5 @@
 import type { Context } from '@deepseek-ai/cordis'
-import type { PropsLocale } from '@deepseek-ai/dsh-client-ui-slots'
+import type { PropsLocale } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ToolCallViewProps } from '../../contract/slots.ts'
 import { readCardModel } from '../models/read-card-model.ts'
 import { readFamilyRow } from './read-family-row.tsx'

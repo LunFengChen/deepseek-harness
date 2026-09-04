@@ -6,18 +6,18 @@ import { fileURLToPath } from 'node:url'
 import type { Browser, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import type { Agent, AgentHandle } from '@deepseek-ai/dsh-agent'
-import { composeEntries, loadOverlayPatches } from '@deepseek-ai/dsh-app-boot'
-import { ToolCallId, createUserMessage, LlmAdapter } from '@deepseek-ai/dsh-llm'
-import type { GenerateOptions, StreamChunk } from '@deepseek-ai/dsh-llm'
-import { SessionId, type SessionEvent } from '@deepseek-ai/dsh-session'
+import type { Agent, AgentHandle } from '@x1a0f3n9/dsh-agent'
+import { composeEntries, loadOverlayPatches } from '@x1a0f3n9/dsh-app-boot'
+import { ToolCallId, createUserMessage, LlmAdapter } from '@x1a0f3n9/dsh-llm'
+import type { GenerateOptions, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import { SessionId, type SessionEvent } from '@x1a0f3n9/dsh-session'
 import {
   ScheduleId,
   createEveryScheduleRecord,
   foldScheduleEvents,
   resolveEveryOccurrence,
   type EveryScheduleRecord,
-} from '@deepseek-ai/dsh-schedule'
+} from '@x1a0f3n9/dsh-schedule'
 import {
   assertFixtureInventory,
   captureStableAria,
@@ -671,11 +671,11 @@ describe.skipIf(MODE === 'record')('web e2e: active Schedule catalog', () => {
       loadOverlayPatches('Schedule catalog overlay roster', OVERLAY),
     ])
     expect(base.find(entry => entry.id === 'ui-schedule')).toMatchObject({
-      name: '@deepseek-ai/dsh-client-ui-schedule',
+      name: '@x1a0f3n9/dsh-client-ui-schedule',
       disabled: true,
     })
     expect(scheduled.find(entry => entry.id === 'ui-schedule')).toMatchObject({
-      name: '@deepseek-ai/dsh-client-ui-schedule',
+      name: '@x1a0f3n9/dsh-client-ui-schedule',
       disabled: false,
     })
 

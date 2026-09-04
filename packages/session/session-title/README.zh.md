@@ -3,7 +3,7 @@ description: "面向用户与维护者的日志会话标题说明，用于选择
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-title
+# @x1a0f3n9/dsh-session-title
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 所有上限都是必填项；该库不提供默认值。以三个上限挂载服务：
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-title'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-title'
   config:
     fallbackMaxWords: 8
     fallbackMaxBytes: 96

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-03-fork-plugin-compatibility.md
-2026-09-03-fork-plugin-compatibility.md: a15faf20ef171ad346fa8ef59cb90ad331199791
-2026-09-03-fork-plugin-compatibility.zh.md: 52b67861047839d7ee07174dfc40405b1215e00e
+2026-09-03-fork-plugin-compatibility.md: 05ec0cebf0061d6abefb6b90cf2fa5e783bb7a7e
+2026-09-03-fork-plugin-compatibility.zh.md: 01452b0a78ca81de28b2d203756859c11b8dcd7d

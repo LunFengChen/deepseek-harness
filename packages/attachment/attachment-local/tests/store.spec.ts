@@ -6,7 +6,7 @@ import { dirname, join, parse, resolve } from 'node:path'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import sharp from 'sharp'
-import type { ImageAttachmentLimits } from '@deepseek-ai/dsh-attachment'
+import type { ImageAttachmentLimits } from '@x1a0f3n9/dsh-attachment'
 import type { NormalizationPolicy } from '../src/normalization.ts'
 import { commitPreparedImageFile, prepareImageFile, readImageFile, saveImageFile } from '../src/store.ts'
 

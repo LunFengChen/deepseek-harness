@@ -4,8 +4,8 @@ import { deepStrictEqual } from 'node:assert'
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { packChunkRuns, type SessionEvent } from '@deepseek-ai/dsh-session'
-import { parseSessionLog } from '@deepseek-ai/dsh-llm-replay'
+import { packChunkRuns, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import { parseSessionLog } from '@x1a0f3n9/dsh-llm-replay'
 
 /** Physical persistence artifacts validated by the WebWorker runtime fixture spec. */
 const WEBWORKER_PHYSICAL_SESSION_FIXTURE_ROOT =

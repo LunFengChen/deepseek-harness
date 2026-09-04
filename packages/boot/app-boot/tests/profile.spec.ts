@@ -11,7 +11,7 @@ import {
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { withFileLock } from '@xfcodeai/dsh-atomic-write'
+import { withFileLock } from '@x1a0f3n9/dsh-atomic-write'
 import { describe, expect, it } from 'vitest'
 import {
   composeEntries,
@@ -98,9 +98,9 @@ describe('initProfile', () => {
   it('creates manifest, user patch layer, pnpm workspace, and official dependency hook', () => {
     const home = tmp()
     const dir = resolveProfileDir('tui', home)
-    initProfile(dir, ['@xfcodeai/dsh-base'])
+    initProfile(dir, ['@x1a0f3n9/dsh-base'])
     const manifest = readProfileManifest('t', dir)
-    expect(manifest.dsh?.profile?.bundles).toEqual(['@xfcodeai/dsh-base'])
+    expect(manifest.dsh?.profile?.bundles).toEqual(['@x1a0f3n9/dsh-base'])
     expect(manifest.dsh?.profile?.patchReload).toBe('live')
     expect(readFileSync(join(dir, PROFILE_PATCH_FILENAME), 'utf8')).toContain('[]')
     expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain('nodeLinker: hoisted')
@@ -110,7 +110,7 @@ describe('initProfile', () => {
     // Re-init keeps user edits.
     writeFileSync(join(dir, PROFILE_PATCH_FILENAME), '- id: x\n  config: {}\n')
     initProfile(dir, ['other'], 'startup')
-    expect(readProfileManifest('t', dir).dsh?.profile?.bundles).toEqual(['@xfcodeai/dsh-base'])
+    expect(readProfileManifest('t', dir).dsh?.profile?.bundles).toEqual(['@x1a0f3n9/dsh-base'])
     expect(readProfileManifest('t', dir).dsh?.profile?.patchReload).toBe('live')
     expect(readFileSync(join(dir, PROFILE_PATCH_FILENAME), 'utf8')).toContain('- id: x')
   })
@@ -219,19 +219,19 @@ describe('loadProfile', () => {
     // The web template auto-initializes on first load. Bundle resolution
     // cannot be asserted to fail here: the source-plane test runner resolves
     // @deepseek-ai/* through tsconfig paths regardless of the staged anchor.
-    expect(PROFILE_TEMPLATES.web?.bundles).toContain('@xfcodeai/dsh-base')
+    expect(PROFILE_TEMPLATES.web?.bundles).toContain('@x1a0f3n9/dsh-base')
     expect(PROFILE_TEMPLATES.web?.patchReload).toBe('live')
     expect(PROFILE_TEMPLATES.headless?.patchReload).toBe('startup')
     expect(PROFILE_TEMPLATES.acp).toEqual({
-      bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-acp-app'],
+      bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-acp-app'],
       patchReload: 'startup',
     })
     expect(PROFILE_TEMPLATES.sdk).toEqual({
-      bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-sdk-app'],
+      bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-sdk-app'],
       patchReload: 'startup',
     })
     expect(PROFILE_TEMPLATES['sdk-minimal']).toEqual({
-      bundles: ['@xfcodeai/dsh-sdk-minimal'],
+      bundles: ['@x1a0f3n9/dsh-sdk-minimal'],
       patchReload: 'startup',
     })
     try {
@@ -247,56 +247,56 @@ describe('loadProfile', () => {
 
   it('normalizes only the exact installation-owned headless bundle tuple', () => {
     const anchor = stageInstallation({
-      '@xfcodeai/dsh-base': { patch: '[]\n' },
-      '@xfcodeai/dsh-web-app': { patch: '[]\n' },
-      '@xfcodeai/dsh-headless': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-base': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-web-app': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-headless': { patch: '[]\n' },
       'custom-bundle': { patch: '[]\n' },
     })
     const home = tmp()
     const stock = resolveProfileDir('headless', home)
     initProfile(stock, [
-      '@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app', '@xfcodeai/dsh-headless',
+      '@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless',
     ])
     const retiredManifest = readProfileManifest('t', stock)
     delete retiredManifest.dsh!.profile!.patchReload
     writeProfileManifest(stock, retiredManifest)
     loadProfile('t', 'headless', anchor, home)
     expect(readProfileManifest('t', stock).dsh?.profile).toEqual({
-      bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-headless'],
+      bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-headless'],
       patchReload: 'startup',
     })
 
     const customHome = tmp()
     const custom = resolveProfileDir('headless', customHome)
     initProfile(custom, [
-      '@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app', '@xfcodeai/dsh-headless', 'custom-bundle',
+      '@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless', 'custom-bundle',
     ])
     loadProfile('t', 'headless', anchor, customHome)
     expect(readProfileManifest('t', custom).dsh?.profile?.bundles).toEqual([
-      '@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app', '@xfcodeai/dsh-headless', 'custom-bundle',
+      '@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless', 'custom-bundle',
     ])
   })
 
   it('keeps the exact fork scope for shipped profiles', () => {
     const anchor = stageInstallation({
-      '@xfcodeai/dsh-base': { patch: '[]\n' },
-      '@xfcodeai/dsh-web-app': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-base': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-web-app': { patch: '[]\n' },
     })
     const home = tmp()
     const dir = resolveProfileDir('web', home)
     initProfile(dir, PROFILE_TEMPLATES.web?.bundles ?? [])
     expect(loadProfile('xfdsh', 'web', anchor, home).layers.map(layer => layer.packageName))
-      .toEqual(['@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app'])
+      .toEqual(['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app'])
     expect(readProfileManifest('t', dir).dsh?.profile).toEqual({
-      bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app'],
+      bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app'],
       patchReload: 'live',
     })
   })
 
   it('adds a shipped reload default only to an exact stock tuple and preserves explicit choices', () => {
     const anchor = stageInstallation({
-      '@xfcodeai/dsh-base': { patch: '[]\n' },
-      '@xfcodeai/dsh-web-app': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-base': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-web-app': { patch: '[]\n' },
     })
     const stockHome = tmp()
     const stock = resolveProfileDir('web', stockHome)
@@ -335,7 +335,7 @@ describe('loadProfile', () => {
 
   it('loads an official bundle and leaves its package import names available', () => {
     const anchor = stageInstallation({
-      'official-bundle': { patch: '[]\n', deps: { '@deepseek-ai/dsh-agent': '0.0.0' } },
+      'official-bundle': { patch: '[]\n', deps: { '@x1a0f3n9/dsh-agent': '0.0.0' } },
     })
     const home = tmp()
     const dir = resolveProfileDir('demo', home)
@@ -351,25 +351,25 @@ describe('fork plugin compatibility', () => {
     const module = await import(pathToFileURL(join(dir, '.pnpmfile.cjs')).href)
     const pkg = {
       dependencies: {
-        '@deepseek-ai/dsh-agent': '^1.2.3',
+        '@x1a0f3n9/dsh-agent': '^1.2.3',
         '@deepseek-ai/cordis': '^2.0.0',
       },
-      peerDependencies: { '@deepseek-ai/dsh-llm': 'npm:@deepseek-ai/dsh-llm@^1.0.0' },
-      optionalDependencies: { '@deepseek-ai/dsh-web': 'workspace:*' },
+      peerDependencies: { '@x1a0f3n9/dsh-llm': 'npm:@x1a0f3n9/dsh-llm@^1.0.0' },
+      optionalDependencies: { '@x1a0f3n9/dsh-web': 'workspace:*' },
     }
     expect(() => module.hooks.readPackage(pkg)).toThrow(
-      'official dsh dependency @deepseek-ai/dsh-web uses unsupported spec workspace:*',
+      'official dsh dependency @x1a0f3n9/dsh-web uses unsupported spec workspace:*',
     )
     const transformed = module.hooks.readPackage({
       dependencies: {
-        '@deepseek-ai/dsh-agent': '^1.2.3',
+        '@x1a0f3n9/dsh-agent': '^1.2.3',
         '@deepseek-ai/cordis': '^2.0.0',
       },
-      peerDependencies: { '@deepseek-ai/dsh-llm': 'npm:@deepseek-ai/dsh-llm@^1.0.0' },
+      peerDependencies: { '@x1a0f3n9/dsh-llm': 'npm:@x1a0f3n9/dsh-llm@^1.0.0' },
     })
-    expect(transformed.dependencies['@deepseek-ai/dsh-agent']).toBe('npm:@xfcodeai/dsh-agent@^1.2.3')
+    expect(transformed.dependencies['@x1a0f3n9/dsh-agent']).toBe('npm:@x1a0f3n9/dsh-agent@^1.2.3')
     expect(transformed.dependencies['@deepseek-ai/cordis']).toBe('^2.0.0')
-    expect(transformed.peerDependencies['@deepseek-ai/dsh-llm']).toBe('npm:@xfcodeai/dsh-llm@^1.0.0')
+    expect(transformed.peerDependencies['@x1a0f3n9/dsh-llm']).toBe('npm:@x1a0f3n9/dsh-llm@^1.0.0')
   })
 
   it('does not overwrite a user-owned pnpm hook', () => {

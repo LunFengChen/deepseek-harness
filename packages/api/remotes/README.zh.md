@@ -3,7 +3,7 @@ description: "应用 Remote 装配：为 Client 消费方选择带类型的 Host
 kind: "package-reference"
 ---
 
-# @xfcodeai/dsh-api-remotes
+# @x1a0f3n9/dsh-api-remotes
 
 [English](README.md) | 中文
 
@@ -25,9 +25,9 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-[`@xfcodeai/dsh-api-session-controller`](../session-controller/README.zh.md) 拥有 Agent 与 Session 身份策略，包括供其他 namespace 使用的 Typert lookup resolver。本包只选择并挂载生成的 Session contribution，不复制激活策略。
+[`@x1a0f3n9/dsh-api-session-controller`](../session-controller/README.zh.md) 拥有 Agent 与 Session 身份策略，包括供其他 namespace 使用的 Typert lookup resolver。本包只选择并挂载生成的 Session contribution，不复制激活策略。
 
-Client 组合挂载 Commands、凭据、settings、Goal、动态 Cordis、文件与 Session 引用、Host 插件清单与 profile 功能设置、消息反馈、Session Controller 和 Workspace Controller contribution。该组合卸载时，Cordis effect 的所有权机制会撤回所有贡献；`@xfcodeai/dsh-api-gateway/client` 负责描述符校验、可追踪 namespace Service、直接与作用域方法、调用、流与取消。Client 入口通过 Cordis 消费共享的 `TypertClientRemote` 接口，不导入具体 Gateway；它只以 type-only 形式重新导出 Gateway Client face 的声明合并，因此消费端经由本外观取到转发事件词汇时，运行时不会多出一条通往 Gateway 实现的边。
+Client 组合挂载 Commands、凭据、settings、Goal、动态 Cordis、文件与 Session 引用、Host 插件清单与 profile 功能设置、消息反馈、Session Controller 和 Workspace Controller contribution。该组合卸载时，Cordis effect 的所有权机制会撤回所有贡献；`@x1a0f3n9/dsh-api-gateway/client` 负责描述符校验、可追踪 namespace Service、直接与作用域方法、调用、流与取消。Client 入口通过 Cordis 消费共享的 `TypertClientRemote` 接口，不导入具体 Gateway；它只以 type-only 形式重新导出 Gateway Client face 的声明合并，因此消费端经由本外观取到转发事件词汇时，运行时不会多出一条通往 Gateway 实现的边。
 
 本 facade 同时是 Client 包指称 wire 类型词汇的正门。它以 type-only 方式转出 Remote 失败词汇（`RemoteResult`、`RemoteFailure`、`RemoteErrorCode`、`RemoteErrorDetailsMap`）、Host 事实（`RemoteHostFacts`），以及各已选领域的浏览器安全载荷类型，因此 Client 功能包只 import 一个 specifier，不必伸手进 `dsh-typert-protocol`、Gateway 或某个拥有方的 Host 入口。有两类包刻意不走这道门：本装配自己选中的 api 层包——反向 import 会形成依赖环——以及它们的测试，后者直接从 `dsh-typert-protocol` 取失败词汇。UI 包的测试则从 [`dsh-client-test-runtime`](../../test-support/client-runtime/README.zh.md) 取 `RemoteError` 构造器。
 
@@ -51,7 +51,7 @@ Host entry 为每条 Client stream 独立注册 allowlist listener 和队列，�
 
 本包根 `tsconfig.json` 只是引用 `tsconfig.host.json` 与 `tsconfig.client.json` 的 solution。Host aggregate 和 Host 直接消费方引用前者，Client aggregate 和 Client 直接消费方引用后者；禁止把包根 solution 放进任一 aggregate 的依赖图。两个 project 拥有互不重叠的源码和 `.tsbuildinfo`，但共享 `lib/types` 输出目录——只有一处刻意的例外：`src/remote-events.ts` 与 `src/types.ts` **同时**列进两个 face 的 `files`，因为转发事件名单是「消费端能收到什么」的唯一控制点，Host 转发循环与 Client 的 `ctx.remote.$on` 键面必须读同一份声明，而不是两份可能彼此漂移的声明。
 
-这条例外不止是一行 `files`。根 `tsconfig.base.json` 把 `@xfcodeai/dsh-api-remotes/types` 映射到 `src/types.ts`——**源平面**，与其余所有 workspace 子路径一致，也与生成的 `/remote` 产物相反（后者没有 `paths` 条目，靠 `exports` 命中构建产物）。于是两个 face 都把同一份名单与类型投影收进各自的 program，并向 `lib/types` 发射逐字相同的 `remote-events` 与 `types` 输出；`.tsbuildinfo` 仍各自独立。没有任何门禁强制两个 face 的源文件互不重叠——`scripts/project-reference-faces.ts` 只校验「引用一个 split project 必须指到对应 face」——因此本段记录这次双列为何是有意的。
+这条例外不止是一行 `files`。根 `tsconfig.base.json` 把 `@x1a0f3n9/dsh-api-remotes/types` 映射到 `src/types.ts`——**源平面**，与其余所有 workspace 子路径一致，也与生成的 `/remote` 产物相反（后者没有 `paths` 条目，靠 `exports` 命中构建产物）。于是两个 face 都把同一份名单与类型投影收进各自的 program，并向 `lib/types` 发射逐字相同的 `remote-events` 与 `types` 输出；`.tsbuildinfo` 仍各自独立。没有任何门禁强制两个 face 的源文件互不重叠——`scripts/project-reference-faces.ts` 只校验「引用一个 split project 必须指到对应 face」——因此本段记录这次双列为何是有意的。
 
 包内 `clientBundle(..., { hostPhase: true })` 让 Host tsdown 打包 Host 入口，让后续 Client tsdown 只打包 browser 入口。普通 Client 插件仍使用单一 Client project，并在 Client tsdown 阶段一起生成 Node loader 入口和 browser bundle；只有两组源码需要不同 compiler face 时才拆分。
 

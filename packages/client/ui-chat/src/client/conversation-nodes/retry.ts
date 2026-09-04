@@ -1,8 +1,8 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type {
   ConversationLocation, ConversationMatch, ConversationNodeDefinition,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type {} from '@deepseek-ai/dsh-llm-retry/types'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-llm-retry/types'
 import type { RetryChatData } from '../contract/chat-nodes.ts'
 import type { ModelRetryNode } from '../contract/snapshot.ts'
 import { chatNode } from './common.ts'

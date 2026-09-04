@@ -3,7 +3,7 @@ description: "Worker 线程代码执行，供用户与维护者组合、调优�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-code-runtime-worker-thread
+# @x1a0f3n9/dsh-code-runtime-worker-thread
 
 [English](README.md) | 中文
 
@@ -30,8 +30,8 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-code-runtime'
-- name: '@deepseek-ai/dsh-code-runtime-worker-thread'
+- name: '@x1a0f3n9/dsh-code-runtime'
+- name: '@x1a0f3n9/dsh-code-runtime-worker-thread'
   config:
     computeMs: 60000            # busy-time budget (measured event-loop active time)
     maxWallMs: 600000           # wall-clock ceiling; never pauses for anything

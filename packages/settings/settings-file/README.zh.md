@@ -3,7 +3,7 @@ description: "面向用户与维护者的文件型设置提供方：选择、配
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-settings-file
+# @x1a0f3n9/dsh-settings-file
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-settings-file'
+- name: '@x1a0f3n9/dsh-settings-file'
   config:
     path: /absolute/path/to/settings.yaml
 ```

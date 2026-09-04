@@ -3,13 +3,13 @@ description: "面向用户与维护者的提供方无关模型调用服务说明
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm
+# @x1a0f3n9/dsh-llm
 
 [English](README.md) | 中文
 
 ## 概述
 
-`@deepseek-ai/dsh-llm` 是位于 harness LLM 能力核心的提供方无关模型调用服务。任何向模型提供方发起流式请求的组合都会经过它，它拥有 agent loop（智能体循环）、会话日志和所有插件共同使用的共享词汇——消息、内容块与原始流式分片。借助它，你可以注册提供方适配器、流式发起一次模型调用、列出与发现模型、解析精确模型元数据与调用默认值，并捕获每个提供方的重试策略；每个请求都会被记录，因此始终可以从会话日志重建。它不执行重试，也不拥有任何提供方协议逻辑：适配器翻译各自提供方的格式，可选包 `dsh-llm-retry` 在持久步骤边界上重跑失败的请求。请求在分发前会被深度冻结，因此 middleware 与适配器只能读取，绝不能改写。
+`@x1a0f3n9/dsh-llm` 是位于 harness LLM 能力核心的提供方无关模型调用服务。任何向模型提供方发起流式请求的组合都会经过它，它拥有 agent loop（智能体循环）、会话日志和所有插件共同使用的共享词汇——消息、内容块与原始流式分片。借助它，你可以注册提供方适配器、流式发起一次模型调用、列出与发现模型、解析精确模型元数据与调用默认值，并捕获每个提供方的重试策略；每个请求都会被记录，因此始终可以从会话日志重建。它不执行重试，也不拥有任何提供方协议逻辑：适配器翻译各自提供方的格式，可选包 `dsh-llm-retry` 在持久步骤边界上重跑失败的请求。请求在分发前会被深度冻结，因此 middleware 与适配器只能读取，绝不能改写。
 
 ## 目录
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 挂载服务与至少一个适配器，然后在每个请求中按名称选择提供方：
 
 ```yaml
-- name: '@deepseek-ai/dsh-llm'
-- name: '@deepseek-ai/dsh-llm-deepseek'
+- name: '@x1a0f3n9/dsh-llm'
+- name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY
 ```
@@ -145,7 +145,7 @@ for await (const chunk of ctx.llm.stream({
 
 这些限制说明本服务在哪里停止、由其他包或未来工作接续。它们是当前包约束，不是任务积压。
 
-- **本服务不提供重试执行、缓存或速率限制**——提供方注册会存储重试策略，但一次流仍是一次提供方尝试；`@deepseek-ai/dsh-llm-retry` 在持久 agent 步骤边界上执行该策略。
+- **本服务不提供重试执行、缓存或速率限制**——提供方注册会存储重试策略，但一次流仍是一次提供方尝试；`@x1a0f3n9/dsh-llm-retry` 在持久 agent 步骤边界上执行该策略。
 - **`GenerateOptions` 采样只包含 `temperature`／`maxTokens`／`stop`**——没有 `tool_choice`、`top_p` 或 penalty 字段；有产生方落地时词汇才会增长（见[已删除惰性旋钮](../../../.agents/notes/archived/simplification/2026-07-04-drop-inert-request-knobs.md)）。
 - **只有出现实际产生方后，相应变体才会加入**——`prefill`、逐工具 `strict`、内容块 `cache` 提示和 `agent` 消息来源变体都没有产生方（见 [Agent Note](../../../.agents/notes/archived/simplification/2026-07-04-prune-producerless-vocabulary-variants.md)）。
 - **`BlockAssembler` 只处理核心块类型**——插件添加块类型的流若从未由 `block-end` 关闭，`blocks()` 会抛出异常。

@@ -3,7 +3,7 @@ description: "面向用户与维护者的凭据 seam：在不把机密值写进�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-credentials
+# @x1a0f3n9/dsh-credentials
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 加载本地存储包并给出文档路径：
 
 ```yaml
-- name: '@deepseek-ai/dsh-credentials-local'
+- name: '@x1a0f3n9/dsh-credentials-local'
   config:
     path: /absolute/path/to/.credentials.yaml
 ```
@@ -47,7 +47,7 @@ kind: "package-reference"
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialRef } from '@deepseek-ai/dsh-credentials'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 
@@ -66,7 +66,7 @@ await ctx.credentials.unset(ref)                       // no-op when absent; sam
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import { credentialKey } from '@deepseek-ai/dsh-credentials'
+import { credentialKey } from '@x1a0f3n9/dsh-credentials'
 
 declare const ctx: Context
 

@@ -3,7 +3,7 @@ description: "Local per-platform sandbox backends for users and maintainers choo
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-sandbox-local
+# @x1a0f3n9/dsh-sandbox-local
 
 English | [中文](README.zh.md)
 
@@ -37,7 +37,7 @@ Load the sandbox service and mount the provider; the defaults below are the sele
 
 ```yaml
 - id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'
+  name: '@x1a0f3n9/dsh-sandbox-local'
 ```
 
 | Field | Default | Meaning |

@@ -3,7 +3,7 @@ description: "面向部署方与维护者的沙箱 Bash 执行器说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-bash-sandbox
+# @x1a0f3n9/dsh-bash-sandbox
 
 [English](README.md) | 中文
 
@@ -45,14 +45,14 @@ kind: "package-reference"
 
 ```yaml
 - id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'
+  name: '@x1a0f3n9/dsh-sandbox-local'
 - id: sandbox-policy
-  name: '@deepseek-ai/dsh-sandbox-policy'
+  name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: read-only
     workspaceRoot: !!js process.cwd() # fallback for calls without a session cwd
 - id: bash
-  name: '@deepseek-ai/dsh-bash-sandbox'
+  name: '@x1a0f3n9/dsh-bash-sandbox'
 ```
 
 ### 拒绝是结果事实

@@ -5,7 +5,7 @@
  * resolved differently from the code under test could exempt a file whose
  * suites actually run.
  *
- * @module @deepseek-ai/dsh-pwsh-local/resolve
+ * @module @x1a0f3n9/dsh-pwsh-local/resolve
  */
 
 import { lstatSync } from 'node:fs'

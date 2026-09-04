@@ -3,9 +3,9 @@ import clsx from 'clsx'
 import {
   CodeBlock, DiffBlock, DisclosureRow, IconInspectOutline12, ReadBlock, SearchBlock, StateDot, TerminalBlock, WebBlock,
   diffTotals,
-} from '@deepseek-ai/dsh-client-ui-primitives'
-import type { PropsRenderSlots, TranslateNS } from '@deepseek-ai/dsh-client-ui-slots'
-import type { MessageImageLoader } from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { PropsRenderSlots, TranslateNS } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { MessageImageLoader } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { CHAT_DIFF_MAX_LINES, type DiffCardModel } from '../models/diff-card-model.ts'
 import { CHAT_READ_MAX_LINES, type ReadCardModel } from '../models/read-card-model.ts'
 import type { ImageCardModel } from '../models/image-card-model.ts'

@@ -3,7 +3,7 @@ description: "面向侧栏的官方 DeepSeek Harness 品牌填充，仅在官方
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-brand-official
+# @x1a0f3n9/dsh-client-ui-brand-official
 
 [English](README.md) | 中文
 

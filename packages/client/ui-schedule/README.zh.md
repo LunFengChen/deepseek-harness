@@ -3,7 +3,7 @@ description: "面向用户与维护者的活动 Schedule 提醒只读 Web 目录
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-schedule
+# @x1a0f3n9/dsh-client-ui-schedule
 
 [English](README.md) | 中文
 
@@ -31,7 +31,7 @@ kind: "package-reference"
 dsh web --patch apps/cli/config/examples/schedule/cordis.yml
 ```
 
-随附 Web graph 已通过 disabled 的 `ui-schedule` row 解析 `@deepseek-ai/dsh-client-ui-schedule`；overlay 会把该 row 与 `@deepseek-ai/dsh-schedule` 一起启用。只有 Session 已成功打开且 projection 至少包含一条活动记录时，触发器才会出现。打开目录后，逾期行在前，未来行再按目标时间排序；完全并列时保留 projection 的创建顺序。
+随附 Web graph 已通过 disabled 的 `ui-schedule` row 解析 `@x1a0f3n9/dsh-client-ui-schedule`；overlay 会把该 row 与 `@x1a0f3n9/dsh-schedule` 一起启用。只有 Session 已成功打开且 projection 至少包含一条活动记录时，触发器才会出现。打开目录后，逾期行在前，未来行再按目标时间排序；完全并列时保留 projection 的创建顺序。
 
 ### 阅读和关闭目录
 

@@ -3,7 +3,7 @@ description: "Official DeepSeek Harness brand occupants for the sidebar, active 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-brand-official
+# @x1a0f3n9/dsh-client-ui-brand-official
 
 English | [中文](README.zh.md)
 

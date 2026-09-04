@@ -3,7 +3,7 @@ description: "The default agent driver for users and maintainers choosing, confi
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-loop
+# @x1a0f3n9/dsh-agent-loop
 
 English | [中文](README.zh.md)
 
@@ -32,7 +32,7 @@ Mount `dsh-agent-loop` in any composition that should run agents. It supplies th
 Agents declared in the config start automatically when the plugin loads. Each entry needs an `id` label; a model call additionally requires both `provider` and `model` (`agent/request` may supply a missing pair before dispatch).
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-loop'
+- name: '@x1a0f3n9/dsh-agent-loop'
   config:
     maxParallelToolCalls: 10
     agents:

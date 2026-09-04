@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { bindScopeParent, createScope, scopeOf } from '@deepseek-ai/dsh-scope'
+import { bindScopeParent, createScope, scopeOf } from '@x1a0f3n9/dsh-scope'
 import SkillRegistry, {
   isModelInvocable,
   isUserInvocable,
@@ -11,7 +11,7 @@ import SkillRegistry, {
   type SkillLookupOptions,
   type SkillProvider,
   type SkillProviderObservation,
-} from '@deepseek-ai/dsh-skill'
+} from '@x1a0f3n9/dsh-skill'
 
 function memorySkill(name: string, description: string, rank: number, body = `${name} body.`): SkillCandidate {
   return {

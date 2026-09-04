@@ -7,10 +7,10 @@ import {
   FileType,
   type EntryInfo,
   type Sandbox,
-} from '@deepseek-ai/dsh-e2b'
-import type E2BRuntime from '@deepseek-ai/dsh-e2b'
-import { FsTargetKey, FsVersion } from '@deepseek-ai/dsh-fs'
-import E2BFileSystem from '@deepseek-ai/dsh-fs-e2b'
+} from '@x1a0f3n9/dsh-e2b'
+import type E2BRuntime from '@x1a0f3n9/dsh-e2b'
+import { FsTargetKey, FsVersion } from '@x1a0f3n9/dsh-fs'
+import E2BFileSystem from '@x1a0f3n9/dsh-fs-e2b'
 import { describe, expect, it, vi } from 'vitest'
 
 interface RemoteNode {

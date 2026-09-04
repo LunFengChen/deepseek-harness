@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import { AttachmentId, ImageVariantId } from '@deepseek-ai/dsh-attachment'
-import type { ImageAttachmentRef, ImageMediaType, RequestImageAttachment } from '@deepseek-ai/dsh-attachment'
-import { createUserMessage, ToolCallId, ReasoningEffortId, createMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, GenerateOptions, Message } from '@deepseek-ai/dsh-llm'
+import { AttachmentId, ImageVariantId } from '@x1a0f3n9/dsh-attachment'
+import type { ImageAttachmentRef, ImageMediaType, RequestImageAttachment } from '@x1a0f3n9/dsh-attachment'
+import { createUserMessage, ToolCallId, ReasoningEffortId, createMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, GenerateOptions, Message } from '@x1a0f3n9/dsh-llm'
 import {
   serializeMessages,
   serializeMessagesWithImages,

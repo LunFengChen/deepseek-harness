@@ -3,7 +3,7 @@ description: "面向选择、挂载或排查持久 workspace 记录与会话头�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-workspace
+# @x1a0f3n9/dsh-workspace
 
 [English](README.md) | 中文
 
@@ -36,14 +36,14 @@ kind: "package-reference"
 此包本身不声明任何配置；它需要会话存储、会话持久化后端，以及保存其记录的存储行。最小组合如下：
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-persistence-jsonl'
-- name: '@deepseek-ai/dsh-storage'
-- name: '@deepseek-ai/dsh-storage-json'
-- name: '@deepseek-ai/dsh-storage-domain'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-persistence-jsonl'
+- name: '@x1a0f3n9/dsh-storage'
+- name: '@x1a0f3n9/dsh-storage-json'
+- name: '@x1a0f3n9/dsh-storage-domain'
   config:
     backend: json
-- name: '@deepseek-ai/dsh-workspace'
+- name: '@x1a0f3n9/dsh-workspace'
 ```
 
 挂载这些行之后，创建项目会立即出现在列表中并在重启后保留；首次启动还会按会话运行的目录对既有会话分组。如果缺少某个必需依赖，workspace 功能会一直不可用，直到它被挂载。

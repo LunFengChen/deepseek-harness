@@ -32,7 +32,7 @@ It is a **library, not a service or plugin**: no `ctx`, registers nothing, holds
 ## API
 
 ```ts
-import { bytesToBase64, randomUUID, type Uuid } from '@deepseek-ai/dsh-util-crypto'
+import { bytesToBase64, randomUUID, type Uuid } from '@x1a0f3n9/dsh-util-crypto'
 ```
 
 | Export | Role |

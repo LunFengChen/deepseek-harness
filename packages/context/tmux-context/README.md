@@ -3,7 +3,7 @@ description: "Opt-in per-turn tmux location context for users and maintainers en
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tmux-context
+# @x1a0f3n9/dsh-tmux-context
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ On each turn whose tmux state changed, the model receives one source-tagged cont
 The minimal mount needs no configuration. A positive `refreshIntervalMs` additionally suppresses injections that fall within that many milliseconds of the latest one; omission or `0` injects whenever the tmux state changed since the last injection.
 
 ```yaml
-- name: '@deepseek-ai/dsh-tmux-context'
+- name: '@x1a0f3n9/dsh-tmux-context'
   config:
     refreshIntervalMs: 60000
 ```

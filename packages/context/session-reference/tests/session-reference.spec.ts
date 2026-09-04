@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { agentEvents, type Agent } from '@deepseek-ai/dsh-agent'
-import { CompactionId, compactCheckpointSource } from '@deepseek-ai/dsh-compaction'
-import { createUserMessage, ToolCallId , createMessage, createToolResultMessage } from '@deepseek-ai/dsh-llm'
-import SessionStore, { Session, SessionId, SessionSeq } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import SessionQueryEngine from '@deepseek-ai/dsh-session-query'
-import SessionTitleService from '@deepseek-ai/dsh-session-title'
+import { agentEvents, type Agent } from '@x1a0f3n9/dsh-agent'
+import { CompactionId, compactCheckpointSource } from '@x1a0f3n9/dsh-compaction'
+import { createUserMessage, ToolCallId , createMessage, createToolResultMessage } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import SessionQueryEngine from '@x1a0f3n9/dsh-session-query'
+import SessionTitleService from '@x1a0f3n9/dsh-session-title'
 import SessionReferenceResolver, {
   decodeSessionReferenceUri,
   encodeSessionReferenceUri,
@@ -14,7 +14,7 @@ import SessionReferenceResolver, {
   parseSessionReferenceText,
   type Config,
   type SessionReferenceErrorCode,
-} from '@deepseek-ai/dsh-session-reference'
+} from '@x1a0f3n9/dsh-session-reference'
 import { stringifyTagSafeJson } from '../src/serialization.ts'
 
 class TestSessionQueryEngine extends SessionQueryEngine {

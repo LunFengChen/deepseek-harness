@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { clearedProxyEnv, installProxyFromEnvironment } from '@deepseek-ai/dsh-http-proxy'
+import { clearedProxyEnv, installProxyFromEnvironment } from '@x1a0f3n9/dsh-http-proxy'
 import { workerSpawnEnv } from '../src/host.ts'
 
 /** A proxy URL carrying credentials, the shape that must never reach model-authored code. */

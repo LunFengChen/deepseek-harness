@@ -1,5 +1,5 @@
 {
-  "name": "@xfcodeai/dsh-host-plugin-inventory",
+  "name": "@x1a0f3n9/dsh-host-plugin-inventory",
   "description": "Profile plugin catalog and current Cordis Loader inventory Remote",
   "version": "0.1.2-alpha.5",
   "publishConfig": {
@@ -48,21 +48,21 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^",
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
   "peerDependenciesMeta": {
-    "@xfcodeai/dsh-agent-presets": {
+    "@x1a0f3n9/dsh-agent-presets": {
       "optional": true
     }
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@xfcodeai/dsh-agent-presets": "workspace:^",
-    "@xfcodeai/dsh-brand": "workspace:^",
-    "@xfcodeai/dsh-typert-protocol": "workspace:^",
+    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }
 }

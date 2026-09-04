@@ -3,7 +3,7 @@ description: "Anonymous per-harness-home identity for users and maintainers trac
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-anonymous-user-id
+# @x1a0f3n9/dsh-anonymous-user-id
 
 English | [中文](README.zh.md)
 
@@ -44,7 +44,7 @@ The id lives in `$DSH_HOME/.anonymous-user-id` (`~/.dsh` by default) as a plain 
 When you build a feature that should share the installation's anonymous id, import the value once and reuse it — telemetry, feedback, and DeepSeek already use the same id, so your records line up with theirs:
 
 ```ts
-import { getOrCreateAnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+import { getOrCreateAnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
 
 const userId = getOrCreateAnonymousUserId() // stable for the process lifetime
 ```

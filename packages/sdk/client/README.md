@@ -3,7 +3,7 @@ description: "The TypeScript SDK client for callers that spawn a DeepSeek Harnes
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-sdk-client
+# @x1a0f3n9/dsh-sdk-client
 
 English | [中文](README.zh.md)
 
@@ -30,8 +30,8 @@ Use this client when TypeScript code must drive a complete Harness runtime from 
 ### Running agent turns with DeepSeekHarness
 
 ```ts
-import { DeepSeekHarness } from '@deepseek-ai/dsh-sdk-client'
-import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
+import { DeepSeekHarness } from '@x1a0f3n9/dsh-sdk-client'
+import { ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 
 await using harness = new DeepSeekHarness({
   profile: 'sdk',
