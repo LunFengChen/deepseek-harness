@@ -12,6 +12,7 @@ import {
 import type { MessageSource } from '@x1a0f3n9/dsh-llm'
 import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@x1a0f3n9/dsh-session'
+import type { SessionPersistence } from '@x1a0f3n9/dsh-session-persistence'
 import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
 import { SessionTitleInvalidError } from '@x1a0f3n9/dsh-session-title'
 import { canonicalClientTimeZone } from '@x1a0f3n9/dsh-util-time'
@@ -478,8 +479,16 @@ export class SessionCommandController {
         {},
       )
     }
+    const persistence = this.ctx.get('sessionPersistence') as SessionPersistence | undefined
+    if (persistence === undefined) {
+      throw new RemoteError(
+        'gateway/internal',
+        'session persistence is unavailable; cannot delete conversation history',
+        {},
+      )
+    }
     await agent.runMaintenance(async () => {
-      await this.ctx.sessionPersistence.truncate(agent.session.id, length)
+      await persistence.truncate(agent.session.id, length)
       agent.session.truncate(length)
     })
     return { accepted: true }
