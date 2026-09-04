@@ -36,6 +36,9 @@ const PEER_SECTIONS = ['peerDependencies'] as const
 /** The workspace root manifest, which is never a release member. */
 const WORKSPACE_ROOT_PACKAGE = '@x1a0f3n9/dsh-root'
 
+/** The npm scope owned by this branch's harness packages. */
+const WORKSPACE_PACKAGE_SCOPE = WORKSPACE_ROOT_PACKAGE.slice(0, WORKSPACE_ROOT_PACKAGE.indexOf('/') + 1)
+
 /** One peer declaration the publish order leaves unordered. */
 interface DroppedPeerEdge {
   readonly consumer: string
@@ -131,7 +134,9 @@ export abstract class ReleaseFamily {
       const name = requireString(manifest, 'name', normalized)
       const version = requireString(manifest, 'version', normalized)
       if (name === WORKSPACE_ROOT_PACKAGE) throw new Error(`${normalized} selected the workspace root`)
-      if (!name.startsWith('@deepseek-ai/')) throw new Error(`${normalized} must name an @deepseek-ai package`)
+      if (!name.startsWith(WORKSPACE_PACKAGE_SCOPE)) {
+        throw new Error(`${normalized} must name a ${WORKSPACE_PACKAGE_SCOPE} package`)
+      }
       if (seen.has(name)) throw new Error(`${name} appears twice in release family ${this.id}`)
       seen.add(name)
       members.push({
