@@ -61,6 +61,10 @@ When you launch `dsh --profile web` over SSH, the URL line still prints but the 
 
 Each browser session composes its own agent from the shipped presets (the `standard` preset by default), instead of sharing one process-wide tool set. You can change the default preset or add your own presets under `$DSH_HOME/.agent-presets`.
 
+### Optional profile plugins
+
+The Web bundle can ship plugin features without forcing them on at runtime. Features declared in `dsh.bundle.plugins` appear in Settings → Plugins → Plugin list, where optional entries can be enabled or disabled without reinstalling the package. The choice is stored in the profile manifest and survives restart; required entries remain enabled. Add or remove external plugin packages with `xfdsh plugin --profile web add <package>` and `remove <package>`.
+
 -----
 
 <a id="understand-the-implementation"></a>

@@ -15,6 +15,12 @@ export const zh = {
   switcherLabel: '选择要查看的 Agent 预设',
   presetOptionDefault: '{name}（默认）',
   presetOptionBroken: '{name}（加载失败）',
+  catalogTitle: '可选插件',
+  catalogSubtitle: '已随当前 profile 预置，可直接启用或停用',
+  enablePlugin: '启用 {name}',
+  disablePlugin: '停用 {name}',
+  requiredTag: '必需',
+  updateError: '插件状态保存失败，请重试。',
   globalTitle: '全局插件',
   globalSubtitle: '系统与所有会话共用',
   presetProvidedDetail: '全局已停用，由 Agent 预设按会话提供',
@@ -38,6 +44,7 @@ export const zh = {
   active: '运行中',
   failed: '启动失败',
   unloading: '卸载中',
+
 } satisfies Record<string, string>
 
 /** Plugin inventory locale key union. */
@@ -58,6 +65,12 @@ export const en = {
   switcherLabel: 'Choose the agent preset to inspect',
   presetOptionDefault: '{name} (default)',
   presetOptionBroken: '{name} (failed to load)',
+  catalogTitle: 'Optional plugins',
+  catalogSubtitle: 'Prebundled with this profile; enable or disable them here',
+  enablePlugin: 'Enable {name}',
+  disablePlugin: 'Disable {name}',
+  requiredTag: 'Required',
+  updateError: 'The plugin state could not be saved. Try again.',
   globalTitle: 'Global plugins',
   globalSubtitle: 'Shared by the system and every session',
   presetProvidedDetail: 'Disabled globally; agent presets provide it per session',
@@ -81,4 +94,5 @@ export const en = {
   active: 'Running',
   failed: 'Failed to start',
   unloading: 'Unloading',
+
 } satisfies Record<PluginInventoryLocaleKey, string>

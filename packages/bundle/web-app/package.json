@@ -35,7 +35,17 @@
   "license": "MIT",
   "dsh": {
     "bundle": {
-      "patch": "./cordis.patch.yml"
+      "patch": "./cordis.patch.yml",
+      "plugins": [
+        {
+          "id": "ui-schedule",
+          "entryId": "ui-schedule",
+          "packageName": "@xfcodeai/dsh-client-ui-schedule",
+          "title": "Schedule",
+          "description": "Schedule management UI and runtime",
+          "defaultEnabled": false
+        }
+      ]
     }
   },
   "dependencies": {

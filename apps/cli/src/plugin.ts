@@ -11,10 +11,9 @@
  */
 
 import { spawnSync } from 'node:child_process'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import {
-  assertForkCompatibleBundle,
   DEFAULT_PROFILE_BUNDLES,
   initProfile,
   PROFILE_TEMPLATES,
@@ -65,11 +64,6 @@ function reconcilePlugins(before: ProfileManifest, profileDir: string): void {
   let changed = false
   for (const packageName of dependencies) {
     const isBundle = exportsPatch(packageName, profileDir)
-    if (isBundle) {
-      const packageDir = resolveBundleDir(NAME, packageName, INSTALL_ANCHOR, profileDir)
-      const bundleManifest = JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8')) as ProfileManifest
-      assertForkCompatibleBundle(NAME, packageName, bundleManifest)
-    }
     if (isBundle && !plugins.includes(packageName)) {
       plugins.push(packageName)
       changed = true

@@ -22,6 +22,30 @@ export interface PluginInventoryEntry {
   readonly fiberPhase: PluginFiberPhase
 }
 
+/** One package-owned prebundled feature exposed for profile-level toggling. */
+export interface PluginInventoryCatalogEntry {
+  readonly id: string
+  readonly entryId: PluginEntryId
+  readonly packageName: string
+  readonly title?: string
+  readonly description?: string
+  readonly required: boolean
+  readonly defaultEnabled: boolean
+  readonly installed: boolean
+  readonly enabled: boolean
+}
+
+/** Request to persist the enablement of one cataloged prebundled feature. */
+export interface PluginInventorySetEnabledRequest {
+  readonly entryId: PluginEntryId
+  readonly enabled: boolean
+}
+
+/** Result of a prebundled feature enablement mutation. */
+export interface PluginInventorySetEnabledValue {
+  readonly enabled: boolean
+}
+
 /** Effective enablement of one preset composition row. */
 export type PresetPluginEnablement = boolean | 'conditional'
 
@@ -62,6 +86,8 @@ export interface AgentPresetPluginGroup {
 /** Point-in-time inventory returned by the plugin inventory Remote. */
 export interface PluginInventorySnapshot {
   readonly entries: readonly PluginInventoryEntry[]
+  /** Optional prebundled features declared by the selected profile bundles. */
+  readonly catalog?: readonly PluginInventoryCatalogEntry[]
   /**
    * Per-preset compositions, present only when an agent-preset roster is
    * composed in this deployment.

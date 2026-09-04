@@ -157,6 +157,14 @@ export function stripClientSuffix(spec: string): string {
   return spec.endsWith('/client') ? spec.slice(0, -'/client'.length) : spec
 }
 
+/** Official dsh client requests resolve to the matching fork module when it is served. */
+export function forkDshSpecifier(spec: string): string {
+  const officialPrefix = '@deepseek-ai/dsh-'
+  return spec.startsWith(officialPrefix)
+    ? '@xfcodeai/dsh-' + spec.slice(officialPrefix.length)
+    : spec
+}
+
 /**
  * Parse `window.__DSH_BOOT__` into the two consumer views. Wire boundary:
  * a missing or malformed graph throws (the shell shows the loud failure —

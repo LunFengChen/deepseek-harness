@@ -3,8 +3,8 @@
 # separate sequences with their own workflows and version lines.
 #
 # Pack and dependency-layout verification run without credentials on every pull
-# request and master push. Publication is a manual workflow_dispatch of
-# release-publish.yml from a xfdsh-v* tag.
+# request and master push. The fork publishes the dsh family automatically from
+# a successful master push; release-publish.yml remains the reviewed tag fallback.
 name: Release (dsh)
 
 on:
@@ -103,6 +103,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Verify release version
+        env:
+          RELEASE_PUBLISH: ${{ github.ref == 'refs/heads/master' && 'true' || 'false' }}
+          RELEASE_PUBLISH_ALLOW_MASTER: ${{ github.ref == 'refs/heads/master' && 'true' || 'false' }}
         run: pnpm run release:verify --family dsh
 
       - name: Build
@@ -138,3 +141,44 @@ jobs:
           path: dist/npm/*
           if-no-files-found: error
           retention-days: 7
+
+
+  publish:
+    name: Publish to npm (master)
+    if: github.ref == 'refs/heads/master'
+    needs: [dependencies, pack]
+    runs-on: ubuntu-24.04
+    # The environment keeps the npm token behind the repository's publication
+    # policy. If it has required reviewers, master publication waits for them.
+    environment: npm-publish
+    concurrency:
+      group: Release-publish
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          dest: ${{ runner.temp }}/setup-pnpm
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.PRIMARY_NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Install (immutable, no package scripts)
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dsh-npm-tarballs
+          path: dist/npm
+
+      - name: Publish tarballs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm run release:publish --family dsh --from dist/npm

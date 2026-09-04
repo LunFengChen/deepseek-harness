@@ -718,16 +718,26 @@ describe('Issue lifecycle workflow', () => {
 })
 
 describe('npm release workflows', () => {
-  it('keeps publication dispatch-only and pack in the PR workflow', () => {
-    // pack stays in the PR/master release workflows so a PR proves the set packs.
-    for (const file of ['release.yml', 'release-vendor.yml']) {
-      const workflow = loadWorkflow(`.github/workflows/${file}`)
-      if (!isRecord(workflow.jobs)) throw new TypeError(`${file} must define jobs`)
-      expect(Object.keys(workflow.jobs).sort()).toEqual(file === 'release.yml' ? ['dependencies', 'pack'] : ['pack'])
+  it('publishes the fork from master while keeping the vendor sequence manual', () => {
+    // The dsh pack remains in the PR/master release workflow so a PR proves the
+    // set packs; only a successful master run may reach the publish job.
+    const dshRelease = loadWorkflow('.github/workflows/release.yml')
+    if (!isRecord(dshRelease.on) || !isRecord(dshRelease.jobs)) {
+      throw new TypeError('release.yml must define on and jobs')
     }
+    expect(Object.keys(dshRelease.jobs).sort()).toEqual(['dependencies', 'pack', 'publish'])
+    const dshPublish = dshRelease.jobs.publish
+    if (!isRecord(dshPublish)) throw new TypeError('release.yml must define a publish job')
+    expect(dshPublish.if).toBe("github.ref == 'refs/heads/master'")
+    expect(dshPublish.needs).toEqual(['dependencies', 'pack'])
+    expect(dshPublish.environment).toBe('npm-publish')
 
-    // publication is workflow_dispatch-only (never a PR check) and keeps the
-    // npm-publish environment plus the shared dist-tag group.
+    const vendorRelease = loadWorkflow('.github/workflows/release-vendor.yml')
+    if (!isRecord(vendorRelease.jobs)) throw new TypeError('release-vendor.yml must define jobs')
+    expect(Object.keys(vendorRelease.jobs)).toEqual(['pack'])
+
+    // The fallback workflows remain explicit actions and keep the npm-publish
+    // environment plus the shared dist-tag group.
     for (const file of ['release-publish.yml', 'release-vendor-publish.yml']) {
       const workflow = loadWorkflow(`.github/workflows/${file}`)
       if (!isRecord(workflow.on) || !isRecord(workflow.jobs)) throw new TypeError(`${file} must define on and jobs`)
@@ -755,7 +765,7 @@ describe('npm release workflows', () => {
 })
 
 describe('Documentation site publication', () => {
-  it('keeps Pages deployment dispatch-only from a xfdsh-v* tag', () => {
+  it('keeps Pages deployment dispatch-only from a dsh-v* tag', () => {
     const workflow = loadWorkflow('.github/workflows/docs-pages.yml')
     const build = workflowJob(workflow, 'build')
     const deploy = workflowJob(workflow, 'deploy')
@@ -767,7 +777,7 @@ describe('Documentation site publication', () => {
     // publication must never appear as a PR check.
     expect(Object.keys(workflow.on)).toEqual(['workflow_dispatch'])
 
-    // RELEASE_PUBLISH makes release:verify reject every ref that is not a xfdsh-v*
+    // RELEASE_PUBLISH makes release:verify reject every ref that is not a dsh-v*
     // tag naming this tree's version, so the site and the npm sequence share one
     // definition of a released version.
     const steps = build.steps.filter(isRecord)

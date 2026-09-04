@@ -1,5 +1,5 @@
 ---
-description: "Read-only projection of the current Cordis Loader plugin state with each agent preset's composition beside it: the pluginInventory service and its pluginInventory/list Remote for web GUI host clients."
+description: "Projection of current Cordis Loader state and profile plugin catalog with each agent preset's composition beside it: the pluginInventory service and its pluginInventory/list Remote for web GUI host clients."
 kind: "package-reference"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-Clients and settings pages can show what is currently composed in the host: calling `pluginInventory/list` returns the current non-group Loader entries in Loader order — entry id, module specifier, effective enablement, and root Fiber phase (`pending`, `loading`, `active`, `failed`, or `unloading`, or `null` when an entry has no live root Fiber). When an agent-preset roster is composed, the snapshot also carries one group per preset — id, trust, display name, default marking, health, and flattened composition rows — because a deployment that mounts the roster runs its model-facing plugins there rather than on the Loader's own entries. The snapshot is point-in-time: the Loader is the sole lifecycle authority, and this package owns no cache, history, provenance model, event stream, or mutation path. Client packages consume the Remote through the explicit [`api-remotes`](../../api/remotes/README.md) assembly rather than importing the Host implementation.
+Clients and settings pages can show what is currently composed in the host: calling `pluginInventory/list` returns the current non-group Loader entries in Loader order — entry id, module specifier, effective enablement, and root Fiber phase (`pending`, `loading`, `active`, `failed`, or `unloading`, or `null` when an entry has no live root Fiber). When an agent-preset roster is composed, the snapshot also carries one group per preset — id, trust, display name, default marking, health, and flattened composition rows — because a deployment that mounts the roster runs its model-facing plugins there rather than on the Loader's own entries. The snapshot is point-in-time: the Loader is the sole lifecycle authority, and this package owns no cache, history, provenance model, or event stream; its separate migration Remote copies official dsh history into the isolated xfdsh home. Client packages consume the Remote through the explicit [`api-remotes`](../../api/remotes/README.md) assembly rather than importing the Host implementation.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ Clients and settings pages can show what is currently composed in the host: call
 <a id="use-this-package"></a>
 ## Use this package
 
-Call `pluginInventory/list` when a client or settings page needs to show what is currently composed in the host — which plugins are loaded, enabled, and alive, and what each agent preset would give a session. The Remote is the only entry point: the service is Remote-only and deliberately declares no same-process Cordis `Context` merge.
+Call `pluginInventory/list` when a client or settings page needs to show what is currently composed in the host — which plugins are loaded, enabled, and alive, and what each agent preset would give a session. The Remote is the only entry point: the service is Remote-only and deliberately declares no same-process Cordis `Context` merge. `pluginInventory/setEnabled` is the profile-management entry point for package-owned prebundled entries. `pluginInventory/historyStatus` reports whether the official `~/.dsh` store is available, and `pluginInventory/migrateHistory` copies its sessions and attachments into the xfdsh home without deleting or overwriting existing files.
 
 ### What a snapshot contains
 
@@ -35,9 +35,13 @@ Each row is one non-group Loader entry: its entry id, the exact module specifier
 
 With a roster composed, `agentPresets` carries one group per preset in roster order: its id, whether the deployment ships it or the user owns it (`trust`, which clients use to localize shipped names), published display name, whether a session naming no preset composes it, and flattened plugin rows — entry id (null when the file row declares none), module specifier, effective enablement, the row's own `!!js` disabled expression when it carries one, and a root-fiber phase when the composition is live. A preset some session already composed answers from its newest standing generation — even when its file has since broken, because the mount is what those sessions run; one never composed since boot answers from its composition file with disabled gates evaluated against the Loader context, and reading never mounts a preset. `conditional` enablement marks a gate the Host could not evaluate, and a broken preset nothing composed stays listed with its reason and no rows. Without a roster the field is absent.
 
+### Profile plugin catalog
+
+A bundle may publish `dsh.bundle.plugins` metadata for features that are already shipped with the profile but are optional at runtime. The snapshot exposes each catalog entry's package, title, default, required, installed, and current enabled state. The Web Settings Plugins page uses `pluginInventory/setEnabled` to update the Loader immediately and persist `dsh.profile.pluginOverrides` in the active profile manifest. Required entries cannot be disabled. Installing or removing external packages remains the CLI's job: use `xfdsh plugin --profile <name> add <package>` or `remove <package>`.
+
 ### What you can and cannot do with it
 
-The inventory is a snapshot for display and diagnostics: a client can render the roster, flag failed entries, and detect changes by comparing snapshots. It cannot enable, disable, add, or remove plugins, and it carries no history — a fiber that already failed and was removed is absent. Because the service reads the Loader on every call, the answer always reflects the current composition rather than a cached view.
+The inventory is a snapshot for display and diagnostics, while catalog entries also support enablement changes for profile-owned prebundled features. It does not install or remove npm packages, and the migration operation copies history rather than making it part of the inventory snapshot — a fiber that already failed and was removed is absent. Because the service reads the Loader on every call, the answer always reflects the current composition rather than a cached view.
 
 -----
 
@@ -83,7 +87,7 @@ Read these when the inventory contract is not enough: how the Remote reaches cli
 <a id="model-experience"></a>
 ## Model Experience
 
-None, as the host-side read-only Loader projection registers nothing model-facing.
+None, as the host-side Loader projection and profile settings Remote register nothing model-facing.
 
 #### KV Cache effect
 
@@ -97,7 +101,7 @@ None; this package neither assembles nor sends a provider request.
 These limits define what a point-in-time inventory cannot tell a client. They are current package constraints, not a task backlog.
 
 - **Point-in-time state only** — the result contains no durable failure history or subscription; a missing root Fiber is reported as `null`, regardless of why no live root exists.
-- **No provenance or mutation** — the service does not identify which bundle, profile, or override introduced an entry, and it cannot enable, disable, add, or remove plugins in either plane.
+- **Mutation is catalog-scoped** — the service can enable or disable only bundle-declared prebundled entries; it does not install or remove npm packages or edit arbitrary patch rows.
 - **Presets appear only with a roster** — a deployment without `dsh-agent-presets` serves Loader entries alone; the `agentPresets` field is absent rather than empty.
 
 <a id="dev-note"></a>

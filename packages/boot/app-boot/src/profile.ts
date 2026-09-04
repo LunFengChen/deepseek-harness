@@ -50,12 +50,34 @@ const PROFILE_MODULE_FALLBACK_DIR = '.dsh-module-fallback'
 export interface DshBundleManifest {
   /** The patch layer this bundle exports, relative to its package root. */
   patch: string
+  /** Optional prebundled plugin features exposed for profile settings. */
+  plugins?: readonly DshPluginCatalogEntry[]
+}
+
+/** Metadata for one prebundled plugin feature that a profile may toggle. */
+export interface DshPluginCatalogEntry {
+  /** Stable catalog identity, unique across the selected bundle layers. */
+  id: string
+  /** Loader entry id changed when this feature is enabled or disabled. */
+  entryId: string
+  /** Package that provides the feature, for display and diagnostics. */
+  packageName: string
+  /** Optional package-owned display title. */
+  title?: string
+  /** Optional package-owned description. */
+  description?: string
+  /** Required features cannot be disabled from profile settings. */
+  required?: boolean
+  /** Default runtime state when the profile has no saved override. */
+  defaultEnabled?: boolean
 }
 
 /** The profile half of the `dsh` manifest section: what a profile directory composes. */
 export interface DshProfileManifest {
   /** Ordered bundle layer list (package names). */
   bundles?: string[]
+  /** Persisted enablement overrides for prebundled plugin catalog entries. */
+  pluginOverrides?: Record<string, boolean>
   /** Whether user patch files reload while this profile remains active. */
   patchReload?: ProfilePatchReload
 }
@@ -91,47 +113,80 @@ export interface ProfileManifest {
   dsh?: DshManifestSection
 }
 
-/** A package dependency that belongs to the upstream, non-fork dsh namespace. */
-export interface LegacyDshDependency {
-  /** The dependency section containing the legacy package name. */
-  section: 'dependencies' | 'peerDependencies' | 'optionalDependencies'
-  /** The package name declared by the bundle. */
-  packageName: string
+/** The upstream product package namespace accepted by profile plugins. */
+export const OFFICIAL_DSH_PACKAGE_PREFIX = '@deepseek-ai/dsh-'
+
+/** The package namespace shipped by this fork. */
+export const FORK_DSH_PACKAGE_PREFIX = '@xfcodeai/dsh-'
+
+/**
+ * Return the fork package corresponding to an official dsh package name.
+ * @param packageName - package name from a plugin manifest or module request.
+ * @returns the fork name for an official dsh package, or `undefined` for other packages.
+ */
+export function forkDshPackageName(packageName: string): string | undefined {
+  return packageName.startsWith(OFFICIAL_DSH_PACKAGE_PREFIX)
+    ? FORK_DSH_PACKAGE_PREFIX + packageName.slice(OFFICIAL_DSH_PACKAGE_PREFIX.length)
+    : undefined
 }
 
 /**
- * Find direct runtime dependencies that cannot resolve inside this fork.
- * Cordis and other upstream-scoped vendor packages are intentionally allowed;
- * only the old `@deepseek-ai/dsh-*` product namespace is incompatible.
- * @param manifest - the bundle package manifest.
- * @returns legacy product dependencies grouped by their manifest section.
+ * Explain the profile install rule for official plugins.
+ *
+ * Profile installs rewrite official dsh dependency specs to npm aliases for the
+ * matching fork packages. This keeps the package import names used by an
+ * official plugin while ensuring that its runtime objects come from one fork
+ * namespace. A missing fork package remains a normal package-manager failure.
  */
-export function findLegacyDshDependencies(manifest: ProfileManifest): LegacyDshDependency[] {
-  const sections = ['dependencies', 'peerDependencies', 'optionalDependencies'] as const
-  return sections.flatMap(section => Object.keys(manifest[section] ?? {})
-    .filter(packageName => packageName.startsWith('@deepseek-ai/dsh-'))
-    .map(packageName => ({ section, packageName })))
+export const PROFILE_PNPMFILE = `const OFFICIAL_PREFIX = ${JSON.stringify(OFFICIAL_DSH_PACKAGE_PREFIX)}
+const FORK_PREFIX = ${JSON.stringify(FORK_DSH_PACKAGE_PREFIX)}
+const SECTIONS = ['dependencies', 'optionalDependencies', 'peerDependencies']
+
+function officialAliasRange(specifier) {
+  if (typeof specifier !== 'string') return undefined
+  const prefix = 'npm:' + OFFICIAL_PREFIX
+  if (!specifier.startsWith(prefix)) return undefined
+  const suffix = specifier.slice(prefix.length)
+  const at = suffix.lastIndexOf('@')
+  return at === -1 ? '*' : suffix.slice(at + 1)
 }
 
-/**
- * Reject a bundle built against the upstream product package namespace.
- * @param binName - the diagnostic prefix on the thrown error.
- * @param packageName - the bundle listed in the profile.
- * @param manifest - the resolved bundle package manifest.
- * @returns nothing when the bundle can run with the fork's package namespace.
- */
-export function assertForkCompatibleBundle(
-  binName: string, packageName: string, manifest: ProfileManifest,
-): void {
-  const legacy = findLegacyDshDependencies(manifest)
-  if (legacy.length === 0) return
-  const names = [...new Set(legacy.map(entry => entry.packageName))].join(', ')
-  throw new Error(
-    `${binName}: profile bundle ${JSON.stringify(packageName)} depends on upstream dsh package(s) ${names}; `
-    + 'this xfdsh installation provides @xfcodeai/dsh-* packages. Install a fork-compatible plugin release '
-    + 'or use the official dsh installation for this bundle. Generic Cordis bundles remain supported when they do not '
-    + 'depend on @deepseek-ai/dsh-* packages',
-  )
+function remap(specifier, packageName) {
+  if (typeof specifier !== 'string') return specifier
+  if (specifier.startsWith('npm:' + FORK_PREFIX)) return specifier
+  const aliasRange = officialAliasRange(specifier)
+  if (aliasRange !== undefined) {
+    return 'npm:' + FORK_PREFIX + packageName.slice(OFFICIAL_PREFIX.length) + '@' + aliasRange
+  }
+  if (/^(?:workspace:|file:|link:|git:|github:|https?:)/.test(specifier)) {
+    throw new Error('xfdsh: official dsh dependency ' + packageName + ' uses unsupported spec ' + specifier
+      + '; install a release with a registry version or a matching @xfcodeai package')
+  }
+  return 'npm:' + FORK_PREFIX + packageName.slice(OFFICIAL_PREFIX.length) + '@' + specifier
+}
+
+module.exports = {
+  hooks: {
+    readPackage(pkg) {
+      for (const section of SECTIONS) {
+        const dependencies = pkg[section]
+        if (dependencies === undefined) continue
+        for (const [packageName, specifier] of Object.entries(dependencies)) {
+          if (packageName.startsWith(OFFICIAL_PREFIX)) {
+            dependencies[packageName] = remap(specifier, packageName)
+          }
+        }
+      }
+      return pkg
+    },
+  },
+}
+`
+
+/** Ensure an existing profile also receives the official-plugin dependency hook. */
+export function ensureProfilePnpmfile(dir: string): void {
+  const path = join(dir, '.pnpmfile.cjs')
+  if (!existsSync(path)) writeFileSync(path, PROFILE_PNPMFILE)
 }
 
 /** One resolved bundle layer of a profile. */
@@ -142,8 +197,20 @@ export interface ProfileLayer {
   packageDir: string
   /** Absolute path of the bundle's patch file. */
   patchPath: string
+  /** The bundle's optional prebundled plugin catalog. */
+  plugins?: DshPluginCatalogEntry[]
   /** The parsed patch list. */
   patches: PatchOptions[]
+}
+
+/** Runtime profile facts exposed to Host plugins that manage profile-owned state. */
+export interface DshProfileRuntime {
+  /** Executable name used in profile diagnostics and manifest writes. */
+  binName: string
+  /** Loaded profile and its selected bundle layers. */
+  profile: Profile
+  /** Absolute package.json path of the running dsh installation. */
+  installAnchor: string
 }
 
 /** A loaded profile: resolved bundle layers plus the user's own patch layer. */
@@ -154,6 +221,8 @@ export interface Profile {
   dir: string
   /** Bundle layers in `dsh.profile.bundles` order. */
   layers: ProfileLayer[]
+  /** Persisted enablement overrides for prebundled plugin catalog entries. */
+  pluginOverrides?: Record<string, boolean>
   /** Absolute path of the profile's own patch file. */
   patchPath: string
   /** The profile's own patches; empty when the file is absent. */
@@ -258,6 +327,7 @@ export function initProfile(
   if (!existsSync(patchPath)) writeFileSync(patchPath, PROFILE_PATCH_TEMPLATE)
   const workspacePath = join(dir, 'pnpm-workspace.yaml')
   if (!existsSync(workspacePath)) writeFileSync(workspacePath, PROFILE_PNPM_WORKSPACE)
+  ensureProfilePnpmfile(dir)
 }
 
 function readModuleProxyRecord(link: string): ModuleProxyRecord | undefined {
@@ -751,6 +821,30 @@ export function writeProfileManifest(dir: string, manifest: ProfileManifest): vo
   writeFileSync(join(dir, 'package.json'), JSON.stringify(manifest, undefined, 2) + '\n')
 }
 
+/**
+ * Persist one prebundled plugin's profile override without touching the user
+ * patch layer or dependency declarations.
+ * @param binName - diagnostic prefix used when the profile manifest is read.
+ * @param dir - profile directory containing `package.json`.
+ * @param entryId - Loader entry id from the bundle catalog.
+ * @param enabled - desired effective enablement.
+ */
+export function writeProfilePluginOverride(
+  binName: string, dir: string, entryId: string, enabled: boolean,
+): void {
+  if (entryId.length === 0) throw new Error(`${binName}: plugin entry id must not be empty`)
+  const manifest = readProfileManifest(binName, dir)
+  const profile = manifest.dsh?.profile ?? {}
+  const pluginOverrides = { ...(profile.pluginOverrides ?? {}), [entryId]: enabled }
+  writeProfileManifest(dir, {
+    ...manifest,
+    dsh: {
+      ...manifest.dsh,
+      profile: { ...profile, pluginOverrides },
+    },
+  })
+}
+
 /** Return whether two bundle lists have the same values in the same order. */
 function sameBundles(left: readonly string[], right: readonly string[]): boolean {
   return left.length === right.length && left.every((value, index) => value === right[index])
@@ -834,6 +928,72 @@ export function resolveBundleDir(
   )
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+}
+
+/** Parse package-owned catalog metadata at the durable package.json boundary. */
+function parsePluginCatalog(
+  binName: string, packageName: string, raw: unknown,
+): DshPluginCatalogEntry[] {
+  if (raw === undefined) return []
+  if (!Array.isArray(raw)) {
+    throw new Error(`${binName}: bundle ${JSON.stringify(packageName)} dsh.bundle.plugins must be an array`)
+  }
+  const ids = new Set<string>()
+  const entryIds = new Set<string>()
+  return raw.map((value, index) => {
+    if (!isRecord(value)
+      || typeof value.id !== 'string' || value.id.length === 0
+      || typeof value.entryId !== 'string' || value.entryId.length === 0
+      || typeof value.packageName !== 'string' || value.packageName.length === 0) {
+      throw new Error(`${binName}: bundle ${JSON.stringify(packageName)} dsh.bundle.plugins[${index}] must declare non-empty id, entryId, and packageName`)
+    }
+    if (ids.has(value.id) || entryIds.has(value.entryId)) {
+      throw new Error(`${binName}: bundle plugin catalog contains duplicate id or entryId ${JSON.stringify(value.id)}`)
+    }
+    if (value.title !== undefined && typeof value.title !== 'string') {
+      throw new Error(`${binName}: bundle plugin catalog entry ${JSON.stringify(value.id)} title must be a string`)
+    }
+    if (value.description !== undefined && typeof value.description !== 'string') {
+      throw new Error(`${binName}: bundle plugin catalog entry ${JSON.stringify(value.id)} description must be a string`)
+    }
+    if (value.required !== undefined && typeof value.required !== 'boolean') {
+      throw new Error(`${binName}: bundle plugin catalog entry ${JSON.stringify(value.id)} required must be a boolean`)
+    }
+    if (value.defaultEnabled !== undefined && typeof value.defaultEnabled !== 'boolean') {
+      throw new Error(`${binName}: bundle plugin catalog entry ${JSON.stringify(value.id)} defaultEnabled must be a boolean`)
+    }
+    ids.add(value.id)
+    entryIds.add(value.entryId)
+    return {
+      id: value.id,
+      entryId: value.entryId,
+      packageName: value.packageName,
+      ...value.title === undefined ? {} : { title: value.title },
+      ...value.description === undefined ? {} : { description: value.description },
+      ...value.required === undefined ? {} : { required: value.required },
+      ...value.defaultEnabled === undefined ? {} : { defaultEnabled: value.defaultEnabled },
+    }
+  })
+}
+
+/** Parse profile plugin overrides before applying them as Loader patches. */
+function parsePluginOverrides(binName: string, dir: string, raw: unknown): Record<string, boolean> {
+  if (raw === undefined) return {}
+  if (!isRecord(raw)) {
+    throw new Error(`${binName}: profile manifest ${join(dir, 'package.json')} dsh.profile.pluginOverrides must be an object`)
+  }
+  const result: Record<string, boolean> = {}
+  for (const [entryId, enabled] of Object.entries(raw)) {
+    if (entryId.length === 0 || typeof enabled !== 'boolean') {
+      throw new Error(`${binName}: profile manifest ${join(dir, 'package.json')} dsh.profile.pluginOverrides must map entry ids to booleans`)
+    }
+    result[entryId] = enabled
+  }
+  return result
+}
+
 /**
  * Load a profile: resolve every `dsh.profile.bundles` entry to its patch
  * layer and parse the profile's own patch file. A listed bundle without a
@@ -862,6 +1022,7 @@ export function loadProfile(
     }
     initProfile(dir, template.bundles, template.patchReload)
   }
+  ensureProfilePnpmfile(dir)
   const manifest = normalizeShippedProfile(name, dir, readProfileManifest(binName, dir))
   // A hand-written profile manifest may omit the dsh section entirely.
   const bundles = manifest.dsh?.profile?.bundles ?? []
@@ -872,22 +1033,39 @@ export function loadProfile(
     )
   }
   const patchReload = rawPatchReload ?? DEFAULT_PROFILE_PATCH_RELOAD
+  const pluginOverrides = parsePluginOverrides(binName, dir, manifest.dsh?.profile?.pluginOverrides)
   const layers = bundles.map((packageName): ProfileLayer => {
     const packageDir = resolveBundleDir(binName, packageName, installAnchor, dir)
     const bundleManifest = JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8')) as ProfileManifest
-    assertForkCompatibleBundle(binName, packageName, bundleManifest)
     const declared = bundleManifest.dsh?.bundle?.patch
     if (declared === undefined) {
       throw new Error(`${binName}: profile bundle ${JSON.stringify(packageName)} declares no dsh.bundle in its package.json`)
     }
     const patchPath = join(packageDir, declared)
-    return { packageName, packageDir, patchPath, patches: loadOverlayPatches(binName, patchPath) }
+    const plugins = parsePluginCatalog(binName, packageName, bundleManifest.dsh?.bundle?.plugins)
+    return { packageName, packageDir, patchPath, plugins, patches: loadOverlayPatches(binName, patchPath) }
   })
+  const catalogIds = new Set<string>()
+  const catalogEntryIds = new Set<string>()
+  for (const layer of layers) {
+    for (const plugin of layer.plugins ?? []) {
+      if (catalogIds.has(plugin.id) || catalogEntryIds.has(plugin.entryId)) {
+        throw new Error(`${binName}: profile bundles contain duplicate plugin catalog id or entry id ${JSON.stringify(plugin.id)}`)
+      }
+      catalogIds.add(plugin.id)
+      catalogEntryIds.add(plugin.entryId)
+    }
+  }
+  for (const entryId of Object.keys(pluginOverrides)) {
+    if (!catalogEntryIds.has(entryId)) {
+      throw new Error(`${binName}: profile manifest ${join(dir, 'package.json')} dsh.profile.pluginOverrides references unknown prebundled plugin ${JSON.stringify(entryId)}`)
+    }
+  }
   const patchPath = join(dir, PROFILE_PATCH_FILENAME)
   const patches = options.userLayer !== false && existsSync(patchPath)
     ? loadOverlayPatches(binName, patchPath)
     : []
-  return { name, dir, layers, patchPath, patches, patchReload }
+  return { name, dir, layers, pluginOverrides, patchPath, patches, patchReload }
 }
 
 /**

@@ -1,5 +1,5 @@
 ---
-description: "当前 Cordis Loader 插件状态的只读投影，并附带每个 Agent 预设的组合：面向 web GUI 宿主客户端的 pluginInventory 服务及其 pluginInventory/list Remote。"
+description: "当前 Cordis Loader 插件状态与 profile 预置插件管理：面向 web GUI 宿主客户端的 pluginInventory 服务及其 list/setEnabled Remote。"
 kind: "package-reference"
 ---
 
@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-当客户端或设置页需要展示宿主当前组合了什么——哪些插件已加载、已启用、是否存活，以及每个 Agent 预设会给会话什么——时调用 `pluginInventory/list`。Remote 是唯一入口：该服务仅供 Remote 使用，刻意不声明同进程 Cordis `Context` merge。
+当客户端或设置页需要展示宿主当前组合了什么——哪些插件已加载、已启用、是否存活，以及每个 Agent 预设会给会话什么——时调用 `pluginInventory/list`。Remote 是唯一入口：该服务仅供 Remote 使用，刻意不声明同进程 Cordis `Context` merge。`pluginInventory/setEnabled` 是 profile 管理预置插件启停的入口。
 
 ### 快照包含什么
 
@@ -35,9 +35,13 @@ kind: "package-reference"
 
 组合了 roster 时，`agentPresets` 按 roster 顺序携带每个预设一组：其 id、随部署内置还是用户自建（`trust`，客户端据此本地化内置预设名）、发布的显示名、未指名预设的会话是否组合它，以及压平后的插件行——条目 id（文件行未声明时为 null）、模块标识、有效启用状态、行自带的 `!!js` disabled 表达式（如有），以及组合存活时的根 Fiber 阶段。已有会话组合过的预设由其最新 standing 世代作答——即使其文件事后损坏也是如此，因为挂载才是这些会话实际运行的组合；开机以来从未被组合的预设由其组合文件作答，disabled 门用 Loader 上下文求值，且读取从不挂载预设。`conditional` 表示宿主无法求值的门；无人组合的坏预设保留在列表中，携带原因且没有行。没有 roster 时该字段缺席。
 
+### Profile 插件目录
+
+bundle 可以通过 `dsh.bundle.plugins` 发布已经随 profile 提供、但运行时可选的功能元数据。快照会返回每个目录项的包名、标题、默认状态、是否必需、是否已安装以及当前启用状态。Web 设置的「插件」页面通过 `pluginInventory/setEnabled` 立即更新 Loader，并把选择写入当前 profile manifest 的 `dsh.profile.pluginOverrides`。必需项不能停用。外部包的安装与移除仍由 CLI 负责：使用 `xfdsh plugin --profile <name> add <package>` 或 `remove <package>`。
+
 ### 你能用它做什么、不能做什么
 
-该清单是供展示与诊断的快照：客户端可以渲染名单、标出失败条目，并通过比较快照检测变化。它不能启用、停用、添加或移除插件，也不携带历史——已经失败并被移除的 fiber 缺席。由于服务每次调用都读取 Loader，答案总是反映当前组合，而不是缓存视图。
+该清单是供展示与诊断的快照；目录项另外支持修改 profile 预置功能的启停。它不会安装或移除 npm 包，也不携带历史——已经失败并被移除的 fiber 缺席。由于服务每次调用都读取 Loader，答案总是反映当前组合，而不是缓存视图。
 
 -----
 
@@ -83,7 +87,7 @@ Typert 生成由 `./typert` 与 `./remote` 导出的 Host 和 Client Remote 产�
 <a id="model-experience"></a>
 ## 模型体验
 
-无。这个仅限 Host 的只读 Loader 投影不注册任何面向模型的内容。
+无。这个仅限 Host 的 Loader 投影与 profile 设置 Remote 不注册任何面向模型的内容。
 
 #### KV Cache 影响
 
@@ -97,7 +101,7 @@ Typert 生成由 `./typert` 与 `./remote` 导出的 Host 和 Client Remote 产�
 这些限制说明一个点时刻清单无法告诉客户端什么。它们是当前包约束，不是任务积压。
 
 - **仅表示调用当下**——结果不包含持久的失败历史或订阅；只要不存在存活的根 Fiber，就会报告 `null`，而不区分其原因。
-- **无来源与修改能力**——服务不识别条目由哪个 bundle、profile 或 override 引入，也不能在任一平面启用、停用、添加或移除插件。
+- **目录范围是刻意限定的**——只有 bundle 声明的预置目录项能通过该 Remote 切换；npm 安装与移除保留在 CLI，自定义 patch 行也不属于目录。
 - **预设仅随 roster 出现**——未装 `dsh-agent-presets` 的部署只提供 Loader 条目；`agentPresets` 字段缺席而非为空。
 
 <a id="dev-note"></a>

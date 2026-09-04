@@ -61,6 +61,10 @@ dsh --profile web --no-open --port 8080
 
 每个浏览器会话都从随发行版交付的 preset（默认 `standard`）组合自己的 agent（智能体），而不是共享一套进程级工具集。你可以更改默认 preset，或在 `$DSH_HOME/.agent-presets` 下添加自己的 preset。
 
+### profile 可选插件
+
+Web bundle 可以随包提供插件功能，但不强制它们在运行时启用。`dsh.bundle.plugins` 声明的功能会出现在「设置 → 插件 → 插件列表」中；可选项可以直接启停，不需要重新安装包。选择会写入 profile manifest，重启后仍然保留；必需项始终保持启用。外部插件包通过 `xfdsh plugin --profile web add <package>` 与 `remove <package>` 安装或移除。
+
 -----
 
 <a id="understand-the-implementation"></a>

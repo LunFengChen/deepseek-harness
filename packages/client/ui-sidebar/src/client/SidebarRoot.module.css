@@ -244,17 +244,26 @@
   white-space: nowrap;
 }
 
+/* New Session row: the primary action and optional adjacent actions share
+   one 38px control line; collapsed mode keeps both at the rail width. */
+.newSessionRow {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 2px 8px;
+}
+
 /* New Session: 38px bar, 12px radius (figma 133:7634 geometry, squared-off
    corners); collapsed it renders as the rail's plain icon control. */
 .newSession {
-  flex: none;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   height: 38px;
   padding: 8px 16px;
-  margin: 0 2px 8px;
   box-sizing: border-box;
   border: 0.5px solid var(--dsw-alias-border-l3);
   border-radius: 12px;
@@ -271,12 +280,17 @@
   background: var(--dsw-alias-button-floating-hover);
 }
 
+.collapsed .newSessionRow {
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
 .collapsed .newSession {
   align-self: flex-start;
   width: 36px;
   height: 36px;
   padding: 0;
-  margin: 0 0 12px;
   gap: 0;
   border-color: transparent;
   background: transparent;

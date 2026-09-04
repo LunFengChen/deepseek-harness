@@ -1,9 +1,14 @@
 import { afterEach, describe, expect, it } from 'vitest'
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
 import { Context, FiberState, type Plugin } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import { remoteMethods } from '@deepseek-ai/dsh-typert-protocol'
 import type { AgentPresets } from '@deepseek-ai/dsh-agent-presets'
 import PluginInventoryGateway from '../src/index.ts'
+import type { PluginEntryId } from '../src/types.ts'
+import type { DshProfileRuntime } from '@xfcodeai/dsh-app-boot'
 
 const contexts: Context[] = []
 
@@ -38,9 +43,11 @@ describe('PluginInventoryGateway', () => {
       serviceKey: 'pluginInventory',
       namespace: 'pluginInventory',
     })
-    expect(remoteMethods(inventory)).toEqual([
+    expect(remoteMethods(inventory)).toEqual(expect.arrayContaining([
       { method: 'list', invocation: { kind: 'direct' } },
-    ])
+      { method: 'setEnabled', invocation: { kind: 'direct' } },
+    ]))
+    expect(remoteMethods(inventory)).toHaveLength(2)
   })
 
   it('projects current non-group Loader entries without a second cache', async () => {
@@ -88,6 +95,60 @@ describe('PluginInventoryGateway', () => {
 
     await ctx.loader.remove(pendingId)
     expect((await inventory.list()).entries.some(entry => entry.entryId === pendingId)).toBe(false)
+  })
+
+
+
+  it('projects and persists the selected profile catalog state', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-'))
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@xfcodeai/dsh-web-app',
+          packageDir: profileDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'optional',
+            entryId: catalogEntryId,
+            packageName: '@xfcodeai/dsh-client-optional',
+            title: 'Optional feature',
+            description: 'A selectable feature',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog).toEqual([{
+      id: 'optional',
+      entryId: catalogEntryId,
+      packageName: '@xfcodeai/dsh-client-optional',
+      title: 'Optional feature',
+      description: 'A selectable feature',
+      required: false,
+      defaultEnabled: true,
+      installed: true,
+      enabled: true,
+    }])
+
+    await expect(inventory.setEnabled({ entryId: catalogEntryId, enabled: false })).resolves.toEqual({ enabled: false })
+    expect((await inventory.list()).catalog?.[0]?.enabled).toBe(false)
+    expect(JSON.parse(readFileSync(join(profileDir, 'package.json'), 'utf8'))).toMatchObject({
+      dsh: { profile: { pluginOverrides: { [entryId]: false } } },
+    })
   })
 
   it('carries each composed preset with root-fiber states mapped to phases', async () => {

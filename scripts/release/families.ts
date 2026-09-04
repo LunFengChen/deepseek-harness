@@ -321,7 +321,7 @@ export abstract class ReleaseFamily {
 class DshFamily extends ReleaseFamily {
   readonly id = 'dsh'
   readonly patterns = ['packages/!(experimental)/*/package.json', 'apps/*/package.json'] as const
-  readonly tagPrefix = 'xfdsh-v'
+  readonly tagPrefix = 'dsh-v'
 
   /** Require current artifacts from a complete official client build. */
   override verifyBuildArtifacts(root: string): void {
@@ -342,7 +342,7 @@ class DshFamily extends ReleaseFamily {
 
   /**
    * The single family prefix: every member shares one version, so one tag names it.
-   * @returns `xfdsh-v`.
+   * @returns `dsh-v`.
    */
   tagPrefixFor(): string {
     return this.tagPrefix
