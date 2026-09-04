@@ -387,6 +387,45 @@ describe('PiAiAdapter provider routing', () => {
     expect(server.paths).toEqual(['/chat/completions'])
   })
 
+  it('classifies an SSE body that ends without finish_reason as a protocol failure', async () => {
+    const server = await mockServer([{
+      status: 200,
+      headers: { 'x-request-id': 'req-abc-123' },
+      events: [
+        '{"choices":[{"delta":{"role":"assistant","content":"partial"},"index":0,"finish_reason":null}]}',
+        '[DONE]',
+      ],
+    }])
+    const ctx = await harness(server.url)
+    const result = await assemble(ctx, { model: 'deepseek-v4-flash', messages: [] })
+    expect(result.finish).toMatchObject({
+      kind: 'error',
+      failure: { code: 'PI_AI_ERROR', status: 200, requestId: 'req-abc-123' },
+    })
+    if (result.finish.kind === 'error') {
+      expect(result.finish.failure.message).toContain('Stream ended without finish_reason')
+      expect(result.finish.failure.message).toContain('provider=deepseek')
+      expect(result.finish.failure.message).toContain('model=deepseek-v4-flash')
+      expect(result.finish.failure.message).toContain('api=openai-completions')
+      expect(result.finish.failure.message).toContain('baseURL=')
+      expect(result.finish.failure.message).toContain('status=200')
+      expect(result.finish.failure.message).toContain('requestId=req-abc-123')
+      expect(result.finish.failure.message).toContain('sawContent=yes')
+    }
+    expect(server.paths).toEqual(['/chat/completions'])
+  })
+
+  it('forwards a provider-scoped env block to pi-ai', async () => {
+    const server = await mockServer([{ events: textEvents }])
+    const ctx = await harness(server.url, { env: { PI_CACHE_RETENTION: 'long' } })
+    const result = await assemble(ctx, { model: 'deepseek-v4-flash', messages: [] })
+    expect(result.finish).toEqual({ kind: 'stop' })
+    expect(server.paths).toEqual(['/chat/completions'])
+    // The env block must reach pi-ai's provider-env reads: a long cache
+    // retention resolved from it changes the wire request.
+    expect(server.requests[0]).toMatchObject({ prompt_cache_retention: '24h' })
+  })
+
   it('uses the resolved catalog context window for usage-based overflow detection', async () => {
     const model = getBuiltinModels('deepseek').find(candidate => candidate.id === 'deepseek-v4-flash')
     if (model === undefined) throw new Error('deepseek-v4-flash missing from pi-ai test catalog')
