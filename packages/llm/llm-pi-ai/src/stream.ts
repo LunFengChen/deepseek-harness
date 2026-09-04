@@ -248,6 +248,7 @@ export function mapStopReason(
  * @param events - one assistant turn's pi-ai event stream.
  * @param contextWindow - resolved catalog capacity for usage-based overflow detection.
  * @param diagnostics - optional per-stream facts used to classify provider failures.
+ * @param callerSignal - caller cancellation state; an aborted caller makes any in-band terminal error an aborted finish.
  * @returns the harness chunks, ending with `usage` then `finish`; throws
  *   `LlmError` (`STREAM_CLOSED`) if the source ends without a terminal event.
  */
@@ -255,6 +256,7 @@ export async function* toStreamChunks(
   events: AsyncIterable<AssistantMessageEvent>,
   contextWindow?: number,
   diagnostics?: PiAiStreamDiagnostics,
+  callerSignal?: AbortSignal,
 ): AsyncGenerator<StreamChunk> {
   // pi-ai contentIndex ↔ our block index map 1:1 (both count blocks from 0
   // in stream order), but we track ids per index for tool calls.
@@ -329,7 +331,14 @@ export async function* toStreamChunks(
         // In-stream error delivery (pi-ai's style) → error finish chunk
         // (the harness's other sanctioned error path besides throwing).
         yield { type: 'usage', usage: mapUsage(event.error.usage) }
-        yield { type: 'finish', reason: mapStopReason(event.error, contextWindow, diagnostics) }
+        yield {
+          type: 'finish',
+          reason: mapStopReason(
+            callerSignal?.aborted ? { ...event.error, stopReason: 'aborted' } : event.error,
+            contextWindow,
+            diagnostics,
+          ),
+        }
         return
       // no default: AssistantMessageEvent is pi-ai's closed union; a new
       // event type should fail compilation here via tsc's exhaustiveness
