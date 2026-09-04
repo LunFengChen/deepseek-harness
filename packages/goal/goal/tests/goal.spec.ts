@@ -370,7 +370,6 @@ describe('GoalService mutations', () => {
       roundsStarted: 2,
       activation: 'disarmed',
     })
-    expect(() => ctx.goals.resume(agent, goal)).toThrow(expect.objectContaining({ code: 'GOAL_INVALID_TRANSITION' }))
     goal = ctx.goals.edit(agent, goal, { maxGoalRounds: 3 })
     expect(goal.blockedReason).toEqual({ code: 'round-limit', message: 'Goal round limit reached.' })
     goal = ctx.goals.resume(agent, goal)
@@ -379,6 +378,19 @@ describe('GoalService mutations', () => {
     appendRound(session, goal, 3)
     goal = ctx.goals.block(agent, goal, { code: 'round-limit', message: 'Goal round limit reached.' })
     expect(ctx.goals.complete(agent, goal).phase).toBe('complete')
+  })
+
+  it('resumes a round-limit blocker without changing its informational budget', async () => {
+    const { ctx, agent, session } = await harness()
+    let goal = ctx.goals.create(agent, { objective: 'continue', maxGoalRounds: 2 })
+    appendRound(session, goal, 1)
+    appendRound(session, goal, 2)
+    goal = ctx.goals.block(agent, goal, { code: 'round-limit', message: 'Goal round limit reached.' })
+
+    goal = ctx.goals.resume(agent, goal)
+
+    expect(goal).toMatchObject({ phase: 'active', maxGoalRounds: 2, roundsStarted: 2, activation: 'armed' })
+    expect(goal.blockedReason).toBeUndefined()
   })
 
   it('clears through a revisioned tombstone and permits a fresh goal', async () => {
@@ -656,7 +668,7 @@ describe('goal replay validation', () => {
     for (const change of invalid) expect(() => foldPair(base, change)).toThrow()
   })
 
-  it('rejects invalid replayed lifecycle phase transitions', () => {
+  it('accepts a resumed round beyond the informational budget', () => {
     const base = snapshotChange()
     const invalid: GoalSnapshotChangeMeta[] = [
       mutation(base, 'edit', 'paused'),
@@ -678,7 +690,7 @@ describe('goal replay validation', () => {
     appendRound(session, base.goal, 2)
     appendChange(session, { ...paused, roundsStarted: 2 })
     appendChange(session, exhausted)
-    expect(() => foldGoal(session.snapshotEvents())).toThrow('exhausted round budget')
+    expect(() => foldGoal(session.snapshotEvents())).not.toThrow()
   })
 
   it('rejects invalid clear continuity and goal id reuse', () => {
