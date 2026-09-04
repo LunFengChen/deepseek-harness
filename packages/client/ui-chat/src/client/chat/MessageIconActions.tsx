@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import {
-  IconBranchOutline16, IconCheckOutline16, IconCopyOutline16, IconTrashOutline16,
+  IconBranchOutline16, IconCheckOutline16, IconCopyOutline16, IconRefreshOutline16, IconTrashOutline16,
   RiskConfirmation, Tooltip, writeClipboard,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ChatViewSlotProps } from '../contract/slots.ts'
@@ -24,6 +24,8 @@ export interface MessageIconActionsProps {
   branchUnavailable?: boolean | undefined
   /** Permanently remove this turn and all later history. */
   onDelete?: (() => void) | undefined
+  /** Remove this turn and submit the same prompt again. */
+  onRegenerate?: (() => void) | undefined
   /** Parent layout class composed onto the actions row. */
   className?: string | undefined
   /**
@@ -46,7 +48,7 @@ export interface MessageIconActionsProps {
  * @returns The actions row element.
  */
 export function MessageIconActions({
-  text, time, clock, onBranch, branchUnavailable = false, onDelete, className,
+  text, time, clock, onBranch, branchUnavailable = false, onDelete, onRegenerate, className,
   extraActions, usageAction, t,
 }: MessageIconActionsProps) {
   const day = useCalendarDay()
@@ -54,7 +56,7 @@ export function MessageIconActions({
   // Same success chrome as CodeBlock: a short check swap after the write,
   // gated so re-clicks during the window neither re-copy nor stack timers.
   const [copied, setCopied] = useState(false)
-  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [destructiveAction, setDestructiveAction] = useState<'delete' | 'regenerate' | null>(null)
   const [deleteAcknowledged, setDeleteAcknowledged] = useState(false)
   const copyPending = useRef(false)
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -79,19 +81,21 @@ export function MessageIconActions({
       }, 1000)
     })
   }, [copied, text])
-  const openDelete = useCallback(() => {
+  const openDestructive = useCallback((action: 'delete' | 'regenerate') => {
     setDeleteAcknowledged(false)
-    setDeleteOpen(true)
+    setDestructiveAction(action)
   }, [])
   const cancelDelete = useCallback(() => {
-    setDeleteOpen(false)
+    setDestructiveAction(null)
     setDeleteAcknowledged(false)
   }, [])
-  const confirmDelete = useCallback(() => {
-    setDeleteOpen(false)
+  const confirmDestructive = useCallback(() => {
+    const action = destructiveAction
+    setDestructiveAction(null)
     setDeleteAcknowledged(false)
-    onDelete?.()
-  }, [onDelete])
+    if (action === 'delete') onDelete?.()
+    else if (action === 'regenerate') onRegenerate?.()
+  }, [destructiveAction, onDelete, onRegenerate])
   const clockEl = time === undefined ? null : (
     <span className={clock === 'start' ? css.timeStart : css.timeEnd}>
       {formatMessageClock(time, t, day)}
@@ -106,9 +110,16 @@ export function MessageIconActions({
         </button>
       </Tooltip>
       {extraActions}
+      {onRegenerate !== undefined && (
+        <Tooltip label={t('message.regenerate')} side="bottom">
+          <button type="button" className={css.action} aria-label={t('message.regenerate')} onClick={() => { openDestructive('regenerate') }}>
+            <IconRefreshOutline16 />
+          </button>
+        </Tooltip>
+      )}
       {onDelete !== undefined && (
         <Tooltip label={t('message.delete')} side="bottom">
-          <button type="button" className={css.action} aria-label={t('message.delete')} onClick={openDelete}>
+          <button type="button" className={css.action} aria-label={t('message.delete')} onClick={() => { openDestructive('delete') }}>
             <IconTrashOutline16 />
           </button>
         </Tooltip>
@@ -134,19 +145,19 @@ export function MessageIconActions({
       )}
       {usageAction}
       {clock === 'end' ? clockEl : null}
-      {onDelete !== undefined && (
+      {(onDelete !== undefined || onRegenerate !== undefined) && (
         <RiskConfirmation
-          open={deleteOpen}
-          title={t('message.delete.title')}
-          description={t('message.delete.description')}
+          open={destructiveAction !== null}
+          title={destructiveAction === 'regenerate' ? t('message.regenerate.title') : t('message.delete.title')}
+          description={destructiveAction === 'regenerate' ? t('message.regenerate.description') : t('message.delete.description')}
           acknowledgeLabel={t('message.delete.acknowledge')}
           cancelLabel={t('message.delete.cancel')}
           closeLabel={t('message.delete.close')}
-          confirmLabel={t('message.delete.confirm')}
+          confirmLabel={destructiveAction === 'regenerate' ? t('message.regenerate.confirm') : t('message.delete.confirm')}
           acknowledged={deleteAcknowledged}
           onAcknowledgedChange={setDeleteAcknowledged}
           onCancel={cancelDelete}
-          onConfirm={confirmDelete}
+          onConfirm={confirmDestructive}
         />
       )}
     </div>

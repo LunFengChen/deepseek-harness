@@ -329,6 +329,7 @@ function panelProps(data: WorkflowRunChatData, sessions = listState(), openSessi
     inspectCall: () => {},
     forkAt: () => {},
     deleteFrom: () => {},
+    regenerate: () => {},
     loadImage: () => Promise.reject(new Error('not used')),
     renderMessageImages: () => null,
     fileMentions: () => undefined,

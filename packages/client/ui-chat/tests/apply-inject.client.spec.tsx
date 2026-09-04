@@ -41,6 +41,7 @@ function sessionFakeFor() {
       value: { attachment: ATTACHMENT, data: Uint8Array.of(1) },
     })),
     prompt: vi.fn<ISession['prompt']>(() => Promise.resolve({ ok: true, value: { accepted: true } })),
+    deleteFrom: vi.fn<ISession['deleteFrom']>(() => Promise.resolve({ ok: true, value: { accepted: true } })),
     cancel: vi.fn<ISession['cancel']>(() => Promise.resolve({ ok: true, value: { accepted: true } })),
   } satisfies SessionBehaviorOverrides
 }
@@ -108,6 +109,26 @@ describe('Chat inject API', () => {
     injected.forkAt(18)
     await vi.waitFor(() => {
       expect(fork).toHaveBeenCalledWith({ sessionId: ROOT, atSeq: 18, increaseTitle: true })
+    })
+    await b.runtime.dispose()
+  })
+
+  it('rebuilds a durable prompt before deleting and re-queuing the history tail', async () => {
+    const b = await bench()
+    const { injected } = b.chatViewApi(ROOT)
+
+    injected.regenerate(17, [
+      { type: 'text', text: '再来一次' },
+      { type: 'image', attachment: ATTACHMENT },
+    ])
+
+    await vi.waitFor(() => {
+      expect(b.session.readAttachment).toHaveBeenCalledWith(ATTACHMENT.attachmentId)
+      expect(b.session.deleteFrom).toHaveBeenCalledWith(17)
+      expect(b.session.prompt).toHaveBeenCalledWith([
+        { type: 'text', text: '再来一次' },
+        { type: 'image', mediaType: ATTACHMENT.mediaType, data: 'AQ==' },
+      ], 'queue')
     })
     await b.runtime.dispose()
   })
