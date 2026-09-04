@@ -16,7 +16,7 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 
 | Area | What changed | Result |
 | --- | --- | --- |
-| Package namespace | Workspace packages were rescoped from `@deepseek-ai/dsh-*` to `@xfcodeai/dsh-*`; vendor and native packages keep their upstream scopes. | The fork owns its own published package line. |
+| Package namespace | Workspace packages were rescoped from `@xfcodeai/dsh-*` to `@xfcodeai/dsh-*`; vendor and native packages keep their upstream scopes. | The fork owns its own published package line. |
 | Launcher and release | The published executable is `xfdsh`; release verification, pack layout, and entrypoint checks were updated to match. | The fork installs and runs beside upstream `dsh` without command collisions. |
 | Session history | The web UI can delete a turn and every later event in the same session, with destructive confirmation. The session controller forwards the request to persistence, the JSONL backend rewrites durable logs, and the projection cache schema was bumped. | Unwanted answers can be removed from the live session and from disk. |
 | Session utilities | Workspace rows include a copy-session-id action. | Session ids are easier to share and debug. |
@@ -30,13 +30,13 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 
 ```sh
 npm install --global @xfcodeai/dsh
-xfdsh web
+xfxfdsh web
 ```
 
 For one-off use:
 
 ```sh
-npx @xfcodeai/dsh web
+npx @xfcodeai/xfdsh web
 ```
 
 ## Developer preview
@@ -52,7 +52,7 @@ Review the [safety notice](SAFETY.md) before running the project.
 Install `Node.js`, then run:
 
 ```sh
-npx @deepseek-ai/dsh web
+npx @xfcodeai/xfdsh web
 ```
 
 The command starts the Web UI at `http://127.0.0.1:3080` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).
@@ -66,10 +66,10 @@ git clone https://github.com/deepseek-ai/deepseek-harness.git
 cd deepseek-harness
 pnpm install
 pnpm run build
-pnpm dsh web
+pnpm xfdsh web
 ```
 
-`pnpm run build` prepares the repository artifacts. `pnpm dsh web` uses those built artifacts without rebuilding.
+`pnpm run build` prepares the repository artifacts. `pnpm xfdsh web` uses those built artifacts without rebuilding.
 
 ## Community and support
 
