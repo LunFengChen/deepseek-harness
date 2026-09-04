@@ -13,7 +13,9 @@ import { join } from 'node:path'
 import { withFileLock } from '@deepseek-ai/dsh-atomic-write'
 import { describe, expect, it } from 'vitest'
 import {
+  assertForkCompatibleBundle,
   composeEntries,
+  findLegacyDshDependencies,
   healProfilesModuleFallback,
   initProfile,
   loadProfile,
@@ -247,6 +249,22 @@ describe('loadProfile', () => {
     ])
   })
 
+  it('keeps the exact fork scope for shipped profiles', () => {
+    const anchor = stageInstallation({
+      '@xfcodeai/dsh-base': { patch: '[]\n' },
+      '@xfcodeai/dsh-web-app': { patch: '[]\n' },
+    })
+    const home = tmp()
+    const dir = resolveProfileDir('web', home)
+    initProfile(dir, PROFILE_TEMPLATES.web?.bundles ?? [])
+    expect(loadProfile('xfdsh', 'web', anchor, home).layers.map(layer => layer.packageName))
+      .toEqual(['@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app'])
+    expect(readProfileManifest('t', dir).dsh?.profile).toEqual({
+      bundles: ['@xfcodeai/dsh-base', '@xfcodeai/dsh-web-app'],
+      patchReload: 'live',
+    })
+  })
+
   it('adds a shipped reload default only to an exact stock tuple and preserves explicit choices', () => {
     const anchor = stageInstallation({
       '@deepseek-ai/dsh-base': { patch: '[]\n' },
@@ -285,6 +303,40 @@ describe('loadProfile', () => {
     const dir = resolveProfileDir('demo', home)
     initProfile(dir, ['not-a-bundle'])
     expect(() => loadProfile('t', 'demo', anchor, home)).toThrow('declares no dsh.bundle')
+  })
+
+  it('rejects a bundle that declares upstream dsh runtime packages', () => {
+    const anchor = stageInstallation({
+      'legacy-bundle': { patch: '[]\n', deps: { '@deepseek-ai/dsh-agent': '0.0.0' } },
+    })
+    const home = tmp()
+    const dir = resolveProfileDir('demo', home)
+    initProfile(dir, ['legacy-bundle'])
+    expect(() => loadProfile('xfdsh', 'demo', anchor, home)).toThrow(
+      'depends on upstream dsh package(s) @deepseek-ai/dsh-agent',
+    )
+  })
+})
+
+describe('fork plugin compatibility', () => {
+  it('finds legacy product dependencies but allows vendor packages and fork packages', () => {
+    const manifest = {
+      dependencies: {
+        '@deepseek-ai/cordis': '0.0.0',
+        '@xfcodeai/dsh-agent': '0.0.0',
+        '@deepseek-ai/dsh-agent': '0.0.0',
+      },
+      peerDependencies: { '@deepseek-ai/dsh-llm': '0.0.0' },
+      optionalDependencies: { '@deepseek-ai/dsh-web': '0.0.0' },
+    }
+    expect(findLegacyDshDependencies(manifest)).toEqual([
+      { section: 'dependencies', packageName: '@deepseek-ai/dsh-agent' },
+      { section: 'peerDependencies', packageName: '@deepseek-ai/dsh-llm' },
+      { section: 'optionalDependencies', packageName: '@deepseek-ai/dsh-web' },
+    ])
+    expect(() => assertForkCompatibleBundle('xfdsh', 'portable-bundle', {
+      dependencies: { '@deepseek-ai/cordis': '0.0.0', '@xfcodeai/dsh-agent': '0.0.0' },
+    })).not.toThrow()
   })
 })
 

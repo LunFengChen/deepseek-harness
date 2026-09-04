@@ -87,7 +87,51 @@ export interface ProfileManifest {
   name?: string
   dependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
+  optionalDependencies?: Record<string, string>
   dsh?: DshManifestSection
+}
+
+/** A package dependency that belongs to the upstream, non-fork dsh namespace. */
+export interface LegacyDshDependency {
+  /** The dependency section containing the legacy package name. */
+  section: 'dependencies' | 'peerDependencies' | 'optionalDependencies'
+  /** The package name declared by the bundle. */
+  packageName: string
+}
+
+/**
+ * Find direct runtime dependencies that cannot resolve inside this fork.
+ * Cordis and other upstream-scoped vendor packages are intentionally allowed;
+ * only the old `@deepseek-ai/dsh-*` product namespace is incompatible.
+ * @param manifest - the bundle package manifest.
+ * @returns legacy product dependencies grouped by their manifest section.
+ */
+export function findLegacyDshDependencies(manifest: ProfileManifest): LegacyDshDependency[] {
+  const sections = ['dependencies', 'peerDependencies', 'optionalDependencies'] as const
+  return sections.flatMap(section => Object.keys(manifest[section] ?? {})
+    .filter(packageName => packageName.startsWith('@deepseek-ai/dsh-'))
+    .map(packageName => ({ section, packageName })))
+}
+
+/**
+ * Reject a bundle built against the upstream product package namespace.
+ * @param binName - the diagnostic prefix on the thrown error.
+ * @param packageName - the bundle listed in the profile.
+ * @param manifest - the resolved bundle package manifest.
+ * @returns nothing when the bundle can run with the fork's package namespace.
+ */
+export function assertForkCompatibleBundle(
+  binName: string, packageName: string, manifest: ProfileManifest,
+): void {
+  const legacy = findLegacyDshDependencies(manifest)
+  if (legacy.length === 0) return
+  const names = [...new Set(legacy.map(entry => entry.packageName))].join(', ')
+  throw new Error(
+    `${binName}: profile bundle ${JSON.stringify(packageName)} depends on upstream dsh package(s) ${names}; `
+    + 'this xfdsh installation provides @xfcodeai/dsh-* packages. Install a fork-compatible plugin release '
+    + 'or use the official dsh installation for this bundle. Generic Cordis bundles remain supported when they do not '
+    + 'depend on @deepseek-ai/dsh-* packages',
+  )
 }
 
 /** One resolved bundle layer of a profile. */
@@ -726,7 +770,7 @@ function normalizeShippedProfile(name: string, dir: string, manifest: ProfileMan
   const isRetiredTuple = installationOwned !== undefined && sameBundles(bundles, installationOwned)
   const isCurrentTuple = sameBundles(bundles, template.bundles)
   const needsReloadDefault = manifest.dsh?.profile?.patchReload === undefined && isCurrentTuple
-  if (!isRetiredTuple && !needsReloadDefault) return manifest
+  if (!isRetiredTuple && !isCurrentTuple && !needsReloadDefault) return manifest
   const normalized: ProfileManifest = {
     ...manifest,
     dsh: {
@@ -768,7 +812,9 @@ function packageDirFromAnchor(
  * profile directory. The installation-first order is the contract that
  * `@deepseek-ai/dsh-base` (and every other in-box bundle) always comes from
  * the same installation as the running dsh, never from a profile-local copy.
- * Resolution does not require the package to export `./package.json`.
+ * Resolution does not require the package to export `./package.json`. The
+ * listed package name is resolved exactly, so a profile cannot silently select
+ * a bundle from another product namespace.
  * @param binName - the diagnostic prefix on the thrown error.
  * @param packageName - the bundle's package name from `dsh.profile.bundles`.
  * @param installAnchor - absolute path of a file inside the dsh app package (its package.json).
@@ -784,7 +830,7 @@ export function resolveBundleDir(
   }
   throw new Error(
     `${binName}: cannot resolve profile bundle ${JSON.stringify(packageName)} from the dsh installation or ${profileDir}; `
-    + `run 'dsh plugin --profile ${basename(profileDir)} install' if its dependency is not installed`,
+    + `run '${binName} plugin --profile ${basename(profileDir)} install' if its dependency is not installed`,
   )
 }
 
@@ -811,7 +857,7 @@ export function loadProfile(
     const template = PROFILE_TEMPLATES[name]
     if (template === undefined) {
       throw new Error(
-        `${binName}: profile ${JSON.stringify(name)} does not exist; create it with 'dsh plugin --profile ${name} add <package>'`,
+        `${binName}: profile ${JSON.stringify(name)} does not exist; create it with '${binName} plugin --profile ${name} add <package>'`,
       )
     }
     initProfile(dir, template.bundles, template.patchReload)
@@ -829,6 +875,7 @@ export function loadProfile(
   const layers = bundles.map((packageName): ProfileLayer => {
     const packageDir = resolveBundleDir(binName, packageName, installAnchor, dir)
     const bundleManifest = JSON.parse(readFileSync(join(packageDir, 'package.json'), 'utf8')) as ProfileManifest
+    assertForkCompatibleBundle(binName, packageName, bundleManifest)
     const declared = bundleManifest.dsh?.bundle?.patch
     if (declared === undefined) {
       throw new Error(`${binName}: profile bundle ${JSON.stringify(packageName)} declares no dsh.bundle in its package.json`)

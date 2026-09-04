@@ -101,7 +101,12 @@ export async function serveStatic(
     res.end()
     return
   }
-  res.writeHead(200, { 'content-type': type })
+  res.writeHead(200, {
+    'content-type': type,
+    // The HTML contains a freshly injected boot graph and plugin URLs. Never
+    // let a browser reuse an older graph after a local rebuild or profile switch.
+    ...(type === HTML_MIME ? { 'cache-control': 'no-store' } : {}),
+  })
   res.end(body)
 }
 
