@@ -625,6 +625,49 @@ export class Session {
     return seq >= this.inheritedEventCount && seq < this.seq
   }
 
+  /**
+   * Find the beginning of the logical turn containing one visible event.
+   * Deletion is turn-granular so the retained prefix never ends inside a turn.
+   * @param seq - visible event sequence in the turn to remove.
+   * @returns the first event sequence of the containing turn.
+   */
+  deletionStart(seq: SessionSeq): SessionLogOffset {
+    if (seq < 0 || seq >= this.log.length) {
+      throw new RangeError(`session deletion sequence ${String(seq)} is outside the log`)
+    }
+    for (let index = Number(seq); index >= 0; index -= 1) {
+      if (this.log[index]?.type === 'turn/start') return SessionLogOffset(index)
+    }
+    throw new Error(`session deletion sequence ${String(seq)} is not inside a turn`)
+  }
+
+  /**
+   * Remove the selected turn and every later event from this live log.
+   * Persistence must already contain the same prefix before this method runs.
+   * @param length - retained event-prefix length.
+   */
+  truncate(length: SessionLogOffset): void {
+    if (length < this.inheritedEventCount) {
+      throw new RangeError(`session truncation length ${String(length)} would remove inherited events`)
+    }
+    if (length > this.log.length) {
+      throw new RangeError(`session truncation length ${String(length)} is outside the log`)
+    }
+    const entry = attachments.get(this)
+    if (entry?.appending) throw new Error('session cannot be truncated while an append is being published')
+    if (length === this.log.length) return
+    this.log.splice(length)
+    this.eventsSnapshot = undefined
+    this.surfaceManager.reset()
+    this.headerFold = undefined
+    this.headerFoldSeq = 0
+    this.contextFold = undefined
+    this.contextFoldSeq = 0
+    this.derived = []
+    this.derivedNodes = 0
+    this.derivedGeneration = this.surfaceManager.replaceGeneration
+  }
+
   /** The next event's sequence number — always the log length (the `seq = log.length` contiguity contract). */
   get seq(): SessionLogOffset {
     return SessionLogOffset(this.log.length)

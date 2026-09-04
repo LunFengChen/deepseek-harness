@@ -1,6 +1,7 @@
 /**
  * JSONL durable session-persistence backend. It stores a header and contiguous
- * events in one append-only file per session and serves the handle-based
+ * events in one per-session file; normal writes append, while explicit
+ * destructive deletion rewrites the retained prefix. It serves the handle-based
  * `SessionPersistence` API: `create`/`open` return per-session handles, and
  * every read validates the same fail-closed storage contract.
  * @module @deepseek-ai/dsh-session-persistence-jsonl
@@ -9,7 +10,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { readdirSync } from 'node:fs'
-import { open, mkdir, readFile, readdir, realpath, link, rm, stat, truncate } from 'node:fs/promises'
+import { open, mkdir, readFile, readdir, realpath, link, rename, rm, stat, truncate } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { scheduler } from 'node:timers/promises'
@@ -203,6 +204,21 @@ class JsonlSessionPersistence extends SessionPersistence {
     options?.signal?.throwIfAborted()
     this.tracker.registerCreated(snapshot, inheritedEventCount)
     return this.tracker.adopt(new JsonlSessionHandle(this, snapshot.id, snapshot, 'write', { cursor: 0, materialized: false, inheritedEventCount }))
+  }
+
+  /**
+   * Rewrite one active session's durable artifact with an earlier event prefix.
+   * @param id - the session whose write handle is active in this backend.
+   * @param length - number of events to retain.
+   * @returns resolution after the durable rewrite completes.
+   */
+  override async truncate(id: SessionId, length: SessionLogOffsetType): Promise<void> {
+    const writer = this.tracker.writerOf(id)
+    if (writer === undefined) {
+      throw new Error(`session "${id}" has no active write handle for destructive deletion`)
+    }
+    await writer.drainLive()
+    await writer.truncate(length)
   }
 
   /**
@@ -454,6 +470,46 @@ class JsonlSessionPersistence extends SessionPersistence {
     await this.ensureRootEncoding()
     signal?.throwIfAborted()
     return this.findLog(id, signal)
+  }
+
+  /**
+   * Rewrite one existing artifact with a contiguous event prefix.
+   * @param header - immutable session metadata stored in the header line.
+   * @param inheritedEventCount - exact fork-inherited prefix count.
+   * @param events - complete retained event prefix.
+   * @returns resolution after the replacement is durable.
+   */
+  async rewrite(
+    header: SessionHeader,
+    inheritedEventCount: SessionLogOffsetType,
+    events: readonly SessionEvent[],
+  ): Promise<void> {
+    this.coldLogMemo.delete(header.id)
+    await this.ensureRootEncoding()
+    await this.rejectOppositeArtifact(header.cwd, header.id)
+    const finalPath = logPath(this.root, header.cwd, header.id, this.compression)
+    if (!await this.exists(finalPath)) {
+      if (this.tracker.hasPending(header.id)) {
+        await this.materialize(header, inheritedEventCount, events)
+        return
+      }
+      throw new SessionPersistenceNotFoundError(header.id)
+    }
+    const content = await this.encodeMaterialization(header, inheritedEventCount, events)
+    const tmp = await this.writeSyncedTempFile(finalPath, content)
+    let published = false
+    try {
+      if (process.platform === 'win32') {
+        await rm(finalPath, { force: true })
+        await publishNewFileWin32(tmp, finalPath)
+      } else {
+        await rename(tmp, finalPath)
+        await this.syncDirPosix(dirname(finalPath))
+      }
+      published = true
+    } finally {
+      if (!published) await rm(tmp, { force: true })
+    }
   }
 
   /**

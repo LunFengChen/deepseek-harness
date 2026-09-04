@@ -13,7 +13,7 @@ import type { SessionRequestId } from '@deepseek-ai/dsh-api-session-controller/t
 import type { SubagentAddress } from '@deepseek-ai/dsh-subagent/client'
 import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import type { ObservableSnapshot, SnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId, SessionSeq } from '@deepseek-ai/dsh-session/types'
 import { sessionSnapshot } from './fixtures.ts'
 import type {
   SessionFixture, SessionFixtureSnapshot, Stabilizer,
@@ -93,6 +93,15 @@ export class FixtureSession implements SessionFace {
    */
   prompt(): never {
     throw new Error(`test session "${this.sessionId}": prompt is not stubbed — supply it on the fixture's session face`)
+  }
+
+  /**
+   * Fail-loud stub; supply `deleteFrom` on the fixture's session face to exercise it.
+   * @param _fromSeq - first durable sequence to remove.
+   * @returns never — always throws.
+   */
+  deleteFrom(_fromSeq: SessionSeq): never {
+    throw new Error(`test session "${this.sessionId}": deleteFrom is not stubbed — supply it on the fixture's session face`)
   }
 
   /**
