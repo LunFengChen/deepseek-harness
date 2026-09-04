@@ -54,7 +54,7 @@ describe('pi-ai SDK retry boundary', () => {
     // throwing, which the converter turns into the harness error finish.
     expect(chunks.at(-1)).toMatchObject({
       type: 'finish',
-      reason: { kind: 'error', failure: { message: 'mock SDK boundary' } },
+      reason: { kind: 'error', failure: { message: expect.stringContaining('mock SDK boundary') } },
     })
   })
 

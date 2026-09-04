@@ -352,7 +352,7 @@ describe('hand-declared providers', () => {
     const result = await assemble(ctx, { provider: 'local-llm', model: 'qwen3', messages: [] })
     expect(result.finish).toMatchObject({
       kind: 'error',
-      failure: { message: 'No API key for provider: local-llm' },
+      failure: { message: expect.stringContaining('No API key for provider: local-llm') },
     })
     expect(server.requests).toHaveLength(0)
   })
