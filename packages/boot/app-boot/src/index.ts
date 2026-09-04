@@ -28,8 +28,10 @@ declare module '@deepseek-ai/cordis' {
 }
 
 export {
+  assertForkCompatibleBundle,
   composeEntries,
   DEFAULT_PROFILE_BUNDLES,
+  findLegacyDshDependencies,
   DEFAULT_PROFILE_PATCH_RELOAD,
   healProfilesModuleFallback,
   initProfile,
@@ -44,6 +46,7 @@ export {
   type DshBundleManifest,
   type DshManifestSection,
   type DshProfileManifest,
+  type LegacyDshDependency,
   type Profile,
   type ProfileLayer,
   type ProfileManifest,

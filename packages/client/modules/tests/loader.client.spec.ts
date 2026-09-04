@@ -129,6 +129,18 @@ describe('Cordis plugin face', () => {
 })
 
 describe('lazy CJS arrival', () => {
+  it('resolves the fork platform seed for fork bundles', async () => {
+    const slots = { marker: 'shared-slots' }
+    const b = bench([row('renderer')], {
+      renderer: require => ({ slots: require('@xfcodeai/dsh-client-ui-slots') }),
+    }, {
+      seed: { '@xfcodeai/dsh-client-ui-slots': slots },
+    })
+
+    const exports = await b.loader.import('renderer', '', {}) as { slots: unknown }
+    expect(exports.slots).toBe(slots)
+  })
+
   it('drains registrations queued by parser-blocking preload scripts into the same live facade', async () => {
     const b = bench([row('runtime')], {}, {
       pending: [{ id: 'runtime', factory: () => ({ marker: 'preloaded' }) }],

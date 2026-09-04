@@ -83,12 +83,17 @@ async function loadComposition(): Promise<Context> {
   return context
 }
 
-/** GET (by default) one path against the running server; returns status, content-type, and a body prefix. */
-async function request(port: number, path: string, init?: RequestInit): Promise<{ status: number; type: string | null; body: string }> {
+/** GET (by default) one path against the running server; returns status, content type, cache policy, and a body prefix. */
+async function request(
+  port: number,
+  path: string,
+  init?: RequestInit,
+): Promise<{ status: number; type: string | null; cache: string | null; body: string }> {
   const response = await fetch(`http://127.0.0.1:${String(port)}${path}`, init)
   return {
     status: response.status,
     type: response.headers.get('content-type'),
+    cache: response.headers.get('cache-control'),
     // Window wide enough to keep index body markers visible behind the
     // served prelude (base anchor + injection rows + boot-readiness tail).
     body: (await response.text()).slice(0, 200),
@@ -121,6 +126,7 @@ describe('real Loader composition', () => {
       status: 401,
       type: 'text/plain; charset=utf-8',
       body: 'dsh web authentication required; reopen the URL printed by dsh web.\n',
+      cache: 'no-store',
     })
 
     // Real assets with their MIME types; a live rebuild is served on the next read.
@@ -128,11 +134,13 @@ describe('real Loader composition', () => {
     expect(await request(port, '/manifest.webmanifest')).toMatchObject({
       status: 200,
       type: 'application/manifest+json',
+      cache: null,
       body: '{}',
     })
     expect(await request(port, '/app.js', { method: 'HEAD' })).toEqual({
       status: 200,
       type: 'text/javascript; charset=utf-8',
+      cache: null,
       body: '',
     })
     await writeFile(join(root!, 'dist', 'app.js'), 'export const rebuilt = true')
@@ -147,12 +155,14 @@ describe('real Loader composition', () => {
       const got = await request(port, path, authenticated())
       expect(got.status).toBe(200)
       expect(got.type).toBe('text/html; charset=utf-8')
+      expect(got.cache).toBe('no-store')
       expect(got.body).toContain('__T__')
       expect(got.body).toContain('shell')
     }
     expect(await request(port, '/', authenticated({ method: 'HEAD' }))).toEqual({
       status: 200,
       type: 'text/html; charset=utf-8',
+      cache: 'no-store',
       body: '',
     })
     untap()
@@ -164,7 +174,7 @@ describe('real Loader composition', () => {
     for (const path of ['/', '/index.html']) {
       const get = await request(port, path, authenticated())
       const head = await request(port, path, authenticated({ method: 'HEAD' }))
-      expect(get).toEqual({ status: 404, type: null, body: '' })
+      expect(get).toEqual({ status: 404, type: null, cache: null, body: '' })
       expect(head).toEqual(get)
     }
 
@@ -182,12 +192,13 @@ describe('real Loader composition', () => {
     for (const path of [...ordinaryMisses, ...assetMisses]) {
       const get = await request(port, path)
       const head = await request(port, path, { method: 'HEAD' })
-      expect(get).toEqual({ status: 404, type: null, body: '' })
+      expect(get).toEqual({ status: 404, type: null, cache: null, body: '' })
       expect(head).toEqual(get)
     }
     expect(await request(port, '/api/no/such/route', authenticated())).toEqual({
       status: 404,
       type: 'text/plain;charset=UTF-8',
+      cache: null,
       body: 'not found',
     })
 
