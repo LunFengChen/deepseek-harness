@@ -4,7 +4,7 @@
 #
 # Pack and dependency-layout verification run without credentials on every pull
 # request and master push. Publication is a manual workflow_dispatch of
-# release-publish.yml from a dsh-v* tag.
+# release-publish.yml from a xfdsh-v* tag.
 name: Release (dsh)
 
 on:

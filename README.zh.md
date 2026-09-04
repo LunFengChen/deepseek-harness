@@ -16,7 +16,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 
 | 领域 | 改动 | 结果 |
 | --- | --- | --- |
-| 包命名空间 | 工作区包从 `@deepseek-ai/dsh-*` 改为 `@xfcodeai/dsh-*`；vendor 和 native 包保留上游命名空间。 | fork 拥有自己的发布包线。 |
+| 包命名空间 | 工作区包从 `@xfcodeai/dsh-*` 改为 `@xfcodeai/dsh-*`；vendor 和 native 包保留上游命名空间。 | fork 拥有自己的发布包线。 |
 | 启动器与发布 | 发布出来的可执行命令是 `xfdsh`；release 校验、pack 布局和入口检查都已跟着调整。 | fork 可以和上游 `dsh` 并装并用，不会冲突。 |
 | 会话历史 | Web UI 可以对当前会话做“真删除”：删掉某个问题/回答以及后面的所有历史，并且有双重确认。session controller 会把删除请求下发给持久化层，JSONL 后端会重写落盘日志，projection cache 也同步升级了版本。 | 不满意的回答可以直接从会话里和磁盘里一起移除。 |
 | 会话工具 | 工作区列表里增加了复制 session id。 | 方便分享、排障和定位会话。 |
@@ -30,13 +30,13 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 
 ```sh
 npm install --global @xfcodeai/dsh
-xfdsh web
+xfxfdsh web
 ```
 
 一次性运行：
 
 ```sh
-npx @xfcodeai/dsh web
+npx @xfcodeai/xfdsh web
 ```
 
 ## 开发者预览
@@ -54,7 +54,7 @@ DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来
 安装 `Node.js`，然后运行：
 
 ```sh
-npx @deepseek-ai/dsh web
+npx @xfcodeai/xfdsh web
 ```
 
 该命令默认会在 `http://127.0.0.1:3080` 启动 Web UI，本机启动时还会用默认浏览器打开页面。通过 SSH 启动时只打印宿主机 URL，因为本地转发地址由 SSH 客户端或编辑器持有。传入 `--no-open` 可仅运行服务器而不打开浏览器。详见 [Web UI 指南](docs/user/guide/index.zh.md)。
@@ -70,10 +70,10 @@ git clone https://github.com/deepseek-ai/deepseek-harness.git
 cd deepseek-harness
 pnpm install
 pnpm run build
-pnpm dsh web
+pnpm xfdsh web
 ```
 
-`pnpm run build` 会准备仓库产物。`pnpm dsh web` 会直接使用这些已构建产物，不会重新构建。
+`pnpm run build` 会准备仓库产物。`pnpm xfdsh web` 会直接使用这些已构建产物，不会重新构建。
 
 ## 社区与支持
 

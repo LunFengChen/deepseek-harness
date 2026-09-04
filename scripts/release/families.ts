@@ -34,7 +34,7 @@ const INSTALL_SECTIONS = ['dependencies', 'optionalDependencies'] as const
 const PEER_SECTIONS = ['peerDependencies'] as const
 
 /** The workspace root manifest, which is never a release member. */
-const WORKSPACE_ROOT_PACKAGE = '@deepseek-ai/dsh-root'
+const WORKSPACE_ROOT_PACKAGE = '@xfcodeai/dsh-root'
 
 /** One peer declaration the publish order leaves unordered. */
 interface DroppedPeerEdge {
@@ -321,7 +321,7 @@ export abstract class ReleaseFamily {
 class DshFamily extends ReleaseFamily {
   readonly id = 'dsh'
   readonly patterns = ['packages/!(experimental)/*/package.json', 'apps/*/package.json'] as const
-  readonly tagPrefix = 'dsh-v'
+  readonly tagPrefix = 'xfdsh-v'
 
   /** Require current artifacts from a complete official client build. */
   override verifyBuildArtifacts(root: string): void {
@@ -342,7 +342,7 @@ class DshFamily extends ReleaseFamily {
 
   /**
    * The single family prefix: every member shares one version, so one tag names it.
-   * @returns `dsh-v`.
+   * @returns `xfdsh-v`.
    */
   tagPrefixFor(): string {
     return this.tagPrefix
@@ -365,7 +365,7 @@ class DshFamily extends ReleaseFamily {
     validateTarballPayload(files, member.name)
   }
 
-  readonly installedEntry = { packageName: '@deepseek-ai/dsh', binPath: 'lib/bin.js' }
+  readonly installedEntry = { packageName: '@xfcodeai/dsh', binPath: 'lib/bin.js' }
 }
 
 /** `vendor/*`: every package keeps its own version line, so every package has its own tag. */

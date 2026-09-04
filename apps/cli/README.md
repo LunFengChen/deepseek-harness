@@ -8,26 +8,26 @@ The `dsh` command is the sole supported Node application launcher: profiles are 
 
 | Command | Purpose |
 |---|---|
-| `dsh --profile <name>` | Boot the named profile under `$DSH_HOME/profiles/<name>`. |
-| `dsh --profile acp` | Serve automation clients over ACP stdio until disconnect. |
-| `dsh --profile headless "job"` | Run one fresh persisted session, print the final answer, and exit. |
-| `dsh --profile sdk` | Serve SDK clients over JSON-RPC stdio until shutdown or disconnect. |
-| `dsh --profile sdk-minimal` | Serve SDK clients with the standalone minimal agent tree. |
-| `dsh web` | Alias of `--profile web`. |
-| `dsh plugin --profile <name> <pnpm args>` | Manage a profile's plugins by forwarding to pnpm in the profile directory. |
+| `xfdsh --profile <name>` | Boot the named profile under `$DSH_HOME/profiles/<name>`. |
+| `xfdsh --profile acp` | Serve automation clients over ACP stdio until disconnect. |
+| `xfdsh --profile headless "job"` | Run one fresh persisted session, print the final answer, and exit. |
+| `xfdsh --profile sdk` | Serve SDK clients over JSON-RPC stdio until shutdown or disconnect. |
+| `xfdsh --profile sdk-minimal` | Serve SDK clients with the standalone minimal agent tree. |
+| `xfdsh web` | Alias of `--profile web`. |
+| `xfdsh plugin --profile <name> <pnpm args>` | Manage a profile's plugins by forwarding to pnpm in the profile directory. |
 
-The invoking directory is the default workspace root. The `web`, `headless`, `sdk`, `sdk-minimal`, and `acp` profiles auto-initialize on first use from shipped templates; any other profile must be created through `dsh plugin`.
+The invoking directory is the default workspace root. The `web`, `headless`, `sdk`, `sdk-minimal`, and `acp` profiles auto-initialize on first use from shipped templates; any other profile must be created through `xfdsh plugin`.
 
 ## App arguments
 
 The launcher parses only its own flags and hands everything after them to the booted profile, where any injected app plugin may parse the shared immutable snapshot ([`dsh-cmdline`](../../packages/boot/cmdline/README.md)). The first token the launcher does not recognize starts the app's arguments:
 
 ```sh
-dsh --profile web --port 8080       # --port belongs to the web app
-dsh --profile tui --resume <id>     # example, assuming the tui profile is installed; --resume belongs to the terminal app
-dsh --profile headless "run the tests"
-dsh --profile web --help            # the web app's flags, not the launcher's
-dsh --help                          # the launcher's own help
+xfdsh --profile web --port 8080       # --port belongs to the web app
+xfdsh --profile tui --resume <id>     # example, assuming the tui profile is installed; --resume belongs to the terminal app
+xfdsh --profile headless "run the tests"
+xfdsh --profile web --help            # the web app's flags, not the launcher's
+xfdsh --help                          # the launcher's own help
 ```
 
 <a id="profiles"></a>
