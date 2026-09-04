@@ -59,6 +59,21 @@ describe('provider retry policy', () => {
     expect(RetryPolicySchema).toBeDefined()
   })
 
+  it('ignores normal-only fields retained after switching to always mode', () => {
+    const layered = {
+      mode: 'always',
+      maxRetries: 5,
+      retryableCodes: ['SERVER'],
+    } as unknown as RetryPolicyConfig
+
+    expect(resolveRetryPolicy(layered, 'provider.retryPolicy')).toEqual({
+      mode: 'always',
+      initialDelayMs: 500,
+      maxDelayMs: 10_000,
+      jitterRatio: 0.1,
+    })
+  })
+
   it.each([
     [{ mode: 'normal', maxRetries: -1 }, /maxRetries/],
     [{ mode: 'normal', maxRetries: 1.5 }, /maxRetries/],
@@ -74,7 +89,7 @@ describe('provider retry policy', () => {
     [{ mode: 'normal', retryableCodes: [''] }, /non-empty strings/],
     [{ mode: 'normal', retryableCodes: [429] }, /non-empty strings/],
     [{ mode: 'normal', maxRetires: 1 }, /unknown key "maxRetires"/],
-    [{ mode: 'always', maxRetries: 1 }, /unknown key "maxRetries"/],
+    [{ mode: 'always', unknown: 1 }, /unknown key "unknown"/],
     [{ mode: 'always', backoff: { initialDelay: 1 } }, /unknown key "initialDelay"/],
     [{ mode: 'sometimes' }, /mode must be "normal" or "always"/],
   ] as const)('rejects invalid policy %#', (config, message) => {
