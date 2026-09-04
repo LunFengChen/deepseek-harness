@@ -13,7 +13,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type { ToolExecution } from '@deepseek-ai/dsh-tools'
 import type { SandboxExecutionPolicy, SandboxMode } from '@deepseek-ai/dsh-sandbox'
-import { ESCALATION_TARGETS, approveEscalation, escalationHintMarker, sandboxDenialMarker, validateEscalationArgs } from '@deepseek-ai/dsh-sandbox'
+import { ESCALATION_TARGETS, approveEscalation, escalationHintMarker, isEscalationSatisfiedByStandingMode, sandboxDenialMarker, validateEscalationArgs } from '@deepseek-ai/dsh-sandbox'
 import type { SandboxPolicyService } from '@deepseek-ai/dsh-sandbox-policy'
 import { FsError } from '@deepseek-ai/dsh-fs'
 
@@ -94,6 +94,9 @@ export class FsSandboxController {
       throw new Error('sandbox_permissions is not available in this composition (no sandboxing filesystem to escalate)')
     }
     const policy = standingPolicy as SandboxExecutionPolicy
+    if (isEscalationSatisfiedByStandingMode(args.sandbox_permissions, policy.mode)) {
+      return policy
+    }
     const approvedMode = await approveEscalation(
       { requestedMode: args.sandbox_permissions, justification: args.justification, effectiveMode: policy.mode, subject: 'operation' },
       {

@@ -10,7 +10,9 @@ import { describe, expect, it } from 'vitest'
 import {
   ESCALATION_TARGETS,
   WIDER_MODES,
+  isEscalationSatisfiedByStandingMode,
   approveEscalation,
+  isEscalationSatisfiedByStandingMode,
   escalationHintMarker,
   sandboxDenialMarker,
   validateEscalationArgs,
@@ -26,6 +28,14 @@ describe('the strictly-wider ladder', () => {
 
   it('the target enum is the closed set every session could escalate TO (read-only is the floor)', () => {
     expect(ESCALATION_TARGETS).toEqual(['workspace-write', 'danger-full-access'])
+  })
+
+  it('treats advertised targets as satisfied under an already-full standing mode', () => {
+    expect(isEscalationSatisfiedByStandingMode('workspace-write', 'danger-full-access')).toBe(true)
+    expect(isEscalationSatisfiedByStandingMode('danger-full-access', 'danger-full-access')).toBe(true)
+    expect(isEscalationSatisfiedByStandingMode('read-only', 'danger-full-access')).toBe(false)
+    expect(isEscalationSatisfiedByStandingMode('danger-full-access', 'workspace-write')).toBe(false)
+    expect(isEscalationSatisfiedByStandingMode('unknown', 'danger-full-access')).toBe(false)
   })
 })
 
