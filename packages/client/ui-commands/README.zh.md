@@ -33,7 +33,7 @@ kind: "package-reference"
 
 ### 带图提交
 
-composer 携带图片附件提交时，只有声明了 `input.images` 的宿主命令继续；其余每条命令路径都会抛出本地化的 `imagesUnsupported` 拒绝，以瞬态 toast 呈现，草稿与图片保持原位——命令绝不消费文本却抛下图片。
+composer 携带图片附件提交时，声明了 `input.images` 的宿主命令会收到序列化后的图片；其他命令路径只显示信息级 `imagesUnsupported` 提示，继续执行文本，并让图片草稿保留在输入框中。
 
 -----
 
