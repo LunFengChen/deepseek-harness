@@ -46,20 +46,28 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
         />
       </button>
     </div>
-    <button
-      aria-label="New session"
-      class="newSession"
-      type="button"
+    <div
+      class="newSessionRow"
     >
-      <svg
-        data-content="c0ce4dcc"
-        fill="none"
-        height="18"
-        viewBox="0 0 16 16"
-        width="18"
-        xmlns="http://www.w3.org/2000/svg"
+      <button
+        aria-label="New session"
+        class="newSession"
+        type="button"
+      >
+        <svg
+          data-content="c0ce4dcc"
+          fill="none"
+          height="18"
+          viewBox="0 0 16 16"
+          width="18"
+          xmlns="http://www.w3.org/2000/svg"
+        />
+      </button>
+      <div
+        data-slot="sidebar.newSession.action"
+        style="display: contents;"
       />
-    </button>
+    </div>
     <div
       class="regionArea"
     >
@@ -171,25 +179,33 @@ exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsul
         />
       </button>
     </div>
-    <button
-      aria-label="New session"
-      class="newSession"
-      type="button"
+    <div
+      class="newSessionRow"
     >
-      <svg
-        data-content="c0ce4dcc"
-        fill="none"
-        height="14"
-        viewBox="0 0 16 16"
-        width="14"
-        xmlns="http://www.w3.org/2000/svg"
-      />
-      <span
-        class="newSessionLabel wide"
+      <button
+        aria-label="New session"
+        class="newSession"
+        type="button"
       >
-        New Session
-      </span>
-    </button>
+        <svg
+          data-content="c0ce4dcc"
+          fill="none"
+          height="14"
+          viewBox="0 0 16 16"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        />
+        <span
+          class="newSessionLabel wide"
+        >
+          New Session
+        </span>
+      </button>
+      <div
+        data-slot="sidebar.newSession.action"
+        style="display: contents;"
+      />
+    </div>
     <div
       class="regionArea"
     >
@@ -301,25 +317,33 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
         />
       </button>
     </div>
-    <button
-      aria-label="新建会话"
-      class="newSession"
-      type="button"
+    <div
+      class="newSessionRow"
     >
-      <svg
-        data-content="c0ce4dcc"
-        fill="none"
-        height="14"
-        viewBox="0 0 16 16"
-        width="14"
-        xmlns="http://www.w3.org/2000/svg"
-      />
-      <span
-        class="newSessionLabel wide"
+      <button
+        aria-label="新建会话"
+        class="newSession"
+        type="button"
       >
-        新会话
-      </span>
-    </button>
+        <svg
+          data-content="c0ce4dcc"
+          fill="none"
+          height="14"
+          viewBox="0 0 16 16"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        />
+        <span
+          class="newSessionLabel wide"
+        >
+          新会话
+        </span>
+      </button>
+      <div
+        data-slot="sidebar.newSession.action"
+        style="display: contents;"
+      />
+    </div>
     <div
       class="regionArea"
     >

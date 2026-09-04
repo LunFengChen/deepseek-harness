@@ -141,6 +141,31 @@ describe('lazy CJS arrival', () => {
     expect(exports.slots).toBe(slots)
   })
 
+  it('resolves official dsh requests through the matching fork platform seed', async () => {
+    const slots = { marker: 'shared-slots' }
+    const b = bench([row('renderer')], {
+      renderer: require => ({ slots: require('@deepseek-ai/dsh-client-ui-slots') }),
+    }, {
+      seed: { '@xfcodeai/dsh-client-ui-slots': slots },
+    })
+
+    const exports = await b.loader.import('renderer', '', {}) as { slots: unknown }
+    expect(exports.slots).toBe(slots)
+  })
+
+  it('prefers a fork graph row when an official dsh client request names it', async () => {
+    const b = bench([
+      row('consumer', { external: ['@deepseek-ai/dsh-client-ui-renderer/client'] }),
+      row('@xfcodeai/dsh-client-ui-renderer'),
+    ], {
+      consumer: require => ({ renderer: require('@deepseek-ai/dsh-client-ui-renderer/client') }),
+      '@xfcodeai/dsh-client-ui-renderer': () => ({ marker: 'fork-renderer' }),
+    })
+
+    const exports = await b.loader.import('consumer', '', {}) as { renderer: { marker: string } }
+    expect(exports.renderer.marker).toBe('fork-renderer')
+  })
+
   it('drains registrations queued by parser-blocking preload scripts into the same live facade', async () => {
     const b = bench([row('runtime')], {}, {
       pending: [{ id: 'runtime', factory: () => ({ marker: 'preloaded' }) }],

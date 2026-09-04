@@ -4,7 +4,7 @@
  * documented on the public interfaces in `./manifest.ts`; this file owns the
  * state tables and the load/materialize machinery.
  */
-import { stripClientSuffix } from './manifest.ts'
+import { forkDshSpecifier, stripClientSuffix } from './manifest.ts'
 import type {
   BootManifest, BootModuleRow, ClientBundleRegistration, ClientModuleLoader, ClientModuleRecord,
   ClientModuleSystemOptions,
@@ -140,6 +140,16 @@ export class ClientModuleSystem implements ClientModuleLoader {
     })
   }
 
+  /** Prefer a served fork row for an official dsh request, otherwise retain the original request. */
+  private resolveSpecifier(specifier: string): string {
+    const forkSpecifier = forkDshSpecifier(specifier)
+    if (forkSpecifier === specifier) return specifier
+    const forkId = stripClientSuffix(forkSpecifier)
+    if (this.seed.has(forkSpecifier) || this.loadCache.has(forkId)
+      || this.graphRows.has(forkId) || this.factories.has(forkId)) return forkSpecifier
+    return specifier
+  }
+
   /** Register each injected package and unresolved dynamic request before its consumer. */
   private async arriveGraphRow(
     row: BootModuleRow,
@@ -157,8 +167,9 @@ export class ClientModuleSystem implements ClientModuleLoader {
     visited.add(row.id)
     const next = [...open, row.id]
     for (const request of row.external) {
-      const id = stripClientSuffix(request)
-      if (this.seed.has(request) || this.loadCache.has(id)) continue
+      const resolved = this.resolveSpecifier(request)
+      const id = stripClientSuffix(resolved)
+      if (this.seed.has(resolved) || this.loadCache.has(id)) continue
       const dependency = this.graphRows.get(id)
       if (dependency !== undefined) await this.arriveGraphRow(dependency, next, visited)
     }
@@ -200,8 +211,9 @@ export class ClientModuleSystem implements ClientModuleLoader {
   private makeRequire(edges: Set<string>): (spec: string) => unknown {
     return (spec: string): unknown => {
       edges.add(spec)
-      if (this.seed.has(spec)) return this.seed.get(spec)
-      const id = stripClientSuffix(spec)
+      const resolved = this.resolveSpecifier(spec)
+      if (this.seed.has(resolved)) return this.seed.get(resolved)
+      const id = stripClientSuffix(resolved)
       const record = this.loadCache.get(id)
       if (record !== undefined) return record.exports
       if (this.factories.has(id)) return this.materialize(id).exports
@@ -213,8 +225,9 @@ export class ClientModuleSystem implements ClientModuleLoader {
   }
 
   async import(specifier: string): Promise<unknown> {
-    if (this.seed.has(specifier)) return this.seed.get(specifier)
-    const id = stripClientSuffix(specifier)
+    const resolved = this.resolveSpecifier(specifier)
+    if (this.seed.has(resolved)) return this.seed.get(resolved)
+    const id = stripClientSuffix(resolved)
     const existing = this.loadCache.get(id)
     if (existing !== undefined) return existing.exports
     const row = this.graphRows.get(id)
@@ -230,7 +243,7 @@ export class ClientModuleSystem implements ClientModuleLoader {
   }
 
   async prefetch(id: string): Promise<void> {
-    const normalized = stripClientSuffix(id)
+    const normalized = stripClientSuffix(this.resolveSpecifier(id))
     if (this.loadCache.has(normalized)) return
     const row = this.graphRows.get(normalized)
     if (row === undefined) throw new Error(`client-modules: prefetch("${id}") — not a graph entry`)
@@ -238,7 +251,7 @@ export class ClientModuleSystem implements ClientModuleLoader {
   }
 
   invalidate(id: string, rev?: string): void {
-    const normalized = stripClientSuffix(id)
+    const normalized = stripClientSuffix(this.resolveSpecifier(id))
     if (this.bootstrapIds.has(normalized)) return
     const row = this.graphRows.get(normalized)
     if (row !== undefined) this.reloadUrls.set(normalized, atRevision(row.url, rev ?? row.rev))

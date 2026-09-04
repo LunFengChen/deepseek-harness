@@ -93,7 +93,7 @@ xfdsh web --help
 
 会话遥测默认按反馈门控共享：在用户记录 `/feedback` 之前不上传任何数据，每条已记录的反馈通过该事件上传尚未共享的会话记录；恢复的会话只共享当前生命周期。`DSH_TELEMETRY_MODE=FULL` 改为将每条已投影会话事件作为 OTLP/HTTP 日志流式发送，`DSH_TELEMETRY_MODE=DISABLED` 让全部数据留在本地，任何非空的 `DSH_TELEMETRY_DISABLED` 仍是具有最终效力的遥测强制关闭开关。`DSH_TELEMETRY_OTLP_URL` 选择其他 collector。随附基础配置没有遥测脱敏规则，因此释放的导出可能包含消息文本、工具参数和结果，以及 workspace 路径；相关部署决策见[反馈门控默认值 Agent Note](../../../.agents/notes/implemented/feature/2026-08-25-feedback-gated-telemetry-default.zh.md)。
 
-通过 `xfdsh plugin --profile <name> add <package-or-git-spec>` 安装外部插件组合包。安装的包拥有其依赖，并贡献其声明的 `cordis.patch.yml` 层。CLI 还随附 `@xfcodeai/dsh-mcp-client` 作为供 patch 层使用的依赖，但默认不启用 MCP 服务器，因为每条服务器命令都是 agent（智能体）沙箱之外的受信任可执行代码。
+通过 `xfdsh plugin --profile <name> add <package-or-git-spec>` 安装外部插件组合包。安装的包拥有其依赖，并贡献其声明的 `cordis.patch.yml` 层。官方组合包可以继续声明 `@deepseek-ai/dsh-*`；profile 的 `.pnpmfile.cjs` 会把这些依赖 spec 转成对应 `@xfcodeai/dsh-*` 包的别名，同时保留包原本的导入名。升级已有 profile 后，请执行一次 `xfdsh plugin --profile <name> install`，让 pnpm 重建这些别名；如果对应的 fork 包不可用，安装会明确失败，不会加载第二套官方运行时。CLI 还随附 `@xfcodeai/dsh-mcp-client` 作为供 patch 层使用的依赖，但默认不启用 MCP 服务器，因为每条服务器命令都是 agent（智能体）沙箱之外的受信任可执行代码。
 
 <a id="source-execution"></a>
 ## 源码执行

@@ -1,8 +1,8 @@
-# `@deepseek-ai/dsh`
+# `@xfcodeai/dsh`
 
 [English](README.md) | 中文
 
-`dsh` 是唯一受支持的 Node 应用启动器；profile 由多个插件组合包 patch 层按顺序叠加而成，其上再应用用户自己的覆盖配置。SDK 与 ACP 都是 profile，而不是独立的公开 bin。Python 运行时 wheel 会打包同一个命令；SDK 默认使用 `sdk`，极简示例选择 `sdk-minimal`。[`src/args.ts`](src/args.ts) 负责命令语法，[`src/bin.ts`](src/bin.ts) 只加载选中的运行器。无效命令、来自其他模式的选项、配置错误和启动失败都会以非零状态退出。
+`xfdsh` 是唯一受支持的 Node 应用启动器；profile 由多个插件组合包 patch 层按顺序叠加而成，其上再应用用户自己的覆盖配置。SDK 与 ACP 都是 profile，而不是独立的公开 bin。Python 运行时 wheel 会打包同一个命令；SDK 默认使用 `sdk`，极简示例选择 `sdk-minimal`。[`src/args.ts`](src/args.ts) 负责命令语法，[`src/bin.ts`](src/bin.ts) 只加载选中的运行器。无效命令、来自其他模式的选项、配置错误和启动失败都会以非零状态退出。
 
 ## 入口模式
 
@@ -37,12 +37,16 @@ profile 目录包含一个 `package.json`，其中记录树外插件依赖，以
 
 配置树以空根为起点，依次叠加以下配置层：
 - `dsh.profile.bundles` 中各组合包的 patch
-- profile 自身的 `cordis.patch.yml`，然后是 home 级的 `$DSH_HOME/cordis.patch.yml`
+- profile 自身的 `cordis.patch.yml`，然后是$DSH_HOME 下的 home 级 `cordis.patch.yml`
 - `--patch` 指定的覆盖层
 
-`dsh.profile.bundles` 中列出的组合包先从 dsh 安装目录解析（`@deepseek-ai/dsh-base`、`@deepseek-ai/dsh-web-app`、`@deepseek-ai/dsh-headless`、`@deepseek-ai/dsh-sdk-app`、`@deepseek-ai/dsh-sdk-minimal`、`@deepseek-ai/dsh-acp-app`），再从 profile 自身的 `node_modules` 解析；pnpm 会将树外插件安装到该目录。
+`dsh.profile.bundles` 中列出的组合包先从 dsh 安装目录解析（`@xfcodeai/dsh-base`、`@xfcodeai/dsh-web-app`、`@xfcodeai/dsh-headless`、`@xfcodeai/dsh-sdk-app`、`@xfcodeai/dsh-sdk-minimal`、`@xfcodeai/dsh-acp-app`），再从 profile 自身的 `node_modules` 解析；pnpm 会将树外插件安装到该目录。
 
 使用 `--dump-default-config` 和 `--dump-config` 可在不启动的情况下检查组合后的配置树。
+
+### 插件兼容性
+
+`xfdsh plugin --profile <name> add <package>` 会把包安装到共用的 `$DSH_HOME/profiles/<name>` 目录；因此 `dsh` 和 `xfdsh` 使用同一个 home 时会看到相同的 profile 与历史记录。`@xfcodeai/dsh-*` 命名空间中的 fork 包，以及声明 `@deepseek-ai/dsh-*` 依赖的官方组合包都受支持。profile 安装会把每个官方 dsh 依赖映射到对应的 fork 包，同时保留官方导入名，因此运行时只使用一套 xfdsh。对应的 fork 包无法安装时，pnpm 会明确失败，而不是混载官方与 fork 两套运行时；升级后，已有 profile 请执行一次 `xfdsh plugin --profile <name> install`。
 
 层的确切优先级、flag、关闭行为、部署默认值和源码执行方式，以 [CLI（命令行界面）行为参考](reference/README.zh.md)为准。
 

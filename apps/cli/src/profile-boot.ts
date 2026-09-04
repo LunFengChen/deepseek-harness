@@ -1,7 +1,8 @@
 /**
  * Shared profile boot for every `dsh` surface: resolve the profile, stack its
- * patch layers (bundle layers in `dsh.profile.bundles` order, the profile's
- * own `cordis.patch.yml`, `--patch` overlays, the telemetry switch), mount the
+ * patch layers (bundle layers in `dsh.profile.bundles` order, catalog defaults,
+ * saved catalog overrides, the profile's own `cordis.patch.yml`, `--patch`
+ * overlays, and the telemetry switch), mount the
  * tree over the profile's empty root config, apply its selected patch-reload
  * lifecycle, and wire fail-loud plus bounded shutdown.
  *
@@ -127,6 +128,10 @@ interface ComposedProfile {
   profile: Profile
   /** Bundle layers concatenated — the part below the user layers on a live reload. */
   bundlePatches: PatchOptions[]
+  /** Catalog-declared default states for prebundled entries. */
+  pluginDefaultPatches: PatchOptions[]
+  /** Profile-owned enablement overrides for cataloged prebundled entries. */
+  pluginOverridePatches: PatchOptions[]
   /** The home-level user layer (`$DSH_HOME/cordis.patch.yml`), applied after the profile's own. */
   homePatches: PatchOptions[]
   /** Layers above the user layers on a live reload: `--patch` overlays and the telemetry switch. */
@@ -137,6 +142,8 @@ interface ComposedProfile {
 function allPatches(composed: ComposedProfile): PatchOptions[] {
   return [
     ...composed.bundlePatches,
+    ...composed.pluginDefaultPatches,
+    ...composed.pluginOverridePatches,
     ...composed.profile.patches,
     ...composed.homePatches,
     ...composed.overlays,
@@ -146,10 +153,10 @@ function allPatches(composed: ComposedProfile): PatchOptions[] {
 /**
  * Load `name` and compose its effective patch stack: bundle layers in
  * `dsh.profile.bundles` order (a base-backed profile gets the base bundle's
- * platform-gated shell rows), the profile's user layer, the home-level user
- * layer (`$DSH_HOME/cordis.patch.yml` — machine-local preferences that apply
- * to every profile, so it outranks the per-profile layer), `--patch` overlays,
- * then the telemetry switch.
+ * platform-gated shell rows), catalog defaults, saved catalog overrides, the
+ * profile's user layer, the home-level user layer (`$DSH_HOME/cordis.patch.yml`
+ * — machine-local preferences that apply to every profile, so it outranks the
+ * per-profile layer), `--patch` overlays, then the telemetry switch.
  * @param name - the profile name.
  * @param patchFiles - `--patch` overlay paths, in argv order.
  * @returns the profile and its patch layers.
@@ -163,14 +170,39 @@ async function composeProfile(
   const homePatches = loadOptionalPatches(NAME, homePatchPath()) ?? []
   const overlays = patchFiles.flatMap(file => loadOverlayPatches(NAME, resolve(file)))
   const bundlePatches = profile.layers.flatMap(layer => layer.patches)
+  const { pluginDefaultPatches, pluginOverridePatches } = composeProfilePluginPatches(profile)
   const rows = new Map<string, EntryOptions>()
-  for (const row of composeEntries([bundlePatches, profile.patches, homePatches, overlays])) {
+  for (const row of composeEntries([
+    bundlePatches, pluginDefaultPatches, pluginOverridePatches, profile.patches, homePatches, overlays,
+  ])) {
     if (typeof row.id === 'string') rows.set(row.id, row)
   }
   const composedOverlays = [...overlays]
   const telemetryPatch = resolveTelemetryPatch(process.env.DSH_TELEMETRY_DISABLED, rows.has(TELEMETRY_ROW_ID))
   if (telemetryPatch !== undefined) composedOverlays.push(telemetryPatch)
-  return { profile, bundlePatches, homePatches, overlays: composedOverlays }
+  return { profile, bundlePatches, pluginDefaultPatches, pluginOverridePatches, homePatches, overlays: composedOverlays }
+}
+
+/**
+ * Resolve the patch rows owned by a profile's prebundled plugin catalog.
+ * Catalog defaults are applied before saved profile overrides, so an explicit
+ * choice survives bundle defaults while later user and command-line layers
+ * remain higher precedence.
+ * @param profile - loaded profile metadata.
+ * @returns default and saved override rows in their application order.
+ */
+export function composeProfilePluginPatches(
+  profile: Pick<Profile, 'layers' | 'pluginOverrides'>,
+): { pluginDefaultPatches: PatchOptions[]; pluginOverridePatches: PatchOptions[] } {
+  const pluginDefaultPatches = profile.layers.flatMap(layer => layer.plugins ?? []).map(plugin => ({
+    id: plugin.entryId,
+    disabled: !(plugin.required || plugin.defaultEnabled === true),
+  }))
+  const pluginOverridePatches = Object.entries(profile.pluginOverrides ?? {}).map(([id, enabled]) => ({
+    id,
+    disabled: !enabled,
+  }))
+  return { pluginDefaultPatches, pluginOverridePatches }
 }
 
 /** Options for {@link runProfile}. */
@@ -255,6 +287,8 @@ export async function runProfile(options: RunProfileOptions): Promise<{ ctx: Con
   // removing the override could never revert the row to the bundle default.
   const composeLive = (): PatchOptions[] => structuredClone([
     ...composed.bundlePatches,
+    ...composed.pluginDefaultPatches,
+    ...composed.pluginOverridePatches,
     ...loadOptionalPatches(NAME, composed.profile.patchPath) ?? [],
     ...loadOptionalPatches(NAME, homePatchPath()) ?? [],
     ...composed.overlays,
@@ -266,6 +300,7 @@ export async function runProfile(options: RunProfileOptions): Promise<{ ctx: Con
     // Before any config-tree entry mounts, so plugins resolve all launch-time
     // environment values from the same immutable provenance snapshot.
     hostCtx.provide(DSH_LAUNCH_ENVIRONMENT_KEY, options.environment)
+    hostCtx.provide('dshProfile', { binName: NAME, profile: composed.profile, installAnchor: INSTALL_ANCHOR })
     // The command line and bounded exit request are launcher facts available
     // to every app plugin that injects the argument snapshot.
     provideCmdline(hostCtx, {

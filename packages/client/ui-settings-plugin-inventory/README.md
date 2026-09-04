@@ -1,5 +1,5 @@
 ---
-description: "Scope-grouped read-only plugin inventory tab in Web Plugins settings for the dsh web client: agent-preset compositions first, the global plane behind a disclosure, search across both."
+description: "Scope-grouped plugin inventory and prebundled feature management tab in Web Plugins settings for the dsh web client: agent-preset compositions first, the global plane behind a disclosure, search across both."
 kind: "package-reference"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-client-ui-settings-plugin-inventory` contributes the read-only **Plugin list** tab to the Web Settings Plugins section. The tab lazily calls `ctx.remote.pluginInventory.list()` the first time it is selected and renders the inventory in two collapsible groups. The agent-preset group comes first, open by default: a display-only switcher pill over the roster opens on the default preset, and each composition row is a compact disclosure card carrying its enablement — including `conditional` for a disabled gate the Host could not evaluate — with provenance facts behind the disclosure. The global group follows collapsed, its header carrying the entry count and a failure count; expanded, failures float first, and an entry disabled globally but enabled by at least one preset is marked as preset-provided in place — its details name the enabling presets — instead of reading as plainly disabled. Search filters both groups, forces the collapsed groups open, and points at matches sitting in unselected presets. Loading, empty, no-match, and generic failure states stay local to the mounted component, and a failed read can be retried without exposing transport details; without a roster the tab renders the global plane alone, expanded.
+`dsh-client-ui-settings-plugin-inventory` contributes the **Plugin list** tab to the Web Settings Plugins section. The package also contributes a compact history-import action beside New Session when the official `~/.dsh` store contains sessions. The same double-confirmation flow remains available in Settings → General. The tab lazily calls `ctx.remote.pluginInventory.list()` the first time it is selected, renders the inventory in two collapsible groups, and shows a separate catalog for profile-prebundled optional features. The agent-preset group comes first, open by default: a display-only switcher pill over the roster opens on the default preset, and each composition row is a compact disclosure card carrying its enablement — including `conditional` for a disabled gate the Host could not evaluate — with provenance facts behind the disclosure. The global group follows collapsed, its header carrying the entry count and a failure count; expanded, failures float first, and an entry disabled globally but enabled by at least one preset is marked as preset-provided in place — its details name the enabling presets — instead of reading as plainly disabled. Search filters both groups, forces the collapsed groups open, and points at matches sitting in unselected presets. Loading, empty, no-match, and generic failure states stay local to the mounted component, and a failed read can be retried without exposing transport details; without a roster the tab renders the global plane alone, expanded.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Open the Plugins section in Settings and select the **Plugin list** tab to inspect the Host's plugin inventory. The tab reads no Remote during plugin activation — selecting it for the first time mounts the component and lazily calls `ctx.remote.pluginInventory.list()` through `api-remotes`.
+The compact history-import action appears beside **New Session** when the official `~/.dsh` store contains sessions. It uses an icon button with a tooltip and the same double-confirmation flow as the **Migrate dsh history** row in Settings → General. Open the Plugins section in Settings and select the **Plugin list** tab to inspect the Host's plugin inventory. The tab reads no Remote during plugin activation — selecting it for the first time mounts the component and lazily calls `ctx.remote.pluginInventory.list()` through `api-remotes`.
 
 ### Reading a card
 
@@ -34,6 +34,10 @@ Each collapsed card uses the short module name as its title and a small enableme
 ### The preset switcher
 
 The switcher is the same selector-pill-plus-menu control the General settings rows use. It lists every roster preset — the default suffixed as such, broken ones marked — and changes only what the list shows: it writes no settings, and selecting a broken preset shows the discovery-reported reason in place of rows. Choosing the default preset or a session's preset stays where it was: the Agent presets section and the new-session screen.
+
+### Managing prebundled features
+
+The Optional plugins group lists catalog entries shipped by the active profile bundle. Each optional row has an accessible switch; changing it calls `pluginInventory/setEnabled`, updates the Loader, and persists the profile override. Required rows are displayed but disabled. Package installation and removal remain CLI operations rather than browser package-manager actions.
 
 ### Retrying a failed read
 
@@ -47,7 +51,7 @@ A failed read renders a generic failure state inside the tab; retrying re-runs t
 <details>
 <summary>Implementation internals — click to expand</summary>
 
-The tab is a read-only projection of a Host-owned snapshot; it performs no Remote read during plugin activation and takes the snapshot on first selection.
+The tab projects a Host-owned snapshot and mutates only the profile catalog through its Remote; it performs no Remote read during plugin activation and takes the snapshot on first selection.
 
 ### Registration
 
@@ -69,7 +73,7 @@ These pages cover the settings section, the remote call, and the Host-side proje
 - [ui-settings-plugins](../ui-settings-plugins/README.md) — the Plugins section this tab registers into.
 - [ui-settings](../ui-settings/README.md) — the domain base declaring `settings.plugins.tab`.
 - [api-remotes](../../api/remotes/README.md) — the Remote BFF surface behind `pluginInventory.list()`.
-- [plugin-inventory](../../host/plugin-inventory/README.md) — the Host-side read-only Loader projection this tab renders.
+- [plugin-inventory](../../host/plugin-inventory/README.md) — the Host-side Loader projection and profile catalog Remote this tab renders.
 
 -----
 
@@ -89,8 +93,8 @@ None; this package neither assembles nor sends a provider request.
 
 These limits define the freshness and reach of the inventory view; they are current package constraints.
 
-- **One snapshot per Settings mount or retry** — the tab does not subscribe to Loader changes or automatically refetch after reconnect; switching tabs preserves the current snapshot, while reopening Settings obtains a new one.
-- **Read-only in both planes** — the tab shows global and preset enablement but mutates neither; enable/disable controls that write a custom preset's own composition file are deliberate follow-up work.
+- **One snapshot per Settings mount or retry** — the tab does not subscribe to Loader changes or automatically refetch after reconnect; switching tabs preserves the current snapshot, while reopening Settings obtains a new one. The General settings section also exposes an official dsh history migration row: it copies sessions and attachments from `~/.dsh` into `~/.xfdsh` after an explicit confirmation and refreshes the session list.
+- **Catalog-only mutation** — the tab can enable or disable profile-owned prebundled catalog entries; global Loader rows and custom preset composition files remain read-only.
 
 <a id="dev-note"></a>
 ### Dev Note
@@ -102,4 +106,4 @@ None.
 
 </details>
 
-**Runtime invariant:** No companion is published. This package owns a read-only Settings contribution.
+**Runtime invariant:** No companion is published. This package owns one Settings contribution and delegates catalog mutations to the Host Remote.

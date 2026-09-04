@@ -1,8 +1,8 @@
-# `@deepseek-ai/dsh`
+# `@xfcodeai/dsh`
 
 English | [中文](README.zh.md)
 
-The `dsh` command is the sole supported Node application launcher: profiles are ordered stacks of plugin-bundle patch layers under the user's own overrides. SDK and ACP are profiles, not separate public bins. The Python runtime wheel packages this same command; the SDK defaults to `sdk`, and the minimal example selects `sdk-minimal`. [`src/args.ts`](src/args.ts) owns the command grammar, and [`src/bin.ts`](src/bin.ts) loads only the selected runner. Invalid commands, options from another mode, configuration errors, and boot failures exit nonzero.
+The `xfdsh` command is the sole supported Node application launcher: profiles are ordered stacks of plugin-bundle patch layers under the user's own overrides. SDK and ACP are profiles, not separate public bins. The Python runtime wheel packages this same command; the SDK defaults to `sdk`, and the minimal example selects `sdk-minimal`. [`src/args.ts`](src/args.ts) owns the command grammar, and [`src/bin.ts`](src/bin.ts) loads only the selected runner. Invalid commands, options from another mode, configuration errors, and boot failures exit nonzero.
 
 ## Entry modes
 
@@ -40,9 +40,13 @@ The tree composes over an empty root:
 - then the profile's `cordis.patch.yml`, then the home-level `$DSH_HOME/cordis.patch.yml`
 - then `--patch` overlays
 
-Bundles named in `dsh.profile.bundles` resolve from the dsh installation first (`@deepseek-ai/dsh-base`, `@deepseek-ai/dsh-web-app`, `@deepseek-ai/dsh-headless`, `@deepseek-ai/dsh-sdk-app`, `@deepseek-ai/dsh-sdk-minimal`, `@deepseek-ai/dsh-acp-app`), then from the profile's own `node_modules`, where pnpm installs out-of-tree plugins.
+Bundles named in `dsh.profile.bundles` resolve from the dsh installation first (`@xfcodeai/dsh-base`, `@xfcodeai/dsh-web-app`, `@xfcodeai/dsh-headless`, `@xfcodeai/dsh-sdk-app`, `@xfcodeai/dsh-sdk-minimal`, `@xfcodeai/dsh-acp-app`), then from the profile's own `node_modules`, where pnpm installs out-of-tree plugins.
 
 Use `--dump-default-config` and `--dump-config` to inspect the composed tree without booting it.
+
+### Plugin compatibility
+
+`xfdsh plugin --profile <name> add <package>` installs the package into the shared `$DSH_HOME/profiles/<name>` directory, so `dsh` and `xfdsh` see the same profiles and history when they use the same home. Fork packages in the `@xfcodeai/dsh-*` namespace and official bundles that declare `@deepseek-ai/dsh-*` dependencies are supported. Profile installation maps each official dsh dependency to the matching fork package while preserving the official import name, so one xfdsh runtime is used. If a matching fork package cannot be installed, pnpm fails explicitly instead of mixing official and fork runtimes. Existing profiles should run `xfdsh plugin --profile <name> install` once after upgrading.
 
 The [CLI behavior reference](reference/README.md) owns exact layer precedence, flags, shutdown behavior, deployment defaults, and source execution.
 

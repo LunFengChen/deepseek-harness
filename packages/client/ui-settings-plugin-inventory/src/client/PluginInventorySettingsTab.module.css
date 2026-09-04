@@ -456,3 +456,109 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.catalogCards {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catalogCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: var(--dsw-elevation-stroke);
+  background: var(--dsw-alias-bg-layer-3);
+}
+
+.catalogMain {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.catalogTitle {
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catalogPackage {
+  overflow-wrap: anywhere;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.catalogDescription {
+  margin: 3px 0 0;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.catalogAction {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.pluginSwitch {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: var(--dsw-alias-bg-layer-1);
+  box-shadow: inset 0 0 0 0.5px var(--dsw-alias-border-l3);
+  cursor: pointer;
+}
+
+.pluginSwitch[aria-checked='true'] {
+  background: var(--dsw-alias-state-business-primary);
+}
+
+.pluginSwitch:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.pluginSwitch:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: 2px;
+}
+
+.pluginSwitchThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--dsw-alias-bg-layer-5, #fff);
+  box-shadow: var(--dsw-elevation-stroke);
+  transition: transform 140ms var(--ds-ease-in-out);
+}
+
+.pluginSwitch[aria-checked='true'] .pluginSwitchThumb {
+  transform: translateX(16px);
+}
+
+.updateFailure {
+  margin: 0;
+  color: var(--dsw-alias-state-error-primary);
+  font-size: 12px;
+  line-height: 18px;
+}

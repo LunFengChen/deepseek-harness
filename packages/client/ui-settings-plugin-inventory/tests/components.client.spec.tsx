@@ -20,10 +20,12 @@ const t = ((key: PluginInventoryLocaleKey, params?: Record<string, string>): str
 function props(
   list: PluginInventorySettingsTabInjected['list'],
   presetName: PluginInventorySettingsTabInjected['presetName'] = preset => preset.name ?? preset.id,
+  setEnabled: PluginInventorySettingsTabInjected['setEnabled'] = async request => ({ enabled: request.enabled }),
 ): PluginInventorySettingsTabProps {
   return {
     t,
     list,
+    setEnabled,
     presetName,
   } as PluginInventorySettingsTabProps
 }
@@ -84,6 +86,29 @@ const globalToggle = (): HTMLElement =>
   screen.getByRole('button', { name: (name: string) => name.startsWith(en.globalTitle) })
 
 describe('PluginInventorySettingsTab', () => {
+  it('shows prebundled optional plugins and persists a toggle', async () => {
+    const setEnabled = vi.fn().mockResolvedValue({ enabled: false })
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'schedule',
+        entryId: 'schedule-entry',
+        packageName: '@xfcodeai/dsh-client-ui-schedule',
+        title: 'Schedule',
+        description: 'Schedule management UI and runtime',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, setEnabled)} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    const toggle = screen.getByRole('switch', { name: en.disablePlugin.replace('{name}', 'Schedule') })
+    expect(toggle.getAttribute('aria-checked')).toBe('true')
+    fireEvent.click(toggle)
+    await waitFor(() => expect(setEnabled).toHaveBeenCalledWith({ entryId: 'schedule-entry', enabled: false }))
+  })
+
   it('shows the default preset first and keeps the global plane collapsed', async () => {
     const view = await renderReady()
 

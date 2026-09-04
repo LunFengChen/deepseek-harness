@@ -70,6 +70,25 @@ function verifyTag(family: ReleaseFamily, members: readonly ReleaseMember[], ref
   }
 }
 
+/**
+ * Assert the ref used for publication is either an approved master build or a
+ * release tag. Master publication is opt-in per workflow; vendor publication
+ * remains tag-only.
+ * @param family - the release family.
+ * @param members - the family's members.
+ * @param ref - the `GITHUB_REF` value.
+ * @param allowMaster - whether this workflow may publish from master.
+ */
+export function verifyPublishRef(
+  family: ReleaseFamily,
+  members: readonly ReleaseMember[],
+  ref: string,
+  allowMaster: boolean,
+): void {
+  if (allowMaster && ref === 'refs/heads/master') return
+  verifyTag(family, members, ref)
+}
+
 /** Run the verification for the family named by `--family`. */
 function main(): void {
   const { values } = parseArgs({
@@ -95,7 +114,12 @@ function main(): void {
   const publishing = process.env.RELEASE_PUBLISH === 'true'
   if (publishing) {
     verifyPublishable(members)
-    verifyTag(family, members, process.env.GITHUB_REF ?? '')
+    verifyPublishRef(
+      family,
+      members,
+      process.env.GITHUB_REF ?? '',
+      process.env.RELEASE_PUBLISH_ALLOW_MASTER === 'true',
+    )
   }
 
   const versions = [...new Set(members.map(member => member.version))]

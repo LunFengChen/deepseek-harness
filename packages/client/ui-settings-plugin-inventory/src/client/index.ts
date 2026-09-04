@@ -1,4 +1,4 @@
-/** Read-only Host plugin inventory registered into Web Settings. */
+/** Host plugin inventory and prebundled feature settings in Web Settings. */
 
 import type {} from '@deepseek-ai/dsh-client-locale/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
@@ -17,7 +17,7 @@ export type { PluginInventoryLocaleKey } from './locales.ts'
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
-    /** Read-only Host plugin inventory copy. */
+    /** Host plugin inventory and profile feature settings copy. */
     'settings.pluginInventory': PluginInventoryLocaleKey
   }
 }
@@ -40,13 +40,19 @@ export function apply(ctx: ClientContext): void {
     }
     return result.value
   }
+  const setEnabled: PluginInventorySettingsTabInjected['setEnabled'] = async request => {
+    const result = await ctx.remote.pluginInventory.setEnabled(request)
+    if (!result.ok) {
+      throw new Error(`pluginInventory.setEnabled failed: ${result.error.code}: ${result.error.message}`)
+    }
+    return result.value
+  }
   // Resolved per call over ui-agent-preset's dictionaries, so a language
   // switch re-resolves shipped names; user-authored metadata passes through.
   const agentPresetCopy = ctx.locale.bind('settings.agentPreset')
   const presetName: PluginInventorySettingsTabInjected['presetName'] = preset =>
     presetDisplayText(preset, agentPresetCopy).name
-  const injected = (): PluginInventorySettingsTabInjected => ({ list, presetName })
-
+  const injected = (): PluginInventorySettingsTabInjected => ({ list, setEnabled, presetName })
   ctx.slots.inject('settings.plugins.tab', () => ctx.slots.register({
     name: 'settings.plugins.tab',
     id: 'all',

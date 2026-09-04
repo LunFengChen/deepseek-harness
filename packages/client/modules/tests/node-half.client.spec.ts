@@ -804,6 +804,13 @@ describe('module graph order', () => {
     ]))).toEqual(['runtime', 'ui'])
   })
 
+  it('resolves an official dsh request onto the matching fork package row', () => {
+    expect(ids(orderByModuleGraph([
+      entry('ui', { external: ['@deepseek-ai/dsh-client-ui-slots/client'] }),
+      entry('@xfcodeai/dsh-client-ui-slots'),
+    ]))).toEqual(['@xfcodeai/dsh-client-ui-slots', 'ui'])
+  })
+
   it('leaves a request no row answers to the static assembly channel', () => {
     expect(ids(orderByModuleGraph([
       entry('consumer', { external: ['@deepseek-ai/cordis'] }),
