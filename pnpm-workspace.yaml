@@ -74,6 +74,10 @@ allowBuilds:
   electron-winstaller: false
   # Store-index rewriting only needs msgpackr's portable JavaScript codec.
   msgpackr-extract: false
+  # Git-hosted preinstalls ship build scripts; these tarballs are the LunFengChen
+  # fork pins used by the web-app catalog.
+  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e: true
+  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa: true
 
 minimumReleaseAgeExclude:
   # Fresh pi-ai releases carry the model catalog updates that are the whole

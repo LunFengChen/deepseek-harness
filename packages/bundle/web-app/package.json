@@ -54,8 +54,8 @@
           "title": "Plugin market",
           "description": "Browse and install community dsh plugins.",
           "defaultEnabled": true,
-          "author": "dsh-market",
-          "homepage": "https://github.com/dsh-market/dsh-market"
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-market"
         },
         {
           "id": "reasoning-effort",
@@ -64,8 +64,8 @@
           "title": "Reasoning effort",
           "description": "Pick thinking strength in the composer.",
           "defaultEnabled": true,
-          "author": "HanaAyane",
-          "homepage": "https://github.com/HanaAyane/dsh-reasoning-effort"
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-reasoning-effort"
         },
         {
           "id": "dsh-context",
@@ -84,8 +84,8 @@
           "title": "Better sidebar",
           "description": "File, terminal, Git, and subagent workbench in the sidebar.",
           "defaultEnabled": true,
-          "author": "omdsh-dev",
-          "homepage": "https://github.com/omdsh-dev/DSH-better-sidebar"
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/DSH-better-sidebar"
         },
         {
           "id": "hindsight",
@@ -181,11 +181,11 @@
     "@deepseek-ai/schemastery": "workspace:^",
     "commander": "^15.0.0",
     "open": "^11.0.0",
-    "dshmarket": "^1.44.0",
-    "dsh-reasoning-effort": "github:HanaAyane/dsh-reasoning-effort#v0.7.1",
+    "dshmarket": "github:LunFengChen/dsh-market#v1.44.0",
+    "dsh-reasoning-effort": "github:LunFengChen/dsh-reasoning-effort#v0.7.1",
     "@x1a0f3n9/dsh-session-timeline": "workspace:^",
     "dsh-context": "github:LunFengChen/dsh-context#v0.49.6",
-    "dsh-better-sidebar": "0.19.0-alpha.1",
+    "dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1",
     "@vectorize-io/hindsight-coding-agents": "0.5.2"
   },
   "peerDependencies": {
