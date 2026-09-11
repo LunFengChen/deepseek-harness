@@ -44,6 +44,7 @@ Load the service and let a single mounted backend auto-select, or pin a provider
 | Field | Default | Meaning |
 |---|---|---|
 | `searchProvider` | (unset) | Pinned search provider id; unset auto-selects when exactly one is usable |
+| `searchProviderOrder` | (unset) | Exclusive search allowlist when no id is pinned; unusable ids are skipped, and an unlisted provider such as `deepseek-official` is not selected |
 | `fetchProvider` | (unset) | Pinned fetch provider id; unset auto-selects when exactly one is usable |
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web) is the exhaustive source for every accepted field and its JSDoc.
@@ -71,9 +72,11 @@ Each call resolves its provider at execution time, and registration or load orde
 | configured id registered and usable | runs that provider |
 | configured id not registered | `WEB_PROVIDER_CONFIGURED_MISSING` |
 | configured id registered but unavailable | `WEB_PROVIDER_CONFIGURED_UNAVAILABLE` |
-| no id, exactly one registered usable provider | runs it |
+| no id, first ordered provider usable | runs that provider |
+| no id, order set, none of those usable | `WEB_PROVIDER_UNAVAILABLE` |
+| no id, no order, exactly one registered usable provider | runs it |
 | no id, no usable provider | `WEB_PROVIDER_UNAVAILABLE` |
-| no id, multiple usable providers | `WEB_PROVIDER_AMBIGUOUS` |
+| no id, no order, multiple usable providers | `WEB_PROVIDER_AMBIGUOUS` |
 
 A provider's availability is a cheap local check — for example whether its API key is present — and never makes network calls, so selection stays fast and deterministic.
 

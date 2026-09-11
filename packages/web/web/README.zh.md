@@ -44,6 +44,7 @@ kind: "package-reference"
 | 字段 | 默认值 | 含义 |
 |---|---|---|
 | `searchProvider` | （未设置） | 固定的搜索提供方 id；未设置时仅在恰好一个可用时自动选择 |
+| `searchProviderOrder` | （未设置） | 未固定 id 时的独占搜索允许列表；不可用的 id 会被跳过，不会选中未列出的提供方（例如 `deepseek-official`） |
 | `fetchProvider` | （未设置） | 固定的抓取提供方 id；未设置时仅在恰好一个可用时自动选择 |
 
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web)是每个受支持字段及其 JSDoc 的穷尽式真源。
@@ -71,9 +72,11 @@ const page = await ctx.web.fetch({ url: 'https://example.com' })
 | 已配置 id 已注册且可用 | 运行该提供方 |
 | 已配置 id 未注册 | `WEB_PROVIDER_CONFIGURED_MISSING` |
 | 已配置 id 已注册但不可用 | `WEB_PROVIDER_CONFIGURED_UNAVAILABLE` |
-| 无 id，恰好一个已注册的可用提供方 | 运行它 |
+| 无 id，顺序中第一个可用提供方 | 运行该提供方 |
+| 无 id，已设置顺序且其中没有可用提供方 | `WEB_PROVIDER_UNAVAILABLE` |
+| 无 id，未设置顺序，恰好一个已注册的可用提供方 | 运行它 |
 | 无 id，没有可用提供方 | `WEB_PROVIDER_UNAVAILABLE` |
-| 无 id，多个可用提供方 | `WEB_PROVIDER_AMBIGUOUS` |
+| 无 id，未设置顺序，多个可用提供方 | `WEB_PROVIDER_AMBIGUOUS` |
 
 提供方的可用性是一项廉价的局部检查——例如其 API 密钥是否存在——并且从不发起网络调用，因此选择保持快速且确定。
 
