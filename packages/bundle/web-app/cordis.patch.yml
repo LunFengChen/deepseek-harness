@@ -330,12 +330,11 @@
     - id: better-sidebar
       name: dsh-better-sidebar
 
-    # Optional Hindsight long-term memory. Off until enabled from Settings → Plugins.
+    # Optional Hindsight long-term memory. Disable from Settings → Plugins.
     # xfdsh defaults HINDSIGHT_SERVER_MODE=daemon (local embed on 127.0.0.1:9077).
     # ~/.hindsight/coding-agent.json still wins for cloud or a self-hosted URL.
     - id: hindsight
       name: '@vectorize-io/hindsight-coding-agents/dsh'
-      disabled: true
 
     # Background jobs: the session-header list over the jobsBySession mirror.
     - id: ui-jobs

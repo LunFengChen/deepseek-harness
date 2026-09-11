@@ -10,7 +10,7 @@ web-app 预装会在第一次启动就加载 `@vectorize-io/hindsight-coding-age
 
 ## Decision
 
-包仍留在 web-app 目录和 patch insert 里，用户可以在 Settings → Plugins 打开。发货行设 `defaultEnabled: false` 和 `disabled: true`。不 fork Hindsight monorepo。
+包仍留在 web-app 目录和 patch insert 里。不 fork Hindsight monorepo。发货的开关默认值见 [xfdsh enables Hindsight by default](../feature/2026-09-12-hindsight-enabled-by-default.zh.md)。
 
 ## Alternatives considered
 
@@ -20,6 +20,6 @@ web-app 预装会在第一次启动就加载 `@vectorize-io/hindsight-coding-age
 
 ## Consequences
 
-- 第一次启动不再加载 Hindsight，也不会要云端 key。
-- 已有 profile 的 `pluginOverrides.hindsight: true` 仍会盖过发货的 disabled 行。
-- 用户在 Settings → Plugins 打开。xfdsh 默认 `HINDSIGHT_SERVER_MODE=daemon`；Cloud 仍可写在 `~/.hindsight/coding-agent.json`。
+- xfdsh 不 fork `vectorize-io/hindsight`。
+- 不需要 Cloud，因为 [xfdsh defaults Hindsight to a local daemon](../feature/2026-09-12-hindsight-local-daemon-default.zh.md)。
+- 已有 profile 的 `pluginOverrides.hindsight` 仍会盖过发货行。

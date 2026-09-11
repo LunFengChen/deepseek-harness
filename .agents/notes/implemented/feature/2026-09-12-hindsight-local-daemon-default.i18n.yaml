@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-12-hindsight-local-daemon-default.md
-2026-09-12-hindsight-local-daemon-default.md: bee38c8b6879e9ca2098d37fc5afd58fdfe046b2
-2026-09-12-hindsight-local-daemon-default.zh.md: a7cf9546f8775a1e99ed02921db8b80331311190
+2026-09-12-hindsight-local-daemon-default.md: 46d1f4a82a45aafe6d46f33b47befcac693c5aa3
+2026-09-12-hindsight-local-daemon-default.zh.md: a7afc32b342d61305697cb943a2a3778a83a9013

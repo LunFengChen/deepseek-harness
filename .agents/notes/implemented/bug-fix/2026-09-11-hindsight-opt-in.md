@@ -10,7 +10,7 @@ The web-app preinstall loaded `@vectorize-io/hindsight-coding-agents` on first b
 
 ## Decision
 
-Keep the package in the web-app catalog and patch insert so users can enable it from Settings → Plugins. Set `defaultEnabled: false` and `disabled: true` on the shipped row. Do not fork the Hindsight monorepo.
+Keep the package in the web-app catalog and patch insert. Do not fork the Hindsight monorepo. The shipped on/off default is owned by [xfdsh enables Hindsight by default](../feature/2026-09-12-hindsight-enabled-by-default.md).
 
 ## Alternatives considered
 
@@ -20,6 +20,6 @@ Keep the package in the web-app catalog and patch insert so users can enable it 
 
 ## Consequences
 
-- First boot no longer loads Hindsight or asks for a cloud key.
-- Existing profile `pluginOverrides.hindsight: true` still wins over the shipped disabled row.
-- Users enable it from Settings → Plugins. xfdsh defaults `HINDSIGHT_SERVER_MODE=daemon`; Cloud remains optional in `~/.hindsight/coding-agent.json`.
+- xfdsh does not fork `vectorize-io/hindsight`.
+- Cloud is not required because [xfdsh defaults Hindsight to a local daemon](../feature/2026-09-12-hindsight-local-daemon-default.md).
+- Existing profile `pluginOverrides.hindsight` still wins over the shipped row.

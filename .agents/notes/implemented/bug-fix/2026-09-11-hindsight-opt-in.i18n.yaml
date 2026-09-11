@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-hindsight-opt-in.md
-2026-09-11-hindsight-opt-in.md: b4f9639b1c7822d5e5e5fe855087e9f6b65be47a
-2026-09-11-hindsight-opt-in.zh.md: e9bd8e1abc4d0743dc67c514a9d7dcb7c9570597
+2026-09-11-hindsight-opt-in.md: a0b90d4a1152d1c331116befbd30330c737ea0ce
+2026-09-11-hindsight-opt-in.zh.md: feef07fecfe38fbd1fa0d449395d9e805e470e79

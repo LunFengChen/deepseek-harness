@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-10-preinstall-reasoning-effort.md
-2026-09-10-preinstall-reasoning-effort.md: a2b8c83cf6a916f59de098f938f24ca30827b0d9
-2026-09-10-preinstall-reasoning-effort.zh.md: bdaf3f70efe1076b6048512fdcc8fd6a654c6da8
+2026-09-10-preinstall-reasoning-effort.md: 217699a037ff9601cf91032b7dc722479119456a
+2026-09-10-preinstall-reasoning-effort.zh.md: cd88bd80f7ec70439514a449d19b603fc89cd000

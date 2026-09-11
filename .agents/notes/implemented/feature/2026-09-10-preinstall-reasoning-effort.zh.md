@@ -45,5 +45,5 @@ Hindsight 记忆在 dsh 外面配置，文件是 `~/.hindsight/coding-agent.json
 
 - 启动 `xfdsh web` 后就有思考强度、上下文面板、better-sidebar 工作台和 Hindsight 工具，不必再 `plugin add`。
 - 用户可以在 Settings → Plugins 关闭每一行。
-- Hindsight 仍默认关闭。打开后 xfdsh 默认走本机 daemon；Cloud 仍可选。
+- 新 profile 会加载 Hindsight。xfdsh 默认走本机 daemon；Cloud 仍可选。
 - 以后升版本就是改 web-app 上的依赖 pin。
