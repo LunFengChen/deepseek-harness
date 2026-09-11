@@ -330,10 +330,11 @@
     - id: better-sidebar
       name: dsh-better-sidebar
 
-    # Optional Hindsight long-term memory. Disable from Settings → Plugins.
+    # Optional Hindsight long-term memory. Off until enabled from Settings → Plugins.
     # Memory itself is configured outside dsh in ~/.hindsight/coding-agent.json.
     - id: hindsight
       name: '@vectorize-io/hindsight-coding-agents/dsh'
+      disabled: true
 
     # Background jobs: the session-header list over the jobsBySession mirror.
     - id: ui-jobs

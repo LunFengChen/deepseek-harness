@@ -93,7 +93,7 @@
           "packageName": "@vectorize-io/hindsight-coding-agents",
           "title": "Hindsight memory",
           "description": "Long-term project memory. Needs a Hindsight server or cloud account.",
-          "defaultEnabled": true,
+          "defaultEnabled": false,
           "author": "vectorize-io",
           "homepage": "https://github.com/vectorize-io/hindsight/tree/main/hindsight-integrations/coding-agents"
         }
