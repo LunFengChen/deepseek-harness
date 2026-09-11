@@ -41,15 +41,19 @@ declare module '@deepseek-ai/cordis' {
 
 /**
  * Config for the web seam. `searchProvider` / `fetchProvider` pin which provider
- * wins for each capability. `searchProviderOrder` provides an explicit fallback
- * order when search is not pinned; all fields are optional (a single registered usable
+ * wins for each capability. `searchProviderOrder` is an exclusive search allowlist
+ * when search is not pinned; all fields are optional (a single registered usable
  * provider auto-selects). Operational overrides such as environment variables
  * must feed these same fields rather than introduce a hidden priority chain.
  */
 export interface WebRuntimeConfig {
   /** Explicit search provider id. Omitted = auto-select when exactly one usable. */
   readonly searchProvider?: string
-  /** Ordered search-provider ids used when no explicit provider is pinned. */
+  /**
+   * Ordered search-provider ids used when no explicit provider is pinned.
+   * Unusable ids are skipped; if none of these are usable, search fails instead
+   * of selecting an unlisted provider such as `deepseek-official`.
+   */
   readonly searchProviderOrder?: string[]
   /** Explicit fetch provider id. Omitted = auto-select when exactly one usable. */
   readonly fetchProvider?: string
@@ -64,8 +68,10 @@ export interface WebRuntimeConfig {
  * - A configured id registered but unavailable →
  *   `WEB_PROVIDER_CONFIGURED_UNAVAILABLE`.
  * - No id configured, an ordered provider is registered and usable → the first such provider.
- * - No id configured, no order matches and exactly one usable provider → that provider.
- * - No id configured, no order matches and multiple usable providers → `WEB_PROVIDER_AMBIGUOUS`.
+ * - No id configured, an order is set and none of those providers are usable →
+ *   `WEB_PROVIDER_UNAVAILABLE`.
+ * - No id configured, no order set, and exactly one usable provider → that provider.
+ * - No id configured, no order set, and multiple usable providers → `WEB_PROVIDER_AMBIGUOUS`.
  * - No id configured, no usable provider → `WEB_PROVIDER_UNAVAILABLE`.
  */
 export class WebRuntime extends Service {
@@ -178,7 +184,7 @@ interface OrderedSelection<P> {
   readonly providers: ReadonlyMap<string, P>
   /** Explicit provider id, when one is pinned. */
   configuredId?: string
-  /** Provider ids to try before falling back to the unambiguous-selection rule. */
+  /** Exclusive ordered provider ids; omitted keeps unambiguous auto-select. */
   preferredIds?: readonly string[]
 }
 
@@ -195,9 +201,15 @@ function resolveProvider<P extends ResolvableProvider>(selection: OrderedSelecti
     }
     return provider
   }
-  for (const id of preferredIds ?? []) {
-    const provider = providers.get(id)
-    if (provider?.available()) return provider
+  if (preferredIds !== undefined && preferredIds.length > 0) {
+    for (const id of preferredIds) {
+      const provider = providers.get(id)
+      if (provider?.available()) return provider
+    }
+    throw new WebError(
+      `none of the ordered web providers are usable (${preferredIds.join(', ')})`,
+      'WEB_PROVIDER_UNAVAILABLE',
+    )
   }
   const usable = [...providers.values()].filter(provider => provider.available())
   const [single] = usable
