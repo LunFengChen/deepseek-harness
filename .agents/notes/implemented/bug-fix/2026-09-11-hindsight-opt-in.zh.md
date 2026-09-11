@@ -22,4 +22,4 @@ web-app 预装会在第一次启动就加载 `@vectorize-io/hindsight-coding-age
 
 - 第一次启动不再加载 Hindsight，也不会要云端 key。
 - 已有 profile 的 `pluginOverrides.hindsight: true` 仍会盖过发货的 disabled 行。
-- 用户配好 `~/.hindsight/coding-agent.json` 后，再在 Settings → Plugins 打开。
+- 用户在 Settings → Plugins 打开。xfdsh 默认 `HINDSIGHT_SERVER_MODE=daemon`；Cloud 仍可写在 `~/.hindsight/coding-agent.json`。
