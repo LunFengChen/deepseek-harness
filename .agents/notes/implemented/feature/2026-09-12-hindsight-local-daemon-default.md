@@ -10,11 +10,9 @@ The Hindsight coding-agent plugin's built-in `serverMode` is `cloud`. Enabling t
 
 ## Decision
 
-`applyForkDefaults` sets `HINDSIGHT_SERVER_MODE=daemon` when the variable is unset or blank. The plugin stays cataloged and off by default. xfdsh does not write `~/.hindsight/coding-agent.json`, does not vendor Hindsight, and does not start a daemon of its own. An explicit env value still wins. A `serverMode` in the Hindsight config file still wins over env.
+`applyForkDefaults` sets `HINDSIGHT_SERVER_MODE=daemon` when the variable is unset or blank. xfdsh does not write `~/.hindsight/coding-agent.json`, does not vendor Hindsight, and does not start a daemon of its own. An explicit env value still wins. A `serverMode` in the Hindsight config file still wins over env. The on/off default is owned by [xfdsh enables Hindsight by default](2026-09-12-hindsight-enabled-by-default.md).
 
 ## Alternatives considered
-
-**Enable the plugin by default once daemon is the destination.** Rejected: local recall still needs `uv` plus an extraction LLM key, and a loaded plugin still registers `hindsight_*` tools when the daemon cannot start.
 
 **Write `~/.hindsight/coding-agent.json` with `serverMode: daemon` when the file is missing.** Rejected: that file is shared with other Hindsight-using agents; xfdsh should not create it.
 
@@ -24,6 +22,6 @@ The Hindsight coding-agent plugin's built-in `serverMode` is `cloud`. Enabling t
 
 ## Consequences
 
-- Enabling Hindsight from Settings → Plugins no longer requires a Cloud account.
+- Loading Hindsight no longer requires a Cloud account.
 - Local recall still needs `uv` on PATH and an extraction LLM (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `HINDSIGHT_API_LLM_PROVIDER`, or the Claude Code CLI). Missing those logs a warning and leaves the turn memoryless.
 - A user who already chose Cloud or self-hosted in env or `coding-agent.json` is unchanged.
