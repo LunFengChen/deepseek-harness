@@ -20,6 +20,9 @@ import { parseDshArgs } from './args.ts'
  * Apply fork-only defaults without overriding explicit user configuration.
  * Profiles and plugins live under `~/.xfdsh`; durable session data remains in
  * the official `~/.dsh` location so both launchers can read the same history.
+ * Unset `HINDSIGHT_SERVER_MODE` becomes `daemon` so Hindsight uses a local
+ * embed instead of Hindsight Cloud. An explicit env value still wins; a
+ * `serverMode` in `~/.hindsight/coding-agent.json` also still wins.
  * @param env - mutable process environment used by the launcher.
  */
 export function applyForkDefaults(env: Record<string, string | undefined> = process.env): void {
@@ -29,6 +32,9 @@ export function applyForkDefaults(env: Record<string, string | undefined> = proc
   }
   if (env.DSH_WEB_DEFAULT_PORT === undefined || env.DSH_WEB_DEFAULT_PORT.trim().length === 0) {
     env.DSH_WEB_DEFAULT_PORT = '7777'
+  }
+  if (env.HINDSIGHT_SERVER_MODE === undefined || env.HINDSIGHT_SERVER_MODE.trim().length === 0) {
+    env.HINDSIGHT_SERVER_MODE = 'daemon'
   }
 }
 

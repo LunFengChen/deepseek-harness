@@ -22,4 +22,4 @@ Keep the package in the web-app catalog and patch insert so users can enable it 
 
 - First boot no longer loads Hindsight or asks for a cloud key.
 - Existing profile `pluginOverrides.hindsight: true` still wins over the shipped disabled row.
-- Users enable it from Settings → Plugins after configuring `~/.hindsight/coding-agent.json`.
+- Users enable it from Settings → Plugins. xfdsh defaults `HINDSIGHT_SERVER_MODE=daemon`; Cloud remains optional in `~/.hindsight/coding-agent.json`.

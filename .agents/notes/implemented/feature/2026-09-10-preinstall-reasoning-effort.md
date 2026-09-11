@@ -45,5 +45,5 @@ Hindsight memory is configured outside dsh in `~/.hindsight/coding-agent.json`. 
 
 - `xfdsh web` starts with thinking strength, a context dashboard, the better-sidebar workbench, and Hindsight tools without extra `plugin add` commands.
 - Users can disable each row from Settings → Plugins.
-- Hindsight recall/retain needs a Cloud account or local server after install.
+- Hindsight stays off until enabled. xfdsh defaults that enablement to a local daemon; Cloud remains optional.
 - A later plugin bump is a dependency pin change on web-app.
