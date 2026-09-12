@@ -1,0 +1,34 @@
+diff --git a/dist/dsh.js b/dist/dsh.js
+index 97880d603508117fe29ccc48da1b2b75864012d3..2f2126a64868961a17d263508eda2c41b2d881eb 100644
+--- a/dist/dsh.js
++++ b/dist/dsh.js
+@@ -16318,7 +16318,8 @@ function git(repo, ...args) {
+   return execFileSync2("git", ["-C", repo, ...args], {
+     encoding: "utf8",
+     maxBuffer: 1 << 28,
+-    windowsHide: true
++    windowsHide: true,
++    stdio: ["ignore", "pipe", "pipe"]
+   });
+ }
+ function repoNameOf(repo) {
+@@ -16566,7 +16567,8 @@ function commitCount(repoDir) {
+   try {
+     const out = execFileSync3("git", ["-C", repoDir, "rev-list", "--count", "HEAD"], {
+       encoding: "utf8",
+-      windowsHide: true
++      windowsHide: true,
++      stdio: ["ignore", "pipe", "pipe"]
+     });
+     return Number(out.trim()) || 0;
+   } catch {
+@@ -17128,7 +17130,8 @@ async function gitSyncNote(args) {
+     const n = Number(
+       execFileSync4("git", ["-C", cwd, "rev-list", "--count", "HEAD"], {
+         encoding: "utf8",
+-        windowsHide: true
++        windowsHide: true,
++        stdio: ["ignore", "pipe", "pipe"]
+       }).trim()
+     );
+     if (n > 0) target = Math.min(DEEPEN_DIFF_TARGET, n);

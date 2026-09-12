@@ -111,5 +111,6 @@ minimumReleaseAgeExclude:
   - dsh-context@0.48.0
 
 patchedDependencies:
+  '@vectorize-io/hindsight-coding-agents@0.5.2': patches/@vectorize-io__hindsight-coding-agents@0.5.2.patch
   '@yao-pkg/pkg@6.21.0': patches/@yao-pkg__pkg@6.21.0.patch
   node-pty@1.2.0-beta.15: patches/node-pty@1.2.0-beta.15.patch
