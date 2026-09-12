@@ -10,7 +10,7 @@ English | [中文](2026-09-10-session-timeline-dependency-scope.zh.md)
 
 ## Decision
 
-Add `@x1a0f3n9/dsh-session-timeline` to `clientFaceExclude`, the same roster as the API session/workspace controllers. The plugin stays a dual-face bundle row, but Host dependency flattening does not apply. Do not add those five exports to the global Host allowlists.
+`@x1a0f3n9/dsh-session-timeline` is an external plugin at [LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline). It is not a workspace package, so it is not in `clientFaceExclude` and Host dependency flattening does not apply. Do not add those five exports to the global Host allowlists.
 
 ## Verification
 
@@ -24,5 +24,5 @@ Add `@x1a0f3n9/dsh-session-timeline` to `clientFaceExclude`, the same roster as 
 
 ## Consequences
 
-- Session-timeline host dependencies stay declared on the package itself.
-- Later Client/Host flattening for this plugin needs a dedicated follow-up if the rewind imports are replaced by service calls.
+- Session-timeline host dependencies stay declared on the plugin package.
+- Workspace Client/Host flattening no longer sees this plugin.

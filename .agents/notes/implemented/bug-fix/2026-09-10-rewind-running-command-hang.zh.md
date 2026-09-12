@@ -14,7 +14,7 @@ UI 回退先停住当前回合；需要还原文件时走内部 `/rewind __resto
 
 ## Verification
 
-`pnpm exec vitest run packages/session/session-timeline/tests/hidden.client.spec.ts packages/session/session-timeline/tests/actions.client.spec.tsx packages/session/session-timeline/tests/portals.client.spec.tsx packages/api/session-controller/tests/commands-delete.host.spec.ts`
+`tests/hidden.client.spec.ts`, `tests/actions.client.spec.tsx`, and `tests/portals.client.spec.tsx` in [LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline), plus `pnpm exec vitest run packages/api/session-controller/tests/commands-delete.host.spec.ts`
 
 ## Alternatives considered
 

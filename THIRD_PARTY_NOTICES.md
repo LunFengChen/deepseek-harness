@@ -57,6 +57,7 @@ External packages installed for runtime use or distributed inside the prebuilt b
 | [`@tanstack/react-virtual`](https://github.com/TanStack/virtual) | MIT |
 | [`@vectorize-io/hindsight-coding-agents`](https://github.com/vectorize-io/hindsight) | MIT |
 | [`@vscode/ripgrep`](https://github.com/microsoft/vscode-ripgrep) | MIT |
+| [`@x1a0f3n9/dsh-session-timeline`](https://github.com/LunFengChen/dsh-session-timeline) | MIT |
 | [`@xterm/headless`](https://github.com/xtermjs/xterm.js) | MIT |
 | [`@yarnpkg/parsers`](https://github.com/yarnpkg/berry) | BSD-2-Clause |
 | [`acorn`](https://github.com/acornjs/acorn) | MIT |

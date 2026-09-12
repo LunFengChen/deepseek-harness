@@ -14,7 +14,7 @@ Long sessions can overflow the model context. Automatic compaction retries after
 
 ## Verification
 
-`pnpm exec vitest run packages/session/session-timeline/tests/compact-button.client.spec.tsx` covers the click path and the missing-session disabled state.
+`tests/compact-button.client.spec.tsx` in [LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline) covers the click path and the missing-session disabled state.
 
 ## Alternatives considered
 

@@ -10,7 +10,7 @@ Status: implemented
 
 ## Decision
 
-把 `@x1a0f3n9/dsh-session-timeline` 加进 `clientFaceExclude`，与 API session/workspace controller 同一名册。插件仍是双面 bundle 行，但不做 Host 依赖扁平化。不要把这五个导出加进全局 Host allowlist。
+`@x1a0f3n9/dsh-session-timeline` 是外部插件，仓库是 [LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline)。它不是工作区包，因此不在 `clientFaceExclude` 里，也不会做 Host 依赖扁平化。不要把这五个导出加进全局 Host allowlist。
 
 ## Verification
 
@@ -24,5 +24,5 @@ Status: implemented
 
 ## Consequences
 
-- session-timeline 的宿主依赖仍由该包自己声明。
-- 如果以后用 service 调用替换这些 rewind 导入，再单独做 Client/Host 扁平化。
+- session-timeline 的宿主依赖仍由插件自己声明。
+- 工作区的 Client/Host 扁平化不再看到这个插件。

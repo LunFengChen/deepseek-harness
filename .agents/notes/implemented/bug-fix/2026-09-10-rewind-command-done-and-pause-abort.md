@@ -14,7 +14,7 @@ Rewind failed when the selected seq was a `command/done` (or any non-human event
 
 ## Verification
 
-`pnpm exec vitest run packages/session/session-timeline/tests/rewind.spec.ts` covers `command/done` walk-back. `pnpm exec vitest run packages/interaction/commands/tests/commands.spec.ts` covers `abortInflight` settling `command/done`.
+`tests/rewind.spec.ts` in [LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline) covers `command/done` walk-back. `pnpm exec vitest run packages/interaction/commands/tests/commands.spec.ts` covers `abortInflight` settling `command/done`.
 
 ## Alternatives considered
 
