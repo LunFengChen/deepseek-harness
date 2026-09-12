@@ -94,8 +94,8 @@
           "title": "Hindsight memory",
           "description": "Long-term project memory. Defaults to a local Hindsight daemon; cloud is optional.",
           "defaultEnabled": true,
-          "author": "vectorize-io",
-          "homepage": "https://github.com/vectorize-io/hindsight/tree/main/hindsight-integrations/coding-agents"
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/hindsight-coding-agents"
         }
       ]
     }
@@ -186,7 +186,7 @@
     "@x1a0f3n9/dsh-session-timeline": "github:LunFengChen/dsh-session-timeline#v0.1.0",
     "dsh-context": "github:LunFengChen/dsh-context#v0.49.6",
     "dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1",
-    "@vectorize-io/hindsight-coding-agents": "0.5.2"
+    "@vectorize-io/hindsight-coding-agents": "github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
