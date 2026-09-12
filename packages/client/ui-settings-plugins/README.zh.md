@@ -1,5 +1,5 @@
 ---
-description: "dsh Web 客户端的「插件」设置分区：功能拥有的标签页、可配置宿主平面插件卡片，以及 settings.plugin.item 扩展点。"
+description: "dsh Web 客户端的「插件」设置分区：功能自有的标签页、可配置宿主平面插件卡片，以及 settings.plugin.item 扩展点。"
 kind: "package-reference"
 ---
 
@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-打开设置中的「插件」分区并选择**插件配置**标签页，即可编辑本部署所组装的宿主平面插件。卡片依次为 shell 执行器（`bash`）、agent 循环的工具调用并行度（`agent-loop`）、subagent 模型选择（`subagent-model-selection`）以及 DeepSeek 搜索提供方（`web-search-deepseek`）。
+打开设置中的「插件」分区并选择**插件配置**标签页，即可编辑本部署所组装的宿主平面插件。卡片依次为 shell 执行器（`bash`）、agent loop（智能体循环）的工具调用并行度（`agent-loop`）、subagent 模型选择（`subagent-model-selection`）以及 DeepSeek 搜索提供方（`web-search-deepseek`）。
 
 ### 这里会出现什么
 
@@ -35,7 +35,7 @@ kind: "package-reference"
 
 卡片暂存用户输入，只有用户保存时才写入。每个控件渲染的都是暂存文本，因此屏幕上所见即保存后所存；**放弃修改**丢弃这些草稿，持有未保存修改的卡片即使收起也会在标题上标明。保存成功后，卡片会在回读确认写入后收起；保存失败时，卡片保持展开、报告失败并保留草稿供用户修改。重置暂存的是组装默认值而非立即写入；字段不接受的草稿会阻塞保存，而不是被丢弃。某个值是否被接受只有 Host 说了算。
 
-Subagent 卡会同时暂存其权限开关与精确模型复选框。启用时必须至少选择一条适配器路由。保存会在一次 mutation 中提交 `enabled` 与 `allowedModels`，并以草稿开始时的 revision 设栅；Host revision 更新后，草稿会标记为失败，而不会恢复已撤销的路由。关闭时会保留已选路由供以后重新使用。可用模型按提供方分组；当前目录中缺失的已存路由排在末尾，且仍可移除。适配器名称与模型描述仍属于实时目录元数据，不会存储；适配器变化、设置提交和重连后，卡片会刷新这些元数据。
+subagent 卡会同时暂存其权限开关与精确模型复选框。启用时必须至少选择一条适配器路由。保存会在一次 mutation 中提交 `enabled` 与 `allowedModels`，并以草稿开始时的 revision 设栅；Host revision 更新后，草稿会标记为失败，而不会恢复已撤销的路由。关闭时会保留已选路由供以后重新使用。可用模型按提供方分组；当前目录中缺失的已存路由排在末尾，且仍可移除。适配器名称与模型描述仍属于实时目录元数据，不会存储；适配器变化、设置提交和重连后，卡片会刷新这些元数据。
 
 ### secret 角色字段
 
@@ -79,7 +79,7 @@ Subagent 卡会同时暂存其权限开关与精确模型复选框。启用时�
 <a id="model-experience"></a>
 ## 模型体验
 
-无。该包是浏览器端设置界面，不注册任何面向模型的表面。
+无。该包是浏览器端设置界面，不注册任何面向模型的接口。
 
 #### KV Cache 影响
 
@@ -107,4 +107,4 @@ Subagent 卡会同时暂存其权限开关与精确模型复选框。启用时�
 
 </details>
 
-**运行时不变式：** 不发布伴生入口。这是浏览器侧 settings surface，node half 不持有事件流或可变运行时数据；layering 与写入拒绝由所属 Host 插件和 api-proxy 覆盖。
+**运行时不变式：** 不发布伴生入口。这是浏览器端设置界面，node half 不持有事件流或可变运行时数据；分层与写入拒绝是 Host 约定，由相应插件和 api-proxy 覆盖。

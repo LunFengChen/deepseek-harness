@@ -5,6 +5,7 @@
   min-width: 100%;
   height: max-content;
   min-height: 100%;
+  padding: 8px;
   font-family: var(--dsw-font, sans-serif);
   white-space: normal;
 }

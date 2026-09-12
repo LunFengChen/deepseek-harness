@@ -12,7 +12,7 @@ import css from './CodeBody.module.css'
 export type CodeBodyProps = DocumentPreviewProps & PropsLocale<'sidebarCodePreview'>
 
 /** @param props - accumulated document contents and framework props. @returns one stable CodeBlock, or no body for byte contents. */
-export function CodeBody({ resourceAddress, content, wrap, t }: CodeBodyProps): ReactNode {
+export function CodeBody({ resourceAddress, content, wrap, scrollportRef, t }: CodeBodyProps): ReactNode {
   if (content.kind !== 'text') return null
   const file = parseFileAddress(resourceAddress)
   if (file === undefined) throw new Error(`ui-sidebar-documentpreview: not a file address "${resourceAddress}"`)
@@ -21,6 +21,7 @@ export function CodeBody({ resourceAddress, content, wrap, t }: CodeBodyProps): 
     <div className={css.renderer} data-code-preview data-wrap={wrap}>
       <CodeBlock
         className={css.code}
+        contentRef={scrollportRef}
         code={content.text}
         lang={language}
         streaming={!content.eof}

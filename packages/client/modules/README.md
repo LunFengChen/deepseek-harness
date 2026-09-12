@@ -57,7 +57,7 @@ This section explains how the module system is built; observable behavior is cov
 
 ### Design concept
 
-The package is dual-face: the node half is the composition and serving side (`ctx.clientModules`, `ClientModuleRegistry`), the browser half is the loading side (`ctx.modules`, `ClientModuleSystem`). The wire between them is the boot graph — `WebBootEntry` rows injected as `window.__DSH_BOOT__`, with `<` escaped so plugin-controlled strings cannot break out of the script element. The vendored Loader's only consumption point is `EntryTree.import`, so the module system is the single replacement for "how plugin code arrives".
+The package has two sides: the Node half is the composition and serving side (`ctx.clientModules`, `ClientModuleRegistry`), the browser half is the loading side (`ctx.modules`, `ClientModuleSystem`). The wire between them is the boot graph — `WebBootEntry` rows injected as `window.__DSH_BOOT__`, with `<` escaped so plugin-controlled strings cannot break out of the script element. The vendored Loader's only consumption point is `EntryTree.import`, so the module system is the single replacement for "how plugin code arrives".
 
 ### Lazy-CJS model
 
@@ -65,9 +65,9 @@ Executing a plugin bundle only registers its factory; every module-body side eff
 
 ### Incremental composition
 
-The node half scans incrementally per package — no full-rescan path. Every `internal/plugin` emission marks the fiber's entry name dirty; a microtask flush reconciles each dirty name against the live loader entries, and the activation pass seeds the same dirty set and flushes synchronously, so first scan and steady state share one implementation. Package metadata is cached per Loader specifier and owning-tree base URL until restart, while the resolved manifest package name identifies the browser module. Distinct active Loader sources resolving to one package name are rejected; removing the conflict promotes the remaining source without requiring its fiber to restart. Bundle content changes reach the graph only through `rebuilt()` (the HMR hook).
+The Node half scans incrementally per package — no full-rescan path. Every `internal/plugin` emission marks the fiber's entry name dirty; a microtask flush reconciles each dirty name against the live loader entries, and the activation pass seeds the same dirty set and flushes synchronously, so first scan and steady state share one implementation. Package metadata is cached per Loader specifier and owning-tree base URL until restart, while the resolved manifest package name identifies the browser module. Distinct active Loader sources resolving to one package name are rejected; removing the conflict promotes the remaining source without requiring its fiber to restart. Bundle content changes reach the graph only through `rebuilt()` (the HMR hook).
 
-The node half snapshots each client bundle and available source map before publication. It groups resources into `/plugins/??...&rev=...` combo URLs, with one bootstrap combo for the modules row and one or more application combos for the other rows; each phase is partitioned before a URL exceeds 3 KiB or combined source exceeds 512 KiB, and immediately-tier rows stay out of deferred combos. Every combo map is Indexed Source Map v3 and uses an authored section when available or an identity section for the packaged bundle. Initial per-plugin revisions use process nonces, so startup does not hash every plugin; HMR hashes only an artifact reported as changed. Advertised responses are immutable, and an unknown combination or revision returns 404.
+The Node half snapshots each client bundle and available source map before publication. It groups resources into `/plugins/??...&rev=...` combo URLs, with one bootstrap combo for the modules row and one or more application combos for the other rows; each phase is partitioned before a URL exceeds 3 KiB. Every combo map is Indexed Source Map v3 and uses an authored section when available or an identity section for the packaged bundle. Initial per-plugin revisions use process nonces, so startup does not hash every plugin; HMR hashes only an artifact reported as changed. Advertised responses are immutable, and an unknown combination or revision returns 404.
 
 ### Boot manifest injection
 
@@ -80,7 +80,7 @@ The host contributes structured index rows that inject, into `<head>`: the `wind
 | [`src/index.ts`](src/index.ts) | Node half: `ClientModuleRegistry`, scan, artifact snapshots, optional combo route, structured index rows |
 | [`src/client/index.ts`](src/client/index.ts) | Browser half: bootstrap export, `ctx.modules` enrollment |
 | [`src/client/system.ts`](src/client/system.ts) | `ClientModuleSystem`: load/materialize/invalidate machinery |
-| [`src/client/manifest.ts`](src/client/manifest.ts) | Wire types and boot-manifest parsing |
+| [`src/client/manifest.ts`](src/client/manifest.ts) | Wire types, boot-manifest parsing, and the `dsh.client` declaration parser |
 
 </details>
 

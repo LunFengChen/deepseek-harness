@@ -27,7 +27,7 @@ overrides:
   '@deepseek-ai/dsh-tools': npm:@x1a0f3n9/dsh-tools@workspace:*
 
 patchedDependencies:
-  '@vectorize-io/hindsight-coding-agents@0.5.2': 29800335eec1163d801e7c5c1cbf78d58428e1658134429c6a258a022afefc31
+  '@electron/osx-sign@1.3.3': 280e7b2816caf01423097d24e79107a66afeb563a348630ce9928ae8499a5861
   '@yao-pkg/pkg@6.21.0': 28edd2180c36691c481522ef81f6f6614505f45e491aad542ac4663d4e6b3ff8
   node-pty@1.2.0-beta.15: b40ae545608897914bd25fb009c97eeac478c34e8a910298ddcb01b746534bb0
 
@@ -65,9 +65,6 @@ importers:
       '@x1a0f3n9/dsh-agent':
         specifier: workspace:^
         version: link:packages/core/agent
-      '@x1a0f3n9/dsh-package-manifest':
-        specifier: workspace:^
-        version: link:packages/util/package-manifest
       '@x1a0f3n9/dsh-tool-session-query':
         specifier: workspace:^
         version: link:packages/session-query/tool-session-query
@@ -541,9 +538,6 @@ importers:
       js-yaml:
         specifier: ^4.2.0
         version: 4.3.1
-      msgpackr:
-        specifier: 2.0.4
-        version: 2.0.4
       pnpm:
         specifier: 11.7.0
         version: 11.7.0
@@ -1039,6 +1033,9 @@ importers:
       '@x1a0f3n9/dsh-client-store':
         specifier: workspace:^
         version: link:../../client/store
+      '@x1a0f3n9/dsh-client-test-runtime':
+        specifier: workspace:^
+        version: link:../../test-support/client-runtime
       '@x1a0f3n9/dsh-commands':
         specifier: workspace:^
         version: link:../../interaction/commands
@@ -1063,6 +1060,9 @@ importers:
       '@x1a0f3n9/dsh-permission-presets':
         specifier: workspace:^
         version: link:../../interaction/permission-presets
+      '@x1a0f3n9/dsh-remote-mock':
+        specifier: workspace:^
+        version: link:../../test-support/remote-mock
       '@x1a0f3n9/dsh-scope':
         specifier: workspace:^
         version: link:../../core/scope
@@ -1173,9 +1173,15 @@ importers:
       '@x1a0f3n9/dsh-client-store':
         specifier: workspace:^
         version: link:../../client/store
+      '@x1a0f3n9/dsh-client-test-runtime':
+        specifier: workspace:^
+        version: link:../../test-support/client-runtime
       '@x1a0f3n9/dsh-host-directory-picker':
         specifier: workspace:^
         version: link:../../host/directory-picker
+      '@x1a0f3n9/dsh-remote-mock':
+        specifier: workspace:^
+        version: link:../../test-support/remote-mock
       '@x1a0f3n9/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
@@ -1765,7 +1771,7 @@ importers:
         version: link:../../../vendor/schemastery
       '@vectorize-io/hindsight-coding-agents':
         specifier: 0.5.2
-        version: 0.5.2(patch_hash=29800335eec1163d801e7c5c1cbf78d58428e1658134429c6a258a022afefc31)
+        version: 0.5.2
       '@x1a0f3n9/dsh-agent-presets':
         specifier: workspace:^
         version: link:../../preset/agent-presets
@@ -2456,6 +2462,9 @@ importers:
       '@x1a0f3n9/dsh-client-ui-conversation':
         specifier: workspace:^
         version: link:../ui-conversation
+      '@x1a0f3n9/dsh-client-ui-input-trigger':
+        specifier: workspace:^
+        version: link:../ui-input-trigger
       '@x1a0f3n9/dsh-client-ui-layout':
         specifier: workspace:^
         version: link:../ui-layout
@@ -3295,6 +3304,9 @@ importers:
       '@x1a0f3n9/dsh-permission-presets':
         specifier: workspace:^
         version: link:../../interaction/permission-presets
+      '@x1a0f3n9/dsh-remote-mock':
+        specifier: workspace:^
+        version: link:../../test-support/remote-mock
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -3439,6 +3451,9 @@ importers:
       '@x1a0f3n9/dsh-client-ui-primitives':
         specifier: workspace:^
         version: link:../ui-primitives
+      '@x1a0f3n9/dsh-client-ui-sidebar-right':
+        specifier: workspace:^
+        version: link:../ui-sidebar-right
       '@x1a0f3n9/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
@@ -3644,6 +3659,9 @@ importers:
       '@x1a0f3n9/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
+      '@x1a0f3n9/dsh-remote-mock':
+        specifier: workspace:^
+        version: link:../../test-support/remote-mock
       '@x1a0f3n9/dsh-settings':
         specifier: workspace:^
         version: link:../../settings/settings
@@ -3686,6 +3704,9 @@ importers:
       '@x1a0f3n9/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
+      '@x1a0f3n9/dsh-remote-mock':
+        specifier: workspace:^
+        version: link:../../test-support/remote-mock
       '@x1a0f3n9/dsh-util-values':
         specifier: workspace:^
         version: link:../../util/values
@@ -4061,6 +4082,9 @@ importers:
       '@x1a0f3n9/dsh-client-ui-renderer':
         specifier: workspace:^
         version: link:../ui-renderer
+      '@x1a0f3n9/dsh-client-ui-sidebar-right':
+        specifier: workspace:^
+        version: link:../ui-sidebar-right
       '@x1a0f3n9/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../ui-slots
@@ -4070,6 +4094,9 @@ importers:
       '@x1a0f3n9/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
+      '@x1a0f3n9/dsh-util-workspace-path':
+        specifier: workspace:^
+        version: link:../../util/workspace-path
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -5678,9 +5705,6 @@ importers:
       '@types/picomatch':
         specifier: ^3.0.2
         version: 3.0.2
-      '@x1a0f3n9/dsh-package-manifest':
-        specifier: workspace:^
-        version: link:../../util/package-manifest
 
   packages/experimental/webworker-runtime:
     dependencies:
@@ -7068,6 +7092,9 @@ importers:
       '@x1a0f3n9/dsh-attachment':
         specifier: workspace:^
         version: link:../../attachment/attachment
+      '@x1a0f3n9/dsh-attachment-local':
+        specifier: workspace:^
+        version: link:../../attachment/attachment-local
       '@x1a0f3n9/dsh-credentials':
         specifier: workspace:^
         version: link:../../credentials/credentials
@@ -7432,6 +7459,9 @@ importers:
 
   packages/plan/plan-mode:
     dependencies:
+      '@x1a0f3n9/dsh-brand':
+        specifier: workspace:^
+        version: link:../../util/brand
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -10105,6 +10135,9 @@ importers:
       '@testing-library/react':
         specifier: ^16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      js-yaml:
+        specifier: ^4.2.0
+        version: 4.3.1
       vitest:
         specifier: ^4.1.8
         version: 4.1.8(@opentelemetry/api@1.9.1)(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(happy-dom@20.11.6)(jsdom@29.1.1(@noble/hashes@2.3.0))(vite@8.0.16(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0))
@@ -10112,12 +10145,27 @@ importers:
       '@deepseek-ai/cordis':
         specifier: workspace:^
         version: link:../../../vendor/cordis
+      '@deepseek-ai/cordis-plugin-include':
+        specifier: workspace:^
+        version: link:../../../vendor/include
+      '@deepseek-ai/cordis-plugin-loader':
+        specifier: workspace:^
+        version: link:../../../vendor/loader
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/react':
         specifier: ~18.3.1
         version: 18.3.31
       '@types/react-dom':
         specifier: ~18.3.0
         version: 18.3.7(@types/react@18.3.31)
+      '@x1a0f3n9/dsh-api-gateway':
+        specifier: workspace:^
+        version: link:../../api/gateway
+      '@x1a0f3n9/dsh-api-remotes':
+        specifier: workspace:^
+        version: link:../../api/remotes
       '@x1a0f3n9/dsh-api-session-controller':
         specifier: workspace:^
         version: link:../../api/session-controller
@@ -10127,9 +10175,21 @@ importers:
       '@x1a0f3n9/dsh-attachment':
         specifier: workspace:^
         version: link:../../attachment/attachment
+      '@x1a0f3n9/dsh-base':
+        specifier: workspace:^
+        version: link:../../bundle/base
       '@x1a0f3n9/dsh-client-connection':
         specifier: workspace:^
         version: link:../../client/connection
+      '@x1a0f3n9/dsh-client-hmr':
+        specifier: workspace:^
+        version: link:../../client/hmr
+      '@x1a0f3n9/dsh-client-locale':
+        specifier: workspace:^
+        version: link:../../client/locale
+      '@x1a0f3n9/dsh-client-modules':
+        specifier: workspace:^
+        version: link:../../client/modules
       '@x1a0f3n9/dsh-client-store':
         specifier: workspace:^
         version: link:../../client/store
@@ -10154,15 +10214,27 @@ importers:
       '@x1a0f3n9/dsh-client-ui-slots':
         specifier: workspace:^
         version: link:../../client/ui-slots
+      '@x1a0f3n9/dsh-client-web':
+        specifier: workspace:^
+        version: link:../../client/web
+      '@x1a0f3n9/dsh-remote-mock':
+        specifier: workspace:^
+        version: link:../remote-mock
       '@x1a0f3n9/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
+      '@x1a0f3n9/dsh-settings':
+        specifier: workspace:^
+        version: link:../../settings/settings
       '@x1a0f3n9/dsh-subagent':
         specifier: workspace:^
         version: link:../../subagent/subagent
       '@x1a0f3n9/dsh-typert-protocol':
         specifier: workspace:^
         version: link:../../typert/protocol
+      '@x1a0f3n9/dsh-web-app':
+        specifier: workspace:^
+        version: link:../../bundle/web-app
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -10228,6 +10300,28 @@ importers:
       '@x1a0f3n9/dsh-session':
         specifier: workspace:^
         version: link:../../core/session
+
+  packages/test-support/remote-mock:
+    dependencies:
+      '@vitest/spy':
+        specifier: ^4.1.8
+        version: 4.1.8
+    devDependencies:
+      '@deepseek-ai/cordis':
+        specifier: workspace:^
+        version: link:../../../vendor/cordis
+      '@x1a0f3n9/dsh-api-settings-controller':
+        specifier: workspace:^
+        version: link:../../api/settings-controller
+      '@x1a0f3n9/dsh-client-connection':
+        specifier: workspace:^
+        version: link:../../client/connection
+      '@x1a0f3n9/dsh-typert-protocol':
+        specifier: workspace:^
+        version: link:../../typert/protocol
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
 
   packages/test-support/session-snapshot:
     dependencies:
@@ -13414,36 +13508,6 @@ packages:
     resolution: {integrity: sha512-Mmjg4anFBD5OzbPnGJOA0jPPN8645ERhQk38HQLpSenx1ox9bfdPkmAzUnNjeQtqQGFLtKe13J20RtLBmUKMZA==}
     hasBin: true
 
-  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
-    resolution: {integrity: sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ==}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.4':
-    resolution: {integrity: sha512-zExlW9zUJKZH/tOtVMttwjKa4Xm/3KcNjnE3dPN92uCktwavMxpgCA3MoJK/DOnTWsQgo224OaST27/mPNAf+w==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.4':
-    resolution: {integrity: sha512-dgX0P/9wGPJeHFBG+ZmhgE6bmtMt7NP5CRBGyyktpopdk/mW4POnrpQsSLtKI1dwpc+pPLuXHDh6vvskyQE/sw==}
-    cpu: [arm64]
-    os: [linux]
-
-  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.4':
-    resolution: {integrity: sha512-Tg3yX65f5GbtXLkrYEHE5oibZG9epyYWas7FogTTEJeDEF9JlXJzKgXaNhT3UXlTOeA+AfZpYZYZ0uPj7Cfquw==}
-    cpu: [arm]
-    os: [linux]
-
-  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.4':
-    resolution: {integrity: sha512-8TNXMEjJc3QEy7R/x1INhgiU+XakDAFUzBhaz7+Rbrs8NH5UQeHQxxmzsSBJGyV6I1jW79undiQm8tOI+D+8FQ==}
-    cpu: [x64]
-    os: [linux]
-
-  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
-    resolution: {integrity: sha512-CmCXPQrkbwExx3j946/PtHWHbYJiCRBRDl4BlkRQcJB/YOwQxJRTpoo7aTsortjgoJ1x7opzTSxn7C+ASSLVjQ==}
-    cpu: [x64]
-    os: [win32]
-
   '@napi-rs/canvas-android-arm64@1.0.8':
     resolution: {integrity: sha512-5+nkh8i3gt6lqS/d2jTZ1xAn6tdgtB4Lf1mW6T0Qm5/rXNwBuV1sAEyLEWan5o9gJPU/GuvHR3rvSeZ+FaGrbw==}
     engines: {node: '>= 10'}
@@ -15774,7 +15838,7 @@ packages:
     engines: {node: '>=12'}
 
   dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e:
-    resolution: {gitHosted: true, integrity: sha512-thtFts5elBbNA0k7CsdI4zL3Nvj8J/pphKome3ISydYLfXHufeai06XblTUgH9d528uM3orJIW+I8LQSPu27Eg==, tarball: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e}
     version: 0.19.0-alpha.1
     engines: {node: '>=20'}
     peerDependencies:
@@ -15803,7 +15867,7 @@ packages:
         optional: true
 
   dsh-context@https://codeload.github.com/LunFengChen/dsh-context/tar.gz/789da56f5cc1ba64798f2e8acb3bb564355913fa:
-    resolution: {gitHosted: true, integrity: sha512-qFYYOc4A62akilxlElrvtGdl932iDAz9eDQCC082KiQtYOMmcelcptOhH1flf9ZeVeGfu6H8inbD7C3lZ1TkSQ==, tarball: https://codeload.github.com/LunFengChen/dsh-context/tar.gz/789da56f5cc1ba64798f2e8acb3bb564355913fa}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/dsh-context/tar.gz/789da56f5cc1ba64798f2e8acb3bb564355913fa}
     version: 0.49.6
     engines: {node: ^22.19.0 || >=24.0.0}
     peerDependencies:
@@ -15836,7 +15900,7 @@ packages:
       react: ^18.2.0
 
   dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa:
-    resolution: {gitHosted: true, integrity: sha512-Va1farRFGWbtYmC/NBBsF154mf1tGAImfV9DvBUVMzXoKMjaOmdtTpPTwMWkcBRRd0mfjhoaMSgViV2SMOJA8w==, tarball: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa}
     version: 1.44.0
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.1
@@ -17229,13 +17293,6 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msgpackr-extract@3.0.4:
-    resolution: {integrity: sha512-4kmO/MdyUIkLIvTPr8VHLil4AtoKIoniWPIEk5+CDy0xnWC84azhSFmuJ7PxZdsYtiP5kEeQsORAVIeMgxT+Hw==}
-    hasBin: true
-
-  msgpackr@2.0.4:
-    resolution: {integrity: sha512-o1C5KRmuRt+apqMr1HuGSqWStZoRBUpEsCsl15uM9VdAF1qHLtvMOU2En747EnTyEl6c4pzPewRMFF31s1CNbA==}
-
   multistream@4.1.0:
     resolution: {integrity: sha512-J1XDiAmmNpRCBfIWJv+n0ymC4ABcf/Pl+5YvC5B/D2f/2+8PtHvCNxMPKiQcZyi922Hq69J2YOpb1pTywfifyw==}
 
@@ -17332,10 +17389,6 @@ packages:
   node-fetch@3.3.2:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  node-gyp-build-optional-packages@5.2.2:
-    resolution: {integrity: sha512-s+w+rBWnpTMwSFbaE0UXsRlg7hU4FjekKU4eyAih5T8nJuNZT1nNsskXpxmeqSK9UzkBl6UgRlnKc8hz8IEqOw==}
-    hasBin: true
 
   node-gyp@12.4.0:
     resolution: {integrity: sha512-OMcPNvqTCFUnNaBlmdgq+lfNqY7gTiSmNRDjY3uAXRyudeKZEZxu3CLtjMQrx4zZxCX2b/mpNqTtwuCJgXhHkw==}
@@ -20047,7 +20100,7 @@ snapshots:
       semver: 7.8.5
       sumchecker: 3.0.1
     optionalDependencies:
-      undici: 7.29.1
+      undici: 7.28.0
     transitivePeerDependencies:
       - supports-color
 
@@ -20059,7 +20112,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@electron/osx-sign@1.3.3':
+  '@electron/osx-sign@1.3.3(patch_hash=280e7b2816caf01423097d24e79107a66afeb563a348630ce9928ae8499a5861)':
     dependencies:
       compare-version: 0.1.2
       debug: 4.4.3(supports-color@9.4.0)
@@ -20903,24 +20956,6 @@ snapshots:
       - '@cfworker/json-schema'
       - supports-color
       - zod
-
-  '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-darwin-x64@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-linux-arm64@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-linux-arm@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-linux-x64@3.0.4':
-    optional: true
-
-  '@msgpackr-extract/msgpackr-extract-win32-x64@3.0.4':
-    optional: true
 
   '@napi-rs/canvas-android-arm64@1.0.8':
     optional: true
@@ -22025,7 +22060,7 @@ snapshots:
 
   '@vectorize-io/hindsight-all@0.8.6': {}
 
-  '@vectorize-io/hindsight-coding-agents@0.5.2(patch_hash=29800335eec1163d801e7c5c1cbf78d58428e1658134429c6a258a022afefc31)':
+  '@vectorize-io/hindsight-coding-agents@0.5.2':
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@vectorize-io/hindsight-all': 0.8.6
@@ -22283,7 +22318,7 @@ snapshots:
       progress: 2.0.3
       semver: 7.8.5
       tar-fs: 3.1.3
-      undici: 7.29.1
+      undici: 7.28.0
       yargs: 16.2.2
     transitivePeerDependencies:
       - bare-abort-controller
@@ -22402,7 +22437,7 @@ snapshots:
       '@electron/fuses': 1.8.0
       '@electron/get': 3.1.0
       '@electron/notarize': 2.5.0
-      '@electron/osx-sign': 1.3.3
+      '@electron/osx-sign': 1.3.3(patch_hash=280e7b2816caf01423097d24e79107a66afeb563a348630ce9928ae8499a5861)
       '@electron/rebuild': 4.2.0
       '@electron/universal': 2.0.3
       '@malept/flatpak-bundler': 0.4.0
@@ -24682,7 +24717,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.14
       dayjs: 1.11.21
-      dompurify: 3.4.15
+      dompurify: 3.4.11
       es-toolkit: 1.49.0
       fastdom: 1.0.12
       katex: 0.16.47
@@ -24954,22 +24989,6 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msgpackr-extract@3.0.4:
-    dependencies:
-      node-gyp-build-optional-packages: 5.2.2
-    optionalDependencies:
-      '@msgpackr-extract/msgpackr-extract-darwin-arm64': 3.0.4
-      '@msgpackr-extract/msgpackr-extract-darwin-x64': 3.0.4
-      '@msgpackr-extract/msgpackr-extract-linux-arm': 3.0.4
-      '@msgpackr-extract/msgpackr-extract-linux-arm64': 3.0.4
-      '@msgpackr-extract/msgpackr-extract-linux-x64': 3.0.4
-      '@msgpackr-extract/msgpackr-extract-win32-x64': 3.0.4
-    optional: true
-
-  msgpackr@2.0.4:
-    optionalDependencies:
-      msgpackr-extract: 3.0.4
-
   multistream@4.1.0:
     dependencies:
       once: 1.4.0
@@ -25055,11 +25074,6 @@ snapshots:
       data-uri-to-buffer: 4.0.1
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
-
-  node-gyp-build-optional-packages@5.2.2:
-    dependencies:
-      detect-libc: 2.1.2
-    optional: true
 
   node-gyp@12.4.0:
     dependencies:

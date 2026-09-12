@@ -1,6 +1,6 @@
 {
   "name": "@x1a0f3n9/dsh-root",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "license": "MIT",
   "private": true,
   "type": "module",
@@ -35,6 +35,7 @@
     "package:desktop:mac:x64": "pnpm --filter @x1a0f3n9/dsh-desktop run package:mac:x64",
     "package:desktop:mac:x64:dir": "pnpm --filter @x1a0f3n9/dsh-desktop run package:mac:x64:dir",
     "package:desktop:win:x64": "pnpm --filter @x1a0f3n9/dsh-desktop run package:win:x64",
+    "package:desktop:win:x64:unsigned": "pnpm --filter @x1a0f3n9/dsh-desktop run package:win:x64:unsigned",
     "package:desktop:win:x64:dir": "pnpm --filter @x1a0f3n9/dsh-desktop run package:win:x64:dir",
     "upload:mac:arm64": "pnpm --filter @x1a0f3n9/dsh-desktop run upload:mac:arm64",
     "upload:mac:x64": "pnpm --filter @x1a0f3n9/dsh-desktop run upload:mac:x64",
@@ -185,7 +186,6 @@
   },
   "devDependencies": {
     "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-package-manifest": "workspace:^",
     "@x1a0f3n9/dsh-tool-session-query": "workspace:^",
     "@x1a0f3n9/dsh-web-fetch-http": "workspace:^",
     "@stylistic/eslint-plugin": "^5.10.0",

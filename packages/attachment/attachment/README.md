@@ -94,7 +94,7 @@ The service family runs one admission-and-storage flow: every entry point enforc
 
 For the full service contract and payload types, read the subsystem reference; for the storage that backs this capability, read the local backend.
 
-- [Attachment subsystem reference](../../../docs/subsystems/attachment.md) — service contract, payload types, and the `ctx.attachments` cordis surface.
+- [Attachment subsystem reference](../../../docs/subsystems/attachment.md) — service contract, payload types, and the `ctx.attachments` Cordis surface.
 - [Local filesystem backend](../attachment-local/README.md) — where your attached images are stored on this machine.
 - [Capability seams](../../../docs/capability-seams.md) — how this capability family is split into roles.
 
@@ -114,7 +114,7 @@ Adding an image changes the provider request and therefore invalidates the affec
 <a id="known-limitations-and-deferred-work"></a>
 
 
-These limits describe what image attachments can and cannot do; they are current package constraints, not a task backlog.
+These limits describe what attachments can and cannot do; they are current package constraints, not a task backlog.
 
 - **Raster image limits apply to images only** — PNG, JPEG, WebP, and GIF are accepted as images under deployment limits; every other file is stored verbatim with no type or size limit, and audio and video have no dedicated handling yet.
 - **Attachments are never deleted** — stored images and files are retained indefinitely; nothing removes them automatically.

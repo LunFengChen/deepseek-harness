@@ -19,13 +19,13 @@ fork 希望全新的 `xfdsh web` profile 就带几款社区 Web 插件，并且�
 | `dsh-better-sidebar` | npm `0.19.0-alpha.1` | 本仓库是 `0.1.5-alpha.2`。npm `latest` 的 `0.18.1` 对准 0.1.2 线；GitHub `v0.19.0` 需要 `0.1.5-rc.1+`。Git 安装会跑 `prepare: tsdown`。 |
 | `@vectorize-io/hindsight-coding-agents` | npm `0.5.2` | DSH 集成在 `hindsight-integrations/coding-agents/`，pnpm 不能把 git 子目录当成依赖。已发布包装了 `./dsh` 和 `dsh.bundle.patch`。 |
 
-pnpm 只 remap 这些插件声明的、且本仓库存在的官方 `@deepseek-ai/dsh-*` peer。缺失的 `@deepseek-ai/dsh-client-runtime` 和可选的 `@huanlin/dsh-plugin-better-locale` 会忽略。remap 名单不是全部官方产品包。
+pnpm 只 remap 这些插件声明的、且本仓库存在的官方 `@x1a0f3n9/dsh-*` peer。缺失的 `@x1a0f3n9/dsh-client-runtime` 和可选的 `@huanlin/dsh-plugin-better-locale` 会忽略。remap 名单不是全部官方产品包。
 
 Hindsight 记忆在 dsh 外面配置，文件是 `~/.hindsight/coding-agent.json`。没有服务或 `disabled: true` 时，插件仍会加载，但不会去建 bank。
 
 ## 验证
 
-`pnpm install` 能解析这四个包，不会从 npm 拉官方 `@deepseek-ai/dsh-*` 产品包。Web bundle 目录列出 `reasoning-effort`、`dsh-context`、`better-sidebar`、`hindsight`，且 `defaultEnabled: true`。
+`pnpm install` 能解析这四个包，不会从 npm 拉官方 `@x1a0f3n9/dsh-*` 产品包。Web bundle 目录列出 `reasoning-effort`、`dsh-context`、`better-sidebar`、`hindsight`，且 `defaultEnabled: true`。
 
 ## 曾考虑的替代方案
 
@@ -35,7 +35,7 @@ Hindsight 记忆在 dsh 外面配置，文件是 `~/.hindsight/coding-agent.json
 
 **依赖 GitHub `main` 或未钉的 git ref。** 不采用：`dsh-context` 和 `dsh-better-sidebar` 在 git 安装时会跑 build/`husky` 的 `prepare`。
 
-**给每个 `@deepseek-ai/dsh-*` 包加全局官方到 fork 的 override。** 不采用：只有声明的 peer 需要 remap；250 个包的 override 会把安装错误藏起来。
+**给每个 `@x1a0f3n9/dsh-*` 包加全局官方到 fork 的 override。** 不采用：只有声明的 peer 需要 remap；250 个包的 override 会把安装错误藏起来。
 
 **钉 better-sidebar `0.19.0`。** 不采用：那个版本的 peer 下限是 `0.1.5-rc.1+`，本仓库还不是。
 

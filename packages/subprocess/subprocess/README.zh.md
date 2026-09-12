@@ -25,11 +25,11 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-在需要运行子进程的组合中挂载一个 subprocess 提供方，并从拥有该命令的能力包调用 `ctx.subprocess`。常用路径是显式的：解析可执行文件、用完全明确的请求 spawn、读取你要的输出，并在工作完成时终止受管范围。
+在需要运行子进程的组合中挂载一个 subprocess 提供方，并从拥有该命令的能力调用 `ctx.subprocess`。常用路径是显式的：解析可执行文件、用完全明确的请求 spawn、读取你要的输出，并在工作完成时终止受管范围。
 
 ### 挂载服务
 
-每个组合由唯一一个提供方注册 `ctx.subprocess`；把它与经由它 spawn 的消费方放在一起加载——bash 执行器、LSP 主机、PTY shell 后端或进程外 subagent 后端。加载第二个提供方会快速失败（每个上下文只有一个服务，这是 cordis 的标准行为）。
+每个组合由唯一一个提供方注册 `ctx.subprocess`；把它与经由它 spawn 的消费方放在一起加载——bash 执行器、LSP 主机、PTY shell 后端或进程外 subagent 后端。加载第二个提供方会快速失败（每个上下文只有一个服务，这是 Cordis 的标准行为）。
 
 ```yaml
 - name: '@x1a0f3n9/dsh-subprocess-local'
@@ -54,9 +54,9 @@ const output = handle.collected.stdout?.readFrom(0)
 
 ### 选择输出投递方式
 
-- `'pipe'` 把原始流交给你做自己的协议分帧——LSP 主机用 JSON-RPC，ACP 后端用 ndjson。
+- `'pipe'` 把原始流交给你做自己的协议分帧——LSP 主机用 JSON-RPC，ACP（Agent Client Protocol）后端用 ndjson。
 - `'inherit'` 让子进程直接写父进程自己的流，用于直通诊断输出。
-- collect 对象缓冲一段有界的进程内尾部；加上 `spill` 上限后，完整流还可以从 spill 文件中恢复。
+- 收集对象（collect object）在内存中缓冲一段有界尾部；加上 `spill` 上限后，完整流还可以从 spill 文件中恢复。
 
 读取基于偏移量且从不消费：后台读取与最终批量读取可以共享同一条流，而不会抢走彼此的字节。
 
@@ -74,7 +74,7 @@ const output = handle.collected.stdout?.readFrom(0)
 
 ### 可能出错的地方
 
-无法解析的可执行文件会以稳定的错误快速失败。从未启动成功的 spawn 会让 `done` reject；从未运行过的进程没有任何缓冲输出。提供方无法证明所选范围为空时，`waitForExit()` 也会 reject；提供方 fallback 可能无法拥有逃离其进程组或已观察 session 的后代。当传输拥有自己的 spawn（SDK 客户端、MCP）时，请绕开本服务并直接导入 `scrubbedParentEnv`，让环境策略保持单一来源。
+无法解析可执行文件时，服务会明确报出稳定的错误。从未启动成功的 spawn 会让 `done` reject；从未运行过的进程没有任何缓冲输出。提供方无法证明所选范围为空时，`waitForExit()` 也会 reject；提供方 fallback 可能无法拥有逃离其进程组或已观察会话的后代。当传输拥有自己的 spawn（SDK 客户端、MCP）时，请绕开本服务并直接导入 `scrubbedParentEnv`，让环境策略保持单一来源。
 
 -----
 
@@ -96,7 +96,7 @@ const output = handle.collected.stdout?.readFrom(0)
 |---|---|
 | [`src/index.ts`](src/index.ts) | 插件入口：抽象 `SubprocessRuntime`、`ctx.subprocess` 注册、共享的 `scrubbedParentEnv` 清除 |
 | [`src/types.ts`](src/types.ts) | 词汇：spawn spec、stdio 模式、句柄、读取器、结果、`DSH_*` 命名空间 |
-| — | 不发布运行时不变式伴生入口；观察由提供方负责。 |
+| — | 不发布运行时不变式伴生入口；这个无状态 Service Definition 负责 spawn spec 与句柄类型，观察则由 Service Providers 负责。 |
 
 ### 数据模型与流程
 
@@ -104,7 +104,7 @@ spawn 会立即返回活动句柄，而不公开目标身份。`done` 独立报�
 
 ### 生命周期与不变式
 
-每个上下文只注册一个实现；加载第二个会抛错（cordis 标准行为）。服务自身的 dispose（资源释放）会终止所有仍在运行的受管进程并等待其退出，因此进程生命周期在消费方重载后依然延续。`argv` 绝不经过 shell 解释；需要 shell 的消费方自行传入 `['bash', '-c', command]`。终端分配的取消（spec 信号）与已发布句柄的生命周期相互独立。
+每个上下文只注册一个实现；加载第二个会抛错（Cordis 标准行为）。服务自身的 dispose（资源释放）会终止所有仍在运行的受管进程并等待其退出，因此进程生命周期在消费方重载后依然延续。`argv` 绝不经过 shell 解释；需要 shell 的消费方自行传入 `['bash', '-c', command]`。终端分配的取消（spec 信号）与已发布句柄的生命周期相互独立。
 
 </details>
 
@@ -141,7 +141,7 @@ spawn 会立即返回活动句柄，而不公开目标身份。`done` 独立报�
 
 - **由 SDK 管理的 spawn 仍在服务之外**——拥有内部 spawn 的传输（SDK 客户端、MCP）无法把该调用路由到本服务；它仍可导入 `scrubbedParentEnv`，使环境策略保持单一来源。
 - **拆卸阶梯归消费方所有**——该 seam 只提供信号动词与受管范围等待，不提供现成的完全停稳序列；每个进程外消费方自行编码其子进程的配合方式（ACP 后端以 stdin EOF 打头的阶梯是仓库内模板）。
-- **可观察性取决于提供方**——native 提供方可以通过 systemd scope 或 Windows Job 拥有逃逸后代，fallback 提供方则只暴露较弱的进程组、进程树或 session 可见性。该 seam 不新增持续的进程表监视器。
+- **可观察性取决于提供方**——native 提供方可以通过 systemd scope 或 Windows Job 拥有逃逸后代，fallback 提供方则只暴露较弱的进程组、进程树或会话可见性。该 seam 不新增持续的进程表监视器。
 
 <a id="dev-note"></a>
 ### 开发备注

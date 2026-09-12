@@ -43,7 +43,7 @@ tab 身份是 `(kind, address)` 二元组：注册表的认领把地址原文用
 | `priority` | 三档字面量之一：`extension`（缺省且最高：产品之外的类型压过所有内置查看器）、`builtin`（随产品发布的类型）、`fallback`（任何更具体的类型都应压过的纯内容查看器）。 |
 | `canOpen(address)` | 可选的同步否决，对 glob 命中生效；每次路由决策都会调用。 |
 | `title(address)` | chip 文本，在 tab 打开时捕获进布局记录，之后不再改写。 |
-| `guide` | 可选的引导页入口框：`{ order, title(), description(), icon? }`。点一框即把贡献它的类型作为页面打开；省略即不上引导页。 |
+| `guide` | 可选的引导页入口框：`{ order, title(), description?(), icon? }`。点一框即把贡献它的类型作为页面打开；省略即不上引导页。 |
 
 路由是一次排序认领。`candidates(address)` 对模式命中且未被 `canOpen` 否决的类型排序：先按档，再按最长命中模式的长度，最后按注册顺序。`claim(address, kind?)` 取第一个候选，或直接用点名的 `kind`——跳过它的 glob，但 `canOpen` 仍生效——返回 `{ kind, contentId: address, title }`。没有任何类型认领的地址会抛错：这是接线错误，不是用户错误。
 
@@ -130,7 +130,7 @@ Host 的 `ctx.workspaceFiles` 服务与生成的 `workspaceFiles` Remote 命名�
 
 ## 内置类型
 
-- **`guide`**——`builtin`，以 `openTab('guide')` 打开。居中标题、一行说明，以及已注册类型贡献的每个 `guide` 入口一框、按 `order` 排列；点一框即在引导 tab 的位置把贡献它的类型作为页面打开。每个 pane 最多一个引导 tab，tab 条的新增控件只在本 pane 没有引导时出现。新 pane 使用已注册的默认页：只有一个引导入口时直接使用该入口，否则使用引导页（[引导](../../packages/client/ui-sidebar-right/README.zh.md#the-guide)）。
+- **`guide`**——`builtin`，以 `openTab('guide')` 打开。一枚弱化的罗盘位于各类型按 `order` 贡献的入口胶囊上方；入口较少时显示已注册的描述，未提供图标的入口统一使用内置占位符。点选胶囊即在引导 tab 的位置把贡献它的类型作为页面打开。每个 pane 最多一个引导 tab，tab 条的新增控件只在本 pane 没有引导时出现。新 pane 使用已注册的默认页：只有一个引导入口时直接使用该入口，否则使用引导页（[引导](../../packages/client/ui-sidebar-right/README.zh.md#the-guide)）。
 - **`text`**——`fallback`，`dsh-resource://file/**`，只认领 Session 地址。Document Preview 通过 `useResource<'file'>` 观察元数据，经 Remote 回调加载内容，并拥有渲染器选择、工具栏、逐 tab 刷新、滚动与源码定位；未知扩展名按纯文本渲染（[README](../../packages/client/ui-sidebar-documentpreview/README.zh.md)）。
 - **`files`**——`builtin`，以 `openTab('files')` 打开。工作区目录树，经 `list` 懒加载，用 `tab.actions.openResource(fileAddressFor(sessionId, root, path))` 在自己所在 pane 打开文件（[README](../../packages/client/ui-sidebar-files/README.zh.md)）。
 

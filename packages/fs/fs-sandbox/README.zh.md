@@ -39,7 +39,7 @@ kind: "package-reference"
 - name: '@x1a0f3n9/dsh-tool-fs'
 ```
 
-后端的配置与本地后端完全相同（`cwd` 解析默认值与 `diffBasisMaxBytes` 覆写上限）；[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-fs-sandbox)是穷尽式真源。
+后端的配置与本地后端完全相同（`cwd` 解析默认值与 `diffBasisMaxBytes` 覆写上限）；[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-fs-sandbox)是完整配置的真源。
 
 ### 围栏行为
 
@@ -134,4 +134,4 @@ kind: "package-reference"
 
 </details>
 
-**运行时不变式：** 不发布伴生入口。这个无状态 adapter 把 policy 与 filesystem 关系委托给其所属 seam。
+**运行时不变式：** 不发布伴生入口。这个无状态适配器把策略与文件系统关系委托给各自所属的 seam。

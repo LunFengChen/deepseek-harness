@@ -11,7 +11,7 @@ import {
 } from './benchmark-npm-resolution.ts'
 
 const DSH_PACKAGE = '@x1a0f3n9/dsh'
-const OFFICIAL_DSH_PACKAGE = '@deepseek-ai/dsh'
+const OFFICIAL_DSH_PACKAGE = '@x1a0f3n9/dsh'
 const CORDIS_PACKAGE = '@deepseek-ai/cordis'
 const NESTED_DSH_ALIAS = 'dsh-previous'
 const NESTED_DSH_PATH = `node_modules/${NESTED_DSH_ALIAS}`
@@ -51,7 +51,7 @@ function isDshPackage(name: string): boolean {
 /**
  * Official product name that community plugins still declare.
  * @param name - a fork-scoped dsh package name.
- * @returns the `@deepseek-ai/dsh*` alias, or `undefined` when `name` is not a fork dsh package.
+ * @returns the `@x1a0f3n9/dsh*` alias, or `undefined` when `name` is not a fork dsh package.
  */
 function officialDshAlias(name: string): string | undefined {
   if (name === DSH_PACKAGE) return OFFICIAL_DSH_PACKAGE

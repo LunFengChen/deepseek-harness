@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-win32-process",
   "description": "Shared low-level Win32 process, stdio, and Job Object primitives",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },

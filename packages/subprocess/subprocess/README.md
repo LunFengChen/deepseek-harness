@@ -29,7 +29,7 @@ Mount a subprocess provider in any composition that must run child processes, an
 
 ### Mounting the service
 
-One provider registers `ctx.subprocess` per composition; load it beside the consumers that spawn through it — the bash executors, the LSP host, the PTY shell backend, or an out-of-process subagent backend. Loading a second provider fails loudly (one service per context, cordis standard).
+One provider registers `ctx.subprocess` per composition; load it beside the consumers that spawn through it — the bash executors, the LSP host, the PTY shell backend, or an out-of-process subagent backend. Loading a second provider fails loudly (one service per context, Cordis standard).
 
 ```yaml
 - name: '@x1a0f3n9/dsh-subprocess-local'
@@ -74,7 +74,7 @@ Children never inherit the harness's ambient secrets: credential-shaped names an
 
 ### What can go wrong
 
-An executable that cannot be resolved fails loud with a stable error. A spawn that never starts rejects `done`; there is no buffered output for a process that never ran. `waitForExit()` also rejects when the provider cannot prove its selected range is empty, and a provider fallback may not own descendants that escape its process group or observed session. When a transport owns its own spawn (the SDK client, MCP), route around the service and import `scrubbedParentEnv` directly so environment policy stays single-sourced.
+An executable that cannot be resolved fails loudly with a stable error. A spawn that never starts rejects `done`; there is no buffered output for a process that never ran. `waitForExit()` also rejects when the provider cannot prove its selected range is empty, and a provider fallback may not own descendants that escape its process group or observed session. When a transport owns its own spawn (the SDK client, MCP), route around the service and import `scrubbedParentEnv` directly so environment policy stays single-sourced.
 
 -----
 
@@ -104,7 +104,7 @@ A spawn returns a live handle immediately without exposing target identity. `don
 
 ### Lifecycle and invariants
 
-One implementation registers per context; loading a second throws (cordis standard). Disposal of the service terminates every still-running managed process and awaits its exit, so process lifetime survives consumer reloads. `argv` is never shell-interpreted; a consumer that wants a shell passes `['bash', '-c', command]` itself. Terminal allocation cancellation (the spec signal) is separate from the published handle's lifetime.
+One implementation registers per context; loading a second throws (Cordis standard). Disposal of the service terminates every still-running managed process and awaits its exit, so process lifetime survives consumer reloads. `argv` is never shell-interpreted; a consumer that wants a shell passes `['bash', '-c', command]` itself. Terminal allocation cancellation (the spec signal) is separate from the published handle's lifetime.
 
 </details>
 

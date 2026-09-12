@@ -27,5 +27,5 @@ fork 的 `master` 混进了上游提交和 xfdsh 提交。把那套历史 rebase
 ## Consequences
 
 - 新的 fork 工作仍走 `features/*` 或 `fix/*`，再 `--no-ff` 合进 `dev-x1a0f3n9`。
-- 官方插件客户端 inject 里的 `@deepseek-ai/dsh-*` 会解析到 fork 模块表。
+- 官方插件客户端 inject 里的 `@x1a0f3n9/dsh-*` 会解析到 fork 模块表。
 - `dshmarket` 仍是可关闭的预装 web-app catalog 项。

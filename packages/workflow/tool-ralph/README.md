@@ -44,7 +44,7 @@ Each child receives only the immutable objective, its current round and cap, a s
 | `maxHandoffChars` | `16384` | Maximum serialized characters in one round report. |
 | `maxResultChars` | `16384` | Maximum characters in the complete successful parent result. |
 
-The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-tool-ralph) is the exhaustive source for every accepted field. The configured provider must exist, support structured output, and report `inheritsParentContext: false`; a call against a provider that violates this fails loud before any round starts.
+The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-tool-ralph) is the exhaustive source for every accepted field. The configured provider must exist, support structured output, and report `inheritsParentContext: false`; a call against a provider that violates this fails loudly before any round starts.
 
 -----
 

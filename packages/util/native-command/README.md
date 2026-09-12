@@ -41,7 +41,7 @@ On exit 0 the call resolves with captured stdout and stderr. On any failure it r
 
 ### Injecting the command boundary
 
-The `NativeCommandRunner` type is the injectable command boundary for host integrations: pass the function (or a wrapper) where the integration needs a testable seam, so tests can substitute a fake runner.
+The `NativeCommandRunner` type is the injectable command boundary for host integrations: pass the function (or a wrapper) where the integration needs a testable boundary, so tests can substitute a fake runner.
 
 ### Opening a Host path
 

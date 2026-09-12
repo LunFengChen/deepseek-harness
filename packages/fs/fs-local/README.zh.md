@@ -29,7 +29,7 @@ kind: "package-reference"
 
 ### 何时选择
 
-普通宿主文件访问请选择 `fs-local`。会话的写入与编辑必须限制在工作区与临时根目录内时，选择 [`fs-sandbox`](../fs-sandbox/README.zh.md)——它扩展此后端，只增加模式围栏。文件必须位于与子进程共享的远程执行世界时，选择 [`fs-e2b`](../../e2b/fs-e2b/README.zh.md)。`config.cwd` 只是解析默认值，不是约束边界：绝对路径与 `..` 都可以逃逸它。
+在单个进程中进行普通宿主文件访问时，请选择 `fs-local`。会话的写入与编辑必须限制在工作区与临时根目录内时，选择 [`fs-sandbox`](../fs-sandbox/README.zh.md)——它扩展此后端，只增加模式围栏。文件必须位于与子进程共享的远程执行世界时，选择 [`fs-e2b`](../../e2b/fs-e2b/README.zh.md)。`config.cwd` 只是解析默认值，不是约束边界：绝对路径与 `..` 都可以逃逸它。
 
 ### 最小配置
 
@@ -46,13 +46,13 @@ kind: "package-reference"
 | `cwd` | `process.cwd()` | 相对路径的基准目录 |
 | `diffBasisMaxBytes` | `10 MiB` | 每次覆写 diff 一侧的 UTF-8 字节上限；更大的覆写返回 `before: null` |
 
-生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-fs-local)是每个受支持字段及其 JSDoc 的穷尽式真源。
+生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-fs-local)完整列出了所有受支持字段及其 JSDoc。
 
 ### 你能做什么
 
 完整或流式读取任意普通 UTF-8 文本文件，按你选择的上限或按字节窗口读取原始字节，并按稳定名称顺序列出一层目录。原子地创建或替换文件，并原子地应用字面量文本编辑；两个变更操作都按文件串行化，并发写入方绝不会交错。版本防护是可选的：省略它即无条件创建或覆盖，提供它则在文件自上次观察以来发生变化时失败。
 
-失败是携带稳定错误码的类型化 `FsError`——`FS_NOT_FOUND`、`FS_NOT_TEXT`（二进制内容）、`FS_STALE_VERSION`（自观察以来已变化）、`FS_EDIT_NOT_FOUND` 或 `FS_AMBIGUOUS_EDIT`（无唯一字面量匹配）等——因此调用方依据错误码分支，绝不解析消息文本。带防护的编辑遇到缺失目标时，无论哪种情况都报告 `FS_STALE_VERSION`。
+失败是携带稳定错误码的类型化 `FsError`——`FS_NOT_FOUND`、`FS_NOT_TEXT`（二进制内容）、`FS_STALE_VERSION`（自观察以来已变化）、`FS_EDIT_NOT_FOUND` 或 `FS_AMBIGUOUS_EDIT`（无唯一字面量匹配）等——因此调用方依据错误码分支，绝不解析消息文本。编辑遇到缺失目标时，无论是否提供版本防护，都报告 `FS_STALE_VERSION`。
 
 -----
 
@@ -69,8 +69,8 @@ kind: "package-reference"
 后端建立在三个想法之上：
 
 - **Realpath 身份。** `targetKey` 是文件的 `realpath`，因此经符号链接到达同一文件的两个输入路径共享一个身份，写入落在链接目标上，同时保留链接。
-- **原子发布。** 写入先写入目标旁私有暂存目录内的独占临时文件，执行 fsync 后发布；现有文件的 mode 会保留，Windows 上的 DACL 也会在替换后存活。
-- **单一变更临界区。** 每目标 FIFO 锁串行化读取→防护→写入窗口，并发写入与编辑因此被确定性排序——一方胜出，其余看到新版本并以陈旧拒绝。
+- **原子发布。** 写入先写入目标旁私有暂存目录内的独占临时文件，执行 fsync 后发布；现有文件的 mode 会保留，Windows 上的 DACL 在替换后也会保留。
+- **单一变更临界区。** 每目标 FIFO 锁串行化读取→防护→写入窗口，并发写入与编辑因此被确定性排序——一方胜出，其余操作看到新版本后因版本陈旧而被拒绝。
 
 ### 源码地图
 

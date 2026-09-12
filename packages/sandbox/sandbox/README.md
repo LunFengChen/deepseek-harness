@@ -141,7 +141,7 @@ Conditional error text is visible for that call and retained in history until co
 
 #### KV Cache effect
 
-Append-only; newly visible content follows the reusable request prefix and does not invalidate existing KV-cache entries.
+Append-only; newly visible content follows the reusable request prefix and does not invalidate existing KV Cache entries.
 
 ### Escalation request and outcome
 

@@ -1,5 +1,5 @@
 ---
-description: "The bash executor seam for developers and maintainers choosing, composing, or implementing command execution over ctx.shell."
+description: "The shell executor seam for developers and maintainers choosing, composing, or implementing command execution over ctx.shell."
 kind: "package-reference"
 ---
 

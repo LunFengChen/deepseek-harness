@@ -19,13 +19,13 @@ The fork wanted several community Web plugins available on a fresh `xfdsh web` p
 | `dsh-better-sidebar` | npm `0.19.0-alpha.1` | This tree is `0.1.5-alpha.2`. npm `latest` `0.18.1` targets the 0.1.2 line; GitHub `v0.19.0` needs `0.1.5-rc.1+`. Git clones run `prepare: tsdown`. |
 | `@vectorize-io/hindsight-coding-agents` | npm `0.5.2` | The DSH integration lives under `hindsight-integrations/coding-agents/`, which pnpm cannot take as a git subdirectory. The published package exports `./dsh` and `dsh.bundle.patch`. |
 
-pnpm remaps only the official `@deepseek-ai/dsh-*` peers these plugins declare and that exist in this workspace. `@deepseek-ai/dsh-client-runtime` and optional `@huanlin/dsh-plugin-better-locale` are ignored as missing. The remap list is not every official product package.
+pnpm remaps only the official `@x1a0f3n9/dsh-*` peers these plugins declare and that exist in this workspace. `@x1a0f3n9/dsh-client-runtime` and optional `@huanlin/dsh-plugin-better-locale` are ignored as missing. The remap list is not every official product package.
 
 Hindsight memory is configured outside dsh in `~/.hindsight/coding-agent.json`. With no server or with `disabled: true`, the plugin stays loaded and does not seed a bank.
 
 ## Verification
 
-`pnpm install` resolves these four packages without adding `@deepseek-ai/dsh-*` product packages from npm. The Web bundle catalog lists `reasoning-effort`, `dsh-context`, `better-sidebar`, and `hindsight` with `defaultEnabled: true`.
+`pnpm install` resolves these four packages without adding `@x1a0f3n9/dsh-*` product packages from npm. The Web bundle catalog lists `reasoning-effort`, `dsh-context`, `better-sidebar`, and `hindsight` with `defaultEnabled: true`.
 
 ## Alternatives considered
 
@@ -35,7 +35,7 @@ Hindsight memory is configured outside dsh in `~/.hindsight/coding-agent.json`. 
 
 **Depend on GitHub `main` or unpinned git refs.** Rejected: `dsh-context` and `dsh-better-sidebar` run build/`husky` `prepare` scripts on git installs.
 
-**Add a global official-to-fork override for every `@deepseek-ai/dsh-*` package.** Rejected: only declared peers need remapping; a 250-package override would hide install mistakes.
+**Add a global official-to-fork override for every `@x1a0f3n9/dsh-*` package.** Rejected: only declared peers need remapping; a 250-package override would hide install mistakes.
 
 **Pin better-sidebar `0.19.0`.** Rejected: that release's peer floor is `0.1.5-rc.1+`, which this tree is not.
 

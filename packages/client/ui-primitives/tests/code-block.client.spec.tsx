@@ -59,6 +59,17 @@ describe('highlightToHtml', () => {
 })
 
 describe('CodeBlock', () => {
+  it('reports the stable source-content wrapper to its owner', () => {
+    const contentRef = vi.fn<(node: HTMLDivElement | null) => void>()
+    const view = render(<CodeBlock code="plain text" contentRef={contentRef} />)
+    const content = view.container.querySelector('[data-code-block-content]')
+    expect(contentRef).toHaveBeenCalledWith(content)
+    view.rerender(<CodeBlock code="updated text" contentRef={contentRef} />)
+    expect(view.container.querySelector('[data-code-block-content]')).toBe(content)
+    view.unmount()
+    expect(contentRef).toHaveBeenLastCalledWith(null)
+  })
+
   it('renders the highlighted tree for TypeScript', () => {
     const view = render(<CodeBlock code={'const a = 1\n'} lang="ts" />)
     const pre = view.container.querySelector('pre.shiki')

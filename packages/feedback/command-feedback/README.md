@@ -25,7 +25,7 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Users can record feedback from the Web client out of the box: the `/feedback` command ships with the standard `dsh` base, needs no configuration, and works in any conversation. A custom app gets the same command by mounting the command registry and this plugin together.
+Users can record feedback from the Web client out of the box: the `/feedback` command ships with the standard `dsh` base, needs no configuration, and works in any conversation. A custom app gets the same command by mounting the Session store, command registry, and this plugin together.
 
 ### The `/feedback` command
 
@@ -48,7 +48,7 @@ In the Web client a bare `/feedback` — picked from the composer menu or typed 
 | `task-result` | The outcome of the task |
 | `instruction-following` | Understanding and following instructions |
 | `product-interaction` | Product features and interaction |
-| `service-stability` | Service stability |
+| `service-stability` | Stability and speed |
 | `resource-cost` | Resource usage and cost |
 | `security-privacy-permission` | Security, privacy, and permissions |
 | `other` | Anything else |

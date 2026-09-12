@@ -3,4 +3,4 @@
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/shell/tool-pwsh/README.md
 README.md: e18a2e378bee2c2aaf40e17a9b02f043815d77cd
-README.zh.md: 059f3da7fb804453cd168224875e4f53ec30424a
+README.zh.md: 541472907bb6d0f702f9a93209fcabe34e7497f0

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-reference",
   "description": "Unified Web @file and @session reference source",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +32,8 @@
         "@x1a0f3n9/dsh-api-session-controller",
         "@x1a0f3n9/dsh-client-connection",
         "@x1a0f3n9/dsh-client-locale",
-        "@x1a0f3n9/dsh-client-ui-input-trigger"
+        "@x1a0f3n9/dsh-client-ui-input-trigger",
+        "@x1a0f3n9/dsh-client-ui-sidebar-right"
       ],
       "platform": "web"
     }
@@ -58,7 +59,8 @@
     "@x1a0f3n9/dsh-session-reference": "workspace:^",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@x1a0f3n9/dsh-util-workspace-path": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^"
   },
   "files": [
     "lib/index.js",

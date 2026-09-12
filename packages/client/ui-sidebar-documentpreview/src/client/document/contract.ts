@@ -1,6 +1,7 @@
 /** Document renderer slot: the owner supplies shared file state, renderers own their presentation. */
 import type { PropsRuntime, SlotHookFactory } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { UseSidebarRightTabInfo } from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
+import type { RefCallback } from 'react'
 
 /** One loaded text window, retaining source line positions. */
 export interface DocumentTextPage {
@@ -30,6 +31,8 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
         readonly content: DocumentContent
         /** The document toolbar's current wrapping preference. */
         readonly wrap: boolean
+        /** Report a renderer-owned scrollport; passing `null` restores the shared body as the owner. */
+        readonly scrollportRef: RefCallback<HTMLElement>
       }
       hookContext: UseSidebarRightTabInfo
       inject: {

@@ -33,7 +33,7 @@ The shipped Web `standard`, `ptc`, and `cordis` presets include [explicit file d
 
 A session composed from a preset runs the plugins that preset's `agent.cordis.yml` names: its tools, prompt sections, and skills. Sessions joined to the same preset share one installed composition, and each session's state stays separate. A child agent (subagent) joins its parent's composition, so it sees the same tools and prompt sections as the agent that spawned it.
 
-The presets you can choose from come from two places: the presets shipped inside this package under `presets/`, and your own presets under `<dshHome>/.agent-presets`. The picker shows each preset's display name and description; a preset whose composition cannot load is listed with the reason rather than hidden, so you can see what to fix or delete.
+The presets you can choose from come from three sources: the presets shipped inside this package under `presets/`, configured roots, and your own presets under `<dshHome>/.agent-presets`. The picker shows each preset's display name and description; a preset whose composition cannot load is listed with the reason rather than hidden, so you can see what to fix or delete.
 
 ### Minimal configuration
 
@@ -50,7 +50,7 @@ The plugin needs a `default` preset id and scans `roots` for presets:
 
 | Field | Default | Meaning |
 |---|---|---|
-| `default` | required | Preset id composed when a session names none |
+| `default` | required | Deployment fallback preset id, used while mode selection is disabled or no user default overrides it |
 | `roots` | `[]` | Scanned directories in precedence order; each supplies `path` (a leading `~` expands) and `trust` (defaults to `user`) |
 | `includeShippedRoot` | `true` | Prepend the package's bundled presets as a `system` root before every configured root |
 | `includeUserRoot` | `true` | Append `<dshHome>/.agent-presets` as a `user` root, after every configured root |
@@ -59,16 +59,17 @@ The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-a
 
 The shipped root is prepended before every configured root, so the built-in set remains available and wins duplicate ids even when a patch replaces the roster configuration. `includeShippedRoot: false` drops that built-in set for deployments that supply all presets themselves. `includeUserRoot: false` drops the derived writable root; tests that pin an exact roster disable both derived roots.
 
-### Choosing the default preset
+### Showing the picker and choosing its default
 
-The `default` config sets the deployment default. When a settings provider is composed, this plugin registers the `agent-presets` namespace with `config.default` as its base, so a user document layers a per-user default over the deployment's:
+The required `default` config sets the deployment default. When a settings provider is composed, this plugin registers the `agent-presets` namespace with `{ default: config.default, modeSelectionEnabled: true }` as its base, so the existing new-session picker remains visible unless a user turns it off. The Host reads both fields on every default resolution: while `modeSelectionEnabled` is false, an omitted preset resolves to `config.default` even if the user document retains another `default`; while it is true, a user default may override the deployment value:
 
 ```yaml
 agent-presets:
+  modeSelectionEnabled: true
   default: minimal
 ```
 
-The value is read when a session is created, so a changed default affects only sessions created afterwards; running sessions stay on the preset they were composed from. Clearing the user field re-inherits the composition default.
+A client shows or hides selection by writing only `modeSelectionEnabled`; the [Web GUI settings switch](../../client/ui-agent-preset/README.md) does exactly that. The deployment default governs while selection is hidden; re-enabling it restores the saved user `default`, or keeps the deployment default when none has been saved. While mode selection stays enabled, choosing a default writes a user override for sessions created later. Because the Host owns the policy, it applies to every subsequently created session whose caller omits a preset, including Web, CLI, SDK, and headless callers; an explicitly named preset and every existing session remain unchanged.
 
 ### Authoring presets
 

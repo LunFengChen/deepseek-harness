@@ -10,7 +10,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { SidebarRightTabRegistry } from '@x1a0f3n9/dsh-client-ui-sidebar-right/src/client/tab-registry.ts'
-import { FILES_ID, FILES_KIND } from '../src/client/definition.ts'
+import { FILES_ID, FILES_KIND } from '../src/client/definition.tsx'
 import { apply, inject } from '../src/client/index.ts'
 import { apply as hostApply } from '../src/index.ts'
 import { FilesBody } from '../src/client/FilesBody.tsx'
@@ -69,7 +69,8 @@ describe('ui-sidebar-files apply', () => {
     expect(definition?.id).toBe(FILES_ID)
     expect(definition?.priority).toBe('builtin')
     expect(definition?.title('sidebar://files')).toBe('type.label')
-    expect(definition?.guide?.map(entry => [entry.order, entry.title()])).toEqual([[10, 'guide.title']])
+    expect(definition?.guide?.map(entry => [entry.order, entry.title(), entry.description?.()]))
+      .toEqual([[10, 'guide.title', 'guide.description']])
     expect(dictionaries.get('sidebarFiles')).toEqual({ zh, en })
     // The seat key is the implementation's id, not the kind: an extension may
     // take the kind over, and the seat must still find this body.

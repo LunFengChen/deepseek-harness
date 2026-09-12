@@ -509,6 +509,7 @@
 .dockScrim {
   position: absolute;
   inset: 0;
+  z-index: 10;
   pointer-events: none;
   /* The ground the panes sit on, not a raised layer: in dark mode `bg-layer-2`
      is a lighter bluish step than the column's `bg-base`, which tinted the
@@ -520,6 +521,7 @@
 
 .dockHint {
   position: absolute;
+  z-index: 10;
   display: flex;
   box-sizing: border-box;
   padding: 8px;

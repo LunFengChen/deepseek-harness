@@ -23,6 +23,7 @@
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
+import { brandString } from '@x1a0f3n9/dsh-brand'
 import { z as zod } from 'zod'
 import type { ZodType } from 'zod'
 import type { Agent, PreStepDecision } from '@x1a0f3n9/dsh-agent'
@@ -30,7 +31,7 @@ import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 import type { Session, UserMessage } from '@x1a0f3n9/dsh-session'
 import { defineTool } from '@x1a0f3n9/dsh-tools'
 import { UserQuestionError } from '@x1a0f3n9/dsh-user-questions'
-import type { CommandId } from '@x1a0f3n9/dsh-commands'
+import type { CommandDefinitionId, CommandId } from '@x1a0f3n9/dsh-commands'
 import type {} from '@x1a0f3n9/dsh-session-projection'
 import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import type { PlanProjection, PlanUnitState } from './types.ts'
@@ -223,6 +224,7 @@ export class PlanModeController extends Service {
     // The command child activates only when a command registry is composed.
     ctx.inject(['commands'], (commandCtx) => {
       commandCtx.commands.register({
+        definitionId: brandString<CommandDefinitionId>('@x1a0f3n9/dsh-plan-mode'),
         name: 'plan',
         description: 'Enter or leave plan mode',
         input: { hint: '[off|message]', attachments: true },

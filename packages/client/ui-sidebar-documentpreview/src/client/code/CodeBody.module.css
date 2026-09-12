@@ -1,6 +1,12 @@
 .renderer {
-  min-height: 100%;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   white-space: normal;
 }
 
@@ -10,13 +16,31 @@
   /* In a sidebar pane the code sits on the pane's own background; the chat
      card's gray fill stays a chat-only default. */
   --dsl-code-block-background: transparent;
-  /* Source lines resolve their offset against the document owner's scroller. */
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
   position: static;
   margin: 0;
   min-width: 0;
 }
 
-/* Both axes scroll in the document owner, not in an inner code window. */
+/* The banner is the scrollport's sibling, so the source scrollbar starts
+   below it. */
+.renderer .code > [data-code-block-content] {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.renderer .code > [data-code-block-content]::-webkit-scrollbar-track {
+  margin: 2px;
+}
+
 .renderer .code pre {
   box-sizing: border-box;
   min-width: 100%;
@@ -24,25 +48,6 @@
   white-space: pre;
   word-break: normal;
   overflow-wrap: normal;
-}
-
-/* Unwrapped long lines widen the document owner's scroller past its viewport;
-   sizing the card to that full scroll width gives the sticky banner room to
-   ride horizontal scrolling. Wrap mode keeps the default block width:
-   max-content would defeat soft wrapping. */
-.renderer[data-wrap='false'] {
-  width: max-content;
-  min-width: 100%;
-}
-
-/* The banner sticks to the scrollport's left edge at the owner's visible
-   width (cqw resolves against the owner's .body container), so the copy
-   control stays in view while the card scrolls horizontally. */
-.renderer[data-wrap='false'] .code [data-code-block-banner] {
-  position: sticky;
-  left: 0;
-  box-sizing: border-box;
-  width: 100cqw;
 }
 
 .renderer[data-wrap='true'] .code {

@@ -18,7 +18,7 @@ Status: implemented
 
 **焦点进入 iframe 时关闭菜单。**[Menu.tsx](../../../../packages/client/ui-primitives/src/Menu.tsx) 增加 window `blur` 监听，以 `document.activeElement instanceof HTMLIFrameElement` 为门：焦点移动是跨源 iframe 内 pointerdown 留下的唯一信号，这道门也让应用或标签页切换不会误关列表。
 
-**代码预览钉住复制条并去掉卡片填充。**关闭折行时，[CodeBody.module.css](../../../../packages/client/ui-sidebar-documentpreview/src/client/code/CodeBody.module.css) 把渲染器设为 `max-content`，让吸附的复制条拥有完整滚动宽度可骑行，并以 `sticky; left: 0; width: 100cqw` 把它钉在文档滚动区上（预览正文设 `container-type: inline-size`）。共享 CodeBlock 的填充改经新变量 `--dsl-code-block-background`（默认值不变，会话保持灰色卡片），共享复制条带上惰性的 `data-code-block-banner` 钩子；预览把变量设为 `transparent`，代码于是坐在分栏自身的背景上。
+**代码预览把复制条与滚动源码分开，并去掉卡片填充。**共享 CodeBlock 用稳定的 `data-code-block-content` 节点包裹渲染后的源码；该节点默认使用 `display: contents`，因此既有消费者保持原布局。[CodeBody.module.css](../../../../packages/client/ui-sidebar-documentpreview/src/client/code/CodeBody.module.css) 将该节点实体化为复制条下方占满剩余高度的内部滚动区；代码渲染器通过 callback ref 报告该节点，使文档 owner 在 Slot 替换后仍能用当前节点恢复位置、分页和跳转代码行。共享 CodeBlock 的填充通过 `--dsl-code-block-background` 设置（默认值不变，会话保持灰色卡片），预览将它设为 `transparent`，代码因此直接使用分栏背景。
 
 ## Alternatives considered
 
@@ -28,8 +28,8 @@ Status: implemented
 
 **菜单用裸的 window blur 关闭。**每次应用或标签页切换都会关掉列表；`activeElement` 门把关闭收窄到父文档看不见的那一种情形。
 
-**代码横轴用内层滚动。**在 `pre` 上恢复 `overflow-x: auto` 能让复制条不动，但横向滚动条会落在整个代码块底部——长文件里够不着——而且两个轴本就有意放在文档 owner 的滚动区里。
+**让代码继续使用共享文档滚动区。**子级复制条无法覆盖父级的原生滚动条。让稳定的源码包装节点同时承载两个滚动轴，滚动条会停在复制条下方的可见视口边缘，而不是长代码块的末端。
 
 ## Consequences
 
-`planDropTab` 的工厂参数是任何嵌入方都可传的新套件 API；`planSettle` 本就接受缺省工厂，如今它同时命名了侧边栏的折叠态行为。`--dsl-code-block-background` 变量与 `data-code-block-banner` 属性是代码块的 owner 定制接缝；共享样式表没有任何规则指向该属性。套件 planner 规格覆盖带回填的本格分栏及其聚焦顺序；侧边栏 store、service 与 seat 规格覆盖惰性播种、格内页合并与折叠后的空布局；一条 Menu 规格覆盖带门的 blur 关闭。`ui-sidebar-right`、`ui-dockkit` 与 `ui-sidebar-documentpreview` 的 README 重述了这些规则。
+`planDropTab` 的工厂参数是任何嵌入方都可传的新套件 API；`planSettle` 本就接受缺省工厂，如今它同时命名了侧边栏的折叠态行为。`--dsl-code-block-background` 变量保留 Chat 默认的灰色卡片，Preview 则使用分栏背景；`data-code-block-content` 允许 owner 实体化专用源码视口，而不改变其它 CodeBlock 布局。套件 planner 规格覆盖带回填的本格分栏及其聚焦顺序；侧边栏 store、service 与 seat 规格覆盖惰性播种、格内页合并与折叠后的空布局；文档预览规格覆盖内部滚动与行跳转；一条 Menu 规格覆盖带门的 blur 关闭。`ui-sidebar-right`、`ui-dockkit` 与 `ui-sidebar-documentpreview` 的 README 重述了这些规则。

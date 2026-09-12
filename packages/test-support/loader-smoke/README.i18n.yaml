@@ -3,4 +3,4 @@
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/test-support/loader-smoke/README.md
 README.md: dd618358aeb6dca2fbaf3a4945d09aa529b28f48
-README.zh.md: 14a812aba42625474e73a0770b3184ec8c7f2463
+README.zh.md: bc86a92ed867fbd33f1e1c3aebb6b4ab5aefc7ce

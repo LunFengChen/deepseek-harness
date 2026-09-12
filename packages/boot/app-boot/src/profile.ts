@@ -35,8 +35,7 @@ import type { EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import { applyEntryPatches, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
 import { resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
 import type {
-  DshManifest,
-  DshModuleFallbackManifest,
+  DshPackageManifest,
   DshPluginCatalogEntry,
   ProfilePatchReload,
 } from '@x1a0f3n9/dsh-package-manifest'
@@ -62,13 +61,8 @@ export interface ProfileTemplate {
   patchReload: ProfilePatchReload
 }
 
-/** The slice of package.json both profiles and bundles use. */
-export interface ProfileManifest {
-  name?: string
-  dependencies?: Record<string, string>
-  peerDependencies?: Record<string, string>
-  dsh?: DshManifest
-}
+/** Package metadata accepted by the profile reader; local profiles need no published identity. */
+export type ProfileManifest = Partial<DshPackageManifest>
 
 /** The upstream product package namespace accepted by profile plugins. */
 export const OFFICIAL_DSH_PACKAGE_PREFIX = '@deepseek-ai/dsh-'
@@ -414,7 +408,7 @@ interface ModuleProxyManifest {
   private: true
   type: 'module'
   exports: Record<string, string>
-  dsh: { moduleFallback: DshModuleFallbackManifest }
+  dsh: { moduleFallback: { targets: Record<string, string> } }
 }
 
 interface ModuleProxyRecord {

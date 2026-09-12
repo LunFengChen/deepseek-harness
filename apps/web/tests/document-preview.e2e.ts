@@ -240,6 +240,18 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
     const iframe = preview.locator('[data-html-preview]')
     await iframe.waitFor({ timeout: 15_000 })
     expect(await iframe.getAttribute('sandbox')).toBe('allow-scripts')
+    expect(await iframe.evaluate((node) => {
+      const host = node.closest('[data-textpreview-body]')
+      if (!(host instanceof HTMLElement)) throw new Error('HTML preview body is unavailable')
+      const outer = host.getBoundingClientRect()
+      const frame = node.getBoundingClientRect()
+      return {
+        top: Math.round(frame.top - outer.top),
+        right: Math.round(outer.right - frame.right),
+        bottom: Math.round(outer.bottom - frame.bottom),
+        left: Math.round(frame.left - outer.left),
+      }
+    })).toEqual({ top: 0, right: 0, bottom: 0, left: 0 })
     const html = page.frameLocator('[data-html-preview]')
     await html.getByRole('heading', { name: 'HTML smoke', exact: true }).waitFor({ timeout: 15_000 })
     await expect.poll(() => html.locator('#result').innerText()).toBe('INLINE_OK')
@@ -379,6 +391,7 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
     const highlightedLines = preview.locator('.shiki .line')
     await expect.poll(() => highlightedLines.count(), { timeout: 15_000 }).toBe(PAGE_LINES)
     const codeBlock = preview.locator('.md-code-block')
+    const codeScrollport = preview.locator('[data-code-block-content]')
     expect(await codeBlock.getAttribute('data-line-numbers')).toBe('true')
     await expect.poll(() => highlightedLines.first().evaluate(node => getComputedStyle(node, '::before').content))
       .not.toMatch(/^(?:none|normal)$/u)
@@ -397,33 +410,31 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
     const prefix = await highlightedLines.allTextContents()
     expect(prefix).toEqual(codeLines.slice(0, PAGE_LINES))
     await expect.poll(() => preview.locator('[data-textpreview-more]').isEnabled()).toBe(true)
-    await scrollForNextPage(body)
+    await scrollForNextPage(codeScrollport)
     await expect.poll(() => highlightedLines.count(), { timeout: 15_000 }).toBe(codeLines.length)
     const completed = await highlightedLines.allTextContents()
     expect(completed).toEqual(codeLines)
     await expect.poll(() => preview.locator('[data-textpreview-more]').count()).toBe(0)
-    const scrollTop = await body.evaluate((node) => {
+    const scrollTop = await codeScrollport.evaluate((node) => {
       const target = Math.floor((node.scrollHeight - node.clientHeight) / 2)
       if (target <= 0) throw new Error('code fixture does not overflow the document body')
       node.scrollTop = target
       return target
     })
-    await expect.poll(() => body.evaluate((node) => {
-      const banner = node.querySelector('.md-code-block')?.firstElementChild
+    await expect.poll(() => codeScrollport.evaluate((node) => {
+      const codeBlock = node.parentElement
+      const banner = codeBlock?.firstElementChild
       const firstLine = node.querySelector('.shiki .line')
       if (!(banner instanceof HTMLElement) || firstLine === null) throw new Error('missing rendered code banner or source line')
       const bounds = node.getBoundingClientRect()
       const clipTop = bounds.top + node.clientTop
       const bannerBounds = banner.getBoundingClientRect()
-      const hit = document.elementFromPoint(bounds.left + node.clientLeft + node.clientWidth / 2, clipTop + 1)
       return {
         scrollTop: node.scrollTop,
-        position: getComputedStyle(banner).position,
-        topGap: bannerBounds.top - clipTop,
+        scrollportBelowBanner: Math.abs(bannerBounds.bottom - bounds.top) < 1,
         firstLineAbove: firstLine.getBoundingClientRect().top < clipTop,
-        topCoveredByBanner: hit !== null && banner.contains(hit),
       }
-    })).toEqual({ scrollTop, position: 'sticky', topGap: 0, firstLineAbove: true, topCoveredByBanner: true })
+    })).toEqual({ scrollTop, scrollportBelowBanner: true, firstLineAbove: true })
     await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(page.url()).origin })
     await page.evaluate(() => navigator.clipboard.writeText(''))
     await codeBlock.getByRole('button', { name: 'Copy', exact: true }).click()

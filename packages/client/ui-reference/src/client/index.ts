@@ -15,6 +15,7 @@
 import type {} from '@x1a0f3n9/dsh-api-remotes/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
 import type { ISessions } from '@x1a0f3n9/dsh-api-session-controller/client'
 import { relativeTime } from '@x1a0f3n9/dsh-client-ui-primitives'
@@ -24,13 +25,13 @@ import type {
 import { formatFileMention } from '@x1a0f3n9/dsh-file-reference/grammar'
 import type { FileReferenceCandidate } from '@x1a0f3n9/dsh-file-reference/types'
 import type { SessionReferenceMentionCandidate } from '@x1a0f3n9/dsh-session-reference/types'
-import { abbreviateHomePath } from '@x1a0f3n9/dsh-util-workspace-path'
+import { abbreviateHomePath, fileAddressFor } from '@x1a0f3n9/dsh-util-workspace-path'
 import { en, NS, zh, type ReferenceKey } from './locales.ts'
 
 /** Required services: the trigger registry, the Remote namespaces, and the copy. */
 export const inject = [
   'inputTriggers', 'locale', 'sessions', 'remote', 'remote.fileReferences',
-  'remote.sessionReferenceResolver',
+  'remote.sessionReferenceResolver', 'sidebarRight',
 ]
 
 /**
@@ -106,6 +107,13 @@ export function apply(ctx: ClientContext): void {
         }
       }
       return undefined
+    },
+    openReference(session, { ref, appearance }) {
+      if (appearance !== 'file') return false
+      const path = ref.startsWith('@"') ? ref.slice(2, -1) : ref.slice(1)
+      const cwd = sessions.list.getSnapshot().byId[session.sessionId]?.cwd
+      ctx.sidebarRight.openResource(fileAddressFor(session.sessionId, cwd, path))
+      return true
     },
     codec: {
       clipboardText: ref => ref,

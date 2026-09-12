@@ -81,7 +81,7 @@ The Team policy and schemas belong to [`@x1a0f3n9/dsh-experimental-tool-agent-te
 
 #### Token effect
 
-The bundle adds the Team policy and tool schemas described by `dsh-tool-team`; it adds no prompt text of its own.
+The bundle adds the Team policy and tool schemas described by `@x1a0f3n9/dsh-experimental-tool-agent-team`; it adds no prompt text of its own.
 
 #### KV Cache effect
 

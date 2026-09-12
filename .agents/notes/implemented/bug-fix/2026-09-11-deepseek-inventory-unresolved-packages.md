@@ -18,7 +18,7 @@ Selecting the official DeepSeek provider runs request-extension preparation befo
 
 **Disable `dsh_plugin_packages` in the fork profile.** Rejected: that drops the field for every official request, including deployments whose packages resolve normally.
 
-**Rewrite community plugin imports onto the fork namespace.** Rejected: resolution of the plugin's own package name is independent of `@deepseek-ai/dsh-*` remapping.
+**Rewrite community plugin imports onto the fork namespace.** Rejected: resolution of the plugin's own package name is independent of `@x1a0f3n9/dsh-*` remapping.
 
 ## Consequences
 

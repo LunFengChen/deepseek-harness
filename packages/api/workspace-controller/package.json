@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-api-workspace-controller",
   "description": "Workspace Remote commands and reconnect-safe state transport",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -83,7 +83,9 @@
     "@x1a0f3n9/dsh-api-gateway": "workspace:^",
     "@x1a0f3n9/dsh-client-connection": "workspace:^",
     "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
     "@x1a0f3n9/dsh-host-directory-picker": "workspace:^",
+    "@x1a0f3n9/dsh-remote-mock": "workspace:^",
     "@x1a0f3n9/dsh-session": "workspace:^",
     "@x1a0f3n9/dsh-storage-domain": "workspace:^",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:^",

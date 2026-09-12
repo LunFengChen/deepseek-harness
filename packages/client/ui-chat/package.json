@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-chat",
   "description": "Chat Conversation target, node definitions, renderers, and details surface",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -32,11 +32,12 @@
         "@x1a0f3n9/dsh-api-workspace-controller",
         "@x1a0f3n9/dsh-client-locale",
         "@x1a0f3n9/dsh-client-ui-conversation",
+        "@x1a0f3n9/dsh-client-ui-input-trigger",
         "@x1a0f3n9/dsh-client-ui-layout",
         "@x1a0f3n9/dsh-client-ui-renderer",
         "@x1a0f3n9/dsh-client-ui-session",
-        "@x1a0f3n9/dsh-client-ui-sidebar-right",
         "@x1a0f3n9/dsh-client-ui-settings",
+        "@x1a0f3n9/dsh-client-ui-sidebar-right",
         "@x1a0f3n9/dsh-client-ui-workspace"
       ],
       "platform": "web"
@@ -62,13 +63,14 @@
     "@x1a0f3n9/dsh-client-store": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-approval": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-input-trigger": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-layout": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-workspace": "workspace:^",
     "@x1a0f3n9/dsh-commands": "workspace:^",

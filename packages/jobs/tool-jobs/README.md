@@ -102,7 +102,7 @@ This section explains the design decisions behind the tools and points at the co
 
 Read these pages when the package-level contract is not enough. They move from the job types to the registry contract and the generated schemas.
 
-- [Background task runtime subsystem](../../../docs/subsystems/jobs.md) — the job types, snapshot fields, and `ctx.jobs` cordis surface.
+- [Background task runtime subsystem](../../../docs/subsystems/jobs.md) — the job types, snapshot fields, and `ctx.jobs` Cordis surface.
 - [jobs group map](../README.md) — the sibling group page and its package table.
 - [Registry contract](../jobs/README.md) — the abstract `ctx.jobs` service behind the tools.
 - [Process-local registry](../jobs-local/README.md) — where jobs run in this process.
@@ -161,7 +161,7 @@ Results and notices remain in parent history until compaction. Stream reads do n
 
 #### KV Cache effect
 
-Append-only; newly visible content follows the reusable request prefix and does not invalidate existing KV-cache entries.
+Append-only; newly visible content follows the reusable request prefix and does not invalidate existing KV Cache entries.
 
 ## Known Limitations and Deferred Work
 

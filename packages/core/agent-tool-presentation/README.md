@@ -107,7 +107,7 @@ No direct invalidation; the presentation is fixed when the agent is composed, so
 
 These limits define when this row needs special care. They are current package constraints, not a task backlog.
 
-- **The runtime stays host-plane** — a preset can select PTC mode but cannot supply the TypeScript runtime it needs; a deployment that composes none can compose no ptc preset.
+- **The runtime stays host-plane** — a preset can select PTC mode but cannot supply the TypeScript runtime it needs; a deployment that composes none can compose no PTC preset.
 
 <a id="dev-note"></a>
 ### Dev Note

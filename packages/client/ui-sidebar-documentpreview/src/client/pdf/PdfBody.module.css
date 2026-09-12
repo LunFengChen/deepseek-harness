@@ -1,8 +1,10 @@
 .body {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   width: 100%;
   min-height: 0;
+  padding: 8px;
   overflow-x: hidden;
   font-family: var(--dsw-font, sans-serif);
   white-space: normal;

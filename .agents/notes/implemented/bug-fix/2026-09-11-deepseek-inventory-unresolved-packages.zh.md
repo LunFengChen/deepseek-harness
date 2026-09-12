@@ -18,7 +18,7 @@ Status: implemented
 
 **在 fork profile 里关掉 `dsh_plugin_packages`。** 否决：这会让所有官方请求都丢掉这个字段，包括包能正常解析的部署。
 
-**把社区插件的 import 改写到 fork 命名空间。** 否决：插件自己的包名解析，和 `@deepseek-ai/dsh-*` remap 不是一回事。
+**把社区插件的 import 改写到 fork 命名空间。** 否决：插件自己的包名解析，和 `@x1a0f3n9/dsh-*` remap 不是一回事。
 
 ## Consequences
 

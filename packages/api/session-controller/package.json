@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-api-session-controller",
   "description": "Session Remote commands, cold reads, and live control transport",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -47,7 +47,8 @@
         "@x1a0f3n9/dsh-api-gateway/client"
       ],
       "inject": [
-        "@x1a0f3n9/dsh-api-gateway"
+        "@x1a0f3n9/dsh-api-gateway",
+        "@x1a0f3n9/dsh-client-file-upload"
       ],
       "platform": "web"
     }
@@ -128,6 +129,7 @@
     "@x1a0f3n9/dsh-client-connection": "workspace:^",
     "@x1a0f3n9/dsh-client-file-upload": "workspace:^",
     "@x1a0f3n9/dsh-client-store": "workspace:^",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
     "@x1a0f3n9/dsh-commands": "workspace:^",
     "@x1a0f3n9/dsh-file-reference": "workspace:^",
     "@x1a0f3n9/dsh-fs": "workspace:^",
@@ -136,6 +138,7 @@
     "@x1a0f3n9/dsh-llm": "workspace:^",
     "@x1a0f3n9/dsh-native-command": "workspace:^",
     "@x1a0f3n9/dsh-permission-presets": "workspace:^",
+    "@x1a0f3n9/dsh-remote-mock": "workspace:^",
     "@x1a0f3n9/dsh-scope": "workspace:^",
     "@x1a0f3n9/dsh-session": "workspace:^",
     "@x1a0f3n9/dsh-session-persistence": "workspace:^",

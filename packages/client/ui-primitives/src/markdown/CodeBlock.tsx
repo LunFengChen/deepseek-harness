@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, ReactNode, Ref } from 'react'
 import clsx from 'clsx'
 import { writeClipboard } from '../clipboard.ts'
 import {
@@ -25,6 +25,8 @@ export interface CodeBlockProps {
   streaming?: boolean | undefined
   /** Extra class merged onto the wrapper (callers position; this component draws). */
   className?: string | undefined
+  /** Ref for the stable source-content wrapper, for owners that use it as a scrollport. */
+  contentRef?: Ref<HTMLDivElement> | undefined
   /** Show a numbered gutter without adding numbers to copied source. Defaults to false. */
   lineNumbers?: boolean | undefined
   /** Copy-button idle label; the owner passes localized copy (this package is cordis-free, so copy arrives via props). */
@@ -59,7 +61,7 @@ function renderLine(line: readonly HighlightSpan[], index: number): ReactNode {
   )
 }
 
-export function CodeBlock({ code, lang, streaming, className, lineNumbers = false, copyLabel, copiedLabel }: CodeBlockProps) {
+export function CodeBlock({ code, lang, streaming, className, contentRef, lineNumbers = false, copyLabel, copiedLabel }: CodeBlockProps) {
   const trimmed = code.endsWith('\n') ? code.slice(0, -1) : code
   const sourceLines = lineNumbers ? trimmed.split('\n') : undefined
   const rootRef = useRef<HTMLDivElement>(null)
@@ -177,8 +179,8 @@ export function CodeBlock({ code, lang, streaming, className, lineNumbers = fals
       style={sourceLines === undefined ? undefined : {
         '--dsl-code-block-line-number-width': `${Math.max(2, String(sourceLines.length).length)}ch`,
       } as CSSProperties}>
+      {/* These paired attributes are stable semantic hooks for owner styling and DOM tests. */}
       <div className={css.bannerWrap}>
-        {/* The attribute carries no style here; owner stylesheets use it to pin the banner (sidebar code preview, horizontal scroll). */}
         <div className={css.banner} data-code-block-banner>
           <div className={css.infostring}>{lang ?? ''}</div>
           <div className={css.action}>
@@ -188,7 +190,7 @@ export function CodeBlock({ code, lang, streaming, className, lineNumbers = fals
           </div>
         </div>
       </div>
-      {body}
+      <div ref={contentRef} className={css.content} data-code-block-content>{body}</div>
     </div>
   )
 }

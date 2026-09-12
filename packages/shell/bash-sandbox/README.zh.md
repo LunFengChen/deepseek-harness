@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-当命令不得以 harness 进程的完整文件权限运行时，用本执行器替代 `dsh-bash-local`。它注册为 `ctx.shell`，并要求一个 `ctx.sandbox` 提供方加上 `ctx.sandboxPolicy`；面向模型的 `bash` 工具基于它不加改动地工作，并公布 `sandbox_permissions`/`justification` 升权字段。
+当命令不得以 harness 进程的完整文件权限运行时，用本执行器替代 `dsh-bash-local`。它注册为 `ctx.shell`，并要求一个 `ctx.sandbox` 提供方加上 `ctx.sandboxPolicy`；面向模型的 `bash` 工具基于它不加改动地工作，并公布 `sandbox_permissions` 与 `justification` 升权字段。
 
 ### 何时选择
 
@@ -71,7 +71,7 @@ kind: "package-reference"
 <details>
 <summary>实现细节——点击展开</summary>
 
-本节解释执行器的设计并指出实现它们的代码位置；可观察行为已在[使用本包](#use-this-package)中完整说明。
+本节解释执行器的设计并指出实现该设计的代码位置；可观察行为已在[使用本包](#use-this-package)中完整说明。
 
 ### 设计概念
 
@@ -83,7 +83,7 @@ kind: "package-reference"
 |---|---|
 | [`src/index.ts`](src/index.ts) | 插件入口：`SandboxBashExecutor`、按进程保留事实、run/start 包装 |
 | [`src/helpers.ts`](src/helpers.ts) | 拒绝、runner 失败与 runner spawn 失败分类 |
-| — | 不发布运行时不变式伴生入口；分类在结果中可观察。 |
+| — | 不发布运行时不变式伴生入口；分类可在结果中观察，且除归属 seam 所强制执行的约定外，本包不公开独立事件序列或可变数据关系。 |
 | `tests/` | 跨 bwrap、Landlock 与 Seatbelt runner 演练的行为 |
 
 ### 主要流程
@@ -141,7 +141,7 @@ kind: "package-reference"
 
 #### Token 影响
 
-除普通输出外，正常允许的运行不会增加 token。拒绝或失败会增加上述有条件标记，并保留到上下文压缩。
+除普通输出外，正常允许的运行不会增加 token。拒绝或失败会增加上述有条件标记，并保留到上下文压缩（context compaction）。
 
 #### KV Cache 影响
 
@@ -151,7 +151,7 @@ kind: "package-reference"
 
 #### 模型看到的内容
 
-如果没有 runner 能强制执行受限模式，前台调用会传播来自 sandbox seam 的 `SANDBOX_UNAVAILABLE` 错误。带有 `ENOENT`/`EACCES` 路径或 syscall 证据并指向 `argv[0]` 的 provider rejection 会把原始错误作为 runner-failure 详情；其他 rejection 保持不声明阶段的 provider error。已结算的 runner 失败以匹配到的致命 stderr 行作为详情，并保留原始 stderr 收集结果；追加的 `Runner failure: <detail>` 是权威诊断，优先于通用的 `SANDBOX_UNAVAILABLE` 前缀。
+如果没有 runner 能强制执行受限模式，前台调用会传播来自 sandbox seam 的 `SANDBOX_UNAVAILABLE` 错误。当提供方拒绝带有 `ENOENT`／`EACCES` 路径或 syscall 证据并指向 `argv[0]` 时，会把原始错误作为 runner 失败详情；其他拒绝仍是与阶段无关的提供方错误。已结算的 runner 失败以匹配到的致命 stderr 行作为详情，并保留原始 stderr 收集结果；追加的 `Runner failure: <detail>` 是权威诊断，优先于通用的 `SANDBOX_UNAVAILABLE` 前缀。
 
 #### Token 影响
 
@@ -170,7 +170,7 @@ kind: "package-reference"
 
 - **限制只覆盖文件影响**——不提供网络限制和统一的进程可见性保证，因此这些模式不是通用安全沙箱。
 - **拒绝从失败命令的 stderr 推断**——后端特征使该推断可跨平台使用，但包含相同特征的应用错误可能被分类为拒绝，也可能遗漏未出现在保留尾部中的拒绝。
-- **异步观测到的后台 runner 失败没有即时错误通道**——它记录在已结算进程上，并在调用方用 `job_output` 读取通用任务时呈现；同步抛出且指明 runner 路径的 subprocess 错误则会让 `start()` 立即失败。
+- **异步观测到的后台 runner 失败没有即时错误通道**——它记录在已结算进程上，并在调用方用 `job_output` 读取通用任务时呈现；同步抛出且指明 runner 路径的子进程错误则会让 `start()` 立即失败。
 - **`danger-full-access` 有意绕过 `ctx.sandbox`**——它是显式无约束模式，不是更宽的沙箱 profile。
 
 <a id="dev-note"></a>
@@ -179,6 +179,6 @@ kind: "package-reference"
 <details>
 <summary>维护者的工作上下文——点击展开</summary>
 
-None.
+无。
 
 </details>

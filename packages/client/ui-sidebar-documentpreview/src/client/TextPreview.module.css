@@ -1,6 +1,6 @@
-/* The pane body is a block scroller with a definite height, not a flex
-   container, so the preview takes that height outright: the header row stays
-   put and the file body below is the one scroller, however short the file. */
+/* The preview takes the pane's definite height outright, so the header stays
+   put while the body below owns the remaining height. A renderer may replace
+   the body's scrolling role with an inner scrollport. */
 .preview {
   display: flex;
   flex: 1 1 auto;
@@ -81,13 +81,9 @@
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
-  /* The files tree's inset and 2px scrollbar offset (ui-sidebar-files
-     FilesBody `.body`), so the two bodies start their text at one edge and
-     both bars sit 2px clear of the pane's edge. */
-  margin-right: 2px;
-  padding: 8px 0 8px 8px;
+  margin: 0;
+  padding: 0;
   overflow: auto;
-  scrollbar-gutter: stable;
   /* The notice and retry surfaces in this sheet are elevated, so the file body's
      scroller rebinds the thumb indirection in a complete pair. */
   --dsh-scrollbar-thumb: var(--dsw-alias-scrollbar-bg-l2);
@@ -99,11 +95,16 @@
   white-space: pre;
 }
 
-/* The bar also stops 2px short of the body's ends, matching its 2px edge
-   offset (ui-sidebar-files FilesBody keeps the same rule). WebKit-only: the
+/* Keep the scrollbar track 2px clear of the body's ends. WebKit-only: the
    Firefox path has no track to inset. */
 .body::-webkit-scrollbar-track {
   margin: 2px;
+}
+
+.body:has([data-code-preview]) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .wrap {
@@ -111,15 +112,13 @@
   word-break: break-word;
 }
 
-/* Sticky code banners meet the scrollport edge; prose owns its initial spacing. */
-.body:has([data-code-preview], [data-document-markdown]) {
-  padding: 0;
-}
-
-/* The code renderer's banner sizes itself to this scroller's visible width
-   (100cqw in CodeBody.module.css); the container makes that width queryable. */
-.body:has([data-code-preview]) {
-  container-type: inline-size;
+/* Plain text keeps the shared document inset while edge-to-edge renderers can
+   fill the scroller themselves. */
+.textDocument {
+  box-sizing: border-box;
+  min-width: 100%;
+  min-height: 100%;
+  padding: 8px;
 }
 
 /* One page of lines; pages abut so the file reads as one. */

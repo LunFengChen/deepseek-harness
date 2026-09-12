@@ -156,7 +156,7 @@ Inspect output and submitted package code are data-dependent and resent until co
 
 #### KV Cache effect
 
-Append-only; newly visible content follows the reusable request prefix and does not invalidate existing KV-cache entries.
+Append-only; newly visible content follows the reusable request prefix and does not invalidate existing KV Cache entries.
 
 ### Later requests after cordis_run
 

@@ -11,21 +11,25 @@ export function TextBody({ content, useTabInfo }: DocumentPreviewProps): ReactNo
   const params = tab.navigation.params
   const target = params !== undefined && 'line' in params ? params.line : undefined
   if (content.kind !== 'text') return null
-  return content.pages.map(page => (
-    <pre key={page.offset} className={css.page} data-textpreview-page={page.offset}>
-      {linesOf(page).map((text, index) => {
-        const number = page.offset + index
-        return (
-          <div
-            key={number}
-            className={clsx(css.line, number === target && css.lineTarget)}
-            data-textpreview-line={number}
-            {...number === target ? { 'data-textpreview-target': number } : {}}
-          >
-            {text}{'\n'}
-          </div>
-        )
-      })}
-    </pre>
-  ))
+  return (
+    <div className={css.textDocument} data-textpreview-plain>
+      {content.pages.map(page => (
+        <pre key={page.offset} className={css.page} data-textpreview-page={page.offset}>
+          {linesOf(page).map((text, index) => {
+            const number = page.offset + index
+            return (
+              <div
+                key={number}
+                className={clsx(css.line, number === target && css.lineTarget)}
+                data-textpreview-line={number}
+                {...number === target ? { 'data-textpreview-target': number } : {}}
+              >
+                {text}{'\n'}
+              </div>
+            )
+          })}
+        </pre>
+      ))}
+    </div>
+  )
 }

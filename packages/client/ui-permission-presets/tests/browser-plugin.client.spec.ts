@@ -9,11 +9,13 @@
  * its Settings row and invalidates that row on host settings changes.
  */
 import { Context } from '@deepseek-ai/cordis'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, onTestFinished } from 'vitest'
 import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
-import { TestRemote, scriptedSettingsRemote } from '@x1a0f3n9/dsh-client-test-runtime'
+import { TestRemote } from '@x1a0f3n9/dsh-client-test-runtime'
+import { remoteDefaultResponses } from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/remote-default-responses.ts'
+import { RemoteMock } from '@x1a0f3n9/dsh-remote-mock'
 import { apply as settingsApply, inject as settingsInject } from '@x1a0f3n9/dsh-client-ui-settings/client'
 import type { CommandDecoration, PopupSelectSpec } from '@x1a0f3n9/dsh-client-ui-commands/client'
 import type { PermissionSelect } from '@x1a0f3n9/dsh-permission-presets/client'
@@ -40,8 +42,9 @@ async function bench() {
   const locale = new LocaleRuntime(ctx)
   locale.setLocale('en')
   ctx.provide('locale', locale)
-  const settingsRemote = scriptedSettingsRemote()
-  const remote = new TestRemote(ctx, { settings: settingsRemote.settings })
+  const mock = RemoteMock.create().load(remoteDefaultResponses)
+  onTestFinished(() => { mock.assertNoUnmatched() })
+  const remote = new TestRemote(ctx, { settings: mock.remote.settings })
   ctx.slots.register({
     name: 'root',
     children: {

@@ -3,4 +3,4 @@
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write native/system/packages/darwin-x64/README.md
 README.md: 1740788eef943373591a895baeb7207635972a46
-README.zh.md: 644165743486a29e48bee7af33429ebf4f5d8fe2
+README.zh.md: 88053b85150c94048a4ffc32b506d365ff13c15f

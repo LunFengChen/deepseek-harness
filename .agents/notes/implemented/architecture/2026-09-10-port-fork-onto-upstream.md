@@ -27,5 +27,5 @@ Product rules stay: `xfdsh` uses `~/.xfdsh` for plugins/profiles, `DSH_SESSION_H
 ## Consequences
 
 - New fork work still uses `features/*` or `fix/*` branches and `--no-ff` merges into `dev-x1a0f3n9`.
-- Official plugin client inject lists that name `@deepseek-ai/dsh-*` resolve to the fork module table.
+- Official plugin client inject lists that name `@x1a0f3n9/dsh-*` resolve to the fork module table.
 - `dshmarket` remains a preinstalled, disableable web-app catalog entry.

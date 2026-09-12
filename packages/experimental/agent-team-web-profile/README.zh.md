@@ -54,7 +54,7 @@ dsh plugin --profile web add @x1a0f3n9/dsh-experimental-agent-team-web-profile
 |---|---|
 | [`cordis.patch.yml`](cordis.patch.yml) | 包含 `ui-agent-team` 行的有序 Web patch |
 | [`src/index.ts`](src/index.ts) | 空模块入口；patch 是运行时内容 |
-| — | 不发布运行时不变式伴生入口；本包是静态 bundle，不持有可独立观察的运行时关系。 |
+| — | 不发布运行时不变式伴生入口；本包只携带静态 profile patch，Remote assembly 与 Team UI 负责各自的激活要求。 |
 
 </details>
 

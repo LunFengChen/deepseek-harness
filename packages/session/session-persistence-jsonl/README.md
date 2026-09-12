@@ -62,9 +62,11 @@ Each session gets a session-owned directory under a readable project directory. 
       session.jsonl.zstd         # released v0, compressed root
       session.v1.jsonl.zstd      # released v1, compressed root
       session.v2.jsonl.zstd      # released v2, compressed root
+      session.v3.jsonl.zstd      # released v3/current, compressed root
       session.jsonl              # released v0, raw root
       session.v1.jsonl           # released v1, raw root
-      session.v2.jsonl           # released v2, raw root; later versions use vN
+      session.v2.jsonl           # released v2, raw root
+      session.v3.jsonl           # released v3/current, raw root; later versions use vN
 ```
 
 Session ids are injectively escaped to one safe path segment before use (no traversal, no collision). The normalized cwd keeps the project directory readable for navigation; cwd strings that normalize alike share a project directory while session ids still select distinct session directories. Runtime operations select the numerically highest canonical generation, and format-refusal diagnostics name that absolute path so an operator can find the raw log a build refused to interpret.

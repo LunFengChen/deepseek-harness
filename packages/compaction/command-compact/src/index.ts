@@ -4,6 +4,7 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
+import { CommandDefinitionId } from '@x1a0f3n9/dsh-commands/brand'
 import { ManualCompactionError } from '@x1a0f3n9/dsh-compaction'
 import type { CommandInvocation, CommandResult } from '@x1a0f3n9/dsh-commands'
 
@@ -98,6 +99,7 @@ export function apply(ctx: Context): void {
     // invocation can enter while already-started handler promises quiesce.
     yield async () => { await Promise.allSettled(active) }
     yield ctx.commands.register({
+      definitionId: CommandDefinitionId('@x1a0f3n9/dsh-command-compact'),
       name: 'compact',
       description: 'Compact older conversation history',
       handler,

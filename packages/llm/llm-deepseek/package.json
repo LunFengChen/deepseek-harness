@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-llm-deepseek",
   "description": "DeepSeek chat-completions adapter for the DeepSeek Harness LLM seam",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -52,6 +52,7 @@
     "@x1a0f3n9/dsh-anonymous-user-id": "workspace:^",
     "@x1a0f3n9/dsh-atomic-write": "workspace:^",
     "@x1a0f3n9/dsh-attachment": "workspace:^",
+    "@x1a0f3n9/dsh-attachment-local": "workspace:^",
     "@x1a0f3n9/dsh-credentials": "workspace:^",
     "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
     "@x1a0f3n9/dsh-fs": "workspace:^",

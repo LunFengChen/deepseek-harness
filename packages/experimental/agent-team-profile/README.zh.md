@@ -34,7 +34,7 @@ dsh plugin --profile headless add @x1a0f3n9/dsh-experimental-agent-team-profile
 dsh --profile headless "Use Agent Teams to split this task between two teammates, wait, and summarize."
 ```
 
-profile 必须已经包含 `@x1a0f3n9/dsh-base`，本层会使用其中的 Subagent service 与 provider 配置行。执行 `dsh plugin --profile <name> remove @x1a0f3n9/dsh-experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
+profile 必须已经包含 `@x1a0f3n9/dsh-base`，本层会使用其中的 Subagent 服务与提供方配置行。执行 `dsh plugin --profile <name> remove @x1a0f3n9/dsh-experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
 
 ### 获得的功能
 
@@ -48,7 +48,7 @@ profile 必须已经包含 `@x1a0f3n9/dsh-base`，本层会使用其中的 Subag
 <details>
 <summary>实现细节——点击展开</summary>
 
-本包的运行时内容是 [`cordis.patch.yml`](cordis.patch.yml)。在 `dsh-base` 之后应用时，patch 会禁用 `tool-subagent-control` 与 `tool-subagent-list-agents`，把 fresh 与 fork Subagent 行设置为 `one-shot`，并以显式 provider 和限制插入 Team service 与工具行。
+本包的运行时内容是 [`cordis.patch.yml`](cordis.patch.yml)。在 `dsh-base` 之后应用时，patch 会禁用 `tool-subagent-control` 与 `tool-subagent-list-agents`，把 fresh 与 fork Subagent 行设置为 `one-shot`，并以显式 provider 和限制插入 Team 服务与工具行。
 
 | 文件 | 职责 |
 |---|---|
@@ -81,7 +81,7 @@ Team 策略与 schema 由 [`@x1a0f3n9/dsh-experimental-tool-agent-team`](../tool
 
 #### Token 影响
 
-本 bundle 会加入 `dsh-tool-team` 描述的 Team 策略与工具 schema；它自身不增加提示词文本。
+本 bundle 会加入 `@x1a0f3n9/dsh-experimental-tool-agent-team` 描述的 Team 策略与工具 schema；它自身不增加提示词文本。
 
 #### KV Cache 影响
 
@@ -93,7 +93,7 @@ Team 策略与 schema 由 [`@x1a0f3n9/dsh-experimental-tool-agent-team`](../tool
 
 - **仅显式启用**——本包公开发布，但随附 CLI、Web、SDK、ACP 与 Python profile 都不会启用它。
 - **共享 checkout**——所有 teammate 都观察同一个工作目录；本 bundle 不提供 worktree 隔离或文件系统锁。
-- **需要 base profile**——本 patch 依赖 `dsh-base` 提供的配置行 id 与 Subagent provider；它不是独立 profile。
+- **需要 base profile**——本 patch 依赖 `dsh-base` 提供的配置行 id 与 Subagent 提供方；它不是独立 profile。
 
 <a id="dev-note"></a>
 ### 开发备注

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-settings-models",
   "description": "Models settings and shared product-onboarding dialogs over existing settings and credential joins",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -44,6 +44,7 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
+    "@x1a0f3n9/dsh-remote-mock": "workspace:^",
     "@x1a0f3n9/dsh-api-remotes": "workspace:^",
     "@x1a0f3n9/dsh-client-locale": "workspace:^",
     "@x1a0f3n9/dsh-client-store": "workspace:^",

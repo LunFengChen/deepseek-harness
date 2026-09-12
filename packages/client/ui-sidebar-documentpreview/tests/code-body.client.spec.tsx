@@ -64,6 +64,7 @@ function installStyles(): void {
     .replaceAll('.renderer', `.${css.renderer}`).replaceAll('.code', `.${css.code}`)
   const shared = readFileSync(resolve(directory, '../../ui-primitives/src/markdown/CodeBlock.module.css'), 'utf8')
     .replaceAll('.block', `.${primitiveCss.block}`)
+    .replaceAll('.content', `.${primitiveCss.content}`)
   stylesheet = document.createElement('style')
   // The shared defaults load last to prove the renderer's selectors override them.
   stylesheet.textContent = `${own}\n${shared}`
@@ -147,21 +148,25 @@ describe('CodeBody', () => {
     expect(view.container.querySelector('.md-code-block')).toBeNull()
   })
 
-  it('switches wrapping without truncating text, remounting the highlighter, or taking over scrolling', () => {
+  it('keeps a stable inner scrollport while switching wrapping without remounting the highlighter', () => {
     installStyles()
     const code = `const identifier = "${'x'.repeat(300)}";`
     const content = contents([code])
     const view = render(<CodeBody {...props(content)} />)
     const pre = element(view.container, '.shiki')
     const block = element(view.container, '.md-code-block')
+    const scrollport = element(view.container, '[data-code-block-content]')
     expect(getComputedStyle(block).marginTop).toBe('0px')
     expect(getComputedStyle(block).position).toBe('static')
-    expect(getComputedStyle(element(view.container, '[data-code-preview]')).minHeight).toBe('100%')
+    expect(getComputedStyle(element(view.container, '[data-code-preview]')).height).toBe('100%')
+    expect(getComputedStyle(scrollport).display).toBe('block')
+    expect(getComputedStyle(scrollport).overflow).toBe('auto')
     expect(getComputedStyle(pre).whiteSpace).toBe('pre')
     expect(getComputedStyle(pre).overflow).toBe('visible')
     expect(getComputedStyle(pre).wordBreak).toBe('normal')
     view.rerender(<CodeBody {...props(content, { wrap: true })} />)
     expect(element(view.container, '.shiki')).toBe(pre)
+    expect(element(view.container, '[data-code-block-content]')).toBe(scrollport)
     expect(getComputedStyle(pre).whiteSpace).toBe('pre-wrap')
     expect(getComputedStyle(pre).overflowWrap).toBe('anywhere')
     expect(getComputedStyle(pre).overflow).toBe('visible')

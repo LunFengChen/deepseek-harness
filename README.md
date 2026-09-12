@@ -16,12 +16,12 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 
 | Area | What changed | Result |
 | --- | --- | --- |
-| Package namespace | Development packages use `@x1a0f3n9/dsh-*`. `master` tracks upstream `@deepseek-ai/dsh-*`. A later stable fork line publishes `@xfcodeai/dsh-*`. Vendor and native packages keep `@deepseek-ai/*`. | The two fork lines and official `dsh` do not share an npm scope. |
+| Package namespace | Development packages use `@x1a0f3n9/dsh-*`. `master` tracks upstream `@x1a0f3n9/dsh-*`. A later stable fork line publishes `@xfcodeai/dsh-*`. Vendor and native packages keep `@deepseek-ai/*`. | The two fork lines and official `dsh` do not share an npm scope. |
 | Launcher | The shipped command is `xfdsh`. Official `dsh` stays the upstream CLI. | The two products can be installed together. |
 | Homes | `xfdsh` stores plugins and profiles in `~/.xfdsh`. Official `dsh` keeps plugins and profiles in `~/.dsh`. Sessions, workspace groups, attachments, settings, and API keys stay in `~/.dsh`. | History is shared without a migration wizard. `xfdsh` never writes `~/.dsh/profiles`. |
 | Web port | `xfdsh web` listens on `127.0.0.1:7777`. Official `dsh web` stays on `3080`. | Both UIs can run at the same time. |
 | Session timeline | Preinstalled, disableable plugin: rewind, delete, regenerate, and a composer compact button. Delete truncates the selected turn and every later event. Compact lands a truncated thinking-model summary instead of leaving the conversation unchanged. | Unwanted answers leave the UI and later model requests. One click runs `/compact`. |
-| Plugin market | Preinstalled, disableable plugin `github:LunFengChen/dsh-market#v1.44.0`. Official `@deepseek-ai/dsh-*` plugins remap into this runtime. | Community plugins install with `xfdsh plugin --profile web add`. |
+| Plugin market | Preinstalled, disableable plugin `github:LunFengChen/dsh-market#v1.44.0`. Official `@x1a0f3n9/dsh-*` plugins remap into this runtime. | Community plugins install with `xfdsh plugin --profile web add`. |
 | Plugin authors | Optional-plugin cards show the catalog author as a GitHub link. | Settings → Plugins opens the plugin repository instead of leaving the package name as the only byline. |
 | Reasoning effort | Preinstalled slider `github:LunFengChen/dsh-reasoning-effort#v0.7.1`. Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. | The composer can pick thinking strength after a custom model declares levels. Disable the slider from Settings → Plugins. |
 | Context dashboard | Preinstalled, disableable plugin `github:LunFengChen/dsh-context#v0.49.6`. Version detection reads this fork, not a leftover official CLI. | A Context tab and `/context` command show composition, compaction, and token use. |
@@ -59,7 +59,7 @@ There are two supported install paths for this fork. Both start `xfdsh web` at `
 **Official `dsh` (unchanged):**
 
 ```sh
-npm install --global @deepseek-ai/dsh
+npm install --global @x1a0f3n9/dsh
 dsh web
 ```
 
@@ -141,6 +141,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 Start with the [development guide](docs/development.md) and [architecture documentation](docs/architecture.md).
 
 For agents, follow [AGENTS.md](AGENTS.md).
+
+## Citation
+
+```bibtex
+@misc{deepseek-harness2026,
+  title={DeepSeek Harness: Everything is a Plugin},
+  author={DeepSeek-AI},
+  year={2026},
+  publisher={GitHub},
+  howpublished={\url{https://github.com/deepseek-ai/deepseek-harness}},
+}
+```
 
 ## License
 

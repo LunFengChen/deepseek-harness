@@ -24,11 +24,11 @@ The right Sidebar's navigator tab type: the session's workspace root as a tree, 
 <a id="what-it-registers"></a>
 ## What it registers
 
-- **The type** — `ctx.sidebarRightTabs.register(...)` with kind `files`, id `@x1a0f3n9/dsh-client-ui-sidebar-files`, band `builtin`, no patterns, and one guide entry (order 10, titled from the `sidebarFiles` namespace) that opens the type.
+- **The type** — `ctx.sidebarRightTabs.register(...)` with kind `files`, id `@x1a0f3n9/dsh-client-ui-sidebar-files`, band `builtin`, no patterns, and one guide entry (order 10, its title and description from the `sidebarFiles` namespace, its glyph the shared folder icon) that opens the type.
 - **The body** — the keyed `sidebar.right.pane.tab` seat under that id: a header row under the strip, then the tree. The header row is the document preview's (`ui-sidebar-documentpreview`): the root path, its directories greyed and its last segment in full ink, never ellipsized (a path wider than the row keeps its end and fades its start), with the one control, reload, at its right. The row is copied rather than shared because a plugin bundle shares runtime code only through the platform modules; once the artifact and slot surfaces settle, one copy in `ui-primitives` could serve every pane header.
 - **The chip title** — the keyed `sidebar.right.pane.tab.title` seat under that id: a shared `FileTypeIcon` folder glyph at 16px before the type's label. The tree's own rows never draw this sheet.
 
-Seven source files under `src/client/`: `definition.ts` (the type), `store.ts` (what it keeps), `face.ts` (how it lists, Remote binding included), `FilesBody.tsx` (what it draws, with its ordering and failure-line helpers), `FilesTitle.tsx` (the chip title), `locales.ts` (what it says), and `index.ts` (the wiring).
+Seven source files under `src/client/`: `definition.tsx` (the type), `store.ts` (what it keeps), `face.ts` (how it lists, Remote binding included), `FilesBody.tsx` (what it draws, with its ordering and failure-line helpers), `FilesTitle.tsx` (the chip title), `locales.ts` (what it says), and `index.ts` (the wiring).
 
 <a id="the-tree"></a>
 ## The tree

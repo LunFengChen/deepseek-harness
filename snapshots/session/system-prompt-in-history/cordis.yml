@@ -7,16 +7,12 @@
   config:
     thinking: enabled
     reasoningEffort: max
-    models:
-      - id: deepseek-v4-flash
-        systemPromptUpdate: in-history
-      - id: deepseek-v4-pro
 
 - id: agent-default-model
   name: '@x1a0f3n9/dsh-agent-default-model'
   config:
     provider: deepseek-official
-    model: deepseek-v4-flash
+    model: deepseek-flash
 
 - id: session-persistence-jsonl
   name: '@x1a0f3n9/dsh-session-persistence-jsonl'

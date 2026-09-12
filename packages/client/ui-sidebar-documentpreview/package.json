@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview",
   "description": "Extensible document previews for Sidebar files: Markdown, highlighted code, images, PDF, HTML, and plain text",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },

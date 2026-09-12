@@ -85,7 +85,7 @@ one-shot child 始终选用只读编辑器。可继续 child 仅在其确切 par
 
 #### 模型看到的内容
 
-只有 `@` 引用 source 会影响模型输入：pick 的候选以字面文本 `@label` 进入普通用户消息，没有专用内容块或宿主侧解析。浏览目录、导航 child 与查看持久化 transcript 都不会添加提示词 section；已接收的继续交互内容会经宿主 subagent 适配器成为普通 FIFO 用户消息。
+只有 `@` 引用 source 会影响模型输入：pick 的候选以字面文本 `@label` 进入普通用户消息，没有专用内容块或宿主侧解析。浏览目录、导航 child 与查看持久化 transcript（文本记录）都不会添加提示词 section；已接收的继续交互内容会经宿主 subagent 适配器成为普通 FIFO 用户消息。
 
 #### Token 影响
 
@@ -115,4 +115,4 @@ one-shot child 始终选用只读编辑器。可继续 child 仅在其确切 par
 
 </details>
 
-**运行时不变式：** 不发布伴生入口。插件只注册一个 slash source，HMR 测试覆盖释放；它不发出 Cordis 事件，也不持有跨插件可变状态。
+**运行时不变式：** 不发布伴生入口。插件只注册一个 slash source，其资源释放已由 HMR（热模块替换）安全规范验证；它不发出 Cordis 事件，也不持有跨插件可变状态。

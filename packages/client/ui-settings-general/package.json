@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-settings-general",
   "description": "Settings ownerless-copy and product onboarding plugin: the General section, shell trigger/header chrome content, settings dictionaries, and the versioned welcome notice",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -49,22 +49,23 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:^",
     "@x1a0f3n9/dsh-api-remotes": "workspace:^",
     "@x1a0f3n9/dsh-client-connection": "workspace:^",
     "@x1a0f3n9/dsh-client-locale": "workspace:^",
     "@x1a0f3n9/dsh-client-store": "workspace:^",
     "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-sidebar": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^",
-    "@types/react": "~18.3.1",
-    "react": "^18.2.0",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
+    "@x1a0f3n9/dsh-remote-mock": "workspace:^",
     "@x1a0f3n9/dsh-settings": "workspace:^",
-    "clsx": "^2.0.0"
+    "@types/react": "~18.3.1",
+    "clsx": "^2.0.0",
+    "react": "^18.2.0"
   },
   "files": [
     "lib/index.js",

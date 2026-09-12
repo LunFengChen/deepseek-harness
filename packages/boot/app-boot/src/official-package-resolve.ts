@@ -1,5 +1,5 @@
 /**
- * Resolve official `@deepseek-ai/dsh-*` imports onto this fork's packages.
+ * Resolve official `@x1a0f3n9/dsh-*` imports onto this fork's packages.
  *
  * Community plugins keep the official package names. pnpm `npm:@x1a0f3n9/...@workspace:*`
  * overrides write broken symlinks, so source launch remaps the specifier before

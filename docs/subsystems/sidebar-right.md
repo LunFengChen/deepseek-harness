@@ -43,7 +43,7 @@ Tab identity is the pair `(kind, address)`: the registry's claim uses the addres
 | `priority` | One of three literal bands: `extension` (the default and the highest: a type from outside the product outranks every shipped viewer), `builtin` (types shipped with the product), `fallback` (plain-content viewers anything more specific should beat). |
 | `canOpen(address)` | Optional synchronous veto of a glob match; it runs on every routing decision. |
 | `title(address)` | The chip's text, captured into the layout record when the tab opens and never rewritten. |
-| `guide` | Optional entry boxes for the guide page: `{ order, title(), description(), icon? }`. Picking a box opens the contributing type as a page; omit to stay off the page. |
+| `guide` | Optional entry boxes for the guide page: `{ order, title(), description?(), icon? }`. Picking a box opens the contributing type as a page; omit to stay off the page. |
 
 Routing is a ranked claim. `candidates(address)` ranks the types whose patterns match and whose `canOpen` does not veto: by band, then by the length of the longest matched pattern, then by registration order. `claim(address, kind?)` picks the first candidate, or the named `kind` outright — its globs are skipped, its `canOpen` still applies — and returns `{ kind, contentId: address, title }`. An address no type claims throws: it is a wiring mistake, not a user error.
 
@@ -130,7 +130,7 @@ The Host `ctx.workspaceFiles` service and generated `workspaceFiles` Remote name
 
 ## Shipped types
 
-- **`guide`** — `builtin`, opened as `openTab('guide')`. A centred title, one line, and one entry box per `guide` entry the registered types contributed, in `order`; picking a box opens the contributing type as a page in the guide tab's place. A pane holds at most one guide tab, and the strip's add control appears only while its pane has none. A new pane receives the registered default page: the sole guide entry directly, or the guide when the entry count is not one ([guide](../../packages/client/ui-sidebar-right/README.md#the-guide)).
+- **`guide`** — `builtin`, opened as `openTab('guide')`. A muted compass sits above one capsule per contributed `guide` entry, in `order`; short lists show registered descriptions, and every missing icon uses the shipped placeholder. Picking a capsule opens the contributing type as a page in the guide tab's place. A pane holds at most one guide tab, and the strip's add control appears only while its pane has none. A new pane receives the registered default page: the sole guide entry directly, or the guide when the entry count is not one ([guide](../../packages/client/ui-sidebar-right/README.md#the-guide)).
 - **`text`** — `fallback`, `dsh-resource://file/**`, claiming Session addresses only. Document Preview observes metadata through `useResource<'file'>`, loads content through Remote callbacks, and owns renderer selection, the toolbar, per-tab refresh, scroll, and source navigation; unknown extensions render as plain text ([README](../../packages/client/ui-sidebar-documentpreview/README.md)).
 - **`files`** — `builtin`, opened as `openTab('files')`. The workspace directory tree, listed lazily through `list`, opening a file with `tab.actions.openResource(fileAddressFor(sessionId, root, path))` into its own pane ([README](../../packages/client/ui-sidebar-files/README.md)).
 

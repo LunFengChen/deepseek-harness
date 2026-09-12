@@ -37,18 +37,16 @@ export function lastLineLoaded(pages: readonly LoadedPage[]): number {
 
 /**
  * Reveal a plain-text or highlighted source line.
- * @param body - scrolling document body.
+ * @param body - scrolling document body or code-content viewport.
  * @param line - 1-based source line to reveal.
  * @returns Whether the current renderer exposes that line.
  */
 export function scrollToLine(body: HTMLElement, line: number): boolean {
+  const innerCode = body.hasAttribute('data-code-block-content')
   const plain = body.querySelector(`[data-textpreview-line="${line}"]`)
-  const code = body.querySelectorAll('[data-code-preview] pre .line').item(line - 1)
+  const code = innerCode ? body.querySelectorAll('pre .line').item(line - 1) : null
   const row = plain ?? code
   if (!(row instanceof HTMLElement)) return false
-  const codeBlock = code === row ? row.closest<HTMLElement>('.md-code-block') : null
-  const toolbar = codeBlock?.firstElementChild
-  const toolbarHeight = toolbar instanceof HTMLElement ? toolbar.offsetHeight : 0
-  body.scrollTop = Math.max(0, row.offsetTop - toolbarHeight)
+  body.scrollTop = Math.max(0, row.offsetTop)
   return true
 }

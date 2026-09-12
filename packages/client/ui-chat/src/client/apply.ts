@@ -6,6 +6,7 @@ import type { SessionBinding } from '@x1a0f3n9/dsh-api-session-controller/client
 import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
 // The `file` entry of `SidebarRightResourceParamsMap`, which types `{ params: { line } }` below.
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/client'
 import { fileAddressFor } from '@x1a0f3n9/dsh-util-workspace-path'
@@ -135,6 +136,11 @@ export function apply(ctx: Context): void {
             if (options?.line === undefined) ctx.sidebarRight.openResource(url)
             else ctx.sidebarRight.openResource(url, { params: { line: options.line } })
             await Promise.resolve()
+          },
+          openSkill: (name) => {
+            const scope = ctx.sessions.scope(sessionId)
+            if (scope === undefined) return
+            ctx.get('inputTriggers')?.sessionOf(scope).openReference('skill', { ref: `/${name}` })
           },
           loadOlder: () => { void session.loadOlder() },
           loadThrough: seq => session.loadThrough(seq),

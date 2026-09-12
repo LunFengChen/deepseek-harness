@@ -69,6 +69,12 @@
   font: inherit;
 }
 
+/* Consumers may turn the stable content node into a viewport without changing
+   the default CodeBlock layout. */
+.content {
+  display: contents;
+}
+
 .block :where(pre) {
   font: var(--dsl-code-block-content-font);
   padding: 16px;

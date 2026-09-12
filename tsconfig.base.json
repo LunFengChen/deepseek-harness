@@ -249,6 +249,9 @@
       // util/ folders are role-named without the util- prefix their npm names carry,
       // so these aliases stay hand-written like dsh-util-crypto above.
       "@x1a0f3n9/dsh-util-time": ["./packages/util/time/src"],
+      // session-log-export lives under session-query/, so the generated aliases map only its
+      // bare name; the browser half needs this explicit subpath for source-mode dynamic imports.
+      "@x1a0f3n9/dsh-session-log-export/client": ["./packages/session-query/session-log-export/src/client"],
       // BEGIN generated package aliases — pnpm run gen-tsconfig-paths
       "@x1a0f3n9/dsh-acp": ["./packages/acp/acp/src"],
       "@x1a0f3n9/dsh-acp-app": ["./packages/bundle/acp-app/src"],
@@ -336,6 +339,7 @@
       "@x1a0f3n9/dsh-plan-mode/invariant": ["./packages/plan/plan-mode/src/invariant.ts"],
       "@x1a0f3n9/dsh-plugin-package-inventory-deepseek": ["./packages/llm/plugin-package-inventory-deepseek/src"],
       "@x1a0f3n9/dsh-pwsh-sandbox": ["./packages/shell/pwsh-sandbox/src"],
+      "@x1a0f3n9/dsh-remote-mock": ["./packages/test-support/remote-mock/src"],
       "@x1a0f3n9/dsh-repeat-tool-reminder": ["./packages/guard/repeat-tool-reminder/src"],
       "@x1a0f3n9/dsh-sandbox": ["./packages/sandbox/sandbox/src"],
       "@x1a0f3n9/dsh-sandbox-local": ["./packages/sandbox/sandbox-local/src"],
@@ -368,7 +372,6 @@
       "@x1a0f3n9/dsh-session-stats": ["./packages/session/session-stats/src"],
       "@x1a0f3n9/dsh-session-telemetry": ["./packages/session/session-telemetry/src"],
       "@x1a0f3n9/dsh-session-telemetry-otel": ["./packages/session/session-telemetry-otel/src"],
-      "@x1a0f3n9/dsh-session-timeline": ["./packages/session/session-timeline/src"],
       "@x1a0f3n9/dsh-session-title": ["./packages/session/session-title/src"],
       "@x1a0f3n9/dsh-session-title/invariant": ["./packages/session/session-title/src/invariant.ts"],
       "@x1a0f3n9/dsh-session-title-all-prompts-llm": ["./packages/session/session-title-all-prompts-llm/src"],

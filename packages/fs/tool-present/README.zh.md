@@ -39,7 +39,7 @@ kind: "package-reference"
 |---|---|---|
 | `maxFiles` | `8` | 每次调用的最大文件数，为正整数 |
 
-挂载时校验文件数量上限。工具要求 Agent Session 具有工作区和已开始的 turn。交付归调用方 Session 所有；父 Session 如需声明交付子 Agent 创建的文件，必须自行调用 `present`。
+挂载时校验文件数量上限。工具要求 Agent Session 具有工作区和尚未结束的轮次。交付归调用方 Session 所有；父 Session 如需声明交付子 Agent 创建的文件，必须自行调用 `present`。
 
 -----
 

@@ -94,7 +94,7 @@ The system-prompt contribution `approval:policy` states the complete current mea
 
 Read these pages when the package-level contract is not enough. They move from the approval vocabulary to the consumers and the design rationale.
 
-- [Approval subsystem reference](../../../docs/subsystems/approval.md) — the shared request/outcome vocabulary and the `ctx.approval` cordis surface.
+- [Approval subsystem reference](../../../docs/subsystems/approval.md) — the shared request/outcome vocabulary and the `ctx.approval` Cordis surface.
 - [Approval seam Agent Note](../../../.agents/notes/implemented/feature/2026-07-06-approval-seam.md) — design rationale for the seam.
 - [Sandbox Agent Note](../../../.agents/notes/implemented/feature/2026-07-06-sandbox.md) — how the sandboxed bash tool consumes approvals for escalated retries.
 - [Interaction group map](../README.md) — adjacent permission preset and question packages.

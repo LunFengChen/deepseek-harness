@@ -22,6 +22,7 @@ import type {} from '@x1a0f3n9/dsh-client-locale/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
 import type { TranslateNS } from '@x1a0f3n9/dsh-client-ui-slots'
+import { IconDataOutline16 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { ModelDirectoryState } from './directory.ts'
 import { ModelDirectoryResolver } from './service.ts'
 import type { ModelSelectInjected } from './slots.ts'
@@ -142,7 +143,9 @@ export function apply(ctx: ClientContext): void {
     const sessions = scope.sessions
     scope.effect(() => command.register({
       name: 'model',
+      label: () => t('command.label'),
       description: () => t('command.description'),
+      icon: IconDataOutline16,
       available: session => sessions.subagentAddress(session.sessionId) === undefined,
       ui: {
         kind: 'popupSelect',

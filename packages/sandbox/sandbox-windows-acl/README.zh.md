@@ -63,7 +63,7 @@ sandbox.dispose() // revokes the revocable (temp) grant, keeps the standing work
 rmSync(tempDir, { recursive: true, force: true })
 ```
 
-工作区 ACE 以常驻方式授予——`dispose()` 保留它们，因为它们是跨实例的复用缓存——而不同的临时 SID 以可回收方式授予。服务端对应物是 `AclWriteGrant` 类：每个目录一次 `add(path, standing)`，`dispose()` 撤销可回收路径并释放 SID。
+工作区 ACE 以常驻方式授予——`dispose()` 保留它们，因为它们是跨实例的复用缓存——而不同的临时 SID 以可回收方式授予。服务端对应实现是 `AclWriteGrant` 类：每个目录一次 `add(path, standing)`，`dispose()` 撤销可回收路径并释放 SID。
 
 ### 隔离给你带来什么
 
@@ -119,13 +119,13 @@ seam 先把确定性工作区 SID 的 ACE 常驻物化（每个工作区每服�
 - **受限子进程的临时能力按每个活跃的会话/工作区对私有。** runner 在 spawn 之前把 TMP/TEMP 改写为该私有目录；共享同一工作区 SID 的两个令牌无法写入彼此的临时目录。
 - **受限令牌下 `whoami` 与令牌检查 cmdlet 会失败。** 子进程对复制令牌的 `GetTokenInformation` 部分不可用，这是诊断噪音而非运行故障。
 
-### 头部验证与源码地图
+### 头文件验证与源码索引
 
 沙箱拥有的 SID、ACL、令牌、文件与锁声明由 [`verify/abi-probe.cpp`](verify/abi-probe.cpp) 对照 Windows 头文件检查。共享进程、stdio 与 Job ABI 由 [`@x1a0f3n9/dsh-win32-process`](../../subprocess/win32-process/README.zh.md#header-verification) 归属并验证。
 
 | 文件 | 职责 |
 |---|---|
-| [`src/index.ts`](src/index.ts) | `AclSandbox`：受限令牌策略、DACL 授权、故障关闭的 spawn 与 dispose |
+| [`src/index.ts`](src/index.ts) | `AclSandbox`：受限令牌策略、DACL 授权、fail-closed 的 spawn 与 dispose |
 | [`src/runner.ts`](src/runner.ts) | 基于共享 Win32 进程原语的 runner 入口 |
 | [`src/grant.ts`](src/grant.ts) | `AclWriteGrant`：服务端授权物化与撤销 |
 | [`src/token.ts`](src/token.ts) + [`src/acl.ts`](src/acl.ts) | 沙箱背后的 Win32 令牌与 DACL 原语 |

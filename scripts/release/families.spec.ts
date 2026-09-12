@@ -69,7 +69,7 @@ describe('release families', () => {
   it('requires dsh members to use the @x1a0f3n9 scope', () => {
     const root = mkdtempSync(join(tmpdir(), 'dsh-release-scope-'))
     roots.push(root)
-    write(join(root, 'apps/public/package.json'), '{"name":"@deepseek-ai/dsh-public","version":"0.0.1"}\n')
+    write(join(root, 'apps/public/package.json'), '{"name":"@x1a0f3n9/dsh-public","version":"0.0.1"}\n')
 
     expect(() => { releaseFamily('dsh').members(root) }).toThrow(/must name a @x1a0f3n9 package/)
   })

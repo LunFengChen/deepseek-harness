@@ -3,8 +3,8 @@ import { Context } from '@deepseek-ai/cordis'
 import { createScope } from '@x1a0f3n9/dsh-scope'
 import type { Scope } from '@x1a0f3n9/dsh-scope'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
-import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
-import CommandRuntime, { parseCommand, type CommandDefinition, type CommandInvocation } from '@x1a0f3n9/dsh-commands'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import CommandRuntime, { CommandDefinitionId, parseCommand, type CommandDefinition } from '@x1a0f3n9/dsh-commands'
 import { AttachmentStore } from '@x1a0f3n9/dsh-attachment'
 
 function command(name: string, text = `ran:${name}`): CommandDefinition {
@@ -58,6 +58,7 @@ describe('CommandRuntime', () => {
     const ctx = await mount()
     const { agent } = await mintAgentScope(ctx, 'a')
     const definition: CommandDefinition = {
+      definitionId: CommandDefinitionId('example/inspect'),
       name: 'inspect',
       description: 'Inspect state',
       input: { hint: '<target>' },
@@ -67,6 +68,7 @@ describe('CommandRuntime', () => {
 
     const listed = ctx.commands.list(agent)
     expect(listed).toEqual([{
+      definitionId: CommandDefinitionId('example/inspect'),
       name: 'inspect',
       description: 'Inspect state',
       input: { hint: '<target>' },
@@ -74,7 +76,7 @@ describe('CommandRuntime', () => {
     expect(Object.isFrozen(listed)).toBe(true)
     expect(Object.isFrozen(listed[0])).toBe(true)
     expect(Object.isFrozen(listed[0]?.input)).toBe(true)
-    expect(ctx.commands.find(agent, 'inspect')).toMatchObject({ name: 'inspect' })
+    expect(ctx.commands.find(agent, 'inspect')).toMatchObject({ name: 'inspect', definitionId: CommandDefinitionId('example/inspect') })
     expect(ctx.commands.find(agent, 'missing')).toBeUndefined()
   })
 
@@ -91,16 +93,18 @@ describe('CommandRuntime', () => {
     const ctx = await mount()
     const { scope, agent } = await mintAgentScope(ctx, 'a')
     const other = { id: 'other' as SessionId } as Agent
-    ctx.commands.register(command('shared', 'global'))
+    ctx.commands.register({ ...command('shared', 'global'), definitionId: CommandDefinitionId('example/shared') })
     scope.ctx.commands.register(command('shared', 'scoped'))
 
     expect(ctx.commands.list(agent).map(item => item.name)).toEqual(['shared'])
     expect(ctx.commands.find(agent, 'shared')?.handler).toBeDefined()
+    expect(ctx.commands.list(agent)[0]).not.toHaveProperty('definitionId')
     expect(ctx.commands.list(other).map(item => item.name)).toEqual(['shared'])
     expect((await ctx.commands.execute(agent, '/shared', [], new AbortController().signal))?.result)
       .toEqual({ kind: 'success', text: 'scoped' })
 
     await scope.dispose()
+    expect(ctx.commands.list(agent)[0]?.definitionId).toBe('example/shared')
     expect((await ctx.commands.execute(agent, '/shared', [], new AbortController().signal))?.result.text).toBe('global')
   })
 

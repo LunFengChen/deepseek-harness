@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-permission-presets",
   "description": "Permission surfaces: a new-session default in General settings and a current-session /permission popup over the permissions projection",
-  "version": "0.1.5-alpha.2",
+  "version": "0.1.5-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -46,6 +46,7 @@
     "@deepseek-ai/cordis": "workspace:^"
   },
   "devDependencies": {
+    "@x1a0f3n9/dsh-remote-mock": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
     "@x1a0f3n9/dsh-api-remotes": "workspace:^",
     "@x1a0f3n9/dsh-api-session-controller": "workspace:^",

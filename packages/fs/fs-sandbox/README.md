@@ -39,7 +39,7 @@ Load the shared policy service, then this backend, then the tools; the read-befo
 - name: '@x1a0f3n9/dsh-tool-fs'
 ```
 
-The backend's config is the local backend's unchanged (`cwd` resolution default and `diffBasisMaxBytes` overwrite bound); the [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-fs-sandbox) is the exhaustive source.
+The backend's config is unchanged from the local backend's (`cwd` resolution default and `diffBasisMaxBytes` overwrite bound); the [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-fs-sandbox) is the exhaustive source.
 
 ### How the fence behaves
 
