@@ -7,7 +7,6 @@ const CLIENT_FACE_INCLUDE: readonly string[] = []
 const CLIENT_FACE_EXCLUDE: readonly string[] = [
   '@x1a0f3n9/dsh-api-session-controller',
   '@x1a0f3n9/dsh-api-workspace-controller',
-  '@x1a0f3n9/dsh-session-timeline',
 ]
 
 /** Host-only packages whose peer relays are deliberately flattened. */

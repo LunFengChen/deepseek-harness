@@ -185,7 +185,6 @@ describe('package dependency scope', () => {
     expect(PACKAGE_DEPENDENCY_POLICY.clientFaceExclude).toEqual([
       '@x1a0f3n9/dsh-api-session-controller',
       '@x1a0f3n9/dsh-api-workspace-controller',
-      '@x1a0f3n9/dsh-session-timeline',
     ])
     expect(PACKAGE_DEPENDENCY_POLICY.hostPackages).toEqual([
       '@x1a0f3n9/dsh-llm',

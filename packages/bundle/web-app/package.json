@@ -45,7 +45,7 @@
           "description": "Rewind, delete, and regenerate conversation turns.",
           "defaultEnabled": true,
           "author": "LunFengChen",
-          "homepage": "https://github.com/LunFengChen/deepseek-harness"
+          "homepage": "https://github.com/LunFengChen/dsh-session-timeline"
         },
         {
           "id": "plugin-market",
@@ -183,7 +183,7 @@
     "open": "^11.0.0",
     "dshmarket": "github:LunFengChen/dsh-market#v1.44.0",
     "dsh-reasoning-effort": "github:LunFengChen/dsh-reasoning-effort#v0.7.1",
-    "@x1a0f3n9/dsh-session-timeline": "workspace:^",
+    "@x1a0f3n9/dsh-session-timeline": "github:LunFengChen/dsh-session-timeline#v0.1.0",
     "dsh-context": "github:LunFengChen/dsh-context#v0.49.6",
     "dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1",
     "@vectorize-io/hindsight-coding-agents": "0.5.2"

@@ -14,7 +14,7 @@ Status: implemented
 
 ## Verification
 
-`pnpm exec vitest run packages/session/session-timeline/tests/compact-button.client.spec.tsx` 覆盖点击路径和没有会话时的禁用态。
+[LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline) 里的 `tests/compact-button.client.spec.tsx` 覆盖点击路径和没有会话时的禁用态。
 
 ## Alternatives considered
 

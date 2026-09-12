@@ -1989,8 +1989,8 @@ importers:
         specifier: workspace:^
         version: link:../../session/session-stats
       '@x1a0f3n9/dsh-session-timeline':
-        specifier: workspace:^
-        version: link:../../session/session-timeline
+        specifier: github:LunFengChen/dsh-session-timeline#v0.1.0
+        version: https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/e9146c9efba34ae7cb00154704dfb5278ab4fd1f(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)(@x1a0f3n9/dsh-agent@packages+core+agent)(@x1a0f3n9/dsh-api-session-controller@packages+api+session-controller)(@x1a0f3n9/dsh-attachment@packages+attachment+attachment)(@x1a0f3n9/dsh-client-ui-primitives@packages+client+ui-primitives)(@x1a0f3n9/dsh-commands@packages+interaction+commands)(@x1a0f3n9/dsh-fs@packages+fs+fs)(@x1a0f3n9/dsh-home-paths@packages+util+home-paths)(@x1a0f3n9/dsh-llm@packages+llm+llm)(@x1a0f3n9/dsh-sandbox@packages+sandbox+sandbox)(@x1a0f3n9/dsh-session@packages+core+session)(@x1a0f3n9/dsh-settings@packages+settings+settings)(@x1a0f3n9/dsh-tools@packages+core+tools)(react@18.3.1)
       '@x1a0f3n9/dsh-session-turn-outline':
         specifier: workspace:^
         version: link:../../session/session-turn-outline
@@ -8397,100 +8397,6 @@ importers:
       '@x1a0f3n9/dsh-subprocess-local':
         specifier: workspace:^
         version: link:../../subprocess/subprocess-local
-
-  packages/session/session-timeline:
-    dependencies:
-      '@deepseek-ai/schemastery':
-        specifier: link:../../../vendor/schemastery
-        version: link:../../../vendor/schemastery
-      '@x1a0f3n9/dsh-api-session-controller':
-        specifier: workspace:^
-        version: link:../../api/session-controller
-      '@x1a0f3n9/dsh-attachment':
-        specifier: workspace:^
-        version: link:../../attachment/attachment
-      '@x1a0f3n9/dsh-client-ui-primitives':
-        specifier: workspace:^
-        version: link:../../client/ui-primitives
-      '@x1a0f3n9/dsh-home-paths':
-        specifier: workspace:^
-        version: link:../../util/home-paths
-      '@x1a0f3n9/dsh-llm':
-        specifier: workspace:^
-        version: link:../../llm/llm
-      '@x1a0f3n9/dsh-sandbox':
-        specifier: workspace:^
-        version: link:../../sandbox/sandbox
-      '@x1a0f3n9/dsh-session':
-        specifier: workspace:^
-        version: link:../../core/session
-    devDependencies:
-      '@deepseek-ai/cordis':
-        specifier: workspace:^
-        version: link:../../../vendor/cordis
-      '@types/node':
-        specifier: ^24.0.0
-        version: 24.13.3
-      '@types/react':
-        specifier: ~18.3.1
-        version: 18.3.31
-      '@types/react-dom':
-        specifier: ~18.3.0
-        version: 18.3.7(@types/react@18.3.31)
-      '@x1a0f3n9/dsh-agent':
-        specifier: workspace:^
-        version: link:../../core/agent
-      '@x1a0f3n9/dsh-client-connection':
-        specifier: workspace:^
-        version: link:../../client/connection
-      '@x1a0f3n9/dsh-client-locale':
-        specifier: workspace:^
-        version: link:../../client/locale
-      '@x1a0f3n9/dsh-client-test-runtime':
-        specifier: workspace:^
-        version: link:../../test-support/client-runtime
-      '@x1a0f3n9/dsh-client-ui-chat':
-        specifier: workspace:^
-        version: link:../../client/ui-chat
-      '@x1a0f3n9/dsh-client-ui-commands':
-        specifier: workspace:^
-        version: link:../../client/ui-commands
-      '@x1a0f3n9/dsh-client-ui-conversation':
-        specifier: workspace:^
-        version: link:../../client/ui-conversation
-      '@x1a0f3n9/dsh-client-ui-input-trigger':
-        specifier: workspace:^
-        version: link:../../client/ui-input-trigger
-      '@x1a0f3n9/dsh-client-ui-renderer':
-        specifier: workspace:^
-        version: link:../../client/ui-renderer
-      '@x1a0f3n9/dsh-client-ui-session':
-        specifier: workspace:^
-        version: link:../../client/ui-session
-      '@x1a0f3n9/dsh-client-ui-settings':
-        specifier: workspace:^
-        version: link:../../client/ui-settings
-      '@x1a0f3n9/dsh-client-ui-slots':
-        specifier: workspace:^
-        version: link:../../client/ui-slots
-      '@x1a0f3n9/dsh-commands':
-        specifier: workspace:^
-        version: link:../../interaction/commands
-      '@x1a0f3n9/dsh-fs':
-        specifier: workspace:^
-        version: link:../../fs/fs
-      '@x1a0f3n9/dsh-settings':
-        specifier: workspace:^
-        version: link:../../settings/settings
-      '@x1a0f3n9/dsh-tools':
-        specifier: workspace:^
-        version: link:../../core/tools
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
 
   packages/session/session-title:
     dependencies:
@@ -15051,6 +14957,31 @@ packages:
 
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
+
+  '@x1a0f3n9/dsh-session-timeline@https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/e9146c9efba34ae7cb00154704dfb5278ab4fd1f':
+    resolution: {gitHosted: true, integrity: sha512-B+zjiaBiJuomOIMypSa8n1JOHaC4hBMfjLcEqeevJHsRjaAjhv4uq2c14pE2Pjaf/y9z4F7zEJuygAPwumilnA==, tarball: https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/e9146c9efba34ae7cb00154704dfb5278ab4fd1f}
+    version: 0.1.0
+    peerDependencies:
+      '@deepseek-ai/cordis': '>=4.0.0'
+      '@deepseek-ai/schemastery': '>=3.0.0'
+      '@x1a0f3n9/dsh-agent': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-api-session-controller': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-attachment': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-client-ui-primitives': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-commands': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-fs': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-home-paths': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-llm': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-sandbox': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-session': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-settings': '>=0.1.5-rc.2'
+      '@x1a0f3n9/dsh-tools': '>=0.1.5-rc.2'
+      react: ^18.2.0
+    peerDependenciesMeta:
+      '@x1a0f3n9/dsh-client-ui-primitives':
+        optional: true
+      react:
+        optional: true
 
   '@xmldom/xmldom@0.8.15':
     resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
@@ -22307,6 +22238,25 @@ snapshots:
       vue: 3.5.39(typescript@6.0.3)
     transitivePeerDependencies:
       - typescript
+
+  '@x1a0f3n9/dsh-session-timeline@https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/e9146c9efba34ae7cb00154704dfb5278ab4fd1f(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)(@x1a0f3n9/dsh-agent@packages+core+agent)(@x1a0f3n9/dsh-api-session-controller@packages+api+session-controller)(@x1a0f3n9/dsh-attachment@packages+attachment+attachment)(@x1a0f3n9/dsh-client-ui-primitives@packages+client+ui-primitives)(@x1a0f3n9/dsh-commands@packages+interaction+commands)(@x1a0f3n9/dsh-fs@packages+fs+fs)(@x1a0f3n9/dsh-home-paths@packages+util+home-paths)(@x1a0f3n9/dsh-llm@packages+llm+llm)(@x1a0f3n9/dsh-sandbox@packages+sandbox+sandbox)(@x1a0f3n9/dsh-session@packages+core+session)(@x1a0f3n9/dsh-settings@packages+settings+settings)(@x1a0f3n9/dsh-tools@packages+core+tools)(react@18.3.1)':
+    dependencies:
+      '@deepseek-ai/cordis': link:vendor/cordis
+      '@deepseek-ai/schemastery': link:vendor/schemastery
+      '@x1a0f3n9/dsh-agent': link:packages/core/agent
+      '@x1a0f3n9/dsh-api-session-controller': link:packages/api/session-controller
+      '@x1a0f3n9/dsh-attachment': link:packages/attachment/attachment
+      '@x1a0f3n9/dsh-commands': link:packages/interaction/commands
+      '@x1a0f3n9/dsh-fs': link:packages/fs/fs
+      '@x1a0f3n9/dsh-home-paths': link:packages/util/home-paths
+      '@x1a0f3n9/dsh-llm': link:packages/llm/llm
+      '@x1a0f3n9/dsh-sandbox': link:packages/sandbox/sandbox
+      '@x1a0f3n9/dsh-session': link:packages/core/session
+      '@x1a0f3n9/dsh-settings': link:packages/settings/settings
+      '@x1a0f3n9/dsh-tools': link:packages/core/tools
+    optionalDependencies:
+      '@x1a0f3n9/dsh-client-ui-primitives': link:packages/client/ui-primitives
+      react: 18.3.1
 
   '@xmldom/xmldom@0.8.15': {}
 

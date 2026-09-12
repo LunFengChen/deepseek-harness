@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-session-timeline-dependency-scope.md
-2026-09-10-session-timeline-dependency-scope.md: 07c441ed86425b9161fedd255976a5c90ec39a7d
-2026-09-10-session-timeline-dependency-scope.zh.md: 03c5ddd91eab458a42caa5e06cc756dc415c610a
+2026-09-10-session-timeline-dependency-scope.md: 389722fcd1632cf3406d78b621844291d34082ee
+2026-09-10-session-timeline-dependency-scope.zh.md: 72ada785cff0c86b9c6734717123266ba54e3f5a

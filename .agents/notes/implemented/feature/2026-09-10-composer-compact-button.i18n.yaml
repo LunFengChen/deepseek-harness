@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-10-composer-compact-button.md
-2026-09-10-composer-compact-button.md: b82f03d54a9b67f4b9ff70edcadfe9ba23b20794
-2026-09-10-composer-compact-button.zh.md: fa38b6d6ea1893dab29654fe2f5cc7073ca2f7a1
+2026-09-10-composer-compact-button.md: adebebcc13eba3ca22a5934286dacb97a31ee2cc
+2026-09-10-composer-compact-button.zh.md: f322c8634d1fd317db913184d7832701463138a5

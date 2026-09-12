@@ -14,7 +14,7 @@ Status: implemented
 
 ## Verification
 
-`pnpm exec vitest run packages/session/session-timeline/tests/rewind.spec.ts` 覆盖 `command/done` 回走。`pnpm exec vitest run packages/interaction/commands/tests/commands.spec.ts` 覆盖 `abortInflight` 结算 `command/done`。
+[LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline) 里的 `tests/rewind.spec.ts` 覆盖 `command/done` 回走。`pnpm exec vitest run packages/interaction/commands/tests/commands.spec.ts` 覆盖 `abortInflight` 结算 `command/done`。
 
 ## Alternatives considered
 
