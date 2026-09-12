@@ -1770,8 +1770,8 @@ importers:
         specifier: link:../../../vendor/schemastery
         version: link:../../../vendor/schemastery
       '@vectorize-io/hindsight-coding-agents':
-        specifier: 0.5.2
-        version: 0.5.2
+        specifier: github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1
+        version: https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/664795b9aa3db1fd9be82819ab6826bfea918eb8
       '@x1a0f3n9/dsh-agent-presets':
         specifier: workspace:^
         version: link:../../preset/agent-presets
@@ -14752,8 +14752,9 @@ packages:
     resolution: {integrity: sha512-2AWNhDBpk1KbWc28t6/MnPDq8Ea8OTYfxB1QV2/2Grs+BOesiTbTPfrPtuXcw+jlSi6M5Xs+JtIH2wGwC0JQ4Q==}
     engines: {node: '>=22'}
 
-  '@vectorize-io/hindsight-coding-agents@0.5.2':
-    resolution: {integrity: sha512-hB8BPsPhNjZZORO0uiXTg5F3A52eEk0wLUt6ZGvvzVxay1sBp2Z5Utt7NsaMIbGTfhOOzFRLxIkCmhfK8i8UzA==}
+  '@vectorize-io/hindsight-coding-agents@https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/664795b9aa3db1fd9be82819ab6826bfea918eb8':
+    resolution: {gitHosted: true, integrity: sha512-wMfkWXwSiCr/FJx1m9e8wQdLmBbEIGidZ9vBLAQ7uXxKE95czXFOUETDd5Pb7sqNEG81dfZcclrvFPrbbvBnnA==, tarball: https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/664795b9aa3db1fd9be82819ab6826bfea918eb8}
+    version: 0.5.2-xfdsh.1
     hasBin: true
 
   '@vitejs/plugin-react@4.7.0':
@@ -21991,7 +21992,7 @@ snapshots:
 
   '@vectorize-io/hindsight-all@0.8.6': {}
 
-  '@vectorize-io/hindsight-coding-agents@0.5.2':
+  '@vectorize-io/hindsight-coding-agents@https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/664795b9aa3db1fd9be82819ab6826bfea918eb8':
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@vectorize-io/hindsight-all': 0.8.6
