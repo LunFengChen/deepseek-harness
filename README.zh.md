@@ -27,6 +27,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 | 上下文面板 | 预装且可关闭：`github:LunFengChen/dsh-context#v0.49.6`。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |
 | Better sidebar | 预装且可关闭：`github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1`。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
 | Hindsight 记忆 | 预装且默认打开：`@vectorize-io/hindsight-coding-agents@0.5.2`。 | xfdsh 默认走本机 daemon，不走 Cloud。可在 Settings → Plugins 关闭。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
+| Hindsight git 报错 | pnpm patch 把 `@vectorize-io/hindsight-coding-agents@0.5.2` 里的 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
 | 内存与续跑 | 会话持久化限制内存读取；context overflow 会压缩并重试。从大模型切到小模型时，会按待选模型先计价压力再发下一次请求。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |
 | 纯文本模型 | 历史图片和新图片会变成稳定文本占位符。 | 切到不支持图片的模型不会让会话停摆。 |

@@ -27,6 +27,7 @@ overrides:
   '@deepseek-ai/dsh-tools': npm:@x1a0f3n9/dsh-tools@workspace:*
 
 patchedDependencies:
+  '@vectorize-io/hindsight-coding-agents@0.5.2': 29800335eec1163d801e7c5c1cbf78d58428e1658134429c6a258a022afefc31
   '@yao-pkg/pkg@6.21.0': 28edd2180c36691c481522ef81f6f6614505f45e491aad542ac4663d4e6b3ff8
   node-pty@1.2.0-beta.15: b40ae545608897914bd25fb009c97eeac478c34e8a910298ddcb01b746534bb0
 
@@ -1764,7 +1765,7 @@ importers:
         version: link:../../../vendor/schemastery
       '@vectorize-io/hindsight-coding-agents':
         specifier: 0.5.2
-        version: 0.5.2
+        version: 0.5.2(patch_hash=29800335eec1163d801e7c5c1cbf78d58428e1658134429c6a258a022afefc31)
       '@x1a0f3n9/dsh-agent-presets':
         specifier: workspace:^
         version: link:../../preset/agent-presets
@@ -22024,7 +22025,7 @@ snapshots:
 
   '@vectorize-io/hindsight-all@0.8.6': {}
 
-  '@vectorize-io/hindsight-coding-agents@0.5.2':
+  '@vectorize-io/hindsight-coding-agents@0.5.2(patch_hash=29800335eec1163d801e7c5c1cbf78d58428e1658134429c6a258a022afefc31)':
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
       '@vectorize-io/hindsight-all': 0.8.6
