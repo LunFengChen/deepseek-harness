@@ -216,6 +216,23 @@ describe('client build environment', () => {
     })
   })
 
+  it('synthesizes a commit hash when git and DSH_CLIENT_COMMIT_HASH are both absent', () => {
+    const fixtureRoot = mkdtempSync(join(tmpdir(), 'dsh-client-build-no-git-hash-'))
+    roots.push(fixtureRoot)
+    write(join(fixtureRoot, 'package.json'), '{"version":"2.0.0"}\n')
+
+    expect(repositoryGitDirty(fixtureRoot)).toBeUndefined()
+    const environment = repositoryClientBuildEnvironment(fixtureRoot, {})
+    expect(environment).toEqual({
+      DSH_CLIENT_COMMIT_HASH: 'f22abd6',
+      DSH_CLIENT_VERSION: '2.0.0',
+    })
+    expect(repositoryCommitHash(fixtureRoot, {})).toBe('f22abd6')
+    expect(() => {
+      repositoryCommitHash(fixtureRoot, { DSH_CLIENT_COMMIT_HASH: 'not-a-hash' })
+    }).toThrow(/must be a Git commit hash/)
+  })
+
   it('defines only public client values over a non-enumerable fallback', () => {
     expect(clientBuildEnvironmentDefines({
       PATH: '/bin',
