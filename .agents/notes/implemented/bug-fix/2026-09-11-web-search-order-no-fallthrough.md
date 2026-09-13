@@ -6,7 +6,7 @@ English | [中文](2026-09-11-web-search-order-no-fallthrough.zh.md)
 
 ## Problem
 
-The shipped base sets `searchProviderOrder: [perplexity, exa]` so web search should use Perplexity, then Exa, and only use DeepSeek when the user pins `searchProvider: deepseek-official`. After those two providers were unavailable, `resolveProvider()` still selected the unique remaining usable backend. `DEEPSEEK_API_KEY` makes `deepseek-official` search available, so a Grok or other chat turn billed DeepSeek search and failed with HTTP 402.
+The shipped base sets `searchProviderOrder: [perplexity, exa, free]` so web search should use Perplexity, then Exa, then keyless Bing/DuckDuckGo, and only use DeepSeek when the user pins `searchProvider: deepseek-official`. After those two providers were unavailable, `resolveProvider()` still selected the unique remaining usable backend. `DEEPSEEK_API_KEY` makes `deepseek-official` search available, so a Grok or other chat turn billed DeepSeek search and failed with HTTP 402.
 
 Chat-model credentials are not search credentials. Pi-ai/Grok has no provider in this seam, so "use the current model's key" cannot run DeepSeek search.
 
@@ -22,6 +22,6 @@ When `searchProviderOrder` is set, it is an exclusive allowlist. Unusable ids ar
 
 ## Consequences
 
-- Default Perplexity → Exa search no longer bills DeepSeek when those keys are missing.
+- Default Perplexity → Exa → keyless Bing/DuckDuckGo search no longer bills DeepSeek when those keys are missing.
 - Users who want DeepSeek search must pin `searchProvider: deepseek-official` in Settings or config.
 - Compositions that omit `searchProviderOrder` still auto-select the unique usable provider.

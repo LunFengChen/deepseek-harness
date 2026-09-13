@@ -127,6 +127,7 @@
     "@x1a0f3n9/dsh-web-fetch-http": "workspace:^",
     "@x1a0f3n9/dsh-web-search-deepseek": "workspace:^",
     "@x1a0f3n9/dsh-web-search-exa": "workspace:^",
+    "@x1a0f3n9/dsh-web-search-free": "workspace:^",
     "@x1a0f3n9/dsh-web-search-perplexity": "workspace:^",
     "@x1a0f3n9/dsh-workflow": "workspace:^",
     "@x1a0f3n9/dsh-workflow-worker-thread": "workspace:^",

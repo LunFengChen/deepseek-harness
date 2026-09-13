@@ -1600,6 +1600,15 @@ importers:
       '@x1a0f3n9/dsh-web-search-deepseek':
         specifier: workspace:^
         version: link:../../web/web-search-deepseek
+      '@x1a0f3n9/dsh-web-search-exa':
+        specifier: workspace:^
+        version: link:../../web/web-search-exa
+      '@x1a0f3n9/dsh-web-search-free':
+        specifier: workspace:^
+        version: link:../../web/web-search-free
+      '@x1a0f3n9/dsh-web-search-perplexity':
+        specifier: workspace:^
+        version: link:../../web/web-search-perplexity
       '@x1a0f3n9/dsh-workflow-worker-thread':
         specifier: workspace:^
         version: link:../../workflow/workflow-worker-thread
@@ -10655,6 +10664,22 @@ importers:
         specifier: workspace:^
         version: link:../web
 
+  packages/web/web-search-free:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
+    devDependencies:
+      '@deepseek-ai/cordis':
+        specifier: workspace:^
+        version: link:../../../vendor/cordis
+      '@x1a0f3n9/dsh-http-proxy':
+        specifier: workspace:^
+        version: link:../../util/http-proxy
+      '@x1a0f3n9/dsh-web':
+        specifier: workspace:^
+        version: link:../web
+
   packages/web/web-search-perplexity:
     dependencies:
       '@deepseek-ai/schemastery':
@@ -11327,6 +11352,9 @@ importers:
       '@x1a0f3n9/dsh-web-search-exa':
         specifier: workspace:^
         version: link:../../packages/web/web-search-exa
+      '@x1a0f3n9/dsh-web-search-free':
+        specifier: workspace:^
+        version: link:../../packages/web/web-search-free
       '@x1a0f3n9/dsh-web-search-perplexity':
         specifier: workspace:^
         version: link:../../packages/web/web-search-perplexity

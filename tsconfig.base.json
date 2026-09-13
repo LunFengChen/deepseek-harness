@@ -448,6 +448,7 @@
       "@x1a0f3n9/dsh-web-fetch-http": ["./packages/web/web-fetch-http/src"],
       "@x1a0f3n9/dsh-web-search-deepseek": ["./packages/web/web-search-deepseek/src"],
       "@x1a0f3n9/dsh-web-search-exa": ["./packages/web/web-search-exa/src"],
+      "@x1a0f3n9/dsh-web-search-free": ["./packages/web/web-search-free/src"],
       "@x1a0f3n9/dsh-web-search-perplexity": ["./packages/web/web-search-perplexity/src"],
       "@x1a0f3n9/dsh-webhook": ["./packages/webhook/webhook/src"],
       "@x1a0f3n9/dsh-webhook/invariant": ["./packages/webhook/webhook/src/invariant.ts"],

@@ -438,16 +438,17 @@
         argumentsPreviewChars: 500
 
     # The shared base enables the stable model-facing web_search and web_fetch
-    # tools. Search defaults to the ordered Perplexity → Exa policy: an unavailable
-    # provider is skipped, while an explicit `searchProvider` pin (including
-    # `deepseek-official`) remains strict. The Web app disables this host row and
-    # composes both tools per agent preset; products with a stricter network policy
-    # override tool-web. Anonymous fetch accepts only public HTTP(S) destinations,
-    # resolves and validates every destination, and pins every actual connection.
+    # tools. Search defaults to the ordered Perplexity → Exa → keyless Bing/DDG
+    # policy: an unavailable provider is skipped, while an explicit `searchProvider`
+    # pin (including `deepseek-official`) remains strict. The Web app disables this
+    # host row and composes both tools per agent preset; products with a stricter
+    # network policy override tool-web. Anonymous fetch accepts only public HTTP(S)
+    # destinations, resolves and validates every destination, and pins every actual
+    # connection.
     - id: web
       name: '@x1a0f3n9/dsh-web'
       config:
-        searchProviderOrder: [perplexity, exa]
+        searchProviderOrder: [perplexity, exa, free]
         fetchProvider: http
 
     - id: web-search-perplexity
@@ -455,6 +456,9 @@
 
     - id: web-search-exa
       name: '@x1a0f3n9/dsh-web-search-exa'
+
+    - id: web-search-free
+      name: '@x1a0f3n9/dsh-web-search-free'
 
     - id: web-search-deepseek
       name: '@x1a0f3n9/dsh-web-search-deepseek'

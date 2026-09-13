@@ -3364,6 +3364,28 @@ export interface Config {
 
 来源：[`packages/web/web-search-exa/src/index.ts:35`](../packages/web/web-search-exa/src/index.ts)
 
+<a id="x1a0f3n9dsh-web-search-free"></a>
+
+## `@x1a0f3n9/dsh-web-search-free`
+
+需要：`web`
+
+```ts config-catalog
+/** Plugin config (all optional — `apply` fills constant defaults). */
+export interface Config {
+  /** Bing origin; `/search` is appended. Defaults to the public site. */
+  bingBaseURL?: string
+  /** DuckDuckGo HTML origin; `/html/` is appended. Defaults to the public site. */
+  ddgBaseURL?: string
+  /** `User-Agent` sent on every request. Defaults to a Mozilla-compatible product token. */
+  userAgent?: string
+  /** Default result count when a request carries no `maxResults`. Omitted = none. */
+  numResults?: number
+}
+```
+
+来源：[`packages/web/web-search-free/src/index.ts:45`](../packages/web/web-search-free/src/index.ts)
+
 <a id="deepseek-aidsh-web-search-perplexity"></a>
 
 ## `@x1a0f3n9/dsh-web-search-perplexity`
