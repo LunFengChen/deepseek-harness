@@ -3,7 +3,7 @@
  * @module @x1a0f3n9/dsh-client-modules/package-alias
  */
 
-const OFFICIAL_PREFIX = '@x1a0f3n9/dsh-'
+const OFFICIAL_PREFIX = '@deepseek-ai/dsh-'
 const FORK_PREFIX = '@x1a0f3n9/dsh-'
 
 /**

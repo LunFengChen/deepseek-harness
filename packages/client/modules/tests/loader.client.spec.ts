@@ -251,6 +251,15 @@ describe('require resolution', () => {
     expect(b.loader.loadCache.has('react')).toBe(false)
   })
 
+  it('require of an official dsh package name answers the fork seed word', async () => {
+    const primitives = { marker: 'primitives' }
+    const b = bench([row('dsh-context')], {
+      'dsh-context': req => ({ dep: req('@deepseek-ai/dsh-client-ui-primitives') }),
+    }, { seed: { '@x1a0f3n9/dsh-client-ui-primitives': primitives } })
+    const exports = await b.loader.import('dsh-context', '', {})
+    expect((exports as { dep: unknown }).dep).toBe(primitives)
+  })
+
   it('require answers an already-materialized module from the cache', async () => {
     let built = 0
     const b = bench([row('a'), row('c')], {
