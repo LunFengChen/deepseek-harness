@@ -70,6 +70,9 @@ function classifyPiAiError(message: string): string {
   if (/\b(?:401|403)\b/.test(message)) return 'AUTH'
   if (isQuotaExceededError(message)) return QUOTA_EXCEEDED_CODE
   if (/\b429\b|rate.?limit/i.test(message)) return 'RATE_LIMIT'
+  // Overflow must win over generic HTTP 400 / invalid-request labels that
+  // Grok and other OpenAI-compatible gateways put on context-limit failures.
+  if (isContextWindowExceededError(message)) return CONTEXT_WINDOW_EXCEEDED_CODE
   if (/\b413\b|failed to buffer the request body:\s*length limit exceeded|payload too large|request body too large/i.test(message)) return 'INVALID_REQUEST'
   if (/\b400\b|invalid.?request/i.test(message)) return 'INVALID_REQUEST'
   // Gateway 5xx failures surface either as a numeric status (`500`) or as
@@ -176,9 +179,9 @@ function recordDiagnosticEvent(
  * @param contextWindow - resolved catalog capacity for usage-based overflow detection.
  * @param diagnostics - optional per-stream facts used to classify provider failures.
  * @returns the mapped harness reason. Recognized error text, `stop` usage above
- *   `contextWindow`, and zero-output `length` usage that fills the window map
- *   to `CONTEXT_WINDOW_EXCEEDED`; a `stop` with no content blocks maps to an
- *   `EMPTY_RESPONSE` error.
+ *   `contextWindow`, a zero-output `length` stop, and a `length` stop whose
+ *   input already occupies most of `contextWindow` map to `CONTEXT_WINDOW_EXCEEDED`;
+ *   a `stop` with no content blocks maps to an `EMPTY_RESPONSE` error.
  */
 export function mapStopReason(
   message: AssistantMessage,
@@ -186,10 +189,15 @@ export function mapStopReason(
   diagnostics?: PiAiStreamDiagnostics,
 ): FinishReason {
   const piAiOverflow = isContextOverflow(message, contextWindow)
-  const harnessOverflow = message.stopReason === 'error'
-    && message.errorMessage !== undefined
-    && isContextWindowExceededError(message.errorMessage)
-  if (piAiOverflow || harnessOverflow) {
+  const lengthOverflow = message.stopReason === 'length'
+    && (
+      message.usage.output === 0
+      || (
+        contextWindow !== undefined
+        && message.usage.input + message.usage.cacheRead >= contextWindow * 0.8
+      )
+    )
+  if (piAiOverflow || lengthOverflow) {
     return {
       kind: 'error',
       failure: {

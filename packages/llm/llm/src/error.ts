@@ -70,6 +70,15 @@ const EXCEEDS_MODEL_CONTEXT = new RegExp(
   'i',
 )
 
+/** xAI Grok and similar OpenAI-compatible gateways name the bound as prompt length. */
+const MAXIMUM_PROMPT_LENGTH = /\bmaximum prompt length\b|\bprompt is too long\b/i
+
+/** Groq and similar gateways ask the caller to shorten the message list. */
+const REDUCE_MESSAGE_LENGTH = /\breduce the length of the messages\b/i
+
+/** Chinese OpenAI-compatible gateways often return localized overflow copy. */
+const CHINESE_CONTEXT_OVERFLOW = /上下文(?:窗口|长度)|(?:提示词|输入|请求).{0,8}过长/
+
 /**
  * Recognize the context-overflow wording used by OpenAI-compatible providers
  * and library adapters. Adapters pass all available provider code, type, and
@@ -82,7 +91,11 @@ export function isContextWindowExceededError(detail: string): boolean {
     || /\b(?:maximum|max)(?:\s+(?:allowed|supported))?\s+context\s+(?:length|window)\b/i.test(detail)
     || TOO_LARGE_FOR_CONTEXT.test(detail)
     || /\b(?:input|prompt|request)\s+(?:is\s+)?too\s+(?:long|large)\s+for\s+(?:this|the)\s+model\b/i.test(detail)
+    || /\btoo long for (?:this|the) model\b/i.test(detail)
     || EXCEEDS_MODEL_CONTEXT.test(detail)
+    || MAXIMUM_PROMPT_LENGTH.test(detail)
+    || REDUCE_MESSAGE_LENGTH.test(detail)
+    || CHINESE_CONTEXT_OVERFLOW.test(detail)
 }
 
 /**
