@@ -13,6 +13,8 @@
  * same reason).
  * Provider-scoped reasoning effort stays absent: it is a per-MODEL capability.
  * Each custom model row offers Default (none) or Custom `reasoningEfforts`.
+ * Retry count and delay are provider-route fields on this card: Default omits
+ * `retryPolicy`, and Custom writes a normal-mode policy with those two values.
  * Everything else stays owned by `settings.yaml`. Profile edits land as
  * minimal `settings.mutate` path ops against the stored section — the card
  * names only the fields it can see instead of rebuilding the whole subtree
@@ -31,6 +33,8 @@ import {
 import { apiKeyFailure } from './apiKey.ts'
 import { EditorFooter } from './EditorFooter.tsx'
 import { ModelListEditor } from './ModelListEditor.tsx'
+import { RetryPolicyFields } from './retry-policy-fields.tsx'
+import { validateRetryPolicy } from './retry-policy.ts'
 import { deriveKeyRef, protocolChoices } from './store.ts'
 import type { ModelsOperations } from './operations.ts'
 import type { SettingsSchemaOperations } from './schema-operations.ts'
@@ -260,6 +264,9 @@ export function ProviderEditor(props: ProviderEditorProps): ReactNode {
       if (failure !== undefined) {
         return `${t('model')} ${String(failure.index + 1)}: ${t(failure.key)}`
       }
+      const retryFailure = validateRetryPolicy(schema.getPath(next, ['retryPolicy']))
+      /* v8 ignore next -- unreachable from the card: the same failure disables submit */
+      if (retryFailure !== undefined) return t(retryFailure)
     }
     /* v8 ignore next -- apply is only reachable from the rendered card, which required a resolved node */
     if (props.credentialOnly !== true && node !== undefined && settingsPath.length === 0) {
@@ -446,6 +453,17 @@ export function ProviderEditor(props: ProviderEditorProps): ReactNode {
                 </div>
               )
               : null}
+            <RetryPolicyFields
+              value={schema.getPath(draft, ['retryPolicy'])}
+              onChange={(next) => {
+                setDraft(current => next === undefined
+                  ? schema.deletePath(current, ['retryPolicy'])
+                  : schema.setPath(current, ['retryPolicy'], next))
+              }}
+              t={t}
+              disabled={disabled}
+              name={`provider-retry-policy-${props.provider}`}
+            />
             {/* Both families edit the same rows through the same contract; only
                 the extras differ — DeepSeek's inherited capacities, pi-ai's
                 endpoint interrogation. */}
@@ -501,6 +519,8 @@ export function ProviderEditor(props: ProviderEditorProps): ReactNode {
         busy={busy}
         submitDisabled={disabled || layout === 'unknown'
           || (props.credentialOnly !== true && modelFailure !== undefined)
+          || (props.credentialOnly !== true
+            && validateRetryPolicy(schema.getPath(draft, ['retryPolicy'])) !== undefined)
           || shownKeyFailure !== undefined
           || (props.credentialRequired === true && keyValue.length === 0)}
         submitLabelKey={props.submitLabelKey ?? 'apply'}
