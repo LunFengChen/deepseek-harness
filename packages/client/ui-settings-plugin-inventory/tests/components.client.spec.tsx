@@ -21,12 +21,14 @@ function props(
   list: PluginInventorySettingsTabInjected['list'],
   presetName: PluginInventorySettingsTabInjected['presetName'] = preset => preset.name ?? preset.id,
   setEnabled: PluginInventorySettingsTabInjected['setEnabled'] = async request => ({ enabled: request.enabled }),
+  surface: PluginInventorySettingsTabInjected['surface'] = 'inventory',
 ): PluginInventorySettingsTabProps {
   return {
     t,
     list,
     setEnabled,
     presetName,
+    surface,
   } as PluginInventorySettingsTabProps
 }
 
@@ -86,7 +88,7 @@ const globalToggle = (): HTMLElement =>
   screen.getByRole('button', { name: (name: string) => name.startsWith(en.globalTitle) })
 
 describe('PluginInventorySettingsTab', () => {
-  it('shows prebundled optional plugins and persists a toggle', async () => {
+  it('shows xfdsh preset plugins and persists a toggle', async () => {
     const setEnabled = vi.fn().mockResolvedValue({ enabled: false })
     render(<PluginInventorySettingsTab {...props(async () => ({
       entries: [],
@@ -103,24 +105,283 @@ describe('PluginInventorySettingsTab', () => {
         defaultEnabled: true,
         installed: true,
         enabled: true,
+      }, {
+        id: 'other',
+        entryId: 'other-entry',
+        packageName: 'other-plugin',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
       }],
-    } as unknown as Snapshot), undefined, setEnabled)} />)
+    } as unknown as Snapshot), undefined, setEnabled, 'catalog')} />)
     await screen.findByRole('searchbox', { name: en.search })
     expect(screen.getByText(en.catalogVersion.replace('{version}', '2.4.1'))).toBeTruthy()
+    const homepage = 'https://github.com/vectorize-io/hindsight/tree/main/hindsight-integrations/coding-agents'
+    const pkg = screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', '@x1a0f3n9/dsh-client-ui-schedule') })
+    expect(pkg.getAttribute('href')).toBe(homepage)
+    expect(pkg.getAttribute('target')).toBe('_blank')
+    expect(pkg.textContent).toBe('@x1a0f3n9/dsh-client-ui-schedule')
     expect(screen.queryByText('vectorize-io')).toBeNull()
-    const packageLink = screen.getByRole('link', {
-      name: en.openPackageGithub.replace('{name}', '@x1a0f3n9/dsh-client-ui-schedule'),
-    })
-    expect(packageLink.getAttribute('href')).toBe(
-      'https://github.com/vectorize-io/hindsight/tree/main/hindsight-integrations/coding-agents',
-    )
-    expect(packageLink.getAttribute('target')).toBe('_blank')
+    expect(screen.queryByText('vectorize-io/hindsight')).toBeNull()
+    expect(screen.getAllByRole('link')).toHaveLength(1)
+    expect(pkg.getAttribute('href') ?? '').not.toContain('npmjs.com')
     const toggle = screen.getByRole('switch', { name: en.disablePlugin.replace('{name}', 'Schedule') })
     expect(toggle.getAttribute('aria-checked')).toBe('true')
     fireEvent.click(toggle)
-    await waitFor(() => {
-      expect(setEnabled).toHaveBeenCalledWith({ entryId: 'schedule-entry', enabled: false })
-    })
+    await waitFor(() => expect(setEnabled).toHaveBeenCalledWith({ entryId: 'schedule-entry', enabled: false }))
+  })
+
+  it('keeps a package name as text when the catalog omits homepage', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'timeline',
+        entryId: 'dsh-session-timeline',
+        packageName: '@x1a0f3n9/dsh-session-timeline',
+        title: 'Session timeline',
+        author: 'LunFengChen',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    expect(screen.getByText('@x1a0f3n9/dsh-session-timeline').closest('a')).toBeNull()
+    expect(screen.queryByRole('link')).toBeNull()
+    expect(screen.queryByText('LunFengChen')).toBeNull()
+  })
+
+  it('links the package name when homepage is GitHub without an owner/repo path', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'market',
+        entryId: 'dsh-market',
+        packageName: 'dshmarket',
+        title: 'Plugin market',
+        author: 'LunFengChen',
+        homepage: 'https://github.com/LunFengChen',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    const pkg = screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', 'dshmarket') })
+    expect(pkg.getAttribute('href')).toBe('https://github.com/LunFengChen')
+    expect(pkg.textContent).toBe('dshmarket')
+    expect(screen.queryByText('LunFengChen')).toBeNull()
+    expect(screen.getAllByRole('link')).toHaveLength(1)
+  })
+
+  it('filters catalog cards by GitHub owner/repo', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'context',
+        entryId: 'dsh-context',
+        packageName: 'dsh-context',
+        title: 'Context dashboard',
+        author: 'LunFengChen',
+        homepage: 'https://github.com/LunFengChen/dsh-context',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }, {
+        id: 'sidebar',
+        entryId: 'better-sidebar',
+        packageName: 'dsh-better-sidebar',
+        title: 'Better sidebar',
+        author: 'LunFengChen',
+        homepage: 'https://github.com/LunFengChen/DSH-better-sidebar',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    fireEvent.change(screen.getByRole('searchbox', { name: en.search }), { target: { value: 'LunFengChen/dsh-context' } })
+    expect(screen.getByText('Context dashboard')).toBeTruthy()
+    expect(screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', 'dsh-context') })).toBeTruthy()
+    expect(screen.queryByText('Better sidebar')).toBeNull()
+    expect(screen.queryByText('LunFengChen/dsh-context')).toBeNull()
+  })
+
+  it('links declared homepages without inventing npmjs URLs', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [
+        {
+          id: 'empty',
+          entryId: 'empty',
+          packageName: 'empty-home',
+          title: 'Empty homepage',
+          author: 'EmptyAuthor',
+          homepage: '',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+        {
+          id: 'invalid',
+          entryId: 'invalid',
+          packageName: 'invalid-home',
+          title: 'Invalid homepage',
+          author: 'InvalidAuthor',
+          homepage: 'not a url',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+        {
+          id: 'other',
+          entryId: 'other',
+          packageName: 'other-host',
+          title: 'Other host',
+          author: 'OtherAuthor',
+          homepage: 'https://example.com/acme/plugin',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+        {
+          id: 'www',
+          entryId: 'www',
+          packageName: 'www-git',
+          title: 'WWW git',
+          author: 'WwwAuthor',
+          homepage: 'https://www.github.com/LunFengChen/dsh-market.git',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+        {
+          id: 'dotgit',
+          entryId: 'dotgit',
+          packageName: 'dot-git-home',
+          title: 'Dot git homepage',
+          author: 'DotGitAuthor',
+          homepage: 'https://github.com/LunFengChen/.git',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+      ],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    expect(screen.getByText('empty-home').closest('a')).toBeNull()
+    expect(screen.queryByText('EmptyAuthor')).toBeNull()
+    expect(screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', 'invalid-home') }).getAttribute('href')).toBe('not a url')
+    expect(screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', 'other-host') }).getAttribute('href')).toBe('https://example.com/acme/plugin')
+    const www = screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', 'www-git') })
+    expect(www.getAttribute('href')).toBe('https://www.github.com/LunFengChen/dsh-market.git')
+    expect(www.textContent).toBe('www-git')
+    expect(screen.queryByText('LunFengChen/dsh-market')).toBeNull()
+    const dotgit = screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', 'dot-git-home') })
+    expect(dotgit.getAttribute('href')).toBe('https://github.com/LunFengChen/.git')
+    expect(screen.queryByText('DotGitAuthor')).toBeNull()
+    for (const link of screen.getAllByRole('link')) {
+      expect(link.getAttribute('href') ?? '').not.toContain('npmjs.com')
+    }
+    fireEvent.change(screen.getByRole('searchbox', { name: en.search }), { target: { value: 'LunFengChen/dsh-market' } })
+    expect(screen.getByText('WWW git')).toBeTruthy()
+    expect(screen.queryByText('Empty homepage')).toBeNull()
+    expect(screen.queryByText('Dot git homepage')).toBeNull()
+  })
+
+  it('hides catalog cards when search matches none of them', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'timeline',
+        entryId: 'dsh-session-timeline',
+        packageName: '@x1a0f3n9/dsh-session-timeline',
+        title: 'Session timeline',
+        author: 'LunFengChen',
+        homepage: 'https://github.com/LunFengChen/deepseek-harness',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    fireEvent.change(screen.getByRole('searchbox', { name: en.search }), { target: { value: 'no-such-plugin' } })
+    expect(screen.getByText(en.emptySearch)).toBeTruthy()
+    expect(screen.queryByText('Session timeline')).toBeNull()
+  })
+
+  it('ignores clicks on required catalog plugins and plugins already saving', async () => {
+    const setEnabled = vi.fn().mockImplementation(() => new Promise(() => {}))
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'required',
+        entryId: 'required-entry',
+        packageName: 'required-plugin',
+        title: 'Required plugin',
+        required: true,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }, {
+        id: 'saving',
+        entryId: 'saving-entry',
+        packageName: 'saving-plugin',
+        title: 'Saving plugin',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }, {
+        id: 'other',
+        entryId: 'other-entry',
+        packageName: 'other-plugin',
+        title: 'Other plugin',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, setEnabled, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    fireEvent.click(screen.getByRole('switch', { name: en.disablePlugin.replace('{name}', 'Saving plugin') }))
+    await waitFor(() => expect(setEnabled).toHaveBeenCalledTimes(1))
+    fireEvent.click(screen.getByRole('switch', { name: en.disablePlugin.replace('{name}', 'Other plugin') }))
+    expect(setEnabled).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps a homepage link without an author byline when GitHub has no owner/repo', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'orphan',
+        entryId: 'orphan-entry',
+        packageName: 'orphan-plugin',
+        title: 'Orphan plugin',
+        homepage: 'https://github.com/LunFengChen/.git',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    expect(screen.getByRole('link', { name: en.openPackageGithub.replace('{name}', 'orphan-plugin') }).getAttribute('href')).toBe(
+      'https://github.com/LunFengChen/.git',
+    )
+    expect(screen.queryByRole('link', { name: en.openPackageGithub.replace('{name}', 'LunFengChen/.git') })).toBeNull()
+    expect(screen.queryByText('LunFengChen')).toBeNull()
   })
 
   it('shows the host error when a catalog toggle fails', async () => {
@@ -137,12 +398,161 @@ describe('PluginInventorySettingsTab', () => {
         installed: false,
         enabled: false,
       }],
-    } as unknown as Snapshot), undefined, setEnabled)} />)
+    } as unknown as Snapshot), undefined, setEnabled, 'catalog')} />)
     await screen.findByRole('searchbox', { name: en.search })
     fireEvent.click(screen.getByRole('switch', { name: en.enablePlugin.replace('{name}', 'Context dashboard') }))
     expect((await screen.findByRole('alert')).textContent).toBe(
       en.updateError.replace('{message}', 'prebundled plugin "dsh-context" is not installed'),
     )
+  })
+
+  it('falls back to a generic catalog update error when the host throws a non-Error', async () => {
+    const setEnabled = vi.fn()
+      .mockRejectedValueOnce('')
+      .mockRejectedValueOnce({ reason: 'bare' })
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [],
+      catalog: [{
+        id: 'context',
+        entryId: 'dsh-context',
+        packageName: 'dsh-context',
+        title: 'Context dashboard',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: false,
+      }],
+    } as unknown as Snapshot), undefined, setEnabled, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    fireEvent.click(screen.getByRole('switch', { name: en.enablePlugin.replace('{name}', 'Context dashboard') }))
+    expect((await screen.findByRole('alert')).textContent).toBe(en.updateError.replace('{message}', 'dsh-context'))
+    fireEvent.click(screen.getByRole('switch', { name: en.enablePlugin.replace('{name}', 'Context dashboard') }))
+    expect((await screen.findByRole('alert')).textContent).toBe(
+      en.updateError.replace('{message}', '[object Object]'),
+    )
+  })
+
+  it('ignores a catalog toggle result after the snapshot is no longer ready', async () => {
+    const deferred = Promise.withResolvers<{ enabled: boolean }>()
+    const snapshot = {
+      entries: [],
+      catalog: [{
+        id: 'schedule',
+        entryId: 'schedule-entry',
+        packageName: '@x1a0f3n9/dsh-client-ui-schedule',
+        title: 'Schedule',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot
+    const setEnabled = vi.fn().mockReturnValue(deferred.promise)
+    const view = render(<PluginInventorySettingsTab {...props(async () => snapshot, undefined, setEnabled, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    fireEvent.click(screen.getByRole('switch', { name: en.disablePlugin.replace('{name}', 'Schedule') }))
+    await waitFor(() => expect(setEnabled).toHaveBeenCalledTimes(1))
+    view.rerender(<PluginInventorySettingsTab {...props(async () => {
+      throw new Error('inventory closed')
+    }, undefined, setEnabled, 'catalog')} />)
+    expect((await screen.findByRole('alert')).textContent).toBe(en.error)
+    await act(async () => { deferred.resolve({ enabled: false }) })
+    expect(screen.getByRole('alert').textContent).toBe(en.error)
+  })
+
+  it('keeps prebundled plugins off the plugin list', async () => {
+    await renderReady({
+      entries: [
+        { entryId: 'dsh-session-timeline', moduleName: '@x1a0f3n9/dsh-session-timeline', enabled: true, fiberPhase: 'active' },
+        { entryId: 'include-web:dsh-context', moduleName: 'other-context-module', enabled: true, fiberPhase: 'active' },
+        { entryId: 'dsh-market', moduleName: 'not-the-market-package', enabled: true, fiberPhase: 'active' },
+        { entryId: 'hmr', moduleName: '@deepseek-ai/cordis-plugin-hmr', enabled: true, fiberPhase: 'active' },
+      ],
+      catalog: [
+        {
+          id: 'timeline',
+          entryId: 'dsh-session-timeline',
+          packageName: '@x1a0f3n9/dsh-session-timeline',
+          title: 'Session timeline',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+        {
+          id: 'context',
+          entryId: 'dsh-context',
+          packageName: 'dsh-context',
+          title: 'Context dashboard',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+        {
+          id: 'market',
+          entryId: 'dsh-market',
+          packageName: 'dshmarket',
+          title: 'Plugin market',
+          required: false,
+          defaultEnabled: true,
+          installed: true,
+          enabled: true,
+        },
+      ],
+    } as unknown as Snapshot)
+
+    expect(screen.queryByText(en.catalogTitle)).toBeNull()
+    expect(screen.queryByText('Session timeline')).toBeNull()
+    expect(screen.queryByText('Context dashboard')).toBeNull()
+    expect(screen.queryByText('Plugin market')).toBeNull()
+    expect(screen.queryByText('@x1a0f3n9/dsh-session-timeline')).toBeNull()
+    expect(screen.getByText('hmr')).toBeTruthy()
+    expect(screen.queryByText('other-context-module')).toBeNull()
+    expect(screen.queryByText('not-the-market-package')).toBeNull()
+  })
+
+  it('renders xfdsh preset plugins without the session or global inventory', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [
+        { entryId: 'hmr', moduleName: '@deepseek-ai/cordis-plugin-hmr', enabled: true, fiberPhase: 'active' },
+      ],
+      agentPresets: [{
+        id: 'solo',
+        trust: 'user',
+        isDefault: false,
+        rows: [{ entryId: 'one', moduleName: '@fixture/one', enabled: true, fiberPhase: null }],
+      }],
+      catalog: [{
+        id: 'timeline',
+        entryId: 'dsh-session-timeline',
+        packageName: '@x1a0f3n9/dsh-session-timeline',
+        title: 'Session timeline',
+        required: false,
+        defaultEnabled: true,
+        installed: true,
+        enabled: true,
+      }],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    expect(screen.getByText(en.catalogTitle)).toBeTruthy()
+    expect(screen.getByText('Session timeline')).toBeTruthy()
+    expect(screen.queryByText(en.globalTitle)).toBeNull()
+    expect(screen.queryByText(en.presetTitle)).toBeNull()
+    expect(screen.queryByText('hmr')).toBeNull()
+  })
+
+  it('hides the xfdsh preset section when the catalog is empty', async () => {
+    render(<PluginInventorySettingsTab {...props(async () => ({
+      entries: [
+        { entryId: 'hmr', moduleName: '@deepseek-ai/cordis-plugin-hmr', enabled: true, fiberPhase: 'active' },
+      ],
+      catalog: [],
+    } as unknown as Snapshot), undefined, undefined, 'catalog')} />)
+    await screen.findByRole('searchbox', { name: en.search })
+    expect(screen.getByText(en.empty)).toBeTruthy()
+    expect(screen.queryByText(en.catalogTitle)).toBeNull()
+    expect(screen.queryByText('hmr')).toBeNull()
   })
 
   it('shows the default preset first and keeps the global plane collapsed', async () => {

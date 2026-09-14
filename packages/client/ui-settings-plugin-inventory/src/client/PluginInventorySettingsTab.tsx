@@ -21,6 +21,9 @@ type PluginInventoryEntry = PluginInventorySnapshot['entries'][number]
 type AgentPresetGroup = NonNullable<PluginInventorySnapshot['agentPresets']>[number]
 type AgentPresetRow = AgentPresetGroup['rows'][number]
 
+/** Which Plugins tab this contribution renders. */
+export type PluginInventorySurface = 'inventory' | 'catalog'
+
 /** Registration-side Remote face used by the section. */
 export interface PluginInventorySettingsTabInjected {
   /** Read a current Host inventory snapshot. */
@@ -32,6 +35,8 @@ export interface PluginInventorySettingsTabInjected {
    * agent-preset dictionaries, user-authored ones keep their own metadata.
    */
   presetName: (preset: AgentPresetGroup) => string
+  /** Inventory is session/global Loader rows; catalog is xfdsh preset plugins. */
+  surface: PluginInventorySurface
 }
 type PluginFiberPhase = PluginInventoryEntry['fiberPhase']
 
@@ -83,6 +88,17 @@ function catalogMatches(entry: PluginInventoryCatalogEntry, normalizedQuery: str
   return [entry.id, entry.entryId, entry.packageName, entry.version, entry.title, entry.description]
     .filter((value): value is string => value !== undefined)
     .some(value => value.toLocaleLowerCase().includes(normalizedQuery))
+}
+
+/** Whether a global Loader row is one of the profile's prebundled catalog plugins. */
+function isPrebundled(
+  moduleName: string,
+  entryId: string,
+  catalog: readonly PluginInventoryCatalogEntry[],
+): boolean {
+  return catalog.some(item => item.packageName === moduleName
+    || entryId === item.entryId
+    || entryId.endsWith(`:${item.entryId}`))
 }
 
 /** The roster row shown when the preset switcher has no explicit choice. */
@@ -203,8 +219,10 @@ function StateTag({ kind, label }: { readonly kind: EnablementKind; readonly lab
   return <Tag tone={TAG_TONES[kind]}>{label}</Tag>
 }
 
-/** Render the plugin inventory and profile catalog: catalog first, then session and global planes. */
-export function PluginInventorySettingsTab({ list, setEnabled, presetName, t }: PluginInventorySettingsTabProps): ReactNode {
+/** Render the plugin inventory or the xfdsh preset-plugin catalog, depending on `surface`. */
+export function PluginInventorySettingsTab({
+  list, setEnabled, presetName, t, surface = 'inventory',
+}: PluginInventorySettingsTabProps): ReactNode {
   const sectionId = useId()
   const [request, setRequest] = useState(0)
   const [query, setQuery] = useState('')
@@ -229,7 +247,7 @@ export function PluginInventorySettingsTab({ list, setEnabled, presetName, t }: 
   const normalizedQuery = query.trim().toLocaleLowerCase()
   const searching = normalizedQuery.length > 0
   const snapshot = state.status === 'ready' ? state.snapshot : undefined
-  const presets = snapshot?.agentPresets ?? []
+  const presets = surface === 'catalog' ? [] : (snapshot?.agentPresets ?? [])
   const selected = presets.find(preset => preset.id === chosenPreset) ?? fallbackPreset(presets)
 
   /** Presets that actually enable a module, keyed by module name. */
@@ -246,9 +264,14 @@ export function PluginInventorySettingsTab({ list, setEnabled, presetName, t }: 
     return found
   }, [presets])
 
-  const entries = snapshot?.entries ?? []
   const catalog = snapshot?.catalog ?? []
-  const filteredCatalog = catalog.filter(entry => catalogMatches(entry, normalizedQuery))
+  const showCatalog = surface === 'catalog'
+  const entries = showCatalog
+    ? []
+    : (snapshot?.entries ?? []).filter(entry => !isPrebundled(entry.moduleName, entry.entryId, catalog))
+  const filteredCatalog = showCatalog
+    ? catalog.filter(entry => catalogMatches(entry, normalizedQuery))
+    : []
   const failedEntries: PluginInventoryEntry[] = []
   const regularEntries: PluginInventoryEntry[] = []
   for (const entry of entries) {
@@ -270,8 +293,11 @@ export function PluginInventorySettingsTab({ list, setEnabled, presetName, t }: 
 
   const presetEffectiveOpen = searching || (presetOpen ?? true)
   const globalEffectiveOpen = searching || (globalOpen ?? presets.length === 0)
-  const nothingMatches = searching && globalCount === 0 && selectedRows.length === 0
-    && otherPresetMatches.length === 0 && filteredCatalog.length === 0
+  const nothingMatches = searching && (
+    showCatalog
+      ? filteredCatalog.length === 0
+      : globalCount === 0 && selectedRows.length === 0 && otherPresetMatches.length === 0
+  )
 
   const retry = (): void => {
     setState({ status: 'loading' })
@@ -432,10 +458,12 @@ export function PluginInventorySettingsTab({ list, setEnabled, presetName, t }: 
               onChange={(event) => { setQuery(event.currentTarget.value) }}
             />
           </label>
-          {entries.length === 0 && presets.length === 0 && catalog.length === 0 ? <p className={css.status}>{t('empty')}</p> : null}
+          {(showCatalog ? catalog.length === 0 : entries.length === 0 && presets.length === 0)
+            ? <p className={css.status}>{t('empty')}</p>
+            : null}
           {nothingMatches ? <p className={css.status}>{t('emptySearch')}</p> : null}
 
-          {catalog.length > 0 ? (
+          {showCatalog && catalog.length > 0 ? (
             <section className={css.group} data-plugin-scope="catalog">
               <div className={css.groupTitleRow}>
                 <div className={css.groupTitle}>{t('catalogTitle')}</div>
