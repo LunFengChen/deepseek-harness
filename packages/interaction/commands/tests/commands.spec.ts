@@ -3,8 +3,8 @@ import { Context } from '@deepseek-ai/cordis'
 import { createScope } from '@x1a0f3n9/dsh-scope'
 import type { Scope } from '@x1a0f3n9/dsh-scope'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
-import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
-import CommandRuntime, { CommandDefinitionId, parseCommand, type CommandDefinition } from '@x1a0f3n9/dsh-commands'
+import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import CommandRuntime, { CommandDefinitionId, parseCommand, type CommandDefinition, type CommandInvocation } from '@x1a0f3n9/dsh-commands'
 import { AttachmentStore } from '@x1a0f3n9/dsh-attachment'
 
 function command(name: string, text = `ran:${name}`): CommandDefinition {
