@@ -313,15 +313,12 @@ export function PendingSubmissionBubble({ submission, renderMessageImages, t }: 
 }
 
 /** User and admitted-steering keyed Chat renderer. */
-type UserOrSteeringViewProps = {
-  node: ChatNodeViewProps<'user'>['node'] | ChatNodeViewProps<'steering'>['node']
-  renderMessageImages: ChatNodeViewProps<'user'>['renderMessageImages']
-  t: ChatNodeViewProps<'user'>['t']
-} & PropsRenderSlots<'conversation.chat.user-actions'>
+type UserOrSteeringViewProps = ChatNodeViewProps<'user' | 'steering'>
+  & PropsRenderSlots<'conversation.chat.user-actions'>
 
 export const UserMessageNodeView = memo(function UserMessageNodeView({
-  node, renderMessageImages, openFile, openSkill, t,
-}: ChatNodeViewProps<'user' | 'steering'>) {
+  node, renderMessageImages, openFile, openSkill, renderSlot, t,
+}: UserOrSteeringViewProps) {
   const data = node.data
   const userActions = renderSlot('conversation.chat.user-actions', {
     seq: data.seq,
