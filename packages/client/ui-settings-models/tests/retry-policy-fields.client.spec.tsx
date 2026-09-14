@@ -34,7 +34,7 @@ describe('RetryPolicyFields', () => {
         name="retry-backoff"
       />,
     )
-    expect(screen.getByLabelText<HTMLInputElement>(en.retryInitialDelay).value).toBe('1000')
+    expect(screen.getByLabelText<HTMLInputElement>(en.retryInitialDelay).value).toBe('500')
   })
 
   it('fills adapter delay when custom backoff is not an object', () => {
@@ -47,6 +47,6 @@ describe('RetryPolicyFields', () => {
         name="retry-backoff-scalar"
       />,
     )
-    expect(screen.getByLabelText<HTMLInputElement>(en.retryInitialDelay).value).toBe('1000')
+    expect(screen.getByLabelText<HTMLInputElement>(en.retryInitialDelay).value).toBe('500')
   })
 })

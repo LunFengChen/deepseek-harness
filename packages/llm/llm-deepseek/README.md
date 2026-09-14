@@ -68,7 +68,7 @@ A request selects the route with `provider: deepseek-official`; the model id pas
 | `fileExpiresAfterSeconds` | `604,800` | Requested uploaded-image lifetime |
 | `fileRefreshMarginSeconds` | `3,600` | Remaining lifetime below which an id is replaced |
 | `fileQuotaCleanupBatch` | `100` | Oldest harness-owned files removed before one quota retry |
-| `retryPolicy` | normal, 10 retries, 1 s to 60 s | Provider-owned retry policy executed by `dsh-llm-retry` |
+| `retryPolicy` | normal, 20 retries, 500 ms to 10 s | Provider-owned retry policy executed by `dsh-llm-retry` |
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-llm-deepseek) is the exhaustive source for every accepted field and its JSDoc.
 

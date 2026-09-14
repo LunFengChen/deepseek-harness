@@ -10,7 +10,7 @@ Request retry count and delay already live on each provider route as `retryPolic
 
 ## Decision
 
-Each provider editor's 自定义设置 fold, and the custom-provider create card, offer Default or Custom count and delay. Default omits `retryPolicy` and uses the adapter policy (ten retries, 1 s to 60 s). Custom writes `{ mode: 'normal', maxRetries, backoff: { initialDelayMs, maxDelayMs } }` with `maxDelayMs` at least 60 s. The control is per provider route, not per model. Stored `mode: 'always'` from yaml stays valid custom so Apply of other fields is not blocked; editing count or delay converts it to normal. Blank or illegal count/delay stores `{ mode: 'normal' }` without NaN and disables Apply/Create.
+Each provider editor's 自定义设置 fold, and the custom-provider create card, offer Default or Custom count and delay. Default omits `retryPolicy` and uses the adapter policy (twenty retries, 500 ms to 10 s). Custom writes `{ mode: 'normal', maxRetries, backoff: { initialDelayMs, maxDelayMs } }` with `maxDelayMs` at least 10 s. The control is per provider route, not per model. Stored `mode: 'always'` from yaml stays valid custom so Apply of other fields is not blocked; editing count or delay converts it to normal. Blank or illegal count/delay stores `{ mode: 'normal' }` without NaN and disables Apply/Create.
 
 ## Verification
 
