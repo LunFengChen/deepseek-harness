@@ -15,7 +15,7 @@ import { ModelsSettingsStore, deriveKeyRef, protocolChoices } from '../src/clien
 import { createModelsOperations } from '../src/client/operations.ts'
 import type { ModelsOperations } from '../src/client/operations.ts'
 import { en } from '../src/client/locales.ts'
-import { settingsSchema } from './settings-schema.client.ts'
+import { RetryPolicyConfig, settingsSchema } from './settings-schema.client.ts'
 
 afterEach(cleanup)
 
@@ -38,6 +38,7 @@ const PiAiConfig = Schema.object({
       maxTokens: Schema.number(),
     })),
     reasoning: Schema.union(['off', 'high']),
+    retryPolicy: RetryPolicyConfig,
   })),
 })
 
@@ -1007,6 +1008,40 @@ describe('hand-declared providers', () => {
       expectedRevision: 7,
     })
     expect(set).toHaveBeenCalledWith('ACME_GATEWAY_API_KEY', 'gw-key')
+  })
+
+  it('includes a custom retry policy only when Custom is selected', async () => {
+    const { mutate, onClose } = mountCard()
+
+    fireEvent.change(screen.getByLabelText(en.customRoute), { target: { value: 'acme-gateway' } })
+    fireEvent.change(screen.getByLabelText(en.baseUrl), { target: { value: 'https://gateway.acme.example/v1' } })
+    fireEvent.click(screen.getByRole('button', { name: en.addModel }))
+    fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
+    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '2' } })
+    fireEvent.change(screen.getByLabelText(en.retryInitialDelay), { target: { value: '800' } })
+    fireEvent.click(screen.getByText(en.create))
+
+    await waitFor(() => { expect(onClose).toHaveBeenCalledWith(true) })
+    expect(firstMutate(mutate).ops[0]?.value).toMatchObject({
+      retryPolicy: {
+        mode: 'normal',
+        maxRetries: 2,
+        backoff: { initialDelayMs: 800, maxDelayMs: 10_000 },
+      },
+    })
+  })
+
+  it('disables create when a custom retry count is blank', () => {
+    mountCard()
+    fireEvent.change(screen.getByLabelText(en.customRoute), { target: { value: 'acme-gateway' } })
+    fireEvent.change(screen.getByLabelText(en.baseUrl), { target: { value: 'https://gateway.acme.example/v1' } })
+    fireEvent.click(screen.getByRole('button', { name: en.addModel }))
+    fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
+    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '' } })
+    expect((screen.getByRole('button', { name: en.create }) as HTMLButtonElement).disabled).toBe(true)
+    expect(screen.getByText(en.retryCountInvalid)).toBeTruthy()
   })
 
   it('scopes each card to fields a provider can actually own', async () => {
