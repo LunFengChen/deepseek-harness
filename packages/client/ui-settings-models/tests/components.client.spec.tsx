@@ -630,7 +630,7 @@ describe('ModelsSection', () => {
         value: {
           mode: 'normal',
           maxRetries: 3,
-          backoff: { initialDelayMs: 250, maxDelayMs: 10_000 },
+          backoff: { initialDelayMs: 250, maxDelayMs: 60_000 },
         },
       }],
       0,

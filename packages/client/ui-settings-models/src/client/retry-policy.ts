@@ -1,16 +1,16 @@
 /**
  * Provider-owned request-retry drafts edited on the Models settings cards.
  *
- * Omission uses the adapter defaults (five retries, 500 ms to 10 s). A stored
+ * Omission uses the adapter defaults (ten retries, 1 s to 60 s). A stored
  * object is a custom normal-mode policy with a retry count and delay.
  */
 
 /** Adapter default for eligible retries after the first request. */
-export const DEFAULT_RETRY_MAX_RETRIES = 5
+export const DEFAULT_RETRY_MAX_RETRIES = 10
 /** Adapter default for the first local backoff delay, in milliseconds. */
-export const DEFAULT_RETRY_INITIAL_DELAY_MS = 500
+export const DEFAULT_RETRY_INITIAL_DELAY_MS = 1_000
 /** Adapter default for the longest local or accepted provider delay, in milliseconds. */
-export const DEFAULT_RETRY_MAX_DELAY_MS = 10_000
+export const DEFAULT_RETRY_MAX_DELAY_MS = 60_000
 /** Node `setTimeout` clamp; the host schema refuses a larger delay. */
 const MAX_TIMER_DELAY_MS = 2_147_483_647
 

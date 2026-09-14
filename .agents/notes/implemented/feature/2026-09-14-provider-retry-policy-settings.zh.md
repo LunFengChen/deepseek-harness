@@ -10,7 +10,7 @@ Status: implemented
 
 ## Decision
 
-每个提供方编辑器的「自定义设置」折叠区，以及自定义提供方创建卡片，都提供默认或自定义次数和间隔。默认会省略 `retryPolicy`，使用适配器策略（5 次重试，500 ms 到 10 s）。自定义写入 `{ mode: 'normal', maxRetries, backoff: { initialDelayMs, maxDelayMs } }`，其中 `maxDelayMs` 至少 10 s。控件按提供方路由，不按模型。yaml 里已有的 `mode: 'always'` 仍视为合法自定义，这样改其他字段时 Apply 不会被挡住；改次数或间隔会把它变成 normal。空白或非法的次数/间隔会存成 `{ mode: 'normal' }`（不含 NaN），并禁用 Apply/Create。
+每个提供方编辑器的「自定义设置」折叠区，以及自定义提供方创建卡片，都提供默认或自定义次数和间隔。默认会省略 `retryPolicy`，使用适配器策略（10 次重试，1 s 到 60 s）。自定义写入 `{ mode: 'normal', maxRetries, backoff: { initialDelayMs, maxDelayMs } }`，其中 `maxDelayMs` 至少 60 s。控件按提供方路由，不按模型。yaml 里已有的 `mode: 'always'` 仍视为合法自定义，这样改其他字段时 Apply 不会被挡住；改次数或间隔会把它变成 normal。空白或非法的次数/间隔会存成 `{ mode: 'normal' }`（不含 NaN），并禁用 Apply/Create。
 
 ## Verification
 

@@ -33,7 +33,7 @@ Choose this adapter when the same composition serves several providers, when a r
 
 ### Configure provider routes
 
-Each profile may set a `retryPolicy`; omission uses normal mode with five retries. `apiKeyEnv` is a credential reference resolved per request through the harness credential seam, so no secret enters the configuration file; a reference that resolves to nothing fails the request with `MISSING_CREDENTIAL`. Omitting it leaves the route configured-but-keyless, which for an installed catalog route defers to pi-ai's provider-native ambient discovery.
+Each profile may set a `retryPolicy`; omission uses normal mode with ten retries from 1 s to 60 s. `apiKeyEnv` is a credential reference resolved per request through the harness credential seam, so no secret enters the configuration file; a reference that resolves to nothing fails the request with `MISSING_CREDENTIAL`. Omitting it leaves the route configured-but-keyless, which for an installed catalog route defers to pi-ai's provider-native ambient discovery.
 
 ```yaml
 - name: '@x1a0f3n9/dsh-llm-pi-ai'
@@ -84,7 +84,7 @@ Each profile may set a `retryPolicy`; omission uses normal mode with five retrie
 | `requestImagePixelBudget` | `4,194,304` | Total-pixel budget for each deterministic request image |
 | `requestImageMaxBytes` | `1 MiB` | Encoded-byte target for each request image before base64 expansion |
 | `maxRequestImageBytes` | `20 MiB` | Aggregate base64 image-payload bound with oldest-first offload |
-| `retryPolicy` | normal, 5 retries | Provider-owned retry policy executed by `dsh-llm-retry` |
+| `retryPolicy` | normal, 10 retries, 1 s to 60 s | Provider-owned retry policy executed by `dsh-llm-retry` |
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-llm-pi-ai) is the exhaustive source for every accepted field and its JSDoc.
 
