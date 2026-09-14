@@ -1027,7 +1027,7 @@ describe('hand-declared providers', () => {
       retryPolicy: {
         mode: 'normal',
         maxRetries: 2,
-        backoff: { initialDelayMs: 800, maxDelayMs: 10_000 },
+        backoff: { initialDelayMs: 800, maxDelayMs: 60_000 },
       },
     })
   })

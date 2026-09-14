@@ -179,7 +179,7 @@ export interface PiAiProviderProfile {
    * the smallest quality-ladder output is used when no quality fits.
    */
   requestImageMaxBytes?: number
-  /** Provider-owned model-request retry policy; omission uses normal mode with five retries. */
+  /** Provider-owned model-request retry policy; omission uses normal mode with ten retries from 1 s to 60 s. */
   retryPolicy?: RetryPolicyConfig
 }
 

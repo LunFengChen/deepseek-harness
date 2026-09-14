@@ -19,7 +19,7 @@
  *         apiKeyEnv: OPENAI_API_KEY
  *         retryPolicy:
  *           mode: normal
- *           maxRetries: 5
+ *           maxRetries: 10
  *       # Catalog route with the catalog narrowed and one capacity corrected.
  *       anthropic:
  *         apiKeyEnv: ANTHROPIC_API_KEY

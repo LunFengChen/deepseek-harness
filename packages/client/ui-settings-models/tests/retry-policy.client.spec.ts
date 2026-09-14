@@ -21,12 +21,12 @@ describe('retryPolicyDraft', () => {
       .toEqual({
         mode: 'normal',
         maxRetries: 3,
-        backoff: { initialDelayMs: 250, maxDelayMs: 10_000 },
+        backoff: { initialDelayMs: 250, maxDelayMs: 60_000 },
       })
     expect(defaultRetryPolicy()).toEqual({
       mode: 'normal',
-      maxRetries: 5,
-      backoff: { initialDelayMs: 500, maxDelayMs: 10_000 },
+      maxRetries: 10,
+      backoff: { initialDelayMs: 1_000, maxDelayMs: 60_000 },
     })
   })
 })
@@ -52,7 +52,7 @@ describe('retryPolicyFromFields', () => {
     expect(retryPolicyFromFields(3, 250)).toEqual({
       mode: 'normal',
       maxRetries: 3,
-      backoff: { initialDelayMs: 250, maxDelayMs: 10_000 },
+      backoff: { initialDelayMs: 250, maxDelayMs: 60_000 },
     })
     expect(retryPolicyFromFields(undefined, 250)).toEqual({ mode: 'normal' })
     expect(JSON.stringify(retryPolicyFromFields(undefined, 250))).not.toContain('null')
@@ -65,7 +65,7 @@ describe('validateRetryPolicy', () => {
     expect(validateRetryPolicy({
       mode: 'normal',
       maxRetries: 3,
-      backoff: { initialDelayMs: 250, maxDelayMs: 10_000 },
+      backoff: { initialDelayMs: 250, maxDelayMs: 60_000 },
     })).toBeUndefined()
     expect(validateRetryPolicy({ mode: 'always' })).toBeUndefined()
   })
