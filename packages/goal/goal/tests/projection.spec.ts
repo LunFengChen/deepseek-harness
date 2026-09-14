@@ -217,7 +217,7 @@ describe('goal projection unit', () => {
     expect(applyGoalProjection(failed, foreignKind)).toBe(failed)
     expect(applyGoalProjection(failed, turnStart)).toBe(failed)
 
-    const failedEmpty = { current: null, seenGoalIds: [] as const, failure: 'stop replay' }
+    const failedEmpty: GoalProjectionState = { current: null, seenGoalIds: [], failure: 'stop replay' }
     const emptyClear = {
       type: 'goal/change', seq: 8, time: 9,
       data: {

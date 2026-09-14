@@ -6,11 +6,11 @@ Status: implemented
 
 ## Problem
 
-`verify-npm-install-layout` 的本地仓库只提供 `@x1a0f3n9/dsh*`。预装社区插件仍声明 `@x1a0f3n9/dsh*` 依赖，npm 会 404，Release 的 publish job 不会启动。
+`verify-npm-install-layout` 的本地仓库只提供 `@x1a0f3n9/dsh*`。预装社区插件仍声明 `@deepseek-ai/dsh*` 依赖，npm 会 404，Release 的 publish job 不会启动。
 
 ## Decision
 
-`buildDualDshRegistry` 把每个 fork dsh 包按相同的合成版本复制到对应的 `@x1a0f3n9/dsh*` 名称下，改写这些包上的官方 dsh range，并从合成 dsh 树里去掉预装社区插件。布局断言仍然只统计 fork 名称。
+`buildDualDshRegistry` 把每个 fork dsh 包按相同的合成版本复制到对应的 `@deepseek-ai/dsh*` 名称下，改写这些包上的官方 dsh range，并从合成 dsh 树里去掉预装社区插件。布局断言仍然只统计 fork 名称。
 
 ## Alternatives considered
 

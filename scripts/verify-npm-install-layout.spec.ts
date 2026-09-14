@@ -81,6 +81,32 @@ describe('npm install layout verifier', () => {
     })
   })
 
+  it('keeps a fork-scoped preinstalled plugin on its own version', () => {
+    const index: RegistryIndex = new Map([
+      ['@x1a0f3n9/dsh', new Map([['0.1.5-rc.2', {
+        name: '@x1a0f3n9/dsh',
+        version: '0.1.5-rc.2',
+        dependencies: { '@x1a0f3n9/dsh-session-timeline': '0.1.0' },
+      }]])],
+      ['@x1a0f3n9/dsh-session-timeline', new Map([['0.1.0', {
+        name: '@x1a0f3n9/dsh-session-timeline',
+        version: '0.1.0',
+      }]])],
+    ])
+
+    const dual = buildDualDshRegistry(index, '0.1.5-rc.2')
+
+    expect([...dual.get('@x1a0f3n9/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
+    expect(dual.get('@x1a0f3n9/dsh')?.get('0.1.0')?.dependencies).not.toHaveProperty(
+      '@x1a0f3n9/dsh-session-timeline',
+    )
+    expect([...dual.get('@x1a0f3n9/dsh-session-timeline')?.keys() ?? []]).toEqual(['0.1.0'])
+    expect(dual.get('@x1a0f3n9/dsh-session-timeline')?.get('0.1.0')).toMatchObject({
+      name: '@x1a0f3n9/dsh-session-timeline',
+      version: '0.1.0',
+    })
+  })
+
   it('accepts isolated DSH releases with one shared Cordis installation', () => {
     expect(assertDualDshInstallLayout(validLayout())).toEqual({
       dshPackagesPerVersion: 3,
