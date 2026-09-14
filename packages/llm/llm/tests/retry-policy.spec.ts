@@ -12,10 +12,10 @@ describe('provider retry policy', () => {
 
     expect(policy).toEqual({
       mode: 'normal',
-      maxRetries: 10,
+      maxRetries: 20,
       retryableCodes: ['EMPTY_RESPONSE', 'RATE_LIMIT', 'SERVER', 'TIMEOUT', 'TRANSPORT'],
-      initialDelayMs: 1_000,
-      maxDelayMs: 60_000,
+      initialDelayMs: 500,
+      maxDelayMs: 10_000,
       jitterRatio: 0.1,
     })
     expect(Object.isFrozen(policy)).toBe(true)
@@ -52,8 +52,8 @@ describe('provider retry policy', () => {
   it('resolves always mode with default backoff', () => {
     expect(resolveRetryPolicy({ mode: 'always' }, 'provider.retryPolicy')).toEqual({
       mode: 'always',
-      initialDelayMs: 1_000,
-      maxDelayMs: 60_000,
+      initialDelayMs: 500,
+      maxDelayMs: 10_000,
       jitterRatio: 0.1,
     })
     expect(RetryPolicySchema).toBeDefined()
@@ -62,14 +62,14 @@ describe('provider retry policy', () => {
   it('ignores normal-only fields retained after switching to always mode', () => {
     const layered = {
       mode: 'always',
-      maxRetries: 10,
+      maxRetries: 20,
       retryableCodes: ['SERVER'],
     } as unknown as RetryPolicyConfig
 
     expect(resolveRetryPolicy(layered, 'provider.retryPolicy')).toEqual({
       mode: 'always',
-      initialDelayMs: 1_000,
-      maxDelayMs: 60_000,
+      initialDelayMs: 500,
+      maxDelayMs: 10_000,
       jitterRatio: 0.1,
     })
   })
