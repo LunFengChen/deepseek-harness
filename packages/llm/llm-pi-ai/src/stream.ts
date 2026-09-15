@@ -88,8 +88,10 @@ function classifyPiAiError(message: string): string {
     || /\b(?:other side closed|HTTP2 request did not get a response|WebSocket closed unexpectedly)\b/i.test(message)
     // undici renders a mid-stream socket drop as a bare `terminated` (its
     // `cause` — the real SocketError — was flattened away upstream); Node's
-    // stream layer says `Premature close`.
-    || /\bterminated\b|premature close/i.test(message)) {
+    // stream layer says `Premature close`. OpenAI Responses gateways emit
+    // `stream_read_error` as an in-band error event when the upstream stream
+    // dies after HTTP 200; that is the same class of drop.
+    || /\bterminated\b|premature close|stream_read_error\b/i.test(message)) {
     return 'TRANSPORT'
   }
   return 'PI_AI_ERROR'
