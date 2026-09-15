@@ -58,7 +58,7 @@ None; directory listings travel over the Remote and assemble no model request.
 
 <a id="known-limitations-and-deferred-work"></a>
 - **Listing only.** No search, artifact filter, drag-and-drop, rename, context menu, current-file highlight, or filesystem watching; a level changes only through reload.
-- **One root.** The tree is rooted at the session's working directory; there is no way to browse above it, and the Host refuses paths outside the workspace root anyway.
+- **One root.** The tree is rooted at the session's working directory; there is no way to browse above it from this page. Named directory listings elsewhere may still target a path the Session filesystem can read.
 
 <a id="dev-note"></a>
 ### Dev Note

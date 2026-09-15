@@ -2019,8 +2019,8 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       dsh-better-sidebar:
-        specifier: github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1
-        version: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.6
+        version: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/cf6870204a8b9d77d1600f8d9c345886ea742cce(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       dsh-context:
         specifier: github:LunFengChen/dsh-context#v0.49.6
         version: https://codeload.github.com/LunFengChen/dsh-context/tar.gz/789da56f5cc1ba64798f2e8acb3bb564355913fa(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)
@@ -3460,6 +3460,9 @@ importers:
       '@x1a0f3n9/dsh-client-ui-primitives':
         specifier: workspace:^
         version: link:../ui-primitives
+      '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview':
+        specifier: workspace:^
+        version: link:../ui-sidebar-documentpreview
       '@x1a0f3n9/dsh-client-ui-sidebar-right':
         specifier: workspace:^
         version: link:../ui-sidebar-right
@@ -15797,9 +15800,9 @@ packages:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
     engines: {node: '>=12'}
 
-  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e}
-    version: 0.19.0-alpha.1
+  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/cf6870204a8b9d77d1600f8d9c345886ea742cce:
+    resolution: {gitHosted: true, integrity: sha512-OEQ29nkS/XMuORcVVgQKF9TAT6xvkUkkfSSuZ/+rVbVk3yI7qoIQImDkLSOHwovEy6XNeyGhqC+72mia2uQn9w==, tarball: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/cf6870204a8b9d77d1600f8d9c345886ea742cce}
+    version: 0.19.1
     engines: {node: '>=20'}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.2
@@ -23134,7 +23137,7 @@ snapshots:
 
   dotenv@16.6.1: {}
 
-  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/672923957500a230365b640223f3427ef269192e(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/cf6870204a8b9d77d1600f8d9c345886ea742cce(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@codemirror/commands': 6.11.0
       '@codemirror/lang-cpp': 6.0.3
@@ -24696,7 +24699,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.14
       dayjs: 1.11.21
-      dompurify: 3.4.11
+      dompurify: 3.4.15
       es-toolkit: 1.49.0
       fastdom: 1.0.12
       katex: 0.16.47

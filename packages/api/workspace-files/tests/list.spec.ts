@@ -1,4 +1,4 @@
-/** The `list` endpoint: the same containment gates as `read`, plus the entry cap. */
+/** The `list` endpoint: the same read authority as `read`, plus the entry cap. */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { mkdir, symlink, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -83,14 +83,16 @@ describe('workspaceFiles.list — the entry cap', () => {
 })
 
 describe('workspaceFiles.list — gates', () => {
-  it('rejects an absolute directory outside the workspace', async () => {
-    const failure = await failureOf(endpoint().list(harness.scope, outside, signal()))
-    expect(failure.code).toBe('workspace-file/outside-workspace')
+  it('lists an absolute directory outside the workspace without mutating it', async () => {
+    await writeFile(join(outside, 'away.txt'), 'x', 'utf8')
+    const listing = await endpoint().list(harness.scope, outside, signal())
+    expect(listing.path).toBe(outside)
+    expect(listing.entries).toEqual([{ name: 'away.txt', type: 'file', size: 1 }])
   })
 
-  it('rejects a traversal that climbs out of the workspace', async () => {
-    const failure = await failureOf(endpoint().list(harness.scope, '..', signal()))
-    expect(failure.code).toBe('workspace-file/outside-workspace')
+  it('lists a traversal that climbs out of the workspace', async () => {
+    const listing = await endpoint().list(harness.scope, '..', signal())
+    expect(listing.entries.map(entry => entry.name).sort()).toEqual(['outside', 'workspace'])
   })
 
   it('rejects a symlinked directory before following it, wherever it points', async () => {

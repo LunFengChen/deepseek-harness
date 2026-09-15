@@ -3,12 +3,12 @@
  * listings, and the filesystem-observation change feed, exposed as
  * `workspaceFiles`.
  *
- * File reads follow the composed filesystem's read access, including paths
- * outside the workspace. The selected Session header supplies the base for
- * relative paths, with the sandbox policy root as its no-cwd fallback, not a
- * read-containment restriction. Directory listings and change observations
- * remain workspace-scoped. File-kind checks and configured read caps apply to
- * every preview; this service exposes no mutations.
+ * File reads and named directory listings follow the composed filesystem's
+ * read access, including paths outside the workspace. The selected Session
+ * header supplies the base for relative paths, with the sandbox policy root
+ * as its no-cwd fallback, not a read-containment restriction. Change
+ * observations remain workspace-scoped. File-kind checks and configured read
+ * caps apply to every preview; this service exposes no mutations.
  *
  * A page is cut from `streamText`, which decodes and rejects non-UTF-8 as it
  * goes, so the file is read only up to the first character past the page and
@@ -23,7 +23,7 @@ import { posix, win32 } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import type {} from '@x1a0f3n9/dsh-fs'
-import type { FsDirEntry, FsInfo, FsPathInfo, FsTarget } from '@x1a0f3n9/dsh-fs'
+import type { FileSystem, FsDirEntry, FsInfo, FsPathInfo, FsTarget } from '@x1a0f3n9/dsh-fs'
 import type {} from '@x1a0f3n9/dsh-sandbox-policy'
 import type {} from '@x1a0f3n9/dsh-session'
 import type {} from '@x1a0f3n9/dsh-session-persistence'
@@ -169,6 +169,15 @@ function workspacePathOf(rootUrl: string, targetUrl: string): string {
   return target.slice(root.length + 1).split('/').map(decodeURIComponent).join('/')
 }
 
+/**
+ * Workspace-relative path when `target` is inside `root`; otherwise the
+ * filesystem absolute path, matching how file reads name an outside file.
+ */
+function listingPathOf(fs: FileSystem, root: FsTarget, target: FsTarget): string {
+  if (fs.contains(root, target)) return workspacePathOf(fs.fileUrl(root), fs.fileUrl(target))
+  return fs.processPath(target)
+}
+
 /** Strip the resolved child target: the wire carries names and metadata only. */
 function directoryEntry(child: FsDirEntry): WorkspaceDirectoryEntry {
   return {
@@ -178,7 +187,7 @@ function directoryEntry(child: FsDirEntry): WorkspaceDirectoryEntry {
   }
 }
 
-/** Host Remote file reads and workspace directory observations over the composed filesystem. */
+/** Host Remote file reads, named directory listings, and workspace-scoped change observations over the composed filesystem. */
 export class WorkspaceFiles extends TypertRemoteService {
   static inject = ['fs', 'sandboxPolicy', 'sessions', 'typert']
 
@@ -327,9 +336,9 @@ export class WorkspaceFiles extends TypertRemoteService {
   }
 
   /**
-   * List the direct children of one directory inside the Session's workspace.
+   * List the direct children of one directory readable by the filesystem backend.
    * @param workspaceFileScope - header-derived workspace root for the Session identity on the wire.
-   * @param path - workspace path, absolute or relative to the workspace root.
+   * @param path - absolute path or path relative to the workspace root; directories outside it are allowed.
    * @param signal - caller cancellation.
    * @returns the directory's children in the backend's stable name order, bounded by the entry cap.
    */
@@ -343,10 +352,10 @@ export class WorkspaceFiles extends TypertRemoteService {
         { path, kind: entry.type },
       )
     }
-    const target = await this.confine(root, workspaceRoot, path, signal)
+    const target = await this.ctx.fs.resolve(path, { cwd: workspaceRoot, signal })
     const children = await this.ctx.fs.listDir(target, signal)
     return {
-      path: workspacePathOf(this.ctx.fs.fileUrl(root), this.ctx.fs.fileUrl(target)),
+      path: listingPathOf(this.ctx.fs, root, target),
       entries: children.slice(0, this.config.maxEntries).map(directoryEntry),
       truncated: children.length > this.config.maxEntries,
     }
@@ -412,14 +421,7 @@ export class WorkspaceFiles extends TypertRemoteService {
     return { root, workspaceRoot, entry }
   }
 
-  /** Resolve an inspected path and refuse it unless the workspace contains it. */
-  private async confine(root: FsTarget, workspaceRoot: string, path: string, signal: AbortSignal): Promise<FsTarget> {
-    const target = await this.ctx.fs.resolve(path, { cwd: workspaceRoot, signal })
-    if (!this.ctx.fs.contains(root, target)) {
-      throw new RemoteError('workspace-file/outside-workspace', `"${path}" is outside the workspace`, { path })
-    }
-    return target
-  }
+
 
   /**
    * All gates for a regular file, ending in the one stat that names its version

@@ -8,15 +8,15 @@ Status: implemented
 
 Web 客户端需要从一个未必在 Host 机器上的浏览器查看会话工作区里的文件：agent 产出的文件、`read` 工具行点名的路径，之后还有文件树，以及既不小也不是文本的文件预览。唯一一个经线路读取工作区文件的端点以 `workspace-file.ts` 住在 Session Controller 上，与它毫无关系的会话生命周期为邻。它在一个总字节上限之下返回整个文件，因此大日志连一部分都看不了、二进制根本看不了；它没有 `stat`、没有列举、没有变更信号，预览不重读就无法得知 agent 已改写文件；其结果还以 Host 的 `url` 命名文件，而 Client 上没有任何东西把这种拼法当地址用。
 
-两个约束框定了这项服务。经 `ctx.fs` 的文件读取使用 Session 组合后的文件系统后端，其读取权限可能延伸到工作区外，而目录树与变更流消费方以工作区为根。服务为普通文件保留后端的读取决策，同时执行文件类型与有界缓冲检查；`list` 与 `changes` 保留工作区包含限制。另外 `dsh-fs` 只暴露一种原始字节读取 `readBytes(target, signal, maxBytes)`，它拒绝任何比上限更长的文件：对模型整体摄入的图片是正确的，对大文件的一个窗口则毫无用处。
+两个约束框定了这项服务。经 `ctx.fs` 的文件读取使用 Session 组合后的文件系统后端，其读取权限可能延伸到工作区外，而变更流消费方以工作区为根。服务为普通文件和具名目录保留后端的读取决策，同时执行文件类型与有界缓冲检查；`changes` 保留工作区包含限制。另外 `dsh-fs` 只暴露一种原始字节读取 `readBytes(target, signal, maxBytes)`，它拒绝任何比上限更长的文件：对模型整体摄入的图片是正确的，对大文件的一个窗口则毫无用处。
 
 ## Decision
 
-`packages/api/workspace-files`（`@x1a0f3n9/dsh-api-workspace-files`）同时拥有 Host 服务 `ctx.workspaceFiles`、`workspaceFiles` Remote 命名空间，以及将 `stat` 与 `changes` 转成[资源模型](2026-09-05-client-resource-model.zh.md)实时元数据的 Client `file` 提供者；包组织方式由[双面包组织](2026-09-07-workspace-files-dual-face-package.zh.md)规定。文件方法从工作区根解析相对路径，但继承 Session 文件系统后端的读取权限；`list` 与 `changes` 仍限于工作区。[工作区文件读取权限](2026-09-09-workspace-file-read-authority.zh.md)拥有这一分层及其安全后果。结果以文件在文件系统执行环境中的绝对路径命名文件，内容则受页、字节窗口或整文件上限约束。字节窗口依托 `dsh-fs` 新增的 seam `FileSystem.readByteRange`，由每个提供者实现。Session Controller 不再携带任何工作区文件代码。
+`packages/api/workspace-files`（`@x1a0f3n9/dsh-api-workspace-files`）同时拥有 Host 服务 `ctx.workspaceFiles`、`workspaceFiles` Remote 命名空间，以及将 `stat` 与 `changes` 转成[资源模型](2026-09-05-client-resource-model.zh.md)实时元数据的 Client `file` 提供者；包组织方式由[双面包组织](2026-09-07-workspace-files-dual-face-package.zh.md)规定。文件方法从工作区根解析相对路径，但继承 Session 文件系统后端的读取权限；具名 `list` 继承该读取权限，`changes` 仍限于工作区。[工作区文件读取权限](2026-09-09-workspace-file-read-authority.zh.md)与[具名目录列举与文件夹打开](2026-09-15-named-directory-listing-and-folder-open.zh.md)拥有这一分层及其安全后果。结果以文件在文件系统执行环境中的绝对路径命名文件，内容则受页、字节窗口或整文件上限约束。字节窗口依托 `dsh-fs` 新增的 seam `FileSystem.readByteRange`，由每个提供者实现。Session Controller 不再携带任何工作区文件代码。
 
 ### 包拓扑
 
-[双面包组织](2026-09-07-workspace-files-dual-face-package.zh.md)取代本记录中把 Host 与 Client 分成两个包的组织选择；这里的文件服务、分页和变更流约定保持不变。[工作区文件读取权限](2026-09-09-workspace-file-read-authority.zh.md)取代文件方法原有的工作区包含选择。Host 与 Client 分别编译在两个叶配置中，共享线路类型，Client 不导入 Host 运行时入口。
+[双面包组织](2026-09-07-workspace-files-dual-face-package.zh.md)取代本记录中把 Host 与 Client 分成两个包的组织选择；这里的文件服务、分页和变更流约定保持不变。[工作区文件读取权限](2026-09-09-workspace-file-read-authority.zh.md)取代文件方法原有的工作区包含选择；[具名目录列举与文件夹打开](2026-09-15-named-directory-listing-and-folder-open.zh.md)取代其中的 `list` 部分。Host 与 Client 分别编译在两个叶配置中，共享线路类型，Client 不导入 Host 运行时入口。
 
 | 面 | 包 | 文件 | 依赖 |
 |---|---|---|---|

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-09-workspace-file-read-authority.md
-2026-09-09-workspace-file-read-authority.md: 35ac15f5e463910be3b3a0cfe7b80dc69c129ad3
-2026-09-09-workspace-file-read-authority.zh.md: 559a59af0bfa988ff880fad22470397e4e74f296
+2026-09-09-workspace-file-read-authority.md: 8a6d77afe41ae34a30c3c133585aa9743660f456
+2026-09-09-workspace-file-read-authority.zh.md: 23b7dbeec4687084e5e2357eac933106c865a999

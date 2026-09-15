@@ -106,7 +106,7 @@ describe('projectUserText', () => {
     expect(chip.textContent).toBe('"/"')
   })
 
-  it('opens decoded files and loaded skills without activating session, folder, or command references', () => {
+  it('opens decoded files, folders, and loaded skills without activating session or command references', () => {
     const openFile = vi.fn()
     const openSkill = vi.fn()
     const view = render(<div>{projectUserText(
@@ -116,9 +116,16 @@ describe('projectUserText', () => {
     fireEvent.click(view.getByRole('button', { name: 'a.ts' }))
     fireEvent.click(view.getByRole('button', { name: 'notes a.md' }))
     fireEvent.click(view.getByRole('button', { name: '/review' }))
-    expect(openFile.mock.calls).toEqual([['src/a.ts'], ['notes a.md']])
+    fireEvent.click(view.getByRole('button', { name: 'dir' }))
+    fireEvent.click(view.getByRole('button', { name: 'dir a' }))
+    expect(openFile.mock.calls).toEqual([
+      ['src/a.ts'],
+      ['notes a.md'],
+      ['dir/', { directory: true }],
+      ['dir a/', { directory: true }],
+    ])
     expect(openSkill).toHaveBeenCalledWith('review')
-    expect(view.container.querySelectorAll('button')).toHaveLength(3)
+    expect(view.container.querySelectorAll('button')).toHaveLength(5)
     const command = render(<div>{projectUserText('/help', [], ['help'], 'command', { openFile, openSkill })}</div>)
     expect(command.container.querySelector('button')).toBeNull()
   })

@@ -38,8 +38,8 @@ interface DecorationRange {
 
 /** Optional navigation supplied by consumers that can preview references. */
 export interface UserTextReferences {
-  /** Open a file path decoded from an `@` mention. */
-  openFile: (path: string) => void
+  /** Open a file or folder path decoded from an `@` mention. */
+  openFile: (path: string, options?: { readonly directory?: boolean }) => void
   /** Open the source of a skill loaded for this message. */
   openSkill: (name: string) => void
 }
@@ -124,12 +124,15 @@ export function projectUserText(
       )}
       {displayLabel}
     </>
+    const mentionPath = label.slice(1).replace(/^"|"$/gu, '')
     const open = references === undefined ? undefined
       : referenceKind === 'file'
-        ? () => { references.openFile(label.slice(1).replace(/^"|"$/gu, '')) }
-        : referenceKind === undefined && slashKind === 'skill'
-          ? () => { references.openSkill(label.slice(1)) }
-          : undefined
+        ? () => { references.openFile(mentionPath) }
+        : referenceKind === 'folder'
+          ? () => { references.openFile(mentionPath, { directory: true }) }
+          : referenceKind === undefined && slashKind === 'skill'
+            ? () => { references.openSkill(label.slice(1)) }
+            : undefined
     const className = clsx(css.refChip, referenceKind === undefined && css.slashChip)
     parts.push(open === undefined
       ? <span key={tokenStart} className={className} data-ref-chip={referenceKind ?? slashKind} title={label}>

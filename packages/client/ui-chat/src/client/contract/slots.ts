@@ -30,10 +30,15 @@ export type UseChatNode = KeyedSnapshotSelectorHook<ChatConversationViewNode | u
 /** Per-key selector hook over one Chat Node's Turn-process presentation. */
 export type UseChatNodeProcess = KeyedSnapshotSelectorHook<ChatTurnProcessPresentation | undefined>
 
-/** Where in a file an open should land. */
+/** Where in a file an open should land, or that the path is a directory. */
 export interface OpenFileOptions {
   /** 1-based line to reveal; absent = the file's beginning. */
   readonly line?: number
+  /**
+   * When true, `path` names a directory. The Sidebar opens a folder window
+   * (a tree rooted there) instead of reading the path as a regular file.
+   */
+  readonly directory?: boolean
 }
 
 /** Owner currency of the completed-Turn extension chain. */

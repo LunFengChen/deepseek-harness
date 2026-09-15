@@ -25,7 +25,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 | 插件作者 | 可选插件卡片会显示作者，并链到 GitHub。 | Settings → Plugins 能打开插件仓库，不再只剩包名。 |
 | 思考强度 | 预装滑条 `github:LunFengChen/dsh-reasoning-effort#v0.7.1`。Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。 | 自定义模型声明档位后，输入框才能选思考强度。滑条可在 Settings → Plugins 关闭。 |
 | 上下文面板 | 预装且可关闭：`github:LunFengChen/dsh-context#v0.49.6`。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |
-| Better sidebar | 预装且可关闭：`github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1`。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
+| Better sidebar | 预装且可关闭：`github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.6`。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
 | Hindsight 记忆 | 预装且默认打开：`github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1`。 | xfdsh 默认走本机 daemon，不走 Cloud。可在 Settings → Plugins 关闭。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
 | Hindsight git 报错 | LunFengChen fork 把 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |

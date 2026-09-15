@@ -1,5 +1,5 @@
 ---
-description: "面向 Web GUI 的工作区文件服务：通过组合文件系统进行有界文件读取，并在 Session 工作区根内列举目录和观察已埋点的文件系统操作。"
+description: "面向 Web GUI 的工作区文件服务：通过组合文件系统进行有界文件读取和具名目录列举，并在 Session 工作区根内观察已埋点的文件系统操作。"
 kind: "package-reference"
 ---
 
@@ -9,7 +9,7 @@ kind: "package-reference"
 
 ## 概述
 
-使用本包可从 Web Client 预览 Session 文件系统允许读取的文件。它按页读取 UTF-8 文本、按有界窗口或完整文件读取原始字节、从基文件目录解析关联文件，并报告文件元数据。文件读取可以指向工作区外路径；目录列举与已埋点的文件系统观察仍限定于工作区。本服务不提供修改操作。
+使用本包可从 Web Client 预览 Session 文件系统允许读取的文件。它按页读取 UTF-8 文本、按有界窗口或完整文件读取原始字节、从基文件目录解析关联文件、报告文件元数据，并列举具名目录。文件读取和具名目录列举可以指向工作区外路径；已埋点的文件系统观察仍限定于工作区。本服务不提供修改操作。
 
 ## 目录
 
@@ -39,7 +39,7 @@ kind: "package-reference"
 
 ### 寻址与路径
 
-`read`、`readBytes`、`readAll`、`readRelated` 与 `stat` 接受绝对路径或相对于所选 Session 工作区根的路径。组合文件系统决定路径是否可读；本服务不额外要求文件读取限定于工作区。`readRelated` 从基文件所在目录解析相对文件系统路径，基文件或目标文件位于工作区外时同样适用。这些方法以文件系统执行环境中的绝对路径报告文件。`list` 仍限定于工作区，并以相对于该根的路径报告被列举目录。`changes` 同样只报告工作区根内已埋点的文件系统观察。
+`read`、`readBytes`、`readAll`、`readRelated`、`stat` 与 `list` 接受绝对路径或相对于所选 Session 工作区根的路径。组合文件系统决定路径是否可读；本服务不额外要求文件读取或具名目录列举限定于工作区。`readRelated` 从基文件所在目录解析相对文件系统路径，基文件或目标文件位于工作区外时同样适用。文件方法以文件系统执行环境中的绝对路径报告文件。`list` 在目录位于工作区根内时报告相对路径，否则报告文件系统绝对路径。`changes` 只报告工作区根内已埋点的文件系统观察。
 
 ### 分页
 
@@ -51,7 +51,7 @@ kind: "package-reference"
 
 ### 文件读取与目录检查
 
-每项操作都先通过 `lstat` 拒绝不存在的路径、末端符号链接或错误的文件类型。文件操作随后通过组合文件系统解析和读取，不做额外的工作区包含检查。只有 `list` 要求解析后的目录仍位于工作区内。配置的分页、窗口、完整文件和目录列举上限仍然适用。文本页还拒绝无效 UTF-8 与 NUL 字节；字节读取不解码内容。空路径是 `gateway/bad-request`。
+每项操作都先通过 `lstat` 拒绝不存在的路径、末端符号链接或错误的文件类型。文件操作和具名列举随后通过组合文件系统解析，不做额外的工作区包含检查。配置的分页、窗口、完整文件和目录列举上限仍然适用。文本页还拒绝无效 UTF-8 与 NUL 字节；字节读取不解码内容。空路径是 `gateway/bad-request`。
 
 ### 变更流
 
@@ -70,7 +70,7 @@ kind: "package-reference"
 
 ### 失败
 
-每种失败都是一个带类型化 details 的 `RemoteError` 代码，声明于 [`src/types.ts`](src/types.ts)：`workspace-file/not-found`、`workspace-file/outside-workspace`（仅目录列举）、`workspace-file/too-large`（带 `limit`，即适用的页、窗口或完整文件上限）、`workspace-file/not-text`、`workspace-file/not-regular-file`（`kind` 为 `directory`、`symlink` 或 `other`）以及 `workspace-file/not-directory`（`kind` 为 `file`、`symlink` 或 `other`）。调用方按代码分支，绝不按消息文本。
+每种失败都是一个带类型化 details 的 `RemoteError` 代码，声明于 [`src/types.ts`](src/types.ts)：`workspace-file/not-found`、`workspace-file/outside-workspace`、`workspace-file/too-large`（带 `limit`，即适用的页、窗口或完整文件上限）、`workspace-file/not-text`、`workspace-file/not-regular-file`（`kind` 为 `directory`、`symlink` 或 `other`）以及 `workspace-file/not-directory`（`kind` 为 `file`、`symlink` 或 `other`）。调用方按代码分支，绝不按消息文本。
 
 ### Client 文件资源
 
@@ -92,7 +92,7 @@ kind: "package-reference"
 
 ### 设计概念
 
-经 `ctx.fs` 的读取使用后端的读取权限；沙箱后端限制写与编辑，而不限制读取。Typert lookup 从 live Session header 或持久层的 header-only `stat` 导出 `WorkspaceFileScope`，所以 cold subagent Session 不需要激活 Agent 或读取事件正文。本服务增加普通文件检查与有界传输，工作区包含要求只属于目录列举与变更观察。页从 `streamText` 切出，后者逐块解码并拒绝非 UTF-8：切页器对窗口之前的行只计数不保留，对窗口内的每个片段先按字节上限验收再缓冲，并在窗口之后的第一个字符处返回。流之前的一次 `stat` 给出页所报告的版本与大小。
+经 `ctx.fs` 的读取使用后端的读取权限；沙箱后端限制写与编辑，而不限制读取。Typert lookup 从 live Session header 或持久层的 header-only `stat` 导出 `WorkspaceFileScope`，所以 cold subagent Session 不需要激活 Agent 或读取事件正文。本服务增加普通文件检查与有界传输；具名目录列举继承同一读取权限，变更观察仍限定于工作区。页从 `streamText` 切出，后者逐块解码并拒绝非 UTF-8：切页器对窗口之前的行只计数不保留，对窗口内的每个片段先按字节上限验收再缓冲，并在窗口之后的第一个字符处返回。流之前的一次 `stat` 给出页所报告的版本与大小。
 
 ### 源码地图
 

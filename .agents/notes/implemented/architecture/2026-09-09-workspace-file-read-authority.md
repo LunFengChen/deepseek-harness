@@ -12,7 +12,7 @@ Workspace Files serves both file content and workspace navigation. Applying work
 
 `read`, `readBytes`, `readAll`, `readRelated`, and `stat` inherit the addressed Session filesystem backend's read authority. The workspace root is the base for relative input paths, not a read boundary; absolute paths and relative paths that leave the workspace are readable when the backend allows them. The service still requires regular files, refuses symlinks, and applies its text and byte caps.
 
-`list` and `changes` remain workspace-scoped because they expose workspace navigation and observation rather than a named file read. `list` rejects a directory outside the root, and `changes` filters observations through the backend's workspace-containment predicate.
+Named directory `list` inherits that same read authority; [named directory listing and folder open](2026-09-15-named-directory-listing-and-folder-open.md) owns the listing, folder-window, and plugin-fence decisions. `changes` remains workspace-scoped and filters observations through the backend's workspace-containment predicate.
 
 `readRelated` resolves a relative path from the base file's directory. A `..` path may therefore read JavaScript or CSS outside the workspace when the Session backend permits it. Document Preview packages bounded, statically declared local scripts and stylesheets into an HTML Blob iframe with `sandbox="allow-scripts"`; the opaque origin blocks parent access, but the browser retains normal network access. This exposure is an intentional security trade-off for rendering static generated HTML.
 
@@ -20,7 +20,7 @@ The [Workspace Files service](2026-09-05-workspace-files-service.md) owns paging
 
 ## Alternatives considered
 
-**Contain every operation within the workspace.** This gives previews a narrower policy than the Session filesystem backend, blocks explicitly addressed readable files, and prevents HTML beside external assets from rendering. Workspace containment remains where the operation itself represents the workspace.
+**Contain every operation within the workspace.** This gives previews a narrower policy than the Session filesystem backend, blocks explicitly addressed readable files, and prevents HTML beside external assets from rendering. Change observation remains workspace-scoped.
 
 **Permit outside reads but block all iframe networking.** A stricter CSP would reduce exfiltration risk, but it would also reject external assets and network behavior intentionally retained for the static-HTML preview. The opaque sandbox protects the parent application; it does not promise network isolation.
 

@@ -7,7 +7,7 @@ import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
-// The `file` entry of `SidebarRightResourceParamsMap`, which types `{ params: { line } }` below.
+// The `file` entry of `SidebarRightResourceParamsMap`, which types `{ params: { line, directory } }` below.
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/client'
 import { fileAddressFor } from '@x1a0f3n9/dsh-util-workspace-path'
 // Type-only service and declaration merges used by the apply world.
@@ -126,15 +126,18 @@ export function apply(ctx: Context): void {
           // elsewhere keeps its absolute spelling in the same Session's address.
           // Which tab type claims the
           // address is the Sidebar's decision, not this call site's.
-          // A line travels as a navigation parameter, not as part of the
-          // address: the file is one piece of content whether it is opened at
-          // its top or at line 400, so the same tab is revealed and told where
-          // to land.
+          // A line or a directory flag travels as a navigation parameter, not
+          // as part of the address: the same tab is revealed, and the viewer
+          // either lands on that line or opens a folder window.
           openFile: async (path, options) => {
             const cwd = ctx.sessions.list.getSnapshot().byId[sessionId]?.cwd
             const url = fileAddressFor(sessionId, cwd, path)
-            if (options?.line === undefined) ctx.sidebarRight.openResource(url)
-            else ctx.sidebarRight.openResource(url, { params: { line: options.line } })
+            const params = {
+              ...options?.line === undefined ? {} : { line: options.line },
+              ...options?.directory === true ? { directory: true } : {},
+            }
+            if (params.line === undefined && params.directory !== true) ctx.sidebarRight.openResource(url)
+            else ctx.sidebarRight.openResource(url, { params })
             await Promise.resolve()
           },
           openSkill: (name) => {
