@@ -60,6 +60,7 @@
     "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@x1a0f3n9/dsh-util-workspace-path": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^"
   },
   "files": [

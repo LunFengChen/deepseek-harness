@@ -21,6 +21,11 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
 export interface WorkspaceFileParams {
   /** 1-based line to scroll into view; absent leaves the position alone. */
   readonly line?: number
+  /**
+   * When true, the address names a directory. A viewer that can show a folder
+   * window (a tree rooted there) does so instead of reading the path as a file.
+   */
+  readonly directory?: boolean
 }
 
 declare module '@x1a0f3n9/dsh-typert-protocol' {

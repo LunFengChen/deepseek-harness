@@ -197,7 +197,7 @@ const SERVICE_ROLES: ServiceRole[] = [
     pkg: 'api-workspace-files',
     title: 'Host workspace file Remote service',
     mode: 'core',
-    note: 'Serves stat, paged text, byte windows, directory listings, and the change feed for files inside a Session\'s workspace root, confined by lstat, containment, and a stat re-check.',
+    note: 'Serves stat, paged text, byte windows, named directory listings, and a workspace-scoped change feed. File reads and listings follow the Session filesystem backend\'s read access, including paths outside the workspace; lstat, file-kind, and size caps still apply.',
   },
   {
     key: 'workspaceController',

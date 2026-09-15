@@ -113,6 +113,15 @@ describe('LlmRuntime', () => {
     expect(isContextWindowExceededError('input is too long for this model')).toBe(true)
     expect(isContextWindowExceededError('request too large for model context')).toBe(true)
     expect(isContextWindowExceededError('input exceeds the model context window limit')).toBe(true)
+    expect(isContextWindowExceededError(
+      "This model's maximum prompt length is 131072 but the request contains 136973 tokens.",
+    )).toBe(true)
+    expect(isContextWindowExceededError('prompt is too long: 213462 tokens > 200000 maximum')).toBe(true)
+    expect(isContextWindowExceededError('Please reduce the length of the messages or completion')).toBe(true)
+    expect(isContextWindowExceededError('The text is too long for this model.')).toBe(true)
+    expect(isContextWindowExceededError('CONTEXT_WINDOW_EXCEEDED')).toBe(true)
+    expect(isContextWindowExceededError('上下文长度超过限制')).toBe(true)
+    expect(isContextWindowExceededError('提示词过长，请缩短后重试')).toBe(true)
   })
 
   it('does not mistake unrelated input validation for context-window overflow', () => {

@@ -507,16 +507,17 @@ describe('pick and codec', () => {
 })
 
 describe('reference preview', () => {
-  it('opens plain and quoted file references without treating folders or sessions as files', async () => {
+  it('opens plain and quoted file references and folders, without treating sessions as files', async () => {
     const { ctx, source, fiber } = await bench()
     const openResource = vi.spyOn(ctx.sidebarRight, 'openResource')
     expect(source.openReference?.(session, { ref: '@notes/readme.md', appearance: 'file' })).toBe(true)
     expect(source.openReference?.(session, { ref: '@"docs/a b.md"', appearance: 'file' })).toBe(true)
     expect(openResource).toHaveBeenNthCalledWith(1, 'dsh-resource://file/session/target/notes/readme.md')
     expect(openResource).toHaveBeenNthCalledWith(2, 'dsh-resource://file/session/target/docs/a%20b.md')
-    expect(source.openReference?.(session, { ref: '@docs/', appearance: 'folder' })).toBe(false)
+    expect(source.openReference?.(session, { ref: '@docs/', appearance: 'folder' })).toBe(true)
+    expect(openResource).toHaveBeenNthCalledWith(3, 'dsh-resource://file/session/target/docs/', { params: { directory: true } })
     expect(source.openReference?.(session, { ref: '@[Research](dsh-session:abc)', appearance: 'session' })).toBe(false)
-    expect(openResource).toHaveBeenCalledTimes(2)
+    expect(openResource).toHaveBeenCalledTimes(3)
     await fiber.dispose()
   })
 })

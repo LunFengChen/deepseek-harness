@@ -138,6 +138,10 @@ describe('Chat inject API', () => {
     // A line travels as the `file` type's navigation parameter, not in the address.
     await injected.openFile('src/a.ts', { line: 7 })
     expect(b.sidebarRight.openResource).toHaveBeenLastCalledWith('dsh-resource://file/session/root-1/src/a.ts', { params: { line: 7 } })
+
+    // A directory is the same address with a folder-window parameter, not a file read.
+    await injected.openFile('src', { directory: true })
+    expect(b.sidebarRight.openResource).toHaveBeenLastCalledWith('dsh-resource://file/session/root-1/src', { params: { directory: true } })
     await b.runtime.dispose()
   })
 

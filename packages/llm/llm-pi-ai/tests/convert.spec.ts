@@ -848,7 +848,6 @@ describe('toStreamChunks', () => {
 describe('mapStopReason / mapUsage', () => {
   it.each([
     ['stop', { kind: 'stop' }],
-    ['length', { kind: 'max-tokens' }],
     ['toolUse', { kind: 'tool-calls' }],
     ['pending', {
       kind: 'error',
@@ -912,6 +911,14 @@ describe('mapStopReason / mapUsage', () => {
       stopReason: 'error',
       errorMessage: 'HTTP 400: invalid input: temperature exceeds maximum allowed value',
     }))).toMatchObject({ kind: 'error', failure: { code: 'INVALID_REQUEST' } })
+    expect(mapStopReason(assistant({
+      stopReason: 'error',
+      errorMessage: "HTTP 400: This model's maximum prompt length is 131072 but the request contains 136973 tokens.",
+    }))).toMatchObject({ kind: 'error', failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE } })
+    expect(mapStopReason(assistant({
+      stopReason: 'error',
+      errorMessage: 'HTTP 400: 上下文长度超过限制',
+    }))).toMatchObject({ kind: 'error', failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'HTTP 413: Payload Too Large' })))
       .toMatchObject({ kind: 'error', failure: { code: 'INVALID_REQUEST' } })
     expect(mapStopReason(assistant({
@@ -936,10 +943,17 @@ describe('mapStopReason / mapUsage', () => {
     'Anthropic stream ended before message_stop',
     'OpenAI Responses stream ended before a terminal response event',
     'openrouter stream ended without a terminal event',
-    'Stream ended without finish_reason',
+    'stream_read_error',
   ])('maps pi-ai transport wording %j', (errorMessage) => {
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage })))
       .toMatchObject({ kind: 'error', failure: { code: 'TRANSPORT' } })
+  })
+
+  it('retries a missing finish_reason as PI_AI_ERROR rather than a socket drop', () => {
+    expect(mapStopReason(assistant({
+      stopReason: 'error',
+      errorMessage: 'Stream ended without finish_reason',
+    }))).toMatchObject({ kind: 'error', failure: { code: 'PI_AI_ERROR' } })
   })
 
   it('uses pi-ai provider-specific overflow classification without losing rate-limit exclusions', () => {
@@ -967,11 +981,29 @@ describe('mapStopReason / mapUsage', () => {
     })
 
     const truncated = assistant({ stopReason: 'length', usage: usage(80, 0, 19) })
-    expect(mapStopReason(truncated)).toEqual({ kind: 'max-tokens' })
+    expect(mapStopReason(truncated)).toMatchObject({
+      kind: 'error',
+      failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
+    })
     expect(mapStopReason(truncated, 100)).toMatchObject({
       kind: 'error',
       failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
     })
+
+    const pressure = assistant({ stopReason: 'length', usage: usage(85, 12) })
+    expect(mapStopReason(pressure)).toEqual({ kind: 'max-tokens' })
+    expect(mapStopReason(pressure, 100)).toMatchObject({
+      kind: 'error',
+      failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
+    })
+
+    const outputCap = assistant({
+      stopReason: 'length',
+      usage: usage(20, 50),
+      content: [{ type: 'text', text: 'ok' }],
+    })
+    expect(mapStopReason(outputCap)).toEqual({ kind: 'max-tokens' })
+    expect(mapStopReason(outputCap, 100)).toEqual({ kind: 'max-tokens' })
   })
 
   it('maps cache fields only when nonzero', () => {

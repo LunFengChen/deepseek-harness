@@ -16,6 +16,8 @@ import type {} from '@x1a0f3n9/dsh-api-remotes/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
+// The `file` entry of `SidebarRightResourceParamsMap`, which types `{ params: { directory } }` below.
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
 import type { ISessions } from '@x1a0f3n9/dsh-api-session-controller/client'
 import { relativeTime } from '@x1a0f3n9/dsh-client-ui-primitives'
@@ -109,10 +111,12 @@ export function apply(ctx: ClientContext): void {
       return undefined
     },
     openReference(session, { ref, appearance }) {
-      if (appearance !== 'file') return false
+      if (appearance !== 'file' && appearance !== 'folder') return false
       const path = ref.startsWith('@"') ? ref.slice(2, -1) : ref.slice(1)
       const cwd = sessions.list.getSnapshot().byId[session.sessionId]?.cwd
-      ctx.sidebarRight.openResource(fileAddressFor(session.sessionId, cwd, path))
+      const url = fileAddressFor(session.sessionId, cwd, path)
+      if (appearance === 'folder') ctx.sidebarRight.openResource(url, { params: { directory: true } })
+      else ctx.sidebarRight.openResource(url)
       return true
     },
     codec: {
