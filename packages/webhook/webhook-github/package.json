@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-webhook-github",
   "description": "Signed GitHub HTTP webhook adapter for the DeepSeek Harness webhook runtime",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.3",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-webworker-packer",
   "description": "Build-time packer for the browser runtime's base VFS image and ordered data-overlay archives",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.3",
   "private": true,
   "repository": {
     "type": "git",

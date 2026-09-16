@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-renderer",
   "description": "Browser UI renderer: React slot bindings, ctx.uiRenderer, and the assembled application root",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.3",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-sidebar-right",
   "description": "Right Sidebar: the docking surface's session-bound state, its panel and header expand control, and the navigation service over it",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.3",
   "publishConfig": {
     "access": "public"
   },

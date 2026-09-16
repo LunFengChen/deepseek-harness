@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-client-ui-agent-team",
   "description": "Web Agent Teams roster, task board, and teammate navigation",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.3",
   "publishConfig": {
     "access": "public"
   },
