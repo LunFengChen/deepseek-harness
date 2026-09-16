@@ -191,6 +191,22 @@ describe('listDirectory', () => {
     expect(entries.find(entry => entry.name === 'dir-skill')?.size).toBeUndefined()
   })
 
+  it('lists a large directory in stable name order without serializing child identity', async () => {
+    const root = join(dir, 'wide')
+    await mkdir(root)
+    const names = Array.from({ length: 40 }, (_, index) => `f${String(index).padStart(2, '0')}.txt`)
+    await Promise.all(names.map(name => writeFile(join(root, name), name)))
+    const entries = await listDirectory(localTarget(root))
+    expect(entries.map(entry => entry.name)).toEqual([...names].sort((left, right) => left.localeCompare(right)))
+    expect(entries.every(entry => entry.type === 'file')).toBe(true)
+  })
+
+  it('lists an empty directory as an empty array', async () => {
+    const root = join(dir, 'empty')
+    await mkdir(root)
+    expect(await listDirectory(localTarget(root))).toEqual([])
+  })
+
   it('derives child target keys from the listed parent identity', async () => {
     const realOne = join(dir, 'real-one')
     const realTwo = join(dir, 'real-two')
@@ -249,6 +265,15 @@ describe('listDirectory', () => {
   it('translates child resolution failures into structured listing errors', async () => {
     const root = join(dir, 'listed')
     await mkdir(root)
+    const loop = join(root, 'loop')
+    await symlink(loop, loop)
+    await expect(listDirectory(localTarget(root))).rejects.toMatchObject({ code: 'FS_IO_ERROR' })
+  })
+
+  it('fails a wide listing when one concurrent child cannot be resolved', async () => {
+    const root = join(dir, 'wide-loop')
+    await mkdir(root)
+    await Promise.all(Array.from({ length: 40 }, (_, index) => writeFile(join(root, `f${index}.txt`), 'x')))
     const loop = join(root, 'loop')
     await symlink(loop, loop)
     await expect(listDirectory(localTarget(root))).rejects.toMatchObject({ code: 'FS_IO_ERROR' })

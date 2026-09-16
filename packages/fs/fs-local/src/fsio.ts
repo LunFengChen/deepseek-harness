@@ -271,10 +271,41 @@ async function resolveListedChildTarget(parent: LocalTarget, name: string): Prom
   return { displayPath: join(parent.displayPath, name), targetKey: identity.targetKey }
 }
 
+/** How many child identity/stat probes run in flight during one listing. */
+const LIST_CHILD_CONCURRENCY = 32
+
+function listedChild(name: string, childTarget: LocalTarget, childInfo: PathInfo | null): LocalDirEntry {
+  return {
+    name,
+    type: childInfo?.type ?? 'other',
+    target: childTarget,
+    ...(childInfo ? { version: childInfo.version } : {}),
+    ...(childInfo?.type === 'file' ? { size: childInfo.size } : {}),
+  }
+}
+
+/**
+ * Resolve one listed child. Non-symlink rows inherit the parent's already
+ * realpath'd identity and only `stat`; symlink rows still realpath so a
+ * retargeted parent listing keeps the captured identity.
+ */
+async function listChild(parent: LocalTarget, entry: Dirent): Promise<LocalDirEntry> {
+  if (entry.isSymbolicLink()) {
+    const childTarget = await resolveListedChildTarget(parent, entry.name)
+    return listedChild(entry.name, childTarget, await probe(childTarget.targetKey))
+  }
+  const childTarget: LocalTarget = {
+    displayPath: join(parent.displayPath, entry.name),
+    targetKey: FsTargetKey(join(parent.targetKey, entry.name)),
+  }
+  return listedChild(entry.name, childTarget, await probe(childTarget.targetKey))
+}
+
 /**
  * List direct children of a directory in stable name order. Each child includes
  * a resolved target plus stat metadata when still available; file contents are
- * never read.
+ * never read. Child probes run with bounded concurrency: a large directory
+ * must not serialize one realpath+stat per name.
  * @param target - the resolved directory to list; a missing or non-directory target throws.
  * @param signal - aborts the listing, checked between children (`FS_ABORTED`).
  * @returns one entry per direct child, sorted by name.
@@ -299,24 +330,28 @@ export async function listDirectory(target: LocalTarget, signal?: AbortSignal): 
   }
   throwIfAborted(signal, 'list')
 
-  const result: LocalDirEntry[] = []
-  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
-    throwIfAborted(signal, 'list')
-    try {
-      const childTarget = await resolveListedChildTarget(target, entry.name)
-      const childInfo = await probe(childTarget.targetKey)
-      result.push({
-        name: entry.name,
-        type: childInfo?.type ?? 'other',
-        target: childTarget,
-        ...(childInfo ? { version: childInfo.version } : {}),
-        ...(childInfo?.type === 'file' ? { size: childInfo.size } : {}),
-      })
-    } catch (error: unknown) {
-      throw listingIoError(join(target.displayPath, entry.name), error)
+  const sorted = entries.sort((left, right) => left.name.localeCompare(right.name))
+  const result: LocalDirEntry[] = new Array(sorted.length)
+  let next = 0
+  let firstError: unknown
+  const workers = Array.from({ length: Math.min(LIST_CHILD_CONCURRENCY, sorted.length) }, async () => {
+    for (;;) {
+      if (firstError !== undefined) return
+      throwIfAborted(signal, 'list')
+      const index = next
+      next += 1
+      const entry = sorted[index]
+      if (entry === undefined) return
+      try {
+        result[index] = await listChild(target, entry)
+      } catch (error: unknown) {
+        firstError ??= listingIoError(join(target.displayPath, entry.name), error)
+        return
+      }
     }
-    throwIfAborted(signal, 'list')
-  }
+  })
+  await Promise.all(workers)
+  if (firstError !== undefined) throw firstError
   return result
 }
 
