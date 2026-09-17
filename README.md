@@ -25,7 +25,7 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 | Plugin authors | Optional-plugin cards show the catalog author as a GitHub link. | Settings → Plugins opens the plugin repository instead of leaving the package name as the only byline. |
 | Reasoning effort | Preinstalled slider `github:LunFengChen/dsh-reasoning-effort#v0.7.1`. Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. | The composer can pick thinking strength after a custom model declares levels. Disable the slider from Settings → Plugins. |
 | Context dashboard | Preinstalled, disableable plugin `github:LunFengChen/dsh-context#v0.49.6`. Version detection reads this fork, not a leftover official CLI. | A Context tab and `/context` command show composition, compaction, and token use. |
-| Better sidebar | Preinstalled, disableable plugin `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7`. | Files, terminal, Git, and subagents live in the sidebar workbench. |
+| Better sidebar | Preinstalled, disableable plugin `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.8`. | Files, terminal, Git, and subagents live in the sidebar workbench. |
 | Hindsight memory | Preinstalled and on by default: `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1`. | xfdsh defaults to a local daemon, not Cloud. Disable from Settings → Plugins. Cloud or a self-hosted URL remains optional in `~/.hindsight/coding-agent.json`. |
 | Hindsight git stderr | The LunFengChen fork pipes `git` stderr. | Opening a session whose cwd is not a git repository no longer prints `fatal: not a git repository`. |
 | Session utilities | Workspace rows can copy the session id. | Session ids are easier to share and debug. |

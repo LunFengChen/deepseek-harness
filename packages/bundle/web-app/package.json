@@ -185,7 +185,7 @@
     "dsh-reasoning-effort": "github:LunFengChen/dsh-reasoning-effort#v0.7.1",
     "@x1a0f3n9/dsh-session-timeline": "github:LunFengChen/dsh-session-timeline#v0.1.0",
     "dsh-context": "github:LunFengChen/dsh-context#v0.49.6",
-    "dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7",
+    "dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.8",
     "@vectorize-io/hindsight-coding-agents": "github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1"
   },
   "peerDependencies": {
