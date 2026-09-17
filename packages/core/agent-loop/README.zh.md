@@ -68,7 +68,7 @@ const handle = await ctx.agents.create({
 })
 ```
 
-每次 inbox 变更都会提交一条规范化的 `agent/inbox/spliced` 事件。投影注册表会同步折叠该事件，因此 `Session.append()` 返回时，实时投影已经反映该 splice。插入、编辑、移除、领取与取消都通过同一组标准 splice 坐标回放。普通删除携带 `outcome: 'canceled'` 并发出 `agent/inbox/discarded { message }`；领取使用不带 outcome 的纯删除，并发出 `agent/inbox/claimed`。每次插入都会发出 `agent/inbox/inserted { message }`。`MessageId` 在两个待处理列表之间保持唯一。需要被移除消息的消费方应使用 claimed 或 discarded 通知，而不依赖 splice 前的 `session/event` 投影视图。fork 子会话在带 `inherited` 的 `session/end-seed` 处丢弃源 agent 的待处理列表；子会话自己随后的 splice 会保留。未带 `inherited` 的 resume `session/end-seed` 不会清空队列。
+每次 inbox 变更都会提交一条规范化的 `agent/inbox/spliced` 事件。投影注册表会同步折叠该事件，因此 `Session.append()` 返回时，实时投影已经反映该 splice。插入、编辑、移除、领取与取消都通过同一组标准 splice 坐标回放。普通删除携带 `outcome: 'canceled'` 并发出 `agent/inbox/discarded { message }`；领取使用不带 outcome 的纯删除，并发出 `agent/inbox/claimed`。每次插入都会发出 `agent/inbox/inserted { message }`。`MessageId` 在两个待处理列表之间保持唯一。需要被移除消息的消费方应使用 claimed 或 discarded 通知，而不依赖 splice 前的 `session/event` 投影视图。带 seed 的 create 会记下 cancel splice 来丢弃源 agent 的待处理列表；inbox fold 仍会重建那些源 splice，因此从该队列继续写下去的子会话可以 resume。未带 `inherited` 的 resume 标记不会改变这些列表。
 
 ### 一个步骤做什么
 

@@ -5,7 +5,7 @@ import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import LlmRuntime from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime from '@x1a0f3n9/dsh-tools'
 import { MockAdapter, textResponse } from './mock-adapter.ts'
@@ -165,5 +165,47 @@ describe('Agent', () => {
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('agent event "agent/status" listener threw'),
     )
+  })
+})
+
+describe('seeded create', () => {
+  it('drops the reconstructed source queue as cancel splices and leaves the parent queued', async () => {
+    const ctx = await harness(new MockAdapter([]))
+    const parent = await ctx.agentLoop.create(SessionId('inbox-fork-parent'), {
+      provider: 'mock', model: 'mock',
+    })
+    const queued = createUserMessage({
+      content: [{ type: 'text', text: 'parent pending' }],
+      source: { kind: 'user' },
+    })
+    const nextStep = createUserMessage({
+      content: [{ type: 'text', text: 'parent next-step' }],
+      source: { kind: 'user' },
+    })
+    parent.inbox.append('next-turn', queued)
+    parent.inbox.append('next-step', nextStep)
+    const seed = parent.session.snapshotEvents()
+    const { agent: child } = await ctx.agents.create({
+      sessionId: SessionId('inbox-fork-child'),
+      seed,
+      inheritedEventCount: SessionLogOffset(seed.length),
+      meta: { parentSession: parent.id, isSeeded: true },
+      agentOptions: { provider: 'mock', model: 'mock' },
+    })
+
+    expect(parent.inbox.nextTurn).toEqual([queued])
+    expect(parent.inbox.nextStep).toEqual([nextStep])
+    expect(child.inbox.nextTurn).toEqual([])
+    expect(child.inbox.nextStep).toEqual([])
+    expect(child.session.snapshotEvents().at(seed.length)).toMatchObject({
+      type: 'session/end-seed',
+      data: { inherited: true },
+    })
+    expect(child.session.snapshotEvents().slice(seed.length + 1).map(event => (
+      event.type === 'agent/inbox/spliced' ? event.data : event.type
+    ))).toEqual([
+      { target: 'next-step', start: 0, removedCount: 1, inserted: [], outcome: 'canceled' },
+      { target: 'next-turn', start: 0, removedCount: 1, inserted: [], outcome: 'canceled' },
+    ])
   })
 })
