@@ -10,7 +10,7 @@ Forking a session is too slow for removing an unwanted answer, and a rewind mark
 
 ## Decision
 
-Delete, rewind, and regenerate share one truncate: resolve the selected visible message to its containing `turn/start`, flush live writes, atomically rewrite the current JSONL generation to that prefix, then truncate the live `Session` and reset derived projections. Historical format generations are not moved, overwritten, or deleted. The initiating client resynchronizes so the next request uses only the retained history.
+Delete, rewind, and regenerate share one truncate: resolve the selected visible message to its containing `turn/start`, flush live writes, rewrite the current JSONL generation to that prefix, drop routed live events at or past the retained length, truncate the live `Session` (which emits `session/truncated`), and rebuild derived projections. Historical format generations are not moved, overwritten, or deleted. The initiating client resynchronizes so the next request uses only the retained history.
 
 Timeline buttons call `deleteFrom` for conversation-only truncation. `/rewind @seq both` restores tracked workspace files first, then truncates. Regenerate reads durable images, truncates, then submits the original user content. The plugin does not append a surface marker. If a command handler truncates away its `command/run`, `command/done` is skipped so the pair cannot become an orphan.
 

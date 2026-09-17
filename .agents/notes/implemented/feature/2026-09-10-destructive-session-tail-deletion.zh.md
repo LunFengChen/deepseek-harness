@@ -10,7 +10,7 @@ Fork 会话删除不满意回答的速度太慢，而 rewind 标记会把不想�
 
 ## Decision
 
-删除、回退和重新生成共用一次截断：把选中的可见消息定位到所属 `turn/start`，刷新待写入事件，将当前 JSONL generation 原子重写为该前缀，再截断内存中的 `Session` 并重置派生投影。历史格式 generation 不会被移动、覆盖或删除。发起操作的客户端会重新同步，因此下一次请求只使用保留的历史。
+删除、回退和重新生成共用一次截断：把选中的可见消息定位到所属 `turn/start`，刷新待写入事件，将当前 JSONL generation 重写为该前缀，丢弃序号大于等于保留长度的已路由实时事件，再截断内存中的 `Session`（发出 `session/truncated`）并重建派生投影。历史格式 generation 不会被移动、覆盖或删除。发起操作的客户端会重新同步，因此下一次请求只使用保留的历史。
 
 时间线按钮对仅对话截断调用 `deleteFrom`。`/rewind @seq both` 先恢复已追踪的工作区文件，再截断。重新生成先读取持久化图片，截断后再提交原始用户内容。插件不再追加 surface 标记。如果命令 handler 截掉了对应的 `command/run`，就跳过 `command/done`，避免出现孤儿配对。
 

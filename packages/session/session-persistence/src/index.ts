@@ -229,7 +229,9 @@ export abstract class SessionPersistence extends Service {
   /**
    * Permanently replace one session's durable event log with an earlier prefix.
    * The caller must apply the matching in-memory truncation only after this
-   * promise resolves. Backends that do not support rewriting reject loudly.
+   * promise resolves. The backend must drop routed live events at or past
+   * `_length` so a later flush cannot replay the discarded tail. Backends that
+   * do not support rewriting reject loudly.
    * @param _id - the live session whose durable log is being rewritten.
    * @param _length - number of events to retain.
    * @returns resolution after the retained prefix is durable.

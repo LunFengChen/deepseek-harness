@@ -203,6 +203,7 @@ export class JsonlSessionHandle implements SessionHandle {
 
   /**
    * Replace the current generation with an earlier contiguous prefix.
+   * Routed live events at or past `length` are dropped after the rewrite.
    * @param length - number of events to retain.
    * @returns resolution after the rewritten prefix is durable.
    */
@@ -236,6 +237,7 @@ export class JsonlSessionHandle implements SessionHandle {
       this.state.tornTruncateTo = undefined
       this.state.recoveredTail = undefined
       this.observedLength = length
+      this.discardLiveFrom(length)
     })
   }
 
@@ -309,6 +311,22 @@ export class JsonlSessionHandle implements SessionHandle {
   }
 
   /**
+   * Drop routed live events at or past `length`. They belong to a discarded
+   * tail after destructive truncation; keeping them poisons the next drain
+   * with an append seq mismatch.
+   * @param length - retained event-prefix length, matching the new cursor.
+   */
+  discardLiveFrom(length: number): void {
+    if (this.buffered.length === 0) return
+    this.buffered = this.buffered.filter(event => event.seq < length)
+    if (this.buffered.length > 0) return
+    this.drainPaused = false
+    if (this.batchTimer === undefined) return
+    clearTimeout(this.batchTimer)
+    this.batchTimer = undefined
+  }
+
+  /**
    * Buffer one published live session event and arm the bounded batching
    * window when it is idle. The routing installer is the only caller.
    * @param event - the live event, retained as a persistence-owned copy.
@@ -351,8 +369,12 @@ export class JsonlSessionHandle implements SessionHandle {
         try {
           await this.persistContiguous(materializeAppendBatch(batch))
         } catch (error: unknown) {
-          this.buffered = batch.concat(this.buffered)
-          this.drainPaused = true
+          const merged = batch.concat(this.buffered)
+          const start = merged.findIndex(event => event.seq === this.state.cursor)
+          this.buffered = start === -1
+            ? merged.filter(event => event.seq < this.state.cursor)
+            : merged.slice(start)
+          this.drainPaused = this.buffered.length > 0
           throw error
         }
       })
@@ -590,6 +612,9 @@ export class JsonlBackendTracker {
       this.writers.get(session.id)?.enqueueLive(event, (error) => {
         ctx.logger.warn(`session-persistence: background write for session "${session.id}" failed (buffered events retained): ${String(error)}`)
       })
+    })
+    ctx.on('session/truncated', (session: Session) => {
+      this.writers.get(session.id)?.discardLiveFrom(session.seq)
     })
     ctx.on('session/flush', (session: Session) => {
       const writer = this.writers.get(session.id)

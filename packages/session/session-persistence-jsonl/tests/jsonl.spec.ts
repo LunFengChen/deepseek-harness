@@ -348,6 +348,80 @@ runLiveWritePathContract('jsonl', LIVE_WRITE_BATCH_MAX_DELAY_MS, async () => {
   return { ctx: await mount(), remount: mount }
 })
 
+describe('JsonlSessionPersistence: destructive truncate vs live buffer', () => {
+  it('drops live events published while rewrite is in flight', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'dsh-jsonl-truncate-live-'))
+    dirs.push(dir)
+    const ctx = new Context()
+    liveContexts.push(ctx)
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(JsonlSessionPersistence, { root: dir, compression: 'none' })
+    const session = ctx.sessions.create(SessionId('rewrite-race'))
+    const handle = await ctx.sessionPersistence.create(session.header)
+    session.append('turn/start', { turn: 1 })
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    await ctx.sessions.flush(session)
+    const retained = session.seq
+    session.append('turn/start', { turn: 2 })
+    session.append('turn/end', { turn: 2, reason: { kind: 'completed' } })
+    await ctx.sessions.flush(session)
+
+    const host = ctx.sessionPersistence as unknown as {
+      rewrite: (...args: unknown[]) => Promise<void>
+    }
+    const original = host.rewrite.bind(host)
+    const gate = Promise.withResolvers<undefined>()
+    const entered = Promise.withResolvers<undefined>()
+    vi.spyOn(host, 'rewrite').mockImplementationOnce(async (...args) => {
+      entered.resolve(undefined)
+      await gate.promise
+      return original(...args)
+    })
+
+    const truncating = ctx.sessionPersistence.truncate(session.id, retained)
+    await entered.promise
+    session.append('turn/start', { turn: 3 })
+    gate.resolve(undefined)
+    await truncating
+    session.truncate(retained)
+    await expect(ctx.sessions.flush(session)).resolves.toBe(true)
+    session.append('turn/start', { turn: 2 })
+    session.append('turn/end', { turn: 2, reason: { kind: 'completed' } })
+    await ctx.sessions.flush(session)
+    expect((await readAll(ctx.sessionPersistence, session.id)).events.map(event => event.seq)).toEqual([0, 1, 2, 3])
+    await handle.close()
+  })
+
+  it('drops a paused live tail after drain failure without waiting for another persist', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'dsh-jsonl-truncate-paused-'))
+    dirs.push(dir)
+    const ctx = new Context()
+    liveContexts.push(ctx)
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(JsonlSessionPersistence, { root: dir, compression: 'none' })
+    const session = ctx.sessions.create(SessionId('paused-tail'))
+    const handle = await ctx.sessionPersistence.create(session.header)
+    await handle.flush()
+    const warned = vi.spyOn(ctx.logger, 'warn').mockImplementation(() => undefined)
+    const host = ctx.sessionPersistence as unknown as { persistBatch: (...args: unknown[]) => Promise<void> }
+    const persist = vi.spyOn(host, 'persistBatch').mockRejectedValue(new Error('paused drain refused'))
+    vi.useFakeTimers()
+    session.append('turn/start', { turn: 1 })
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    await vi.advanceTimersByTimeAsync(LIVE_WRITE_BATCH_MAX_DELAY_MS)
+    vi.useRealTimers()
+    expect(persist).toHaveBeenCalledTimes(1)
+    const writer = handle as JsonlSessionHandle
+    writer.discardLiveFrom(1)
+    writer.discardLiveFrom(0)
+    persist.mockRestore()
+    await expect(ctx.sessions.flush(session)).resolves.toBe(true)
+    expect((await readAll(ctx.sessionPersistence, session.id)).events).toEqual([])
+    warned.mockRestore()
+    await handle.close()
+  })
+})
+
 describe('JsonlSessionPersistence: format helpers', () => {
   it('names and parses only canonical immutable generations', () => {
     expect(generationLogFilename(0, 'none')).toBe('session.jsonl')

@@ -2,10 +2,11 @@
  * Shared live-write-path contract for any {@link SessionPersistence} backend:
  * published live events route by session id into the active write handle,
  * `session/flush` is the durability and error-observation barrier,
- * `session/disposed` drains and closes, and `close()` itself drains the
- * routed buffer — including through backend teardown with no cross-fiber
- * ordering. Each provider owns its storage runtime; this suite pins the
- * equivalent observable behavior the seam requires.
+ * `session/truncated` and persistence `truncate` drop routed events past the
+ * retained prefix, `session/disposed` drains and closes, and `close()` itself
+ * drains the routed buffer — including through backend teardown with no
+ * cross-fiber ordering. Each provider owns its storage runtime; this suite
+ * pins the equivalent observable behavior the seam requires.
  *
  * @module @x1a0f3n9/dsh-session-persistence/tests/live-write-contract
  */
@@ -259,6 +260,34 @@ export function runLiveWritePathContract(
       await expect(ctx.sessions.flush(session)).resolves.toBe(true)
       expect((await readAll(ctx.sessionPersistence, session.id)).map(event => event.seq)).toEqual([0, 1, 2, 3])
       warned.mockRestore()
+      await handle.close()
+      await ctx.fiber.dispose()
+    })
+
+    it('discards routed live events past a destructive truncation so the next flush can continue', async () => {
+      const { ctx } = await make()
+      const session = ctx.sessions.create(SessionId('truncate-live-tail'))
+      const handle = await ctx.sessionPersistence.create(session.header)
+      session.append('turn/start', { turn: 1 })
+      session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+      await ctx.sessions.flush(session)
+      const retained = session.seq
+      session.append('turn/start', { turn: 2 })
+      session.append('turn/end', { turn: 2, reason: { kind: 'completed' } })
+      await ctx.sessionPersistence.truncate(session.id, retained)
+      session.append('turn/start', { turn: 3 })
+      await expect(ctx.sessions.flush(session)).rejects.toThrow(/append seq mismatch/)
+      session.truncate(retained)
+      await expect(ctx.sessions.flush(session)).resolves.toBe(true)
+      session.append('turn/start', { turn: 2 })
+      session.append('turn/end', { turn: 2, reason: { kind: 'completed' } })
+      await ctx.sessions.flush(session)
+      expect((await readAll(ctx.sessionPersistence, session.id)).map(event => [event.type, event.seq])).toEqual([
+        ['turn/start', 0],
+        ['turn/end', 1],
+        ['turn/start', 2],
+        ['turn/end', 3],
+      ])
       await handle.close()
       await ctx.fiber.dispose()
     })

@@ -71,6 +71,18 @@ declare module '@deepseek-ai/cordis' {
      */
     'session/event'(this: Scoped<Session>, session: Session, event: SessionEvent): void
     /**
+     * Emitted after a live session log is rewritten to an earlier prefix.
+     * The log already has the retained length when listeners run; observer
+     * failures are logged and contained. That prefix is the new authority:
+     * persistence drops routed live events at or past that length, projection
+     * cells rebuild, and any other seq-indexed cache must drop or rescan.
+     * Scope-filtered dispatch (`@x1a0f3n9/dsh-scope`) reuses the owner scope.
+     * @param session - the session whose log shrank.
+     * @dshScopeScan unsupported
+     * @mode emit
+     */
+    'session/truncated'(this: Scoped<Session>, session: Session): void
+    /**
      * Awaited parallel durability checkpoint: every listener runs and the
      * caller awaits all of them, with no waterfall veto. Scope-filtered dispatch
      * (`@x1a0f3n9/dsh-scope`) reuses the session's owner scope.
@@ -402,7 +414,7 @@ function collectSessionCallbacks(ctx: Context, args: unknown[]): SessionCallback
 /** Invoke one resolved observe-only listener snapshot with per-listener containment. */
 function invokeContainedSessionObservers(
   ctx: Context,
-  name: 'session/event' | 'session/disposed',
+  name: 'session/event' | 'session/disposed' | 'session/truncated',
   id: SessionId,
   args: unknown[],
   callbacks: SessionCallback[],
@@ -683,8 +695,10 @@ export class Session {
   }
 
   /**
-   * Remove the selected turn and every later event from this live log.
-   * Persistence must already contain the same prefix before this method runs.
+   * Replace this live log with the prefix `[0, length)`. Persistence must
+   * already contain that prefix. A store-attached session then emits
+   * `session/truncated`; detached sessions do not, so a seq-indexed reader
+   * must notice `session.seq` shrank.
    * @param length - retained event-prefix length.
    */
   truncate(length: SessionLogOffset): void {
@@ -708,6 +722,10 @@ export class Session {
     this.derived = []
     this.derivedNodes = 0
     this.derivedGeneration = this.surfaceManager.replaceGeneration
+    if (entry === undefined) return
+    const callbackArgs: unknown[] = [this]
+    const callbacks = collectSessionCallbacks(entry.emitCtx, [entry.carrier, 'session/truncated', this])
+    invokeContainedSessionObservers(entry.emitCtx, 'session/truncated', entry.id, callbackArgs, callbacks)
   }
 
   /** The next event's sequence number — always the log length (the `seq = log.length` contiguity contract). */

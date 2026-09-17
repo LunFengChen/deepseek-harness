@@ -2,7 +2,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
 import LlmRuntime, { createUserMessage, markAgentLoopRequest } from '@x1a0f3n9/dsh-llm'
 import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
-import SessionStore, { SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionStore, { SessionId, SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { turnBoundaryProjectionDefinition } from '@x1a0f3n9/dsh-agent-loop'
 import SessionTitleService, {
@@ -447,5 +447,71 @@ describe('SessionTitleService Provider lifecycle', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('automatic title generation failed'))
     await expect(ctx.sessionTitle.refresh(session)).rejects.toThrow('title backend failed')
     warn.mockRestore()
+  })
+
+  it('aborts in-flight generation whose watermark is past a truncated log', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(SessionTitleService, CONFIG)
+    const pending = deferred<SessionTitleProviderResult>()
+    let observedSignal: AbortSignal | undefined
+    ctx.sessionTitle.register({
+      id: SessionTitleProviderId('truncate-active'),
+      automatic: 'all-prompts',
+      generate(request) {
+        observedSignal = request.signal
+        return pending.promise
+      },
+    })
+    const session = ctx.sessions.create(SessionId('truncate-title'))
+    session.append('turn/start', { turn: 1 })
+    const message = appendHumanPrompt(session, 'Generate this title')
+    await settle()
+    appendRoute(session)
+    await settle()
+    expect(observedSignal?.aborted).toBe(false)
+
+    session.truncate(SessionLogOffset(message.seq))
+    expect(observedSignal?.aborted).toBe(true)
+    pending.resolve({ title: 'stale truncated title', messageSeqs: [message.seq] })
+    await settle()
+    expect(ctx.sessionTitle.get(session)).toBeUndefined()
+  })
+
+  it('drops pending generation whose watermark is past a truncated log', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(SessionTitleService, CONFIG)
+    const generate = vi.fn(async () => ({ title: 'should not run', messageSeqs: [SessionSeq(0)] }))
+    ctx.sessionTitle.register({
+      id: SessionTitleProviderId('truncate-pending'),
+      automatic: 'all-prompts',
+      generate,
+    })
+    const session = ctx.sessions.create(SessionId('truncate-pending-title'))
+    session.append('turn/start', { turn: 1 })
+    const message = appendHumanPrompt(session, 'Pending title prompt')
+    await settle()
+    session.truncate(SessionLogOffset(message.seq))
+    appendRoute(session)
+    await settle()
+    expect(generate).not.toHaveBeenCalled()
+  })
+
+  it('ignores truncation on a session with no title work', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(SessionTitleService, CONFIG)
+    const session = ctx.sessions.create(SessionId('truncate-idle-title'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'later' }],
+      source: { kind: 'plugin', plugin: 'test' },
+    }), { surfaceOp: 'append' })
+    expect(() => session.truncate(SessionLogOffset(1))).not.toThrow()
+    expect(ctx.sessionTitle.get(session)).toBeUndefined()
   })
 })

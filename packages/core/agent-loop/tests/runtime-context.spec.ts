@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { createUserMessage } from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import { RuntimeContextProjection } from '../src/runtime-context.ts'
 
 const SOURCE = '@x1a0f3n9/dsh-system-prompt'
@@ -41,5 +41,19 @@ describe('RuntimeContextProjection', () => {
     const other = ctx.sessions.create(SessionId('runtime-context-other'))
     other.append('user/message', contextMessage('other'), { surfaceOp: 'append' })
     expect(projection.project('retained', [])).toBeUndefined()
+  })
+
+  it('restores the retained snapshot after a live log prefix rewrite', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    const session = ctx.sessions.create(SessionId('runtime-context-truncate'))
+    session.append('user/message', contextMessage('kept'), { surfaceOp: 'append' })
+    session.append('user/message', contextMessage('dropped'), { surfaceOp: 'append' })
+    const projection = new RuntimeContextProjection(ctx, session)
+    expect(projection.project('dropped', [])).toBeUndefined()
+
+    session.truncate(SessionLogOffset(1))
+    expect(projection.project('kept', [])).toBeUndefined()
+    expect(projection.project('dropped', [])?.content).toEqual([{ type: 'text', text: 'dropped' }])
   })
 })
