@@ -12,7 +12,8 @@ export type PluginsSettingsLocaleKey =
   | 'webSearchApiKey' | 'webSearchApiKeyHint' | 'webSearchApiKeySet' | 'webSearchApiKeyUnset'
   | 'webSearchBaseUrl' | 'webSearchBaseUrlHint' | 'webSearchMaxUses' | 'webSearchMaxUsesHint'
   | 'webProviderTitle' | 'webProviderDescription' | 'webProviderLabel' | 'webProviderHint'
-  | 'webProviderDefault' | 'webProviderPerplexity' | 'webProviderExa' | 'webProviderDeepSeek'
+  | 'webProviderDefault' | 'webProviderPool' | 'webProviderPerplexity' | 'webProviderExa'
+  | 'webProviderFree' | 'webProviderDeepSeek'
   | 'subagentModelSelectionTitle' | 'subagentModelSelectionDescription'
   | 'subagentModelSelectionToggle' | 'subagentModelSelectionChoose' | 'subagentModelSelectionAllowed'
   | 'subagentModelSelectionLoading' | 'subagentModelSelectionLoadFailed' | 'subagentModelSelectionRetry'
@@ -62,10 +63,12 @@ export const en: Record<PluginsSettingsLocaleKey, string> = {
   webProviderTitle: 'Search provider',
   webProviderDescription: 'Choose the backend used for web search in this deployment.',
   webProviderLabel: 'Provider',
-  webProviderHint: 'Default tries Perplexity first and Exa second; choose DeepSeek only when you want it.',
-  webProviderDefault: 'Default (Perplexity → Exa)',
+  webProviderHint: 'Default uses the multi-key search pool (Tavily, Perplexity, Exa, then keyless Bing/DuckDuckGo). Pin a single backend only when you want that vendor alone.',
+  webProviderDefault: 'Default (search pool)',
+  webProviderPool: 'Search pool',
   webProviderPerplexity: 'Perplexity',
   webProviderExa: 'Exa',
+  webProviderFree: 'Keyless Bing/DuckDuckGo',
   webProviderDeepSeek: 'DeepSeek official',
   subagentModelSelectionTitle: 'Subagent',
   subagentModelSelectionDescription: 'Control which models agents may choose for subagents.',
@@ -126,10 +129,12 @@ export const zh: Record<PluginsSettingsLocaleKey, string> = {
   webProviderTitle: '搜索提供方',
   webProviderDescription: '选择本部署执行网页搜索时使用的后端。',
   webProviderLabel: '提供方',
-  webProviderHint: '默认依次尝试 Perplexity 和 Exa；只有明确需要时再选择 DeepSeek。',
-  webProviderDefault: '默认（Perplexity → Exa）',
+  webProviderHint: '默认使用多密钥搜索池（Tavily、Perplexity、Exa，再到无需密钥的 Bing/DuckDuckGo）。只有想单独用某个厂商时才固定单一后端。',
+  webProviderDefault: '默认（搜索池）',
+  webProviderPool: '搜索池',
   webProviderPerplexity: 'Perplexity',
   webProviderExa: 'Exa',
+  webProviderFree: '无需密钥的 Bing/DuckDuckGo',
   webProviderDeepSeek: 'DeepSeek 官方',
   subagentModelSelectionTitle: 'Subagent',
   subagentModelSelectionDescription: '控制 Agent 为 Subagent 选择模型的权限。',

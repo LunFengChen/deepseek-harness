@@ -127,7 +127,7 @@ Each tool attaches structured metadata to its result (`output.presentationMeta`)
 Read these pages when the package-level contract is not enough. They move from the shared vocabulary to the service, the generated catalogs, and the design rationale.
 
 - [Web subsystem](../../../docs/subsystems/web.md) — the exhaustive search/fetch requests and results, provider availability, and error codes.
-- [Web package map](../README.md) — the seven-package family and each role.
+- [Web package map](../README.md) — the web package family and each role.
 - [dsh-web](../web/README.md) — the web service the tools execute through.
 - [Generated tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-tool-web) — the exact `web_search` and `web_fetch` schemas.
 - [dsh-tool-call-timeout-policy](../../guard/timeout-policy/README.md) — the deployment policy that enforces each tool's timeout budget.

@@ -42,8 +42,13 @@ describe('dsh-base bundle', () => {
     })
     expect(rows.filter(row => row.id === 'subagent-codex')).toHaveLength(0)
     expect(rows.filter(row => row.id === 'subagent-claude-code')).toHaveLength(0)
-    expect(rows.find(row => row.id === 'web')?.config).toMatchObject({ fetchProvider: 'http' })
+    expect(rows.find(row => row.id === 'web')?.config).toMatchObject({
+      searchProviderOrder: ['search-pool'],
+      fetchProvider: 'http',
+    })
+    expect(rows.find(row => row.id === 'web-search-pool')).toBeDefined()
     expect(rows.find(row => row.id === 'web-fetch-http')).toBeDefined()
+    expect(manifest.dependencies).toHaveProperty('@x1a0f3n9/dsh-web-search-pool')
     expect(rows.find(row => row.id === 'tool-web')?.config).toMatchObject({ fetch: true })
     expect(manifest.dependencies).not.toHaveProperty('@x1a0f3n9/dsh-subagent-codex')
     expect(manifest.dependencies).not.toHaveProperty('@x1a0f3n9/dsh-subagent-claude-code')

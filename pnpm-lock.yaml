@@ -1609,6 +1609,9 @@ importers:
       '@x1a0f3n9/dsh-web-search-perplexity':
         specifier: workspace:^
         version: link:../../web/web-search-perplexity
+      '@x1a0f3n9/dsh-web-search-pool':
+        specifier: workspace:^
+        version: link:../../web/web-search-pool
       '@x1a0f3n9/dsh-workflow-worker-thread':
         specifier: workspace:^
         version: link:../../workflow/workflow-worker-thread
@@ -7151,7 +7154,7 @@ importers:
         version: link:../../../vendor/schemastery
       '@earendil-works/pi-ai':
         specifier: ^0.85.1
-        version: 0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(supports-color@9.4.0)(ws@8.21.0)(zod@4.4.3)
+        version: 0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)
       '@x1a0f3n9/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
@@ -10702,6 +10705,40 @@ importers:
         specifier: workspace:^
         version: link:../web
 
+  packages/web/web-search-pool:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
+    devDependencies:
+      '@deepseek-ai/cordis':
+        specifier: workspace:^
+        version: link:../../../vendor/cordis
+      '@deepseek-ai/cordis-plugin-include':
+        specifier: workspace:^
+        version: link:../../../vendor/include
+      '@deepseek-ai/cordis-plugin-loader':
+        specifier: workspace:^
+        version: link:../../../vendor/loader
+      '@x1a0f3n9/dsh-http-proxy':
+        specifier: workspace:^
+        version: link:../../util/http-proxy
+      '@x1a0f3n9/dsh-launch-environment':
+        specifier: workspace:^
+        version: link:../../util/launch-environment
+      '@x1a0f3n9/dsh-web':
+        specifier: workspace:^
+        version: link:../web
+      '@x1a0f3n9/dsh-web-search-exa':
+        specifier: workspace:^
+        version: link:../web-search-exa
+      '@x1a0f3n9/dsh-web-search-free':
+        specifier: workspace:^
+        version: link:../web-search-free
+      '@x1a0f3n9/dsh-web-search-perplexity':
+        specifier: workspace:^
+        version: link:../web-search-perplexity
+
   packages/webhook/webhook:
     dependencies:
       '@x1a0f3n9/dsh-brand':
@@ -11361,6 +11398,9 @@ importers:
       '@x1a0f3n9/dsh-web-search-perplexity':
         specifier: workspace:^
         version: link:../../packages/web/web-search-perplexity
+      '@x1a0f3n9/dsh-web-search-pool':
+        specifier: workspace:^
+        version: link:../../packages/web/web-search-pool
       '@x1a0f3n9/dsh-workflow':
         specifier: workspace:^
         version: link:../../packages/workflow/workflow
@@ -20004,14 +20044,14 @@ snapshots:
     transitivePeerDependencies:
       - '@algolia/client-search'
 
-  '@earendil-works/pi-ai@0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(supports-color@9.4.0)(ws@8.21.0)(zod@4.4.3)':
+  '@earendil-works/pi-ai@0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(ws@8.21.0)(zod@4.4.3)':
     dependencies:
       '@anthropic-ai/sdk': 0.123.0(zod@4.4.3)
       '@aws-sdk/client-bedrock-runtime': 3.1048.0
       '@earendil-works/pi-telemetry': 0.85.1
       '@google/genai': 1.52.0(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))
       '@smithy/node-http-handler': 4.7.3
-      http-proxy-agent: 7.0.2(supports-color@9.4.0)
+      http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       openai: 6.40.0(ws@8.21.0)(zod@4.4.3)
       partial-json: 0.1.7
@@ -20063,7 +20103,7 @@ snapshots:
       semver: 7.8.5
       sumchecker: 3.0.1
     optionalDependencies:
-      undici: 7.28.0
+      undici: 7.29.1
     transitivePeerDependencies:
       - supports-color
 
@@ -22300,7 +22340,7 @@ snapshots:
       progress: 2.0.3
       semver: 7.8.5
       tar-fs: 3.1.3
-      undici: 7.28.0
+      undici: 7.29.1
       yargs: 16.2.2
     transitivePeerDependencies:
       - bare-abort-controller
@@ -22633,7 +22673,7 @@ snapshots:
       cross-spawn: 7.0.6
       debug: 4.4.3(supports-color@9.4.0)
       fs-extra: 10.1.0
-      http-proxy-agent: 7.0.2(supports-color@9.4.0)
+      http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       js-yaml: 4.3.1
       sanitize-filename: 1.6.4
@@ -24028,7 +24068,7 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
-  http-proxy-agent@7.0.2(supports-color@9.4.0):
+  http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@9.4.0)

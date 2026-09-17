@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-web-search-order-no-fallthrough.md
-2026-09-11-web-search-order-no-fallthrough.md: 58adff04aa74ef78170dc087a439e5a17282dc0c
-2026-09-11-web-search-order-no-fallthrough.zh.md: 304299c8796e84f930e93e1a3ce1549b1a6c6d26
+2026-09-11-web-search-order-no-fallthrough.md: 56ec5a8514f295f84ac6319d81573693d03c3f46
+2026-09-11-web-search-order-no-fallthrough.zh.md: b1479ca269772abd6e6b978fb785003cc906ad6c

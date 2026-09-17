@@ -25,7 +25,7 @@ With `dsh-web-search-free`, the harness searches the web through Bing HTML first
 <a id="use-this-package"></a>
 ## Use this package
 
-Mount the provider in a composition that already loads the web service; it registers as the `free` search provider, so `ctx.web.search()` resolves it automatically when it is the only usable search backend — or pin it with `searchProvider: free`. The shipped base lists it last in `searchProviderOrder: [perplexity, exa, free]`.
+Mount the provider in a composition that already loads the web service; it registers as the `free` search provider, so `ctx.web.search()` resolves it automatically when it is the only usable search backend — or pin it with `searchProvider: free`. The shipped base uses `searchProviderOrder: [search-pool]`; this leaf is the pool's last hop and remains independently pin-able.
 
 ### When to choose it
 
@@ -97,7 +97,7 @@ The provider is a thin HTML adapter with two deliberate rules:
 Read these pages when the package-level contract is not enough. They move from the shared vocabulary to the service, the model-facing tools, and the design rationale.
 
 - [Web subsystem](../../../docs/subsystems/web.md) — the exhaustive search request/result vocabulary and error codes.
-- [Web package map](../README.md) — the seven-package family and each role.
+- [Web package map](../README.md) — the web package family and each role.
 - [dsh-web](../web/README.md) — the web service this provider registers into.
 - [dsh-tool-web](../tool-web/README.md) — the model-facing `web_search` tool that renders this provider's sources.
 - [Generated configuration catalog](../../../docs/config-catalog.md#x1a0f3n9dsh-web-search-free) — every accepted config field and its source declaration.

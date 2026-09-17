@@ -127,7 +127,7 @@ schema 校验会在执行前拒绝缺失或非数组的 `queries` 字段、非�
 当包级约定不够用时阅读以下页面。它们从共享词汇逐步进入服务、生成目录与设计依据。
 
 - [web 子系统](../../../docs/subsystems/web.zh.md)——穷尽式的搜索／抓取请求与结果、提供方可用性与错误码。
-- [web 包映射](../README.zh.md)——七包家族与各角色。
+- [web 包映射](../README.zh.md)——web 包族与各角色。
 - [dsh-web](../web/README.zh.md)——工具经由其执行的 web 服务。
 - [生成工具目录](../../../docs/tool-catalog.zh.md#deepseek-aidsh-tool-web)——精确的 `web_search` 与 `web_fetch` schema。
 - [dsh-tool-call-timeout-policy](../../guard/timeout-policy/README.zh.md)——强制执行每个工具超时预算的部署策略。

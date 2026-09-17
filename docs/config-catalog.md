@@ -3408,6 +3408,70 @@ export interface Config {
 
 Source: [`packages/web/web-search-perplexity/src/index.ts:30`](../packages/web/web-search-perplexity/src/index.ts)
 
+<a id="x1a0f3n9dsh-web-search-pool"></a>
+
+## `@x1a0f3n9/dsh-web-search-pool`
+
+Requires: `web`
+
+```ts config-catalog
+/** Plugin config (all optional — `apply` fills env-var and constant defaults). */
+export interface Config {
+  /** `failover` (default) walks the list; `rotate` round-robins the start. */
+  strategy?: SearchPoolStrategy
+  /** Backends in preference order. Omitted = {@link SEARCH_POOL_DEFAULT_BACKENDS}. */
+  backends?: SearchPoolBackendConfig[]
+  /** Transient failures in `circuitWindowMs` that open the circuit. Defaults to 3. */
+  circuitFailureThreshold?: number
+  /** Sliding window that counts transient failures, in ms. Defaults to 60000. */
+  circuitWindowMs?: number
+  /** Cooldown after a transient-open circuit, in ms. Defaults to 60000. */
+  circuitCooldownMs?: number
+  /** Cooldown after quota or auth, in ms. Defaults to 3600000. */
+  quotaCooldownMs?: number
+}
+
+/** How the pool picks the next healthy backend. */
+export type SearchPoolStrategy = 'failover' | 'rotate'
+
+/** One pool backend as declared in plugin config. */
+export interface SearchPoolBackendConfig {
+  /** Stable id used in circuit keys and error prefixes. Defaults to `kind`. */
+  id?: string
+  /** Vendor adapter to run. */
+  kind: SearchPoolBackendKind
+  /** Literal key or comma/whitespace-separated key list. Prefer `apiKeyEnv`. */
+  apiKey?: string
+  /**
+   * Environment variable holding one key or a comma/whitespace-separated list.
+   * Tavily also reads `$TAVILY_API_KEY` when this is unset.
+   */
+  apiKeyEnv?: string
+  /** Vendor origin override; each adapter appends its operation path. */
+  baseURL?: string
+  /**
+   * When true (the default except `free`), the backend is skipped until at
+   * least one key resolves. `free` is keyless.
+   */
+  needsKey?: boolean
+}
+
+/**
+ * Vendor adapter the pool can dispatch. Leaf `ctx.web` providers remain
+ * independently pin-able; these ids are pool-internal.
+ */
+export type SearchPoolBackendKind =
+  | 'tavily'
+  | 'perplexity'
+  | 'exa'
+  | 'serper'
+  | 'brave'
+  | 'jina'
+  | 'free'
+```
+
+Source: [`packages/web/web-search-pool/src/index.ts:75`](../packages/web/web-search-pool/src/index.ts)
+
 <a id="deepseek-aidsh-webhook-github"></a>
 
 ## `@x1a0f3n9/dsh-webhook-github`

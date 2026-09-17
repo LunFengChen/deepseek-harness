@@ -87,6 +87,7 @@ flowchart TD
     pkg_web_search_exa["web-search-exa"]
     pkg_web_search_free["web-search-free"]
     pkg_web_search_perplexity["web-search-perplexity"]
+    pkg_web_search_pool["web-search-pool"]
   end
   subgraph group_spill["packages/spill"]
     pkg_spill["spill"]
@@ -657,6 +658,11 @@ flowchart TD
   pkg_fs_sandbox --> pkg_fs_local
   pkg_fs_sandbox --> pkg_sandbox
   pkg_fs_sandbox --> pkg_sandbox_policy
+  pkg_web_search_pool --> pkg_launch_environment
+  pkg_web_search_pool --> pkg_web
+  pkg_web_search_pool --> pkg_web_search_exa
+  pkg_web_search_pool --> pkg_web_search_free
+  pkg_web_search_pool --> pkg_web_search_perplexity
   pkg_headless --> pkg_agent
   pkg_headless --> pkg_agent_default_model
   pkg_headless --> pkg_llm
@@ -1377,6 +1383,7 @@ flowchart TD
 | [`command-goal`](../packages/goal/command-goal) | `goal` | [`commands`](../packages/interaction/commands), [`goal`](../packages/goal/goal), [`llm`](../packages/llm/llm) |
 | [`goal-round-driver`](../packages/goal/goal-round-driver) | `goal` | [`agent`](../packages/core/agent), [`goal`](../packages/goal/goal), [`invariants`](../packages/runtime-diagnostics/invariants), [`llm`](../packages/llm/llm), [`session`](../packages/core/session) |
 | [`fs-sandbox`](../packages/fs/fs-sandbox) | `fs` | [`fs`](../packages/fs/fs), [`fs-local`](../packages/fs/fs-local), [`sandbox`](../packages/sandbox/sandbox), [`sandbox-policy`](../packages/sandbox/sandbox-policy) |
+| [`web-search-pool`](../packages/web/web-search-pool) | `web` | [`launch-environment`](../packages/util/launch-environment), [`web`](../packages/web/web), [`web-search-exa`](../packages/web/web-search-exa), [`web-search-free`](../packages/web/web-search-free), [`web-search-perplexity`](../packages/web/web-search-perplexity) |
 | [`headless`](../packages/bundle/headless) | `bundle` | [`agent`](../packages/core/agent), [`agent-default-model`](../packages/core/agent-default-model), [`llm`](../packages/llm/llm), [`session`](../packages/core/session) |
 | [`compaction`](../packages/compaction/compaction) | `compaction` | [`brand`](../packages/util/brand), [`commands`](../packages/interaction/commands), [`invariants`](../packages/runtime-diagnostics/invariants), [`llm`](../packages/llm/llm), [`session`](../packages/core/session) |
 | [`command-feedback`](../packages/feedback/command-feedback) | `feedback` | [`anonymous-user-id`](../packages/identity/anonymous-user-id), [`commands`](../packages/interaction/commands), [`session`](../packages/core/session), [`typert-protocol`](../packages/typert/protocol) |

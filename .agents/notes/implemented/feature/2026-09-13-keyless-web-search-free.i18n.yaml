@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-13-keyless-web-search-free.md
-2026-09-13-keyless-web-search-free.md: e077922a17b50fdf517bf4cce746eab5a0e8f207
-2026-09-13-keyless-web-search-free.zh.md: 3f8fa2e58901dc5677f930cefd6b5bb3cbaf1fd3
+2026-09-13-keyless-web-search-free.md: f6490f474c78fd7c8f6fe526ef0fe7b3caae211a
+2026-09-13-keyless-web-search-free.zh.md: 8a0250bd6125e10107ac23667cc0fd38e1bda033

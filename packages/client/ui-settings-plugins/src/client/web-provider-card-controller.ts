@@ -16,8 +16,10 @@ export interface WebProviderSettings {
 /** Search-provider choices exposed by the Web settings card. */
 export const WEB_SEARCH_PROVIDER_OPTIONS = [
   { value: '', labelKey: 'webProviderDefault' },
+  { value: 'search-pool', labelKey: 'webProviderPool' },
   { value: 'perplexity', labelKey: 'webProviderPerplexity' },
   { value: 'exa', labelKey: 'webProviderExa' },
+  { value: 'free', labelKey: 'webProviderFree' },
   { value: 'deepseek-official', labelKey: 'webProviderDeepSeek' },
 ] as const
 

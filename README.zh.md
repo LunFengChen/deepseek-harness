@@ -31,7 +31,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
 | 内存与续跑 | 会话持久化限制内存读取；context overflow 会压缩并重试。从大模型切到小模型时，会按待选模型先计价压力再发下一次请求。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |
 | 纯文本模型 | 历史图片和新图片会变成稳定文本占位符。 | 切到不支持图片的模型不会让会话停摆。 |
-| Web 搜索 | 默认顺序是 Perplexity，然后 Exa，然后无需密钥的 Bing/DuckDuckGo（`free`）。DeepSeek 搜索仍可选手动选择。 | 任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。 |
+| Web 搜索 | 默认提供方是多密钥 `search-pool`（Tavily、Perplexity、Exa，再到无需密钥的 Bing/DuckDuckGo）。DeepSeek 搜索仍可选手动选择。 | 任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。 |
 | 多回答 / session git graph | 还没做。等 timeline 回退 UI 完成后再扩展。 | 只记在文档里，本轮不做。 |
 
 ## 分支
