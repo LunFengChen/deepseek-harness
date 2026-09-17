@@ -76,7 +76,7 @@ allowBuilds:
   msgpackr-extract: false
   # Git-hosted preinstalls ship build scripts; these tarballs are the LunFengChen
   # fork pins used by the web-app catalog.
-  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/71b74b04c60be131afa2f713fd454549ca7c4819: true
+  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7bd57328d625130d5a6e343a2ca6008daa767e06: true
   dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa: true
   dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0: true
   dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/cf6870204a8b9d77d1600f8d9c345886ea742cce: set this to true or false

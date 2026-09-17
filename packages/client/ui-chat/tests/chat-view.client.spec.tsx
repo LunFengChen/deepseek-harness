@@ -157,10 +157,10 @@ const steering = (seq: number, text: string, turn: number): SteeringMessageNode 
   kind: 'steering', messageId: `steering-${String(seq)}` as SteeringMessageNode['messageId'],
   seq, time: seq * 1_000, turn, content: [{ type: 'text', text }], source: null,
 })
-const retry = (seq: number): ModelRetryNode => ({
+const retry = (seq: number, retryState: ModelRetryNode['retryState'] = 'scheduled'): ModelRetryNode => ({
   kind: 'model-retry', retryId: 'chat-view-retry' as ModelRetryNode['retryId'],
   seq, time: seq * 1_000, turn: 1, step: 0,
-  retryState: 'scheduled',
+  retryState,
   provider: 'mock', mode: 'normal', policyKey: 'mock-normal',
   retry: 1, maxRetries: 2, delayMs: 450,
   failure: { code: 'TRANSPORT', message: '连接被重置' },
@@ -2181,7 +2181,7 @@ describe('ChatView', () => {
     const view = render(<h.ChatView {...h.props} />)
     // Freshly mounted (as after a reload) yet already past the 15s gate.
     const status = view.getByRole('status')
-    expect(status.textContent).toMatch(/^深度求索中\.\.\.2分0\d秒$/)
+    expect(status.textContent).toMatch(/^正在准备\.\.\.2分0\d秒$/)
     expect(status.querySelector('[aria-hidden="true"]')).not.toBeNull()
     act(() => {
       h.setSession({ queue: [{
@@ -2193,7 +2193,7 @@ describe('ChatView', () => {
         text: 'also',
       }] })
     })
-    expect(status.textContent).toMatch(/^深度求索中\.\.\.2分0\d秒$/)
+    expect(status.textContent).toMatch(/^正在准备\.\.\.2分0\d秒$/)
   })
 
   it('the running clock reads hours once the turn passes an hour', () => {
@@ -2204,7 +2204,101 @@ describe('ChatView', () => {
       { running: true },
     )
     const view = render(<h.ChatView {...h.props} />)
-    expect(view.getByRole('status').textContent).toMatch(/^深度求索中\.\.\.1小时05分0\d秒$/)
+    expect(view.getByRole('status').textContent).toMatch(/^正在准备\.\.\.1小时05分0\d秒$/)
+  })
+
+  it('labels a running session with no open turn as preparing', () => {
+    const h = makeHarness({ nodes: [] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels a running session after a closed turn as preparing', () => {
+    const h = makeHarness({
+      nodes: [user(1, 'q'), assistant(2, 'a')],
+      turnEnds: new Map([[1, 3]]),
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels a transcript echo as preparing before the host marks the session running', () => {
+    const h = makeHarness(
+      { nodes: [] },
+      {
+        pendingSubmissions: [{
+          requestId: 'req-prepare' as never, placement: 'transcript',
+          time: 5_000, text: '先发出来', attachments: [],
+        }],
+      },
+    )
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels an in-flight assistant stream as generating', () => {
+    const h = makeHarness({
+      nodes: [user(1, 'go')],
+      partial: { turn: 1, step: 1, blocks: [{ kind: 'text', text: 'hello' }] },
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('深度求索中...')
+  })
+
+  it('labels a scheduled model retry at the tip as retrying', () => {
+    const h = makeHarness({ nodes: [user(1, 'try'), retry(2)] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('正在重试...')).toBeTruthy()
+  })
+
+  it('labels a settled assistant in an open turn as preparing', () => {
+    const h = makeHarness({ nodes: [user(1, 'go'), assistant(2, 'done')] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels a started model retry without a live stream as preparing', () => {
+    const h = makeHarness({
+      nodes: [user(1, 'try'), retry(2, 'started')],
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('正在准备...')).toBeTruthy()
+  })
+
+  it('labels a live tool call as generating', () => {
+    const h = makeHarness({ runningCalls: [runningCall('r1')] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('深度求索中...')
+  })
+
+  it('labels an open step as generating before the first token', () => {
+    const snapshot = chatSnapshotFixture({
+      nodes: [user(1, 'go')],
+      turnTimings: new Map([[1, { startTime: Date.now() }]]),
+    })
+    const turn = snapshot.timeline.turns.get(1)
+    if (turn === undefined) throw new Error('expected open turn')
+    const h = makeHarness({
+      chat: {
+        ...snapshot,
+        timeline: {
+          turnOrder: snapshot.timeline.turnOrder,
+          turns: new Map([[1, {
+            ...turn,
+            steps: [{
+              turn: 1,
+              step: 1,
+              start: undefined,
+              end: undefined,
+              status: 'open',
+              data: turn.data as never,
+            }],
+          }]]),
+        },
+      },
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('深度求索中...')
   })
 
   it('hands each ordered root call to the keyed business-node slot', () => {
