@@ -100,7 +100,8 @@ const IN_BAND_ERROR_CODE: Readonly<Record<string, string>> = Object.freeze({
 function inBandProviderCode(message: string): string | undefined {
   const trimmed = message.trim()
   const labeled = /^(?:Error Code\s+)?([a-z][a-z0-9_]*)\s*:/i.exec(trimmed)
-  if (labeled !== null) return labeled[1].toLowerCase()
+  const code = labeled?.[1]
+  if (code !== undefined) return code.toLowerCase()
   if (/^[a-z][a-z0-9_]*$/i.test(trimmed)) return trimmed.toLowerCase()
   return undefined
 }
