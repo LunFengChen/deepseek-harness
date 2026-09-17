@@ -90,6 +90,48 @@ describe('Agent', () => {
     expect(lifecycle).toEqual(['turn/start', 'agent/inbox/claimed'])
   })
 
+  it('starts prompt assembly on a later macrotask after claiming', async () => {
+    const ctx = await harness(new MockAdapter([textResponse('ok')]))
+    const agent = await ctx.agentLoop.create(SessionId('yield-assemble'), { provider: 'mock', model: 'mock' })
+    const assemble = vi.spyOn(ctx.systemPrompt, 'assemble')
+    const lifecycle: string[] = []
+    ctx.on('session/event', (session, event) => {
+      if (session === agent.session && event.type === 'turn/start') lifecycle.push('turn/start')
+    })
+    ctx.on('agent/inbox/claimed', ({ agent: subject }) => {
+      if (subject === agent) lifecycle.push('agent/inbox/claimed')
+    })
+
+    try {
+      send(agent, 'run')
+      expect(lifecycle).toEqual(['turn/start', 'agent/inbox/claimed'])
+      expect(assemble).not.toHaveBeenCalled()
+
+      await new Promise<void>((resolve) => { setImmediate(resolve) })
+      expect(assemble).toHaveBeenCalledTimes(1)
+      await agent.whenIdle()
+    } finally {
+      assemble.mockRestore()
+    }
+  })
+
+  it('skips prompt assembly when cancelled during the post-claim yield', async () => {
+    const ctx = await harness(new MockAdapter([textResponse('ok')]))
+    const agent = await ctx.agentLoop.create(SessionId('yield-cancel'), { provider: 'mock', model: 'mock' })
+    const assemble = vi.spyOn(ctx.systemPrompt, 'assemble')
+
+    try {
+      send(agent, 'run')
+      expect(assemble).not.toHaveBeenCalled()
+      agent.cancel({ kind: 'user' })
+      await new Promise<void>((resolve) => { setImmediate(resolve) })
+      expect(assemble).not.toHaveBeenCalled()
+      await agent.whenIdle()
+    } finally {
+      assemble.mockRestore()
+    }
+  })
+
   it('idle inject() rejects invalid input before enqueue', async () => {
     const ctx = await harness(new MockAdapter([textResponse('ok')]))
     const agent = await ctx.agentLoop.create(SessionId('a1'), { provider: 'mock', model: 'mock' })
