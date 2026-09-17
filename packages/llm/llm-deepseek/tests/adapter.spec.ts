@@ -1303,6 +1303,7 @@ describe('DeepSeekAdapter against a mock server', () => {
     [429, 'RATE_LIMIT'],
     [400, 'INVALID_REQUEST'],
     [500, 'SERVER'],
+    [502, 'SERVER'],
     [503, 'SERVER'],
   ])('maps HTTP %d to failure code %s with the body message', async (status, code) => {
     const behavior: Behavior = {
@@ -1439,6 +1440,10 @@ describe('DeepSeekAdapter against a mock server', () => {
     expect(httpErrorCode(429, { code: 'insufficient_quota', message: 'account credits exhausted' }))
       .toBe(QUOTA_EXCEEDED_CODE)
     expect(httpErrorCode(429, { message: 'request rate limit exceeded' })).toBe('RATE_LIMIT')
+    expect(httpErrorCode(429, { message: 'You have exceeded the 5-hour usage quota. It will reset soon.' }))
+      .toBe(QUOTA_EXCEEDED_CODE)
+    expect(httpErrorCode(403, { type: 'permission_error', message: "You've reached your usage limit for this billing cycle." }))
+      .toBe(QUOTA_EXCEEDED_CODE)
   })
 
   it('keeps the status-line message for JSON error bodies without a message', async () => {

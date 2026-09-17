@@ -379,6 +379,8 @@ describe('PiAiAdapter provider routing', () => {
     [400, 'INVALID_REQUEST'],
     [429, 'RATE_LIMIT'],
     [500, 'SERVER'],
+    [502, 'SERVER'],
+    [503, 'SERVER'],
   ] as const)('maps HTTP %s failures to %s', async (status, code) => {
     const server = await mockServer([{ status, body: JSON.stringify({ error: { message: `provider ${status}` } }) }])
     const ctx = await harness(server.url)

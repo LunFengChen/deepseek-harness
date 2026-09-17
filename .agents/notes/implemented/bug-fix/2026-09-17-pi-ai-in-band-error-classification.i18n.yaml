@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-17-pi-ai-in-band-error-classification.md
+2026-09-17-pi-ai-in-band-error-classification.md: e6f11a255392aff05bb884ad7a01a9b7f703715a
+2026-09-17-pi-ai-in-band-error-classification.zh.md: 0c646b8ba965deb587098e31f33db9c292b3d31f

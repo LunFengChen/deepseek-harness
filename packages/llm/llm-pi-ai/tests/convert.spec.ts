@@ -895,6 +895,12 @@ describe('mapStopReason / mapUsage', () => {
     }))).toMatchObject({ kind: 'error', failure: { code: 'QUOTA' } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'HTTP 500: backend down' })))
       .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
+    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'OpenAI API error (502): 502 status code (no body)' })))
+      .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
+    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'OpenAI API error (503): {"message":"Service temporarily unavailable","type":"api_error"}' })))
+      .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
+    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'OpenAI API error (524): 524 status code (no body)' })))
+      .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'provider timed out' })))
       .toMatchObject({ kind: 'error', failure: { code: 'TIMEOUT' } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'ECONNRESET socket closed' })))
@@ -944,16 +950,42 @@ describe('mapStopReason / mapUsage', () => {
     'OpenAI Responses stream ended before a terminal response event',
     'openrouter stream ended without a terminal event',
     'stream_read_error',
+    'Stream ended without finish_reason',
+    'Bad control character in string literal in JSON at position 75 (line 1 column 76)',
   ])('maps pi-ai transport wording %j', (errorMessage) => {
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage })))
       .toMatchObject({ kind: 'error', failure: { code: 'TRANSPORT' } })
   })
 
-  it('retries a missing finish_reason as PI_AI_ERROR rather than a socket drop', () => {
-    expect(mapStopReason(assistant({
-      stopReason: 'error',
-      errorMessage: 'Stream ended without finish_reason',
-    }))).toMatchObject({ kind: 'error', failure: { code: 'PI_AI_ERROR' } })
+  it.each([
+    ['gateway_concurrency_limit: Concurrency limit exceeded for account, please retry later', 'RATE_LIMIT'],
+    ['Concurrency limit exceeded for account, please retry later', 'RATE_LIMIT'],
+    ['Error Code internal_server_error: Internal Server Error', 'SERVER'],
+    ['upstream_error: Upstream service temporarily unavailable', 'SERVER'],
+    ['An error occurred in model serving, error message is: [Backend buffer overflow.]', 'SERVER'],
+    ['Error Code cyber_policy: This content was flagged for possible cybersecurity risk.', 'INVALID_REQUEST'],
+    ['OpenAI API error (404): {"message":"Model \\"gpt-5.5\\" is not supported","type":"model_not_found"}', 'INVALID_REQUEST'],
+    ['The service encountered an unexpected internal error. Request id: 0217877372827183742719bd01cfbc48', 'SERVER'],
+    ['You have exceeded the 5-hour usage quota. It will reset at 2026-08-28 18:52:12 +0800 CST.', 'QUOTA'],
+    ["You've reached your usage limit for this billing cycle. Your quota will reset soon.", 'QUOTA'],
+    ["OpenAI API error (403): You've reached your usage limit for this billing cycle.", 'QUOTA'],
+    ['OpenAI API error (429): {"message":"You have exceeded the 5-hour usage quota","type":"rate_limit_error"}', 'QUOTA'],
+  ] as const)('maps in-band provider wording %j to %s', (errorMessage, code) => {
+    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage })))
+      .toMatchObject({ kind: 'error', failure: { code } })
+  })
+
+  it('classifies an HTML or empty 5xx body from the captured HTTP status', () => {
+    expect(mapStopReason(
+      assistant({ stopReason: 'error', errorMessage: '<html>Bad Gateway</html>' }),
+      undefined,
+      { status: 502 },
+    )).toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
+    expect(mapStopReason(
+      assistant({ stopReason: 'error', errorMessage: 'gateway_concurrency_limit: please retry later' }),
+      undefined,
+      { status: 200 },
+    )).toMatchObject({ kind: 'error', failure: { code: 'RATE_LIMIT' } })
   })
 
   it('uses pi-ai provider-specific overflow classification without losing rate-limit exclusions', () => {

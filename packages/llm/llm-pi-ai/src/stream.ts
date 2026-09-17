@@ -61,31 +61,77 @@ export function mapUsage(usage: PiUsage): TokenUsage {
 // wrapper a bare `terminated`, so we are left pattern-matching terse words here.
 // If pi-ai ever forwards the original Error (or a fetch/dispatcher hook that lets
 // us capture the cause ourselves), classify on `code`/`cause` instead of text.
-function classifyPiAiError(message: string): string {
-  // This wording is thrown by pi-ai's OpenAI Chat Completions parser after the
-  // HTTP/SSE body ends without a protocol finish marker. It used to be treated
-  // as a terminal protocol bug; providers that truncate mid-stream under load
-  // also throw it, so the default retry policy now retries PI_AI_ERROR as well.
-  if (/^Stream ended without finish_reason$/i.test(message.trim())) return 'PI_AI_ERROR'
-  if (/\b(?:401|403)\b/.test(message)) return 'AUTH'
+/**
+ * OpenAI-compatible in-band error codes from HTTP 200 SSE `error` events.
+ * Leading `code:` / `Error Code code:` / a bare code token map onto the shared
+ * retryable set; content-policy and missing-model codes stay non-retryable.
+ */
+const IN_BAND_ERROR_CODE: Readonly<Record<string, string>> = Object.freeze({
+  gateway_concurrency_limit: 'RATE_LIMIT',
+  concurrency_limit: 'RATE_LIMIT',
+  concurrent_limit: 'RATE_LIMIT',
+  rate_limit: 'RATE_LIMIT',
+  rate_limit_exceeded: 'RATE_LIMIT',
+  rate_limit_error: 'RATE_LIMIT',
+  too_many_requests: 'RATE_LIMIT',
+  insufficient_quota: QUOTA_EXCEEDED_CODE,
+  quota_exceeded: QUOTA_EXCEEDED_CODE,
+  internal_server_error: 'SERVER',
+  server_error: 'SERVER',
+  upstream_error: 'SERVER',
+  api_error: 'SERVER',
+  overloaded_error: 'SERVER',
+  engine_overloaded: 'SERVER',
+  overloaded: 'SERVER',
+  bad_gateway: 'SERVER',
+  service_unavailable: 'SERVER',
+  gateway_timeout: 'SERVER',
+  cf_error: 'SERVER',
+  stream_read_error: 'TRANSPORT',
+  cyber_policy: 'INVALID_REQUEST',
+  content_policy: 'INVALID_REQUEST',
+  content_filter: 'INVALID_REQUEST',
+  model_not_found: 'INVALID_REQUEST',
+  invalid_request: 'INVALID_REQUEST',
+  invalid_request_error: 'INVALID_REQUEST',
+  permission_error: 'AUTH',
+})
+
+function inBandProviderCode(message: string): string | undefined {
+  const trimmed = message.trim()
+  const labeled = /^(?:Error Code\s+)?([a-z][a-z0-9_]*)\s*:/i.exec(trimmed)
+  if (labeled !== null) return labeled[1].toLowerCase()
+  if (/^[a-z][a-z0-9_]*$/i.test(trimmed)) return trimmed.toLowerCase()
+  return undefined
+}
+
+function classifyPiAiError(message: string, status?: number): string {
   if (isQuotaExceededError(message)) return QUOTA_EXCEEDED_CODE
-  if (/\b429\b|rate.?limit/i.test(message)) return 'RATE_LIMIT'
+  const inBand = inBandProviderCode(message)
+  if (inBand !== undefined) {
+    const mapped = IN_BAND_ERROR_CODE[inBand]
+    if (mapped !== undefined) return mapped
+  }
+  if (/\b429\b|rate.?limit/i.test(message) || status === 429) return 'RATE_LIMIT'
+  if (/\bconcurrency[\s_-]+limit\b|\bplease retry later\b/i.test(message)) return 'RATE_LIMIT'
   // Overflow must win over generic HTTP 400 / invalid-request labels that
   // Grok and other OpenAI-compatible gateways put on context-limit failures.
   if (isContextWindowExceededError(message)) return CONTEXT_WINDOW_EXCEEDED_CODE
-  if (/\b413\b|failed to buffer the request body:\s*length limit exceeded|payload too large|request body too large/i.test(message)) return 'INVALID_REQUEST'
-  if (/\b400\b|invalid.?request/i.test(message)) return 'INVALID_REQUEST'
-  // Gateway 5xx failures surface either as a numeric status (`500`) or as
-  // OpenAI-style error codes (`internal_server_error`, `server_error`); both
-  // are transient server faults and belong to the retryable SERVER class.
-  if (/\b(?:internal_)?server_error\b|\b5\d\d\b/i.test(message)) return 'SERVER'
-  if (/\btime(?:d)?\s*out\b|timeout/i.test(message)) return 'TIMEOUT'
-  // A stream truncated before the provider's terminal event: most pi-ai providers
-  // throw their own wording when the wire closes mid-response without a terminal
-  // event (`… stream ended before message_stop`, `… before a terminal response
-  // event`, `… ended without a terminal event`). The OpenAI Chat Completions
-  // `finish_reason` invariant above is intentionally handled before this broad
-  // wording so a gateway protocol bug does not get retried as a socket drop.
+  if (/\b413\b|failed to buffer the request body:\s*length limit exceeded|payload too large|request body too large/i.test(message) || status === 413) return 'INVALID_REQUEST'
+  if (/\b404\b|\bmodel_not_found\b/i.test(message) || status === 404) return 'INVALID_REQUEST'
+  if (/\b400\b|invalid.?request/i.test(message) || status === 400) return 'INVALID_REQUEST'
+  if (/\b(?:401|403)\b/.test(message) || status === 401 || status === 403) return 'AUTH'
+  // Gateway 5xx failures surface as a numeric status, OpenAI-style error
+  // codes, Cloudflare 52x, or an HTML/empty body whose HTTP status is 5xx.
+  if (/\b(?:internal_)?server_error\b|\b5\d\d\b/i.test(message)
+    || /\bunexpected internal error\b/i.test(message)
+    || (status !== undefined && status >= 500)) {
+    return 'SERVER'
+  }
+  if (/\btemporarily unavailable\b|backend buffer overflow/i.test(message)) return 'SERVER'
+  if (/\btime(?:d)?\s*out\b|timeout/i.test(message) || status === 408) return 'TIMEOUT'
+  // Truncation before a terminal event, including Chat Completions
+  // `Stream ended without finish_reason`, is the same drop class as a socket close.
   if (/stream ended (?:before|without)\b/i.test(message)) return 'TRANSPORT'
   if (/\b(?:network|connection|socket|fetch)\b|\bECONN[A-Z]+\b/i.test(message)
     || /\b(?:other side closed|HTTP2 request did not get a response|WebSocket closed unexpectedly)\b/i.test(message)
@@ -93,8 +139,10 @@ function classifyPiAiError(message: string): string {
     // `cause` — the real SocketError — was flattened away upstream); Node's
     // stream layer says `Premature close`. OpenAI Responses gateways emit
     // `stream_read_error` as an in-band error event when the upstream stream
-    // dies after HTTP 200; that is the same class of drop.
-    || /\bterminated\b|premature close|stream_read_error\b/i.test(message)) {
+    // dies after HTTP 200; a truncated JSON body is the same class of drop.
+    || /\bterminated\b|premature close|stream_read_error\b/i.test(message)
+    || /bad control character in string literal in json/i.test(message)
+    || /unexpected (?:end of json|token[\s\S]*in json)|json at position \d+/i.test(message)) {
     return 'TRANSPORT'
   }
   return 'PI_AI_ERROR'
@@ -241,7 +289,7 @@ export function mapStopReason(
         kind: 'error',
         failure: {
           message: appendDiagnostics(text, diagnostics),
-          code: classifyPiAiError(text),
+          code: classifyPiAiError(text, diagnostics?.status),
           ...diagnosticFailureFacts(diagnostics),
         },
       }

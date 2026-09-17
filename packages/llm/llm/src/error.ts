@@ -110,6 +110,9 @@ export function isQuotaExceededError(detail: string): boolean {
     || /\bexceed(?:ed|s)?[\s_-]+(?:(?:your|the)[\s_-]+)?(?:current[\s_-]+)?quota\b/i.test(detail)
     || /\b(?:balance|credits?)[\s_-]+(?:exhausted|depleted)\b/i.test(detail)
     || /\bout[\s_-]+of[\s_-]+(?:credits?|budget)\b/i.test(detail)
+    || /\bexceeded the .{0,24}usage[\s_-]+quota\b/i.test(detail)
+    || /\breached your usage limit\b/i.test(detail)
+    || /\busage[\s_-]+limit\b.{0,48}\bbilling cycle\b/i.test(detail)
 }
 
 /**
