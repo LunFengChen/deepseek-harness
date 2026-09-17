@@ -1956,9 +1956,9 @@ export type JsonlCompression = 'zstd' | 'none'
 /**
  * Plugin config. Both throttle triggers are deployment choices with no
  * universally correct value, so the composition states them explicitly
- * (cordis.yml); the three mandatory write points (session creation,
- * `turn/end`, and session disposal) are policy, not tunables, and always
- * fire.
+ * (cordis.yml); the four mandatory write points (session creation,
+ * `turn/end`, `session/truncated`, and session disposal) are policy, not
+ * tunables, and always fire.
  */
 export interface Config {
   /** Committed events per session that force a durable checkpoint write between mandatory points. */

@@ -119,6 +119,9 @@ export class TokenMeter extends Service {
     ctx.on('session/event', (session) => {
       if (this.states.has(session)) this._sync(session)
     })
+    ctx.on('session/truncated', (session) => {
+      this.states.delete(session)
+    })
   }
 
   /**
@@ -217,6 +220,10 @@ export class TokenMeter extends Service {
   /** Catch one session's fold up to the current durable tail. */
   private _sync(session: Session): ReplayState {
     let state = this.states.get(session)
+    if (state !== undefined && state.consumedEvents > session.seq) {
+      this.states.delete(session)
+      state = undefined
+    }
     if (state === undefined) {
       state = {
         consumedEvents: SessionLogOffset(0),

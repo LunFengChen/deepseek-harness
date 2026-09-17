@@ -1,5 +1,5 @@
 /**
- * SessionProjectionCache behavior: mandatory-point writes (turn/end, detach),
+ * SessionProjectionCache behavior: mandatory-point writes (turn/end, truncate, detach),
  * count/interval throttling between them, fail-soft durability (a failed
  * write logs and stays stale, never throws into the event path), and the
  * synchronous cached listing read. The durable medium is the
@@ -200,6 +200,24 @@ describe('SessionProjectionCache write policy', () => {
     await vi.waitFor(async () => {
       expect((await storedRows(root, session.id))?.['cache-test/marks'])
         .toEqual({ ver: 1, seq: end.seq, val: { marks: ['a'] } })
+    }, { timeout: 5_000 })
+  })
+
+  it('rewrites the durable checkpoint after the live session log is truncated', async () => {
+    const { ctx, root } = await harness()
+    const session = ctx.sessions.create(SessionId('truncate-cache'))
+    mark(session, ['keep'])
+    const firstEnd = endTurn(session)
+    mark(session, ['drop'])
+    const secondEnd = endTurn(session)
+    await vi.waitFor(async () => {
+      expect((await storedRows(root, session.id))?.['cache-test/marks'])
+        .toEqual({ ver: 1, seq: secondEnd.seq, val: { marks: ['drop'] } })
+    }, { timeout: 5_000 })
+    session.truncate(SessionLogOffset(firstEnd.seq + 1))
+    await vi.waitFor(async () => {
+      expect((await storedRows(root, session.id))?.['cache-test/marks'])
+        .toEqual({ ver: 1, seq: firstEnd.seq, val: { marks: ['keep'] } })
     }, { timeout: 5_000 })
   })
 

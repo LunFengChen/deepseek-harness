@@ -226,6 +226,7 @@ export class SessionCommandController {
 
   /**
    * Create a new ordinary Session from one completed-turn prefix.
+   * Pending inbox input stays on the source; the child starts with empty lists.
    * @param request - source Session and optional event anchor.
    * @returns the new Session identity.
    */

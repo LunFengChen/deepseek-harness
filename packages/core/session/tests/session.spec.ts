@@ -1315,6 +1315,23 @@ describe('SessionStore', () => {
     expect(ctx.sessions.list()).toEqual([session])
   })
 
+  it('emits session/truncated after a live log prefix rewrite', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    const session = ctx.sessions.create(SessionId('truncate-event'))
+    session.append('turn/start', { turn: 1 })
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    session.append('turn/start', { turn: 2 })
+    const seen: number[] = []
+    ctx.on('session/truncated', (truncated) => {
+      seen.push(truncated.seq)
+    })
+    session.truncate(SessionLogOffset(2))
+    expect(seen).toEqual([2])
+    expect(session.seq).toBe(2)
+    await ctx.fiber.dispose()
+  })
+
   it('rejects duplicate ids and supports seeding', async () => {
     const ctx = new Context()
     await ctx.plugin(SessionStore)

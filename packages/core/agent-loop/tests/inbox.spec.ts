@@ -126,32 +126,76 @@ describe('ReactLoopInbox', () => {
     expect((duplicate.cause as Error).message).toBe(`message "${pending.id}" is already pending`)
   })
 
-  it('projects inherited inbox events in a forked session', async () => {
+  it('drops the source live queue at an inherited fork cut and keeps the parent queued', async () => {
     const ctx = new Context()
     await ctx.plugin(SessionStore)
     await ctx.plugin(SessionProjectionRegistry)
     const parent = ctx.sessions.create(SessionId('inbox-fork-parent'))
     const parentAgent = stubAgent('inbox-fork-parent', { ctx, session: parent })
     const parentInbox = new ReactLoopInbox(ctx.sessionProjections, parent, agentEvents(ctx, parentAgent))
-    const inherited = createUserMessage({
+    const queued = createUserMessage({
       content: [{ type: 'text', text: 'parent pending' }],
       source: { kind: 'user' },
     })
-    parentInbox.append('next-turn', inherited)
+    parentInbox.append('next-turn', queued)
+    const nextStep = createUserMessage({
+      content: [{ type: 'text', text: 'parent next-step' }],
+      source: { kind: 'user' },
+    })
+    parentInbox.append('next-step', nextStep)
     const child = ctx.sessions.fork(parent, undefined, SessionId('inbox-fork-child'))
     const childAgent = stubAgent('inbox-fork-child', { ctx, session: child })
     const childInbox = new ReactLoopInbox(ctx.sessionProjections, child, agentEvents(ctx, childAgent))
 
     expect(child.inheritedEventCount).toBe(parent.snapshotEvents().length)
-    expect(childInbox.nextTurn).toEqual([inherited])
+    expect(child.snapshotEvents().at(-1)).toMatchObject({
+      type: 'session/end-seed',
+      data: { inherited: true },
+    })
+    expect(parentInbox.nextTurn).toEqual([queued])
+    expect(parentInbox.nextStep).toEqual([nextStep])
+    expect(childInbox.nextTurn).toEqual([])
+    expect(childInbox.nextStep).toEqual([])
 
     const own = createUserMessage({
       content: [{ type: 'text', text: 'child pending' }],
       source: { kind: 'user' },
     })
     childInbox.append('next-turn', own)
-    expect(childInbox.nextTurn).toEqual([inherited, own])
+    expect(childInbox.nextTurn).toEqual([own])
+    expect(parentInbox.nextTurn).toEqual([queued])
+    expect(parentInbox.nextStep).toEqual([nextStep])
 
+    const resumed = ctx.sessions.create(SessionId('inbox-fork-resume'), {
+      seed: child.snapshotEvents(),
+    })
+    const resumedAgent = stubAgent('inbox-fork-resume', { ctx, session: resumed })
+    const resumedInbox = new ReactLoopInbox(ctx.sessionProjections, resumed, agentEvents(ctx, resumedAgent))
+    expect(resumedInbox.nextTurn).toEqual([own])
+    expect(resumedInbox.nextStep).toEqual([])
+  })
+
+  it('keeps pending input across an untagged resume end-seed', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    const live = ctx.sessions.create(SessionId('inbox-resume-source'))
+    const liveAgent = stubAgent('inbox-resume-source', { ctx, session: live })
+    const liveInbox = new ReactLoopInbox(ctx.sessionProjections, live, agentEvents(ctx, liveAgent))
+    const queued = createUserMessage({
+      content: [{ type: 'text', text: 'resume pending' }],
+      source: { kind: 'user' },
+    })
+    liveInbox.append('next-turn', queued)
+
+    const resumed = ctx.sessions.create(SessionId('inbox-resume-child'), {
+      seed: live.snapshotEvents(),
+    })
+    const resumedAgent = stubAgent('inbox-resume-child', { ctx, session: resumed })
+    const resumedInbox = new ReactLoopInbox(ctx.sessionProjections, resumed, agentEvents(ctx, resumedAgent))
+    expect(resumed.snapshotEvents().at(-1)?.type).toBe('session/end-seed')
+    expect(resumed.snapshotEvents().at(-1)?.data).toEqual({})
+    expect(resumedInbox.nextTurn).toEqual([queued])
   })
 
   it('updates the projection cell before session observers run', async () => {

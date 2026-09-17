@@ -56,9 +56,9 @@ declare module '@deepseek-ai/cordis' {
 /**
  * Plugin config. Both throttle triggers are deployment choices with no
  * universally correct value, so the composition states them explicitly
- * (cordis.yml); the three mandatory write points (session creation,
- * `turn/end`, and session disposal) are policy, not tunables, and always
- * fire.
+ * (cordis.yml); the four mandatory write points (session creation,
+ * `turn/end`, `session/truncated`, and session disposal) are policy, not
+ * tunables, and always fire.
  */
 export interface Config {
   /** Committed events per session that force a durable checkpoint write between mandatory points. */
@@ -83,9 +83,9 @@ interface DirtyState {
 /**
  * The persisted projection cache service. Opens the `session_projcache`
  * domain at init, checkpoints live sessions on a throttled write-behind
- * (count/interval triggers from {@link Config}) plus three mandatory points —
- * session creation, `turn/end`, and session disposal (the live-to-cold
- * moment) — and serves the
+ * (count/interval triggers from {@link Config}) plus four mandatory points —
+ * session creation, `turn/end`, `session/truncated`, and session disposal
+ * (the live-to-cold moment) — and serves the
  * cached rows for a session header. Every durable write is fail-soft:
  * failures log a warning and the cache self-heals on the next write.
  */
@@ -326,6 +326,9 @@ export class SessionProjectionCache extends Service {
     // on the cold list. The creation write captures the seed-derived cut.
     this.ctx.on('session/created', (session: Session) => {
       void this.flushSoft(session, 'create')
+    })
+    this.ctx.on('session/truncated', (session: Session) => {
+      void this.flushSoft(session, 'truncate')
     })
 
     // Detach (the live-to-cold moment): the final mandatory point. After

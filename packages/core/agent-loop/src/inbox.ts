@@ -23,12 +23,27 @@ export const inboxProjectionSchema = z.object({
   'next-step': z.array(z.custom<UserMessage>()).readonly(),
 }).readonly()
 
-/** Standard fold that reconstructs pending input and rejects invalid durable splice history. */
+function emptyInbox(): InboxState {
+  return { 'next-turn': [], 'next-step': [] }
+}
+
+function inboxIsEmpty(state: InboxState): boolean {
+  return state['next-turn'].length === 0 && state['next-step'].length === 0
+}
+
+/**
+ * Standard fold that reconstructs pending input and rejects invalid durable splice history.
+ * An inherited `session/end-seed` drops the source agent's live queue: fork copies
+ * conversation history, not queued prompts.
+ */
 export const inboxProjectionDefinition = {
   key: 'inbox',
   stateSchema: inboxProjectionSchema,
-  init: (): InboxState => ({ 'next-turn': [], 'next-step': [] }),
+  init: (): InboxState => emptyInbox(),
   apply(state: InboxState, event) {
+    if (event.type === 'session/end-seed' && event.data.inherited === true) {
+      return inboxIsEmpty(state) ? state : emptyInbox()
+    }
     if (event.type !== 'agent/inbox/spliced') return state
     const splice = event.data
     try {

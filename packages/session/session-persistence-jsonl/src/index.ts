@@ -841,7 +841,8 @@ class JsonlSessionPersistence extends SessionPersistence {
 
   /**
    * Rewrite one active session's current generation with an earlier event prefix.
-   * Historical format generations are left in place.
+   * Historical format generations are left in place. Routed live events at or
+   * past `length` are dropped so a later drain cannot replay the discarded tail.
    * @param id - the session whose write handle is active in this backend.
    * @param length - number of events to retain.
    * @returns resolution after the durable rewrite completes.

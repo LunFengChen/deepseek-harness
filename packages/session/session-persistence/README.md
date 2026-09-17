@@ -80,7 +80,7 @@ The package is a seam, not a backend framework: it exports the abstract `Session
 
 ### The invariants every backend honors
 
-- **Contiguous `seq`.** Ordinary `append` never rewrites committed events; an explicit persistence `truncate` is the destructive exception that replaces the current generation's retained prefix. `append`'s first `seq` must equal the stored next-seq, and a gap rejects.
+- **Contiguous `seq`.** Ordinary `append` never rewrites committed events; an explicit persistence `truncate` is the destructive exception that replaces the current generation's retained prefix. `append`'s first `seq` must equal the stored next-seq, and a gap rejects. Destructive truncate drops routed live events at or past the retained length so a later flush cannot replay the discarded tail.
 - **A torn physical tail never reaches a reader.** It belongs to an append that never resolved; the write path truncates it durably before its first new append.
 - **Lossless JSON data.** Batches and headers pass the shared one-pass validate-and-snapshot boundary (`materializeAppendBatch`/`materializeCreateHeader`); non-serializable payloads reject at the call site.
 - **Durability.** `append` persists best-effort; `flush` — per handle or service-wide — is the barrier that promises storage and also materializes an empty session.
