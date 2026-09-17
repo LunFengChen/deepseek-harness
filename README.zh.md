@@ -21,7 +21,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 | 数据目录 | `xfdsh` 的插件和 profile 放在 `~/.xfdsh`。官方 `dsh` 的插件和 profile 仍在 `~/.dsh`。会话、分组、附件、settings 和 API key 共用 `~/.dsh`。 | 不用迁移向导就能读到同一份历史。`xfdsh` 不会写 `~/.dsh/profiles`。 |
 | Web 端口 | `xfdsh web` 默认监听 `127.0.0.1:7777`。官方 `dsh web` 仍是 `3080`。 | 两套 UI 可以同时开。 |
 | Session Timeline | 预装且可关闭：`github:LunFengChen/dsh-session-timeline#v0.1.0`（`@x1a0f3n9/dsh-session-timeline`）：回退、删除、重新生成，以及输入框压缩按钮。 | 不满意的回答会从界面和后续模型请求里一起消失。一点即可运行 `/compact`。 |
-| 插件市场 | 预装且可关闭：`github:LunFengChen/dsh-market#v1.44.1`。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 | 社区插件用 `xfdsh plugin --profile web add` 安装。 |
+| 插件市场 | 预装且可关闭：`github:LunFengChen/dsh-market#v1.44.2`。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 | 社区插件用 `xfdsh plugin --profile web add` 安装。 |
 | xfdsh预置插件 | 预置插件放在 **xfdsh预置插件** 标签页。卡片显示包版本，包名链到 GitHub pin。插件列表只保留会话/全局清单，并去掉这些包。 | Settings → Plugins → xfdsh预置插件 里开关，而不会混进插件列表。 |
 | 思考强度 | 预装滑条 `github:LunFengChen/dsh-reasoning-effort#v0.7.1`。Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。 | 自定义模型声明档位后，输入框才能选思考强度。滑条可在 Settings → Plugins 关闭。 |
 | 上下文面板 | 预装且可关闭：`github:LunFengChen/dsh-context#v0.49.6`。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |

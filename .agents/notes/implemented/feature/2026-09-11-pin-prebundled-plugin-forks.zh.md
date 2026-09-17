@@ -12,7 +12,7 @@ xfdsh 会预装社区插件。`dsh-context` 已经来自 `LunFengChen/dsh-contex
 
 在 `packages/bundle/web-app/package.json` 把要自己维护的预装钉到 LunFengChen 的 GitHub tag：
 
-- `dshmarket` → `github:LunFengChen/dsh-market#v1.44.1`
+- `dshmarket` → `github:LunFengChen/dsh-market#v1.44.2`
 - `dsh-reasoning-effort` → `github:LunFengChen/dsh-reasoning-effort#v0.7.1`
 - `dsh-context` → `github:LunFengChen/dsh-context#v0.49.6`
 - `dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7`

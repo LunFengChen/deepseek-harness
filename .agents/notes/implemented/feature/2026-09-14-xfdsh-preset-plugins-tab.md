@@ -21,4 +21,4 @@ Register a second `settings.plugins.tab` (`xfdsh-presets`). That tab renders the
 ## Consequences
 
 - Settings → Plugins shows Plugin configuration, Plugin list, and xfdsh preset plugins.
-- Timeline, market, reasoning effort, dsh-context, better-sidebar, and Hindsight toggle from the new tab.
+- Timeline, market, reasoning effort, dsh-context, better-sidebar, Hindsight, and failover queue toggle from the new tab.

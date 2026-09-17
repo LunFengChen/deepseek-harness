@@ -2034,8 +2034,8 @@ importers:
         specifier: github:LunFengChen/dsh-reasoning-effort#v0.7.1
         version: https://codeload.github.com/LunFengChen/dsh-reasoning-effort/tar.gz/c96471f966db8c6d4283c02e6fa6da358aca521a(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-client-runtime@0.1.0-rc.8(5df0fdd8cfed3960dcc27eb4916d7181))(react@18.3.1)
       dshmarket:
-        specifier: github:LunFengChen/dsh-market#v1.44.1
-        version: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)
+        specifier: github:LunFengChen/dsh-market#v1.44.2
+        version: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/844c5121a43afc0fb01b39347531d4d388ab7dd2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)
       open:
         specifier: ^11.0.0
         version: 11.0.0
@@ -15913,9 +15913,9 @@ packages:
       '@deepseek-ai/dsh-client-ui-slots': npm:@x1a0f3n9/dsh-client-ui-slots@workspace:*
       react: ^18.2.0
 
-  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0}
-    version: 1.44.1
+  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/844c5121a43afc0fb01b39347531d4d388ab7dd2:
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/844c5121a43afc0fb01b39347531d4d388ab7dd2}
+    version: 1.44.2
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.1
       '@deepseek-ai/dsh-settings': npm:@x1a0f3n9/dsh-settings@workspace:*
@@ -23253,7 +23253,7 @@ snapshots:
       '@deepseek-ai/schemastery': link:vendor/schemastery
       react: 18.3.1
 
-  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery):
+  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/844c5121a43afc0fb01b39347531d4d388ab7dd2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery):
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       js-yaml: 4.3.1

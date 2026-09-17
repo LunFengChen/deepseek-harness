@@ -191,7 +191,7 @@
     "@deepseek-ai/schemastery": "workspace:^",
     "commander": "^15.0.0",
     "open": "^11.0.0",
-    "dshmarket": "github:LunFengChen/dsh-market#v1.44.1",
+    "dshmarket": "github:LunFengChen/dsh-market#v1.44.2",
     "dsh-reasoning-effort": "github:LunFengChen/dsh-reasoning-effort#v0.7.1",
     "@x1a0f3n9/dsh-session-timeline": "github:LunFengChen/dsh-session-timeline#v0.1.0",
     "dsh-context": "github:LunFengChen/dsh-context#v0.49.6",

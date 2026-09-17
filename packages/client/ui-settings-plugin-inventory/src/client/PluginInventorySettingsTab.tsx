@@ -82,10 +82,36 @@ function matches(moduleName: string, entryId: string | null, normalizedQuery: st
     .some(value => value.toLocaleLowerCase().includes(normalizedQuery))
 }
 
+/** `owner/repo` when homepage is a GitHub repository URL; used only for catalog search. */
+function githubOwnerRepo(homepage: string | undefined): string | undefined {
+  if (homepage === undefined || homepage.length === 0) return undefined
+  let url: URL
+  try {
+    url = new URL(homepage)
+  } catch (_invalidUrl) {
+    return undefined
+  }
+  if (url.hostname !== 'github.com' && url.hostname !== 'www.github.com') return undefined
+  const segments = url.pathname.split('/').filter(segment => segment.length > 0)
+  const owner = segments[0]
+  const repo = segments[1]?.replace(/\.git$/u, '')
+  if (owner === undefined || repo === undefined || repo.length === 0) return undefined
+  return `${owner}/${repo}`
+}
+
 /** Whether a prebundled catalog row matches the current search query. */
 function catalogMatches(entry: PluginInventoryCatalogEntry, normalizedQuery: string): boolean {
   if (normalizedQuery.length === 0) return true
-  return [entry.id, entry.entryId, entry.packageName, entry.version, entry.title, entry.description]
+  return [
+    entry.id,
+    entry.entryId,
+    entry.packageName,
+    entry.version,
+    entry.title,
+    entry.description,
+    entry.author,
+    githubOwnerRepo(entry.homepage),
+  ]
     .filter((value): value is string => value !== undefined)
     .some(value => value.toLocaleLowerCase().includes(normalizedQuery))
 }
@@ -486,7 +512,7 @@ export function PluginInventorySettingsTab({
                         <div className={css.catalogMain}>
                           <strong className={css.catalogTitle} title={entry.packageName}>{title}</strong>
                           <div className={css.catalogMeta}>
-                            {entry.homepage !== undefined ? (
+                            {entry.homepage !== undefined && entry.homepage.length > 0 ? (
                               <a
                                 className={css.catalogPackageLink}
                                 href={entry.homepage}
