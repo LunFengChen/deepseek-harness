@@ -32,7 +32,7 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 | Session utilities | Workspace rows can copy the session id. | Session ids are easier to share and debug. |
 | Memory and continuation | Session persistence bounds in-memory reads; context overflow triggers compaction and retry. A large-to-small model switch prices pressure against the pending picker before the next request. | Long sessions are less likely to stall. Truncated nonempty summaries still replace the compacted span. |
 | Text-only models | Historical and new images become stable text placeholders on text-only routes. | Switching models does not strand a session that already contains images. |
-| Web search | Default provider is the multi-key `search-pool` (Tavily, Perplexity, Exa, then keyless Bing/DuckDuckGo). DeepSeek search remains selectable. | Every chat model can `web_search` without a DeepSeek search key. |
+| Web search pool | Preinstalled, disableable first-party plugin `@x1a0f3n9/dsh-web-search-pool` (Settings → Plugins). Default order is the pool, then Perplexity, Exa, and keyless Bing/DuckDuckGo. DeepSeek search remains selectable. | Every chat model can `web_search` without a DeepSeek search key. |
 | Multi-answer / session git graph | Not implemented. Follow-up work on `dsh-session-timeline` after the rewind UI is done. | Documented and deferred. |
 
 ## Branches

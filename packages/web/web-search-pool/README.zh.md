@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-在已加载 web 服务的组合中挂载本提供方；它以 `search-pool` 搜索提供方身份注册。已交付的 base 把它列为独占有序 id：`searchProviderOrder: [search-pool]`。当部署只想用某一个厂商时，再固定叶子 id（`perplexity`、`exa`、`free`、`deepseek-official`）。
+在已加载 web 服务的组合中挂载本提供方；它以 `search-pool` 搜索提供方身份注册。已交付的 xfdsh web-app 把它预置进去，并覆盖 `searchProviderOrder: [search-pool, perplexity, exa, free]`。当部署只想用某一个厂商时，再固定叶子 id（`perplexity`、`exa`、`free`、`deepseek-official`）。
 
 ### 何时选择它
 
@@ -38,7 +38,7 @@ kind: "package-reference"
 ```yaml
 - name: '@x1a0f3n9/dsh-web'
   config:
-    searchProviderOrder: [search-pool]
+    searchProviderOrder: [search-pool, perplexity, exa, free]
     fetchProvider: http
 - name: '@x1a0f3n9/dsh-web-search-pool'
 ```

@@ -25,7 +25,7 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-在已加载 web 服务的组合中挂载本提供方；它以 `free` 搜索提供方身份注册，因此当它是唯一可用的搜索后端时，`ctx.web.search()` 会自动解析到它——也可以用 `searchProvider: free` 固定。已交付的 base 使用 `searchProviderOrder: [search-pool]`；本叶子是搜索池的最后一跳，仍可单独固定。
+在已加载 web 服务的组合中挂载本提供方；它以 `free` 搜索提供方身份注册，因此当它是唯一可用的搜索后端时，`ctx.web.search()` 会自动解析到它——也可以用 `searchProvider: free` 固定。已交付的 xfdsh web-app 使用 `searchProviderOrder: [search-pool, perplexity, exa, free]`；本叶子是搜索池的最后一跳，仍可单独固定。
 
 ### 何时选择
 

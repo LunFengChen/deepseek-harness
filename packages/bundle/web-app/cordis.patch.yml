@@ -37,6 +37,14 @@
     # once the web UI owns the choice per session.
     mode: !!js process.env.DSH_TOOLS_MODE
 
+# xfdsh 预置 search-pool as the default search provider. Restate fetchProvider
+# because a patch replaces the whole `web` config. Disabling the catalog plugin
+# skips the unusable `search-pool` id and falls through to the leaf backends.
+- id: web
+  config:
+    searchProviderOrder: [search-pool, perplexity, exa, free]
+    fetchProvider: http
+
 # ── web-only host rows, the transport layer, and the browser roster ─────────
 
 # `dsh.client` rows are the browser roster the modules node half scans into
@@ -339,6 +347,10 @@
     # Optional P1/P2/P3 provider+model failover. Disable from Settings → Plugins.
     - id: dsh-failover-queue
       name: '@x1a0f3n9/dsh-failover-queue'
+
+    # Optional multi-key web search pool. Disable from Settings → Plugins.
+    - id: web-search-pool
+      name: '@x1a0f3n9/dsh-web-search-pool'
 
     # Background jobs: the session-header list over the jobsBySession mirror.
     - id: ui-jobs

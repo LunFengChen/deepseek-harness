@@ -25,7 +25,7 @@ With `dsh-web-search-pool`, the harness searches the web through one `search-poo
 <a id="use-this-package"></a>
 ## Use this package
 
-Mount the provider in a composition that already loads the web service; it registers as the `search-pool` search provider. The shipped base lists it as the exclusive ordered id: `searchProviderOrder: [search-pool]`. Pin a leaf (`perplexity`, `exa`, `free`, `deepseek-official`) when a deployment wants that vendor alone.
+Mount the provider in a composition that already loads the web service; it registers as the `search-pool` search provider. The shipped xfdsh web-app preinstalls it and overlays `searchProviderOrder: [search-pool, perplexity, exa, free]`. Pin a leaf (`perplexity`, `exa`, `free`, `deepseek-official`) when a deployment wants that vendor alone.
 
 ### When to choose it
 
@@ -38,7 +38,7 @@ Load the web service and the pool; API keys fall back to launch-environment vari
 ```yaml
 - name: '@x1a0f3n9/dsh-web'
   config:
-    searchProviderOrder: [search-pool]
+    searchProviderOrder: [search-pool, perplexity, exa, free]
     fetchProvider: http
 - name: '@x1a0f3n9/dsh-web-search-pool'
 ```

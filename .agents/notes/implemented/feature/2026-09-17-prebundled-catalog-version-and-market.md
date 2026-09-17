@@ -28,3 +28,4 @@ dshmarket `v1.44.1` reads `dsh.bundle.plugins` from selected profile bundles, re
 - Discover marks LunFengChen-forked preinstalls as installed even when the registry URL is the official repo.
 - Uninstall stays off for packages the profile did not add.
 - Failover queue loads from the Web bundle, not from a manual `~/.xfdsh` profile add.
+- Web search pool loads from the same catalog as a first-party workspace 预置.

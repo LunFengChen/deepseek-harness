@@ -1609,9 +1609,6 @@ importers:
       '@x1a0f3n9/dsh-web-search-perplexity':
         specifier: workspace:^
         version: link:../../web/web-search-perplexity
-      '@x1a0f3n9/dsh-web-search-pool':
-        specifier: workspace:^
-        version: link:../../web/web-search-pool
       '@x1a0f3n9/dsh-workflow-worker-thread':
         specifier: workspace:^
         version: link:../../workflow/workflow-worker-thread
@@ -2018,6 +2015,9 @@ importers:
       '@x1a0f3n9/dsh-web-frontend':
         specifier: workspace:^
         version: link:../../../apps/web
+      '@x1a0f3n9/dsh-web-search-pool':
+        specifier: workspace:^
+        version: link:../../web/web-search-pool
       '@x1a0f3n9/dsh-workspace':
         specifier: workspace:^
         version: link:../../workspace/workspace
@@ -11401,9 +11401,6 @@ importers:
       '@x1a0f3n9/dsh-web-search-perplexity':
         specifier: workspace:^
         version: link:../../packages/web/web-search-perplexity
-      '@x1a0f3n9/dsh-web-search-pool':
-        specifier: workspace:^
-        version: link:../../packages/web/web-search-pool
       '@x1a0f3n9/dsh-workflow':
         specifier: workspace:^
         version: link:../../packages/workflow/workflow

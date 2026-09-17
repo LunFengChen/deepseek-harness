@@ -10,7 +10,7 @@ English | [中文](2026-09-13-keyless-web-search-free.zh.md)
 
 ## Decision
 
-Add `@x1a0f3n9/dsh-web-search-free` as the `free` search provider. It reads Bing HTML first and DuckDuckGo HTML if Bing yields no sources. The shipped exclusive order is `[search-pool]`; `free` remains a pin-able leaf and the pool's last hop. DeepSeek search stays mounted and remains a pin-only choice. Redirects are followed because HTML engines geo-redirect; credentialed search backends still reject redirects. See [web search pool](2026-09-17-web-search-pool.md).
+Add `@x1a0f3n9/dsh-web-search-free` as the `free` search provider. It reads Bing HTML first and DuckDuckGo HTML if Bing yields no sources. The shipped xfdsh web exclusive order is `[search-pool, perplexity, exa, free]`; `free` remains a pin-able leaf and the pool's last hop. DeepSeek search stays mounted and remains a pin-only choice. Redirects are followed because HTML engines geo-redirect; credentialed search backends still reject redirects. See [web search pool](2026-09-17-web-search-pool.md).
 
 ## Alternatives considered
 
@@ -24,7 +24,7 @@ Add `@x1a0f3n9/dsh-web-search-free` as the `free` search provider. It reads Bing
 
 ## Consequences
 
-- Default search is `search-pool`, whose last hop is keyless Bing/DuckDuckGo. Pin `searchProvider: free` to use this leaf alone.
+- xfdsh web default search is `search-pool`, whose last hop is keyless Bing/DuckDuckGo. Pin `searchProvider: free` to use this leaf alone.
 - Chat routes without a search key still run `web_search`.
 - Pinning `searchProvider: deepseek-official` still selects DeepSeek search.
 - HTML layout changes can empty the keyless result until the parsers are updated.

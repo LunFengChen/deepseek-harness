@@ -28,3 +28,4 @@ dshmarket `v1.44.1` 从当前选中的 profile bundle 读取 `dsh.bundle.plugins
 - 即使登记处 URL 是官方仓库，Discover 也会把 LunFengChen fork 预装标成已安装。
 - 不是 profile 自己加的包，卸载入口保持关闭。
 - 故障转移队列从 Web bundle 加载，不是手动往 `~/.xfdsh` profile 里加。
+- Web 搜索池作为第一方 workspace 预置，走同一份目录。

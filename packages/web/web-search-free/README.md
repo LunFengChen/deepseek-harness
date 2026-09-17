@@ -25,7 +25,7 @@ With `dsh-web-search-free`, the harness searches the web through Bing HTML first
 <a id="use-this-package"></a>
 ## Use this package
 
-Mount the provider in a composition that already loads the web service; it registers as the `free` search provider, so `ctx.web.search()` resolves it automatically when it is the only usable search backend — or pin it with `searchProvider: free`. The shipped base uses `searchProviderOrder: [search-pool]`; this leaf is the pool's last hop and remains independently pin-able.
+Mount the provider in a composition that already loads the web service; it registers as the `free` search provider, so `ctx.web.search()` resolves it automatically when it is the only usable search backend — or pin it with `searchProvider: free`. The shipped xfdsh web-app uses `searchProviderOrder: [search-pool, perplexity, exa, free]`; this leaf is the pool's last hop and remains independently pin-able.
 
 ### When to choose it
 

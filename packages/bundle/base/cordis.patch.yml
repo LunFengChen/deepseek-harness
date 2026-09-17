@@ -438,20 +438,18 @@
         argumentsPreviewChars: 500
 
     # The shared base enables the stable model-facing web_search and web_fetch
-    # tools. Search defaults to `search-pool` (multi-key failover across Tavily,
-    # Perplexity, Exa, Serper, Brave, Jina, then keyless Bing/DDG). An unavailable
-    # ordered provider is skipped, while an explicit `searchProvider` pin
-    # (including `deepseek-official` or a leaf id) remains strict. Fetch stays
-    # anonymous HTTP. The Web app disables this host row and composes both tools
-    # per agent preset; products with a stricter network policy override tool-web.
+    # tools. Search defaults to the ordered Perplexity → Exa → keyless Bing/DDG
+    # policy: an unavailable provider is skipped, while an explicit `searchProvider`
+    # pin (including `deepseek-official`) remains strict. The Web app disables this
+    # host row and composes both tools per agent preset; products with a stricter
+    # network policy override tool-web. Anonymous fetch accepts only public HTTP(S)
+    # destinations, resolves and validates every destination, and pins every actual
+    # connection.
     - id: web
       name: '@x1a0f3n9/dsh-web'
       config:
-        searchProviderOrder: [search-pool]
+        searchProviderOrder: [perplexity, exa, free]
         fetchProvider: http
-
-    - id: web-search-pool
-      name: '@x1a0f3n9/dsh-web-search-pool'
 
     - id: web-search-perplexity
       name: '@x1a0f3n9/dsh-web-search-perplexity'

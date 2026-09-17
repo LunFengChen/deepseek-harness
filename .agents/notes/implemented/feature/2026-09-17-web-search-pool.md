@@ -10,7 +10,7 @@ Default search is an exclusive `searchProviderOrder`. Perplexity and Exa each ta
 
 ## Decision
 
-Ship `@x1a0f3n9/dsh-web-search-pool` as plugin `web-search-pool`, provider id `search-pool`. It is a `WebSearchProvider`: failover or rotate across Tavily, Perplexity, Exa, Serper, Brave, Jina, then keyless `free`. Multiple keys per backend split on comma or whitespace. A quota/auth failure opens that `${backend}:${key}` circuit longer than a transient burst. Tavily without a key is skipped so anonymous Tavily quota is not burned before `free`. Credentialed adapters use `redirect: 'error'`. Fetch stays `http`. The shipped base sets `searchProviderOrder: [search-pool]` and does not pin `searchProvider`, so Settings Default still means the order and a leaf pin still wins. `free`, Exa, Perplexity, and DeepSeek remain independently pin-able. Tavily extract/map/crawl stay off.
+Ship `@x1a0f3n9/dsh-web-search-pool` as plugin `web-search-pool`, provider id `search-pool`. It is a `WebSearchProvider`: failover or rotate across Tavily, Perplexity, Exa, Serper, Brave, Jina, then keyless `free`. Multiple keys per backend split on comma or whitespace. A quota/auth failure opens that `${backend}:${key}` circuit longer than a transient burst. Tavily without a key is skipped so anonymous Tavily quota is not burned before `free`. Credentialed adapters use `redirect: 'error'`. Fetch stays `http`. The xfdsh web-app catalog preinstalls the plugin (`defaultEnabled: true`) and overlays `searchProviderOrder: [search-pool, perplexity, exa, free]` without pinning `searchProvider`, so Settings Default still means the order and a leaf pin still wins. Disabling the catalog card unloads the plugin; the overlay then skips the unusable `search-pool` id. The shipped base keeps `[perplexity, exa, free]`. `free`, Exa, Perplexity, and DeepSeek remain independently pin-able. Tavily extract/map/crawl stay off.
 
 Related: exclusive order in [ordered web search does not fall through](../bug-fix/2026-09-11-web-search-order-no-fallthrough.md); the `free` leaf in [keyless Bing/DuckDuckGo web search](2026-09-13-keyless-web-search-free.md).
 
@@ -22,13 +22,16 @@ Related: exclusive order in [ordered web search does not fall through](../bug-fi
 
 **Put retry inside `dsh-web`.** Rejected: the service selects one registered provider per request. Mid-request failover is provider behavior.
 
-**Pin `searchProvider: search-pool` in the base.** Rejected: a pin hides the order and blocks Settings Default from meaning "use the exclusive allowlist". Listing only `search-pool` in `searchProviderOrder` is enough for exclusive selection.
+**Pin `searchProvider: search-pool`.** Rejected: a pin hides the order and blocks Settings Default from meaning "use the exclusive allowlist". Listing `search-pool` first in the web-app overlay is enough for exclusive selection while the plugin is loaded.
+
+**Mount the plugin from `dsh-base` for every profile.** Rejected: xfdsh 预置 plugins belong in the web-app catalog so Settings can disable them. Headless and SDK keep Perplexity → Exa → free.
 
 **Include keyless Tavily by default.** Rejected: it would consume a shared anonymous quota before the local HTML hop.
 
 ## Consequences
 
-- Default `web_search` runs `search-pool`; missing Perplexity/Exa keys fall through that provider to `free` instead of failing the exclusive order.
+- xfdsh web default `web_search` runs `search-pool`; missing Perplexity/Exa keys fall through that provider to `free` instead of failing the exclusive order.
+- Disabling Settings → Plugins → Web search pool skips `search-pool` and uses Perplexity → Exa → free.
 - Pinning `exa`, `perplexity`, `free`, or `deepseek-official` still selects that leaf alone.
 - `web_fetch` is unchanged.
 - A 200 with zero sources does not walk to the next vendor.
