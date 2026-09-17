@@ -94,6 +94,7 @@ describe('PluginInventorySettingsTab', () => {
         id: 'schedule',
         entryId: 'schedule-entry',
         packageName: '@x1a0f3n9/dsh-client-ui-schedule',
+        version: '2.4.1',
         title: 'Schedule',
         description: 'Schedule management UI and runtime',
         author: 'vectorize-io',
@@ -105,15 +106,21 @@ describe('PluginInventorySettingsTab', () => {
       }],
     } as unknown as Snapshot), undefined, setEnabled)} />)
     await screen.findByRole('searchbox', { name: en.search })
-    const author = screen.getByRole('link', { name: en.openAuthorGithub.replace('{name}', 'vectorize-io') })
-    expect(author.getAttribute('href')).toBe(
+    expect(screen.getByText(en.catalogVersion.replace('{version}', '2.4.1'))).toBeTruthy()
+    expect(screen.queryByText('vectorize-io')).toBeNull()
+    const packageLink = screen.getByRole('link', {
+      name: en.openPackageGithub.replace('{name}', '@x1a0f3n9/dsh-client-ui-schedule'),
+    })
+    expect(packageLink.getAttribute('href')).toBe(
       'https://github.com/vectorize-io/hindsight/tree/main/hindsight-integrations/coding-agents',
     )
-    expect(author.getAttribute('target')).toBe('_blank')
+    expect(packageLink.getAttribute('target')).toBe('_blank')
     const toggle = screen.getByRole('switch', { name: en.disablePlugin.replace('{name}', 'Schedule') })
     expect(toggle.getAttribute('aria-checked')).toBe('true')
     fireEvent.click(toggle)
-    await waitFor(() => expect(setEnabled).toHaveBeenCalledWith({ entryId: 'schedule-entry', enabled: false }))
+    await waitFor(() => {
+      expect(setEnabled).toHaveBeenCalledWith({ entryId: 'schedule-entry', enabled: false })
+    })
   })
 
   it('shows the host error when a catalog toggle fails', async () => {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { Context, FiberState, type Plugin } from '@deepseek-ai/cordis'
@@ -155,6 +155,132 @@ describe('PluginInventoryGateway', () => {
     })
   })
 
+  it('projects the installed package version onto catalog rows', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-version-'))
+    const packageDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-bundle-'))
+    mkdirSync(join(packageDir, 'node_modules', '@x1a0f3n9', 'dsh-client-optional'), { recursive: true })
+    writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ name: '@x1a0f3n9/dsh-web-app' }))
+    writeFileSync(
+      join(packageDir, 'node_modules', '@x1a0f3n9', 'dsh-client-optional', 'package.json'),
+      JSON.stringify({ name: '@x1a0f3n9/dsh-client-optional', version: '2.4.1' }),
+    )
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'optional',
+            entryId: catalogEntryId,
+            packageName: '@x1a0f3n9/dsh-client-optional',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog?.[0]).toMatchObject({
+      packageName: '@x1a0f3n9/dsh-client-optional',
+      version: '2.4.1',
+    })
+  })
+
+  it('omits catalog version when package.json version is empty', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-empty-version-'))
+    const packageDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-empty-bundle-'))
+    mkdirSync(join(packageDir, 'node_modules', 'dsh-context'), { recursive: true })
+    writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ name: '@x1a0f3n9/dsh-web-app' }))
+    writeFileSync(
+      join(packageDir, 'node_modules', 'dsh-context', 'package.json'),
+      JSON.stringify({ name: 'dsh-context', version: '' }),
+    )
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'context',
+            entryId: catalogEntryId,
+            packageName: 'dsh-context',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog?.[0]?.version).toBeUndefined()
+  })
+
+  it('omits catalog version when package.json version is not a string', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-number-version-'))
+    const packageDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-number-bundle-'))
+    mkdirSync(join(packageDir, 'node_modules', 'dsh-context'), { recursive: true })
+    writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ name: '@x1a0f3n9/dsh-web-app' }))
+    writeFileSync(
+      join(packageDir, 'node_modules', 'dsh-context', 'package.json'),
+      JSON.stringify({ name: 'dsh-context', version: 1 }),
+    )
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'context',
+            entryId: catalogEntryId,
+            packageName: 'dsh-context',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog?.[0]?.version).toBeUndefined()
+  })
+
   it('matches include-prefixed runtime ids to catalog entry ids', async () => {
     const { ctx, inventory } = await harness()
     const localId = await ctx.loader.create({ name: 'cordis:active' })
@@ -193,7 +319,7 @@ describe('PluginInventoryGateway', () => {
       installAnchor: join(profileDir, 'package.json'),
     } satisfies DshProfileRuntime)
 
-    expect((await inventory.list()).catalog).toEqual([{
+    expect((await inventory.list()).catalog).toMatchObject([{
       id: 'context',
       entryId: catalogEntryId,
       packageName: 'dsh-context',

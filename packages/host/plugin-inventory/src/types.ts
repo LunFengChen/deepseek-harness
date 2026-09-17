@@ -27,6 +27,8 @@ export interface PluginInventoryCatalogEntry {
   readonly id: string
   readonly entryId: PluginEntryId
   readonly packageName: string
+  /** Version from the package's `package.json` when the bundle layer can resolve it. */
+  readonly version?: string
   readonly title?: string
   readonly description?: string
   readonly author?: string

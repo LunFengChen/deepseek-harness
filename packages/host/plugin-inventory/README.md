@@ -29,7 +29,7 @@ Call `pluginInventory/list` when a client or settings page needs to show what is
 
 ### What a snapshot contains
 
-Each row is one non-group Loader entry: its entry id, the exact module specifier, the effective enablement (including disabled ancestor groups), and the current root Fiber phase. `pending` means the entry waits to load, `loading` that it is being read, `active` that it is running, `failed` that its fiber rejected, and `unloading` that it is being torn down; `null` means no live root Fiber exists at all. Structural group rows are skipped.
+Each row is one non-group Loader entry: its entry id, the exact module specifier, the effective enablement (including disabled ancestor groups), and the current root Fiber phase. `pending` means the entry waits to load, `loading` that it is being read, `active` that it is running, `failed` that its fiber rejected, and `unloading` that it is being torn down; `null` means no live root Fiber exists at all. Structural group rows are skipped. When the selected profile lists a bundle catalog, `catalog` also carries those optional plugins, including the version from each package's `package.json` when the bundle layer can resolve it.
 
 ### Per-preset compositions
 

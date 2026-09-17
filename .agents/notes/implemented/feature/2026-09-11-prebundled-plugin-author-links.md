@@ -10,11 +10,11 @@ The Web optional-plugin catalog showed titles and package names only. Scoped pac
 
 ## Decision
 
-Catalog entries may declare `author` and `homepage`. `homepage` must be a credential-free `https://github.com/...` URL. Optional-plugin cards render the author as a new-tab GitHub link.
+Catalog entries may declare `author` and `homepage`. `homepage` must be a credential-free `https://github.com/...` URL. Optional-plugin cards no longer render a separate author byline; the package name is the GitHub link when `homepage` is set. See [omit catalog author byline](2026-09-17-omit-catalog-author-byline.md).
 
 ## Verification
 
-`pnpm exec vitest run packages/boot/app-boot/tests/profile.spec.ts packages/host/plugin-inventory/tests/inventory.spec.ts packages/client/ui-settings-plugin-inventory/tests/components.client.spec.tsx` covers parse rejection, Host projection, and the clickable byline.
+`pnpm exec vitest run packages/boot/app-boot/tests/profile.spec.ts packages/host/plugin-inventory/tests/inventory.spec.ts packages/client/ui-settings-plugin-inventory/tests/components.client.spec.tsx` covers parse rejection, Host projection, and the package-name GitHub link.
 
 ## Alternatives considered
 
@@ -24,5 +24,5 @@ Catalog entries may declare `author` and `homepage`. `homepage` must be a creden
 
 ## Consequences
 
-- Settings → Plugins → Optional plugins shows a GitHub author byline when the catalog declares one.
+- Settings → Plugins → Optional plugins links the package name to `homepage` when the catalog declares one.
 - A non-GitHub homepage fails profile load instead of becoming an in-app link.

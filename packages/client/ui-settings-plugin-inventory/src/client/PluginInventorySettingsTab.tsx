@@ -80,7 +80,7 @@ function matches(moduleName: string, entryId: string | null, normalizedQuery: st
 /** Whether a prebundled catalog row matches the current search query. */
 function catalogMatches(entry: PluginInventoryCatalogEntry, normalizedQuery: string): boolean {
   if (normalizedQuery.length === 0) return true
-  return [entry.id, entry.entryId, entry.packageName, entry.title, entry.description, entry.author]
+  return [entry.id, entry.entryId, entry.packageName, entry.version, entry.title, entry.description]
     .filter((value): value is string => value !== undefined)
     .some(value => value.toLocaleLowerCase().includes(normalizedQuery))
 }
@@ -457,20 +457,22 @@ export function PluginInventorySettingsTab({ list, setEnabled, presetName, t }: 
                       <li key={entry.entryId} className={css.catalogCard} data-plugin-entry={entry.entryId}>
                         <div className={css.catalogMain}>
                           <strong className={css.catalogTitle} title={entry.packageName}>{title}</strong>
-                          <code className={css.catalogPackage}>{entry.packageName}</code>
-                          {entry.author !== undefined && entry.homepage !== undefined ? (
-                            <a
-                              className={css.catalogAuthor}
-                              href={entry.homepage}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={t('openAuthorGithub', { name: entry.author })}
-                            >
-                              {entry.author}
-                            </a>
-                          ) : entry.author !== undefined ? (
-                            <span className={css.catalogAuthor}>{entry.author}</span>
-                          ) : null}
+                          <div className={css.catalogMeta}>
+                            {entry.homepage !== undefined ? (
+                              <a
+                                className={css.catalogPackageLink}
+                                href={entry.homepage}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={t('openPackageGithub', { name: entry.packageName })}
+                              >
+                                <code className={css.catalogPackage}>{entry.packageName}</code>
+                              </a>
+                            ) : (
+                              <code className={css.catalogPackage}>{entry.packageName}</code>
+                            )}
+                            {entry.version !== undefined ? <span className={css.catalogVersion}>{t('catalogVersion', { version: entry.version })}</span> : null}
+                          </div>
                           {entry.description !== undefined ? <p className={css.catalogDescription}>{entry.description}</p> : null}
                         </div>
                         <div className={css.catalogAction}>

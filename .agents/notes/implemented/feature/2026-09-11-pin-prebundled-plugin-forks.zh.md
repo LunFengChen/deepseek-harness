@@ -6,17 +6,21 @@ Status: implemented
 
 ## Problem
 
-xfdsh 会预装社区插件。`dsh-context` 已经来自 `LunFengChen/dsh-context`。其余能从 GitHub 安装的插件还指向上游 npm 或 GitHub，版本探测或依赖修复就得等别人发版。Hindsight 仍走上游：`vectorize-io/hindsight` 是很大的 monorepo，而且现在是默认关闭。
+xfdsh 会预装社区插件。`dsh-context` 已经来自 `LunFengChen/dsh-context`。其余能从 GitHub 安装的插件还指向上游 npm 或 GitHub，版本探测或依赖修复就得等别人发版。
 
 ## Decision
 
-把剩下要自己维护的预装钉到 LunFengChen 的 GitHub tag：
+在 `packages/bundle/web-app/package.json` 把要自己维护的预装钉到 LunFengChen 的 GitHub tag：
 
-- `dshmarket` → `github:LunFengChen/dsh-market#v1.44.0`
+- `dshmarket` → `github:LunFengChen/dsh-market#v1.44.1`
 - `dsh-reasoning-effort` → `github:LunFengChen/dsh-reasoning-effort#v0.7.1`
-- `dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1`
+- `dsh-context` → `github:LunFengChen/dsh-context#v0.49.6`
+- `dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7`
+- `@x1a0f3n9/dsh-session-timeline` → `github:LunFengChen/dsh-session-timeline#v0.1.0`
+- `@vectorize-io/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1`
+- `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.3`
 
-目录里的作者和主页跟着这些 fork。Session timeline 仍在本仓库。Hindsight 仍用上游包，默认关闭。
+目录里的作者和主页跟着这些 fork。cordis 行保持 `name: dshmarket`；不要把 pin 改到改名为 `@x1a0f3n9/dshmarket` 的包。
 
 ## Alternatives considered
 

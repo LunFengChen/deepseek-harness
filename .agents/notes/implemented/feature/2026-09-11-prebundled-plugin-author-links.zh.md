@@ -10,11 +10,11 @@ Web 可选插件目录以前只显示标题和包名。带 scope 的包看起来
 
 ## Decision
 
-目录条目可以声明 `author` 和 `homepage`。`homepage` 必须是不带凭据的 `https://github.com/...` URL。可选插件卡片把作者渲染成新标签页的 GitHub 链接。
+目录条目可以声明 `author` 和 `homepage`。`homepage` 必须是不带凭据的 `https://github.com/...` URL。可选插件卡片不再单独显示作者行；声明了 `homepage` 时，包名就是 GitHub 链接。见[去掉目录作者行](2026-09-17-omit-catalog-author-byline.zh.md)。
 
 ## Verification
 
-`pnpm exec vitest run packages/boot/app-boot/tests/profile.spec.ts packages/host/plugin-inventory/tests/inventory.spec.ts packages/client/ui-settings-plugin-inventory/tests/components.client.spec.tsx` 覆盖解析拒绝、Host 投影和可点击署名。
+`pnpm exec vitest run packages/boot/app-boot/tests/profile.spec.ts packages/host/plugin-inventory/tests/inventory.spec.ts packages/client/ui-settings-plugin-inventory/tests/components.client.spec.tsx` 覆盖解析拒绝、Host 投影和包名上的 GitHub 链接。
 
 ## Alternatives considered
 
@@ -24,5 +24,5 @@ Web 可选插件目录以前只显示标题和包名。带 scope 的包看起来
 
 ## Consequences
 
-- Settings → Plugins → 可选插件在目录声明了作者时会显示 GitHub 署名。
+- Settings → Plugins → 可选插件在目录声明了 `homepage` 时，把包名链到该地址。
 - 非 GitHub 的 homepage 会让 profile 加载失败，而不会变成应用内链接。

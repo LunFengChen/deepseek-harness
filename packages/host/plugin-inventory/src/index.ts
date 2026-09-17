@@ -1,5 +1,7 @@
 /** Projection and profile-level management for the current Cordis Loader plugin entries. */
 
+import { createRequire } from 'node:module'
+import { join } from 'node:path'
 import type { Context, FiberState } from '@deepseek-ai/cordis'
 import type { Entry } from '@deepseek-ai/cordis-plugin-loader'
 import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
@@ -27,6 +29,25 @@ export type * from './types.ts'
 /** Brand an existing Loader-tree entry id at the owning boundary. */
 function pluginEntryId(value: string): PluginEntryId {
   return value as PluginEntryId
+}
+
+/**
+ * Resolve a catalog package's version from a bundle layer's install tree.
+ * @param packageDir - bundle package directory whose `node_modules` holds the catalog plugin.
+ * @param packageName - catalog `packageName`.
+ * @returns the non-empty version string, or `undefined` when the package is missing or has no version.
+ */
+function catalogPackageVersion(packageDir: string, packageName: string): string | undefined {
+  let manifest: { version?: unknown }
+  try {
+    manifest = createRequire(join(packageDir, 'package.json'))(`${packageName}/package.json`) as {
+      version?: unknown
+    }
+  } catch {
+    // The bundle layer may not have installed this catalog package yet.
+    return undefined
+  }
+  return typeof manifest.version === 'string' && manifest.version !== '' ? manifest.version : undefined
 }
 
 /**
@@ -79,10 +100,12 @@ function catalogEntries(ctx: Context): PluginInventoryCatalogEntry[] {
       }
       seen.add(plugin.entryId)
       const entry = findLoaderEntry(ctx.loader.entries(), plugin.entryId)
+      const version = catalogPackageVersion(layer.packageDir, plugin.packageName)
       catalog.push({
         id: plugin.id,
         entryId: pluginEntryId(plugin.entryId),
         packageName: plugin.packageName,
+        ...version === undefined ? {} : { version },
         ...plugin.title === undefined ? {} : { title: plugin.title },
         ...plugin.description === undefined ? {} : { description: plugin.description },
         ...plugin.author === undefined ? {} : { author: plugin.author },

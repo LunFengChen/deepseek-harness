@@ -1958,6 +1958,9 @@ importers:
       '@x1a0f3n9/dsh-cordis-host-runner':
         specifier: workspace:^
         version: link:../../extensions/cordis-host-runner
+      '@x1a0f3n9/dsh-failover-queue':
+        specifier: github:LunFengChen/dsh-failover-queue#v0.1.3
+        version: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6cc7ef43c153aa655a7142827caae3021cbf0034(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
       '@x1a0f3n9/dsh-file-reference':
         specifier: workspace:^
         version: link:../../context/file-reference
@@ -2031,8 +2034,8 @@ importers:
         specifier: github:LunFengChen/dsh-reasoning-effort#v0.7.1
         version: https://codeload.github.com/LunFengChen/dsh-reasoning-effort/tar.gz/c96471f966db8c6d4283c02e6fa6da358aca521a(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-client-runtime@0.1.0-rc.8(5df0fdd8cfed3960dcc27eb4916d7181))(react@18.3.1)
       dshmarket:
-        specifier: github:LunFengChen/dsh-market#v1.44.0
-        version: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)
+        specifier: github:LunFengChen/dsh-market#v1.44.1
+        version: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)
       open:
         specifier: ^11.0.0
         version: 11.0.0
@@ -15030,6 +15033,14 @@ packages:
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
 
+  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6cc7ef43c153aa655a7142827caae3021cbf0034':
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6cc7ef43c153aa655a7142827caae3021cbf0034}
+    version: 0.1.3
+    engines: {node: '>=22.19'}
+    peerDependencies:
+      '@deepseek-ai/cordis': '>=4.0.0'
+      '@deepseek-ai/schemastery': '>=3.0.0'
+
   '@x1a0f3n9/dsh-session-timeline@https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/e9146c9efba34ae7cb00154704dfb5278ab4fd1f':
     resolution: {gitHosted: true, integrity: sha512-B+zjiaBiJuomOIMypSa8n1JOHaC4hBMfjLcEqeevJHsRjaAjhv4uq2c14pE2Pjaf/y9z4F7zEJuygAPwumilnA==, tarball: https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/e9146c9efba34ae7cb00154704dfb5278ab4fd1f}
     version: 0.1.0
@@ -15902,9 +15913,9 @@ packages:
       '@deepseek-ai/dsh-client-ui-slots': npm:@x1a0f3n9/dsh-client-ui-slots@workspace:*
       react: ^18.2.0
 
-  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa}
-    version: 1.44.0
+  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0:
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0}
+    version: 1.44.1
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.1
       '@deepseek-ai/dsh-settings': npm:@x1a0f3n9/dsh-settings@workspace:*
@@ -22311,6 +22322,11 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6cc7ef43c153aa655a7142827caae3021cbf0034(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)':
+    dependencies:
+      '@deepseek-ai/cordis': link:vendor/cordis
+      '@deepseek-ai/schemastery': link:vendor/schemastery
+
   '@x1a0f3n9/dsh-session-timeline@https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/e9146c9efba34ae7cb00154704dfb5278ab4fd1f(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)(@x1a0f3n9/dsh-agent@packages+core+agent)(@x1a0f3n9/dsh-api-session-controller@packages+api+session-controller)(@x1a0f3n9/dsh-attachment@packages+attachment+attachment)(@x1a0f3n9/dsh-client-ui-primitives@packages+client+ui-primitives)(@x1a0f3n9/dsh-commands@packages+interaction+commands)(@x1a0f3n9/dsh-fs@packages+fs+fs)(@x1a0f3n9/dsh-home-paths@packages+util+home-paths)(@x1a0f3n9/dsh-llm@packages+llm+llm)(@x1a0f3n9/dsh-sandbox@packages+sandbox+sandbox)(@x1a0f3n9/dsh-session@packages+core+session)(@x1a0f3n9/dsh-settings@packages+settings+settings)(@x1a0f3n9/dsh-tools@packages+core+tools)(react@18.3.1)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
@@ -23237,7 +23253,7 @@ snapshots:
       '@deepseek-ai/schemastery': link:vendor/schemastery
       react: 18.3.1
 
-  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery):
+  dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery):
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       js-yaml: 4.3.1

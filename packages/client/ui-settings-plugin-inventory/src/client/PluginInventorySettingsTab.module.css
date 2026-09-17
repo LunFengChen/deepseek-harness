@@ -444,6 +444,13 @@
   white-space: nowrap;
 }
 
+.catalogMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
 .catalogPackage {
   overflow-wrap: anywhere;
   color: var(--dsw-alias-label-tertiary);
@@ -451,24 +458,23 @@
   line-height: 16px;
 }
 
-.catalogAuthor {
+.catalogPackageLink {
   width: fit-content;
   max-width: 100%;
-  overflow: hidden;
-  color: var(--dsw-alias-label-secondary);
-  font-size: 12px;
-  line-height: 16px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-a.catalogAuthor {
+  color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-a.catalogAuthor:hover {
+.catalogPackageLink:hover .catalogPackage {
   color: var(--dsw-alias-label-primary);
+}
+
+.catalogVersion {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
 }
 
 .catalogDescription {

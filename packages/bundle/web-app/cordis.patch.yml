@@ -336,6 +336,10 @@
     - id: hindsight
       name: '@vectorize-io/hindsight-coding-agents/dsh'
 
+    # Optional P1/P2/P3 provider+model failover. Disable from Settings → Plugins.
+    - id: dsh-failover-queue
+      name: '@x1a0f3n9/dsh-failover-queue'
+
     # Background jobs: the session-header list over the jobsBySession mirror.
     - id: ui-jobs
       name: '@x1a0f3n9/dsh-client-ui-jobs'
