@@ -1802,8 +1802,8 @@ importers:
         specifier: workspace:^
         version: link:../../boot/app-boot
       '@x1a0f3n9/dsh-better-sidebar':
-        specifier: github:LunFengChen/DSH-better-sidebar#v0.19.2
-        version: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/b312d8159ad05ca4f09e4f27517bc39adc392aa3(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: github:LunFengChen/DSH-better-sidebar#v0.19.3
+        version: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@x1a0f3n9/dsh-client-connection':
         specifier: workspace:^
         version: link:../../client/connection
@@ -15037,9 +15037,9 @@ packages:
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
 
-  '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/b312d8159ad05ca4f09e4f27517bc39adc392aa3':
-    resolution: {gitHosted: true, integrity: sha512-ZpFxfDQ9L/09VERal/CPSHvV8Ia+rdbAjh8eetb4mEoC1v3Kef2dEWFor7KpS2ECcAeTpPDEp3lvtD9lNPRTvQ==, tarball: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/b312d8159ad05ca4f09e4f27517bc39adc392aa3}
-    version: 0.19.2
+  '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2':
+    resolution: {gitHosted: true, integrity: sha512-js/2mwVb7fWjAcNDSwuuS/WNtMZrXXWjWMEe/+PgmKtMYRZUiVvisFxy3Cj0xNqlDeFH3QopOy5f18k/iqfjog==, tarball: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2}
+    version: 0.19.3
     engines: {node: '>=20'}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.2
@@ -22373,7 +22373,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/b312d8159ad05ca4f09e4f27517bc39adc392aa3(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@codemirror/commands': 6.11.0
       '@codemirror/lang-cpp': 6.0.3
