@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-17-prebundled-catalog-version-and-market.md
-2026-09-17-prebundled-catalog-version-and-market.md: 858450ea9ae123119bc2fe45307ac1ace3238a45
-2026-09-17-prebundled-catalog-version-and-market.zh.md: 9f71a689973f1ace796213ab8a5c07fd301787ba
+2026-09-17-prebundled-catalog-version-and-market.md: bed7440a2babe9ba7f583ca16acc39ff61065d72
+2026-09-17-prebundled-catalog-version-and-market.zh.md: 2f48d0607cdc16545599734995fd22b7ded5fafd
