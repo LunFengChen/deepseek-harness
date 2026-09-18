@@ -1,4 +1,5 @@
 import { memo, useCallback, useMemo } from 'react'
+import type { ReactNode } from 'react'
 import { JsonBlock } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { ConversationLocationDataStore, ConversationTurnDataMap } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { ChatNodeOwnerProps, ChatViewSlotProps } from '../contract/slots.ts'
@@ -6,6 +7,7 @@ import type { ChatNode } from '../contract/chat-nodes.ts'
 import { TURN_PROCESS_INDEPENDENT_KINDS } from '../contract/turn-process.ts'
 import { storedTurnProcessEntry } from '../stores.ts'
 import { useSearchableHidden } from './searchable-hidden.ts'
+import { UserMessageFallbackView } from './MessageItem.tsx'
 import css from './ChatView.module.css'
 
 interface ChatNodeSeatProps extends ChatNodeOwnerProps {
@@ -32,6 +34,35 @@ function turnDataOf(node: ChatNode | undefined): ConversationLocationDataStore<C
 function turnOf(node: ChatNode | undefined): number | undefined {
   const location = node?.location
   return location?.kind === 'turn' || location?.kind === 'step' ? location.turn.turn : undefined
+}
+
+function isUserStyleChatNode(node: ChatNode): node is ChatNode<'user' | 'steering'> {
+  return node.kind === 'user' || node.kind === 'steering'
+}
+
+/** User and steering rows stay ordinary bubbles when the keyed renderer is absent. */
+function chatNodeFallback(
+  owner: RoutedChatNodeOwner,
+  t: ChatViewSlotProps['t'],
+): ReactNode {
+  if (isUserStyleChatNode(owner.node)) {
+    return (
+      <UserMessageFallbackView
+        node={owner.node}
+        renderMessageImages={owner.renderMessageImages}
+        openFile={owner.openFile}
+        openSkill={owner.openSkill}
+        t={t}
+      />
+    )
+  }
+  return (
+    <JsonBlock
+      label={t('message.unknownSurface', { type: owner.node.kind })}
+      payload={owner.node.data}
+      truncatedLabel={total => t('json.truncated', { total })}
+    />
+  )
 }
 
 /** Subscribe, apply Turn-process visibility, and dispatch one stable Context key. */
@@ -137,13 +168,7 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
       {renderSlot('conversation.chat.node', routedOwner, {
         entryKey: routedNode.kind,
         hookContext: turnData,
-        fallback: (
-          <JsonBlock
-            label={t('message.unknownSurface', { type: routedNode.kind })}
-            payload={routedNode.data}
-            truncatedLabel={total => t('json.truncated', { total })}
-          />
-        ),
+        fallback: chatNodeFallback(routedOwner, t),
       })}
     </div>
   )
