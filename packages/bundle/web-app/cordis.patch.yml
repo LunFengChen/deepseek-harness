@@ -348,6 +348,10 @@
     - id: dsh-failover-queue
       name: '@x1a0f3n9/dsh-failover-queue'
 
+    # Optional local Agent skills manager. Disable from Settings → Plugins.
+    - id: skills-manager
+      name: '@x1a0f3n9/dsh-skills-manager'
+
     # Optional multi-key web search pool. Disable from Settings → Plugins.
     - id: web-search-pool
       name: '@x1a0f3n9/dsh-web-search-pool'

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-18-preset-plugin-npm-scope.md
-2026-09-18-preset-plugin-npm-scope.md: 5b468560184d4f85c2ebbaf399e7153eefb24274
-2026-09-18-preset-plugin-npm-scope.zh.md: 52476de1d484ce8e5bddc3fd0e00367549e5f270
+2026-09-18-preset-plugin-npm-scope.md: d63e64bd5c62712fe7a95075e1bafc911b9a5bbe
+2026-09-18-preset-plugin-npm-scope.zh.md: 2f2ee73cc138b26da739e2f96064697ca728aba0
