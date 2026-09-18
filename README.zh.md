@@ -21,18 +21,18 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 | 数据目录 | `xfdsh` 的插件和 profile 放在 `~/.xfdsh`。官方 `dsh` 的插件和 profile 仍在 `~/.dsh`。会话、分组、附件、settings 和 API key 共用 `~/.dsh`。 | 不用迁移向导就能读到同一份历史。`xfdsh` 不会写 `~/.dsh/profiles`。 |
 | Web 端口 | `xfdsh web` 默认监听 `127.0.0.1:7777`。官方 `dsh web` 仍是 `3080`。 | 两套 UI 可以同时开。 |
 | Session Timeline | 预装且可关闭：`github:LunFengChen/dsh-session-timeline#v0.1.0`（`@x1a0f3n9/dsh-session-timeline`）：回退、删除、重新生成，以及输入框压缩按钮。 | 不满意的回答会从界面和后续模型请求里一起消失。一点即可运行 `/compact`。 |
-| 插件市场 | 预装且可关闭：`github:LunFengChen/dsh-market#v1.44.2`。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 | 社区插件用 `xfdsh plugin --profile web add` 安装。 |
-| xfdsh预置插件 | 预置插件放在 **xfdsh预置插件** 标签页。卡片显示包版本，包名链到 GitHub pin。插件列表只保留会话/全局清单，并去掉这些包。 | Settings → Plugins → xfdsh预置插件 里开关，而不会混进插件列表。 |
-| 思考强度 | 预装滑条 `github:LunFengChen/dsh-reasoning-effort#v0.7.1`。Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。 | 自定义模型声明档位后，输入框才能选思考强度。滑条可在 Settings → Plugins 关闭。 |
-| 上下文面板 | 预装且可关闭：`github:LunFengChen/dsh-context#v0.49.6`。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |
-| Better sidebar | 预装且可关闭：`github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.8`。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
-| Hindsight 记忆 | 预装且默认打开：`github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1`。 | xfdsh 默认走本机 daemon，不走 Cloud。可在 Settings → Plugins 关闭。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
+| 插件市场 | 预装且可关闭：`github:LunFengChen/dsh-market#v1.45.2`（`@x1a0f3n9/dshmarket`）。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 | 社区插件用 `xfdsh plugin --profile web add` 安装。 |
+| xfdsh预置插件 | 预置插件放在 **xfdsh预置插件** 设置页。卡片显示包版本，包名链到 GitHub pin。插件列表只保留会话/全局清单，并去掉这些包。 | Settings → xfdsh预置插件 里开关，而不会混进插件列表。 |
+| 思考强度 | 预装滑条 `github:LunFengChen/dsh-reasoning-effort#v0.7.3`（`@x1a0f3n9/dsh-reasoning-effort`）。Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。 | 自定义模型声明档位后，输入框才能选思考强度。滑条可在 Settings → xfdsh预置插件 关闭。 |
+| 上下文面板 | 预装且可关闭：`github:LunFengChen/dsh-context#v0.49.7`（`@x1a0f3n9/dsh-context`）。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |
+| Better sidebar | 预装且可关闭：`github:LunFengChen/DSH-better-sidebar#v0.19.2`（`@x1a0f3n9/dsh-better-sidebar`）。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
+| Hindsight 记忆 | 预装且默认打开：`github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`（`@x1a0f3n9/hindsight-coding-agents`）。 | xfdsh 默认走本机 daemon，不走 Cloud。可在 Settings → xfdsh预置插件 关闭。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
 | 故障转移队列 | 预装且可关闭：`github:LunFengChen/dsh-failover-queue#v0.1.4`。 | 输入框芯片显示 `故障转移：P1 provider/model`，在 `llm-retry` 用尽后切下一档，或在 `AUTH` / `RATE_LIMIT` / `NO_ADAPTER` 时立即切换。 |
 | Hindsight git 报错 | LunFengChen fork 把 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
 | 内存与续跑 | 会话持久化限制内存读取；context overflow 会压缩并重试。从大模型切到小模型时，会按待选模型先计价压力再发下一次请求。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |
 | 纯文本模型 | 历史图片和新图片会变成稳定文本占位符。 | 切到不支持图片的模型不会让会话停摆。 |
-| Web 搜索池 | 预装且可关闭的第一方插件 `@x1a0f3n9/dsh-web-search-pool`（设置 → 插件）。默认顺序是搜索池，然后是 Perplexity、Exa 和无需密钥的 Bing/DuckDuckGo。DeepSeek 搜索仍可选手动选择。 | 任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。
+| Web 搜索池 | 预装且可关闭的第一方插件 `@x1a0f3n9/dsh-web-search-pool`（设置 → xfdsh预置插件）。默认顺序是搜索池，然后是 Perplexity、Exa 和无需密钥的 Bing/DuckDuckGo。DeepSeek 搜索仍可选手动选择。 | 任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。
 | 多回答 / session git graph | 还没做。等 timeline 回退 UI 完成后再扩展。 | 只记在文档里，本轮不做。 |
 
 ## 分支
@@ -91,7 +91,7 @@ pnpm xfdsh web
 npx --package @x1a0f3n9/dsh xfdsh web
 ```
 
-`xfdsh` 的插件和 profile 放在 `~/.xfdsh`，不会写 `~/.dsh/profiles`。会话、分组、附件、settings 和 API key 仍在 `~/.dsh`，所以两套 CLI 看到同一份历史。预装的 timeline、插件市场、思考强度、上下文面板、better-sidebar 和 hindsight 可以在 Settings → Plugins 关闭。
+`xfdsh` 的插件和 profile 放在 `~/.xfdsh`，不会写 `~/.dsh/profiles`。会话、分组、附件、settings 和 API key 仍在 `~/.dsh`，所以两套 CLI 看到同一份历史。预装的 timeline、插件市场、思考强度、上下文面板、better-sidebar、hindsight、故障转移和搜索池可以在 Settings → xfdsh预置插件 关闭。
 
 推送 `dev-x1a0f3n9` 会发布 `@x1a0f3n9/*`。遇到 npm 新包名额度会暂停这一轮但不把 job 判失败，下次再推会继续发剩下的名字。`master` 当前跟踪上游，不发布这个 fork。之后的稳定 fork 发布使用 `@xfcodeai/*`。
 

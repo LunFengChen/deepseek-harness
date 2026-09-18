@@ -80,7 +80,9 @@ allowBuilds:
   dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/3828a34c36ad083d6b33b640666a07e8cd348baa: true
   dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/1eceb14151d5c6991f447ebb28f5060d648001e0: true
   dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/844c5121a43afc0fb01b39347531d4d388ab7dd2: true
-  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/cf6870204a8b9d77d1600f8d9c345886ea742cce: set this to true or false
+  dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/cf6870204a8b9d77d1600f8d9c345886ea742cce: false
+  '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/b312d8159ad05ca4f09e4f27517bc39adc392aa3': true
+  '@x1a0f3n9/dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/8c3679053d085287a6379338e2ea4db517d1a2b2': true
 
 minimumReleaseAgeExclude:
   # Fresh pi-ai releases carry the model catalog updates that are the whole

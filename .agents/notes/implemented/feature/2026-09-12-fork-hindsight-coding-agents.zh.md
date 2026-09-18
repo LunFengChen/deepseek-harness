@@ -10,7 +10,7 @@ xfdsh 之前预装 npm 上的 `@vectorize-io/hindsight-coding-agents@0.5.2`，�
 
 ## Decision
 
-Hindsight 预装来自 [LunFengChen/hindsight-coding-agents](https://github.com/LunFengChen/hindsight-coding-agents) 的 `v0.5.2-xfdsh.1`。目录里的作者和主页是 LunFengChen。npm 包名仍是 `@vectorize-io/hindsight-coding-agents`，这样 loader 行 `@vectorize-io/hindsight-coding-agents/dsh` 还能解析。git stderr 的 pipe 已经打进这个 fork。不再使用的 pnpm patch 文件已删除。
+Hindsight 预装来自 [LunFengChen/hindsight-coding-agents](https://github.com/LunFengChen/hindsight-coding-agents) 的 `v0.5.2-xfdsh.4`。目录里的作者和主页是 LunFengChen。npm 包名是 `@x1a0f3n9/hindsight-coding-agents`，loader 行是 `@x1a0f3n9/hindsight-coding-agents/dsh`。git stderr 的 pipe 已经打进这个 fork。不再使用的 pnpm patch 文件已删除。后来的 scope 改名见 [preset plugin npm scope](2026-09-18-preset-plugin-npm-scope.zh.md)。
 
 ## Alternatives considered
 

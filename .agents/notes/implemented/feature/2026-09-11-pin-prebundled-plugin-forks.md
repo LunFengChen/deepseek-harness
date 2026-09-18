@@ -10,17 +10,17 @@ xfdsh preinstalls community plugins. `dsh-context` already comes from `LunFengCh
 
 ## Decision
 
-Pin self-maintained preinstalls to LunFengChen GitHub tags in `packages/bundle/web-app/package.json`:
+Pin self-maintained preinstalls to LunFengChen GitHub tags in `packages/bundle/web-app/package.json`. The npm names now use the fork scope; see [preset plugin npm scope](2026-09-18-preset-plugin-npm-scope.md):
 
-- `dshmarket` → `github:LunFengChen/dsh-market#v1.44.2`
-- `dsh-reasoning-effort` → `github:LunFengChen/dsh-reasoning-effort#v0.7.1`
-- `dsh-context` → `github:LunFengChen/dsh-context#v0.49.6`
-- `dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7`
+- `@x1a0f3n9/dshmarket` → `github:LunFengChen/dsh-market#v1.45.2`
+- `@x1a0f3n9/dsh-reasoning-effort` → `github:LunFengChen/dsh-reasoning-effort#v0.7.3`
+- `@x1a0f3n9/dsh-context` → `github:LunFengChen/dsh-context#v0.49.7`
+- `@x1a0f3n9/dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.2`
 - `@x1a0f3n9/dsh-session-timeline` → `github:LunFengChen/dsh-session-timeline#v0.1.0`
-- `@vectorize-io/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1`
+- `@x1a0f3n9/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`
 - `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.4`
 
-Catalog author and homepage follow those forks. Keep the cordis row `name: dshmarket`; do not retarget the pin at a package renamed to `@x1a0f3n9/dshmarket`.
+Catalog author and homepage follow those forks. Cordis loader `name` matches the scoped npm package.
 
 ## Alternatives considered
 

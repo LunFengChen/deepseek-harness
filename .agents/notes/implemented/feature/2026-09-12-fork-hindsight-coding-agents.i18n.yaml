@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-12-fork-hindsight-coding-agents.md
-2026-09-12-fork-hindsight-coding-agents.md: c06d4937cd85fe12667809edd10742ca0351b3ca
-2026-09-12-fork-hindsight-coding-agents.zh.md: e88c49a7c412c5286f6439a9f75a47c0c42ff7b3
+2026-09-12-fork-hindsight-coding-agents.md: d21b2ae8b19eabb6f1bf8893744310a6520ab5e3
+2026-09-12-fork-hindsight-coding-agents.zh.md: 7dcfd13d41aaadb2504aa8ab33be353b33a39825

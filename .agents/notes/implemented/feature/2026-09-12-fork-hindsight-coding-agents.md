@@ -10,7 +10,7 @@ xfdsh preinstalled Hindsight from npm `@vectorize-io/hindsight-coding-agents@0.5
 
 ## Decision
 
-Hindsight is preinstalled from [LunFengChen/hindsight-coding-agents](https://github.com/LunFengChen/hindsight-coding-agents) at `v0.5.2-xfdsh.1`. The catalog author and homepage are LunFengChen. The npm package name stays `@vectorize-io/hindsight-coding-agents` so the loader row `@vectorize-io/hindsight-coding-agents/dsh` still resolves. Git stderr piping is baked into that fork. The unused pnpm patch file is gone.
+Hindsight is preinstalled from [LunFengChen/hindsight-coding-agents](https://github.com/LunFengChen/hindsight-coding-agents) at `v0.5.2-xfdsh.4`. The catalog author and homepage are LunFengChen. The npm package is `@x1a0f3n9/hindsight-coding-agents` and the loader row is `@x1a0f3n9/hindsight-coding-agents/dsh`. Git stderr piping is baked into that fork. The unused pnpm patch file is gone. The later scope rename is [preset plugin npm scope](2026-09-18-preset-plugin-npm-scope.md).
 
 ## Alternatives considered
 

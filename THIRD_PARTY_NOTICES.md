@@ -55,10 +55,14 @@ External packages installed for runtime use or distributed inside the prebuilt b
 | [`@shikijs/langs`](https://github.com/shikijs/shiki) | MIT |
 | [`@standard-schema/spec`](https://github.com/standard-schema/standard-schema) | MIT |
 | [`@tanstack/react-virtual`](https://github.com/TanStack/virtual) | MIT |
-| [`@vectorize-io/hindsight-coding-agents`](https://github.com/vectorize-io/hindsight) | MIT |
 | [`@vscode/ripgrep`](https://github.com/microsoft/vscode-ripgrep) | MIT |
+| [`@x1a0f3n9/dsh-better-sidebar`](https://github.com/LunFengChen/DSH-better-sidebar) | MIT |
+| [`@x1a0f3n9/dsh-context`](https://github.com/LunFengChen/dsh-context) | Apache-2.0 |
 | [`@x1a0f3n9/dsh-failover-queue`](https://github.com/LunFengChen/dsh-failover-queue) | MIT |
+| [`@x1a0f3n9/dsh-reasoning-effort`](https://github.com/LunFengChen/dsh-reasoning-effort) | MIT |
 | [`@x1a0f3n9/dsh-session-timeline`](https://github.com/LunFengChen/dsh-session-timeline) | MIT |
+| [`@x1a0f3n9/dshmarket`](https://github.com/LunFengChen/dsh-market) | MIT |
+| [`@x1a0f3n9/hindsight-coding-agents`](https://github.com/LunFengChen/hindsight-coding-agents) | MIT |
 | [`@xterm/headless`](https://github.com/xtermjs/xterm.js) | MIT |
 | [`@yarnpkg/parsers`](https://github.com/yarnpkg/berry) | BSD-2-Clause |
 | [`acorn`](https://github.com/acornjs/acorn) | MIT |
@@ -69,10 +73,6 @@ External packages installed for runtime use or distributed inside the prebuilt b
 | [`commander`](https://github.com/tj/commander.js) | MIT |
 | [`compression`](https://github.com/expressjs/compression) | MIT |
 | [`diff`](https://github.com/kpdecker/jsdiff) | BSD-3-Clause |
-| [`dsh-better-sidebar`](https://github.com/omdsh-dev/DSH-better-sidebar) | MIT |
-| [`dsh-context`](https://github.com/LunFengChen/dsh-context) | Apache-2.0 |
-| [`dsh-reasoning-effort`](https://github.com/HanaAyane/dsh-reasoning-effort) | MIT |
-| [`dshmarket`](https://github.com/dsh-market/dsh-market) | MIT |
 | [`e2b`](https://github.com/e2b-dev/e2b) | MIT |
 | [`electron-updater`](https://github.com/electron-userland/electron-builder) | MIT |
 | [`eventsource-parser`](https://github.com/rexxars/eventsource-parser) | MIT |
