@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-17-fork-drops-source-inbox.md
-2026-09-17-fork-drops-source-inbox.md: b7eb3f4c22fb910cd558b830145d2e43eb3cdc01
-2026-09-17-fork-drops-source-inbox.zh.md: e4eb1e25cc82c862c219c87903a5d333e7a2d303
+2026-09-17-fork-drops-source-inbox.md: e34e1a65894a9b21a1321453eb7cc7cf043ba132
+2026-09-17-fork-drops-source-inbox.zh.md: 93f93e623721002946a5712acf56e88840673e27

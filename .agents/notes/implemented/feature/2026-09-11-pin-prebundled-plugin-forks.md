@@ -12,7 +12,7 @@ xfdsh preinstalls community plugins. `dsh-context` already comes from `LunFengCh
 
 Pin self-maintained preinstalls to LunFengChen GitHub tags in `packages/bundle/web-app/package.json`:
 
-- `dshmarket` → `github:LunFengChen/dsh-market#v1.44.1`
+- `dshmarket` → `github:LunFengChen/dsh-market#v1.44.2`
 - `dsh-reasoning-effort` → `github:LunFengChen/dsh-reasoning-effort#v0.7.1`
 - `dsh-context` → `github:LunFengChen/dsh-context#v0.49.6`
 - `dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7`

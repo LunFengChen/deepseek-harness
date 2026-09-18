@@ -27,23 +27,17 @@ function emptyInbox(): InboxState {
   return { 'next-turn': [], 'next-step': [] }
 }
 
-function inboxIsEmpty(state: InboxState): boolean {
-  return state['next-turn'].length === 0 && state['next-step'].length === 0
-}
-
 /**
  * Standard fold that reconstructs pending input and rejects invalid durable splice history.
- * An inherited `session/end-seed` drops the source agent's live queue: fork copies
- * conversation history, not queued prompts.
+ * An inherited `session/end-seed` is not a queue cut: committed child splices may
+ * still address the reconstructed source queue. A fresh fork drops that queue by
+ * recording cancel splices after the marker.
  */
 export const inboxProjectionDefinition = {
   key: 'inbox',
   stateSchema: inboxProjectionSchema,
   init: (): InboxState => emptyInbox(),
   apply(state: InboxState, event) {
-    if (event.type === 'session/end-seed' && event.data.inherited === true) {
-      return inboxIsEmpty(state) ? state : emptyInbox()
-    }
     if (event.type !== 'agent/inbox/spliced') return state
     const splice = event.data
     try {
@@ -76,7 +70,7 @@ export const inboxProjectionDefinition = {
     viewSchema: inboxProjectionSchema as unknown as z.ZodType<InboxWireState>,
     view: (state: InboxState) => state as unknown as InboxWireState,
   },
-  stateVersion: 1,
+  stateVersion: 2,
 } satisfies ProjectionDefinition<'inbox', InboxState>
 
 /**

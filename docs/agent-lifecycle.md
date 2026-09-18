@@ -25,6 +25,7 @@ sequenceDiagram
   Note over Agent,Driver: claim pending next-step input plus one queued prompt
   Driver-->>SDK: <code>agent/inbox/spliced</code> pure deletion
   Driver-->>SDK: <code>agent/inbox/claimed</code> { message, turn } per message
+  Note over Driver,SDK: yield one setImmediate
   Driver->>Prompt: <code>system-prompt/assemble</code> waterfall
   Driver->>Hooks: <code>agent/pre-step</code> waterfall
   Hooks-->>Driver: authoritative reject or enter(messages)
@@ -71,6 +72,7 @@ sequenceDiagram
   opt next-step input is pending
     Driver-->>Driver: claim pending next-step input
     Driver-->>SDK: <code>agent/inbox/claimed</code> { message, turn } per message
+    Note over Driver,SDK: yield one setImmediate
     Driver->>Hooks: <code>agent/pre-step</code> waterfall
     Hooks-->>Driver: authoritative reject or enter(messages)
   end

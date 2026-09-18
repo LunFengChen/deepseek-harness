@@ -75,6 +75,19 @@ async function reconstructPersistedInbox(
   throw new Error('persisted inbox reconstruction unexpectedly succeeded')
 }
 
+async function readPersistedInbox(
+  rawId: string,
+  populate: (session: Session) => void,
+): Promise<{ session: Session; inbox: ReactLoopInbox }> {
+  const ctx = new Context()
+  await ctx.plugin(SessionStore)
+  const session = ctx.sessions.create(SessionId(rawId))
+  populate(session)
+  await ctx.plugin(SessionProjectionRegistry)
+  const agent = stubAgent(rawId, { ctx, session })
+  return { session, inbox: new ReactLoopInbox(ctx.sessionProjections, session, agentEvents(ctx, agent)) }
+}
+
 describe('ReactLoopInbox', () => {
   it('registers the durable projection in its constructor', async () => {
     const ctx = new Context()
@@ -126,7 +139,7 @@ describe('ReactLoopInbox', () => {
     expect((duplicate.cause as Error).message).toBe(`message "${pending.id}" is already pending`)
   })
 
-  it('drops the source live queue at an inherited fork cut and keeps the parent queued', async () => {
+  it('reconstructs source splices across an inherited fork marker', async () => {
     const ctx = new Context()
     await ctx.plugin(SessionStore)
     await ctx.plugin(SessionProjectionRegistry)
@@ -154,15 +167,15 @@ describe('ReactLoopInbox', () => {
     })
     expect(parentInbox.nextTurn).toEqual([queued])
     expect(parentInbox.nextStep).toEqual([nextStep])
-    expect(childInbox.nextTurn).toEqual([])
-    expect(childInbox.nextStep).toEqual([])
+    expect(childInbox.nextTurn).toEqual([queued])
+    expect(childInbox.nextStep).toEqual([nextStep])
 
     const own = createUserMessage({
       content: [{ type: 'text', text: 'child pending' }],
       source: { kind: 'user' },
     })
     childInbox.append('next-turn', own)
-    expect(childInbox.nextTurn).toEqual([own])
+    expect(childInbox.nextTurn).toEqual([queued, own])
     expect(parentInbox.nextTurn).toEqual([queued])
     expect(parentInbox.nextStep).toEqual([nextStep])
 
@@ -171,8 +184,62 @@ describe('ReactLoopInbox', () => {
     })
     const resumedAgent = stubAgent('inbox-fork-resume', { ctx, session: resumed })
     const resumedInbox = new ReactLoopInbox(ctx.sessionProjections, resumed, agentEvents(ctx, resumedAgent))
-    expect(resumedInbox.nextTurn).toEqual([own])
-    expect(resumedInbox.nextStep).toEqual([])
+    expect(resumedInbox.nextTurn).toEqual([queued, own])
+    expect(resumedInbox.nextStep).toEqual([nextStep])
+  })
+
+  it('reconstructs a post-cut splice that still addresses the source queue', async () => {
+    const first = createUserMessage({
+      content: [{ type: 'text', text: 'first queued' }],
+      source: { kind: 'user' },
+    })
+    const second = createUserMessage({
+      content: [{ type: 'text', text: 'second queued' }],
+      source: { kind: 'user' },
+    })
+    const third = createUserMessage({
+      content: [{ type: 'text', text: 'third queued' }],
+      source: { kind: 'user' },
+    })
+    const { inbox } = await readPersistedInbox('inbox-inherited-cut-replay', (session) => {
+      session.append('agent/inbox/spliced', {
+        target: 'next-turn', start: 0, inserted: [first],
+      })
+      session.append('agent/inbox/spliced', {
+        target: 'next-turn', start: 0, inserted: [second],
+      })
+      session.append('session/end-seed', { inherited: true })
+      session.append('agent/inbox/spliced', {
+        target: 'next-turn', start: 2, inserted: [third],
+      })
+    })
+    expect(inbox.nextTurn).toEqual([second, first, third])
+    expect(inbox.nextStep).toEqual([])
+  })
+
+  it('reconstructs a seeded create that recorded the source-queue drop', async () => {
+    const first = createUserMessage({
+      content: [{ type: 'text', text: 'source queued' }],
+      source: { kind: 'user' },
+    })
+    const own = createUserMessage({
+      content: [{ type: 'text', text: 'child queued' }],
+      source: { kind: 'user' },
+    })
+    const { inbox } = await readPersistedInbox('inbox-seeded-create-drop', (session) => {
+      session.append('agent/inbox/spliced', {
+        target: 'next-turn', start: 0, inserted: [first],
+      })
+      session.append('session/end-seed', { inherited: true })
+      session.append('agent/inbox/spliced', {
+        target: 'next-turn', start: 0, removedCount: 1, inserted: [], outcome: 'canceled',
+      })
+      session.append('agent/inbox/spliced', {
+        target: 'next-turn', start: 0, inserted: [own],
+      })
+    })
+    expect(inbox.nextTurn).toEqual([own])
+    expect(inbox.nextStep).toEqual([])
   })
 
   it('keeps pending input across an untagged resume end-seed', async () => {

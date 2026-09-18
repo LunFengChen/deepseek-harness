@@ -242,6 +242,9 @@ export class ReactLoopAgent implements Agent {
     if (this.phase.kind !== 'running') throw new Error(`agent "${this.id}": pre-step outside running phase`)
     const signal = this.phase.abort.signal
     const claimed = this.inbox.claim(target, position.turn)
+    // Flush running status and turn/start before assemble's synchronous prefix.
+    await new Promise<void>((resolve) => { setImmediate(resolve) })
+    signal.throwIfAborted()
     const assembly = await this.loopCtx.systemPrompt.assemble(assembleContextFor(this, signal))
     signal.throwIfAborted()
     const sections = renderContextSections(assembly)

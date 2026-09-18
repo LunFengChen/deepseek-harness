@@ -1,4 +1,4 @@
-/** Host plugin inventory and prebundled feature settings in Web Settings. */
+/** Host plugin inventory and xfdsh preset-plugin settings in Web Settings. */
 
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
@@ -12,7 +12,11 @@ import { presetDisplayText } from '@x1a0f3n9/dsh-agent-presets/display'
 import { PluginInventorySettingsTab, type PluginInventorySettingsTabInjected } from './PluginInventorySettingsTab.tsx'
 import { en, zh, type PluginInventoryLocaleKey } from './locales.ts'
 
-export type { PluginInventorySettingsTabInjected, PluginInventorySettingsTabProps } from './PluginInventorySettingsTab.tsx'
+export type {
+  PluginInventorySettingsTabInjected,
+  PluginInventorySettingsTabProps,
+  PluginInventorySurface,
+} from './PluginInventorySettingsTab.tsx'
 export type { PluginInventoryLocaleKey } from './locales.ts'
 
 declare module '@x1a0f3n9/dsh-client-ui-slots' {
@@ -28,7 +32,7 @@ export const NS = 'settings.pluginInventory'
 /** Services required by the Settings registration and generated Remote face. */
 export const inject = ['slots', 'locale', 'remote', 'remote.pluginInventory']
 
-/** Contribute the lazy inventory tab to the Plugins settings section. */
+/** Contribute the inventory and xfdsh preset-plugin tabs to the Plugins settings section. */
 export function apply(ctx: ClientContext): void {
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-settings-plugin-inventory: dictionaries')
 
@@ -52,13 +56,23 @@ export function apply(ctx: ClientContext): void {
   const agentPresetCopy = ctx.locale.bind('settings.agentPreset')
   const presetName: PluginInventorySettingsTabInjected['presetName'] = preset =>
     presetDisplayText(preset, agentPresetCopy).name
-  const injected = (): PluginInventorySettingsTabInjected => ({ list, setEnabled, presetName })
+  const injected = (surface: PluginInventorySettingsTabInjected['surface']): PluginInventorySettingsTabInjected => ({
+    list, setEnabled, presetName, surface,
+  })
   ctx.slots.inject('settings.plugins.tab', () => ctx.slots.register({
     name: 'settings.plugins.tab',
     id: 'all',
     order: 10,
     label: () => t('tab'),
     locale: NS,
-    inject: injected,
+    inject: () => injected('inventory'),
+  }, PluginInventorySettingsTab))
+  ctx.slots.inject('settings.plugins.tab', () => ctx.slots.register({
+    name: 'settings.plugins.tab',
+    id: 'xfdsh-presets',
+    order: 15,
+    label: () => t('presetTab'),
+    locale: NS,
+    inject: () => injected('catalog'),
   }, PluginInventorySettingsTab))
 }

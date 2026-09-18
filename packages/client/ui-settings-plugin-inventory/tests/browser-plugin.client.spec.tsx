@@ -60,20 +60,33 @@ describe('ui-settings-plugin-inventory browser plugin', () => {
     declare(b.slots)
     await b.ctx.plugin({ inject: [...inject], apply }).await()
 
-    const entry = b.slots.entries('settings.plugins.tab')[0]!
+    const tabs = b.slots.entries('settings.plugins.tab')
+    expect(tabs).toHaveLength(2)
+    const entry = tabs[0]!
+    const preset = tabs[1]!
     expect(entry.component).toBe(PluginInventorySettingsTab)
+    expect(preset.component).toBe(PluginInventorySettingsTab)
     expect(entry.options).toMatchObject({ id: 'all', order: 10 })
+    expect(preset.options).toMatchObject({ id: 'xfdsh-presets', order: 15 })
     expect(entry.locale).toBe(NS)
+    expect(preset.locale).toBe(NS)
     expect(resolveSlotLabel(entry.options.label)).toBe('插件列表')
+    expect(resolveSlotLabel(preset.options.label)).toBe('xfdsh预置插件')
     expect(b.list).not.toHaveBeenCalled()
 
     const injected = (entry.inject as unknown as () => PluginInventorySettingsTabInjected)()
+    expect(injected.surface).toBe('inventory')
+    expect((preset.inject as unknown as () => PluginInventorySettingsTabInjected)().surface).toBe('catalog')
     await expect(injected.list()).resolves.toEqual(EMPTY)
     expect(b.list).toHaveBeenCalledOnce()
     b.list.mockResolvedValueOnce({ ok: false, error: { code: 'REMOTE_ERROR', message: 'unavailable' } })
     await expect(injected.list()).rejects.toThrow('pluginInventory.list failed: REMOTE_ERROR: unavailable')
     await expect(injected.setEnabled({ entryId: 'ui-schedule' as never, enabled: true })).resolves.toEqual({ enabled: true })
     expect(b.setEnabled).toHaveBeenCalledWith({ entryId: 'ui-schedule', enabled: true })
+    b.setEnabled.mockResolvedValueOnce({ ok: false, error: { code: 'REMOTE_ERROR', message: 'denied' } })
+    await expect(injected.setEnabled({ entryId: 'ui-schedule' as never, enabled: false })).rejects.toThrow(
+      'pluginInventory.setEnabled failed: REMOTE_ERROR: denied',
+    )
 
     // Shipped preset names resolve over the agent-preset dictionaries the
     // real plugin registers; user-authored metadata stays untranslated.
@@ -90,9 +103,10 @@ describe('ui-settings-plugin-inventory browser plugin', () => {
     expect(b.slots.entries('settings.plugins.tab')).toHaveLength(0)
 
     const stop = declare(b.slots)
-    await vi.waitFor(() => { expect(b.slots.entries('settings.plugins.tab')).toHaveLength(1) })
+    await vi.waitFor(() => { expect(b.slots.entries('settings.plugins.tab')).toHaveLength(2) })
     b.locale.setLocale('en')
     expect(resolveSlotLabel(b.slots.entries('settings.plugins.tab')[0]!.options.label)).toBe('Plugin list')
+    expect(resolveSlotLabel(b.slots.entries('settings.plugins.tab')[1]!.options.label)).toBe('xfdsh preset plugins')
 
     stop()
     expect(b.slots.entries('settings.plugins.tab')).toHaveLength(0)
