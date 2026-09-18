@@ -108,6 +108,16 @@
           "homepage": "https://github.com/LunFengChen/dsh-failover-queue"
         },
         {
+          "id": "skills-manager",
+          "entryId": "skills-manager",
+          "packageName": "@x1a0f3n9/dsh-skills-manager",
+          "title": "Skills manager",
+          "description": "Load, toggle, create, and import local Agent skills.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-skills-manager"
+        },
+        {
           "id": "search-pool",
           "entryId": "web-search-pool",
           "packageName": "@x1a0f3n9/dsh-web-search-pool",
@@ -207,6 +217,7 @@
     "@x1a0f3n9/dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.2",
     "@x1a0f3n9/hindsight-coding-agents": "github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4",
     "@x1a0f3n9/dsh-failover-queue": "github:LunFengChen/dsh-failover-queue#v0.1.4",
+    "@x1a0f3n9/dsh-skills-manager": "github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1",
     "@x1a0f3n9/dsh-web-search-pool": "workspace:^"
   },
   "peerDependencies": {

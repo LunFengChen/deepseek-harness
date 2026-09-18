@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-14-xfdsh-preset-plugins-tab.md
-2026-09-14-xfdsh-preset-plugins-tab.md: c93027f62a27968f5a76f3dffe7a9ba4d4d2c3a0
-2026-09-14-xfdsh-preset-plugins-tab.zh.md: 44e243840e1a343648302381c01cf16f769b8ca8
+2026-09-14-xfdsh-preset-plugins-tab.md: ee35eae132471748700d2c1f93265cc2047b278e
+2026-09-14-xfdsh-preset-plugins-tab.zh.md: 3fa1a6948bb594920a77213733ba023a87d0dac7

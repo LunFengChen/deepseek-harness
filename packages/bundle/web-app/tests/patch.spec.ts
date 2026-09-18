@@ -58,6 +58,7 @@ describe('dsh-web-app bundle', () => {
       { id: 'dsh-context', packageName: '@x1a0f3n9/dsh-context' },
       { id: 'better-sidebar', packageName: '@x1a0f3n9/dsh-better-sidebar' },
       { id: 'hindsight', packageName: '@x1a0f3n9/hindsight-coding-agents', loader: '@x1a0f3n9/hindsight-coding-agents/dsh' },
+      { id: 'skills-manager', packageName: '@x1a0f3n9/dsh-skills-manager' },
     ]
     for (const pin of scopedPins) {
       expect(manifest.dependencies).toHaveProperty(pin.packageName)

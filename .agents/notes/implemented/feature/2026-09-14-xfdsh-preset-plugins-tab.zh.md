@@ -21,4 +21,4 @@ Status: implemented
 ## Consequences
 
 - Settings → Plugins 显示插件配置、插件列表和 xfdsh预置插件。
-- Timeline、市场、思考强度、dsh-context、better-sidebar、Hindsight 和故障转移队列都在新标签页开关。
+- Timeline、市场、思考强度、dsh-context、better-sidebar、Hindsight、故障转移队列、技能管理和 web-search-pool 都在新标签页开关。
