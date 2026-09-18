@@ -324,25 +324,25 @@
 
     # Optional plugin market UI. Disable from Settings → Plugins.
     - id: dsh-market
-      name: dshmarket
+      name: '@x1a0f3n9/dshmarket'
 
     # Optional thinking-strength control. Disable from Settings → Plugins.
     - id: reasoning-effort
-      name: dsh-reasoning-effort
+      name: '@x1a0f3n9/dsh-reasoning-effort'
 
     # Optional context dashboard. Disable from Settings → Plugins.
     - id: dsh-context
-      name: dsh-context
+      name: '@x1a0f3n9/dsh-context'
 
     # Optional VS Code-like sidebar workbench. Disable from Settings → Plugins.
     - id: better-sidebar
-      name: dsh-better-sidebar
+      name: '@x1a0f3n9/dsh-better-sidebar'
 
     # Optional Hindsight long-term memory. Disable from Settings → Plugins.
     # xfdsh defaults HINDSIGHT_SERVER_MODE=daemon (local embed on 127.0.0.1:9077).
     # ~/.hindsight/coding-agent.json still wins for cloud or a self-hosted URL.
     - id: hindsight
-      name: '@vectorize-io/hindsight-coding-agents/dsh'
+      name: '@x1a0f3n9/hindsight-coding-agents/dsh'
 
     # Optional P1/P2/P3 provider+model failover. Disable from Settings → Plugins.
     - id: dsh-failover-queue

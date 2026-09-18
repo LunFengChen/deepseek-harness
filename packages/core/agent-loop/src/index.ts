@@ -823,6 +823,9 @@ export class AgentLoop extends Service implements AgentFactory {
       throw error
     }
     try {
+      if (source === 'startup' && session.header.isSeeded && prepared.agent.inbox.hasPending) {
+        prepared.agent.inbox.clear()
+      }
       const setupCommit = await raceAbort(setup?.(prepared.agent.ctx, prepared.agent), prepared.signal, id)
       setupCommit?.commit()
       await this.appendUnstoredSuffix(stored, session)

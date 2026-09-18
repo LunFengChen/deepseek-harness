@@ -82,6 +82,11 @@ const OVERRIDES: Record<string, { license?: string; repo?: string }> = {
     license: 'MIT',
     repo: 'https://github.com/vectorize-io/hindsight',
   },
+  // Forked pin; the published manifest still omits `license`.
+  '@x1a0f3n9/hindsight-coding-agents': {
+    license: 'MIT',
+    repo: 'https://github.com/LunFengChen/hindsight-coding-agents',
+  },
 }
 
 /**

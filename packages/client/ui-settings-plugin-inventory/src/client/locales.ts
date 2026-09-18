@@ -3,6 +3,7 @@
 /** Simplified Chinese dictionary and key source of truth. */
 export const zh = {
   tab: '插件列表',
+  presetTab: 'xfdsh预置插件',
   loading: '正在读取插件…',
   error: '暂时无法读取插件。',
   retry: '重试',
@@ -15,7 +16,7 @@ export const zh = {
   switcherLabel: '选择要查看的 Agent 预设',
   presetOptionDefault: '{name}（默认）',
   presetOptionBroken: '{name}（加载失败）',
-  catalogTitle: '可选插件',
+  catalogTitle: 'xfdsh预置插件',
   catalogSubtitle: '已随当前 profile 预置，可直接启用或停用',
   catalogVersion: 'v{version}',
   openPackageGithub: '在 GitHub 打开 {name}',
@@ -55,6 +56,7 @@ export type PluginInventoryLocaleKey = keyof typeof zh
 /** English dictionary checked against the Chinese key set. */
 export const en = {
   tab: 'Plugin list',
+  presetTab: 'xfdsh preset plugins',
   loading: 'Reading plugins…',
   error: 'Plugins are temporarily unavailable.',
   retry: 'Retry',
@@ -67,7 +69,7 @@ export const en = {
   switcherLabel: 'Choose the agent preset to inspect',
   presetOptionDefault: '{name} (default)',
   presetOptionBroken: '{name} (failed to load)',
-  catalogTitle: 'Optional plugins',
+  catalogTitle: 'xfdsh preset plugins',
   catalogSubtitle: 'Prebundled with this profile; enable or disable them here',
   catalogVersion: 'v{version}',
   openPackageGithub: 'Open {name} on GitHub',

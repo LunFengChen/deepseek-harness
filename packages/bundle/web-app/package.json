@@ -50,7 +50,7 @@
         {
           "id": "plugin-market",
           "entryId": "dsh-market",
-          "packageName": "dshmarket",
+          "packageName": "@x1a0f3n9/dshmarket",
           "title": "Plugin market",
           "description": "Browse and install community dsh plugins.",
           "defaultEnabled": true,
@@ -60,7 +60,7 @@
         {
           "id": "reasoning-effort",
           "entryId": "reasoning-effort",
-          "packageName": "dsh-reasoning-effort",
+          "packageName": "@x1a0f3n9/dsh-reasoning-effort",
           "title": "Reasoning effort",
           "description": "Pick thinking strength in the composer.",
           "defaultEnabled": true,
@@ -70,7 +70,7 @@
         {
           "id": "dsh-context",
           "entryId": "dsh-context",
-          "packageName": "dsh-context",
+          "packageName": "@x1a0f3n9/dsh-context",
           "title": "Context dashboard",
           "description": "Inspect context composition, compaction, and token use.",
           "defaultEnabled": true,
@@ -80,7 +80,7 @@
         {
           "id": "better-sidebar",
           "entryId": "better-sidebar",
-          "packageName": "dsh-better-sidebar",
+          "packageName": "@x1a0f3n9/dsh-better-sidebar",
           "title": "Better sidebar",
           "description": "File, terminal, Git, and subagent workbench in the sidebar.",
           "defaultEnabled": true,
@@ -90,7 +90,7 @@
         {
           "id": "hindsight",
           "entryId": "hindsight",
-          "packageName": "@vectorize-io/hindsight-coding-agents",
+          "packageName": "@x1a0f3n9/hindsight-coding-agents",
           "title": "Hindsight memory",
           "description": "Long-term project memory. Defaults to a local Hindsight daemon; cloud is optional.",
           "defaultEnabled": true,
@@ -200,13 +200,13 @@
     "@deepseek-ai/schemastery": "workspace:^",
     "commander": "^15.0.0",
     "open": "^11.0.0",
-    "dshmarket": "github:LunFengChen/dsh-market#v1.44.1",
-    "dsh-reasoning-effort": "github:LunFengChen/dsh-reasoning-effort#v0.7.1",
+    "@x1a0f3n9/dshmarket": "github:LunFengChen/dsh-market#v1.45.2",
+    "@x1a0f3n9/dsh-reasoning-effort": "github:LunFengChen/dsh-reasoning-effort#v0.7.3",
     "@x1a0f3n9/dsh-session-timeline": "github:LunFengChen/dsh-session-timeline#v0.1.0",
-    "dsh-context": "github:LunFengChen/dsh-context#v0.49.6",
-    "dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7",
-    "@vectorize-io/hindsight-coding-agents": "github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1",
-    "@x1a0f3n9/dsh-failover-queue": "github:LunFengChen/dsh-failover-queue#v0.1.3",
+    "@x1a0f3n9/dsh-context": "github:LunFengChen/dsh-context#v0.49.7",
+    "@x1a0f3n9/dsh-better-sidebar": "github:LunFengChen/DSH-better-sidebar#v0.19.2",
+    "@x1a0f3n9/hindsight-coding-agents": "github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4",
+    "@x1a0f3n9/dsh-failover-queue": "github:LunFengChen/dsh-failover-queue#v0.1.4",
     "@x1a0f3n9/dsh-web-search-pool": "workspace:^"
   },
   "peerDependencies": {

@@ -12,7 +12,7 @@ Status: implemented
 
 ## 决策
 
-每个拟议步骤之前，循环包内部的 `ReactLoopInbox` 会原子领取完整批次：全部 `next-step` 消息，以及轮次边界上的一条 `next-turn` 消息。在首次边界，循环会先提交 `turn/start`，使领取及其唯一一次 `agent/pre-step` 决策拥有持久轮次归属。领取会记录规范化、不带 outcome 的纯删除 `agent/inbox/spliced`，针对每条已领取消息发出一次 `agent/inbox/claimed { message, turn }`，并把独占批次返回给循环，由后者用 `{ turn, step, signal }` 等待 waterfall（瀑布式事件）。
+每个拟议步骤之前，循环包内部的 `ReactLoopInbox` 会原子领取完整批次：全部 `next-step` 消息，以及轮次边界上的一条 `next-turn` 消息。在首次边界，循环会先提交 `turn/start`，使领取及其唯一一次 `agent/pre-step` 决策拥有持久轮次归属。领取之后，驱动器在提示词组装前让出一个 `setImmediate`，以便 `running` 与 `turn/start` 能够刷新（[轮次准备状态](../bug-fix/2026-09-17-turn-preparing-status.zh.md)）。领取会记录规范化、不带 outcome 的纯删除 `agent/inbox/spliced`，针对每条已领取消息发出一次 `agent/inbox/claimed { message, turn }`，并把独占批次返回给循环，由后者用 `{ turn, step, signal }` 等待 waterfall（瀑布式事件）。
 
 `PreStepDecision` 为 `{ kind: 'reject' } | { kind: 'enter'; messages: UserMessage[] }`。reject 不会打开步骤，会让已领取批次保持已删除，并将轮次关闭为 blocked，且不产生任何步骤事件。空的 enter、取消以及 `step/start` 前的失败同样会关闭一个边界平衡的无步骤轮次。enter 提供在 `step/start` 后以 `user/message` 追加的完整批次。包装 `next()` 的监听器会保留下游变更，除非有意替换，因此全部消息改写只在最终返回值中一次性结算。系统不再存在 `agent/prompt-prepare`、`agent/prompt-submit` 或 `agent/step` 扩展点。
 

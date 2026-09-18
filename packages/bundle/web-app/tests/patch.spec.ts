@@ -47,9 +47,30 @@ describe('dsh-web-app bundle', () => {
       searchProviderOrder: ['search-pool', 'perplexity', 'exa', 'free'],
       fetchProvider: 'http',
     })
-    const inserts = (parsed as { insert?: { id?: string }[] }[]).flatMap(
+    const inserts = (parsed as { insert?: { id?: string; name?: string }[] }[]).flatMap(
       patch => patch.insert ?? [],
     )
     expect(inserts.find(row => row.id === 'web-search-pool')).toBeDefined()
+
+    const scopedPins = [
+      { id: 'dsh-market', packageName: '@x1a0f3n9/dshmarket' },
+      { id: 'reasoning-effort', packageName: '@x1a0f3n9/dsh-reasoning-effort' },
+      { id: 'dsh-context', packageName: '@x1a0f3n9/dsh-context' },
+      { id: 'better-sidebar', packageName: '@x1a0f3n9/dsh-better-sidebar' },
+      { id: 'hindsight', packageName: '@x1a0f3n9/hindsight-coding-agents', loader: '@x1a0f3n9/hindsight-coding-agents/dsh' },
+    ]
+    for (const pin of scopedPins) {
+      expect(manifest.dependencies).toHaveProperty(pin.packageName)
+      expect(manifest.dsh?.bundle?.plugins).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            packageName: pin.packageName,
+          }),
+        ]),
+      )
+      expect(inserts.find(row => row.id === pin.id)).toMatchObject({
+        name: pin.loader ?? pin.packageName,
+      })
+    }
   })
 })
