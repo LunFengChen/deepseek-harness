@@ -107,6 +107,38 @@ describe('npm install layout verifier', () => {
     })
   })
 
+  it('does not rewrite a scoped git-hosted plugin onto the synthetic versions', () => {
+    const index: RegistryIndex = new Map([
+      ['@x1a0f3n9/dsh-web-app', new Map([['0.1.5-rc.3', {
+        name: '@x1a0f3n9/dsh-web-app',
+        version: '0.1.5-rc.3',
+        dependencies: {
+          '@x1a0f3n9/dsh-child': 'workspace:^',
+          '@x1a0f3n9/dsh-better-sidebar': 'github:LunFengChen/DSH-better-sidebar#v0.19.3',
+        },
+      }]])],
+      ['@x1a0f3n9/dsh-child', new Map([['0.1.5-rc.3', {
+        name: '@x1a0f3n9/dsh-child',
+        version: '0.1.5-rc.3',
+      }]])],
+      ['@x1a0f3n9/dsh-better-sidebar', new Map([['0.19.3', {
+        name: '@x1a0f3n9/dsh-better-sidebar',
+        version: '0.19.3',
+      }]])],
+    ])
+
+    const dual = buildDualDshRegistry(index, '0.1.5-rc.3')
+
+    expect(dual.get('@x1a0f3n9/dsh-web-app')?.get('0.2.0')?.dependencies).toEqual({
+      '@x1a0f3n9/dsh-child': '^0.2.0',
+    })
+    expect(dual.get('@x1a0f3n9/dsh-better-sidebar')?.get('0.19.3')).toMatchObject({
+      name: '@x1a0f3n9/dsh-better-sidebar',
+      version: '0.19.3',
+    })
+    expect(dual.get('@x1a0f3n9/dsh-better-sidebar')?.has('0.2.0')).toBe(false)
+  })
+
   it('accepts isolated DSH releases with one shared Cordis installation', () => {
     expect(assertDualDshInstallLayout(validLayout())).toEqual({
       dshPackagesPerVersion: 3,
