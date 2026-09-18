@@ -10,7 +10,7 @@ Session timeline 原来在 harness 工作区里。插件维护和 harness 包混
 
 ## Decision
 
-`@x1a0f3n9/dsh-session-timeline` 是独立插件，仓库是 [LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline)。包名仍是 `@x1a0f3n9/dsh-session-timeline`。Web bundle 预装 `github:LunFengChen/dsh-session-timeline#v0.1.0`，不再包含 `packages/session/session-timeline`。
+`@x1a0f3n9/dsh-session-timeline` 是独立插件，仓库是 [LunFengChen/dsh-session-timeline](https://github.com/LunFengChen/dsh-session-timeline)。包名仍是 `@x1a0f3n9/dsh-session-timeline`。Web bundle 预装 `github:LunFengChen/dsh-session-timeline#v0.1.5-xfdsh.2`，不再包含 `packages/session/session-timeline`。
 
 ## Alternatives considered
 
