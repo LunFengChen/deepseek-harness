@@ -18,8 +18,9 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import type { LlmDiscoveredModel } from '@x1a0f3n9/dsh-api-remotes/client'
 import {
-  Button, IconChevronDownOutline14, IconChevronRightOutline14, IconTrashOutline16, Modal,
+  Button, IconChevronDownOutline14, IconChevronRightOutline14, IconTrashOutline16, Modal, Switch,
 } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { IMAGE_INPUT, acceptsImages, withImageInput } from './image-input.ts'
 import { formatCapacity, parseCapacity } from './DeepSeekModelsEditor.tsx'
 import type { ModelsOperations } from './operations.ts'
 import type { DeepSeekModelDraft } from './DeepSeekModelsEditor.tsx'
@@ -133,6 +134,7 @@ function adopt(candidate: LlmDiscoveredModel): ModelDraft {
     ...candidate.name === undefined ? {} : { name: candidate.name },
     ...candidate.contextWindow === undefined ? {} : { contextWindow: candidate.contextWindow },
     ...candidate.maxTokens === undefined ? {} : { maxTokens: candidate.maxTokens },
+    ...acceptsImages(candidate.inputModalities) ? { input: [...IMAGE_INPUT] } : {},
   }
 }
 
@@ -224,6 +226,10 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
         Object.entries({ ...model, ...next }).filter(([key]) => !cleared.has(key)),
       )
     }))
+  }
+
+  const setImageInput = (index: number, enabled: boolean): void => {
+    onChange(models.map((model, at) => at === index ? withImageInput(model, 'input', enabled) : model))
   }
 
   const setEfforts = (index: number, efforts: ReasoningEffortsMap | undefined): void => {
@@ -450,6 +456,15 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
           {expanded.has(index)
             ? (
               <div className={styles['modelAdvanced']}>
+                <div className={styles['modelImageInput']}>
+                  <span className={styles['modelFieldLabel']}>{t('modelSupportsImages')}</span>
+                  <Switch
+                    checked={acceptsImages(model['input'])}
+                    label={`${t('modelSupportsImages')} ${index + 1}`}
+                    disabled={disabled}
+                    onChange={(next) => { setImageInput(index, next) }}
+                  />
+                </div>
                 <label className={styles['modelField']}>
                   <span className={styles['modelFieldLabel']}>{t('modelContextWindow')}</span>
                   <input

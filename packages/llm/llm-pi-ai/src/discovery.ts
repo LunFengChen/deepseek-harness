@@ -23,9 +23,9 @@
  */
 
 import { INVALID_CREDENTIAL_CODE, LlmError, normalizeApiKey } from '@x1a0f3n9/dsh-llm'
-import type { LlmDiscoveredModel, LlmModelDiscoveryOperation } from '@x1a0f3n9/dsh-llm'
+import type { LlmDiscoveredModel, LlmModelDiscoveryOperation, ModelModality } from '@x1a0f3n9/dsh-llm'
 import { attributionHeaders } from '@x1a0f3n9/dsh-llm'
-import { catalogModels } from './catalog.ts'
+import { catalogModels, catalogProviderIds } from './catalog.ts'
 
 /**
  * Protocols whose model listing this module can read. OpenAI protocols use
@@ -101,6 +101,24 @@ function label(...candidates: readonly unknown[]): string | undefined {
     if (typeof candidate === 'string' && candidate.length > 0) return candidate
   }
   return undefined
+}
+
+/**
+ * Installed-catalog input for one model id, preferring an entry that includes
+ * `image` when several providers ship the same id.
+ * @param id - listing or catalog model id.
+ * @returns that catalog's `input` list, or `undefined` when no catalog names it.
+ */
+function catalogInputById(id: string): readonly ModelModality[] | undefined {
+  let fallback: readonly ModelModality[] | undefined
+  for (const provider of catalogProviderIds()) {
+    const model = catalogModels(provider).get(id)
+    if (model === undefined) continue
+    const input = [...model.input] as ModelModality[]
+    if (input.includes('image')) return input
+    fallback ??= input
+  }
+  return fallback
 }
 
 /**
@@ -219,11 +237,13 @@ function readListing(body: unknown): LlmDiscoveredModel[] {
       entry?.limit?.output,
       entry?.top_provider?.max_completion_tokens,
     )
+    const inputModalities = catalogInputById(id)
     models.push({
       id,
       name,
       ...contextWindow === undefined ? {} : { contextWindow },
       ...maxTokens === undefined ? {} : { maxTokens },
+      ...inputModalities === undefined ? {} : { inputModalities },
     })
   }
   return models
@@ -280,6 +300,7 @@ export async function discoverModels(
         name: model.name,
         contextWindow: model.contextWindow,
         maxTokens: model.maxTokens,
+        inputModalities: [...model.input] as ModelModality[],
       }))
     }
   }

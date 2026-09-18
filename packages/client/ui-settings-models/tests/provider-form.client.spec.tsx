@@ -36,6 +36,7 @@ const PiAiConfig = Schema.object({
       name: Schema.string(),
       contextWindow: Schema.number(),
       maxTokens: Schema.number(),
+      input: Schema.array(Schema.string()),
     })),
     reasoning: Schema.union(['off', 'high']),
     retryPolicy: RetryPolicyConfig,
@@ -751,6 +752,65 @@ describe('endpoint interrogation', () => {
     expect(firstMutate(mutate).ops[0]?.value).toEqual([
       { id: 'kept', contextWindow: 111 },
       { id: 'fresh', contextWindow: 4096, maxTokens: 2048, name: 'Fresh' },
+    ])
+  })
+
+  it('writes input [text, image] from the Supports images switch', async () => {
+    const { mutate } = await mountSection({
+      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'kept' }] } },
+    })
+    openEditor('openai')
+    expandModel(1)
+    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
+    expect(imageSwitch.getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(imageSwitch)
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([
+      { id: 'kept', input: ['text', 'image'] },
+    ])
+  })
+
+  it('drops input when the Supports images switch is turned off', async () => {
+    const { mutate } = await mountSection({
+      providers: {
+        openai: {
+          baseURL: 'https://proxy.example/v1',
+          models: [{ id: 'kept', input: ['text', 'image'] }],
+        },
+      },
+    })
+    openEditor('openai')
+    expandModel(1)
+    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
+    expect(imageSwitch.getAttribute('aria-checked')).toBe('true')
+    fireEvent.click(imageSwitch)
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([
+      { id: 'kept' },
+    ])
+  })
+
+  it('adopts a candidate\'s disclosed image input onto the new row', async () => {
+    const discover = vi.fn(() => Promise.resolve(ok([
+      { id: 'vision-preview', name: 'Vision', inputModalities: ['text', 'image'] as const },
+    ])))
+    const { mutate } = await mountSection({
+      discover,
+      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [] } },
+    })
+    openEditor('openai')
+    fireEvent.click(screen.getByText(en.fetchModels))
+    await screen.findByText(en.fetchTitle)
+    fireEvent.click(screen.getByText(en.fetchAdopt))
+    expandModel(1)
+    expect(screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` }).getAttribute('aria-checked'))
+      .toBe('true')
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([
+      { id: 'vision-preview', name: 'Vision', input: ['text', 'image'] },
     ])
   })
 
