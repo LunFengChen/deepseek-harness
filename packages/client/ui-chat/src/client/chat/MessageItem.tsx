@@ -4,6 +4,7 @@ import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { PendingSubmission } from '@x1a0f3n9/dsh-api-session-controller/client'
 import type { MessageImageSource } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { fileExtension, FileTypeIcon, fileSizeText, JsonBlock, projectUserText, StateDot } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { ChatNode } from '../contract/chat-nodes.ts'
 import type { ChatNodeOwnerProps, ChatNodeViewProps, ChatViewSlotProps } from '../contract/slots.ts'
 import type { ModelRetryNode, TurnErrorNode, UserMessageNode } from '../contract/snapshot.ts'
 import { CompactionItem } from './CompactionItem.tsx'
@@ -312,18 +313,17 @@ export function PendingSubmissionBubble({ submission, renderMessageImages, t }: 
   )
 }
 
-/** User and admitted-steering keyed Chat renderer. */
-type UserOrSteeringViewProps = ChatNodeViewProps<'user' | 'steering'>
-  & PropsRenderSlots<'conversation.chat.user-actions'>
-
-export const UserMessageNodeView = memo(function UserMessageNodeView({
-  node, renderMessageImages, openFile, openSkill, renderSlot, t,
-}: UserOrSteeringViewProps) {
-  const data = node.data
-  const userActions = renderSlot('conversation.chat.user-actions', {
-    seq: data.seq,
-    content: data.content,
-  })
+/** Shared user/steering bubble used by the keyed renderer and the seat fallback. */
+function UserMessageBubble({
+  data, renderMessageImages, openFile, openSkill, t, extraActions,
+}: {
+  data: ChatNode<'user' | 'steering'>['data']
+  renderMessageImages: ChatNodeOwnerProps['renderMessageImages']
+  openFile: ChatNodeOwnerProps['openFile']
+  openSkill: ChatNodeOwnerProps['openSkill']
+  t: ChatViewSlotProps['t']
+  extraActions?: ReactNode
+}): ReactNode {
   return (
     <UserStyleBubble
       content={data.content}
@@ -338,10 +338,59 @@ export const UserMessageNodeView = memo(function UserMessageNodeView({
           time={data.time}
           clock="start"
           className={css.actions}
-          extraActions={userActions}
+          extraActions={extraActions}
           t={t}
         />
       )}
+    />
+  )
+}
+
+/**
+ * User or admitted-steering bubble without the user-actions list slot.
+ * ChatNodeSeat uses this when the keyed `conversation.chat.node` renderer is absent.
+ * @param props - durable node payload and Chat owner seats.
+ * @returns the right-aligned user bubble, including copy actions.
+ */
+export function UserMessageFallbackView({
+  node, renderMessageImages, openFile, openSkill, t,
+}: {
+  node: ChatNode<'user' | 'steering'>
+  renderMessageImages: ChatNodeOwnerProps['renderMessageImages']
+  openFile: ChatNodeOwnerProps['openFile']
+  openSkill: ChatNodeOwnerProps['openSkill']
+  t: ChatViewSlotProps['t']
+}): ReactNode {
+  return (
+    <UserMessageBubble
+      data={node.data}
+      renderMessageImages={renderMessageImages}
+      openFile={openFile}
+      openSkill={openSkill}
+      t={t}
+    />
+  )
+}
+
+/** User and admitted-steering keyed Chat renderer. */
+type UserOrSteeringViewProps = ChatNodeViewProps<'user' | 'steering'>
+  & PropsRenderSlots<'conversation.chat.user-actions'>
+
+export const UserMessageNodeView = memo(function UserMessageNodeView({
+  node, renderMessageImages, openFile, openSkill, renderSlot, t,
+}: UserOrSteeringViewProps) {
+  const extraActions = renderSlot('conversation.chat.user-actions', {
+    seq: node.data.seq,
+    content: node.data.content,
+  })
+  return (
+    <UserMessageBubble
+      data={node.data}
+      renderMessageImages={renderMessageImages}
+      openFile={openFile}
+      openSkill={openSkill}
+      t={t}
+      extraActions={extraActions}
     />
   )
 })

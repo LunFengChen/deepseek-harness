@@ -1030,6 +1030,25 @@ describe('ChatView', () => {
     expect(h.forkAt).toHaveBeenCalledWith(1)
   })
 
+  it('keeps a steering message as a user bubble when the keyed node renderer is absent', () => {
+    const h = makeHarness({ nodes: [steering(2, 'interrupt now', 1)] })
+    h.setNodeRenderer(((_key: string, _owner: object, opts?: { fallback?: React.ReactNode }) =>
+      opts?.fallback ?? null) as React.ComponentProps<typeof ChatNodeSeat>['renderSlot'])
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('interrupt now')).toBeTruthy()
+    expect(view.getByText('interrupt now').closest('[class*="userRow"]')).not.toBeNull()
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.container.querySelector('[data-chat-flow-kind="steering"]')).not.toBeNull()
+  })
+
+  it('keeps the unknown-surface dump for kinds that are not user messages', () => {
+    const h = makeHarness({ nodes: [toolResult(3, 'a')] })
+    h.setNodeRenderer(((_key: string, _owner: object, opts?: { fallback?: React.ReactNode }) =>
+      opts?.fallback ?? null) as React.ComponentProps<typeof ChatNodeSeat>['renderSlot'])
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText(/未知 surface 事件：tool-call/)).toBeTruthy()
+  })
+
   it('keeps a later pending occurrence visible when it reuses a durable MessageId', () => {
     const pending = {
       id: 'steer-occurrence-later' as never,
