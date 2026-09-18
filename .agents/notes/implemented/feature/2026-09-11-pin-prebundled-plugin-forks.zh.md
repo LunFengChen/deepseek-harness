@@ -18,7 +18,7 @@ xfdsh 会预装社区插件。`dsh-context` 已经来自 `LunFengChen/dsh-contex
 - `dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7`
 - `@x1a0f3n9/dsh-session-timeline` → `github:LunFengChen/dsh-session-timeline#v0.1.0`
 - `@vectorize-io/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1`
-- `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.3`
+- `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.4`
 
 目录里的作者和主页跟着这些 fork。cordis 行保持 `name: dshmarket`；不要把 pin 改到改名为 `@x1a0f3n9/dshmarket` 的包。
 

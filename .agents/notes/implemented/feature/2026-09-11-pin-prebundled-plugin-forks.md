@@ -18,7 +18,7 @@ Pin self-maintained preinstalls to LunFengChen GitHub tags in `packages/bundle/w
 - `dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.0-alpha.1-xfdsh.7`
 - `@x1a0f3n9/dsh-session-timeline` → `github:LunFengChen/dsh-session-timeline#v0.1.0`
 - `@vectorize-io/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.1`
-- `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.3`
+- `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.4`
 
 Catalog author and homepage follow those forks. Keep the cordis row `name: dshmarket`; do not retarget the pin at a package renamed to `@x1a0f3n9/dshmarket`.
 
