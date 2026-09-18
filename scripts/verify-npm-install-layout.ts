@@ -79,7 +79,11 @@ function isWorkspaceDshPackage(name: string): boolean {
   return isDshPackage(name) && !PREINSTALLED_PLUGIN_PACKAGES.has(name)
 }
 
-function cloneForVersion(manifest: object, version: string): MutableRegistryManifest {
+function cloneForVersion(
+  manifest: object,
+  version: string,
+  rewriteNames: ReadonlySet<string>,
+): MutableRegistryManifest {
   const cloned = structuredClone(manifest) as MutableRegistryManifest
   cloned.version = version
   for (const field of DEPENDENCY_FIELDS) {
@@ -88,11 +92,39 @@ function cloneForVersion(manifest: object, version: string): MutableRegistryMani
     const next: Record<string, string> = {}
     for (const [name, range] of Object.entries(dependencies)) {
       if (PREINSTALLED_PLUGIN_PACKAGES.has(name)) continue
-      next[name] = isForkDshPackage(name) || isOfficialDshPackage(name) ? `^${version}` : range
+      if (isForkDshPackage(name) || isOfficialDshPackage(name)) {
+        // Git-hosted @x1a0f3n9/dsh-* plugins keep their own versions. Rewriting
+        // them to ^0.2.0 makes npm look for a version that does not exist.
+        if (!rewriteNames.has(name)) continue
+        next[name] = `^${version}`
+        continue
+      }
+      next[name] = range
     }
     cloned[field] = next
   }
   return cloned
+}
+
+/**
+ * Workspace DSH names at `sourceVersion`, plus the official aliases the dual
+ * registry will publish for them. Git-hosted plugins at other versions stay out.
+ * @param index - Registry metadata containing the working release.
+ * @param sourceVersion - Workspace version copied into each synthetic release.
+ * @returns Names whose ranges may be rewritten to the synthetic versions.
+ */
+function syntheticRewriteNames(index: RegistryIndex, sourceVersion: string): Set<string> {
+  const names = new Set<string>()
+  for (const [name, versions] of index) {
+    if (!versions.has(sourceVersion)) continue
+    if (isForkDshPackage(name)) {
+      names.add(name)
+      const alias = officialDshAlias(name)
+      if (alias !== undefined) names.add(alias)
+    }
+    if (isOfficialDshPackage(name)) names.add(name)
+  }
+  return names
 }
 
 /**
@@ -103,6 +135,7 @@ function cloneForVersion(manifest: object, version: string): MutableRegistryMani
  */
 export function buildDualDshRegistry(index: RegistryIndex, sourceVersion: string): RegistryIndex {
   const output = new Map(index)
+  const rewriteNames = syntheticRewriteNames(index, sourceVersion)
   let dshPackages = 0
   for (const [name, versions] of index) {
     if (!isWorkspaceDshPackage(name)) {
@@ -117,7 +150,7 @@ export function buildDualDshRegistry(index: RegistryIndex, sourceVersion: string
     dshPackages++
     const cloned = new Map(SYNTHETIC_DSH_VERSIONS.map(version => [
       version,
-      cloneForVersion(source, version),
+      cloneForVersion(source, version, rewriteNames),
     ]))
     output.set(name, cloned)
     const alias = officialDshAlias(name)
