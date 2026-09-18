@@ -64,6 +64,7 @@ const DeepSeekConfig = Schema.object({
     name: Schema.string(),
     description: Schema.string(),
     contextWindow: Schema.number().step(1).min(1),
+    inputModalities: Schema.array(Schema.string()),
   // The adapter declares its catalog as a schema default rather than a
   // composition entry, which is what the restore-defaults path has to read.
   })).default([
@@ -1044,6 +1045,42 @@ describe('ModelsSection', () => {
       .toBe(en.contextWindowPlaceholder)
     expect(screen.getByLabelText<HTMLInputElement>(`${en.maxTokens} 1`).placeholder)
       .toBe(en.maxTokensPlaceholder)
+  })
+
+  it('writes inputModalities [text, image] from the Supports images switch', async () => {
+    const { mutate } = await mountDeepSeekCard({
+      mutate: vi.fn(() => Promise.resolve(remoteOk(wireNamespaces()[0]))),
+    })
+    fireEvent.click(screen.getByText(en.customized))
+    expandRow(1)
+    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
+    expect(imageSwitch.getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(imageSwitch)
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    const models = (mutate.mock.calls[0] as [string, { op: string; path: string[]; value?: unknown }[]])[1]
+      .find(op => op.path[0] === 'models')?.value as Record<string, unknown>[]
+    expect(models[0]).toMatchObject({
+      id: 'deepseek-v4-flash',
+      inputModalities: ['text', 'image'],
+    })
+  })
+
+  it('drops inputModalities when the Supports images switch is turned off', () => {
+    const onChange = vi.fn()
+    render(<DeepSeekModelsEditor
+      models={[{ id: 'flash', inputModalities: ['text', 'image'] }]}
+      overridden={true}
+      defaultContextWindow={undefined}
+      defaultMaxTokens={undefined}
+      t={t}
+      disabled={false}
+      onChange={onChange}
+      onReset={vi.fn()}
+    />)
+    expandRow(1)
+    fireEvent.click(screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` }))
+    expect(onChange).toHaveBeenCalledWith([{ id: 'flash' }])
   })
 
   it('can empty and reset the model override, then clear optional fields without dropping hidden data', async () => {

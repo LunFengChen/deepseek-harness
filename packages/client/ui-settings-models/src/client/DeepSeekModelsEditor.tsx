@@ -8,8 +8,9 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import {
-  IconChevronDownOutline14, IconChevronRightOutline14, IconPlusOutline16, IconTrashOutline16,
+  IconChevronDownOutline14, IconChevronRightOutline14, IconPlusOutline16, IconTrashOutline16, Switch,
 } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { acceptsImages, withImageInput } from './image-input.ts'
 import type { en } from './locales.ts'
 import { validateReasoningEfforts } from './reasoning-efforts.ts'
 import styles from './ModelsSection.module.css'
@@ -147,7 +148,7 @@ export interface DeepSeekModelsEditorProps {
 
 /**
  * Render the direct DeepSeek adapter's model catalog: id and display name on
- * each row, capacities behind the row's own disclosure.
+ * each row, image-input and capacities behind the row's own disclosure.
  * @param props - effective rows plus the array-level override actions.
  * @returns the catalog editor.
  */
@@ -175,6 +176,12 @@ export function DeepSeekModelsEditor(props: DeepSeekModelsEditorProps): ReactNod
       return copy
     })
     props.onChange(next)
+  }
+
+  const setImageInput = (index: number, enabled: boolean): void => {
+    props.onChange(props.models.map((model, at) => (
+      at === index ? withImageInput(model, 'inputModalities', enabled) : { ...model }
+    )))
   }
 
   const remove = (index: number): void => {
@@ -344,6 +351,15 @@ export function DeepSeekModelsEditor(props: DeepSeekModelsEditorProps): ReactNod
                 {expanded.has(index)
                   ? (
                     <div className={styles['modelAdvanced']}>
+                      <div className={styles['modelImageInput']}>
+                        <span className={styles['modelFieldLabel']}>{props.t('modelSupportsImages')}</span>
+                        <Switch
+                          checked={acceptsImages(model['inputModalities'])}
+                          label={`${props.t('modelSupportsImages')} ${String(index + 1)}`}
+                          disabled={props.disabled}
+                          onChange={(next) => { setImageInput(index, next) }}
+                        />
+                      </div>
                       {capacityField(model, index, 'contextWindow', props.defaultContextWindow)}
                       {capacityField(model, index, 'maxTokens', props.defaultMaxTokens)}
                     </div>

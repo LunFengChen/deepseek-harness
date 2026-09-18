@@ -502,6 +502,15 @@
   padding: 8px 4px 2px;
 }
 
+.modelImageInput {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
 .modelField {
   display: flex;
   flex-direction: column;

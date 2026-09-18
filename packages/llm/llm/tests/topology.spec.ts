@@ -238,14 +238,14 @@ describe('model discovery registry', () => {
   it('normalizes what an interrogation returns without inventing capacities', async () => {
     const ctx = await setup()
     ctx.llm.registerModelDiscovery('llm-example', () => Promise.resolve([
-      { id: 'keep', name: 'Keep', contextWindow: 1024, maxTokens: 256 },
+      { id: 'keep', name: 'Keep', contextWindow: 1024, maxTokens: 256, inputModalities: ['text', 'image'] },
       { id: '' },
       { id: 'keep' },
       { id: 'bare' },
     ] as never))
 
     expect(await ctx.llm.discoverModels('llm-example', { baseURL: 'https://gateway.example/v1' })).toEqual([
-      { id: 'keep', name: 'Keep', contextWindow: 1024, maxTokens: 256 },
+      { id: 'keep', name: 'Keep', contextWindow: 1024, maxTokens: 256, inputModalities: ['text', 'image'] },
       { id: 'bare' },
     ])
   })

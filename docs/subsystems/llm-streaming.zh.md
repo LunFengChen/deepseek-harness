@@ -702,6 +702,11 @@ interface LlmDiscoveredModel {
   contextWindow?: number
   /** Maximum output tokens, when disclosed. */
   maxTokens?: number
+  /**
+   * Accepted request modalities when the listing or an installed catalog
+   * discloses them. Absent means unknown, not text-only.
+   */
+  inputModalities?: readonly ModelModality[]
 }
 ```
 
