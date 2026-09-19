@@ -14,12 +14,12 @@ fork 出来的 xfdsh 预装包仍在用上游 npm 名：`dshmarket`、`dsh-reaso
 
 当前 pin：
 
-- `@x1a0f3n9/dsh-reasoning-effort` → `github:LunFengChen/dsh-reasoning-effort#v0.7.3`
-- `@x1a0f3n9/dsh-context` → `github:LunFengChen/dsh-context#v0.49.7`
-- `@x1a0f3n9/dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.2`
-- `@x1a0f3n9/dshmarket` → `github:LunFengChen/dsh-market#v1.45.2`
-- `@x1a0f3n9/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`，loader `@x1a0f3n9/hindsight-coding-agents/dsh`
-- `@x1a0f3n9/dsh-skills-manager` → `github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1`
+- `@x1a0f3n9/dsh-reasoning-effort` → `0.7.3`
+- `@x1a0f3n9/dsh-context` → `0.49.7`
+- `@x1a0f3n9/dsh-better-sidebar` → `0.19.3`
+- `@x1a0f3n9/dshmarket` → `1.45.2`
+- `@x1a0f3n9/hindsight-coding-agents` → `0.5.2-xfdsh.4`，loader `@x1a0f3n9/hindsight-coding-agents/dsh`
+- `@x1a0f3n9/dsh-skills-manager` → `0.1.53-xfdsh.1`
 
 这推翻了 [fork Hindsight coding agents](2026-09-12-fork-hindsight-coding-agents.zh.md) 里“保留上游 npm 名”，以及 [pin remaining prebundled plugins](2026-09-11-pin-prebundled-plugin-forks.zh.md) 里“cordis 行保持 `dshmarket`”。
 
@@ -33,6 +33,6 @@ fork 出来的 xfdsh 预装包仍在用上游 npm 名：`dshmarket`、`dsh-reaso
 
 ## Consequences
 
-- Settings → xfdsh预置插件 显示 `@x1a0f3n9/...`，点进去打开 LunFengChen 的 GitHub pin。
-- `pnpm install` 解析这些 pin 之前，GitHub tag 必须已经存在。
+- Settings → xfdsh预置插件 显示 `@x1a0f3n9/...`，点进去打开 LunFengChen 的 GitHub 仓库。
+- `pnpm install` 解析这些 pin 之前，对应 npm 版本必须已经发布。
 - 官方 `@deepseek-ai/dsh` 不变。

@@ -126,6 +126,13 @@ minimumReleaseAgeExclude:
   - '@openai/codex@0.153.4||0.153.4-darwin-arm64||0.153.4-darwin-x64||0.153.4-linux-arm64||0.153.4-linux-x64||0.153.4-win32-arm64||0.153.4-win32-x64'
   - dsh-better-sidebar@0.19.0-alpha.1
   - dsh-context@0.48.0
+  - '@x1a0f3n9/dsh-better-sidebar@0.19.3'
+  - '@x1a0f3n9/dsh-context@0.49.7'
+  - '@x1a0f3n9/dsh-failover-queue@0.1.11'
+  - '@x1a0f3n9/dsh-reasoning-effort@0.7.3'
+  - '@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2'
+  - '@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1'
+  - '@x1a0f3n9/dshmarket@1.45.2'
 
 patchedDependencies:
   '@electron/osx-sign@1.3.3': patches/@electron__osx-sign@1.3.3.patch

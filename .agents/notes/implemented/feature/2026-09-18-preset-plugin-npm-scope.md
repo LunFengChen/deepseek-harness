@@ -14,12 +14,12 @@ Each forked preinstall publishes as `@x1a0f3n9/<name>`. Catalog `packageName`, w
 
 Current pins:
 
-- `@x1a0f3n9/dsh-reasoning-effort` → `github:LunFengChen/dsh-reasoning-effort#v0.7.3`
-- `@x1a0f3n9/dsh-context` → `github:LunFengChen/dsh-context#v0.49.7`
-- `@x1a0f3n9/dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.2`
-- `@x1a0f3n9/dshmarket` → `github:LunFengChen/dsh-market#v1.45.2`
-- `@x1a0f3n9/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`, loader `@x1a0f3n9/hindsight-coding-agents/dsh`
-- `@x1a0f3n9/dsh-skills-manager` → `github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1`
+- `@x1a0f3n9/dsh-reasoning-effort` → `0.7.3`
+- `@x1a0f3n9/dsh-context` → `0.49.7`
+- `@x1a0f3n9/dsh-better-sidebar` → `0.19.3`
+- `@x1a0f3n9/dshmarket` → `1.45.2`
+- `@x1a0f3n9/hindsight-coding-agents` → `0.5.2-xfdsh.4`, loader `@x1a0f3n9/hindsight-coding-agents/dsh`
+- `@x1a0f3n9/dsh-skills-manager` → `0.1.53-xfdsh.1`
 
 This reverses [fork Hindsight coding agents](2026-09-12-fork-hindsight-coding-agents.md) keeping the upstream npm name, and [pin remaining prebundled plugins](2026-09-11-pin-prebundled-plugin-forks.md) keeping the unscoped `dshmarket` loader row.
 
@@ -33,6 +33,6 @@ This reverses [fork Hindsight coding agents](2026-09-12-fork-hindsight-coding-ag
 
 ## Consequences
 
-- Settings → xfdsh preset plugins shows `@x1a0f3n9/...` and opens the LunFengChen GitHub pin.
-- GitHub tags must exist before `pnpm install` can resolve the pins.
+- Settings → xfdsh preset plugins shows `@x1a0f3n9/...` and opens the LunFengChen GitHub repository.
+- The pinned npm versions must exist before `pnpm install` can resolve them.
 - Official `@deepseek-ai/dsh` is unchanged.
