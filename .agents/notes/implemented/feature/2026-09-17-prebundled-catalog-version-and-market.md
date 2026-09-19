@@ -12,7 +12,7 @@ xfdsh ships community plugins inside `@x1a0f3n9/dsh-web-app`. Settings → Plugi
 
 `pluginInventory/list` projects each catalog package's `package.json` `version` when the bundle layer can resolve it. Optional-plugin cards render that version next to the package name.
 
-`@x1a0f3n9/dshmarket` `v1.45.2` reads `dsh.bundle.plugins` from selected profile bundles, returns them as `prebundled`, and treats those names (plus unscoped aliases) as presence-only catalog matches. Bundle manifests resolve through Node module resolution from the profile `package.json` and the host CLI entry, because a source-launched Web bundle is often hoisted outside `profile/node_modules`. Profile `dependencies` stay the mutation source of truth: the Installed tab can list a prebundled package and must not offer uninstall or update for it. The Web bundle pin is `github:LunFengChen/dsh-market#v1.45.2` (`@x1a0f3n9/dshmarket`). Failover queue ships in the same catalog as `github:LunFengChen/dsh-failover-queue#v0.1.9`.
+`@x1a0f3n9/dshmarket` `v1.45.2` reads `dsh.bundle.plugins` from selected profile bundles, returns them as `prebundled`, and treats those names (plus unscoped aliases) as presence-only catalog matches. Bundle manifests resolve through Node module resolution from the profile `package.json` and the host CLI entry, because a source-launched Web bundle is often hoisted outside `profile/node_modules`. Profile `dependencies` stay the mutation source of truth: the Installed tab can list a prebundled package and must not offer uninstall or update for it. The Web bundle pin is `github:LunFengChen/dsh-market#v1.45.2` (`@x1a0f3n9/dshmarket`). Failover queue ships in the same catalog as `github:LunFengChen/dsh-failover-queue#v0.1.10`.
 
 ## Alternatives considered
 
