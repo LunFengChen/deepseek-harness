@@ -70,7 +70,7 @@ This uses `~/.dsh` for plugins, profiles, sessions, settings, and keys, and list
 **Fork npm (development scope `@x1a0f3n9`):**
 
 ```sh
-npm install --global @x1a0f3n9/dsh@next
+npm install --global @x1a0f3n9/dsh
 xfdsh web
 ```
 
@@ -84,12 +84,12 @@ pnpm run build
 pnpm xfdsh web
 ```
 
-`pnpm xfdsh web` launches this checkout through tsx. Later launches do not need another compile. Rebuild after a fresh clone, after pulling large changes, or when using `pnpm exec xfdsh`. A bare `xfdsh web` on PATH comes from `npm install --global @x1a0f3n9/dsh@next`.
+`pnpm xfdsh web` launches this checkout through tsx. Later launches do not need another compile. Rebuild after a fresh clone, after pulling large changes, or when using `pnpm exec xfdsh`. A bare `xfdsh web` on PATH comes from `npm install --global @x1a0f3n9/dsh`.
 
 For one-off use without a global install:
 
 ```sh
-npx --package @x1a0f3n9/dsh@next xfdsh web
+npx --package @x1a0f3n9/dsh xfdsh web
 ```
 
 `xfdsh` keeps plugins and profiles in `~/.xfdsh` and never writes `~/.dsh/profiles`. Sessions, workspace groups, attachments, settings, and API keys stay in `~/.dsh`, so both CLIs see the same history. Preinstalled timeline, plugin-market, reasoning-effort, context, better-sidebar, hindsight, failover, and search-pool entries can be disabled from Settings → xfdsh preset plugins.
@@ -109,7 +109,7 @@ Review the [safety notice](SAFETY.md) before running the project.
 Install `Node.js`, then run:
 
 ```sh
-npx --package @x1a0f3n9/dsh@next xfdsh web
+npx --package @x1a0f3n9/dsh xfdsh web
 ```
 
 The command starts the Web UI at `http://127.0.0.1:7777` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).

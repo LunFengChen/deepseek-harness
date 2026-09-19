@@ -10,7 +10,7 @@ Status: implemented
 
 ## Decision
 
-每个预置插件都按 `packages/bundle/web-app` 里已经 pin 的版本，把带编译产物的 tarball 发到 npm。web-app 清单用这些精确 npm 版本，不再用 `github:`。因此 `npm install --global @x1a0f3n9/dsh@next` 从 registry 安装插件。`.github/workflows/publish-preset-plugins.yml` 按 tag clone，只在缺少 `lib/index.js` 或 `dist/index.js` 时编译，并用 harness 的 `NPM_TOKEN` 发布。
+每个预置插件都按 `packages/bundle/web-app` 里已经 pin 的版本，把带编译产物的 tarball 发到 npm。web-app 清单用这些精确 npm 版本，不再用 `github:`。因此 `npm install --global @x1a0f3n9/dsh` 从 registry 安装插件。`.github/workflows/publish-preset-plugins.yml` 按 tag clone，只在缺少 `lib/index.js` 或 `dist/index.js` 时编译，并用 harness 的 `NPM_TOKEN` 发布。
 
 当前 pin：
 
@@ -35,6 +35,6 @@ Status: implemented
 
 ## Consequences
 
-- 朋友用 `npm install --global @x1a0f3n9/dsh@next` 安装 fork，然后 `xfdsh web`，不用 clone 插件仓库。
+- 朋友用 `npm install --global @x1a0f3n9/dsh` 安装 fork，然后 `xfdsh web`，不用 clone 插件仓库。
 - 刷新 harness lockfile 之前，这些 pin 版本必须已经在 npm 上。
 - 官方 `@deepseek-ai/dsh` 不变。

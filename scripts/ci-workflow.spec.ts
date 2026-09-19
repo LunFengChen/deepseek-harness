@@ -32,6 +32,8 @@ describe('CI workflow', () => {
       const publish = workflowJob(loadWorkflow('.github/workflows/' + name), 'publish')
       expect(publish.concurrency).toMatchObject({ 'cancel-in-progress': false })
     }
+    const distTag = workflowJob(loadWorkflow('.github/workflows/release-dist-tag.yml'), 'dist-tag')
+    expect(distTag.concurrency).toMatchObject({ 'cancel-in-progress': false })
     for (const name of ['python-release.yml', 'node-addon-system-release.yml', 'docs-pages.yml']) {
       expect(loadWorkflow('.github/workflows/' + name).concurrency).toMatchObject({ 'cancel-in-progress': false })
     }
@@ -1058,6 +1060,23 @@ describe('npm release workflows', () => {
       environment: 'npm-publish',
       concurrency: { group: 'Release-publish' },
     })
+
+    const distTag = loadWorkflow('.github/workflows/release-dist-tag.yml')
+    if (!isRecord(distTag.on) || !isRecord(distTag.jobs)) {
+      throw new TypeError('release-dist-tag.yml must define on and jobs')
+    }
+    expect(Object.keys(distTag.on)).toEqual(['workflow_dispatch'])
+    expect(distTag.jobs['dist-tag']).toMatchObject({
+      environment: 'npm-publish',
+      concurrency: { group: 'Release-publish', 'cancel-in-progress': false },
+    })
+    const distTagJob = workflowJob(distTag, 'dist-tag')
+    if (!Array.isArray(distTagJob.steps)) throw new TypeError('dist-tag job must define steps')
+    const point = distTagJob.steps.filter(isRecord).find(step => step.name === 'Point dist-tag')
+    expect(point).toMatchObject({
+      env: { NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}' },
+    })
+    expect(String(point?.run ?? '')).toContain('pnpm run release:dist-tag')
   })
 
   it('runs dependency policy and npm layout checks in the DSH release workflow', () => {

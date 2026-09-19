@@ -10,7 +10,7 @@ English | [中文](2026-09-19-preset-plugins-npm.zh.md)
 
 ## Decision
 
-Each preset plugin publishes a compiled tarball to npm at the version already pinned in `packages/bundle/web-app`. The web-app manifest uses those exact npm versions, not `github:` specifiers. `npm install --global @x1a0f3n9/dsh@next` therefore installs plugins from the registry. `.github/workflows/publish-preset-plugins.yml` clones each tag, builds only when `lib/index.js` or `dist/index.js` is missing, and publishes with the harness `NPM_TOKEN`.
+Each preset plugin publishes a compiled tarball to npm at the version already pinned in `packages/bundle/web-app`. The web-app manifest uses those exact npm versions, not `github:` specifiers. `npm install --global @x1a0f3n9/dsh` therefore installs plugins from the registry. `.github/workflows/publish-preset-plugins.yml` clones each tag, builds only when `lib/index.js` or `dist/index.js` is missing, and publishes with the harness `NPM_TOKEN`.
 
 Pinned versions:
 
@@ -35,6 +35,6 @@ Pinned versions:
 
 ## Consequences
 
-- Friends install the fork with `npm install --global @x1a0f3n9/dsh@next` and run `xfdsh web` without cloning plugin repositories.
+- Friends install the fork with `npm install --global @x1a0f3n9/dsh` and run `xfdsh web` without cloning plugin repositories.
 - The pinned plugin versions must exist on npm before `pnpm install` can refresh the harness lockfile.
 - Official `@deepseek-ai/dsh` is unchanged.
