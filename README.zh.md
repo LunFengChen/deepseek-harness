@@ -27,7 +27,7 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 | 上下文面板 | 预装且可关闭：`github:LunFengChen/dsh-context#v0.49.7`（`@x1a0f3n9/dsh-context`）。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |
 | Better sidebar | 预装且可关闭：`github:LunFengChen/DSH-better-sidebar#v0.19.3`（`@x1a0f3n9/dsh-better-sidebar`）。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
 | Hindsight 记忆 | 预装且默认打开：`github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`（`@x1a0f3n9/hindsight-coding-agents`）。 | xfdsh 默认走本机 daemon，不走 Cloud。可在 Settings → xfdsh预置插件 关闭。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
-| 故障转移队列 | 预装且可关闭：`github:LunFengChen/dsh-failover-queue#v0.1.10`。 | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3 编辑。在 `llm-retry` 用尽后切下一档，或在 `AUTH` / `RATE_LIMIT` / `NO_ADAPTER` 时立即切换。 |
+| 故障转移队列 | 预装且可关闭：`github:LunFengChen/dsh-failover-queue#v0.1.11`。 | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3 编辑。在 `llm-retry` 用尽后切下一档，或在 `AUTH` / `RATE_LIMIT` / `NO_ADAPTER` 时立即切换。P1 恢复后会探活切回，不会粘在 P2。 |
 | 技能管理 | 预装且可关闭：`github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1`（`@x1a0f3n9/dsh-skills-manager`）：加载、开关、创建并导入本机 Agent 技能。 | 卡片打开时出现 Settings → 技能。可在 Settings → xfdsh预置插件 关闭。 |
 | Hindsight git 报错 | LunFengChen fork 把 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
