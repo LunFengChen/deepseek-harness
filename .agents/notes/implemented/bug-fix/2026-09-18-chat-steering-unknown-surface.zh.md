@@ -24,7 +24,7 @@ Status: implemented
 
 **在 seat fallback 里复用 `UserMessageNodeView`。** 拒绝：该 view 会调用 `renderSlot('conversation.chat.user-actions')`，Chat view binding 并未授权这个子 slot。fallback 不能假装子列表存在。
 
-**把缺失的 `steering` 别名到 keyed `user`。** 拒绝：这会向 user renderer 谎报 `node.kind`。产品路径仍注册两个 key；fallback 是降级，不是第二次派发。
+**把缺失的 `steering` 别名到 keyed `user`。** slot key 复用是[把准入后的 steering Chat 节点派发到 user keyed occupant](2026-09-20-chat-steering-user-slot-key.zh.md)里的产品派发。本笔记仍拥有缺失 occupant 的 fallback 以及 kind `steering`。
 
 **保留 unknown-surface 转储。** 拒绝：插话发送是用户消息。节点数据的 JsonBlock 不是可接受的 Chat 行。
 
@@ -33,3 +33,7 @@ Status: implemented
 - keyed `steering` renderer 缺失时，插话发送仍显示为用户气泡。
 - 该行上的 rewind、删除和重新生成仍要求 keyed renderer 加上 session-timeline 的 user-actions。fallback 省略这些操作。
 - `message.unknownSurface` 仍是非 user/steering 的 Chat kind 的转储。
+
+## 相关
+
+[把准入后的 steering Chat 节点派发到 user keyed occupant](2026-09-20-chat-steering-user-slot-key.zh.md) 拥有用户风格节点的 ChatNodeSeat `entryKey` 映射。
