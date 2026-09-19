@@ -70,7 +70,7 @@ dsh web
 **fork npm（开发 scope `@x1a0f3n9`）：**
 
 ```sh
-npm install --global @x1a0f3n9/dsh@next
+npm install --global @x1a0f3n9/dsh
 xfdsh web
 ```
 
@@ -84,12 +84,12 @@ pnpm run build
 pnpm xfdsh web
 ```
 
-`pnpm xfdsh web` 用 tsx 启动当前仓库。之后每次启动不用再编译。克隆后、拉取大改动后，或使用 `pnpm exec xfdsh` 时才需要重新 `pnpm run build`。PATH 上的裸 `xfdsh web` 来自 `npm install --global @x1a0f3n9/dsh@next`。
+`pnpm xfdsh web` 用 tsx 启动当前仓库。之后每次启动不用再编译。克隆后、拉取大改动后，或使用 `pnpm exec xfdsh` 时才需要重新 `pnpm run build`。PATH 上的裸 `xfdsh web` 来自 `npm install --global @x1a0f3n9/dsh`。
 
 不装全局包的一次性运行：
 
 ```sh
-npx --package @x1a0f3n9/dsh@next xfdsh web
+npx --package @x1a0f3n9/dsh xfdsh web
 ```
 
 `xfdsh` 的插件和 profile 放在 `~/.xfdsh`，不会写 `~/.dsh/profiles`。会话、分组、附件、settings 和 API key 仍在 `~/.dsh`，所以两套 CLI 看到同一份历史。预装的 timeline、插件市场、思考强度、上下文面板、better-sidebar、hindsight、故障转移和搜索池可以在 Settings → xfdsh预置插件 关闭。
@@ -111,7 +111,7 @@ DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来
 安装 `Node.js`，然后运行：
 
 ```sh
-npx --package @x1a0f3n9/dsh@next xfdsh web
+npx --package @x1a0f3n9/dsh xfdsh web
 ```
 
 该命令默认会在 `http://127.0.0.1:7777` 启动 Web UI，本机启动时还会用默认浏览器打开页面。通过 SSH 启动时只打印宿主机 URL，因为本地转发地址由 SSH 客户端或编辑器持有。传入 `--no-open` 可仅运行服务器而不打开浏览器。详见 [Web UI 指南](docs/user/guide/index.zh.md)。

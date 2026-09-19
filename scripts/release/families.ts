@@ -360,12 +360,19 @@ class DshFamily extends ReleaseFamily {
     return this.tagPrefix
   }
 
+  /**
+   * Point `alpha` and `canary` at named tags; leave `rc` and other versions on
+   * npm's `latest` default
+   * ([rationale](../../.agents/notes/implemented/process/2026-09-19-dsh-rc-latest-dist-tag.md)).
+   * @param version - package version from the packed manifest.
+   * @returns `alpha` or `canary`, or undefined so npm uses `latest`.
+   */
   override distTagForVersion(version: string): string | undefined {
     const separator = version.indexOf('-')
     if (separator === -1) return undefined
     const [channel] = version.slice(separator + 1).split('.')
     if (channel === 'alpha' || channel === 'canary') return channel
-    return 'next'
+    return undefined
   }
 
   /**
