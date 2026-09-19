@@ -1970,8 +1970,8 @@ importers:
         specifier: workspace:^
         version: link:../../extensions/cordis-host-runner
       '@x1a0f3n9/dsh-failover-queue':
-        specifier: github:LunFengChen/dsh-failover-queue#v0.1.6
-        version: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/32573528e5328247ac9fe591dc4a3354c28d8e68(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
+        specifier: github:LunFengChen/dsh-failover-queue#v0.1.8
+        version: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/3bdb6c100d532cd8d694183d13a9b3cfa1c6cc86(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
       '@x1a0f3n9/dsh-file-reference':
         specifier: workspace:^
         version: link:../../context/file-reference
@@ -15066,9 +15066,9 @@ packages:
       react:
         optional: true
 
-  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/32573528e5328247ac9fe591dc4a3354c28d8e68':
-    resolution: {gitHosted: true, integrity: sha512-ukaVONyQVTfq+alWuP/vXEKNpRxcOjDCH2l7FhhSCb4j540fioKUbwD7iFvZqLYgqBClNrsPLhG4FIx2bu8Qww==, tarball: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/32573528e5328247ac9fe591dc4a3354c28d8e68}
-    version: 0.1.6
+  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/3bdb6c100d532cd8d694183d13a9b3cfa1c6cc86':
+    resolution: {gitHosted: true, integrity: sha512-2k2COOmbk9jeO6M5ZtK1LBwkCcMnTs4l354npYS1X5pu4YPoD0q4o07GHBpK+VjIpw7K0DiUZXbVS8xrigV4mA==, tarball: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/3bdb6c100d532cd8d694183d13a9b3cfa1c6cc86}
+    version: 0.1.8
     engines: {node: '>=22.19'}
     peerDependencies:
       '@deepseek-ai/cordis': '>=4.0.0'
@@ -22375,7 +22375,7 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
-  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/32573528e5328247ac9fe591dc4a3354c28d8e68(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)':
+  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/3bdb6c100d532cd8d694183d13a9b3cfa1c6cc86(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       '@deepseek-ai/schemastery': link:vendor/schemastery
