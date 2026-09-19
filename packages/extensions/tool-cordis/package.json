@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-tool-cordis",
   "description": "Self-referential cordis toolset: inspect the live runtime, mount and dispose model-written plugins",
-  "version": "0.1.5-rc.3",
+  "version": "0.1.5-rc.4",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-connection",
   "description": "Authenticated RPC transport, generation lifecycle, and browser fixture",
-  "version": "0.1.5-rc.3",
+  "version": "0.1.5-rc.4",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-session-format-catalog",
   "description": "Build-static first-party Session format codec and migration catalog",
-  "version": "0.1.5-rc.3",
+  "version": "0.1.5-rc.4",
   "publishConfig": {
     "access": "public"
   },
