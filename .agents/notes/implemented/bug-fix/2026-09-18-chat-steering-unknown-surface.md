@@ -24,7 +24,7 @@ Keep kind `steering`. Keep the keyed renderer on `UserMessageNodeView`, includin
 
 **Reuse `UserMessageNodeView` from the seat fallback.** Rejected: that view calls `renderSlot('conversation.chat.user-actions')`, which the Chat view binding does not authorize. The fallback must not pretend the child list exists.
 
-**Alias missing `steering` to keyed `user`.** Rejected: it would lie about `node.kind` to the user renderer. The product path still registers both keys; the fallback is degradation, not a second dispatch.
+**Alias missing `steering` to keyed `user`.** Slot-key reuse is the product dispatch in [Dispatch admitted steering Chat nodes through the user keyed occupant](2026-09-20-chat-steering-user-slot-key.md). This note still owns the missing-occupant fallback and kind `steering`.
 
 **Keep the unknown-surface dump.** Rejected: interrupt send is a user message. A JsonBlock of node data is not an acceptable Chat row.
 
@@ -33,3 +33,7 @@ Keep kind `steering`. Keep the keyed renderer on `UserMessageNodeView`, includin
 - Interrupt send still looks like a user bubble when the keyed `steering` renderer is missing.
 - Rewind, delete, and regenerate on that row still require the keyed renderer plus session-timeline user-actions. The fallback omits those actions.
 - `message.unknownSurface` remains the dump for Chat kinds that are not user or steering.
+
+## Related
+
+[Dispatch admitted steering Chat nodes through the user keyed occupant](2026-09-20-chat-steering-user-slot-key.md) owns ChatNodeSeat `entryKey` mapping for user-style nodes.

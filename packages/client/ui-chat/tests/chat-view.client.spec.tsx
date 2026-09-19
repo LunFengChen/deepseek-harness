@@ -297,7 +297,8 @@ function makeHarness(
     const nodeProps = <Kind extends ChatNode['kind']>(): ChatNodeViewProps<Kind> => (
       { ...props, ...nodeOwner, useTurnData } as unknown as ChatNodeViewProps<Kind>
     )
-    switch (nodeOwner.node.kind) {
+    const entryKey = (opts as { entryKey?: string } | undefined)?.entryKey ?? nodeOwner.node.kind
+    switch (entryKey) {
       case 'user':
         return <UserMessageNodeView {...nodeProps<'user'>()} renderSlot={renderUserActionsSlot} SessionProvider={props.SessionProvider} />
       case 'steering':
@@ -1010,6 +1011,7 @@ describe('ChatView', () => {
     })
     expect(view.getAllByText('interrupt now')).toHaveLength(1)
     expect(view.container.querySelector('[data-pending-steering]')).toBeNull()
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
     // Only the durable steering bubble: the turn is still running, so its
     // assistant narration owns no footer yet, and a steering bubble never
     // carries a branch action.
@@ -1021,6 +1023,8 @@ describe('ChatView', () => {
       h.setSession({ running: false })
       h.setChat({ turnEnds: new Map([[1, 3]]) })
     })
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.getByText('interrupt now').closest('[class*="userRow"]')).not.toBeNull()
     // The Turn Tail belongs to the closed Turn, independently of a later
     // steering bubble's placement in the Chat list.
     const branchButtons = view.getAllByRole('button', { name: '在新对话中分支' })
@@ -1047,6 +1051,50 @@ describe('ChatView', () => {
       opts?.fallback ?? null) as React.ComponentProps<typeof ChatNodeSeat>['renderSlot'])
     const view = render(<h.ChatView {...h.props} />)
     expect(view.getByText(/未知 surface 事件：tool-call/)).toBeTruthy()
+  })
+
+  it('keeps a settled steering interrupt as a user bubble', () => {
+    const h = makeHarness({
+      nodes: [steering(2, 'interrupt now', 1), assistant(3, 'final answer')],
+      turnEnds: new Map([[1, 4]]),
+    })
+    h.setSession({ running: false })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('interrupt now').closest('[class*="userRow"]')).not.toBeNull()
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.container.querySelector('[data-chat-flow-kind="steering"]')).not.toBeNull()
+  })
+
+  it('paints settled steering through the user keyed occupant', () => {
+    const h = makeHarness({
+      nodes: [steering(2, 'interrupt now', 1)],
+    })
+    h.setSession({ running: false })
+    const keys: string[] = []
+    h.setNodeRenderer(((_key: string, owner: object, opts?: {
+      entryKey?: string
+      fallback?: React.ReactNode
+    }) => {
+      if (opts?.entryKey !== undefined) keys.push(opts.entryKey)
+      if (opts?.entryKey === 'steering') {
+        throw new Error('settled steering must not require a steering keyed occupant')
+      }
+      if (opts?.entryKey === 'user') {
+        const node = (owner as RoutedChatNodeOwner).node
+        const text = node.kind === 'user' || node.kind === 'steering'
+          ? node.data.content
+            .map(block => block.type === 'text' ? block.text : '')
+            .join('')
+          : ''
+        return <div data-testid="user-occupant">{text}</div>
+      }
+      return opts?.fallback ?? null
+    }) as React.ComponentProps<typeof ChatNodeSeat>['renderSlot'])
+    const view = render(<h.ChatView {...h.props} />)
+    expect(keys).toEqual(['user'])
+    expect(view.getByTestId('user-occupant').textContent).toBe('interrupt now')
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.container.querySelector('[data-chat-flow-kind="steering"]')).not.toBeNull()
   })
 
   it('keeps a later pending occurrence visible when it reuses a durable MessageId', () => {

@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-18-chat-steering-unknown-surface.md
-2026-09-18-chat-steering-unknown-surface.md: c322b8a6ffdc4ac0462a639af10e8137bc7417f0
-2026-09-18-chat-steering-unknown-surface.zh.md: 3b22e621f6acf92e10cbdb495b6810338241e71e
+2026-09-18-chat-steering-unknown-surface.md: 486a69c0196f98ac7b5107def366700ef3e40b06
+2026-09-18-chat-steering-unknown-surface.zh.md: ae0525d285e9179ca750b5a987edf0df5bed4ccf

@@ -40,6 +40,11 @@ function isUserStyleChatNode(node: ChatNode): node is ChatNode<'user' | 'steerin
   return node.kind === 'user' || node.kind === 'steering'
 }
 
+/** Admitted steering reuses the user keyed occupant; the seat wrapper keeps kind steering. */
+function chatNodeRendererKey(node: ChatNode): ChatNode['kind'] {
+  return isUserStyleChatNode(node) ? 'user' : node.kind
+}
+
 /** User and steering rows stay ordinary bubbles when the keyed renderer is absent. */
 function chatNodeFallback(
   owner: RoutedChatNodeOwner,
@@ -149,9 +154,9 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
   ])
   if (routedNode === undefined || owner === null) return null
   const turnData = turnDataOf(routedNode)
-  // Runtime dispatch owns the correlation: every Node's discriminant is the
-  // keyed-slot entry passed alongside that same Node. TypeScript does not
-  // distribute an object containing a union into a union of objects itself.
+  // User-style nodes share the user keyed occupant; other kinds keep their
+  // discriminant. TypeScript does not distribute an object containing a union
+  // into a union of objects itself.
   const routedOwner = { ...owner, node: routedNode } as RoutedChatNodeOwner
   return (
     <div
@@ -166,7 +171,7 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
       data-turn-process-answer={compactAnswer || undefined}
     >
       {renderSlot('conversation.chat.node', routedOwner, {
-        entryKey: routedNode.kind,
+        entryKey: chatNodeRendererKey(routedNode),
         hookContext: turnData,
         fallback: chatNodeFallback(routedOwner, t),
       })}
