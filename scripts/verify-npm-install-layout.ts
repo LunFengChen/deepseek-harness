@@ -65,7 +65,14 @@ const PREINSTALLED_PLUGIN_PACKAGES = new Set([
   'dsh-context',
   'dsh-better-sidebar',
   '@vectorize-io/hindsight-coding-agents',
+  '@x1a0f3n9/dshmarket',
+  '@x1a0f3n9/dsh-reasoning-effort',
   '@x1a0f3n9/dsh-session-timeline',
+  '@x1a0f3n9/dsh-context',
+  '@x1a0f3n9/dsh-better-sidebar',
+  '@x1a0f3n9/hindsight-coding-agents',
+  '@x1a0f3n9/dsh-failover-queue',
+  '@x1a0f3n9/dsh-skills-manager',
 ])
 
 /**
@@ -93,7 +100,7 @@ function cloneForVersion(
     for (const [name, range] of Object.entries(dependencies)) {
       if (PREINSTALLED_PLUGIN_PACKAGES.has(name)) continue
       if (isForkDshPackage(name) || isOfficialDshPackage(name)) {
-        // Git-hosted @x1a0f3n9/dsh-* plugins keep their own versions. Rewriting
+        // Preinstalled @x1a0f3n9/dsh-* plugins keep their own versions. Rewriting
         // them to ^0.2.0 makes npm look for a version that does not exist.
         if (!rewriteNames.has(name)) continue
         next[name] = `^${version}`
@@ -108,7 +115,7 @@ function cloneForVersion(
 
 /**
  * Workspace DSH names at `sourceVersion`, plus the official aliases the dual
- * registry will publish for them. Git-hosted plugins at other versions stay out.
+ * registry will publish for them. Preinstalled plugins at other versions stay out.
  * @param index - Registry metadata containing the working release.
  * @param sourceVersion - Workspace version copied into each synthetic release.
  * @returns Names whose ranges may be rewritten to the synthetic versions.

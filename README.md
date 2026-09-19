@@ -20,15 +20,15 @@ The rows below summarize the fork's user-visible and release-impacting changes; 
 | Launcher | The shipped command is `xfdsh`. Official `dsh` stays the upstream CLI. | The two products can be installed together. |
 | Homes | `xfdsh` stores plugins and profiles in `~/.xfdsh`. Official `dsh` keeps plugins and profiles in `~/.dsh`. Sessions, workspace groups, attachments, settings, and API keys stay in `~/.dsh`. | History is shared without a migration wizard. `xfdsh` never writes `~/.dsh/profiles`. |
 | Web port | `xfdsh web` listens on `127.0.0.1:7777`. Official `dsh web` stays on `3080`. | Both UIs can run at the same time. |
-| Session timeline | Preinstalled, disableable plugin `github:LunFengChen/dsh-session-timeline#v0.1.5-xfdsh.2` (`@x1a0f3n9/dsh-session-timeline`): rewind, delete, regenerate, and a composer compact button. | Unwanted answers leave the UI and later model requests. One click runs `/compact`. |
-| Plugin market | Preinstalled, disableable plugin `github:LunFengChen/dsh-market#v1.45.2` (`@x1a0f3n9/dshmarket`). Official `@deepseek-ai/dsh-*` plugins remap into this runtime. | Community plugins install with `xfdsh plugin --profile web add`. |
-| xfdsh preset plugins | Prebundled fork plugins live on the **xfdsh preset plugins** settings page. Cards show the package version; the package name links to the GitHub pin. Plugin list keeps session/global inventory and omits those packages. | Settings → xfdsh preset plugins enables or disables them without mixing them into Plugin list. |
-| Reasoning effort | Preinstalled slider `github:LunFengChen/dsh-reasoning-effort#v0.7.3` (`@x1a0f3n9/dsh-reasoning-effort`). Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. | The composer can pick thinking strength after a custom model declares levels. Disable the slider from Settings → xfdsh preset plugins. |
-| Context dashboard | Preinstalled, disableable plugin `github:LunFengChen/dsh-context#v0.49.7` (`@x1a0f3n9/dsh-context`). Version detection reads this fork, not a leftover official CLI. | A Context tab and `/context` command show composition, compaction, and token use. |
-| Better sidebar | Preinstalled, disableable plugin `github:LunFengChen/DSH-better-sidebar#v0.19.3` (`@x1a0f3n9/dsh-better-sidebar`). | Files, terminal, Git, and subagents live in the sidebar workbench. |
-| Hindsight memory | Preinstalled and on by default: `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4` (`@x1a0f3n9/hindsight-coding-agents`). | xfdsh defaults to a local daemon, not Cloud. Disable from Settings → xfdsh preset plugins. Cloud or a self-hosted URL remains optional in `~/.hindsight/coding-agent.json`. |
-| Failover queue | Preinstalled, disableable plugin `github:LunFengChen/dsh-failover-queue#v0.1.11`. | Composer chip plus Settings → Failover for the P1/P2/P3 editor. Fails over after `llm-retry`, or immediately on `AUTH` / `RATE_LIMIT` / `NO_ADAPTER`. Recovered P1 is probed and selected again; failover is not sticky. |
-| Skills manager | Preinstalled, disableable plugin `github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1` (`@x1a0f3n9/dsh-skills-manager`): load, toggle, create, and import local Agent skills. | Settings → Skills appears when the card is on. Disable from Settings → xfdsh preset plugins. |
+| Session timeline | Preinstalled, disableable plugin `@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2`: rewind, delete, regenerate, and a composer compact button. | Unwanted answers leave the UI and later model requests. One click runs `/compact`. |
+| Plugin market | Preinstalled, disableable plugin `@x1a0f3n9/dshmarket@1.45.2`. Official `@deepseek-ai/dsh-*` plugins remap into this runtime. | Community plugins install with `xfdsh plugin --profile web add`. |
+| xfdsh preset plugins | Prebundled fork plugins live on the **xfdsh preset plugins** settings page. Cards show the package version; the package name links to the GitHub repository. Plugin list keeps session/global inventory and omits those packages. | Settings → xfdsh preset plugins enables or disables them without mixing them into Plugin list. |
+| Reasoning effort | Preinstalled slider `@x1a0f3n9/dsh-reasoning-effort@0.7.3`. Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. | The composer can pick thinking strength after a custom model declares levels. Disable the slider from Settings → xfdsh preset plugins. |
+| Context dashboard | Preinstalled, disableable plugin `@x1a0f3n9/dsh-context@0.49.7`. Version detection reads this fork, not a leftover official CLI. | A Context tab and `/context` command show composition, compaction, and token use. |
+| Better sidebar | Preinstalled, disableable plugin `@x1a0f3n9/dsh-better-sidebar@0.19.3`. | Files, terminal, Git, and subagents live in the sidebar workbench. |
+| Hindsight memory | Preinstalled and on by default: `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4`. | xfdsh defaults to a local daemon, not Cloud. Disable from Settings → xfdsh preset plugins. Cloud or a self-hosted URL remains optional in `~/.hindsight/coding-agent.json`. |
+| Failover queue | Preinstalled, disableable plugin `@x1a0f3n9/dsh-failover-queue@0.1.11`. | Composer chip plus Settings → Failover for the P1/P2/P3 editor. Fails over after `llm-retry`, or immediately on `AUTH` / `RATE_LIMIT` / `NO_ADAPTER`. Recovered P1 is probed and selected again; failover is not sticky. |
+| Skills manager | Preinstalled, disableable plugin `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1`: load, toggle, create, and import local Agent skills. | Settings → Skills appears when the card is on. Disable from Settings → xfdsh preset plugins. |
 | Hindsight git stderr | The LunFengChen fork pipes `git` stderr. | Opening a session whose cwd is not a git repository no longer prints `fatal: not a git repository`. |
 | Session utilities | Workspace rows can copy the session id. | Session ids are easier to share and debug. |
 | Memory and continuation | Session persistence bounds in-memory reads; context overflow triggers compaction and retry. A large-to-small model switch prices pressure against the pending picker before the next request. | Long sessions are less likely to stall. Truncated nonempty summaries still replace the compacted span. |
@@ -70,7 +70,7 @@ This uses `~/.dsh` for plugins, profiles, sessions, settings, and keys, and list
 **Fork npm (development scope `@x1a0f3n9`):**
 
 ```sh
-npm install --global @x1a0f3n9/dsh
+npm install --global @x1a0f3n9/dsh@next
 xfdsh web
 ```
 
@@ -84,12 +84,12 @@ pnpm run build
 pnpm xfdsh web
 ```
 
-`pnpm xfdsh web` launches this checkout through tsx. Later launches do not need another compile. Rebuild after a fresh clone, after pulling large changes, or when using `pnpm exec xfdsh`. A bare `xfdsh web` on PATH comes from `npm install --global @x1a0f3n9/dsh`.
+`pnpm xfdsh web` launches this checkout through tsx. Later launches do not need another compile. Rebuild after a fresh clone, after pulling large changes, or when using `pnpm exec xfdsh`. A bare `xfdsh web` on PATH comes from `npm install --global @x1a0f3n9/dsh@next`.
 
 For one-off use without a global install:
 
 ```sh
-npx --package @x1a0f3n9/dsh xfdsh web
+npx --package @x1a0f3n9/dsh@next xfdsh web
 ```
 
 `xfdsh` keeps plugins and profiles in `~/.xfdsh` and never writes `~/.dsh/profiles`. Sessions, workspace groups, attachments, settings, and API keys stay in `~/.dsh`, so both CLIs see the same history. Preinstalled timeline, plugin-market, reasoning-effort, context, better-sidebar, hindsight, failover, and search-pool entries can be disabled from Settings → xfdsh preset plugins.
@@ -109,7 +109,7 @@ Review the [safety notice](SAFETY.md) before running the project.
 Install `Node.js`, then run:
 
 ```sh
-npx --package @x1a0f3n9/dsh xfdsh web
+npx --package @x1a0f3n9/dsh@next xfdsh web
 ```
 
 The command starts the Web UI at `http://127.0.0.1:7777` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).

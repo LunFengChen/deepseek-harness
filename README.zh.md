@@ -20,15 +20,15 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 | 启动器 | 发布出来的命令是 `xfdsh`。官方 `dsh` 仍是上游 CLI。 | 两套产品可以并装。 |
 | 数据目录 | `xfdsh` 的插件和 profile 放在 `~/.xfdsh`。官方 `dsh` 的插件和 profile 仍在 `~/.dsh`。会话、分组、附件、settings 和 API key 共用 `~/.dsh`。 | 不用迁移向导就能读到同一份历史。`xfdsh` 不会写 `~/.dsh/profiles`。 |
 | Web 端口 | `xfdsh web` 默认监听 `127.0.0.1:7777`。官方 `dsh web` 仍是 `3080`。 | 两套 UI 可以同时开。 |
-| Session Timeline | 预装且可关闭：`github:LunFengChen/dsh-session-timeline#v0.1.5-xfdsh.2`（`@x1a0f3n9/dsh-session-timeline`）：回退、删除、重新生成，以及输入框压缩按钮。 | 不满意的回答会从界面和后续模型请求里一起消失。一点即可运行 `/compact`。 |
-| 插件市场 | 预装且可关闭：`github:LunFengChen/dsh-market#v1.45.2`（`@x1a0f3n9/dshmarket`）。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 | 社区插件用 `xfdsh plugin --profile web add` 安装。 |
-| xfdsh预置插件 | 预置插件放在 **xfdsh预置插件** 设置页。卡片显示包版本，包名链到 GitHub pin。插件列表只保留会话/全局清单，并去掉这些包。 | Settings → xfdsh预置插件 里开关，而不会混进插件列表。 |
-| 思考强度 | 预装滑条 `github:LunFengChen/dsh-reasoning-effort#v0.7.3`（`@x1a0f3n9/dsh-reasoning-effort`）。Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。 | 自定义模型声明档位后，输入框才能选思考强度。滑条可在 Settings → xfdsh预置插件 关闭。 |
-| 上下文面板 | 预装且可关闭：`github:LunFengChen/dsh-context#v0.49.7`（`@x1a0f3n9/dsh-context`）。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |
-| Better sidebar | 预装且可关闭：`github:LunFengChen/DSH-better-sidebar#v0.19.3`（`@x1a0f3n9/dsh-better-sidebar`）。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
-| Hindsight 记忆 | 预装且默认打开：`github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`（`@x1a0f3n9/hindsight-coding-agents`）。 | xfdsh 默认走本机 daemon，不走 Cloud。可在 Settings → xfdsh预置插件 关闭。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
-| 故障转移队列 | 预装且可关闭：`github:LunFengChen/dsh-failover-queue#v0.1.11`。 | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3 编辑。在 `llm-retry` 用尽后切下一档，或在 `AUTH` / `RATE_LIMIT` / `NO_ADAPTER` 时立即切换。P1 恢复后会探活切回，不会粘在 P2。 |
-| 技能管理 | 预装且可关闭：`github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1`（`@x1a0f3n9/dsh-skills-manager`）：加载、开关、创建并导入本机 Agent 技能。 | 卡片打开时出现 Settings → 技能。可在 Settings → xfdsh预置插件 关闭。 |
+| Session Timeline | 预装且可关闭：`@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2`：回退、删除、重新生成，以及输入框压缩按钮。 | 不满意的回答会从界面和后续模型请求里一起消失。一点即可运行 `/compact`。 |
+| 插件市场 | 预装且可关闭：`@x1a0f3n9/dshmarket@1.45.2`。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 | 社区插件用 `xfdsh plugin --profile web add` 安装。 |
+| xfdsh预置插件 | 预置插件放在 **xfdsh预置插件** 设置页。卡片显示包版本，包名链到 GitHub 仓库。插件列表只保留会话/全局清单，并去掉这些包。 | Settings → xfdsh预置插件 里开关，而不会混进插件列表。 |
+| 思考强度 | 预装滑条 `@x1a0f3n9/dsh-reasoning-effort@0.7.3`。Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。 | 自定义模型声明档位后，输入框才能选思考强度。滑条可在 Settings → xfdsh预置插件 关闭。 |
+| 上下文面板 | 预装且可关闭：`@x1a0f3n9/dsh-context@0.49.7`。版本探测读本 fork，不读残留的官方 CLI。 | Context 页和 `/context` 命令能看组成、压缩和 token 用量。 |
+| Better sidebar | 预装且可关闭：`@x1a0f3n9/dsh-better-sidebar@0.19.3`。 | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
+| Hindsight 记忆 | 预装且默认打开：`@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4`。 | xfdsh 默认走本机 daemon，不走 Cloud。可在 Settings → xfdsh预置插件 关闭。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
+| 故障转移队列 | 预装且可关闭：`@x1a0f3n9/dsh-failover-queue@0.1.11`。 | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3 编辑。在 `llm-retry` 用尽后切下一档，或在 `AUTH` / `RATE_LIMIT` / `NO_ADAPTER` 时立即切换。P1 恢复后会探活切回，不会粘在 P2。 |
+| 技能管理 | 预装且可关闭：`@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1`：加载、开关、创建并导入本机 Agent 技能。 | 卡片打开时出现 Settings → 技能。可在 Settings → xfdsh预置插件 关闭。 |
 | Hindsight git 报错 | LunFengChen fork 把 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
 | 内存与续跑 | 会话持久化限制内存读取；context overflow 会压缩并重试。从大模型切到小模型时，会按待选模型先计价压力再发下一次请求。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |
@@ -70,7 +70,7 @@ dsh web
 **fork npm（开发 scope `@x1a0f3n9`）：**
 
 ```sh
-npm install --global @x1a0f3n9/dsh
+npm install --global @x1a0f3n9/dsh@next
 xfdsh web
 ```
 
@@ -84,12 +84,12 @@ pnpm run build
 pnpm xfdsh web
 ```
 
-`pnpm xfdsh web` 用 tsx 启动当前仓库。之后每次启动不用再编译。克隆后、拉取大改动后，或使用 `pnpm exec xfdsh` 时才需要重新 `pnpm run build`。PATH 上的裸 `xfdsh web` 来自 `npm install --global @x1a0f3n9/dsh`。
+`pnpm xfdsh web` 用 tsx 启动当前仓库。之后每次启动不用再编译。克隆后、拉取大改动后，或使用 `pnpm exec xfdsh` 时才需要重新 `pnpm run build`。PATH 上的裸 `xfdsh web` 来自 `npm install --global @x1a0f3n9/dsh@next`。
 
 不装全局包的一次性运行：
 
 ```sh
-npx --package @x1a0f3n9/dsh xfdsh web
+npx --package @x1a0f3n9/dsh@next xfdsh web
 ```
 
 `xfdsh` 的插件和 profile 放在 `~/.xfdsh`，不会写 `~/.dsh/profiles`。会话、分组、附件、settings 和 API key 仍在 `~/.dsh`，所以两套 CLI 看到同一份历史。预装的 timeline、插件市场、思考强度、上下文面板、better-sidebar、hindsight、故障转移和搜索池可以在 Settings → xfdsh预置插件 关闭。
@@ -111,7 +111,7 @@ DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来
 安装 `Node.js`，然后运行：
 
 ```sh
-npx --package @x1a0f3n9/dsh xfdsh web
+npx --package @x1a0f3n9/dsh@next xfdsh web
 ```
 
 该命令默认会在 `http://127.0.0.1:7777` 启动 Web UI，本机启动时还会用默认浏览器打开页面。通过 SSH 启动时只打印宿主机 URL，因为本地转发地址由 SSH 客户端或编辑器持有。传入 `--no-open` 可仅运行服务器而不打开浏览器。详见 [Web UI 指南](docs/user/guide/index.zh.md)。

@@ -1811,8 +1811,8 @@ importers:
         specifier: workspace:^
         version: link:../../boot/app-boot
       '@x1a0f3n9/dsh-better-sidebar':
-        specifier: github:LunFengChen/DSH-better-sidebar#v0.19.3
-        version: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.19.3
+        version: 0.19.3(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@x1a0f3n9/dsh-client-connection':
         specifier: workspace:^
         version: link:../../client/connection
@@ -1961,8 +1961,8 @@ importers:
         specifier: workspace:^
         version: link:../../code-runtime/code-runtime-worker-thread
       '@x1a0f3n9/dsh-context':
-        specifier: github:LunFengChen/dsh-context#v0.49.7
-        version: https://codeload.github.com/LunFengChen/dsh-context/tar.gz/4aaee673094849c07f0f07d7796a455f10d6b48f(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)
+        specifier: 0.49.7
+        version: 0.49.7(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)
       '@x1a0f3n9/dsh-cordis-client-runner':
         specifier: workspace:^
         version: link:../../extensions/cordis-client-runner
@@ -1970,8 +1970,8 @@ importers:
         specifier: workspace:^
         version: link:../../extensions/cordis-host-runner
       '@x1a0f3n9/dsh-failover-queue':
-        specifier: github:LunFengChen/dsh-failover-queue#v0.1.11
-        version: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6a0804b7c01ad2163d0a34cd5f7ec8682de3a0eb(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
+        specifier: 0.1.11
+        version: 0.1.11(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
       '@x1a0f3n9/dsh-file-reference':
         specifier: workspace:^
         version: link:../../context/file-reference
@@ -2006,8 +2006,8 @@ importers:
         specifier: workspace:^
         version: link:../../feedback/message-feedback
       '@x1a0f3n9/dsh-reasoning-effort':
-        specifier: github:LunFengChen/dsh-reasoning-effort#v0.7.3
-        version: https://codeload.github.com/LunFengChen/dsh-reasoning-effort/tar.gz/1a4f895d1fd1d5725aa0a3c91b846110e127d7c7(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-client-runtime@0.1.0-rc.8(340a5d268e48b2d5e4b7b9abba1ce28c))(react@18.3.1)
+        specifier: 0.7.3
+        version: 0.7.3(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-client-runtime@0.1.0-rc.8(340a5d268e48b2d5e4b7b9abba1ce28c))(react@18.3.1)
       '@x1a0f3n9/dsh-session-log-export':
         specifier: workspace:^
         version: link:../../session-query/session-log-export
@@ -2018,14 +2018,14 @@ importers:
         specifier: workspace:^
         version: link:../../session/session-stats
       '@x1a0f3n9/dsh-session-timeline':
-        specifier: github:LunFengChen/dsh-session-timeline#v0.1.5-xfdsh.2
-        version: https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/bc34808da984ede50334c7d9fe5122b8237c5f95(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)
+        specifier: 0.1.5-xfdsh.2
+        version: 0.1.5-xfdsh.2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)
       '@x1a0f3n9/dsh-session-turn-outline':
         specifier: workspace:^
         version: link:../../session/session-turn-outline
       '@x1a0f3n9/dsh-skills-manager':
-        specifier: github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1
-        version: https://codeload.github.com/LunFengChen/dsh-skills-manager/tar.gz/fb10b1e1887ca9ec8b80eb43ca1f0b819bee4838(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(react@18.3.1)
+        specifier: 0.1.53-xfdsh.1
+        version: 0.1.53-xfdsh.1(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(react@18.3.1)
       '@x1a0f3n9/dsh-subprocess':
         specifier: workspace:^
         version: link:../../subprocess/subprocess
@@ -2042,11 +2042,11 @@ importers:
         specifier: workspace:^
         version: link:../../workspace/workspace
       '@x1a0f3n9/dshmarket':
-        specifier: github:LunFengChen/dsh-market#v1.45.2
-        version: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/8c3679053d085287a6379338e2ea4db517d1a2b2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)
+        specifier: 1.45.2
+        version: 1.45.2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)
       '@x1a0f3n9/hindsight-coding-agents':
-        specifier: github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4
-        version: https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/bb10aaa71de66ddfae0d5b906c5db2b9974ed8cd
+        specifier: 0.5.2-xfdsh.4
+        version: 0.5.2-xfdsh.4
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -7171,7 +7171,7 @@ importers:
         version: link:../../../vendor/schemastery
       '@earendil-works/pi-ai':
         specifier: ^0.85.1
-        version: 0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.6.5))(supports-color@9.4.0)(ws@8.21.0)(zod@4.4.3)
+        version: 0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.6.5))(ws@8.21.0)(zod@4.4.3)
       '@x1a0f3n9/dsh-brand':
         specifier: workspace:^
         version: link:../../util/brand
@@ -15039,9 +15039,8 @@ packages:
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
 
-  '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2':
-    resolution: {gitHosted: true, integrity: sha512-js/2mwVb7fWjAcNDSwuuS/WNtMZrXXWjWMEe/+PgmKtMYRZUiVvisFxy3Cj0xNqlDeFH3QopOy5f18k/iqfjog==, tarball: https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2}
-    version: 0.19.3
+  '@x1a0f3n9/dsh-better-sidebar@0.19.3':
+    resolution: {integrity: sha512-uBkDj3JmN81woEUYN/WY9n3wGw+a96M13D/NLpbHc6fPmPpbv3Z2B37ZHFD/5bhgmWfSvb6oRS4HNIPHNM8org==}
     engines: {node: '>=20'}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.2
@@ -15068,9 +15067,8 @@ packages:
       '@huanlin/dsh-plugin-better-locale':
         optional: true
 
-  '@x1a0f3n9/dsh-context@https://codeload.github.com/LunFengChen/dsh-context/tar.gz/4aaee673094849c07f0f07d7796a455f10d6b48f':
-    resolution: {gitHosted: true, integrity: sha512-DgfKtjAYRZ/UKAvlNrra9rHqCkGW8JGfwy/f9CLtlMNJ0scYKdJM+tf05ODkjKXzGrppSMzXFxMZH0TQn5M9Xg==, tarball: https://codeload.github.com/LunFengChen/dsh-context/tar.gz/4aaee673094849c07f0f07d7796a455f10d6b48f}
-    version: 0.49.7
+  '@x1a0f3n9/dsh-context@0.49.7':
+    resolution: {integrity: sha512-hY0pBQYVmuf29Dc2lGeIfvkviWjxG+crolAZTwbyjWvJQ5sId4MS2BJJln77Z2iJBvXxmG0CSq3c0OoHysqTmA==}
     engines: {node: ^22.19.0 || >=24.0.0}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.2
@@ -15085,17 +15083,15 @@ packages:
       react:
         optional: true
 
-  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6a0804b7c01ad2163d0a34cd5f7ec8682de3a0eb':
-    resolution: {gitHosted: true, integrity: sha512-31XC8cOrcJD/glt/g/1IsEEXMFf0RRhPs/AFWqxFWrFOVDGz9sGoJIxwovXKQQee/b+Bih9InHkgeD6BbH7FXg==, tarball: https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6a0804b7c01ad2163d0a34cd5f7ec8682de3a0eb}
-    version: 0.1.11
+  '@x1a0f3n9/dsh-failover-queue@0.1.11':
+    resolution: {integrity: sha512-Me9qXcI6OTa8AW0kCUh7MQWekQDF+fRNN/7/UK8wtVlgBiPrC0IuIeq55XScA/Xsb1ZttG7OhpLHjP70ljgd3Q==}
     engines: {node: '>=22.19'}
     peerDependencies:
       '@deepseek-ai/cordis': '>=4.0.0'
       '@deepseek-ai/schemastery': '>=3.0.0'
 
-  '@x1a0f3n9/dsh-reasoning-effort@https://codeload.github.com/LunFengChen/dsh-reasoning-effort/tar.gz/1a4f895d1fd1d5725aa0a3c91b846110e127d7c7':
-    resolution: {gitHosted: true, integrity: sha512-pto9tKDzQI3f/nErqnXHftVXT9umfl5XMKVHzO+nbzuf53yjS4OfmGVmxQsmoTeKFMx9RtwSlh+lZjzzNaE3zw==, tarball: https://codeload.github.com/LunFengChen/dsh-reasoning-effort/tar.gz/1a4f895d1fd1d5725aa0a3c91b846110e127d7c7}
-    version: 0.7.3
+  '@x1a0f3n9/dsh-reasoning-effort@0.7.3':
+    resolution: {integrity: sha512-EYQpz+3ibVEZOhnmBC9dKN2P2K8YDzlZ9ApoGEiJNJT/303jUO3TFmtw6dAdd89xN/0E0dhb6Q0rh9DZVyMQTw==}
     engines: {node: '>=22.19'}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.1
@@ -15109,9 +15105,8 @@ packages:
       '@deepseek-ai/dsh-client-ui-slots': npm:@x1a0f3n9/dsh-client-ui-slots@workspace:*
       react: ^18.2.0
 
-  '@x1a0f3n9/dsh-session-timeline@https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/bc34808da984ede50334c7d9fe5122b8237c5f95':
-    resolution: {gitHosted: true, integrity: sha512-ajAwkLeQ69bygzcNKpNZXTrQJ2WQz4F0uBXgXG0L6KG4E6FTDU7Y/L7ol3Gu/vHES0W+K0lX1fgIzZRULN9uFA==, tarball: https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/bc34808da984ede50334c7d9fe5122b8237c5f95}
-    version: 0.1.5-xfdsh.2
+  '@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2':
+    resolution: {integrity: sha512-RZ5Lhes+Mkvw6Pt9OHbCCnTU/ix1plUHynND/Okn98Vy9dRzh9r338hNTLh1tukQDkGY8sTpfgNiE8MilVJnHw==}
     peerDependencies:
       '@deepseek-ai/cordis': '>=4.0.0'
       '@deepseek-ai/dsh-agent': npm:@x1a0f3n9/dsh-agent@workspace:*
@@ -15141,9 +15136,8 @@ packages:
       react:
         optional: true
 
-  '@x1a0f3n9/dsh-skills-manager@https://codeload.github.com/LunFengChen/dsh-skills-manager/tar.gz/fb10b1e1887ca9ec8b80eb43ca1f0b819bee4838':
-    resolution: {gitHosted: true, integrity: sha512-DYzS7gsOT7JtWiSyA0jaKHKwHaylIh26FPbseRouwg1dzg/VgM7U1q70nzWZTZ8CI4e3bzz0LToqZrxmNStH7w==, tarball: https://codeload.github.com/LunFengChen/dsh-skills-manager/tar.gz/fb10b1e1887ca9ec8b80eb43ca1f0b819bee4838}
-    version: 0.1.53-xfdsh.1
+  '@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1':
+    resolution: {integrity: sha512-Sx4FkQR3j9jdpesBnB3dDlI+S9ZTKwHzEt8A/ROJSdnx70niIRzTnM7c/z4MLsJDjEzNx28Q7xpNCQVvrsTGnA==}
     engines: {node: ^22.19.0 || >=24.0.0}
     peerDependencies:
       '@deepseek-ai/cordis': '>=4.0.1 <5.0.0'
@@ -15157,9 +15151,8 @@ packages:
       '@deepseek-ai/dsh-web-app': npm:@x1a0f3n9/dsh-web-app@workspace:*
       react: ^18.2.0
 
-  '@x1a0f3n9/dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/8c3679053d085287a6379338e2ea4db517d1a2b2':
-    resolution: {gitHosted: true, integrity: sha512-cO0ckzGJpKP8IPpJ1XaK+37FtI652+gKJW+9z4814f+3jDX539XzqxvKglYTPi6Y3qZt+no/+p2Bq8Bs66MJDQ==, tarball: https://codeload.github.com/LunFengChen/dsh-market/tar.gz/8c3679053d085287a6379338e2ea4db517d1a2b2}
-    version: 1.45.2
+  '@x1a0f3n9/dshmarket@1.45.2':
+    resolution: {integrity: sha512-mLbaWF5nhAJYjrSYenNjfZbuNf+dA7E6cQqEuzrarno+DzJgNRPH51h6C79mgRcsZa8sx6wO3MI9siPkTPRJog==}
     peerDependencies:
       '@deepseek-ai/cordis': ^4.0.1
       '@deepseek-ai/dsh-settings': npm:@x1a0f3n9/dsh-settings@workspace:*
@@ -15170,9 +15163,8 @@ packages:
       '@deepseek-ai/schemastery':
         optional: true
 
-  '@x1a0f3n9/hindsight-coding-agents@https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/bb10aaa71de66ddfae0d5b906c5db2b9974ed8cd':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/bb10aaa71de66ddfae0d5b906c5db2b9974ed8cd}
-    version: 0.5.2-xfdsh.4
+  '@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4':
+    resolution: {integrity: sha512-sTWZBAsbBHOFxLnwC60KH4cIFi1YEdsc+WKYyTil1Mko+kFT0qTYjZIwdzBFEtGhbmkGKx+GlxIiR6l7GS0Yeg==}
     hasBin: true
 
   '@xmldom/xmldom@0.8.15':
@@ -18954,18 +18946,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.21.3:
-    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   wsl-utils@0.3.1:
     resolution: {integrity: sha512-g/eziiSUNBSsdDJtCLB8bdYEUMj4jR7AGeUo96p/3dTafgjHhpF4RiCFPiRILwjQoDXx5MqkBr4fwWtR3Ky4Wg==}
     engines: {node: '>=20'}
@@ -20215,14 +20195,14 @@ snapshots:
     transitivePeerDependencies:
       - '@algolia/client-search'
 
-  '@earendil-works/pi-ai@0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.6.5))(supports-color@9.4.0)(ws@8.21.0)(zod@4.4.3)':
+  '@earendil-works/pi-ai@0.85.1(@modelcontextprotocol/sdk@1.29.0(zod@4.6.5))(ws@8.21.0)(zod@4.4.3)':
     dependencies:
       '@anthropic-ai/sdk': 0.123.0(zod@4.4.3)
       '@aws-sdk/client-bedrock-runtime': 3.1048.0
       '@earendil-works/pi-telemetry': 0.85.1
       '@google/genai': 1.52.0(@modelcontextprotocol/sdk@1.29.0(zod@4.6.5))
       '@smithy/node-http-handler': 4.7.3
-      http-proxy-agent: 7.0.2(supports-color@9.4.0)
+      http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       openai: 6.40.0(ws@8.21.0)(zod@4.4.3)
       partial-json: 0.1.7
@@ -21135,7 +21115,6 @@ snapshots:
       zod-to-json-schema: 3.25.2(zod@4.6.5)
     transitivePeerDependencies:
       - supports-color
-    optional: true
 
   '@modelcontextprotocol/server-everything@2026.7.4':
     dependencies:
@@ -22509,7 +22488,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@x1a0f3n9/dsh-better-sidebar@0.19.3(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@codemirror/commands': 6.11.0
       '@codemirror/lang-cpp': 6.0.3
@@ -22552,29 +22531,29 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@x1a0f3n9/dsh-context@https://codeload.github.com/LunFengChen/dsh-context/tar.gz/4aaee673094849c07f0f07d7796a455f10d6b48f(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)':
+  '@x1a0f3n9/dsh-context@0.49.7(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       '@deepseek-ai/dsh-session': link:npm:@x1a0f3n9/dsh-session@workspace:*
       '@deepseek-ai/dsh-settings': link:npm:@x1a0f3n9/dsh-settings@workspace:*
       '@deepseek-ai/schemastery': link:vendor/schemastery
-      zod: 4.4.3
+      zod: 4.6.5
     optionalDependencies:
       react: 18.3.1
 
-  '@x1a0f3n9/dsh-failover-queue@https://codeload.github.com/LunFengChen/dsh-failover-queue/tar.gz/6a0804b7c01ad2163d0a34cd5f7ec8682de3a0eb(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)':
+  '@x1a0f3n9/dsh-failover-queue@0.1.11(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       '@deepseek-ai/schemastery': link:vendor/schemastery
 
-  '@x1a0f3n9/dsh-reasoning-effort@https://codeload.github.com/LunFengChen/dsh-reasoning-effort/tar.gz/1a4f895d1fd1d5725aa0a3c91b846110e127d7c7(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-client-runtime@0.1.0-rc.8(340a5d268e48b2d5e4b7b9abba1ce28c))(react@18.3.1)':
+  '@x1a0f3n9/dsh-reasoning-effort@0.7.3(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-client-runtime@0.1.0-rc.8(340a5d268e48b2d5e4b7b9abba1ce28c))(react@18.3.1)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       '@deepseek-ai/dsh-client-runtime': 0.1.0-rc.8(340a5d268e48b2d5e4b7b9abba1ce28c)
       '@deepseek-ai/schemastery': link:vendor/schemastery
       react: 18.3.1
 
-  '@x1a0f3n9/dsh-session-timeline@https://codeload.github.com/LunFengChen/dsh-session-timeline/tar.gz/bc34808da984ede50334c7d9fe5122b8237c5f95(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)':
+  '@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-agent@npm+@x1a0f3n9+dsh-agent@workspace)(@deepseek-ai/dsh-llm@npm+@x1a0f3n9+dsh-llm@workspace)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)(react@18.3.1)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       '@deepseek-ai/dsh-agent': link:npm:@x1a0f3n9/dsh-agent@workspace:*
@@ -22585,28 +22564,28 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
-  '@x1a0f3n9/dsh-skills-manager@https://codeload.github.com/LunFengChen/dsh-skills-manager/tar.gz/fb10b1e1887ca9ec8b80eb43ca1f0b819bee4838(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(react@18.3.1)':
+  '@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-session@npm+@x1a0f3n9+dsh-session@workspace)(react@18.3.1)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       '@deepseek-ai/dsh-session': link:npm:@x1a0f3n9/dsh-session@workspace:*
       fflate: 0.8.3
       react: 18.3.1
 
-  '@x1a0f3n9/dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/8c3679053d085287a6379338e2ea4db517d1a2b2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)':
+  '@x1a0f3n9/dshmarket@1.45.2(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/dsh-settings@npm+@x1a0f3n9+dsh-settings@workspace)(@deepseek-ai/schemastery@vendor+schemastery)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
-      js-yaml: 4.3.1
+      js-yaml: 4.3.2
       undici: 7.29.1
     optionalDependencies:
       '@deepseek-ai/dsh-settings': link:npm:@x1a0f3n9/dsh-settings@workspace:*
       '@deepseek-ai/schemastery': link:vendor/schemastery
 
-  '@x1a0f3n9/hindsight-coding-agents@https://codeload.github.com/LunFengChen/hindsight-coding-agents/tar.gz/bb10aaa71de66ddfae0d5b906c5db2b9974ed8cd':
+  '@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.29.0(zod@4.4.3)
+      '@modelcontextprotocol/sdk': 1.29.0(zod@4.6.5)
       '@vectorize-io/hindsight-all': 0.8.6
       jsonc-parser: 3.3.1
-      zod: 4.4.3
+      zod: 4.6.5
     transitivePeerDependencies:
       - '@cfworker/json-schema'
       - supports-color
@@ -22964,9 +22943,9 @@ snapshots:
       cross-spawn: 7.0.6
       debug: 4.4.3(supports-color@9.4.0)
       fs-extra: 10.1.0
-      http-proxy-agent: 7.0.2(supports-color@9.4.0)
+      http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
-      js-yaml: 4.3.1
+      js-yaml: 4.3.2
       sanitize-filename: 1.6.4
       source-map-support: 0.5.21
       stat-mode: 1.0.0
@@ -24219,7 +24198,7 @@ snapshots:
       buffer-image-size: 0.6.4
       entities: 7.0.1
       whatwg-mimetype: 3.0.0
-      ws: 8.21.3
+      ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -24295,7 +24274,7 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
-  http-proxy-agent@7.0.2(supports-color@9.4.0):
+  http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
       debug: 4.4.3(supports-color@9.4.0)
@@ -26957,8 +26936,6 @@ snapshots:
 
   ws@8.21.0: {}
 
-  ws@8.21.3: {}
-
   wsl-utils@0.3.1:
     dependencies:
       is-wsl: 3.1.1
@@ -27022,7 +26999,6 @@ snapshots:
   zod-to-json-schema@3.25.2(zod@4.6.5):
     dependencies:
       zod: 4.6.5
-    optional: true
 
   zod@4.4.3: {}
 
