@@ -18,7 +18,7 @@ xfdsh 会预装社区插件。`dsh-context` 已经来自 `LunFengChen/dsh-contex
 - `@x1a0f3n9/dsh-better-sidebar` → `github:LunFengChen/DSH-better-sidebar#v0.19.2`
 - `@x1a0f3n9/dsh-session-timeline` → `github:LunFengChen/dsh-session-timeline#v0.1.5-xfdsh.2`
 - `@x1a0f3n9/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`
-- `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.8`
+- `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.9`
 - `@x1a0f3n9/dsh-skills-manager` → `github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1`
 
 目录里的作者和主页跟着这些 fork。cordis loader 的 `name` 与 scoped npm 包名一致。
