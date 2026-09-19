@@ -1,0 +1,177 @@
+# Publish the eight xfdsh preset plugins from their GitHub tags to npm.
+# Harness packages still publish from release.yml on dev-x1a0f3n9.
+#
+# Run from Actions → Publish preset plugins → Run workflow, or:
+#   gh workflow run publish-preset-plugins.yml --ref feat/preset-plugins-npm
+name: Publish preset plugins
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PRIMARY_NODE_VERSION: '24'
+
+jobs:
+  publish:
+    name: ${{ matrix.package }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: npm-publish
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: LunFengChen/dsh-market
+            ref: v1.45.2
+            package: '@x1a0f3n9/dshmarket'
+            version: '1.45.2'
+            build: npm
+          - repo: LunFengChen/dsh-reasoning-effort
+            ref: v0.7.3
+            package: '@x1a0f3n9/dsh-reasoning-effort'
+            version: '0.7.3'
+            build: none
+          - repo: LunFengChen/dsh-session-timeline
+            ref: v0.1.5-xfdsh.2
+            package: '@x1a0f3n9/dsh-session-timeline'
+            version: '0.1.5-xfdsh.2'
+            build: none
+          - repo: LunFengChen/dsh-context
+            ref: v0.49.7
+            package: '@x1a0f3n9/dsh-context'
+            version: '0.49.7'
+            build: none
+          - repo: LunFengChen/DSH-better-sidebar
+            ref: v0.19.3
+            package: '@x1a0f3n9/dsh-better-sidebar'
+            version: '0.19.3'
+            build: pnpm
+          - repo: LunFengChen/hindsight-coding-agents
+            ref: v0.5.2-xfdsh.4
+            package: '@x1a0f3n9/hindsight-coding-agents'
+            version: '0.5.2-xfdsh.4'
+            build: none
+          - repo: LunFengChen/dsh-failover-queue
+            ref: v0.1.11
+            package: '@x1a0f3n9/dsh-failover-queue'
+            version: '0.1.11'
+            build: none
+          - repo: LunFengChen/dsh-skills-manager
+            ref: v0.1.53-xfdsh.1
+            package: '@x1a0f3n9/dsh-skills-manager'
+            version: '0.1.53-xfdsh.1'
+            build: none
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ matrix.repo }}
+          ref: ${{ matrix.ref }}
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+        if: matrix.build == 'pnpm'
+        with:
+          dest: ${{ runner.temp }}/setup-pnpm-${{ github.run_id }}-${{ matrix.package }}
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.PRIMARY_NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Enable Corepack
+        if: matrix.build != 'none'
+        run: corepack enable
+
+      - name: Guard package identity
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VER=$(node -p "require('./package.json').version")
+          echo "package $NAME@$VER from ${{ matrix.repo }}@${{ matrix.ref }}"
+          if [ "$NAME" != '${{ matrix.package }}' ]; then
+            echo "::error::expected ${{ matrix.package }}, got $NAME"
+            exit 1
+          fi
+          if [ "$VER" != '${{ matrix.version }}' ]; then
+            echo "::error::expected ${{ matrix.version }}, got $VER"
+            exit 1
+          fi
+          case "$NAME" in
+            @x1a0f3n9/*) ;;
+            *)
+              echo "::error::refusing to publish $NAME; preset plugins must be @x1a0f3n9/*"
+              exit 1
+              ;;
+          esac
+
+      - name: Skip when already on npm
+        id: existing
+        run: |
+          if npm view '${{ matrix.package }}@${{ matrix.version }}' version >/dev/null 2>&1; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo '${{ matrix.package }}@${{ matrix.version }} already on npm'
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install and build
+        if: steps.existing.outputs.present != 'true' && matrix.build != 'none'
+        run: |
+          set -euo pipefail
+          case '${{ matrix.build }}' in
+            npm)
+              if [ -f package-lock.json ]; then
+                npm ci --ignore-scripts --legacy-peer-deps || npm install --ignore-scripts --legacy-peer-deps
+              else
+                npm install --ignore-scripts --legacy-peer-deps
+              fi
+              npm run build
+              ;;
+            pnpm)
+              pnpm install --frozen-lockfile --ignore-scripts --config.strict-peer-dependencies=false \
+                || pnpm install --ignore-scripts --config.strict-peer-dependencies=false
+              pnpm run build
+              ;;
+            *)
+              echo "unknown build=${{ matrix.build }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Require compiled output
+        if: steps.existing.outputs.present != 'true'
+        run: |
+          if [ -f lib/index.js ] || [ -f dist/index.js ]; then
+            echo "compiled output present"
+            ls -ld lib dist 2>/dev/null || true
+            exit 0
+          fi
+          echo "::error::${{ matrix.package }}@${{ matrix.version }} has no lib/index.js or dist/index.js"
+          ls -la
+          exit 1
+
+      - name: Publish
+        if: steps.existing.outputs.present != 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          VER='${{ matrix.version }}'
+          TAG=latest
+          case "$VER" in
+            *-*) TAG=xfdsh ;;
+          esac
+          set +e
+          OUT=$(npm publish --access public --ignore-scripts --tag "$TAG" 2>&1)
+          STATUS=$?
+          printf '%s\n' "$OUT"
+          if [ "$STATUS" -eq 0 ]; then
+            exit 0
+          fi
+          if printf '%s\n' "$OUT" | grep -Eq 'cannot publish over previously published versions|Cannot publish over previously staged version|You cannot publish over the previously published versions'; then
+            echo '${{ matrix.package }}@${{ matrix.version }} already on npm, treating as success'
+            exit 0
+          fi
+          exit "$STATUS"
