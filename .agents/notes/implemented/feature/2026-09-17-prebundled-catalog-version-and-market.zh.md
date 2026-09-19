@@ -12,7 +12,7 @@ xfdsh 把社区插件打进 `@x1a0f3n9/dsh-web-app`。设置 → 插件列出它
 
 `pluginInventory/list` 在 bundle 层能解析到该包时，把 `package.json` 的 `version` 投到目录行上。可选插件卡片把这个版本显示在包名旁边。
 
-`@x1a0f3n9/dshmarket` `v1.45.2` 从当前选中的 profile bundle 读取 `dsh.bundle.plugins`，作为 `prebundled` 返回，并把这些名字（含去 scope 的别名）当作仅用于匹配的在场记录。bundle 的 `package.json` 通过 Node 模块解析从 profile `package.json` 和宿主 CLI 入口读取，因为源码启动时 Web bundle 经常 hoist 到 `profile/node_modules` 外面。profile 的 `dependencies` 仍是变更的真相来源：已安装页可以列出预装包，但不能提供卸载或更新。Web bundle 钉的是 `github:LunFengChen/dsh-market#v1.45.2`（`@x1a0f3n9/dshmarket`）。故障转移队列同样走目录，钉 `github:LunFengChen/dsh-failover-queue#v0.1.6`。
+`@x1a0f3n9/dshmarket` `v1.45.2` 从当前选中的 profile bundle 读取 `dsh.bundle.plugins`，作为 `prebundled` 返回，并把这些名字（含去 scope 的别名）当作仅用于匹配的在场记录。bundle 的 `package.json` 通过 Node 模块解析从 profile `package.json` 和宿主 CLI 入口读取，因为源码启动时 Web bundle 经常 hoist 到 `profile/node_modules` 外面。profile 的 `dependencies` 仍是变更的真相来源：已安装页可以列出预装包，但不能提供卸载或更新。Web bundle 钉的是 `github:LunFengChen/dsh-market#v1.45.2`（`@x1a0f3n9/dshmarket`）。故障转移队列同样走目录，钉 `github:LunFengChen/dsh-failover-queue#v0.1.8`。
 
 ## Alternatives considered
 
