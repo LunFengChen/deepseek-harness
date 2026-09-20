@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-workflow",
   "description": "Workflow capability seam: ctx.workflowEngine service, run vocabulary, and workflow/* events",
-  "version": "0.1.5-rc.4",
+  "version": "0.1.5-rc.5",
   "publishConfig": {
     "access": "public"
   },
