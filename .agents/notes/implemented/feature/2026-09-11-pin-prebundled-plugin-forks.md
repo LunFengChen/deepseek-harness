@@ -20,6 +20,7 @@ Pin self-maintained preinstalls to LunFengChen GitHub tags in `packages/bundle/w
 - `@x1a0f3n9/hindsight-coding-agents` → `github:LunFengChen/hindsight-coding-agents#v0.5.2-xfdsh.4`
 - `@x1a0f3n9/dsh-failover-queue` → `github:LunFengChen/dsh-failover-queue#v0.1.11`
 - `@x1a0f3n9/dsh-skills-manager` → `github:LunFengChen/dsh-skills-manager#v0.1.53-xfdsh.1`
+- `@x1a0f3n9/dsh-mcp-panel` → `github:LunFengChen/dsh-mcp-panel#v0.6.16-xfdsh.1`
 
 Catalog author and homepage follow those forks. Cordis loader `name` matches the scoped npm package.
 

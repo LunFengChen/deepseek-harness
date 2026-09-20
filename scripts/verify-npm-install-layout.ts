@@ -73,6 +73,7 @@ const PREINSTALLED_PLUGIN_PACKAGES = new Set([
   '@x1a0f3n9/hindsight-coding-agents',
   '@x1a0f3n9/dsh-failover-queue',
   '@x1a0f3n9/dsh-skills-manager',
+  '@x1a0f3n9/dsh-mcp-panel',
 ])
 
 /**

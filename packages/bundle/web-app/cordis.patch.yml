@@ -352,6 +352,10 @@
     - id: skills-manager
       name: '@x1a0f3n9/dsh-skills-manager'
 
+    # Optional MCP management console over the official client. Disable from Settings → Plugins.
+    - id: mcp-panel
+      name: '@x1a0f3n9/dsh-mcp-panel'
+
     # Optional multi-key web search pool. Disable from Settings → Plugins.
     - id: web-search-pool
       name: '@x1a0f3n9/dsh-web-search-pool'

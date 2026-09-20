@@ -75,6 +75,7 @@ Prebundled extras live on **Settings → xfdsh preset plugins**. Cards show the 
 | Hindsight memory | `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4` | On by default. Uses a local daemon, not Cloud. Cloud or a self-hosted URL remains optional in `~/.hindsight/coding-agent.json`. |
 | Failover queue | `@x1a0f3n9/dsh-failover-queue@0.1.11` | Composer chip plus Settings → Failover for P1/P2/P3. Fails over after `llm-retry`, or immediately on `AUTH` / `RATE_LIMIT` / `NO_ADAPTER`. Recovered P1 is probed and selected again. |
 | Skills manager | `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1` | Load, toggle, create, and import local Agent skills. Settings → Skills appears when the card is on. |
+| MCP panel | `@x1a0f3n9/dsh-mcp-panel@0.6.16-xfdsh.1` | Settings → MCP and `/mcp` add, edit, and trial-call official MCP client servers. The card writes `@x1a0f3n9/dsh-mcp-client` rows and still lists `@deepseek-ai/dsh-mcp-client` rows. |
 | Web search pool | `@x1a0f3n9/dsh-web-search-pool` | Default order is the search pool, then Perplexity, Exa, and keyless Bing/DuckDuckGo. DeepSeek search remains selectable. Every chat model can `web_search` without a DeepSeek search key. |
 
 ### Other changes

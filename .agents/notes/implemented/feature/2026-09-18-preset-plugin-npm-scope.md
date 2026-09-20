@@ -20,6 +20,7 @@ Current pins:
 - `@x1a0f3n9/dshmarket` → `1.45.2`
 - `@x1a0f3n9/hindsight-coding-agents` → `0.5.2-xfdsh.4`, loader `@x1a0f3n9/hindsight-coding-agents/dsh`
 - `@x1a0f3n9/dsh-skills-manager` → `0.1.53-xfdsh.1`
+- `@x1a0f3n9/dsh-mcp-panel` → `github:LunFengChen/dsh-mcp-panel#v0.6.16-xfdsh.1`
 
 This reverses [fork Hindsight coding agents](2026-09-12-fork-hindsight-coding-agents.md) keeping the upstream npm name, and [pin remaining prebundled plugins](2026-09-11-pin-prebundled-plugin-forks.md) keeping the unscoped `dshmarket` loader row.
 

@@ -50,6 +50,9 @@ overrides:
   '@deepseek-ai/dsh-fs': 'npm:@x1a0f3n9/dsh-fs@workspace:*'
   '@deepseek-ai/dsh-home-paths': 'npm:@x1a0f3n9/dsh-home-paths@workspace:*'
   '@deepseek-ai/dsh-sandbox': 'npm:@x1a0f3n9/dsh-sandbox@workspace:*'
+  '@deepseek-ai/dsh-subprocess': 'link:packages/subprocess/subprocess'
+  '@deepseek-ai/dsh-jobs': 'link:packages/jobs/jobs'
+  '@deepseek-ai/dsh-typert-protocol': 'link:packages/typert/protocol'
 
 peerDependencyRules:
   allowedVersions:
@@ -95,6 +98,7 @@ allowBuilds:
   '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/b312d8159ad05ca4f09e4f27517bc39adc392aa3': true
   '@x1a0f3n9/dsh-better-sidebar@https://codeload.github.com/LunFengChen/DSH-better-sidebar/tar.gz/7aba5b7fcf71723997a9faa9af17600cf5a584f2': true
   '@x1a0f3n9/dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/8c3679053d085287a6379338e2ea4db517d1a2b2': true
+  '@x1a0f3n9/dsh-mcp-panel@https://codeload.github.com/LunFengChen/dsh-mcp-panel/tar.gz/d88639625d84db788be7cfa00ae5d4ae2741a2d7': true
 
 minimumReleaseAgeExclude:
   # Fresh pi-ai releases carry the model catalog updates that are the whole
@@ -132,6 +136,7 @@ minimumReleaseAgeExclude:
   - '@x1a0f3n9/dsh-reasoning-effort@0.7.3'
   - '@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2'
   - '@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1'
+  - '@x1a0f3n9/dsh-mcp-panel@0.6.16-xfdsh.1'
   - '@x1a0f3n9/dshmarket@1.45.2'
 
 patchedDependencies:

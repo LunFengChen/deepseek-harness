@@ -118,6 +118,16 @@
           "homepage": "https://github.com/LunFengChen/dsh-skills-manager"
         },
         {
+          "id": "mcp-panel",
+          "entryId": "mcp-panel",
+          "packageName": "@x1a0f3n9/dsh-mcp-panel",
+          "title": "MCP panel",
+          "description": "Add, edit, and trial-call official MCP client servers from Settings.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-mcp-panel"
+        },
+        {
           "id": "search-pool",
           "entryId": "web-search-pool",
           "packageName": "@x1a0f3n9/dsh-web-search-pool",
@@ -218,6 +228,8 @@
     "@x1a0f3n9/hindsight-coding-agents": "0.5.2-xfdsh.4",
     "@x1a0f3n9/dsh-failover-queue": "0.1.11",
     "@x1a0f3n9/dsh-skills-manager": "0.1.53-xfdsh.1",
+    "@x1a0f3n9/dsh-mcp-client": "workspace:^",
+    "@x1a0f3n9/dsh-mcp-panel": "github:LunFengChen/dsh-mcp-panel#v0.6.16-xfdsh.1",
     "@x1a0f3n9/dsh-web-search-pool": "workspace:^"
   },
   "peerDependencies": {
