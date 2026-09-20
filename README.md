@@ -5,11 +5,11 @@ English | [中文](README.zh.md)
 This repository is **xfdsh**, a fork of [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`).
 The published command is `xfdsh`. Official `dsh` can stay installed.
 
-Install Node.js, then start the Web UI at `http://127.0.0.1:7777`.
-
 ## Use this fork
 
-Two install paths. Both launch `xfdsh web`. Sessions, workspace groups, attachments, settings, and API keys stay in `~/.dsh`, so there is no history migration.
+Install Node.js, then start the Web UI at `http://127.0.0.1:7777`.
+
+Two install paths. Both launch `xfdsh web`. Sessions, workspace groups, attachments, settings, and API keys stay in `~/.dsh`, so there is no history migration. Plugins and profiles live in `~/.xfdsh`. Disable preinstalled extras from Settings → xfdsh preset plugins.
 
 Read the [safety notice](SAFETY.md) before running.
 
@@ -42,37 +42,24 @@ pnpm xfdsh web
 
 GitHub's default branch is `dev-x1a0f3n9`, so a clone without `-b` also lands here. Daily launches are `pnpm xfdsh web` and do not rebuild. Rebuild after a fresh clone, after pulling large changes, or when using `pnpm exec xfdsh`. `pnpm exec xfdsh web` uses the built bin and needs a current `lib/`.
 
-### Data
-
-`xfdsh` stores plugins and profiles in `~/.xfdsh` and never writes `~/.dsh/profiles`. Official `dsh` keeps plugins and profiles in `~/.dsh`. Shared session data is listed above. Disable preinstalled extras from Settings → xfdsh preset plugins.
-
 ## Official dsh
 
-Official DeepSeek Harness is a separate product from [DeepSeek AI](https://deepseek.com). It is built on an **everything-is-a-plugin** architecture and powered by [Cordis](https://github.com/cordiverse/cordis), described in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512).
-
-Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
+Official DeepSeek Harness is a separate product from [DeepSeek AI](https://deepseek.com).
 
 ```sh
 npm install --global @deepseek-ai/dsh
 dsh web
 ```
 
-Official `dsh web` listens on `http://127.0.0.1:3080` and uses `~/.dsh` for plugins, profiles, sessions, settings, and keys.
+Official `dsh web` listens on `http://127.0.0.1:3080` and uses `~/.dsh` for plugins and profiles. Both CLIs can run at the same time. They share session history and keep plugin installs apart.
 
-Both CLIs can run at the same time. They share session history and keep plugin installs apart.
+It is built on an **everything-is-a-plugin** architecture and powered by [Cordis](https://github.com/cordiverse/cordis), described in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512). Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/).
 
 ## What this fork changes
 
 The rows below summarize user-visible and release-impacting fork changes. Merge commits that only integrate upstream are not listed.
 
-### Runtime
-
-| Area | What changed | Result |
-| --- | --- | --- |
-| Package namespace | Development packages use `@x1a0f3n9/dsh-*`. `master` tracks upstream `@deepseek-ai/dsh-*`. A later stable fork line publishes `@xfcodeai/dsh-*`. Vendor and native packages keep `@deepseek-ai/*`. | The two fork lines and official `dsh` do not share an npm scope. |
-| Launcher | The shipped command is `xfdsh`. Official `dsh` stays the upstream CLI. | The two products can be installed together. |
-| Homes | `xfdsh` plugins and profiles live in `~/.xfdsh`. Sessions, workspace groups, attachments, settings, and API keys stay in `~/.dsh`. | History is shared without a migration wizard. |
-| Web port | `xfdsh web` listens on `127.0.0.1:7777`. Official `dsh web` stays on `3080`. | Both UIs can run at the same time. |
+Development packages use `@x1a0f3n9/dsh-*`. `master` tracks upstream `@deepseek-ai/dsh-*`. A later stable fork line publishes `@xfcodeai/dsh-*`. Vendor and native packages keep `@deepseek-ai/*`.
 
 ### Preset plugins
 
