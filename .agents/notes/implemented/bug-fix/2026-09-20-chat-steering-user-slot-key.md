@@ -18,7 +18,7 @@ This partially supersedes the rejected "alias missing steering to keyed user" al
 
 ## Testing
 
-`packages/client/ui-chat/tests/chat-view.client.spec.tsx` pins a settled steering node as a user bubble with `[data-chat-flow-kind=steering]` and no unknown-surface label. A second case throws if `entryKey` is `steering` and expects the user occupant. Pending-to-durable handoff keeps the user bubble after the turn closes. The missing-renderer fallback path still paints `UserMessageFallbackView` for steering and dumps `tool-call`.
+`packages/client/ui-chat/tests/chat-view.client.spec.tsx` pins a settled steering node as a user bubble with `[data-chat-flow-kind=steering]` and no unknown-surface label. A second case throws if `entryKey` is `steering` and expects the user occupant. Pending-to-durable handoff keeps the user bubble after the turn closes. The missing-renderer fallback path still paints `UserMessageFallbackView` for steering and dumps `tool-call`. The harness `entryKey` switch narrows `node.kind === 'tool-call'` before reading `data.root`.
 
 ## Alternatives considered
 

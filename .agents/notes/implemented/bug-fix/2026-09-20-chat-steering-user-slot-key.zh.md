@@ -18,7 +18,7 @@ ChatNodeSeat 把用户风格节点（`user` 和 `steering`）映射到 keyed ent
 
 ## 测试
 
-`packages/client/ui-chat/tests/chat-view.client.spec.tsx` 钉住已结算 steering 节点为用户气泡，带 `[data-chat-flow-kind=steering]`，且没有 unknown-surface 标签。第二个用例在 `entryKey` 为 `steering` 时抛错，并期望 user occupant。pending 到持久节点的交接在轮次关闭后仍保持用户气泡。缺 renderer 的 fallback 路径仍为 steering 画出 `UserMessageFallbackView`，并为 `tool-call` 转储。
+`packages/client/ui-chat/tests/chat-view.client.spec.tsx` 钉住已结算 steering 节点为用户气泡，带 `[data-chat-flow-kind=steering]`，且没有 unknown-surface 标签。第二个用例在 `entryKey` 为 `steering` 时抛错，并期望 user occupant。pending 到持久节点的交接在轮次关闭后仍保持用户气泡。缺 renderer 的 fallback 路径仍为 steering 画出 `UserMessageFallbackView`，并为 `tool-call` 转储。harness 的 `entryKey` switch 在读取 `data.root` 前会收窄 `node.kind === 'tool-call'`。
 
 ## 考虑过的替代方案
 

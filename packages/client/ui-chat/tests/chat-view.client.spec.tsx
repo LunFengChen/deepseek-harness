@@ -341,7 +341,9 @@ function makeHarness(
       case 'unknown':
         return <UnknownNodeView {...nodeProps<'unknown'>()} />
       case 'tool-call': {
-        const block = nodeOwner.node.data.root
+        const node = nodeOwner.node
+        if (node.kind !== 'tool-call') return opts?.fallback ?? null
+        const block = node.data.root
         const toolName = 'kind' in block ? block.call?.name ?? '' : block.name
         const tool = {
           callId: block.callId,
