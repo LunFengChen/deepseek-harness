@@ -10,7 +10,7 @@ Status: implemented
 
 ## Decision
 
-`v0.1.11` 给每条路由 Closed / Open / HalfOpen 熔断器。`agent/request` 覆盖到第一个可用档（先 P1）。立即码（`AUTH` / `RATE_LIMIT` / `NO_ADAPTER`）插到 `llm-retry` 前面，打开熔断并重试下一档。完整的 `assistant/message` 记一次成功；HalfOpen 两次成功后关闭熔断，下次选档回到 P1。队列行用绿 / 黄 / 红表示健康。xfdsh 钉 `github:LunFengChen/dsh-failover-queue#v0.1.11`。
+`v0.1.11` 给每条路由 Closed / Open / HalfOpen 熔断器。`agent/request` 覆盖到第一个可用档（先 P1）。立即码插到 `llm-retry` 前面，打开熔断并重试下一档；[503 / 超时 / 传输从 v0.1.12 起也在这个集合里](2026-09-20-failover-queue-server-immediate.zh.md)。完整的 `assistant/message` 记一次成功；HalfOpen 两次成功后关闭熔断，下次选档回到 P1。队列行用绿 / 黄 / 红表示健康。xfdsh 钉 `@x1a0f3n9/dsh-failover-queue@0.1.12`。
 
 ## Verification
 

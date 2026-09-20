@@ -73,7 +73,7 @@ dsh web
 | 上下文面板 | `@x1a0f3n9/dsh-context@0.49.7` | Context 页和 `/context` 能看组成、压缩和 token 用量。版本探测读本 fork。 |
 | Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.19.3` | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
 | Hindsight 记忆 | `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4` | 默认打开。走本机 daemon，不走 Cloud。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
-| 故障转移队列 | `@x1a0f3n9/dsh-failover-queue@0.1.11` | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3。在 `llm-retry` 用尽后切下一档，或在 `AUTH` / `RATE_LIMIT` / `NO_ADAPTER` 时立即切换。P1 恢复后会探活切回。 |
+| 故障转移队列 | `@x1a0f3n9/dsh-failover-queue@0.1.12` | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3。503 / 超时 / 传输错误会跳过 `llm-retry`，立刻切下一档。P1 恢复后会探活切回。 |
 | 技能管理 | `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1` | 加载、开关、创建并导入本机 Agent 技能。卡片打开时出现 Settings → 技能。 |
 | Web 搜索池 | `@x1a0f3n9/dsh-web-search-pool` | 默认顺序是搜索池，然后是 Perplexity、Exa 和无需密钥的 Bing/DuckDuckGo。DeepSeek 搜索仍可选手动选择。任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。 |
 

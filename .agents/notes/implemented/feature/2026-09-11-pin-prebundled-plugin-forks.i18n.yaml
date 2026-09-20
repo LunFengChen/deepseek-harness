@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-11-pin-prebundled-plugin-forks.md
-2026-09-11-pin-prebundled-plugin-forks.md: 7ba8cd6e847c21f1799bbf5bf4517f10fa6b4bb4
-2026-09-11-pin-prebundled-plugin-forks.zh.md: a57e472cd181481bcd001151c73608d9f4c9896d
+2026-09-11-pin-prebundled-plugin-forks.md: 8447bdde59e117f85fbd6ddcf97f4f4054c5ea07
+2026-09-11-pin-prebundled-plugin-forks.zh.md: 97086ec8c050dd4509a51e01555edeff9550d7e7

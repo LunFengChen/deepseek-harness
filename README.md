@@ -73,7 +73,7 @@ Prebundled extras live on **Settings → xfdsh preset plugins**. Cards show the 
 | Context dashboard | `@x1a0f3n9/dsh-context@0.49.7` | A Context tab and `/context` show composition, compaction, and token use. Version detection reads this fork. |
 | Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.19.3` | Files, terminal, Git, and subagents in the sidebar workbench. |
 | Hindsight memory | `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4` | On by default. Uses a local daemon, not Cloud. Cloud or a self-hosted URL remains optional in `~/.hindsight/coding-agent.json`. |
-| Failover queue | `@x1a0f3n9/dsh-failover-queue@0.1.11` | Composer chip plus Settings → Failover for P1/P2/P3. Fails over after `llm-retry`, or immediately on `AUTH` / `RATE_LIMIT` / `NO_ADAPTER`. Recovered P1 is probed and selected again. |
+| Failover queue | `@x1a0f3n9/dsh-failover-queue@0.1.12` | Composer chip plus Settings → Failover for P1/P2/P3. A 503 / timeout / transport error skips `llm-retry` and jumps to the next P. Recovered P1 is probed and selected again. |
 | Skills manager | `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1` | Load, toggle, create, and import local Agent skills. Settings → Skills appears when the card is on. |
 | Web search pool | `@x1a0f3n9/dsh-web-search-pool` | Default order is the search pool, then Perplexity, Exa, and keyless Bing/DuckDuckGo. DeepSeek search remains selectable. Every chat model can `web_search` without a DeepSeek search key. |
 
