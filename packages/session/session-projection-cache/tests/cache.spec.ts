@@ -406,6 +406,31 @@ describe('SessionProjectionCache listing read', () => {
       .toThrow('unseeded projection-cache identity inherited event count must be 0')
   })
 
+  it('serves a seeded listing hint from the stored inherited cut', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    roots.push(root)
+    const id = SessionId('listed-seeded')
+    await seedRecord(
+      root,
+      id,
+      { 'cache-test/marks': { ver: 1, seq: SessionSeq(1), val: { marks: ['seed'] } } },
+      {
+        formatVersion: SESSION_FORMAT_VERSION,
+        createdAt: 0,
+        cwd: '/work',
+        isSeeded: true,
+        inheritedEventCount: SessionLogOffset(2),
+      },
+    )
+    const { cache } = await harness({ root })
+    const seededHeader = { ...headerOf(id, 0, '/work'), isSeeded: true }
+
+    expect(cache.cachedListedHint(seededHeader)?.values['cache-test/marks'])
+      .toEqual({ marks: ['seed'] })
+    expect(cache.cachedListedHint({ ...seededHeader, cwd: '/elsewhere' })).toBeUndefined()
+    expect(cache.cachedListedHint(headerOf(id, 0, '/work'))).toBeUndefined()
+  })
+
   it('serves a creation-time checkpoint at the before-first-event cursor', async () => {
     const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
     roots.push(root)

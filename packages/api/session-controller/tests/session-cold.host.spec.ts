@@ -94,8 +94,7 @@ describe('sessions.list cold merge', () => {
       inspect,
     })
     ctx.provide('sessionProjectionCache', {
-      cachedSnapshot: () => undefined,
-      cachedPredecessorTitle: (meta: SessionHeader) => meta.id === sid('legacy-title')
+      cachedListedHint: (meta: SessionHeader) => meta.id === sid('legacy-title')
         ? { asOfSeq: -1, values: { title: 'Cached predecessor title' } }
         : undefined,
     } as never)
@@ -143,7 +142,7 @@ describe('sessions.list cold merge', () => {
     })
     const cacheCalls: string[] = []
     ctx.provide('sessionProjectionCache', {
-      cachedSnapshot: (meta: SessionHeader) => {
+      cachedListedHint: (meta: SessionHeader) => {
         cacheCalls.push(String(meta.id))
         if (meta.id === sid('cached-blank')) {
           return { asOfSeq: 0, values: { sessionListMetadata: { blank: true, lastPromptAt: null } } }
@@ -151,9 +150,11 @@ describe('sessions.list cold merge', () => {
         if (meta.id === sid('cached-conversation')) {
           return { asOfSeq: 1, values: { sessionListMetadata: { blank: false, lastPromptAt: 1000 } } }
         }
+        if (meta.id === sid('seeded-cold')) {
+          return { asOfSeq: 12, values: { title: 'Seeded cached title' } }
+        }
         return undefined
       },
-      cachedPredecessorTitle: () => undefined,
     } as never)
     const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
 
@@ -171,10 +172,14 @@ describe('sessions.list cold merge', () => {
       origin: 'subagent',
     })
     expect(byId['missing-cwd']).toBeUndefined()
-    // A cold seeded header never consults the cache: its cut is not 0, so a
-    // cut-0 lookup would alias a different projection identity.
-    expect(byId['seeded-cold']).toMatchObject({ blank: false, updatedAt: 450 })
-    expect(cacheCalls).not.toContain('seeded-cold')
+    // A cold seeded header has no inherited cut; listing still reads the
+    // cache hint so fork titles survive restart without a body read.
+    expect(byId['seeded-cold']).toMatchObject({
+      blank: false,
+      updatedAt: 450,
+      projections: { asOfSeq: 12, values: { title: 'Seeded cached title' } },
+    })
+    expect(cacheCalls).toContain('seeded-cold')
     expect(inspect).not.toHaveBeenCalled()
   })
 

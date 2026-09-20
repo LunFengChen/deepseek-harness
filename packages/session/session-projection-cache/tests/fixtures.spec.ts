@@ -259,6 +259,10 @@ describe('archived version recovery', () => {
     const seeded = { ...headerFor(id, doc.record.identity), isSeeded: true }
     expect(cache.cachedSnapshot(seeded, SessionLogOffset(2), ['title'])).toBeUndefined()
     expect(cache.cachedPredecessorTitle(seeded, SessionLogOffset(2))).toBeUndefined()
+    expect(cache.cachedListedHint(seeded)).toEqual({
+      asOfSeq: -1,
+      values: { title: doc.record.rows.title?.val },
+    })
   })
 
   it('backs up and skips a record that fails schema validation instead of failing the boot', async () => {

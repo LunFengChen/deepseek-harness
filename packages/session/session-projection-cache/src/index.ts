@@ -176,6 +176,40 @@ export class SessionProjectionCache extends Service {
     const expected = identityOf(meta, inheritedEventCount)
     const record = this.requireTable().get(meta.id)
     if (record === undefined || !predecessorIdentityMatches(record.identity, expected)) return undefined
+    return this.titleHintFromRecord(record)
+  }
+
+  /**
+   * Zero-I/O listing hint for a header-only Session row.
+   *
+   * Unseeded rows use inherited cut 0. Seeded rows have no cut in the listed
+   * header; this method reads the stored checkpoint's `inheritedEventCount`
+   * only after `createdAt`, `cwd`, and seeded lineage already match, then
+   * serves {@link cachedSnapshot} or {@link cachedPredecessorTitle}. Hydration
+   * still requires the caller to supply the authoritative cut.
+   * @param meta - listed Session header (identity witness; no log read).
+   * @returns a listing projection cut, or `undefined` when no usable row exists.
+   */
+  cachedListedHint(meta: SessionHeader): ProjectionSnapshot | undefined {
+    if (!meta.isSeeded) {
+      return this.cachedSnapshot(meta, SessionLogOffset(0))
+        ?? this.cachedPredecessorTitle(meta, SessionLogOffset(0))
+    }
+    const record = this.requireTable().get(meta.id)
+    if (record === undefined || !listedSeededIdentityMatches(record.identity, meta)) {
+      return undefined
+    }
+    const cut = record.identity.inheritedEventCount
+    if (cut !== undefined && cut > 0) {
+      return this.cachedSnapshot(meta, cut)
+        ?? this.cachedPredecessorTitle(meta, cut)
+        ?? this.titleHintFromRecord(record)
+    }
+    return this.titleHintFromRecord(record)
+  }
+
+  /** Title-only listing view with the predecessor sentinel sequence. */
+  private titleHintFromRecord(record: CheckpointRecord): ProjectionSnapshot | undefined {
     const title = this.viewRecord(record, [PREDECESSOR_TITLE_KEY])
     return title === undefined ? undefined : { ...title, asOfSeq: -1 }
   }
@@ -432,6 +466,20 @@ function predecessorIdentityMatches(
   const predecessor = stored.formatVersion === undefined
     || stored.formatVersion < expected.formatVersion
   return predecessor && lifecycleIdentityMatches(stored, expected)
+}
+
+/**
+ * Whether a stored checkpoint may supply a seeded listing hint.
+ *
+ * The listed header has no inherited cut. Matching `createdAt` and `cwd`
+ * names this lifecycle; an explicit unseeded stamp or a newer Session format
+ * is a different record. Absent `isSeeded` is accepted because predecessor
+ * documents predate that field.
+ */
+function listedSeededIdentityMatches(stored: CheckpointIdentity, meta: SessionHeader): boolean {
+  if (stored.createdAt !== meta.createdAt || stored.cwd !== meta.cwd) return false
+  if (stored.isSeeded === false) return false
+  return stored.formatVersion === undefined || stored.formatVersion <= meta.version
 }
 
 /** Match the format-independent fields that distinguish one Session lifecycle. */

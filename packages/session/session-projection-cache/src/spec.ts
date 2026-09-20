@@ -86,8 +86,9 @@ export type CheckpointRecord = z.infer<typeof checkpointRecord>
  * current fold semantics cannot vouch for.
  *
  * A lifecycle-matching predecessor may still expose its version-compatible
- * title through the cache service's listing-only hint; this never relaxes the
- * format requirement for hydration or another fold shortcut.
+ * title through `cachedListedHint`; this never relaxes the format requirement
+ * for hydration or another fold shortcut. Seeded listing uses the stored
+ * inherited cut after createdAt/cwd/seeded lineage match, and never cut 0.
  *
  * `invalidRecords: 'backup-and-skip'`: a stored record that fails the schema
  * anyway is disposable derived data, so it must never cost the boot — the
