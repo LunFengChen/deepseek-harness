@@ -1,18 +1,18 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry, { agentEvents } from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { createUserMessage, HarnessError } from '@deepseek-ai/dsh-llm'
-import SessionStore, { Session, SessionId, type UserMessage } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
+import AgentRegistry, { agentEvents } from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, HarnessError } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, type UserMessage } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import GoalService, {
   GoalError,
   GoalId,
   decodeGoalChange,
   foldGoal,
-} from '@deepseek-ai/dsh-goal'
-import type { GoalChangeMeta, GoalRef, GoalSnapshotChangeMeta } from '@deepseek-ai/dsh-goal'
-import { createInboxStub } from '@deepseek-ai/dsh-agent-loop-testkit'
+} from '@x1a0f3n9/dsh-goal'
+import type { GoalChangeMeta, GoalRef, GoalSnapshotChangeMeta } from '@x1a0f3n9/dsh-goal'
+import { createInboxStub } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 interface StubAgent {
   agent: Agent
@@ -71,7 +71,7 @@ function stubAgentForSession(session: Session, suppliedCtx?: Context): StubAgent
 /** Build a registry-compatible agent around a fresh session. */
 function stubAgent(
   rawId: string,
-  seed?: readonly import('@deepseek-ai/dsh-session').SessionEvent[],
+  seed?: readonly import('@x1a0f3n9/dsh-session').SessionEvent[],
   ctx?: Context,
 ): StubAgent {
   const session = ctx === undefined
@@ -144,7 +144,7 @@ describe('GoalService creation and replay', () => {
     vi.useRealTimers()
   })
 
-  it('uses 256 rounds by default and validates create input inside create', async () => {
+  it('uses 100000 rounds by default and validates create input inside create', async () => {
     const { ctx, agent } = await harness()
     expect(() => ctx.goals.create(agent, { objective: '   ' })).toThrow(expect.objectContaining({
       code: 'GOAL_INVALID_OBJECTIVE',
@@ -157,7 +157,7 @@ describe('GoalService creation and replay', () => {
     expect(() => ctx.goals.create(agent, {
       objective: 'x', maxGoalRounds: Number.MAX_SAFE_INTEGER + 1,
     })).toThrow(GoalError)
-    expect(ctx.goals.create(agent, { objective: 'x' }).maxGoalRounds).toBe(256)
+    expect(ctx.goals.create(agent, { objective: 'x' }).maxGoalRounds).toBe(100000)
   })
 
   it('also resolves the default when constructed directly without Cordis config normalization', async () => {
@@ -169,7 +169,7 @@ describe('GoalService creation and replay', () => {
     const goals = new GoalService(ctx)
     await new Promise(resolve => setImmediate(resolve))
     expect(goals.create(stub.agent, { objective: 'direct' })).toMatchObject({
-      objective: 'direct', maxGoalRounds: 256,
+      objective: 'direct', maxGoalRounds: 100000,
     })
   })
 

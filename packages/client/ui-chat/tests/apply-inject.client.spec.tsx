@@ -1,22 +1,22 @@
 // @vitest-environment jsdom
 /** Chat inject factories exercised over independently mounted Conversation and Chat plugins. */
 import { describe, expect, it, vi } from 'vitest'
-import { AttachmentId } from '@deepseek-ai/dsh-attachment'
-import type { ISession } from '@deepseek-ai/dsh-api-session-controller/client'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
+import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
+import type { ISession } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import {
   SlotTestRuntime, TestRemote, stubSettingsScope, usePinnedBrowserLanguages,
-} from '@deepseek-ai/dsh-client-test-runtime'
-import type { SessionBehaviorOverrides } from '@deepseek-ai/dsh-client-test-runtime'
-import type { ClientRemote } from '@deepseek-ai/dsh-api-remotes/client'
+} from '@x1a0f3n9/dsh-client-test-runtime'
+import type { SessionBehaviorOverrides } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { ClientRemote } from '@x1a0f3n9/dsh-api-remotes/client'
 import {
   apply as applyConversation, inject as injectConversation,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import {
   apply as applyChat, inject as injectChat, type ChatViewInjected,
-} from '@deepseek-ai/dsh-client-ui-chat/client'
-import { SessionSeq, type SessionId } from '@deepseek-ai/dsh-session/types'
-import type { WorkspaceId } from '@deepseek-ai/dsh-workspace/types'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { SessionSeq, type SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { WorkspaceId } from '@x1a0f3n9/dsh-workspace/types'
 import { createChatStore } from '../src/client/stores.ts'
 
 usePinnedBrowserLanguages('zh-CN')
@@ -138,6 +138,10 @@ describe('Chat inject API', () => {
     // A line travels as the `file` type's navigation parameter, not in the address.
     await injected.openFile('src/a.ts', { line: 7 })
     expect(b.sidebarRight.openResource).toHaveBeenLastCalledWith('dsh-resource://file/session/root-1/src/a.ts', { params: { line: 7 } })
+
+    // A directory is the same address with a folder-window parameter, not a file read.
+    await injected.openFile('src', { directory: true })
+    expect(b.sidebarRight.openResource).toHaveBeenLastCalledWith('dsh-resource://file/session/root-1/src', { params: { directory: true } })
     await b.runtime.dispose()
   })
 

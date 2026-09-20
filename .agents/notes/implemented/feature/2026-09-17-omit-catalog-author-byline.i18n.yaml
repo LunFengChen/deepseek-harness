@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-17-omit-catalog-author-byline.md
+2026-09-17-omit-catalog-author-byline.md: 6cbb72037234d9ec3a7096d3cefb4b70fb96b7aa
+2026-09-17-omit-catalog-author-byline.zh.md: c24423138dff487957ae1a346b069a4682a47e0b

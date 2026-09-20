@@ -12,7 +12,7 @@ Using one persistent shell gives the model a consistent file-operation interface
 
 ## Decision
 
-The shipped minimal compositions expose exactly one platform-selected persistent shell: `bash` on Linux and macOS, or `pwsh` on Windows. Neither composition mounts `@deepseek-ai/dsh-tool-str-replace-editor`, a filesystem tool, or the `fs-local` service that supported the editor. The fixed complete persona, absence of runtime context and compaction, shell timeout, and launch-specific host services remain unchanged.
+The shipped minimal compositions expose exactly one platform-selected persistent shell: `bash` on Linux and macOS, or `pwsh` on Windows. Neither composition mounts `@x1a0f3n9/dsh-tool-str-replace-editor`, a filesystem tool, or the `fs-local` service that supported the editor. The fixed complete persona, absence of runtime context and compaction, shell timeout, and launch-specific host services remain unchanged.
 
 The standalone editor package remains available for explicit custom compositions. A trusted user-authored preset or higher profile patch must insert the editor into the Cordis tree with a filesystem provider in the same service scope; the shipped `minimal` and `sdk-minimal` defaults never insert it. The [Python SDK guide](../../../../docs/user/guide/python-sdk.md#opt-in-to-str_replace_editor) provides an executable patch example.
 

@@ -16,11 +16,11 @@ import {
   SlotOwnershipError, StaleAuthorizationError,
   type ActionsDecl, type SessionProviderComponent, type SlotEntryDef,
   type SlotSpec, type StoreHandle, type StoredEntry,
-} from '@deepseek-ai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 import type {
   RenderOpts, ScopedStandardSourceBinding, SlotRendererHost, SlotScopeAdapter,
   StandardSourceBinding, StoreInstanceLike,
-} from '@deepseek-ai/dsh-client-ui-renderer/client'
+} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import { createSlotRenderer } from '../src/client/scoped-slots.tsx'
 
 type AnyProps = Record<string, unknown>
@@ -287,7 +287,7 @@ function mountChainRoot(h: Fake, children: Record<string, DeclaredSpec>, body: (
 }
 
 describe('root outlet', () => {
-  it('renders the root registration and fails loud when root is unregistered (boot order)', () => {
+  it('renders the root registration and waits when root is unregistered', () => {
     const h = makeHost()
     h.add('root', { component: () => <b>shell</b> })
     const renderer = createSlotRenderer()
@@ -295,10 +295,8 @@ describe('root outlet', () => {
     expect(view.container.textContent).toBe('shell')
 
     const empty = makeHost()
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    expect(() => render(<>{createSlotRenderer().renderRoot(empty.host, {})}</>))
-      .toThrow(/boot order/)
-    spy.mockRestore()
+    const pending = render(<>{createSlotRenderer().renderRoot(empty.host, {})}</>)
+    expect(pending.container.querySelector('[data-dsh-boot-pending]')).not.toBeNull()
   })
 
   it('passes renderRoot owner props into the root component', () => {

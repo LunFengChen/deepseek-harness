@@ -1,3 +1,3 @@
 import { clientBundle } from '../tsdown.client.ts'
 
-export default clientBundle('@deepseek-ai/dsh-client-ui-directory-picker-native', ['lib/types/index.js'])
+export default clientBundle('@x1a0f3n9/dsh-client-ui-directory-picker-native', ['lib/types/index.js'])

@@ -18,25 +18,25 @@
  * agent factory's `setup(agentCtx)` hook is the one supported call site,
  * because only there is the join installed while the agent is still
  * unpublished, so a rejected composition rolls the whole creation back.
- * @module @deepseek-ai/dsh-agent-presets
+ * @module @x1a0f3n9/dsh-agent-presets
  */
 
 import { stat } from 'node:fs/promises'
 import { Context } from '@deepseek-ai/cordis'
 import { evaluate } from '@deepseek-ai/cordis-plugin-loader'
 import z from '@deepseek-ai/schemastery'
-import { Remote, RemoteError, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
-import { bindScopeParent, createScope, scopeOf, type Scope, type ScopeKey, type ScopeParentBinding } from '@deepseek-ai/dsh-scope'
+import { Remote, RemoteError, TypertRemoteService } from '@x1a0f3n9/dsh-typert-protocol'
+import { bindScopeParent, createScope, scopeOf, type Scope, type ScopeKey, type ScopeParentBinding } from '@x1a0f3n9/dsh-scope'
 // Type-only: resolves the `agent/created` lifecycle event this service watches.
-import type {} from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 import type { AgentPresetDocument, AgentPresetRoster } from './types.ts'
-import type {} from '@deepseek-ai/dsh-session-projection'
+import type {} from '@x1a0f3n9/dsh-session-projection'
 // Type-only: resolves the registry notification emitted after scope reparenting.
-import type {} from '@deepseek-ai/dsh-tools'
-import type SettingsService from '@deepseek-ai/dsh-settings'
-import type { SettingsScope } from '@deepseek-ai/dsh-settings'
-import { dshHomePath } from '@deepseek-ai/dsh-home-paths'
+import type {} from '@x1a0f3n9/dsh-tools'
+import type SettingsService from '@x1a0f3n9/dsh-settings'
+import type { SettingsScope } from '@x1a0f3n9/dsh-settings'
+import { dshHomePath } from '@x1a0f3n9/dsh-home-paths'
 import { discoverPresets, SHIPPED_PRESET_ROOT, USER_PRESET_DIR } from './discovery.ts'
 import { copyComposition, deleteComposition, presetExists, readComposition } from './authoring.ts'
 import { livePresetMounts, mountPreset, serviceForAgent, standingMountFor } from './mount.ts'

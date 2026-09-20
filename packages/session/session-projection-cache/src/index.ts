@@ -13,25 +13,25 @@
  * next cold read) and a `ver` mismatch discards the row instead of migrating
  * it. Design authority: the session-projection RFC
  * (.agents/notes/proposed/architecture/2026-07-27-session-projection-and-command-log.md).
- * @module @deepseek-ai/dsh-session-projection-cache
+ * @module @x1a0f3n9/dsh-session-projection-cache
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { snapshotJsonValue } from '@deepseek-ai/dsh-util-values'
-import { SessionLogOffset } from '@deepseek-ai/dsh-session'
+import { snapshotJsonValue } from '@x1a0f3n9/dsh-util-values'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import type {
   Session,
   SessionEvent,
   SessionHeader,
   SessionId,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import type {
   ProjectionCheckpoint,
   ProjectionSnapshot,
   SessionProjectionMap,
-} from '@deepseek-ai/dsh-session-projection'
-import type { KvTable } from '@deepseek-ai/dsh-storage-domain'
+} from '@x1a0f3n9/dsh-session-projection'
+import type { KvTable } from '@x1a0f3n9/dsh-storage-domain'
 import { projectionCacheDomainSpec } from './spec.ts'
 import type { CheckpointIdentity, CheckpointRecord } from './spec.ts'
 
@@ -56,9 +56,9 @@ declare module '@deepseek-ai/cordis' {
 /**
  * Plugin config. Both throttle triggers are deployment choices with no
  * universally correct value, so the composition states them explicitly
- * (cordis.yml); the three mandatory write points (session creation,
- * `turn/end`, and session disposal) are policy, not tunables, and always
- * fire.
+ * (cordis.yml); the four mandatory write points (session creation,
+ * `turn/end`, `session/truncated`, and session disposal) are policy, not
+ * tunables, and always fire.
  */
 export interface Config {
   /** Committed events per session that force a durable checkpoint write between mandatory points. */
@@ -83,9 +83,9 @@ interface DirtyState {
 /**
  * The persisted projection cache service. Opens the `session_projcache`
  * domain at init, checkpoints live sessions on a throttled write-behind
- * (count/interval triggers from {@link Config}) plus three mandatory points —
- * session creation, `turn/end`, and session disposal (the live-to-cold
- * moment) — and serves the
+ * (count/interval triggers from {@link Config}) plus four mandatory points —
+ * session creation, `turn/end`, `session/truncated`, and session disposal
+ * (the live-to-cold moment) — and serves the
  * cached rows for a session header. Every durable write is fail-soft:
  * failures log a warning and the cache self-heals on the next write.
  */
@@ -176,6 +176,40 @@ export class SessionProjectionCache extends Service {
     const expected = identityOf(meta, inheritedEventCount)
     const record = this.requireTable().get(meta.id)
     if (record === undefined || !predecessorIdentityMatches(record.identity, expected)) return undefined
+    return this.titleHintFromRecord(record)
+  }
+
+  /**
+   * Zero-I/O listing hint for a header-only Session row.
+   *
+   * Unseeded rows use inherited cut 0. Seeded rows have no cut in the listed
+   * header; this method reads the stored checkpoint's `inheritedEventCount`
+   * only after `createdAt`, `cwd`, and seeded lineage already match, then
+   * serves {@link cachedSnapshot} or {@link cachedPredecessorTitle}. Hydration
+   * still requires the caller to supply the authoritative cut.
+   * @param meta - listed Session header (identity witness; no log read).
+   * @returns a listing projection cut, or `undefined` when no usable row exists.
+   */
+  cachedListedHint(meta: SessionHeader): ProjectionSnapshot | undefined {
+    if (!meta.isSeeded) {
+      return this.cachedSnapshot(meta, SessionLogOffset(0))
+        ?? this.cachedPredecessorTitle(meta, SessionLogOffset(0))
+    }
+    const record = this.requireTable().get(meta.id)
+    if (record === undefined || !listedSeededIdentityMatches(record.identity, meta)) {
+      return undefined
+    }
+    const cut = record.identity.inheritedEventCount
+    if (cut !== undefined && cut > 0) {
+      return this.cachedSnapshot(meta, cut)
+        ?? this.cachedPredecessorTitle(meta, cut)
+        ?? this.titleHintFromRecord(record)
+    }
+    return this.titleHintFromRecord(record)
+  }
+
+  /** Title-only listing view with the predecessor sentinel sequence. */
+  private titleHintFromRecord(record: CheckpointRecord): ProjectionSnapshot | undefined {
     const title = this.viewRecord(record, [PREDECESSOR_TITLE_KEY])
     return title === undefined ? undefined : { ...title, asOfSeq: -1 }
   }
@@ -327,6 +361,9 @@ export class SessionProjectionCache extends Service {
     this.ctx.on('session/created', (session: Session) => {
       void this.flushSoft(session, 'create')
     })
+    this.ctx.on('session/truncated', (session: Session) => {
+      void this.flushSoft(session, 'truncate')
+    })
 
     // Detach (the live-to-cold moment): the final mandatory point. After
     // this write the cold-read ladder serves the session from the cache.
@@ -429,6 +466,20 @@ function predecessorIdentityMatches(
   const predecessor = stored.formatVersion === undefined
     || stored.formatVersion < expected.formatVersion
   return predecessor && lifecycleIdentityMatches(stored, expected)
+}
+
+/**
+ * Whether a stored checkpoint may supply a seeded listing hint.
+ *
+ * The listed header has no inherited cut. Matching `createdAt` and `cwd`
+ * names this lifecycle; an explicit unseeded stamp or a newer Session format
+ * is a different record. Absent `isSeeded` is accepted because predecessor
+ * documents predate that field.
+ */
+function listedSeededIdentityMatches(stored: CheckpointIdentity, meta: SessionHeader): boolean {
+  if (stored.createdAt !== meta.createdAt || stored.cwd !== meta.cwd) return false
+  if (stored.isSeeded === false) return false
+  return stored.formatVersion === undefined || stored.formatVersion <= meta.version
 }
 
 /** Match the format-independent fields that distinguish one Session lifecycle. */

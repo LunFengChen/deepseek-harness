@@ -3,7 +3,7 @@ description: "Web boot kernel for the web GUI: two-stage boot of the client plug
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-web
+# @x1a0f3n9/dsh-client-web
 
 English | [中文](README.zh.md)
 
@@ -31,7 +31,7 @@ The shell base styles apply automatic CJK/Latin spacing to ordinary content in s
 
 ### What boot looks like
 
-Boot runs in two stages: the module stage adopts the parser-loaded bootstrap batch, builds the module system from the Host-provided boot graph, and prefetches the `immediately` tier through the shared application-batch URL, which executes once. The plugin stage then activates every graph entry and waits for all of them before handing the marked boot DOM to the UI renderer, which hydrates it and switches to the complete UI.
+Boot runs in two stages: the module stage adopts the parser-loaded bootstrap batch, builds the module system from the Host-provided boot graph, and prefetches the `immediately` tier through that tier's application combo URL. The plugin stage then creates the immediately-tier entries and hands the marked boot DOM to the UI renderer as soon as `uiRenderer` exists; deferred entries start after that wave.
 
 ### The boot page
 
@@ -57,11 +57,11 @@ This section explains how the boot kernel is built; observable behavior is cover
 
 ### Design concept
 
-The kernel owns exactly three things: the module system, the Cordis Loader, and the boot page. The Host owns the graph, batch preload, and loader facade, so `AppWebEntry` never knows the bootstrap package id or parses the wire format. The dynamic UI renderer receives the mount point only after every client entry activates.
+The kernel owns exactly three things: the module system, the Cordis Loader, and the boot page. The Host owns the graph, batch preload, and loader facade, so `AppWebEntry` never knows the bootstrap package id or parses the wire format. The dynamic UI renderer receives the mount point as soon as `uiRenderer` exists; remaining entries may still be arriving.
 
 ### Two-stage boot
 
-`run()` calls the Host-installed `window.__ModuleLoader__.create({ boot, staticModules, ...seams })`; the facade returns the constructed module system and parsed manifest after adopting the parser-loaded bootstrap batch. The module stage prefetches the `immediately` tier through the one shared application-batch URL. The plugin stage mounts the Loader, assigns `loader.internal = modules`, creates every graph entry uniformly, awaits quiescence, then audits activation: any entry that failed import, stayed pending on a missing service, or landed in another non-active state throws one aggregated error naming every failing entry.
+`run()` calls the Host-installed `window.__ModuleLoader__.create({ boot, staticModules, ...seams })`; the facade returns the constructed module system and parsed manifest after adopting the parser-loaded bootstrap batch. The module stage prefetches the `immediately` tier through that tier's application combo URLs. The plugin stage mounts the Loader, assigns `loader.internal = modules`, creates immediately-tier entries, hydrates when `uiRenderer` exists, then creates deferred entries, awaits quiescence, then audits activation: any entry that failed import, stayed pending on a missing service, or landed in another non-active state throws one aggregated error naming every failing entry.
 
 ### Boot page mechanics
 
@@ -112,7 +112,7 @@ None; this package neither assembles nor sends a provider request.
 
 These limits define what the boot kernel does not support. They are current package constraints, not a task backlog.
 
-- **The application waits for the full roster** — one failed entry keeps the framework-free boot page visible with a per-entry report; partial UI availability is not supported.
+- **A failed entry still fails the boot audit** — first paint can happen once `uiRenderer` exists, but a later FAILED fiber still reports on the boot page; the root outlet waits for the first live registration instead of throwing.
 
 <a id="dev-note"></a>
 ### Dev Note

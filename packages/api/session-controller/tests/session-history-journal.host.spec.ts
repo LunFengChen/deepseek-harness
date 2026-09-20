@@ -2,13 +2,14 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry, { type Agent, type AssistantStreamFrame } from '@deepseek-ai/dsh-agent'
-import SessionStore from '@deepseek-ai/dsh-session'
-import { LlmAttemptId, ToolCallId, createMessage, createToolResultMessage, createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { Session, SessionEvent, SessionId } from '@deepseek-ai/dsh-session'
-import { SessionHistoryController } from '@deepseek-ai/dsh-api-session-controller/src/history.ts'
-import type { SessionFollowFrame, SessionPage, SessionWireEvent } from '@deepseek-ai/dsh-api-session-controller/types'
-import { createSessionTestRemote, installSessionReadTestServices } from './test-remote.ts'
+import AgentRegistry, { type Agent, type AssistantStreamFrame } from '@x1a0f3n9/dsh-agent'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import { LlmAttemptId, ToolCallId, createMessage, createToolResultMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq, type Session, type SessionEvent, type SessionHeader, type SessionId } from '@x1a0f3n9/dsh-session'
+import { SessionPersistenceNotFoundError } from '@x1a0f3n9/dsh-session-persistence'
+import { SessionHistoryController } from '@x1a0f3n9/dsh-api-session-controller/src/history.ts'
+import type { SessionFollowFrame, SessionPage, SessionWireEvent } from '@x1a0f3n9/dsh-api-session-controller/types'
+import { createSessionTestRemote, installSessionReadTestServices, testSessionPersistence } from './test-remote.ts'
 
 /** Append a production-shaped human prompt to the session surface. */
 function appendUserText(session: Session, text: string): SessionEvent {
@@ -920,4 +921,500 @@ describe('Session history raw journal', () => {
       await ctx.fiber.dispose()
     }
   })
+
+  it('pages a live log without snapshotting the whole Session', async () => {
+    const { ctx } = await harness()
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const session = ctx.sessions.create(undefined, { meta: { cwd: '/workspace' } })
+    for (let turn = 1; turn <= 40; turn += 1) {
+      session.append('turn/start', { turn })
+      appendUserText(session, `prompt ${String(turn)}`)
+      appendAssistantText(session, `reply ${String(turn)}`, 1)
+      session.append('turn/end', { turn, reason: { kind: 'completed' } })
+    }
+    const snapshot = vi.spyOn(session, 'snapshotEvents')
+    const response = await remote.page({
+      address: { kind: 'session', sessionId: session.id },
+      throughSeq: session.seq - 1,
+      maxMessages: 50,
+    })
+    if (!response.ok) throw new Error('unreachable')
+    const messages = pageEvents(response.value).filter(event => (
+      event.type === 'user/message' || event.type === 'assistant/message'
+    ))
+    expect(messages).toHaveLength(50)
+    expect(response.value.hasMore).toBe(true)
+    expect(snapshot.mock.calls.some(([from, to]) => from === 0 && (to === undefined || to === session.seq))).toBe(false)
+    await ctx.fiber.dispose()
+  })
+
+  it('follows a live log without snapshotting the whole Session', async () => {
+    const { ctx } = await harness()
+    const session = ctx.sessions.create(undefined, { meta: { cwd: '/workspace' } })
+    for (let turn = 1; turn <= 40; turn += 1) {
+      session.append('turn/start', { turn })
+      appendUserText(session, `follow ${String(turn)}`)
+      appendAssistantText(session, `follow-reply ${String(turn)}`, 1)
+      session.append('turn/end', { turn, reason: { kind: 'completed' } })
+    }
+    const history = new SessionHistoryController(ctx, (observation) => { observation[Symbol.dispose]() })
+    const snapshot = vi.spyOn(session, 'snapshotEvents')
+    const abort = new AbortController()
+    const iterator = history.follow({
+      address: { kind: 'session', sessionId: session.id },
+      maxMessages: 50,
+    }, abort.signal)[Symbol.asyncIterator]()
+    const opening = await iterator.next()
+    expect(opening).toMatchObject({ done: false, value: { type: 'snapshot', hasMore: true } })
+    expect(snapshot.mock.calls.some(([from, to]) => from === 0 && (to === undefined || to === session.seq))).toBe(false)
+    abort.abort()
+    await iterator.next()
+    await ctx.fiber.dispose()
+  })
+
+  it('pages a persistence suffix without observing the Session', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-page' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    const events: SessionEvent[] = []
+    for (let turn = 1; turn <= 8; turn += 1) {
+      const seq0 = (turn - 1) * 2
+      events.push({ type: 'turn/start', seq: SessionSeq(seq0), time: seq0 + 1, data: { turn } } as SessionEvent)
+      events.push({
+        type: 'user/message',
+        seq: SessionSeq(seq0 + 1),
+        time: seq0 + 2,
+        data: createUserMessage({ content: [{ type: 'text', text: `n${String(turn)}` }], source: { kind: 'user' } }),
+        surfaceOp: 'append',
+      } as SessionEvent)
+    }
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      list: () => Promise.resolve([header]),
+      inspect: () => Promise.resolve({ meta: header, events: [] }),
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events,
+        cursor: events.at(-1)?.seq ?? -1,
+      }),
+    }) as never)
+    const observe = vi.spyOn(ctx.sessionQuery, 'observeSession')
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: 15,
+      maxMessages: 4,
+    })
+    if (!response.ok) throw new Error('unreachable')
+    expect(observe).not.toHaveBeenCalled()
+    expect(response.value.hasMore).toBe(true)
+    expect(pageEvents(response.value).filter(event => event.type === 'user/message')).toHaveLength(4)
+    await ctx.fiber.dispose()
+  })
+
+  it('follows a persistence suffix without promoting an observation', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-follow' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    const events = [
+      { type: 'turn/start', seq: SessionSeq(10), time: 11, data: { turn: 2 } },
+      {
+        type: 'user/message', seq: SessionSeq(11), time: 12,
+        data: createUserMessage({ content: [{ type: 'text', text: 'tail' }], source: { kind: 'user' } }),
+        surfaceOp: 'append',
+      },
+    ] as SessionEvent[]
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events,
+        cursor: 11,
+      }),
+    }) as never)
+    const promote = vi.fn()
+    const observe = vi.spyOn(ctx.sessionQuery, 'observeSession')
+    const history = new SessionHistoryController(ctx, promote)
+    const abort = new AbortController()
+    const iterator = history.follow({
+      address: { kind: 'session', sessionId },
+      maxMessages: 50,
+    }, abort.signal)[Symbol.asyncIterator]()
+    await expect(iterator.next()).resolves.toMatchObject({
+      done: false,
+      value: { type: 'snapshot', cursor: 11, hasMore: true },
+    })
+    expect(observe).not.toHaveBeenCalled()
+    expect(promote).not.toHaveBeenCalled()
+    abort.abort()
+    await iterator.next()
+    await ctx.fiber.dispose()
+  })
+
+  it('maps a missing suffix onto session/not-found', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-missing' as SessionId
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.reject(new SessionPersistenceNotFoundError(sessionId)),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: -1,
+    })
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('session/not-found')
+    await ctx.fiber.dispose()
+  })
+
+  it('rejects a suffix page whose throughSeq is past the suffix cursor', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-past' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [{ type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } }] as SessionEvent[],
+        cursor: 0,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: 1,
+    })
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('gateway/bad-request')
+    await ctx.fiber.dispose()
+  })
+
+  it('falls back to a full observation when the suffix reader returns undefined', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-undefined' as SessionId
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve(undefined),
+    }) as never)
+    const observe = vi.spyOn(ctx.sessionQuery, 'observeSession')
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: -1,
+    })
+    expect(observe).toHaveBeenCalled()
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('session/not-found')
+    await ctx.fiber.dispose()
+  })
+
+  it('maps a suffix without cwd onto session/not-found', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-cwd' as SessionId
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header: { version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, isSeeded: false } as SessionHeader,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [],
+        cursor: -1,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: -1,
+    })
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('session/not-found')
+    await ctx.fiber.dispose()
+  })
+
+  it('maps a suffix follow without cwd onto session/not-found', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-follow-cwd' as SessionId
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header: { version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, isSeeded: false } as SessionHeader,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [],
+        cursor: -1,
+      }),
+    }) as never)
+    const history = new SessionHistoryController(ctx, (observation) => { observation[Symbol.dispose]() })
+    const abort = new AbortController()
+    const iterator = history.follow({
+      address: { kind: 'session', sessionId },
+    }, abort.signal)[Symbol.asyncIterator]()
+    await expect(iterator.next()).rejects.toMatchObject({ code: 'session/not-found' })
+    abort.abort()
+    await ctx.fiber.dispose()
+  })
+
+  it('rejects a suffix page whose covering events are empty at throughSeq', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-empty-through' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [],
+        cursor: 0,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: 0,
+    })
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('gateway/internal')
+    await ctx.fiber.dispose()
+  })
+
+  it('rejects a suffix page whose covering events skip throughSeq', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-skip-through' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [
+          { type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } },
+          { type: 'turn/end', seq: SessionSeq(2), time: 3, data: { turn: 1, reason: { kind: 'completed' } } },
+        ] as SessionEvent[],
+        cursor: 2,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: 1,
+    })
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('gateway/internal')
+    await ctx.fiber.dispose()
+  })
+
+  it('rejects a suffix page whose throughSeq is missing from the covering events', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-gap' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [{ type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } }] as SessionEvent[],
+        cursor: 1,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: 1,
+    })
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('gateway/internal')
+    await ctx.fiber.dispose()
+  })
+
+  it('pages an empty suffix window when throughSeq is -1', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-through-empty' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [{ type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } }] as SessionEvent[],
+        cursor: 0,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: -1,
+    })
+    if (!response.ok) throw new Error('unreachable')
+    expect(response.value.records).toEqual([])
+    expect(response.value.hasMore).toBe(false)
+    await ctx.fiber.dispose()
+  })
+
+  it('reports older pages when beforeSeq sits behind the suffix origin', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-before-origin' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    const events = [
+      { type: 'turn/start', seq: SessionSeq(10), time: 11, data: { turn: 2 } },
+      {
+        type: 'user/message', seq: SessionSeq(11), time: 12,
+        data: createUserMessage({ content: [{ type: 'text', text: 'tail' }], source: { kind: 'user' } }),
+        surfaceOp: 'append',
+      },
+    ] as SessionEvent[]
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events,
+        cursor: 11,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: 11,
+      beforeSeq: 5,
+      maxMessages: 50,
+    })
+    if (!response.ok) throw new Error('unreachable')
+    expect(response.value.records).toEqual([])
+    expect(response.value.hasMore).toBe(true)
+    await ctx.fiber.dispose()
+  })
+
+  it('keeps cited source events inside a suffix page', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-sources' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    const events = [
+      {
+        type: 'user/message', seq: SessionSeq(2), time: 3,
+        data: createUserMessage({ content: [{ type: 'text', text: 'cite' }], source: { kind: 'user' } }),
+        surfaceOp: 'append',
+        sourceEventSeqs: [SessionSeq(0), SessionSeq(1)],
+      },
+    ] as SessionEvent[]
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events,
+        cursor: 2,
+      }),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: 2,
+      maxMessages: 1,
+    })
+    if (!response.ok) throw new Error('unreachable')
+    expect(pageEvents(response.value)).toHaveLength(1)
+    expect(response.value.hasMore).toBe(false)
+    await ctx.fiber.dispose()
+  })
+
+  it('pages a live empty session without copying events', async () => {
+    const { ctx } = await harness()
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const session = ctx.sessions.create(undefined, { meta: { cwd: '/workspace' } })
+    const snapshot = vi.spyOn(session, 'snapshotEvents')
+    const empty = await remote.page({
+      address: { kind: 'session', sessionId: session.id },
+      throughSeq: -1,
+    })
+    if (!empty.ok) throw new Error('unreachable')
+    expect(empty.value.records).toEqual([])
+    const before = await remote.page({
+      address: { kind: 'session', sessionId: session.id },
+      throughSeq: 0,
+      beforeSeq: 0,
+    })
+    expect(before.ok).toBe(false)
+    expect(snapshot).not.toHaveBeenCalled()
+    await ctx.fiber.dispose()
+  })
+
+  it('returns an empty live page when beforeSeq is 0', async () => {
+    const { ctx } = await harness()
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const session = ctx.sessions.create(undefined, { meta: { cwd: '/workspace' } })
+    session.append('turn/start', { turn: 1 })
+    appendUserText(session, 'hi')
+    const response = await remote.page({
+      address: { kind: 'session', sessionId: session.id },
+      throughSeq: session.seq - 1,
+      beforeSeq: 0,
+    })
+    if (!response.ok) throw new Error('unreachable')
+    expect(response.value.records).toEqual([])
+    expect(response.value.hasMore).toBe(false)
+    await ctx.fiber.dispose()
+  })
+
+  it('follows an empty pending suffix without observing', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-pending-follow' as SessionId
+    const header: SessionHeader = {
+      version: SESSION_FORMAT_VERSION, id: sessionId, createdAt: 1, cwd: '/workspace', isSeeded: false,
+    }
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.resolve({
+        header,
+        inheritedEventCount: SessionLogOffset(0),
+        events: [],
+        cursor: 0,
+      }),
+    }) as never)
+    const observe = vi.spyOn(ctx.sessionQuery, 'observeSession')
+    const history = new SessionHistoryController(ctx, (observation) => { observation[Symbol.dispose]() })
+    const abort = new AbortController()
+    const iterator = history.follow({
+      address: { kind: 'session', sessionId },
+    }, abort.signal)[Symbol.asyncIterator]()
+    await expect(iterator.next()).resolves.toMatchObject({
+      done: false,
+      value: { type: 'snapshot', cursor: 0, records: [], hasMore: false },
+    })
+    expect(observe).not.toHaveBeenCalled()
+    abort.abort()
+    await iterator.next()
+    await ctx.fiber.dispose()
+  })
+
+  it('propagates a non-not-found suffix reader failure', async () => {
+    const { ctx } = await harness()
+    const sessionId = 'session-suffix-boom' as SessionId
+    ctx.provide('sessionPersistence', testSessionPersistence(ctx, {
+      readHistorySuffix: () => Promise.reject(new Error('suffix backend failed')),
+    }) as never)
+    const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+    const response = await remote.page({
+      address: { kind: 'session', sessionId },
+      throughSeq: -1,
+    })
+    expect(response.ok).toBe(false)
+    if (response.ok) throw new Error('unreachable')
+    expect(response.error.code).toBe('gateway/internal')
+    expect(response.error.message).toMatch(/suffix backend failed/)
+    await ctx.fiber.dispose()
+  })
+
 })

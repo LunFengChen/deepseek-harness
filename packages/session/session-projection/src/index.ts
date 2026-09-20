@@ -14,18 +14,18 @@
  * carry the complete post-change state, never a bare delta — it keeps every
  * unit's transition trivially cheap and every served value self-describing.
  *
- * @module @deepseek-ai/dsh-session-projection
+ * @module @x1a0f3n9/dsh-session-projection
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import type { ZodType } from 'zod'
-import { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
+import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type {
   Session,
   SessionEvent,
   SessionHeader,
   SessionSeqCursor,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
@@ -180,8 +180,9 @@ function cursorBefore(offset: SessionLogOffset): SessionSeqCursor {
 
 /**
  * `ctx.sessionProjections`: the projection unit table and its drive. The
- * service subscribes to `session/event` once; every committed event passes
- * every registered unit's `apply` (eager drive). A changed state reference
+ * service subscribes to `session/event` and `session/truncated`; every
+ * committed event passes every registered unit's `apply` (eager drive),
+ * and a truncated log rebuilds cells from the retained prefix. A changed state reference
  * computes the next client view; the change feed is notified only when its
  * raw result changes by `Object.is`.
  * Cells build lazily — a unit registered after events flowed, or a session
@@ -219,6 +220,9 @@ export class SessionProjectionRegistry extends Service {
     })
     ctx.on('session/event', (session: Session, event: SessionEvent) => {
       this.drive(session, event)
+    })
+    ctx.on('session/truncated', (session: Session) => {
+      this.forgetSession(session)
     })
   }
 
@@ -599,6 +603,16 @@ export class SessionProjectionRegistry extends Service {
     for (const registration of this.registrations.values()) this.cellFor(registration, session)
   }
 
+  /** Drop cached cells after the live log shrank below their watermarks. */
+  private forgetSession(session: Session): void {
+    for (const registration of this.registrations.values()) registration.cells.delete(session)
+  }
+
+  /** Whether a cell is watermarked at or past the live log end. */
+  private cellPastLog(cell: UnitCell, session: Session): boolean {
+    return cell.observedSeq >= session.seq
+  }
+
   /** Fold one unit from init over `events`, producing a cell watermarked at the last folded event. */
   private buildCell(
     def: ErasedDefinition,
@@ -614,6 +628,10 @@ export class SessionProjectionRegistry extends Service {
   /** Read (or lazily build, folding the full in-memory log) one unit's cell. */
   private cellFor(registration: Registration, session: Session): UnitCell {
     let cell = registration.cells.get(session)
+    if (cell !== undefined && this.cellPastLog(cell, session)) {
+      registration.cells.delete(session)
+      cell = undefined
+    }
     if (cell === undefined) {
       cell = this.buildCell(
         registration.def,
@@ -657,6 +675,10 @@ export class SessionProjectionRegistry extends Service {
   private drive(session: Session, event: SessionEvent): void {
     for (const registration of this.registrations.values()) {
       let cell = registration.cells.get(session)
+      if (cell !== undefined && this.cellPastLog(cell, session)) {
+        registration.cells.delete(session)
+        cell = undefined
+      }
       if (cell !== undefined && cell.observedSeq >= event.seq) continue
       if (cell === undefined) {
         // Late build mid-stream: fold history before this event (seq = log

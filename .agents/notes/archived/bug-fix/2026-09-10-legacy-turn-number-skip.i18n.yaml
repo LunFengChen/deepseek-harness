@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/archived/bug-fix/2026-09-10-legacy-turn-number-skip.md
+2026-09-10-legacy-turn-number-skip.md: 776d64eae5b2b370c8401a69652e98e68d0bf1c0
+2026-09-10-legacy-turn-number-skip.zh.md: 1e250fa0995c43e2aaed3b973b73d02cff2359fe

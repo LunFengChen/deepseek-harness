@@ -3,7 +3,7 @@ description: "Build-static first-party Session format codec and adjacent migrati
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-session-format-catalog
+# @x1a0f3n9/dsh-session-format-catalog
 
 English | [中文](README.zh.md)
 

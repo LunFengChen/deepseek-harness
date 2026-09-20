@@ -3,7 +3,7 @@ description: "为 agent-loop 测试提供先决依赖挂载、生产 AgentLoop �
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-agent-loop-testkit
+# @x1a0f3n9/dsh-agent-loop-testkit
 
 [English](README.md) | 中文
 
@@ -33,11 +33,11 @@ kind: "package-library"
 
 ```ts
 import { Context } from '@deepseek-ai/cordis'
-import { SessionId, type UserMessage } from '@deepseek-ai/dsh-session'
+import { SessionId, type UserMessage } from '@x1a0f3n9/dsh-session'
 import {
   mountAgentLoopTestDependencies,
   mountAgentLoopTestHarness,
-} from '@deepseek-ai/dsh-agent-loop-testkit'
+} from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 const ctx = new Context()
 
@@ -58,7 +58,7 @@ const admitted = harness.claim(agent, 'next-turn', 1)
 当测试对象需要可变的待处理列表，但不测试持久性、投影校验、实时 Inbox 通知或驱动的认领策略时，使用 `createInboxStub()`。该桩通过两个进程内数组实现公开队列操作，且绝不会写入 Session。当测试对象不应访问待处理输入时，使用 `unsupportedInbox()`；每次变更都会在首个意外依赖处抛错。
 
 ```ts
-import { createInboxStub } from '@deepseek-ai/dsh-agent-loop-testkit'
+import { createInboxStub } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 const agent = {
   // ...

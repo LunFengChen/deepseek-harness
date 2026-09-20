@@ -3,7 +3,7 @@
  * `.env`, install the fail-loud Loader guards, resolve the config path (snapshot-aware), load the
  * optional user patch layers from the Harness home (`~/.dsh`), expose its path resolver to
  * config expressions, and drive the Cordis Loader against a leaf `cordis.yml` until the tree settles.
- * @module @deepseek-ai/dsh-app-boot
+ * @module @x1a0f3n9/dsh-app-boot
  */
 
 import { pathToFileURL } from 'node:url'
@@ -15,19 +15,35 @@ import { Context, type FiberState } from '@deepseek-ai/cordis'
 import Loader, { type Entry, type EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import Include, { applyEntryPatches, entryListSchema, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
 import Group from '@deepseek-ai/cordis-plugin-group'
-import { dshHomePath, resolveDshHome } from '@deepseek-ai/dsh-home-paths'
-import { createLaunchEnvironmentSnapshot, type LaunchEnvironmentSnapshot } from '@deepseek-ai/dsh-launch-environment'
+import { dshHomePath, dshSessionPath, resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
+import { createLaunchEnvironmentSnapshot, type LaunchEnvironmentSnapshot } from '@x1a0f3n9/dsh-launch-environment'
 import type {} from '@deepseek-ai/cordis-plugin-hmr'
-import type {} from '@deepseek-ai/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-system-prompt'
+import type { DshProfileRuntime } from './profile.ts'
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
     /** Harness-home path resolver available to Loader `!!js` config expressions. */
     dshHomePath?: typeof dshHomePath
+    /** Shared session-data path resolver available to Loader config expressions. */
+    dshSessionPath?: typeof dshSessionPath
+    /** Loaded profile facts used by profile-aware Host management plugins. */
+    dshProfile?: DshProfileRuntime
   }
 }
 
 export {
+  registerOfficialDshPackageResolve,
+  remapOfficialDshSpecifier,
+  resolveOfficialDshPackage,
+} from './official-package-resolve.ts'
+
+export {
+  ensureProfilePnpmfile,
+  FORK_DSH_PACKAGE_PREFIX,
+  forkDshPackageName,
+  OFFICIAL_DSH_PACKAGE_PREFIX,
+  PROFILE_PNPMFILE,
   composeEntries,
   DEFAULT_PROFILE_BUNDLES,
   DEFAULT_PROFILE_PATCH_RELOAD,
@@ -35,6 +51,7 @@ export {
   initProfile,
   loadProfile,
   loadProfileDirectory,
+  pluginOverridePatches,
   PROFILE_PATCH_FILENAME,
   PROFILE_TEMPLATES,
   PROFILES_DIR,
@@ -42,6 +59,9 @@ export {
   resolveBundleDir,
   resolveProfileDir,
   writeProfileManifest,
+  writeProfilePluginOverride,
+  type DshPluginCatalogEntry,
+  type DshProfileRuntime,
   type Profile,
   type ProfileLayer,
   type ProfileManifest,
@@ -798,6 +818,7 @@ export async function boot(
   try {
     ctx.baseUrl = pathToFileURL(dirname(absoluteConfigPath)).href + '/'
     ctx.provide('dshHomePath', dshHomePath)
+    ctx.provide('dshSessionPath', dshSessionPath)
     await ctx.plugin(Loader)
     await prepare?.(ctx)
     stage = 'plugin tree failed to load'

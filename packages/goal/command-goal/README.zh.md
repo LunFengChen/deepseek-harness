@@ -3,7 +3,7 @@ description: "面向在 UI 命令平面中选择、组合或排查 goal 控制�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-command-goal
+# @x1a0f3n9/dsh-command-goal
 
 [English](README.md) | 中文
 
@@ -54,11 +54,11 @@ kind: "package-reference"
 
 ```yaml
 - id: commands
-  name: '@deepseek-ai/dsh-commands'
+  name: '@x1a0f3n9/dsh-commands'
 - id: goal
-  name: '@deepseek-ai/dsh-goal'
+  name: '@x1a0f3n9/dsh-goal'
 - id: command-goal
-  name: '@deepseek-ai/dsh-command-goal'
+  name: '@x1a0f3n9/dsh-command-goal'
 ```
 
 随附的 `dsh` 基础配置启用持久 goal 栈与此命令。Web bundle 把 goal 服务与 driver 保留在 Host，禁用基础命令 producer，并在 `standard`、`code` 和 `cordis` agent preset 中挂载 producer；`minimal` 会省略它。ACP（Agent Client Protocol）自动化应用启用领域与模型工具，但不挂载命令适配器。独立的 `sdk-minimal` profile 省略完整 goal 栈，因此其结果 API 仍在一个关联的物理轮次后结束。
@@ -126,7 +126,7 @@ kind: "package-reference"
 这些限制说明命令何时不合适或需要特别注意。它们是当前包约束，不是任务积压。
 
 - **仅纯文本交互**——通用命令注册表没有模态编辑表单或替换确认回调；内联 edit 与显式 clear 能在不同适配器中保持明确且一致的破坏性意图。
-- **没有逐命令 Round 上限参数**——`defaultMaxGoalRounds` 仍是部署配置；用户直接请求时，可以要求模型通过另行授权的 goal 工具编辑 `max_goal_rounds`。
+- **没有逐命令 Round 上限参数**——`defaultMaxGoalRounds` 仍是部署配置。面向模型的 goal 工具不暴露轮次上限参数。
 - **没有持续状态组件**——裸 `/goal` 是可移植的观察接口；不提供适配器专用徽标或重连后可恢复的命令输出。
 - **随附应用中只有 Web 命令适配器使用此命令**——无头、ACP 自动化和 JSON-RPC 适配器不消费 `ctx.commands`。如果组合中包含面向模型的 goal 工具，普通提示词仍能授权它们。
 

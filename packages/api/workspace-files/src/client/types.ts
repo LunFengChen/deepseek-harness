@@ -4,10 +4,10 @@
  */
 // Bring the base `ResourceProtocolMap` declaration into this program so the
 // augmentation below merges into it instead of declaring a second interface.
-import type {} from '@deepseek-ai/dsh-client-resources/client'
+import type {} from '@x1a0f3n9/dsh-client-resources/client'
 import type { WorkspaceFileStat } from '../types.ts'
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface ResourceProtocolMap {
     /**
      * One workspace file's metadata, addressed as
@@ -21,9 +21,14 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
 export interface WorkspaceFileParams {
   /** 1-based line to scroll into view; absent leaves the position alone. */
   readonly line?: number
+  /**
+   * When true, the address names a directory. A viewer that can show a folder
+   * window (a tree rooted there) does so instead of reading the path as a file.
+   */
+  readonly directory?: boolean
 }
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
     /**
      * The address is not a `dsh-resource://file/` address in a scope the

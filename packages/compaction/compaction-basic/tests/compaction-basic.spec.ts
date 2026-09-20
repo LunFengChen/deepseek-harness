@@ -1,19 +1,19 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { AttachmentId } from '@deepseek-ai/dsh-attachment'
-import BasicCompactionEngine from '@deepseek-ai/dsh-compaction-basic'
-import type { BasicCompactionConfig } from '@deepseek-ai/dsh-compaction-basic'
-import { selectCompactableRange } from '@deepseek-ai/dsh-compaction-basic/src/region.ts'
-import { frameSummary } from '@deepseek-ai/dsh-compaction-basic/src/summarizer.ts'
-import type { SummarizationInput, SummaryResult } from '@deepseek-ai/dsh-compaction-basic/src/summarizer.ts'
-import { CompactionId, toolPairingBalancedAfter, toolPairingBalancedBefore } from '@deepseek-ai/dsh-compaction'
+import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
+import BasicCompactionEngine from '@x1a0f3n9/dsh-compaction-basic'
+import type { BasicCompactionConfig } from '@x1a0f3n9/dsh-compaction-basic'
+import { selectCompactableRange } from '@x1a0f3n9/dsh-compaction-basic/src/region.ts'
+import { frameSummary } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
+import type { SummarizationInput, SummaryResult } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
+import { CompactionId, toolPairingBalancedAfter, toolPairingBalancedBefore } from '@x1a0f3n9/dsh-compaction'
 import {
   resolveCompactSpec,
   resolveConfig,
   resolveTargetPolicy,
-} from '@deepseek-ai/dsh-compaction-basic/src/config.ts'
-import type { CompactionResult } from '@deepseek-ai/dsh-compaction'
-import LlmRuntime, { createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, createSystemMessage, createToolResultMessage, LlmAdapter , createMessage } from '@deepseek-ai/dsh-llm'
+} from '@x1a0f3n9/dsh-compaction-basic/src/config.ts'
+import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
+import LlmRuntime, { createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, createSystemMessage, createToolResultMessage, LlmAdapter , createMessage } from '@x1a0f3n9/dsh-llm'
 import type {
   ContentBlock,
   GenerateOptions,
@@ -22,12 +22,22 @@ import type {
   Message,
   StreamChunk,
   TokenUsage,
-} from '@deepseek-ai/dsh-llm'
-import SessionStore, { Session, SessionId, SessionSeq } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import TokenMeter from '@deepseek-ai/dsh-token-meter'
-import { agentEvents, type Agent, type RequestErrorAction } from '@deepseek-ai/dsh-agent'
-import ToolResultPruner from '@deepseek-ai/dsh-compaction-tool-result-pruner'
+} from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import { agentEvents, type Agent, type RequestErrorAction } from '@x1a0f3n9/dsh-agent'
+import ToolResultPruner from '@x1a0f3n9/dsh-compaction-tool-result-pruner'
+
+declare module '@x1a0f3n9/dsh-session/types' {
+  interface SessionEventMap {
+    'model/selection': {
+      readonly provider: string
+      readonly model: string
+      readonly reasoningEffort?: string
+    }
+  }
+}
 
 const SIGNAL = new AbortController().signal
 const MODEL = 'test-model'
@@ -107,7 +117,7 @@ function promptInput(text: string): SummarizationInput {
   })] }
 }
 
-const SYSTEM_PROMPT_PLUGIN = '@deepseek-ai/dsh-system-prompt'
+const SYSTEM_PROMPT_PLUGIN = '@x1a0f3n9/dsh-system-prompt'
 
 /**
  * Closed two-message turns followed by one open turn for durable compaction events.
@@ -154,6 +164,33 @@ function conversation(turns = 4, text = 'fixture '.repeat(40).trim(), system?: s
   session.append('turn/start', {
     turn: turns + 1,
   })
+  return session
+}
+
+/** Closed turns with no request/header, so overflow recovery must use AgentOptions. */
+function headerlessConversation(turns = 4, text = 'fixture '.repeat(40).trim()): Session {
+  const session = Session.create(SessionId(`headerless-${turns}`))
+  for (let turn = 1; turn <= turns; turn += 1) {
+    session.append('turn/start', { turn })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: `${text} user ${turn}` }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('step/start', { turn, step: 1 })
+    session.append('assistant/message', {
+      stream: [],
+      turn,
+      step: 1,
+      message: createMessage({
+        role: 'assistant',
+        content: [{ type: 'text', text: `${text} assistant ${turn}` }],
+        source: { kind: 'model', provider: MODEL, model: MODEL },
+      }),
+    }, { surfaceOp: 'append' })
+    session.append('step/end', { turn, step: 1 })
+    session.append('turn/end', { turn, reason: { kind: 'completed' } })
+  }
+  session.append('turn/start', { turn: turns + 1 })
   return session
 }
 
@@ -313,12 +350,12 @@ describe('compact configuration and defaults', () => {
       retainRatio: 0.16,
       summarizationProvider: '',
       summarizationModel: '',
-      maxTokens: 8192,
       compactionRetries: 1,
-      maxOverflowRetries: 1,
+      maxOverflowRetries: 3,
       modelPolicies: [],
       auto: true,
     })
+    expect(resolved).not.toHaveProperty('maxTokens')
     expect(Object.isFrozen(resolved)).toBe(true)
   })
 
@@ -561,6 +598,65 @@ describe('pressure measurement and retention', () => {
       reason: 'change',
     })
     await expect(compactIfNeeded(compact, session)).resolves.not.toBeNull()
+  })
+
+  it('prices pre-step pressure against a pending model/selection, not the last header', async () => {
+    const ctx = new Context()
+    void new LlmRuntime(ctx)
+    new SessionProjectionRegistry(ctx)
+    void new TokenMeter(ctx)
+    ctx.llm.registerAdapter(['large', 'small'], new RoutedContextAdapter({
+      large: 10_000,
+      small: 1_000,
+    }))
+    const compact = service({
+      auto: false,
+      thresholdRatio: 0.5,
+      retainRatio: 0.1,
+    }, ctx)
+    const session = conversation(4)
+    session.append('request/header', {
+      header: { config: { provider: 'large', model: 'shared-id' } },
+      reason: 'resume',
+    })
+    await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
+
+    session.append('model/selection', { provider: 'small', model: 'shared-id' })
+    await expect(compactIfNeeded(compact, session)).resolves.not.toBeNull()
+  })
+
+  it('ignores a model/selection without both provider and model', async () => {
+    const ctx = new Context()
+    void new LlmRuntime(ctx)
+    new SessionProjectionRegistry(ctx)
+    void new TokenMeter(ctx)
+    ctx.llm.registerAdapter(['large', 'small'], new RoutedContextAdapter({
+      large: 10_000,
+      small: 1_000,
+    }))
+    const compact = service({
+      auto: false,
+      thresholdRatio: 0.5,
+      retainRatio: 0.1,
+    }, ctx)
+    const session = conversation(4)
+    session.append('request/header', {
+      header: { config: { provider: 'large', model: 'shared-id' } },
+      reason: 'resume',
+    })
+    session.append('model/selection', { provider: '', model: 'shared-id' })
+    await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
+  })
+
+  it('uses AgentOptions for overflow recovery when no request header exists', async () => {
+    const compact = service(compactConfig)
+    const session = headerlessConversation()
+    await expect(compact.compactIfNeeded(agent(session, MODEL), 'pressure', SIGNAL))
+      .resolves.toBeNull()
+    await expect(compact.compactIfNeeded(agent(session), 'context-overflow', SIGNAL))
+      .resolves.toBeNull()
+    await expect(compact.compactIfNeeded(agent(session, MODEL), 'context-overflow', SIGNAL))
+      .resolves.not.toBeNull()
   })
 
   it('requires capacity only for proactive pressure, not provider-confirmed overflow', async () => {
@@ -1484,7 +1580,6 @@ describe('default one-shot summarizer', () => {
     [{ kind: 'error', failure: { message: 'provider failed', code: 'PROVIDER' } }, 'PROVIDER', /provider failed/],
     [{ kind: 'error', failure: { message: 'opaque', code: 'UNKNOWN' } }, 'UNKNOWN', /opaque/],
     [{ kind: 'aborted', failure: { message: 'summarization aborted', code: 'ABORTED' } }, 'ABORTED', /aborted/],
-    [{ kind: 'max-tokens' }, 'MAX_TOKENS', /token cap/],
   ] as Array<[(StreamChunk & { type: 'finish' })['reason'], string | undefined, RegExp]>) (
     'rejects terminal finish %#',
     async (finish, code, pattern) => {
@@ -1500,6 +1595,24 @@ describe('default one-shot summarizer', () => {
       expect((thrown as Error & { code?: string }).code).toBe(code)
     },
   )
+
+  it('lands truncated summarization when the output cap is hit but text exists', async () => {
+    const { adapter, compact } = await summarizerHarness(
+      [{ type: 'text', text: 'partial checkpoint' }],
+      { kind: 'max-tokens' },
+    )
+    await expect(compact.runSummarize(promptInput('history'), agent(conversation(1), MODEL)))
+      .resolves.toMatchObject({
+        summary: [{ type: 'text', text: 'partial checkpoint' }],
+      })
+    expect(adapter.lastOptions).not.toHaveProperty('maxTokens')
+  })
+
+  it('rejects truncated summarization that produced no text', async () => {
+    const { compact } = await summarizerHarness([], { kind: 'max-tokens' })
+    await expect(compact.runSummarize(promptInput('history'), agent(conversation(1), MODEL)))
+      .rejects.toThrow(/no text summary content/)
+  })
 
   it('rejects empty or reasoning-only successful output', async () => {
     const { compact } = await summarizerHarness([{ type: 'reasoning', text: 'private' }])
@@ -1681,6 +1794,17 @@ describe('automatic listener and loader composition', () => {
     expect(session.surface.nodes).toContain(retainedSeq)
   })
 
+  it('retries overflow recovery from AgentOptions when the session has no header', async () => {
+    const ctx = createContext(10_000)
+    void new TestCompactionEngine(ctx, {
+      thresholdRatio: 1,
+      retainTokens: 900,
+    })
+    const session = headerlessConversation(3)
+    expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(true)
+    expect(session.snapshotEvents().some(event => event.type === 'compaction/summary')).toBe(true)
+  })
+
   it('authorizes overflow retry when pruning alone advances an indivisible surface', async () => {
     const ctx = createContext(10_000)
     void new ToolResultPruner(ctx, {
@@ -1784,6 +1908,8 @@ describe('automatic listener and loader composition', () => {
 
   it('does not retry when a backend reports success without replacing the surface', async () => {
     const ctx = createContext()
+    const warnings: string[] = []
+    ctx.logger.warn = ((message: string) => void warnings.push(message)) as typeof ctx.logger.warn
     const compact = new TestCompactionEngine(ctx)
     const session = conversation(2)
     const fakeResult: CompactionResult = {
@@ -1800,10 +1926,13 @@ describe('automatic listener and loader composition', () => {
 
     expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(false)
     expect(session.surface.replaceGeneration).toBe(0)
+    expect(warnings).toContainEqual(expect.stringContaining('without replacing the surface'))
   })
 
   it('delegates downstream exactly once when no replacement is available', async () => {
     const ctx = createContext()
+    const warnings: string[] = []
+    ctx.logger.warn = ((message: string) => void warnings.push(message)) as typeof ctx.logger.warn
     const compact = new TestCompactionEngine(ctx)
     vi.spyOn(compact, 'compactIfNeeded').mockResolvedValue(null)
     const downstream = new Error('downstream recovery failed')
@@ -1820,6 +1949,7 @@ describe('automatic listener and loader composition', () => {
       },
     )).rejects.toBe(downstream)
     expect(calls).toBe(1)
+    expect(warnings).toContainEqual(expect.stringContaining('no compactable range'))
   })
 
   it('preserves the original provider error when recovery throws', async () => {
@@ -1885,6 +2015,17 @@ describe('automatic listener and loader composition', () => {
     })
 
     await expect(recover(ctx, agent(session, MODEL), overflow())).resolves.toBe(false)
+  })
+
+  it('delegates canonical overflow when no conversation target exists', async () => {
+    const ctx = createContext()
+    const compact = new TestCompactionEngine(ctx)
+    const compactIfNeeded = vi.spyOn(compact, 'compactIfNeeded')
+    const session = Session.create(SessionId('targetless-overflow'))
+    session.append('turn/start', { turn: 1 })
+
+    await expect(recover(ctx, agent(session), overflow())).resolves.toBe(false)
+    expect(compactIfNeeded).not.toHaveBeenCalled()
   })
 
   it('honors retry caps and ignores non-context failures', async () => {

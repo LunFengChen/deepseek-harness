@@ -3,13 +3,13 @@ description: "叠加在 dsh-base 上公开发布的实验性 Agent Teams profile
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-experimental-agent-team-profile
+# @x1a0f3n9/dsh-experimental-agent-team-profile
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-experimental-agent-team-profile` 是在 `@deepseek-ai/dsh-base` 之上启用 [Agent Teams](../agent-team/README.zh.md) 的公开实验性 profile 层。它的 patch 会插入 Team domain 与 Team-scoped 工具、禁用名称重叠的全局 continuable-child control，并保留普通的一次性 fresh 与 fork delegation 工具。必须将本包显式添加到已初始化的 profile；随附 profile 默认都不会启用它。
+`dsh-experimental-agent-team-profile` 是在 `@x1a0f3n9/dsh-base` 之上启用 [Agent Teams](../agent-team/README.zh.md) 的公开实验性 profile 层。它的 patch 会插入 Team domain 与 Team-scoped 工具、禁用名称重叠的全局 continuable-child control，并保留普通的一次性 fresh 与 fork delegation 工具。必须将本包显式添加到已初始化的 profile；随附 profile 默认都不会启用它。
 
 ## 目录
 
@@ -30,11 +30,11 @@ kind: "package-bundle"
 将本包添加到已初始化的 profile，然后运行一个要求 Lead 委派工作的任务：
 
 ```sh
-dsh plugin --profile headless add @deepseek-ai/dsh-experimental-agent-team-profile
+dsh plugin --profile headless add @x1a0f3n9/dsh-experimental-agent-team-profile
 dsh --profile headless "Use Agent Teams to split this task between two teammates, wait, and summarize."
 ```
 
-profile 必须已经包含 `@deepseek-ai/dsh-base`，本层会使用其中的 Subagent 服务与提供方配置行。执行 `dsh plugin --profile <name> remove @deepseek-ai/dsh-experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
+profile 必须已经包含 `@x1a0f3n9/dsh-base`，本层会使用其中的 Subagent 服务与提供方配置行。执行 `dsh plugin --profile <name> remove @x1a0f3n9/dsh-experimental-agent-team-profile` 移除本包时，bundle 也会从 profile 的有序层列表中移除。
 
 ### 获得的功能
 
@@ -77,11 +77,11 @@ profile 必须已经包含 `@deepseek-ai/dsh-base`，本层会使用其中的 Su
 
 #### 模型会看到什么
 
-Team 策略与 schema 由 [`@deepseek-ai/dsh-experimental-tool-agent-team`](../tool-agent-team/README.zh.md) 所有。本 bundle 只改变 composition：Team-scoped `list_agents`、`send_message` 与 `interrupt_agent` 会替代已禁用的全局 continuable-child control。`subagent` 与 `subagent_fork` 仍作为一次性 delegation 工具可用，其子 agent 不会获得 continuable-child `report` 工具。
+Team 策略与 schema 由 [`@x1a0f3n9/dsh-experimental-tool-agent-team`](../tool-agent-team/README.zh.md) 所有。本 bundle 只改变 composition：Team-scoped `list_agents`、`send_message` 与 `interrupt_agent` 会替代已禁用的全局 continuable-child control。`subagent` 与 `subagent_fork` 仍作为一次性 delegation 工具可用，其子 agent 不会获得 continuable-child `report` 工具。
 
 #### Token 影响
 
-本 bundle 会加入 `@deepseek-ai/dsh-experimental-tool-agent-team` 描述的 Team 策略与工具 schema；它自身不增加提示词文本。
+本 bundle 会加入 `@x1a0f3n9/dsh-experimental-tool-agent-team` 描述的 Team 策略与工具 schema；它自身不增加提示词文本。
 
 #### KV Cache 影响
 

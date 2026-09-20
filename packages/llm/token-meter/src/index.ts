@@ -1,29 +1,29 @@
 /**
  * Single replay-aware token-meter service for request and surface pressure.
  *
- * @module @deepseek-ai/dsh-token-meter
+ * @module @x1a0f3n9/dsh-token-meter
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { assembleAssistantStream } from '@deepseek-ai/dsh-llm'
-import type { LlmImageRequestPricing, LlmRuntime, Message, TokenUsage } from '@deepseek-ai/dsh-llm'
-import { deepFreeze } from '@deepseek-ai/dsh-util-values'
+import { assembleAssistantStream } from '@x1a0f3n9/dsh-llm'
+import type { LlmImageRequestPricing, LlmRuntime, Message, TokenUsage } from '@x1a0f3n9/dsh-llm'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
 import type {
   EpochHeader,
   Session,
   SessionEvent,
   SessionLogOffset as SessionLogOffsetType,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import {
   canonicalHeader,
   headerEquals,
   isSurfaceEvent,
   SessionLogOffset,
   SessionSeq,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 // Type-only: activates the `ctx.sessionProjections` Context declaration.
-import type {} from '@deepseek-ai/dsh-session-projection'
+import type {} from '@x1a0f3n9/dsh-session-projection'
 import type {
   TokenMeasurement,
   TokenMeasurementBaseline,
@@ -118,6 +118,9 @@ export class TokenMeter extends Service {
     // read latency without creating state for sessions no consumer has read.
     ctx.on('session/event', (session) => {
       if (this.states.has(session)) this._sync(session)
+    })
+    ctx.on('session/truncated', (session) => {
+      this.states.delete(session)
     })
   }
 
@@ -217,6 +220,10 @@ export class TokenMeter extends Service {
   /** Catch one session's fold up to the current durable tail. */
   private _sync(session: Session): ReplayState {
     let state = this.states.get(session)
+    if (state !== undefined && state.consumedEvents > session.seq) {
+      this.states.delete(session)
+      state = undefined
+    }
     if (state === undefined) {
       state = {
         consumedEvents: SessionLogOffset(0),

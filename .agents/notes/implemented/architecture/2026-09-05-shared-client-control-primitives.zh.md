@@ -6,7 +6,7 @@ Status: implemented
 
 ## Problem
 
-客户端功能插件通过 slot 组合，彼此从不 import 对方的值，因此 `@deepseek-ai/dsh-client-ui-primitives` 是它们共享 React 组件的唯一通道。在某个功能包内部长出来的控件，对下一个需要同样东西的包不可见，而复制它的标记与 CSS 是当时最省事的做法。三类控件已经这样分叉：36×20 的开关只存在于 `ui-settings-plugins`；只读胶囊徽章在 `ui-agent-preset`、`ui-settings-plugins`、`ui-settings-plugin-inventory` 里被分别声明了五次，带着两种圆角和各自编写的配色；插件相位状态点在 `ui-settings-plugin-inventory` 里被重新实现，就在它所复制的共享 `StateDot` 旁边。
+客户端功能插件通过 slot 组合，彼此从不 import 对方的值，因此 `@x1a0f3n9/dsh-client-ui-primitives` 是它们共享 React 组件的唯一通道。在某个功能包内部长出来的控件，对下一个需要同样东西的包不可见，而复制它的标记与 CSS 是当时最省事的做法。三类控件已经这样分叉：36×20 的开关只存在于 `ui-settings-plugins`；只读胶囊徽章在 `ui-agent-preset`、`ui-settings-plugins`、`ui-settings-plugin-inventory` 里被分别声明了五次，带着两种圆角和各自编写的配色；插件相位状态点在 `ui-settings-plugin-inventory` 里被重新实现，就在它所复制的共享 `StateDot` 旁边。
 
 修复所需的两半，作者当时一半也拿不到。没有任何清单要求他们在写控件前先看 `ui-primitives`，而这个包也没给他们可看的东西：README 只列了六个源文件，包却导出了四十多个符号。
 

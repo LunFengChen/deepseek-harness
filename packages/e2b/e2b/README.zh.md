@@ -3,7 +3,7 @@ description: "E2B 文件与命令工作的共享远程 Linux 沙箱：配置、�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-e2b
+# @x1a0f3n9/dsh-e2b
 
 [English](README.md) | 中文
 
@@ -36,14 +36,14 @@ kind: "package-reference"
 三个设置很重要：API 密钥（或 `E2B_API_KEY` 环境变量）、绝对远程工作目录与沙箱生命周期。密钥错误、相对工作目录或无效生命周期都会在任何远程工作开始前拒绝启动。
 
 ```yaml
-- name: '@deepseek-ai/dsh-e2b'
+- name: '@x1a0f3n9/dsh-e2b'
   config:
     apiKey: <E2B API key>
     cwd: /home/user/workspace
     timeoutMs: 300000
 
-- name: '@deepseek-ai/dsh-subprocess-e2b'
-- name: '@deepseek-ai/dsh-fs-e2b'
+- name: '@x1a0f3n9/dsh-subprocess-e2b'
+- name: '@x1a0f3n9/dsh-fs-e2b'
 ```
 
 | 字段 | 默认值 | 含义 |

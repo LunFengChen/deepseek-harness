@@ -3,7 +3,7 @@ description: "The persisted session-projection cache for deployments and maintai
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-projection-cache
+# @x1a0f3n9/dsh-session-projection-cache
 
 English | [中文](README.zh.md)
 
@@ -39,7 +39,7 @@ The cache opens its domain through the storage stack, so base mounts `storage`, 
 
 ```yaml
 - id: session-projection-cache
-  name: '@deepseek-ai/dsh-session-projection-cache'
+  name: '@x1a0f3n9/dsh-session-projection-cache'
   config:
     writeEveryEvents: 200
     writeIntervalMs: 5000
@@ -54,11 +54,11 @@ The plugin injects `storageDomain`, `sessionProjections`, and `sessions`. The ge
 
 ### How checkpoints are written
 
-Three mandatory points always write: session creation persists the seed-derived cut, `turn/end` persists the value that listing reads want, and session disposal persists the final live cut. Between them, the configured count and interval throttles write as events accumulate. Every write atomically replaces the session's complete record through the domain write chain; a failure logs a warning and keeps the cache stale, and the next write self-heals.
+Four mandatory points always write: session creation persists the seed-derived cut, `turn/end` persists the value that listing reads want, `session/truncated` persists the retained prefix after destructive deletion, and session disposal persists the final live cut. Between them, the configured count and interval throttles write as events accumulate. Every write atomically replaces the session's complete record through the domain write chain; a failure logs a warning and keeps the cache stale, and the next write self-heals.
 
 ### Reading cached values
 
-`cachedSnapshot(meta, inheritedEventCount)` synchronously serves client values from the storage domain's in-memory tables with zero I/O. It accepts only an identity-matching record and version- and schema-matching keys, then returns a `{ asOfSeq, values }` cut at the lowest served-row watermark. `cachedPredecessorTitle(meta, inheritedEventCount)` is the narrower listing-only exception: a structurally admitted predecessor record whose lifecycle matches may expose only a current-version-compatible `title` row. The title is a possibly stale fact from a durable prefix, not a fold seed; it carries the sentinel `asOfSeq: -1` because a cardinality-changing Session migration can invalidate the predecessor row's numeric sequence. All other predecessor rows remain unavailable. An unseeded listing knows that its cut is zero; a seeded header-only listing does not know the numeric cut and skips both fast paths until an authoritative body read supplies it. `coldSnapshot(meta, inheritedEventCount, events)` accepts the exact cut with a complete ordered log, skips the checkpointed prefix while folding, and refreshes the record without reading persistence itself.
+`cachedSnapshot(meta, inheritedEventCount)` synchronously serves client values from the storage domain's in-memory tables with zero I/O. It accepts only an identity-matching record and version- and schema-matching keys, then returns a `{ asOfSeq, values }` cut at the lowest served-row watermark. `cachedPredecessorTitle(meta, inheritedEventCount)` is the narrower listing-only exception: a structurally admitted predecessor record whose lifecycle matches may expose only a current-version-compatible `title` row. The title is a possibly stale fact from a durable prefix, not a fold seed; it carries the sentinel `asOfSeq: -1` because a cardinality-changing Session migration can invalidate the predecessor row's numeric sequence. All other predecessor rows remain unavailable. `cachedListedHint(meta)` is the Session-list entry: unseeded rows use cut 0, and a seeded header-only row takes the stored checkpoint's `inheritedEventCount` after `createdAt`, `cwd`, and seeded lineage match, then serves the current snapshot or a predecessor title. Hydration still requires the caller to pass the authoritative cut. `coldSnapshot(meta, inheritedEventCount, events)` accepts the exact cut with a complete ordered log, skips the checkpointed prefix while folding, and refreshes the record without reading persistence itself.
 
 ### What the cache guarantees
 

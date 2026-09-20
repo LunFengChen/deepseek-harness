@@ -1,0 +1,45 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types"
+  },
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../../../vendor/cosmokit"
+    },
+    {
+      "path": "../../../vendor/cordis"
+    },
+    {
+      "path": "../../../vendor/schemastery"
+    },
+    {
+      "path": "../web"
+    },
+    {
+      "path": "../../util/launch-environment"
+    },
+    {
+      "path": "../web-search-exa"
+    },
+    {
+      "path": "../web-search-perplexity"
+    },
+    {
+      "path": "../web-search-free"
+    },
+    {
+      "path": "../../util/http-proxy"
+    },
+    {
+      "path": "../../../vendor/loader"
+    },
+    {
+      "path": "../../../vendor/include"
+    }
+  ]
+}

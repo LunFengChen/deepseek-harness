@@ -5,8 +5,8 @@
  * each physical generation of that stream to its own script. The stream's
  * boot-time opening baseline lives in `remoteDefaultResponses`.
  */
-import { ok, type RemoteTable, type StreamScript } from '@deepseek-ai/dsh-remote-mock'
-import type { RemoteFailure, RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+import { ok, type RemoteTable, type StreamScript } from '@x1a0f3n9/dsh-remote-mock'
+import type { RemoteFailure, RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import type {
   WorkspaceArchiveSessionRequest,
   WorkspaceArchiveValue,

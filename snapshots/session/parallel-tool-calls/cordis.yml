@@ -3,12 +3,12 @@
 # storage those scenarios exercise.
 
 - id: spill-local
-  name: '@deepseek-ai/dsh-spill-local'
+  name: '@x1a0f3n9/dsh-spill-local'
   config:
     root: !!js process.env.DSH_SNAPSHOT_SPILL_ROOT ?? './.spill'
 
 - id: spill-policy
-  name: '@deepseek-ai/dsh-spill-policy'
+  name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: !!js process.env.DSH_SNAPSHOT && 800 || 50000
 

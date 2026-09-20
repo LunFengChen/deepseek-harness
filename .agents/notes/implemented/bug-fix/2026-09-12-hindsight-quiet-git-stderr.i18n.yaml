@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-12-hindsight-quiet-git-stderr.md
+2026-09-12-hindsight-quiet-git-stderr.md: f8449a795579a2ba829be68c88e2d942f509a2ae
+2026-09-12-hindsight-quiet-git-stderr.zh.md: 5d176fe9b42432b782421cbc333b4d15598cf394

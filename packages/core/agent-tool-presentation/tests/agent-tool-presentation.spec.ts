@@ -8,14 +8,14 @@
 
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createScope } from '@deepseek-ai/dsh-scope'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import { CodeRuntime } from '@deepseek-ai/dsh-code-runtime'
-import type { CodeRunRequest, CodeRunResult } from '@deepseek-ai/dsh-code-runtime'
-import ToolRuntime, { RUN_CODE_NAME, defineTool } from '@deepseek-ai/dsh-tools'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { SessionId } from '@deepseek-ai/dsh-session'
-import { apply, Config, inject, name } from '@deepseek-ai/dsh-agent-tool-presentation'
+import { createScope } from '@x1a0f3n9/dsh-scope'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import { CodeRuntime } from '@x1a0f3n9/dsh-code-runtime'
+import type { CodeRunRequest, CodeRunResult } from '@x1a0f3n9/dsh-code-runtime'
+import ToolRuntime, { RUN_CODE_NAME, defineTool } from '@x1a0f3n9/dsh-tools'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { SessionId } from '@x1a0f3n9/dsh-session'
+import { apply, Config, inject, name } from '@x1a0f3n9/dsh-agent-tool-presentation'
 
 /** A runtime that never runs anything: presentation never dispatches. */
 class StubRuntime extends CodeRuntime {

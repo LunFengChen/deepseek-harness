@@ -5,14 +5,14 @@
  */
 import { Context, Service } from '@deepseek-ai/cordis'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import type {
   CandidateRequest, ClientSessionContext, InputTriggerCandidate, InputTriggerSource,
-} from '@deepseek-ai/dsh-client-ui-input-trigger/client'
-import type { FileReferenceCandidate } from '@deepseek-ai/dsh-file-reference/types'
-import type { SessionReferenceMentionCandidate } from '@deepseek-ai/dsh-session-reference/types'
+} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
+import type { FileReferenceCandidate } from '@x1a0f3n9/dsh-file-reference/types'
+import type { SessionReferenceMentionCandidate } from '@x1a0f3n9/dsh-session-reference/types'
 import { apply, inject } from '../src/client/index.ts'
 import { apply as nodeApply } from '../src/index.ts'
 
@@ -507,16 +507,17 @@ describe('pick and codec', () => {
 })
 
 describe('reference preview', () => {
-  it('opens plain and quoted file references without treating folders or sessions as files', async () => {
+  it('opens plain and quoted file references and folders, without treating sessions as files', async () => {
     const { ctx, source, fiber } = await bench()
     const openResource = vi.spyOn(ctx.sidebarRight, 'openResource')
     expect(source.openReference?.(session, { ref: '@notes/readme.md', appearance: 'file' })).toBe(true)
     expect(source.openReference?.(session, { ref: '@"docs/a b.md"', appearance: 'file' })).toBe(true)
     expect(openResource).toHaveBeenNthCalledWith(1, 'dsh-resource://file/session/target/notes/readme.md')
     expect(openResource).toHaveBeenNthCalledWith(2, 'dsh-resource://file/session/target/docs/a%20b.md')
-    expect(source.openReference?.(session, { ref: '@docs/', appearance: 'folder' })).toBe(false)
+    expect(source.openReference?.(session, { ref: '@docs/', appearance: 'folder' })).toBe(true)
+    expect(openResource).toHaveBeenNthCalledWith(3, 'dsh-resource://file/session/target/docs/', { params: { directory: true } })
     expect(source.openReference?.(session, { ref: '@[Research](dsh-session:abc)', appearance: 'session' })).toBe(false)
-    expect(openResource).toHaveBeenCalledTimes(2)
+    expect(openResource).toHaveBeenCalledTimes(3)
     await fiber.dispose()
   })
 })

@@ -1,6 +1,6 @@
 import { Context } from '@deepseek-ai/cordis'
-import LocalSubprocessRuntime from '@deepseek-ai/dsh-subprocess-local'
-import { LocalBashExecutor } from '@deepseek-ai/dsh-bash-local'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import { LocalBashExecutor } from '@x1a0f3n9/dsh-bash-local'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'

@@ -3,7 +3,7 @@ description: "面向用户与维护者的进程内 spawn subagent 后端说明�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-subagent-spawn-in-process
+# @x1a0f3n9/dsh-subagent-spawn-in-process
 
 [English](README.md) | 中文
 
@@ -36,9 +36,9 @@ kind: "package-reference"
 先加载 subagent 服务与本后端，再为每个目标配置一个委派工具。这是暴露由 spawn 支撑的 `subagent` 工具的最小组合：
 
 ```yaml
-- name: '@deepseek-ai/dsh-subagent'
-- name: '@deepseek-ai/dsh-subagent-spawn-in-process'
-- name: '@deepseek-ai/dsh-tool-subagent'
+- name: '@x1a0f3n9/dsh-subagent'
+- name: '@x1a0f3n9/dsh-subagent-spawn-in-process'
+- name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: spawn
 ```

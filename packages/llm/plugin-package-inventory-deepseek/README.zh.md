@@ -3,7 +3,7 @@ description: "面向发送官方 DeepSeek 请求的部署，说明活跃 Loader 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-plugin-package-inventory-deepseek
+# @x1a0f3n9/dsh-plugin-package-inventory-deepseek
 
 [English](README.md) | 中文
 
@@ -35,7 +35,7 @@ kind: "package-reference"
 
 每次请求都会重读宿主 Loader 树中的活跃非 group 配置项。存在可选 `ctx.agentPresets` 且 `sessionId` 解析到已加入 standing preset 的存活 Agent 时，该 preset 的独立 Loader 树也会加入同一次收集；未挂载该服务的部署只报告宿主树。只有根 fiber 处于 `ACTIVE` 且 Loader 有效状态为启用的配置项才会纳入。
 
-裸包与包子路径 specifier 通过 Node 包搜索路径解析，无需包导出 `./package.json`。每个普通配置项使用其所属 Loader 树的基址。standing preset 的根配置项使用宿主基址，与 preset Loader 对裸包的显式覆写保持一致；嵌套 include 仍使用自身基址。相对与绝对模块会向上查找最近的 manifest（元数据清单）；没有 `name` 的 manifest 只标记松散模块，不贡献包身份。具名包 manifest 还必须声明非空 `version`，格式错误的包元数据会使请求准备失败。系统使用与 locale 无关的比较按确切名称／版本对去重并排序，同时存活的不同版本仍会分开保留。
+裸包与包子路径 specifier 通过 Node 包搜索路径解析，无需包导出 `./package.json`。每个普通配置项使用其所属 Loader 树的基址。standing preset 的根配置项使用宿主基址，与 preset Loader 对裸包的显式覆写保持一致；嵌套 include 仍使用自身基址。相对与绝对模块会向上查找最近的 manifest（元数据清单）；没有 `name` 的 manifest 只标记松散模块，不贡献包身份。裸包如果在 Node 搜索路径上找不到 manifest，同样会省略，这样 Loader 已经 import 成功的 GitHub 插件不会阻断官方 DeepSeek 请求。找到的具名包 manifest 还必须声明非空 `version`，格式错误的包元数据仍会使请求准备失败。系统使用与 locale 无关的比较按确切名称／版本对去重并排序，同时存活的不同版本仍会分开保留。
 
 版本 1 的 `dsh_plugin_packages` 字段只包含 `{ name, version }` 对。系统会排除禁用、pending、failed、disposed、unloading 状态，结构性 `cordis:` 配置项，普通依赖，没有所属包身份的松散文件，以编程方式挂载的子 fiber，以及内存动态插件。
 

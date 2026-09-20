@@ -3,7 +3,7 @@ description: "按 Session 寻址上传浏览器文件，提供流式接收、进
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-file-upload
+# @x1a0f3n9/dsh-client-file-upload
 
 [English](README.md) | 中文
 
@@ -29,7 +29,7 @@ kind: "package-reference"
 
 ```yaml
 - id: file-upload
-  name: '@deepseek-ai/dsh-client-file-upload'
+  name: '@x1a0f3n9/dsh-client-file-upload'
 ```
 
 本包没有 Cordis 配置字段。`Blob` 在专用 Worker 内通过 XMLHttpRequest 发送，因此服务可以报告浏览器上传进度，并在浏览器提供总量时一并报告。`ReadableStream` 会转移给该 Worker，再增量传入 Fetch；进度只报告已消费字节，不包含总量。`AbortSignal` 会终止专用 Worker，或传递给页面自己提供的载体。精确字节与 fixture Blob 输入使用生成的 Remote。

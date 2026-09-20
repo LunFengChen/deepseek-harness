@@ -2,7 +2,7 @@
 
 import type {
   AssistantMessageNode, ConversationNode,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 /** Latency and decode-throughput readings for one turn's footer. */
 export interface TurnMetrics {

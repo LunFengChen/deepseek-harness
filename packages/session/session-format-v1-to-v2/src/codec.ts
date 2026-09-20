@@ -3,7 +3,7 @@ import {
   sessionFormatCount,
   sessionFormatSafeInteger,
   snapshotSessionFormatJson,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import type {
   SessionFormatArtifactDecoder,
   SessionFormatCodec,
@@ -13,7 +13,7 @@ import type {
   SessionFormatJsonObject,
   SessionFormatJsonValue,
   SessionFormatRecovery,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import { assertReleasedV2Header } from './validation.ts'
 
 const HEADER_REQUIRED = ['type', 'version', 'id', 'createdAt', 'isSeeded', 'delegationDepth'] as const

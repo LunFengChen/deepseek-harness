@@ -9,18 +9,18 @@
  */
 import { Service } from '@deepseek-ai/cordis'
 import type { Context } from '@deepseek-ai/cordis'
-import { randomUUID } from '@deepseek-ai/dsh-util-crypto'
+import { randomUUID } from '@x1a0f3n9/dsh-util-crypto'
 // Type-only imports: a plugin-to-plugin value import is a bundle purity
 // error, so scope resolution goes through the sessions service (scopeOf
 // method) instead of the standalone helper.
 import type {
   ISessions, PendingSubmissionRetirement, SessionFace,
-} from '@deepseek-ai/dsh-api-session-controller/client'
-import type {} from '@deepseek-ai/dsh-client-file-upload/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { ImageMediaType } from '@deepseek-ai/dsh-attachment'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
-import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type {} from '@x1a0f3n9/dsh-client-file-upload/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { ImageMediaType } from '@x1a0f3n9/dsh-attachment'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type {
   ComposerAttachment, ComposerFileAttachment, ComposerImageAttachment, DraftFileUpload,
 } from './contract/slots.ts'

@@ -21,6 +21,9 @@
       "path": "../../util/brand"
     },
     {
+      "path": "../../boot/app-boot"
+    },
+    {
       "path": "../../typert/protocol"
     }
   ]

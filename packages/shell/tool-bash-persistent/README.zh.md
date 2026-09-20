@@ -3,7 +3,7 @@ description: "面向模型的持久 bash 工具，供选择、配置或排查跨
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-bash-persistent
+# @x1a0f3n9/dsh-tool-bash-persistent
 
 [English](README.md) | 中文
 
@@ -36,9 +36,9 @@ kind: "package-reference"
 默认的 `shell` 后端通过 `dsh-terminal-bash` 启动交互式 bash；部署方可以注册其他 PTY 后端并按名称选择。
 
 ```yaml
-- name: '@deepseek-ai/dsh-terminal'
-- name: '@deepseek-ai/dsh-terminal-bash'
-- name: '@deepseek-ai/dsh-tool-bash-persistent'
+- name: '@x1a0f3n9/dsh-terminal'
+- name: '@x1a0f3n9/dsh-terminal-bash'
+- name: '@x1a0f3n9/dsh-tool-bash-persistent'
 ```
 
 | 字段 | 默认值 | 含义 |

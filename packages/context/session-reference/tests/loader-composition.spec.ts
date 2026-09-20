@@ -8,18 +8,18 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import { agentEvents, type Agent } from '@deepseek-ai/dsh-agent'
-import { createUserMessage, ToolCallId } from '@deepseek-ai/dsh-llm'
-import * as systemPromptPlugin from '@deepseek-ai/dsh-system-prompt'
-import * as toolsPlugin from '@deepseek-ai/dsh-tools'
-import * as fsPlugin from '@deepseek-ai/dsh-fs-local'
-import * as toolFsPlugin from '@deepseek-ai/dsh-tool-fs'
-import * as sessionPlugin from '@deepseek-ai/dsh-session'
-import { Session, SessionId } from '@deepseek-ai/dsh-session'
-import * as queryPlugin from '@deepseek-ai/dsh-session-query-sqlite'
-import * as referencePlugin from '@deepseek-ai/dsh-session-reference'
-import * as spillPlugin from '@deepseek-ai/dsh-spill-local'
-import { sessionDir } from '@deepseek-ai/dsh-spill-local'
+import { agentEvents, type Agent } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, ToolCallId } from '@x1a0f3n9/dsh-llm'
+import * as systemPromptPlugin from '@x1a0f3n9/dsh-system-prompt'
+import * as toolsPlugin from '@x1a0f3n9/dsh-tools'
+import * as fsPlugin from '@x1a0f3n9/dsh-fs-local'
+import * as toolFsPlugin from '@x1a0f3n9/dsh-tool-fs'
+import * as sessionPlugin from '@x1a0f3n9/dsh-session'
+import { Session, SessionId } from '@x1a0f3n9/dsh-session'
+import * as queryPlugin from '@x1a0f3n9/dsh-session-query-sqlite'
+import * as referencePlugin from '@x1a0f3n9/dsh-session-reference'
+import * as spillPlugin from '@x1a0f3n9/dsh-spill-local'
+import { sessionDir } from '@x1a0f3n9/dsh-spill-local'
 import * as sourcePlugin from './fixtures/source-session.ts'
 
 let context: Context | undefined
@@ -44,14 +44,14 @@ describe('session-reference real Loader composition', () => {
     await ctx.plugin(Loader)
     ctx.loader.builtins.include = Include
     const modules = new Map<string, unknown>([
-      ['@deepseek-ai/dsh-session', sessionPlugin],
-      ['@deepseek-ai/dsh-system-prompt', systemPromptPlugin],
-      ['@deepseek-ai/dsh-tools', toolsPlugin],
-      ['@deepseek-ai/dsh-fs-local', fsPlugin],
-      ['@deepseek-ai/dsh-tool-fs', toolFsPlugin],
-      ['@deepseek-ai/dsh-session-query-sqlite', queryPlugin],
-      ['@deepseek-ai/dsh-session-reference', referencePlugin],
-      ['@deepseek-ai/dsh-spill-local', spillPlugin],
+      ['@x1a0f3n9/dsh-session', sessionPlugin],
+      ['@x1a0f3n9/dsh-system-prompt', systemPromptPlugin],
+      ['@x1a0f3n9/dsh-tools', toolsPlugin],
+      ['@x1a0f3n9/dsh-fs-local', fsPlugin],
+      ['@x1a0f3n9/dsh-tool-fs', toolFsPlugin],
+      ['@x1a0f3n9/dsh-session-query-sqlite', queryPlugin],
+      ['@x1a0f3n9/dsh-session-reference', referencePlugin],
+      ['@x1a0f3n9/dsh-spill-local', spillPlugin],
       ['./source-session.ts', sourcePlugin],
     ])
     ctx.loader.internal = {

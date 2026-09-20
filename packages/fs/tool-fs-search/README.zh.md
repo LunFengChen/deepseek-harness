@@ -3,7 +3,7 @@ description: "面向模型的 glob 与 grep 发现工具：供组合或排查 ag
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-fs-search
+# @x1a0f3n9/dsh-tool-fs-search
 
 [English](README.md) | 中文
 
@@ -32,11 +32,11 @@ kind: "package-reference"
 一个子进程后端，然后是工具；spill 后端为可选，使达到上限的结果可完整恢复。
 
 ```yaml
-- name: '@deepseek-ai/dsh-subprocess-local'
-- name: '@deepseek-ai/dsh-tool-fs-search'
+- name: '@x1a0f3n9/dsh-subprocess-local'
+- name: '@x1a0f3n9/dsh-tool-fs-search'
   config:
     sampleOverCapGlobResults: false
-- name: '@deepseek-ai/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-local'
 ```
 
 `sampleOverCapGlobResults` 是必填项且没有回退值：部署必须显式选择超过上限时的排序约定。格式化 spill 成功时，两种模式都会在 spill 产物中保留完整排序列表。

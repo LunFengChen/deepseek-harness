@@ -15,9 +15,9 @@ import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, st
 import { realpath } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, dirname, isAbsolute, join, normalize } from 'node:path'
-import { ToolCallId } from '@deepseek-ai/dsh-llm'
-import { SessionId } from '@deepseek-ai/dsh-session'
-import type { SaveTextSpill } from '@deepseek-ai/dsh-spill'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import { SessionId } from '@x1a0f3n9/dsh-session'
+import type { SaveTextSpill } from '@x1a0f3n9/dsh-spill'
 import LocalSpillStore, {
   DEFAULT_ROOT_PREFIX,
   discoverDefaultRoots,
@@ -27,8 +27,8 @@ import LocalSpillStore, {
   saveTextFile,
   sessionDir,
   sweepSpillRoots,
-} from '@deepseek-ai/dsh-spill-local'
-import type { SweepRoot } from '@deepseek-ai/dsh-spill-local'
+} from '@x1a0f3n9/dsh-spill-local'
+import type { SweepRoot } from '@x1a0f3n9/dsh-spill-local'
 import { gatherSweepRoots } from '../src/cleanup.ts'
 
 const DAY_MS = 24 * 60 * 60 * 1000

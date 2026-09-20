@@ -3,7 +3,7 @@ description: "SPA dist server for the Web shell: claims the webserver fallback s
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-host-frontend-static
+# @x1a0f3n9/dsh-host-frontend-static
 
 English | [中文](README.zh.md)
 
@@ -30,7 +30,7 @@ Compose this plugin in a browser-facing host that serves the built Web shell: it
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-host-frontend-static'
+- name: '@x1a0f3n9/dsh-host-frontend-static'
   config:
     distIndex: /absolute/path/to/dist/index.html
 ```

@@ -1,7 +1,7 @@
 /** Slash-menu props for the Conversation-owned input overlay. */
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { InputTriggerCrumb, PickAction } from '../types.ts'
-import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type { MenuState } from '../core/contract.ts'
 
 /** Injected business face of the MenuView overlay entry (copy rides the standard locale seat, not this face). */

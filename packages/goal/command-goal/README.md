@@ -3,7 +3,7 @@ description: "The human-facing /goal slash command for users and maintainers cho
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-command-goal
+# @x1a0f3n9/dsh-command-goal
 
 English | [中文](README.zh.md)
 
@@ -54,11 +54,11 @@ The command injects the commands registry and the goal service. A custom app mou
 
 ```yaml
 - id: commands
-  name: '@deepseek-ai/dsh-commands'
+  name: '@x1a0f3n9/dsh-commands'
 - id: goal
-  name: '@deepseek-ai/dsh-goal'
+  name: '@x1a0f3n9/dsh-goal'
 - id: command-goal
-  name: '@deepseek-ai/dsh-command-goal'
+  name: '@x1a0f3n9/dsh-command-goal'
 ```
 
 The shipped `dsh` base enables the persisted-goal stack and this command. The Web bundle keeps the goal service and driver on the Host, disables the base command producer, and mounts the producer in the `standard`, `code`, and `cordis` agent presets; `minimal` omits it. The ACP automation app enables the domain and model tools without a command adapter. The standalone `sdk-minimal` profile omits the complete goal stack so its result API still settles one correlated physical turn.
@@ -126,7 +126,7 @@ Command discovery, mutations, and direct output do not affect the cache. Later c
 These limits define when the command is a poor fit or needs special care. They are current package constraints, not a task backlog.
 
 - **Plain-text interaction only** — the generic command registry has no modal edit form or replacement-confirmation callback; inline edit and explicit clear keep destructive intent deterministic across adapters.
-- **No per-command round-cap argument** — `defaultMaxGoalRounds` remains deployment config, while a direct human request may ask the model to edit `max_goal_rounds` through the separately authorized goal tool.
+- **No per-command round-cap argument** — `defaultMaxGoalRounds` remains deployment config. Model-facing goal tools do not expose a round-cap parameter.
 - **No continuous status widget** — bare `/goal` is the portable observation API; no adapter-specific badges or reconnectable command output are provided.
 - **Web command adapter only in the shipped apps** — headless, ACP automation, and JSON-RPC adapters do not consume `ctx.commands`. Ordinary prompts can still authorize model-facing goal tools when those are composed.
 

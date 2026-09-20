@@ -12,7 +12,7 @@ Status: implemented
 
 ## Decision
 
-[`packages/client/resources`](../../../../packages/client/resources/README.zh.md)（`@deepseek-ai/dsh-client-resources`）提供 `ctx.resources` 与 `useResource` 全局标准 hook。消费方活读的任何东西都是**资源**，资源只由其**地址**标识，地址的协议命名唯一一个把它变成帧流的**提供方**。
+[`packages/client/resources`](../../../../packages/client/resources/README.zh.md)（`@x1a0f3n9/dsh-client-resources`）提供 `ctx.resources` 与 `useResource` 全局标准 hook。消费方活读的任何东西都是**资源**，资源只由其**地址**标识，地址的协议命名唯一一个把它变成帧流的**提供方**。
 
 ### 地址
 

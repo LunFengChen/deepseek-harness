@@ -1,5 +1,5 @@
 /**
- * SessionProjectionCache behavior: mandatory-point writes (turn/end, detach),
+ * SessionProjectionCache behavior: mandatory-point writes (turn/end, truncate, detach),
  * count/interval throttling between them, fail-soft durability (a failed
  * write logs and stays stale, never throws into the event path), and the
  * synchronous cached listing read. The durable medium is the
@@ -22,22 +22,22 @@ import SessionStore, {
   SessionId,
   SessionLogOffset,
   SessionSeq,
-} from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
-import Storage from '@deepseek-ai/dsh-storage'
+} from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
+import Storage from '@x1a0f3n9/dsh-storage'
 import {
   apply as storageJsonApply, Config as storageJsonConfig, inject as storageJsonInject, name as storageJsonName,
-} from '@deepseek-ai/dsh-storage-json'
+} from '@x1a0f3n9/dsh-storage-json'
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
-} from '@deepseek-ai/dsh-storage-domain'
+} from '@x1a0f3n9/dsh-storage-domain'
 import SessionProjectionCache from '../src/index.ts'
 import { checkpointRecord, projectionCacheDomainSpec } from '../src/spec.ts'
 import type { CheckpointRecord } from '../src/spec.ts'
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     'cache-test/marks': MarksState
     'cache-test/secondary-marks': MarksState
@@ -53,7 +53,7 @@ declare module '@deepseek-ai/dsh-session-projection/types' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     'cache-test/mark': { marks: string[] }
   }
@@ -200,6 +200,24 @@ describe('SessionProjectionCache write policy', () => {
     await vi.waitFor(async () => {
       expect((await storedRows(root, session.id))?.['cache-test/marks'])
         .toEqual({ ver: 1, seq: end.seq, val: { marks: ['a'] } })
+    }, { timeout: 5_000 })
+  })
+
+  it('rewrites the durable checkpoint after the live session log is truncated', async () => {
+    const { ctx, root } = await harness()
+    const session = ctx.sessions.create(SessionId('truncate-cache'))
+    mark(session, ['keep'])
+    const firstEnd = endTurn(session)
+    mark(session, ['drop'])
+    const secondEnd = endTurn(session)
+    await vi.waitFor(async () => {
+      expect((await storedRows(root, session.id))?.['cache-test/marks'])
+        .toEqual({ ver: 1, seq: secondEnd.seq, val: { marks: ['drop'] } })
+    }, { timeout: 5_000 })
+    session.truncate(SessionLogOffset(firstEnd.seq + 1))
+    await vi.waitFor(async () => {
+      expect((await storedRows(root, session.id))?.['cache-test/marks'])
+        .toEqual({ ver: 1, seq: firstEnd.seq, val: { marks: ['keep'] } })
     }, { timeout: 5_000 })
   })
 
@@ -386,6 +404,31 @@ describe('SessionProjectionCache listing read', () => {
     expect(cache.cachedSnapshot(seededHeader, SessionLogOffset(1))).toBeUndefined()
     expect(() => cache.cachedSnapshot(headerOf(id), SessionLogOffset(1)))
       .toThrow('unseeded projection-cache identity inherited event count must be 0')
+  })
+
+  it('serves a seeded listing hint from the stored inherited cut', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
+    roots.push(root)
+    const id = SessionId('listed-seeded')
+    await seedRecord(
+      root,
+      id,
+      { 'cache-test/marks': { ver: 1, seq: SessionSeq(1), val: { marks: ['seed'] } } },
+      {
+        formatVersion: SESSION_FORMAT_VERSION,
+        createdAt: 0,
+        cwd: '/work',
+        isSeeded: true,
+        inheritedEventCount: SessionLogOffset(2),
+      },
+    )
+    const { cache } = await harness({ root })
+    const seededHeader = { ...headerOf(id, 0, '/work'), isSeeded: true }
+
+    expect(cache.cachedListedHint(seededHeader)?.values['cache-test/marks'])
+      .toEqual({ marks: ['seed'] })
+    expect(cache.cachedListedHint({ ...seededHeader, cwd: '/elsewhere' })).toBeUndefined()
+    expect(cache.cachedListedHint(headerOf(id, 0, '/work'))).toBeUndefined()
   })
 
   it('serves a creation-time checkpoint at the before-first-event cursor', async () => {

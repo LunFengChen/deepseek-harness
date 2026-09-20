@@ -3,7 +3,7 @@ description: "Active Loader package inventory metadata for deployments sending o
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-plugin-package-inventory-deepseek
+# @x1a0f3n9/dsh-plugin-package-inventory-deepseek
 
 English | [中文](README.zh.md)
 
@@ -35,7 +35,7 @@ Shipped profiles use the default, so every official DeepSeek request carries the
 
 Every request re-reads active non-group entries from the host Loader tree. When optional `ctx.agentPresets` is present and `sessionId` resolves to a live Agent joined to a standing preset, that preset's separate Loader tree joins the same collection; deployments without the service report the host tree only. Entries are included only while their root fiber is `ACTIVE` and their effective Loader state is enabled.
 
-Bare package and package-subpath specifiers resolve through Node's package search paths without requiring a `./package.json` export. Each ordinary entry uses its owning Loader tree base. A standing preset's root entries use the harness base, matching the preset Loader's deliberate bare-package override; nested includes retain their own bases. Relative and absolute modules walk to their nearest manifest; a manifest without `name` marks a loose module and contributes no package identity. A named package manifest must also declare a non-empty `version`, and malformed package metadata fails request preparation. Exact name/version pairs are deduplicated and sorted with a locale-independent comparison, while simultaneously active different versions remain separate.
+Bare package and package-subpath specifiers resolve through Node's package search paths without requiring a `./package.json` export. Each ordinary entry uses its owning Loader tree base. A standing preset's root entries use the harness base, matching the preset Loader's deliberate bare-package override; nested includes retain their own bases. Relative and absolute modules walk to their nearest manifest; a manifest without `name` marks a loose module and contributes no package identity. A bare package whose manifest is not on Node's search path is omitted the same way, so a GitHub-installed plugin that the Loader already imported cannot block the official DeepSeek request. A named package manifest that is found must also declare a non-empty `version`, and malformed package metadata still fails request preparation. Exact name/version pairs are deduplicated and sorted with a locale-independent comparison, while simultaneously active different versions remain separate.
 
 The version-1 `dsh_plugin_packages` field contains only `{ name, version }` pairs. Disabled, pending, failed, disposed, unloading, structural `cordis:` rows, ordinary dependencies, loose files without an owning package identity, programmatically mounted child fibers, and in-memory dynamic plugins are excluded.
 

@@ -4,7 +4,7 @@
  * Format packages transform parsed JSON values. This module owns the physical
  * encoding, exact source identity, immutable generation files, and exclusive
  * current-generation publication for both configured JSONL suffixes.
- * @module @deepseek-ai/dsh-session-persistence-jsonl/generation
+ * @module @x1a0f3n9/dsh-session-persistence-jsonl/generation
  */
 
 import { createHash, randomBytes } from 'node:crypto'
@@ -24,15 +24,15 @@ import { pipeline, Readable } from 'node:stream'
 import { scheduler } from 'node:timers/promises'
 import { isDeepStrictEqual } from 'node:util'
 import { constants, createZstdCompress } from 'node:zlib'
-import { Session } from '@deepseek-ai/dsh-session'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
-import { BlockAssembler, expandAssistantStream } from '@deepseek-ai/dsh-llm'
+import { Session } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
+import { BlockAssembler, expandAssistantStream } from '@x1a0f3n9/dsh-llm'
 import type {
   SessionFormatArtifact,
   SessionFormatJsonValue,
   SessionFormatRestore,
-} from '@deepseek-ai/dsh-session-format'
-import { validateStoredEvents } from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-format'
+import { validateStoredEvents } from '@x1a0f3n9/dsh-session-persistence'
 import type { JsonlCompression } from './format.ts'
 import { generationLogFilename, logSuffix, SessionLogScanner } from './format.ts'
 import { publishNewFileWin32 } from './win32.ts'

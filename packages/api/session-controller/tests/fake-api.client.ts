@@ -6,7 +6,7 @@ import type {
   SessionId, SessionSearchItem,
   SubagentCatalog, SubagentInterruptReceipt, SubagentPromptReceipt,
   WorkspaceId, WorkspaceView,
-} from '@deepseek-ai/dsh-api-remotes/client'
+} from '@x1a0f3n9/dsh-api-remotes/client'
 import type {
   SessionAddress,
   SessionAssistantStreamBaseline,
@@ -19,14 +19,14 @@ import type {
   SessionProjectionBaseline,
   SessionSelectModelRequest,
   SessionSelectModelValue,
-} from '@deepseek-ai/dsh-api-session-controller/types'
-import type { WorkspaceRemote } from '@deepseek-ai/dsh-api-workspace-controller/client'
-import type { WorkspaceFollowFrame } from '@deepseek-ai/dsh-api-workspace-controller/types'
-import type { RemoteFailure, RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-api-session-controller/types'
+import type { WorkspaceRemote } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { WorkspaceFollowFrame } from '@x1a0f3n9/dsh-api-workspace-controller/types'
+import type { RemoteFailure, RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import {
   RemoteStream,
   type RemoteStreamOptions,
-} from '@deepseek-ai/dsh-api-gateway/client'
+} from '@x1a0f3n9/dsh-api-gateway/client'
 import type { SessionRemotes } from '../src/client/sessions/remotes.ts'
 import { followSnapshot, pageThrough } from './remote/history.client.ts'
 
@@ -137,6 +137,7 @@ export class FakeApiClient {
     }))
   onRename: (payload: unknown) => Promise<RemoteResult<{ title: string; seq: number }>> = () => Promise.resolve(ok({ title: 'fk-renamed', seq: 0 }))
   onFork: (payload: unknown) => Promise<RemoteResult<{ sessionId: SessionId }>> = () => Promise.resolve(ok({ sessionId: 'fk-fork' as SessionId }))
+  onDeleteFrom: (payload: unknown) => Promise<RemoteResult<{ accepted: true }>> = () => Promise.resolve(ok({ accepted: true as const }))
   onHistory: (payload: { sessionId: SessionId; throughSeq?: number; beforeSeq?: number; maxMessages?: number })
   => Promise<RemoteResult<SessionPage & { readonly projections?: SessionProjectionBaseline }>> =
     () => Promise.resolve(ok({ records: [], hasMore: false }))
@@ -227,6 +228,7 @@ export class FakeApiClient {
         ),
         rename: payload => this.record('session.rename', payload, this.onRename(payload)),
         fork: payload => this.record('session.fork', payload, this.onFork(payload)),
+        deleteFrom: payload => this.record('session.deleteFrom', payload, this.onDeleteFrom(payload)),
         prompt: payload => this.record('session.prompt', payload, this.onPrompt(payload)),
         attachment: payload => this.record('session.attachment', payload, this.onAttachment(payload)),
         updateQueue: payload => this.record('session.updateQueue', payload, this.onUpdateQueue(payload)),

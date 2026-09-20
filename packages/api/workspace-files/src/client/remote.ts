@@ -3,9 +3,9 @@
  * `workspaceFiles` methods by name, and the stream supervisor structurally, so
  * the feed and the provider are testable against a scripted face.
  */
-import type { ClientRemote } from '@deepseek-ai/dsh-api-gateway/client'
+import type { ClientRemote } from '@x1a0f3n9/dsh-api-gateway/client'
 // Merges the generated `workspaceFiles` namespace into the Remote face.
-import type {} from '@deepseek-ai/dsh-api-workspace-files/remote'
+import type {} from '@x1a0f3n9/dsh-api-workspace-files/remote'
 
 /** One item of a supervised stream; `accept` marks the delivering generation as healthy. */
 export interface SupervisedStreamItem<Item> {

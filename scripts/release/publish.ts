@@ -2,11 +2,11 @@
  * Publish one packed release family from the tarballs the pack step produced.
  *
  * Publication is decided per package against the registry, never from a list of
- * "what this release includes": a version the registry lacks is published, a
- * version whose published tarball has the same integrity is skipped, and a
- * version whose published tarball differs fails the run — that last case means
- * the content changed without a version bump
- * ([rationale](../../.agents/notes/implemented/process/2026-08-10-npm-release-sequences.md)).
+ * "what this release includes". Every member is probed first. Names the registry
+ * lacks are published in the original order. Names already present are handled
+ * afterwards: identical tarballs skip, a tagged mismatch fails, and a branch
+ * allow-ref publish skips that mismatch because npm will not replace the version
+ * ([rationale](../../.agents/notes/implemented/bug-fix/2026-09-11-publish-absent-names-first.md)).
  *
  * Skipping on identical integrity is what makes re-running the publish step over
  * the same artifact safe.
@@ -23,23 +23,60 @@ import { packedIdentity, readPublishOrder } from './tarball.ts'
 
 /**
  * Registry codes that answer a write which did not settle, rather than a
- * rejection of what was sent. `E409 Failed to save packument` is the one this
- * sequence actually hits: publishing several packages in a row can outrun the
- * registry's own processing. A rejected payload (`E403` over an existing
- * version, a malformed manifest) never clears on a retry and must surface.
+ * rejection of what was sent. `E409 Failed to save packument` is a packument
+ * race from back-to-back writes and may retry. `E429` is npm refusing further
+ * writes after a burst, especially new package names; it is classified here so
+ * the run can stop further PUTs, not retried. A rejected payload
+ * (`E403` over an existing version, a malformed manifest) never clears on a
+ * retry and must surface.
  */
 const TRANSIENT_PUBLISH_CODES = ['E409', 'E429', 'E500', 'E502', 'E503', 'E504', 'ETIMEDOUT', 'ECONNRESET', 'EAI_AGAIN'] as const
 
 /** How many times one tarball's publish is attempted before the run fails. */
-const PUBLISH_ATTEMPTS = 4
+export const PUBLISH_ATTEMPTS = 10
 
 /**
- * Shortest gap between two publishes, and the first retry backoff.
+ * Shortest gap between two PUTs, and the first `E409` retry backoff.
  *
  * The registry needs a moment to commit a packument before the next write; back
- * to back publishes are what produce `E409`.
+ * to back publishes are what produce `E409`. The same gap applies before the
+ * first PUT after a skip-path `npm view` burst.
  */
-const PUBLISH_SPACING_MS = 2_000
+export const PUBLISH_SPACING_MS = 5_000
+
+/**
+ * Shortest gap before every `npm view`. Skip-path probes with no delay spend
+ * the same write-adjacent quota the first PUT needs.
+ */
+export const REGISTRY_PROBE_SPACING_MS = 1_000
+
+/** How many `E429` answers one tarball may retry before this run stops PUTs. */
+export const RATE_LIMIT_ATTEMPTS = 1
+
+/**
+ * npm refused further new-package writes. Remaining absent names wait for a
+ * later run; this error is not retried.
+ */
+export class NpmWriteQuotaError extends Error {
+  override readonly name = 'NpmWriteQuotaError'
+
+  /**
+   * @param packageName - member that received `E429`.
+   * @param packageVersion - version that was being published.
+   * @param output - combined npm output.
+   */
+  constructor(
+    readonly packageName: string,
+    readonly packageVersion: string,
+    output: string,
+  ) {
+    super(
+      `npm publish ${packageName}@${packageVersion} hit the npm new-package write quota (E429).\n${output}`,
+    )
+  }
+}
+
+let lastRegistryCallAt = 0
 
 /** What the registry knows about one version. */
 type RegistryState =
@@ -51,8 +88,94 @@ type RegistryState =
  * @param output - combined npm output.
  * @returns True when the registry reported a write it did not commit.
  */
-function isTransientFailure(output: string): boolean {
+export function isTransientFailure(output: string): boolean {
   return TRANSIENT_PUBLISH_CODES.some(code => output.includes(`code ${code}`))
+}
+
+/**
+ * Whether a failed publish is an npm write-budget rejection rather than a packument race.
+ * @param output - combined npm output.
+ * @returns True when npm reported `E429`.
+ */
+export function isRateLimited(output: string): boolean {
+  return output.includes('code E429')
+}
+
+/**
+ * How long to wait before the next publish attempt after a packument race.
+ * `E429` never reaches this helper: the run stops PUTs on the first rate limit.
+ * @param output - combined npm output of the failed attempt.
+ * @param tries - 1-based attempt that just failed.
+ * @returns Backoff in milliseconds.
+ */
+export function retryBackoffMs(output: string, tries: number): number {
+  void output
+  return PUBLISH_SPACING_MS * 2 ** (tries - 1)
+}
+
+/**
+ * Wait until `minGapMs` has passed since the previous registry call, then mark
+ * the next call as started.
+ * @param minGapMs - shortest allowed gap before this call.
+ */
+async function spaceRegistryCall(minGapMs: number): Promise<void> {
+  const wait = lastRegistryCallAt + minGapMs - Date.now()
+  if (wait > 0) await sleep(wait)
+  lastRegistryCallAt = Date.now()
+}
+
+/**
+ * How to treat a version the registry already has.
+ *
+ * Tagged releases fail on a byte mismatch so a changed payload cannot reuse a
+ * version. A branch allow-ref publish skips: npm will not replace the version.
+ * Callers run this only after every absent name has been attempted.
+ * @param localIntegrity - sha512 of the packed tarball.
+ * @param registryIntegrity - `dist.integrity` npm recorded for this version.
+ * @param allowRef - `RELEASE_PUBLISH_ALLOW_REF`, or empty for tag-only publishes.
+ * @returns `skip` to leave the registry bytes in place, or `fail` to stop the run.
+ */
+export function existingPublishedVersionAction(
+  localIntegrity: string,
+  registryIntegrity: string,
+  allowRef: string,
+): 'skip' | 'fail' {
+  if (localIntegrity === registryIntegrity) return 'skip'
+  return allowRef === '' ? 'fail' : 'skip'
+}
+
+/**
+ * How a branch vs tagged publish treats npm's new-package write quota.
+ *
+ * A tagged release must fail: the version did not finish publishing. A branch
+ * allow-ref publish pauses: already-published names are skipped on the next
+ * push, and GitHub Actions is not a drip queue.
+ * @param allowRef - `RELEASE_PUBLISH_ALLOW_REF`, or empty for tag-only publishes.
+ * @returns `pause` to exit 0 after stopping PUTs, or `fail` to fail the job.
+ */
+export function rateLimitedPublishAction(allowRef: string): 'pause' | 'fail' {
+  return allowRef === '' ? 'fail' : 'pause'
+}
+
+/** Registry membership used to split a family into publish passes. */
+export type PublishRegistryKind = 'absent' | 'present'
+
+/**
+ * Split probed members into an absent pass and a present pass.
+ *
+ * Each pass keeps the original order. Absent names consume the new-package
+ * write quota. A present mismatch must not fail before unpublished members
+ * are attempted.
+ * @param members - family members in publish-order, each already probed.
+ * @returns absent names first, then names the registry already has.
+ */
+export function partitionPublishPasses<T extends { readonly kind: PublishRegistryKind }>(
+  members: readonly T[],
+): { readonly absent: readonly T[]; readonly present: readonly T[] } {
+  return {
+    absent: members.filter(member => member.kind === 'absent'),
+    present: members.filter(member => member.kind === 'present'),
+  }
 }
 
 /**
@@ -70,7 +193,8 @@ function integrityOf(tarball: string): string {
  * @param version - package version.
  * @returns The registry state for that version.
  */
-function registryState(name: string, version: string): RegistryState {
+async function registryState(name: string, version: string): Promise<RegistryState> {
+  await spaceRegistryCall(REGISTRY_PROBE_SPACING_MS)
   const result = attempt('npm', ['view', `${name}@${version}`, 'dist.integrity', '--json'])
   if (result.status !== 0) {
     const output = `${result.stdout}${result.stderr}`
@@ -106,11 +230,12 @@ async function publishTarball(
     // No --access: every release member declares its own publishConfig, and
     // a command-line flag would override it. check-workspace-constraints
     // requires a public access level on every release member.
-    const result = attemptEchoed('npm', ['publish', tarball, ...tagArgs])
+    await spaceRegistryCall(PUBLISH_SPACING_MS)
+    const result = attemptEchoed('npm', ['publish', tarball, ...tagArgs, '--fetch-retries', '0'])
     const output = `${result.stdout}${result.stderr}`
     if (result.status === 0) return
 
-    const settled = registryState(name, version)
+    const settled = await registryState(name, version)
     if (settled.kind === 'present' && settled.integrity === integrityOf(tarball)) {
       console.log(`release publish: ${name}@${version} landed despite a reported failure, continuing`)
       return
@@ -118,13 +243,26 @@ async function publishTarball(
     if (tries === PUBLISH_ATTEMPTS || !isTransientFailure(output)) {
       throw new Error(`npm publish ${name}@${version} failed:\n${output}`)
     }
-    const backoff = PUBLISH_SPACING_MS * 2 ** (tries - 1)
+    if (isRateLimited(output) && tries >= RATE_LIMIT_ATTEMPTS) {
+      throw new NpmWriteQuotaError(name, version, output)
+    }
+    const backoff = retryBackoffMs(output, tries)
     console.log(
       `release publish: ${name}@${version} hit a transient registry failure`
       + ` (attempt ${String(tries)} of ${String(PUBLISH_ATTEMPTS)}), retrying in ${String(backoff)}ms`,
     )
     await sleep(backoff)
   }
+}
+
+/** One packed family member after its registry probe. */
+interface ProbedMember {
+  readonly index: number
+  readonly tarball: string
+  readonly name: string
+  readonly version: string
+  readonly kind: PublishRegistryKind
+  readonly registryIntegrity: string | undefined
 }
 
 /** Publish the family named by `--family` from the directory named by `--from`. */
@@ -145,37 +283,80 @@ async function main(): Promise<void> {
   // release that takes minutes per family.
   const order = readPublishOrder(directory)
   const total = String(order.length)
-  let published = 0
-  let skipped = 0
+  const probed: ProbedMember[] = []
   for (const [index, filename] of order.entries()) {
-    const progress = `[${String(index + 1)}/${total}]`
     const tarball = join(directory, filename)
     const { name, version } = packedIdentity(tarball)
-    const state = registryState(name, version)
-    if (state.kind === 'present') {
-      const local = integrityOf(tarball)
-      if (state.integrity !== local) {
-        throw new Error(
-          `${name}@${version} is already published with different content`
-          + `\n  registry: ${state.integrity}\n  packed:   ${local}`
-          + '\nBump the version, or investigate why the build is not reproducible.',
+    const state = await registryState(name, version)
+    probed.push({
+      index,
+      tarball,
+      name,
+      version,
+      kind: state.kind,
+      registryIntegrity: state.kind === 'present' ? state.integrity : undefined,
+    })
+  }
+
+  const { absent, present } = partitionPublishPasses(probed)
+  let published = 0
+  let skipped = 0
+  let quotaPaused = false
+  const allowRef = process.env.RELEASE_PUBLISH_ALLOW_REF?.trim() ?? ''
+
+  for (const member of absent) {
+    const progress = `[${String(member.index + 1)}/${total}]`
+    try {
+      await publishTarball(member.tarball, member.name, member.version, family.distTagForVersion(member.version))
+    } catch (error) {
+      if (
+        error instanceof NpmWriteQuotaError
+        && rateLimitedPublishAction(allowRef) === 'pause'
+      ) {
+        console.log(
+          `release publish: ${progress} paused at ${error.packageName}@${error.packageVersion} after npm E429;`
+          + ' remaining absent names wait for a later push',
         )
+        quotaPaused = true
+        break
       }
-      console.log(`release publish: ${progress} ${name}@${version} already published, skipping`)
-      skipped += 1
-      continue
+      throw error
     }
-    // Space out the writes: the gap belongs between publishes, so a run that
-    // only skips does not wait at all.
-    if (published > 0) await sleep(PUBLISH_SPACING_MS)
-    await publishTarball(tarball, name, version, family.distTagForVersion(version))
-    console.log(`release publish: ${progress} ${name}@${version} published`)
+    console.log(`release publish: ${progress} ${member.name}@${member.version} published`)
     published += 1
+  }
+
+  for (const member of present) {
+    const progress = `[${String(member.index + 1)}/${total}]`
+    const local = integrityOf(member.tarball)
+    const registryIntegrity = member.registryIntegrity
+    if (registryIntegrity === undefined) {
+      throw new Error(`release publish: ${member.name}@${member.version} probed present without integrity`)
+    }
+    if (existingPublishedVersionAction(local, registryIntegrity, allowRef) === 'fail') {
+      throw new Error(
+        `${member.name}@${member.version} is already published with different content`
+        + `\n  registry: ${registryIntegrity}\n  packed:   ${local}`
+        + '\nBump the version, or investigate why the build is not reproducible.',
+      )
+    }
+    if (local !== registryIntegrity) {
+      console.log(
+        `release publish: ${progress} ${member.name}@${member.version} already published with different content, skipping`
+        + `\n  registry: ${registryIntegrity}\n  packed:   ${local}`,
+      )
+    } else {
+      console.log(`release publish: ${progress} ${member.name}@${member.version} already published, skipping`)
+    }
+    skipped += 1
   }
 
   console.log(
     `release publish: family ${family.id}, ${total} member(s),`
-    + ` ${String(published)} published, ${String(skipped)} already present`,
+    + ` ${String(published)} published, ${String(skipped)} already present`
+    + (quotaPaused
+      ? `, paused on npm new-package write quota (${String(absent.length - published)} absent remaining)`
+      : ''),
   )
 }
 

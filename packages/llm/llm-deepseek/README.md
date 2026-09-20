@@ -3,7 +3,7 @@ description: "The DeepSeek chat-completions adapter for users and maintainers co
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm-deepseek
+# @x1a0f3n9/dsh-llm-deepseek
 
 English | [中文](README.zh.md)
 
@@ -34,7 +34,7 @@ Choose this adapter when the deployment targets DeepSeek's official API, optiona
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-llm-deepseek'
+- name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY  # credential reference, resolved per request
     baseURL: https://api.deepseek.com # optional; $DEEPSEEK_BASE_URL then this default
@@ -68,7 +68,7 @@ A request selects the route with `provider: deepseek-official`; the model id pas
 | `fileExpiresAfterSeconds` | `604,800` | Requested uploaded-image lifetime |
 | `fileRefreshMarginSeconds` | `3,600` | Remaining lifetime below which an id is replaced |
 | `fileQuotaCleanupBatch` | `100` | Oldest harness-owned files removed before one quota retry |
-| `retryPolicy` | normal, 5 retries | Provider-owned retry policy executed by `dsh-llm-retry` |
+| `retryPolicy` | normal, 20 retries, 500 ms to 10 s | Provider-owned retry policy executed by `dsh-llm-retry` |
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-llm-deepseek) is the exhaustive source for every accepted field and its JSDoc.
 

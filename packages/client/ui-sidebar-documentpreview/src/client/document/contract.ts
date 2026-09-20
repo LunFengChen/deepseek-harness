@@ -1,6 +1,6 @@
 /** Document renderer slot: the owner supplies shared file state, renderers own their presentation. */
-import type { PropsRuntime, SlotHookFactory } from '@deepseek-ai/dsh-client-ui-slots'
-import type { UseSidebarRightTabInfo } from '@deepseek-ai/dsh-client-ui-sidebar-right/client'
+import type { PropsRuntime, SlotHookFactory } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { UseSidebarRightTabInfo } from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
 import type { RefCallback } from 'react'
 
 /** One loaded text window, retaining source line positions. */
@@ -18,7 +18,7 @@ export type DocumentContent =
   | { readonly kind: 'text'; readonly text: string; readonly pages: readonly DocumentTextPage[]; readonly eof: boolean }
   | { readonly kind: 'bytes'; readonly data: Uint8Array<ArrayBuffer> }
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface SlotMap {
     /** Document body selected by a registered implementation id. */
     'sidebar.right.tab.document': {

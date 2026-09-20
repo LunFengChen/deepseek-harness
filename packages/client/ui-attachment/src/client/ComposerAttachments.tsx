@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type {
   ComposerAttachment, ComposerAttachmentsProps, ComposerImageAttachment,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import { IconCloseFill14 } from '@deepseek-ai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { IconCloseFill14 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import { AttachmentRail } from '../AttachmentRail.tsx'
 import type { AttachmentRailItem } from '../AttachmentRail.tsx'
 import { DropOverlay } from '../DropOverlay.tsx'

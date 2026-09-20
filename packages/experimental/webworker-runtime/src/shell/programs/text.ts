@@ -1,7 +1,7 @@
 /**
  * Text utilities of the command table. Each one reads its operands as files
  * and falls back to standard input, the way its POSIX counterpart does.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/shell/programs/text
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/programs/text
  */
 
 import { describeFailure, resolveIn } from '../fs-access.ts'

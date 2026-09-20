@@ -3,7 +3,7 @@ description: "Endpoint-named mock for Typert Remote traffic: a table of unary an
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-remote-mock
+# @x1a0f3n9/dsh-remote-mock
 
 English | [中文](README.zh.md)
 

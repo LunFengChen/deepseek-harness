@@ -6,12 +6,12 @@ import { pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import AgentRegistry, { type Agent } from '@deepseek-ai/dsh-agent'
-import { SessionId } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import { createScope } from '@deepseek-ai/dsh-scope'
-import AgentPresets, { mountPreset } from '@deepseek-ai/dsh-agent-presets'
-import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
+import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
+import { SessionId } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import { createScope } from '@x1a0f3n9/dsh-scope'
+import AgentPresets, { mountPreset } from '@x1a0f3n9/dsh-agent-presets'
+import DeepSeekLlmApiExtensionRegistry from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
 import * as PluginInventory from '../src/index.ts'
 
 const contexts: Context[] = []
@@ -158,15 +158,15 @@ describe('DeepSeek plugin package inventory', () => {
     ])
   })
 
-  it('fails when a Loader-resolved bare entry has no package manifest', async () => {
+  it('omits a Loader-resolved bare entry whose package manifest is not on the search path', async () => {
     const { ctx } = await harness()
     ctx.loader.internal = {
       version: 'v2',
       import: async () => ({ default: () => {} }),
     } as unknown as NonNullable<typeof ctx.loader.internal>
     await ctx.loader.create({ name: 'missing-package' })
-    await expect(ctx.deepseekLlmApiExtensions.prepare({ body: { messages: [] }, signal: SIGNAL }))
-      .rejects.toThrow(/cannot resolve active package/)
+    const prepared = await ctx.deepseekLlmApiExtensions.prepare({ body: { messages: [] }, signal: SIGNAL })
+    expect(prepared.fields.dsh_plugin_packages).toEqual({ version: 1, packages: [] })
   })
 
   it('supports a direct embedding whose context has no base URL', async () => {

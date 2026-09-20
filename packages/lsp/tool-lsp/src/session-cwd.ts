@@ -2,10 +2,10 @@
  * Derive the workspace root an `lsp` call resolves against from the calling
  * agent's session. A missing cwd fails as `LSP_WORKSPACE_REQUIRED` because the
  * local provider must canonicalize a real workspace before starting a server.
- * @module @deepseek-ai/dsh-tool-lsp/session-cwd
+ * @module @x1a0f3n9/dsh-tool-lsp/session-cwd
  */
 
-import type { ToolExecution } from '@deepseek-ai/dsh-tools'
+import type { ToolExecution } from '@x1a0f3n9/dsh-tools'
 
 /**
  * The session workspace cwd for this call, or `undefined` when none applies.

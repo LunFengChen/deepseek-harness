@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { WorkflowError } from '@deepseek-ai/dsh-workflow'
+import { WorkflowError } from '@x1a0f3n9/dsh-workflow'
 import { validateMeta } from '../src/meta.ts'
 
 /** Assert a META_INVALID throw whose message matches every given fragment. */

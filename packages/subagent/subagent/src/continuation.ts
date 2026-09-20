@@ -10,19 +10,19 @@
  * execution. No continuable path creates a Task or an intermediate
  * result-bearing wrapper.
  *
- * @module @deepseek-ai/dsh-subagent
+ * @module @x1a0f3n9/dsh-subagent
  */
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import { ReasoningEffortId, contentHasImage, createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, MessageId, MessageSource } from '@deepseek-ai/dsh-llm'
-import { SessionLogOffset } from '@deepseek-ai/dsh-session'
-import type { SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionPersistence } from '@deepseek-ai/dsh-session-persistence'
-import type { SessionObservation, SessionQueryEngine } from '@deepseek-ai/dsh-session-query'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { ReasoningEffortId, contentHasImage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, MessageId, MessageSource } from '@x1a0f3n9/dsh-llm'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionPersistence } from '@x1a0f3n9/dsh-session-persistence'
+import type { SessionObservation, SessionQueryEngine } from '@x1a0f3n9/dsh-session-query'
 import {
   childSessionMeta,
   captureDelegatedPolicyOverrides,
@@ -539,7 +539,7 @@ export class SubagentContinuationManager {
     const query = this.ctx.get('sessionQuery')
     if (query === undefined) {
       throw new SubagentError(
-        'continuable subagents require session query (load @deepseek-ai/dsh-session-query)',
+        'continuable subagents require session query (load @x1a0f3n9/dsh-session-query)',
         'CONTINUATION_UNAVAILABLE',
       )
     }

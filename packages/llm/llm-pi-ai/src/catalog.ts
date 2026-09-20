@@ -580,9 +580,9 @@ export interface PiAiModelProfile {
   contextWindow?: number
   /**
    * Maximum output tokens. Configuring one also makes it this model's
-   * per-request default; a value inherited from the installed catalog, or the
-   * route's fallback, is the model's capability and never becomes a request
-   * default on its own.
+   * per-request default. A value inherited from the installed catalog, or the
+   * route's fallback, is the model's capability and is also the request
+   * default when the caller names no cap.
    */
   maxTokens?: number
   /**
@@ -808,10 +808,9 @@ export interface RouteCatalog {
    *
    * Separate from `Model.maxTokens` because the two answer different
    * questions: pi-ai requires `maxTokens` as the model's output *capability*,
-   * while the harness seam's `defaultMaxTokens` is a cap the deployment chose
-   * to send on requests that name none. Materializing a catalog capability as
-   * a request default would start capping every request at a number nobody
-   * picked, so only an explicit configuration lands here.
+   * while this map records only a cap the deployment named. The adapter still
+   * materializes `defaultMaxTokens` from the capability when this map has no
+   * entry, so a gateway cannot apply a smaller hidden default.
    */
   configuredMaxTokens: ReadonlyMap<string, number>
 }
@@ -906,8 +905,8 @@ export function resolveRouteModels(
     if (!Number.isInteger(maxTokens) || maxTokens <= 0) {
       invalid(provider, `model "${entry.id}" maxTokens must be a positive integer`)
     }
-    // Only a value the profile named is a deployment choice; the catalog's is
-    // the model's capability and stays out of request defaults.
+    // Only a value the profile named is an explicit deployment choice; the
+    // adapter still falls back to the model's capability for request defaults.
     if (entry.maxTokens !== undefined) configuredMaxTokens.set(entry.id, entry.maxTokens)
     return {
       // The installed entry lays the floor, and the fields below override it.

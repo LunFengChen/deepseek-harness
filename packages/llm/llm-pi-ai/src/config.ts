@@ -15,12 +15,12 @@
 
 import type { CacheRetention, ChatTemplateKwargValue, ModelThinkingLevel, Provider, ThinkingBudgets, Transport } from '@earendil-works/pi-ai'
 import z from '@deepseek-ai/schemastery'
-import { credentialRef } from '@deepseek-ai/dsh-credentials'
-import type { CredentialRef } from '@deepseek-ai/dsh-credentials'
-import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
-import { resolveRetryPolicy, RetryPolicySchema } from '@deepseek-ai/dsh-llm'
-import type { ResolvedRetryPolicy, RetryPolicyConfig } from '@deepseek-ai/dsh-llm'
-import { deepEqualJson } from '@deepseek-ai/dsh-util-values'
+import { credentialRef } from '@x1a0f3n9/dsh-credentials'
+import type { CredentialRef } from '@x1a0f3n9/dsh-credentials'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
+import { resolveRetryPolicy, RetryPolicySchema } from '@x1a0f3n9/dsh-llm'
+import type { ResolvedRetryPolicy, RetryPolicyConfig } from '@x1a0f3n9/dsh-llm'
+import { deepEqualJson } from '@x1a0f3n9/dsh-util-values'
 import {
   CACHE_CONTROL_FORMATS,
   CHAT_TEMPLATE_VARS,
@@ -64,7 +64,7 @@ export const DEFAULT_REQUEST_IMAGE_MAX_BYTES = 1024 * 1024
 export const DEFAULT_CONTEXT_WINDOW = 262_144
 
 /** Output capability assumed for a model neither configuration nor the catalog sizes. */
-export const DEFAULT_MAX_TOKENS = 32_768
+export const DEFAULT_MAX_TOKENS = 256_000
 
 /**
  * Modalities assumed for a model neither configuration nor the catalog
@@ -132,8 +132,8 @@ export interface PiAiProviderProfile {
   defaultContextWindow?: number
   /**
    * Output capability for a model this route lists that neither the entry nor
-   * the installed catalog sizes (default 32,768). This sizes the model; it
-   * never becomes a per-request cap on its own.
+   * the installed catalog sizes (default 256,000). This sizes the model and
+   * is also the per-request default when the caller names no cap.
    */
   defaultMaxTokens?: number
   /**
@@ -149,6 +149,8 @@ export interface PiAiProviderProfile {
   defaultInput?: PiAiModality[]
   /** Provider request headers, validated against Fetch when the profile resolves; Harness attribution wins reserved names. */
   headers?: Record<string, string>
+  /** Provider-scoped environment overrides passed to pi-ai for this route. */
+  env?: Record<string, string>
   /** Provider-neutral pi-ai reasoning level. */
   reasoning?: ModelThinkingLevel
   /** Token budgets used by reasoning providers that support them. */
@@ -177,7 +179,7 @@ export interface PiAiProviderProfile {
    * the smallest quality-ladder output is used when no quality fits.
    */
   requestImageMaxBytes?: number
-  /** Provider-owned model-request retry policy; omission uses normal mode with five retries. */
+  /** Provider-owned model-request retry policy; omission uses normal mode with twenty retries from 500 ms to 10 s. */
   retryPolicy?: RetryPolicyConfig
 }
 
@@ -211,8 +213,8 @@ export interface ResolvedPiAiProviderProfile
   modelErrors: ReadonlyMap<string, string>
   /**
    * Per-request output caps this profile explicitly configured, by model id.
-   * The seam materializes one only into a request that names no cap of its
-   * own, so a catalog capability must not appear here.
+   * Explicit values win over the model's capability when the seam materializes
+   * `defaultMaxTokens` for a request that names no cap of its own.
    */
   configuredMaxTokens: ReadonlyMap<string, number>
 }
@@ -331,6 +333,7 @@ const profile = z.object({
   defaultMaxTokens: z.number().step(1).min(1).default(DEFAULT_MAX_TOKENS),
   defaultInput: z.array(z.union(MODALITIES)).default([...DEFAULT_INPUT]),
   headers: z.dict(z.string()),
+  env: z.dict(z.string()),
   reasoning: z.union(THINKING_LEVELS),
   thinkingBudgets,
   cacheRetention: z.union(['none', 'short', 'long']),
@@ -495,6 +498,7 @@ export function resolveProfiles(
       requestImageMaxBytes,
       retryPolicy: resolveRetryPolicy(retryPolicy, `llm-pi-ai: provider "${provider}" retryPolicy`),
       ...rest.headers === undefined ? {} : { headers: { ...rest.headers } },
+      ...rest.env === undefined ? {} : { env: { ...rest.env } },
       ...rest.thinkingBudgets === undefined ? {} : { thinkingBudgets: { ...rest.thinkingBudgets } },
       configuredMaxTokens: catalog?.configuredMaxTokens ?? new Map(),
       modelErrors: catalog?.modelErrors ?? new Map(),

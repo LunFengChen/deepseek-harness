@@ -5,7 +5,7 @@
  * or command substitution, and no pre-tool approval or rewrite path; only
  * blocking decisions are honored. Shared execution and parsing live in
  * `dsh-hook-protocol`.
- * @module @deepseek-ai/dsh-hooks-codex
+ * @module @x1a0f3n9/dsh-hooks-codex
  */
 
 // Each dialect bridge keeps its complete dependency list visible at the entry
@@ -14,12 +14,12 @@
 import { readFileSync } from 'node:fs'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type { Agent, PreStepDecision } from '@deepseek-ai/dsh-agent'
-import type {} from '@deepseek-ai/dsh-session-projection'
-import { createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, MessageSource } from '@deepseek-ai/dsh-llm'
-import type { UserMessage } from '@deepseek-ai/dsh-session'
-import type { PostToolDecision, PreToolDecision, ToolExecution, ToolExecutionResult } from '@deepseek-ai/dsh-tools'
+import type { Agent, PreStepDecision } from '@x1a0f3n9/dsh-agent'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, MessageSource } from '@x1a0f3n9/dsh-llm'
+import type { UserMessage } from '@x1a0f3n9/dsh-session'
+import type { PostToolDecision, PreToolDecision, ToolExecution, ToolExecutionResult } from '@x1a0f3n9/dsh-tools'
 import {
   appendHookInvoked,
   appendHookResult,
@@ -32,7 +32,7 @@ import {
   type HookOutput,
   type MatcherGroup,
   type MergedHookOutcome,
-} from '@deepseek-ai/dsh-hook-protocol'
+} from '@x1a0f3n9/dsh-hook-protocol'
 import { parseCodexConfig, type CodexHookConfig } from './config.ts'
 /* jscpd:ignore-end */
 

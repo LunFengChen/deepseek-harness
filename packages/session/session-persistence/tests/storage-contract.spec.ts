@@ -4,8 +4,8 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import { SESSION_FORMAT_VERSION, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionEvent } from '@deepseek-ai/dsh-session'
+import { SESSION_FORMAT_VERSION, SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import {
   SessionAlreadyExistsError,
   SessionAlreadyOwnedError,
@@ -14,6 +14,7 @@ import {
   SessionOwnershipLostError,
   SessionPersistenceCorruptionError,
   SessionPersistenceNotFoundError,
+  SessionPersistence,
   SessionPersistenceRevision,
   SessionReadOnlyError,
   assertContiguous,
@@ -318,5 +319,25 @@ describe('error vocabulary', () => {
 describe('SessionPersistenceRevision', () => {
   it('brands the backend token without changing its runtime value', () => {
     expect(SessionPersistenceRevision('rev:1')).toBe('rev:1')
+  })
+})
+
+describe('SessionPersistence.truncate', () => {
+  it('rejects unless a backend overrides the rewrite primitive', async () => {
+    await expect(SessionPersistence.prototype.truncate.call(
+      {} as SessionPersistence,
+      SessionId('unsupported'),
+      SessionLogOffset(0),
+    )).rejects.toThrow(/does not support destructive session deletion/)
+  })
+})
+
+describe('SessionPersistence.readHistorySuffix', () => {
+  it('returns undefined unless a backend overrides the suffix reader', async () => {
+    await expect(SessionPersistence.prototype.readHistorySuffix.call(
+      {} as SessionPersistence,
+      SessionId('unsupported'),
+      { maxMessages: 50 },
+    )).resolves.toBeUndefined()
   })
 })

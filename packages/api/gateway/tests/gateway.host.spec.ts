@@ -3,9 +3,9 @@ import type { AddressInfo } from 'node:net'
 import { describe, expect, it } from 'vitest'
 import { Context, Service, symbols } from '@deepseek-ai/cordis'
 import { z } from 'zod'
-import { apply as applyConnection, inject as connectionInject } from '@deepseek-ai/dsh-client-connection'
-import type { HostConnectionHandle } from '@deepseek-ai/dsh-client-connection'
-import type { WebServer, WebRoute } from '@deepseek-ai/dsh-host-webserver'
+import { apply as applyConnection, inject as connectionInject } from '@x1a0f3n9/dsh-client-connection'
+import type { HostConnectionHandle } from '@x1a0f3n9/dsh-client-connection'
+import type { WebServer, WebRoute } from '@x1a0f3n9/dsh-host-webserver'
 import {
   bindTypertRemote,
   Remote,
@@ -15,9 +15,9 @@ import {
   type TypertContext,
   type TypertLookup,
   type TypertLookupProvider,
-} from '@deepseek-ai/dsh-typert-protocol'
-import TypertRegistry, { type TypertContribution } from '@deepseek-ai/dsh-typert-registry'
-import TypertGatewayService, { TypertGatewayError } from '@deepseek-ai/dsh-api-gateway'
+} from '@x1a0f3n9/dsh-typert-protocol'
+import TypertRegistry, { type TypertContribution } from '@x1a0f3n9/dsh-typert-registry'
+import TypertGatewayService, { TypertGatewayError } from '@x1a0f3n9/dsh-api-gateway'
 import { provideBrowserCredentials } from './browser-credentials.ts'
 
 interface FixtureAgent {
@@ -28,7 +28,7 @@ interface MarkedContext extends Context {
   readonly fixtureScope?: string
 }
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface TypertLookupMap {
     gatewayFixture: TypertLookup<FixtureAgent, string>
     gatewayFixtureAlias: TypertLookup<FixtureAgent, string>

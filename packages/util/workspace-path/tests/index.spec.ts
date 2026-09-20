@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   abbreviateHomePath, fileAddressFor, isAbsoluteWorkspacePath, parseFileAddress, pathPartsOf, relativizeToCwd,
   resolveWorkspacePath, workspaceTitleOf,
-} from '@deepseek-ai/dsh-util-workspace-path'
+} from '@x1a0f3n9/dsh-util-workspace-path'
 
 describe('Workspace path helpers', () => {
   it('addresses every path by session and keeps absolute paths outside the workspace', () => {

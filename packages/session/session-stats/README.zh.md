@@ -3,7 +3,7 @@ description: "面向客户端与维护者的全日志会话计数与墙钟时间
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-stats
+# @x1a0f3n9/dsh-session-stats
 
 [English](README.md) | 中文
 
@@ -30,9 +30,9 @@ kind: "package-reference"
 ### 组合
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-projection'
-- name: '@deepseek-ai/dsh-session-stats'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-projection'
+- name: '@x1a0f3n9/dsh-session-stats'
 ```
 
 ### 各字段含义

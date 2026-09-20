@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
-import { RetryId } from '@deepseek-ai/dsh-llm-retry'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import { RetryId } from '@x1a0f3n9/dsh-llm-retry'
 import type {} from '../src/index.ts'
 
 const dirs: string[] = []

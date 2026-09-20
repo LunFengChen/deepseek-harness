@@ -20,7 +20,7 @@ Ship a small Electron shell with a bundled upstream Node.js executable and pinne
 
 Electron owns the reserved profile at `.dsh/profiles/desktop`. The [bundled-runtime decision](2026-09-08-desktop-bundled-runtime-and-external-plugins.md) owns core resource storage, external plugin dependencies, shared package links, and profile reconciliation. The private Desktop Host remains outside the public CLI package and is never published to npm.
 
-One Desktop release number identifies the Electron artifact and its exact `@deepseek-ai/dsh` and `@deepseek-ai/dsh-desktop-host` dependencies. A release cannot select a different core version at build or runtime. Updating dsh therefore requires a new Electron release even when shell code is unchanged.
+One Desktop release number identifies the Electron artifact and its exact `@x1a0f3n9/dsh` and `@x1a0f3n9/dsh-desktop-host` dependencies. A release cannot select a different core version at build or runtime. Updating dsh therefore requires a new Electron release even when shell code is unchanged.
 
 The browser Web UI, dsh backend, existing `dsh plugin` CLI, user npm, and user pnpm cannot mutate this profile. The CLI reserves every case variant of the `desktop` name and rejects boot, config-dump, and plugin-management requests for it. Electron acquires its process-lifetime single-instance lock before project recovery or Host startup; later launches focus or recreate the primary window without touching profile state. An Electron-only GUI sends structured install, remove, and update requests through preload; Electron invokes only its bundled pnpm.
 
@@ -106,7 +106,7 @@ The bundled upstream Node.js and pnpm are expected to add about 35–50 MB compr
 | Surface | Implementation |
 |---|---|
 | Shell | `apps/desktop` owns Electron windows, restricted preloads, the custom protocol, child lifecycle, project transactions, the plugin GUI, update coordination, and electron-builder configuration. |
-| Installed runtime | Private `@deepseek-ai/dsh-desktop-host` boots the portless desktop composition from the active project and streams API and asset responses over validated framed byte pipes. |
+| Installed runtime | Private `@x1a0f3n9/dsh-desktop-host` boots the portless desktop composition from the active project and streams API and asset responses over validated framed byte pipes. |
 | Package state | Bundled Node.js executes immutable core resources; bundled pnpm modifies only the external plugin graph in the Desktop profile. |
 | Qualification | macOS packaging requires the configured company identity and notary credentials, verifies every native runtime file before inventory generation, verifies the completed application signature, and requires notarization plus Gatekeeper acceptance for both the application and DMG. Windows packaging requires the configured public certificate, SafeNet private-key container, Token Password, and SignTool, and verifies every produced signature. Update hosting, previous-version installed-artifact tests, and platform GUI recordings remain release-environment gates. |
 

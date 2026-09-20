@@ -3,7 +3,7 @@ description: "The skill provider registry for users and maintainers choosing, co
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-skill
+# @x1a0f3n9/dsh-skill
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Use `dsh-skill` when agents should load skills from more than one source through
 Load the plugin like any Cordis plugin. The only configuration limits how many completed provider catalogs are kept in memory; everything else is provider behavior.
 
 ```yaml
-- name: '@deepseek-ai/dsh-skill'
+- name: '@x1a0f3n9/dsh-skill'
 ```
 
 | Field | Default | Meaning |

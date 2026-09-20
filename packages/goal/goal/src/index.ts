@@ -1,7 +1,7 @@
 /**
  * Same-session goal domain: event-sourced state, compare-and-set mutations,
  * and process-local continuation activation.
- * @module @deepseek-ai/dsh-goal
+ * @module @x1a0f3n9/dsh-goal
  */
 
 import { randomUUID } from 'node:crypto'
@@ -9,13 +9,13 @@ import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { z as zod } from 'zod'
 import type { ZodType } from 'zod'
-import { agentEvents } from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionLogOffset } from '@deepseek-ai/dsh-session'
-import { TypertRemoteService, Remote } from '@deepseek-ai/dsh-typert-protocol'
-import type {} from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
+import { agentEvents } from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionEvent, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import { TypertRemoteService, Remote } from '@x1a0f3n9/dsh-typert-protocol'
+import type {} from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import {
   applyGoalEvent,
   goalChangeRef,
@@ -137,14 +137,15 @@ function goalProjectionState(state: GoalFoldState): GoalProjectionState {
 /**
  * Fold durable goal events through the strict replay rules without throwing
  * from the projection registry's event drive. The first invalid owned event
- * is retained in `failure`; host goal access rejects that state while the
- * client view remains at the last valid goal.
+ * is retained in `failure`; the client view stays at the last valid goal.
+ * A later matching clear tombstone recovers the host stream so a new goal
+ * can be created; other events stay ignored while the failure is retained.
  * @param state - the projection covering all prior events.
  * @param event - the next committed session event.
  * @returns the next projection (same reference when the event is unrelated).
  */
 export function applyGoalProjection(state: GoalProjectionState, event: SessionEvent): GoalProjectionState {
-  if (state.failure !== null) return state
+  if (state.failure !== null) return applyGoalRecoveryClear(state, event)
   if (event.type !== 'goal/change'
     && (event.type !== 'user/message' || event.data.source.kind !== 'goal')) return state
   const folded = goalFoldState(state)
@@ -158,6 +159,29 @@ export function applyGoalProjection(state: GoalProjectionState, event: SessionEv
   }
 }
 
+/**
+ * Apply only a matching clear against the last valid current goal after a
+ * retained replay failure. Other events, including malformed or stale clears,
+ * leave the original failure in place.
+ * @param state - the projection that already retained a replay failure.
+ * @param event - the next committed session event.
+ * @returns recovered empty state, or the same failed reference.
+ */
+function applyGoalRecoveryClear(state: GoalProjectionState, event: SessionEvent): GoalProjectionState {
+  if (event.type !== 'goal/change' || event.data.operation !== 'clear' || state.current === null) {
+    return state
+  }
+  try {
+    const folded = goalFoldState(state)
+    applyGoalEvent(folded, event)
+    return goalProjectionState(folded)
+  } catch {
+    // Keep the original retained failure; a non-matching recovery-clear must
+    // not replace it or throw from the projection drive.
+    return state
+  }
+}
+
 /** Strict host goal state with the existing cropped client value. */
 export const goalProjectionDefinition = {
   key: 'goal',
@@ -167,6 +191,9 @@ export const goalProjectionDefinition = {
   wire: { viewSchema: goalProjectionSchema, view: state => state.current },
   stateVersion: 6,
 } satisfies ProjectionDefinition<'goal', GoalProjectionState>
+
+/** Round budget used when a create request omits its own cap. */
+export const DEFAULT_MAX_GOAL_ROUNDS = 100000
 
 /** Deployment defaults for goal creation. */
 export interface Config {
@@ -241,7 +268,7 @@ export class GoalService extends TypertRemoteService {
   static inject = ['agents', 'sessionProjections']
 
   static Config: z<Config> = z.object({
-    defaultMaxGoalRounds: z.number().default(256),
+    defaultMaxGoalRounds: z.number().default(DEFAULT_MAX_GOAL_ROUNDS),
   })
 
   private readonly resolved: ResolvedConfig
@@ -250,7 +277,7 @@ export class GoalService extends TypertRemoteService {
   constructor(ctx: Context, config: Config = {}) {
     super(ctx, 'goals')
     this.resolved = {
-      defaultMaxGoalRounds: resolveMaxGoalRounds(config.defaultMaxGoalRounds ?? 256),
+      defaultMaxGoalRounds: resolveMaxGoalRounds(config.defaultMaxGoalRounds ?? DEFAULT_MAX_GOAL_ROUNDS),
     }
     ctx.on('agent/session-start', ({ agent }) => {
       this.setActivation(agent.session, 'disarmed')
@@ -269,6 +296,8 @@ export class GoalService extends TypertRemoteService {
 
   /**
    * Read the current goal for one exact live agent.
+   * A retained replay failure still returns the last valid view so a caller
+   * can read `{id, revision}` and clear the stuck goal.
    * @param agent - owning live agent.
    * @returns a fresh view or `undefined` when no goal is current.
    * @throws {@link GoalError} when the agent is not the registry's live instance.
@@ -276,7 +305,7 @@ export class GoalService extends TypertRemoteService {
   @Remote('get')
   get(agent: Agent): GoalView | undefined {
     this.assertLive(agent)
-    return this.view(this.state(agent.session), this.runtimeState(agent.session))
+    return this.view(this.projection(agent.session).current, this.runtimeState(agent.session))
   }
 
   /**
@@ -425,14 +454,18 @@ export class GoalService extends TypertRemoteService {
 
   /**
    * Clear the current goal while retaining a durable tombstone and history.
+   * A retained replay failure still accepts a matching clear against the last
+   * valid current goal so the host stream can recover.
    * @param agent - owning live agent.
    * @param ref - expected current revision.
    * @returns the tombstone ref whose revision is one past the cleared snapshot.
    */
   @Remote('clear')
   clear(agent: Agent, ref: GoalRef): GoalRef {
-    const [state, runtime] = this.prepareMutation(agent)
-    const currentState = this.expectCurrent(state, ref)
+    this.assertLive(agent)
+    const projection = this.projection(agent.session)
+    const currentState = this.expectCurrent(projection.current, ref)
+    const runtime = this.runtimeState(agent.session)
     const current = currentState.goal
     const tombstone: GoalRef = { id: current.id, revision: current.revision + 1 }
     const change: GoalClearChangeMeta = {
@@ -472,10 +505,16 @@ export class GoalService extends TypertRemoteService {
     }
   }
 
-  /** Read the current durable projection maintained by the registry. */
-  private state(session: Session): GoalProjection | null {
+  /** Read host goal projection state, including a retained replay failure. */
+  private projection(session: Session): GoalProjectionState {
     const state = this.ctx.sessionProjections.stateOf(session, 'goal')
     if (state === undefined) throw new Error('goal projection is not registered')
+    return state
+  }
+
+  /** Read the current durable projection maintained by the registry. */
+  private state(session: Session): GoalProjection | null {
+    const state = this.projection(session)
     if (state.failure !== null) throw new Error(state.failure)
     return state.current
   }

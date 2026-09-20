@@ -11,12 +11,12 @@
  * - `list` speaks workspace paths — the same syntax its `path` argument accepts —
  *   because its consumer is a tree rooted at the workspace root.
  *
- * @module @deepseek-ai/dsh-api-workspace-files/types
+ * @module @x1a0f3n9/dsh-api-workspace-files/types
  */
 
 // Import the protocol module so the declaration at the end of this file
 // augments its error map rather than defining an unrelated ambient module.
-import type {} from '@deepseek-ai/dsh-typert-protocol'
+import type {} from '@x1a0f3n9/dsh-typert-protocol'
 
 /** Identity and freshness of one workspace file, without its content. */
 export interface WorkspaceFileStat {
@@ -100,8 +100,9 @@ export interface WorkspaceDirectoryEntry {
 /** Direct children of one workspace directory. */
 export interface WorkspaceDirectoryListing {
   /**
-   * The listed directory as a workspace path, relative to the workspace root
-   * and empty for the root itself. A child's path is this value joined with
+   * The listed directory: a workspace-relative path when it is inside the
+   * Session workspace (empty for the root itself), otherwise the filesystem
+   * absolute path. A child's path is this value joined with
    * {@link WorkspaceDirectoryEntry.name} by `/`.
    */
   readonly path: string
@@ -142,11 +143,11 @@ export type WorkspaceFileWatchFrame =
   | { readonly kind: 'ready' }
   | { readonly kind: 'change'; readonly change: WorkspaceFileChange }
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface RemoteErrorDetailsMap {
     /** No entry exists at that path inside the workspace. */
     'workspace-file/not-found': { readonly path: string }
-    /** The directory listing path resolves outside the session's workspace root. */
+    /** The listed directory is outside the Session workspace. */
     'workspace-file/outside-workspace': { readonly path: string }
     /** The requested page exceeds the configured byte cap; nothing is returned. */
     'workspace-file/too-large': { readonly path: string; readonly limit: number }

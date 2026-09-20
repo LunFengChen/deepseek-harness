@@ -23,14 +23,14 @@ describe('desktop package-set selection', () => {
 
   it('includes only the available internal production closure', () => {
     const available = new Map<string, PackedDesktopPackage>([
-      ['@deepseek-ai/dsh', packed('@deepseek-ai/dsh', {
-        dependencies: { '@deepseek-ai/dsh-base': '^1.0.0', external: '^2.0.0' },
+      ['@x1a0f3n9/dsh', packed('@x1a0f3n9/dsh', {
+        dependencies: { '@x1a0f3n9/dsh-base': '^1.0.0', external: '^2.0.0' },
         optionalDependencies: { '@deepseek-ai/platform-package': '1.0.0', '@deepseek-ai/missing-platform': '1.0.0' },
       })],
-      ['@deepseek-ai/dsh-desktop-host', packed('@deepseek-ai/dsh-desktop-host', {
-        dependencies: { '@deepseek-ai/dsh': '^1.0.0' },
+      ['@x1a0f3n9/dsh-desktop-host', packed('@x1a0f3n9/dsh-desktop-host', {
+        dependencies: { '@x1a0f3n9/dsh': '^1.0.0' },
       })],
-      ['@deepseek-ai/dsh-base', packed('@deepseek-ai/dsh-base', {
+      ['@x1a0f3n9/dsh-base', packed('@x1a0f3n9/dsh-base', {
         peerDependencies: { '@deepseek-ai/cordis': '^1.0.0' },
       })],
       ['@deepseek-ai/cordis', packed('@deepseek-ai/cordis')],
@@ -39,25 +39,25 @@ describe('desktop package-set selection', () => {
     ])
     expect(selectDesktopPackageClosure(available).map(entry => entry.manifest.name)).toEqual([
       '@deepseek-ai/cordis',
-      '@deepseek-ai/dsh',
-      '@deepseek-ai/dsh-base',
-      '@deepseek-ai/dsh-desktop-host',
+      '@x1a0f3n9/dsh',
+      '@x1a0f3n9/dsh-base',
+      '@x1a0f3n9/dsh-desktop-host',
       '@deepseek-ai/platform-package',
     ])
   })
 
   it('rejects a required internal package absent from the packed release inputs', () => {
     const available = new Map<string, PackedDesktopPackage>([
-      ['@deepseek-ai/dsh', packed('@deepseek-ai/dsh', {
-        dependencies: { '@deepseek-ai/dsh-base': '^1.0.0' },
+      ['@x1a0f3n9/dsh', packed('@x1a0f3n9/dsh', {
+        dependencies: { '@x1a0f3n9/dsh-base': '^1.0.0' },
       })],
-      ['@deepseek-ai/dsh-desktop-host', packed('@deepseek-ai/dsh-desktop-host', {
-        dependencies: { '@deepseek-ai/dsh': '^1.0.0' },
+      ['@x1a0f3n9/dsh-desktop-host', packed('@x1a0f3n9/dsh-desktop-host', {
+        dependencies: { '@x1a0f3n9/dsh': '^1.0.0' },
       })],
     ])
     expect(() => selectDesktopPackageClosure(available)).toThrow(/unpacked internal package/u)
     expect(() => selectDesktopPackageClosure(new Map([
-      ['@deepseek-ai/dsh', packed('@deepseek-ai/dsh')],
+      ['@x1a0f3n9/dsh', packed('@x1a0f3n9/dsh')],
     ]))).toThrow(/omit @deepseek-ai\/dsh-desktop-host/u)
   })
 

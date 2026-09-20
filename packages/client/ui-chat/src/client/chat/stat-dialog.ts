@@ -3,7 +3,7 @@
 // the matching dialog surface skin lives in stat-dialog.module.css.
 
 import { useEffect, useRef, useState, type CSSProperties, type MutableRefObject } from 'react'
-import { useAnchoredPosition, useDismissOnOutsidePointer } from '@deepseek-ai/dsh-client-ui-primitives'
+import { useAnchoredPosition, useDismissOnOutsidePointer } from '@x1a0f3n9/dsh-client-ui-primitives'
 
 /** Viewport margin the placement clamp keeps (the Menu portal margin). */
 const PANEL_MARGIN = 12

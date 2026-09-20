@@ -1,5 +1,5 @@
-import { BrandWordmark, FishLogo } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { SidebarBrandMarkOwnerProps } from '@deepseek-ai/dsh-client-ui-sidebar/client'
+import { BrandWordmark, FishLogo } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { SidebarBrandMarkOwnerProps } from '@x1a0f3n9/dsh-client-ui-sidebar/client'
 
 /**
  * Render the official mark with the presentation requested by its host surface.

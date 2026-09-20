@@ -1,7 +1,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import { appendFileSync } from 'node:fs'
-import type { GenerateOptions, LlmResolvedModelInfo, StreamChunk } from '@deepseek-ai/dsh-llm'
-import { ToolCallId, LlmAdapter, ReasoningEffortId } from '@deepseek-ai/dsh-llm'
+import type { GenerateOptions, LlmResolvedModelInfo, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import { ToolCallId, LlmAdapter, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 
 /**
  * Test adapter for the `mock-delegate` model: the first request calls the

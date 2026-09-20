@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { LlmAttemptId } from '@deepseek-ai/dsh-llm'
-import { SessionSeq } from '@deepseek-ai/dsh-session'
+import { LlmAttemptId } from '@x1a0f3n9/dsh-llm'
+import { SessionSeq } from '@x1a0f3n9/dsh-session'
 import { SessionAssistantStreamAccumulator } from '../src/assistant-stream.ts'
 
 describe('SessionAssistantStreamAccumulator', () => {

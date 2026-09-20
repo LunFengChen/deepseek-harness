@@ -8,7 +8,7 @@ import type { HtmlBodyProps } from './HtmlBody.tsx'
 import { en, zh } from './locales.ts'
 
 /** HTML implementation identity, shared by metadata and the keyed slot. */
-export const HTML_BODY_ID = '@deepseek-ai/dsh-client-ui-sidebar-documentpreview/html'
+export const HTML_BODY_ID = '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/html'
 
 /**
  * Describe the builtin HTML renderer's file types and loading mode.

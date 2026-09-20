@@ -1,10 +1,10 @@
-import { AssistantStreamAccumulator } from '@deepseek-ai/dsh-llm'
-import type { AssistantStreamRecord } from '@deepseek-ai/dsh-llm'
+import { AssistantStreamAccumulator } from '@x1a0f3n9/dsh-llm'
+import type { AssistantStreamRecord } from '@x1a0f3n9/dsh-llm'
 import {
   SessionFormatUnsupportedMigrationError,
   defineSessionFormatMigration,
   sessionFormatCount,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import type {
   SessionFormatEvent,
   SessionFormatEventRun,
@@ -14,13 +14,13 @@ import type {
   SessionFormatMigrationContext,
   SessionFormatMigrationStage,
   SessionFormatMigrationStageInput,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import {
   RELEASED_V0_EVENT_DISPOSITIONS,
   assertReleasedEventPayload,
   assertReleasedV1Header,
   isReleasedAssistantChunkRun,
-} from '@deepseek-ai/dsh-session-format-v0-to-v1'
+} from '@x1a0f3n9/dsh-session-format-v0-to-v1'
 import { assertReleasedV2Header } from './validation.ts'
 
 const CHUNK_EVENT_REQUIRED = ['type', 'seq', 'time', 'data'] as const
@@ -41,7 +41,7 @@ interface AttemptGroup {
 
 /** Adjacent migration that embeds released-v1 top-level Assistant chunks into v2 attempt events. */
 export const sessionFormatV1ToV2 = defineSessionFormatMigration({
-  name: '@deepseek-ai/dsh-session-format-v1-to-v2',
+  name: '@x1a0f3n9/dsh-session-format-v1-to-v2',
   fromVersion: 1,
   toVersion: 2,
   migrateHeader(header) {

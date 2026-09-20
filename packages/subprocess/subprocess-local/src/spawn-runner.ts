@@ -9,11 +9,11 @@ import {
   spawnCurrentTokenJobProcess,
   terminateJob,
   Win32Error,
-} from '@deepseek-ai/dsh-win32-process'
+} from '@x1a0f3n9/dsh-win32-process'
 import type {
   CurrentTokenProcessBindings,
   NativePtr,
-} from '@deepseek-ai/dsh-win32-process'
+} from '@x1a0f3n9/dsh-win32-process'
 import { loadLinuxExecve } from './linux-execve.ts'
 import {
   consumeLinuxLaunchRequest,

@@ -3,7 +3,7 @@ description: "完整的 V2 到 V3 会话转换：系统头节点、经过审计�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-session-format-v2-to-v3
+# @x1a0f3n9/dsh-session-format-v2-to-v3
 
 [English](README.md) | 中文
 
@@ -69,7 +69,7 @@ const targetHeader = sessionFormatV2ToV3.migrateHeader(sourceHeader)
 
 在每条 `request/header` 处，缺失的 `data.header.system` 表示空提示词；否则，其字符串与当前提示词进行精确比较。发生变化时，在该请求头之前立即插入系统消息，恰好替换当前受保护的头节点，并在 `sourceEventSeqs` 中引用它。提示词不变时不插入消息。空字符串和缺失字段会清空先前的提示词；仅含空白的字符串仍为非空文本。每个请求头都会移除 `data.header.system`，无论是否需要替换。
 
-合成消息携带开放步骤的 `turn` 和 `step`、锚点事件的 `time`、角色 `system`，以及来源 `{ kind: 'plugin', plugin: '@deepseek-ai/dsh-system-prompt' }`。空提示词使用 `content: []`；其他提示词使用包含精确字符串的单个文本块。首次追加没有溯源；每次替换的两个端点及唯一源引用都使用前一头节点的目标序号。空头节点保持受保护，但不产生模型消息。
+合成消息携带开放步骤的 `turn` 和 `step`、锚点事件的 `time`、角色 `system`，以及来源 `{ kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt' }`。空提示词使用 `content: []`；其他提示词使用包含精确字符串的单个文本块。首次追加没有溯源；每次替换的两个端点及唯一源引用都使用前一头节点的目标序号。空头节点保持受保护，但不产生模型消息。
 
 每个合成标识由 `v2-to-v3-system-` 加上 `JSON.stringify(['session-format-v2-to-v3', sourceHeader.id, anchor.seq, anchor.type])` 的十六进制 SHA-256 构成。首次创建的锚点是源 `step/start`，替换的锚点是提示词变化的 `request/header`。与已生成或源消息标识的冲突均被拒绝，不受遇到顺序影响；检查范围包括收件箱插入消息与标题请求消息中的标识。现有消息标识绝不改变。特别是，`TOOL_NOT_STARTED` 修复标识保留规范的历史 `interrupted-tool-result-<callId>-<integer>` 后缀；该后缀不是目标序列坐标。
 

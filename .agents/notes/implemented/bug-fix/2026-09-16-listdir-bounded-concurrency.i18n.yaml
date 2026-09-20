@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-16-listdir-bounded-concurrency.md
+2026-09-16-listdir-bounded-concurrency.md: 4f03c45941b4e523b0440f577b2c7d199569b8e9
+2026-09-16-listdir-bounded-concurrency.zh.md: 88d022e196aa634aaecb94a8803268cb7a28a030

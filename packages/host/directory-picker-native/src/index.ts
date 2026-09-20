@@ -8,11 +8,11 @@
  * background host spawned the child). Only viable when
  * the operator sits at the host's screen; remote deployments compose the
  * browse backend instead.
- * @module @deepseek-ai/dsh-host-directory-picker-native
+ * @module @x1a0f3n9/dsh-host-directory-picker-native
  */
 
-import { DirectoryPicker } from '@deepseek-ai/dsh-host-directory-picker'
-import type { DirectoryPickerCapability } from '@deepseek-ai/dsh-host-directory-picker'
+import { DirectoryPicker } from '@x1a0f3n9/dsh-host-directory-picker'
+import type { DirectoryPickerCapability } from '@x1a0f3n9/dsh-host-directory-picker'
 import { pickNativeDirectory } from './native-picker.ts'
 
 export type { DirectoryPickerInternals, DirectoryPickerRunner } from './native-picker.ts'

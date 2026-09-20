@@ -10,9 +10,11 @@ import {
   dshCachePath,
   dshHomeDisplay,
   dshHomePath,
+  dshSessionPath,
   expandHomePath,
   resolveDshHome,
-} from '@deepseek-ai/dsh-home-paths'
+  resolveDshSessionHome,
+} from '@x1a0f3n9/dsh-home-paths'
 
 afterEach(() => {
   vi.unstubAllEnvs()
@@ -50,6 +52,17 @@ describe('dsh path helpers', () => {
     vi.stubEnv('DSH_HOME', '~/env-dsh')
     expect(dshHomePath()).toBe(join(homedir(), 'env-dsh'))
     expect(dshHomePath('storages', 'cache')).toBe(join(homedir(), 'env-dsh', 'storages', 'cache'))
+  })
+
+  it('keeps session data on DSH_HOME unless DSH_SESSION_HOME is set', () => {
+    const harnessHome = join(homedir(), 'env-dsh')
+    const sessionHome = join(homedir(), 'shared-dsh')
+    expect(resolveDshSessionHome(undefined, { DSH_HOME: '~/env-dsh' })).toBe(harnessHome)
+    expect(resolveDshSessionHome(undefined, { DSH_HOME: '~/env-dsh', DSH_SESSION_HOME: '~/shared-dsh' })).toBe(sessionHome)
+    expect(resolveDshSessionHome('/tmp/explicit-sessions', { DSH_SESSION_HOME: '~/shared-dsh' })).toBe(resolve('/tmp/explicit-sessions'))
+    vi.stubEnv('DSH_HOME', '~/env-dsh')
+    vi.stubEnv('DSH_SESSION_HOME', '~/shared-dsh')
+    expect(dshSessionPath('sessions')).toBe(join(sessionHome, 'sessions'))
   })
 
   it('labels a resolved home by whether it is the default root', () => {

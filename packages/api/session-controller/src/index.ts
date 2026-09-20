@@ -3,13 +3,13 @@
 import { hostname } from 'node:os'
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { errorChain } from '@deepseek-ai/dsh-llm'
-import type {} from '@deepseek-ai/dsh-client-file-upload'
-import { canOpenNativePath, nativeFileManager, openNativePath, revealNativePath } from '@deepseek-ai/dsh-native-command'
-import type { SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionInspection } from '@deepseek-ai/dsh-session-persistence'
-import type { SessionObservation } from '@deepseek-ai/dsh-session-query'
-import { Remote, RemoteError, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
+import { errorChain } from '@x1a0f3n9/dsh-llm'
+import type {} from '@x1a0f3n9/dsh-client-file-upload'
+import { canOpenNativePath, nativeFileManager, openNativePath, revealNativePath } from '@x1a0f3n9/dsh-native-command'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionInspection } from '@x1a0f3n9/dsh-session-persistence'
+import type { SessionObservation } from '@x1a0f3n9/dsh-session-query'
+import { Remote, RemoteError, TypertRemoteService } from '@x1a0f3n9/dsh-typert-protocol'
 import {
   ApiSessionAgentController,
   inspectApiSession,
@@ -35,6 +35,8 @@ import type {
   SessionCreateValue,
   SessionFollowFrame,
   SessionFollowRequest,
+  SessionDeleteFromRequest,
+  SessionDeleteFromValue,
   SessionForkRequest,
   SessionForkValue,
   SessionListRequest,
@@ -92,6 +94,7 @@ export class SessionController extends TypertRemoteService {
     'fileUploads',
     'llm',
     'sessions',
+    'sessionPersistence',
     'sessionProjections',
     'sessionQuery',
     'typert',
@@ -335,6 +338,16 @@ export class SessionController extends TypertRemoteService {
   @Remote('fork')
   fork(request: SessionForkRequest): Promise<SessionForkValue> {
     return this.commands.fork(request)
+  }
+
+  /**
+   * Permanently remove the selected turn and every later event from a Session.
+   * @param request - Session identity and visible event sequence in the turn.
+   * @returns acknowledgement after the durable log has been rewritten.
+   */
+  @Remote('deleteFrom')
+  deleteFrom(request: SessionDeleteFromRequest): Promise<SessionDeleteFromValue> {
+    return this.commands.deleteFrom(request)
   }
 
   /**

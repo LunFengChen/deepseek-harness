@@ -1,7 +1,7 @@
 {
-  "name": "@deepseek-ai/dsh-typert-registry",
+  "name": "@x1a0f3n9/dsh-typert-registry",
   "description": "Runtime registry for generated package reflection and Zod schemas",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.5",
   "publishConfig": {
     "access": "public"
   },
@@ -55,6 +55,6 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/dsh-typert-protocol": "workspace:^"
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
   }
 }

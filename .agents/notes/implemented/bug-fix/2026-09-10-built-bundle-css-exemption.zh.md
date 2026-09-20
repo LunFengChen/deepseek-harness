@@ -6,7 +6,7 @@ Status: implemented
 
 ## 问题
 
-[Node import sweep](../../../../packages/experimental/webworker-runtime/tests/compile/transform-corpus-check.ts)因 Node 无法加载 Dockkit bundle 的样式表而豁免该 bundle，并曾以一个精确的样式表路径作为接受证据：`packages/client/ui-dockkit/lib/components/dockkit.module.css`。该已构建 bundle 在导入自身样式表之前先导入 workspace 包 `@deepseek-ai/dsh-client-ui-primitives`，`tsx` 启动器又通过 tsconfig `paths` 把这个说明符解析进依赖的 `src` 树，因此 sweep 报告的是 `packages/client/ui-primitives/src/StateDot.module.css` 的 `ERR_UNKNOWN_FILE_EXTENSION`。固定路径在带有 client 构建输出的树上无法匹配，Windows 完整门禁的清单于是把这个豁免 bundle 报告为意外的基线失败。
+[Node import sweep](../../../../packages/experimental/webworker-runtime/tests/compile/transform-corpus-check.ts)因 Node 无法加载 Dockkit bundle 的样式表而豁免该 bundle，并曾以一个精确的样式表路径作为接受证据：`packages/client/ui-dockkit/lib/components/dockkit.module.css`。该已构建 bundle 在导入自身样式表之前先导入 workspace 包 `@x1a0f3n9/dsh-client-ui-primitives`，`tsx` 启动器又通过 tsconfig `paths` 把这个说明符解析进依赖的 `src` 树，因此 sweep 报告的是 `packages/client/ui-primitives/src/StateDot.module.css` 的 `ERR_UNKNOWN_FILE_EXTENSION`。固定路径在带有 client 构建输出的树上无法匹配，Windows 完整门禁的清单于是把这个豁免 bundle 报告为意外的基线失败。
 
 ## 决策
 

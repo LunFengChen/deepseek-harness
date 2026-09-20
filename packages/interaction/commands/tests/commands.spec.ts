@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createScope } from '@deepseek-ai/dsh-scope'
-import type { Scope } from '@deepseek-ai/dsh-scope'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import CommandRuntime, { CommandDefinitionId, parseCommand, type CommandDefinition } from '@deepseek-ai/dsh-commands'
-import { AttachmentStore } from '@deepseek-ai/dsh-attachment'
+import { createScope } from '@x1a0f3n9/dsh-scope'
+import type { Scope } from '@x1a0f3n9/dsh-scope'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import CommandRuntime, { CommandDefinitionId, parseCommand, type CommandDefinition, type CommandInvocation } from '@x1a0f3n9/dsh-commands'
+import { AttachmentStore } from '@x1a0f3n9/dsh-attachment'
 
 function command(name: string, text = `ran:${name}`): CommandDefinition {
   return {
@@ -177,7 +177,7 @@ describe('CommandRuntime', () => {
   it('passes exact invocation context and detaches valid handler results', async () => {
     const ctx = await mount()
     const { agent } = await mintAgentScope(ctx, 'a')
-    const seen = vi.fn(() => ({ kind: 'success' as const, text: 'ok' }))
+    const seen = vi.fn((_invocation: CommandInvocation) => ({ kind: 'success' as const, text: 'ok' }))
     ctx.commands.register({ name: 'run', description: 'Run it', handler: seen })
     const controller = new AbortController()
 
@@ -190,8 +190,13 @@ describe('CommandRuntime', () => {
     expect(seen).toHaveBeenCalledWith(expect.objectContaining({
       agent,
       rawInput: '  untouched ',
-      signal: controller.signal,
+      attachments: [],
     }))
+    const invocation = seen.mock.calls[0]?.[0]
+    if (invocation === undefined) throw new Error('command handler was not invoked')
+    expect(invocation.signal).toBeInstanceOf(AbortSignal)
+    expect(invocation.signal).not.toBe(controller.signal)
+    expect(invocation.signal.aborted).toBe(false)
     await expect(ctx.commands.execute(agent, 'run', [], controller.signal)).resolves.toBeUndefined()
     await expect(ctx.commands.execute(agent, '/missing', [], controller.signal)).resolves.toBeUndefined()
   })
@@ -325,6 +330,27 @@ describe('CommandRuntime', () => {
     ])
   })
 
+  it('skips command/done when the handler truncated the matching command/run', async () => {
+    const ctx = await mount()
+    const { agent } = await mintAgentScope(ctx, 'a')
+    agent.session.append('turn/start', { turn: 1 })
+    ctx.commands.register({
+      name: 'cut',
+      description: 'Truncate',
+      handler: (invocation) => {
+        invocation.agent.session.truncate(SessionLogOffset(1))
+        return { kind: 'success', text: 'cut' }
+      },
+    })
+
+    const execution = await ctx.commands.execute(agent, '/cut', [], new AbortController().signal)
+
+    expect(execution?.result).toEqual({ kind: 'success', text: 'cut' })
+    expect(agent.session.snapshotEvents().map(event => event.type)).toEqual([
+      'turn/start',
+    ])
+  })
+
   it('preserves an earlier authoritative domain-event reference on successful settlement', async () => {
     const ctx = await mount()
     const { agent } = await mintAgentScope(ctx, 'a')
@@ -421,6 +447,26 @@ describe('CommandRuntime', () => {
       expect(lifecycleOf(agent)).toMatchObject([
         { type: 'command/run', data: { name: 'hang' } },
         { type: 'command/done', data: { kind: 'error', text: 'operator cancelled command' } },
+      ])
+    })
+  })
+
+  it('aborts in-flight execute when session pause asks the registry to stop', async () => {
+    const ctx = await mount()
+    const { agent } = await mintAgentScope(ctx, 'a')
+    ctx.commands.register({
+      name: 'hang',
+      description: 'Hang',
+      handler: () => new Promise(() => undefined),
+    })
+    const pending = ctx.commands.execute(agent, '/hang', [], new AbortController().signal)
+    await vi.waitFor(() => { expect(lifecycleOf(agent)).toHaveLength(1) })
+    ctx.commands.abortInflight(agent, new Error('session cancelled'))
+    await expect(pending).rejects.toThrow('session cancelled')
+    await vi.waitFor(() => {
+      expect(lifecycleOf(agent)).toMatchObject([
+        { type: 'command/run', data: { name: 'hang' } },
+        { type: 'command/done', data: { kind: 'error', text: 'session cancelled' } },
       ])
     })
   })

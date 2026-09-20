@@ -19,7 +19,7 @@ import {
   type WorkspacePackageManifest,
 } from './verify-package-dependencies.ts'
 
-const TARGET_PACKAGE = '@deepseek-ai/dsh'
+const TARGET_PACKAGE = '@x1a0f3n9/dsh'
 const CORDIS = '@deepseek-ai/cordis'
 
 interface Options {

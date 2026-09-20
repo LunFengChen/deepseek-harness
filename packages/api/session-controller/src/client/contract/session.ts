@@ -7,11 +7,11 @@
  * must stub); implementation-internal entry points (history staging, wire-frame
  * dispatch) stay on the class, invisible out here.
  */
-import type { AttachmentIdType, FileAttachmentRef, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import type { MessageId } from '@deepseek-ai/dsh-llm/brand'
-import type { SessionId, SessionSeq } from '@deepseek-ai/dsh-session/types'
-import type { RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
-import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
+import type { AttachmentIdType, FileAttachmentRef, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import type { SessionId, SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type { PromptContentPart, QueueAction, SessionRequestId } from '../../types.ts'
 import type { PendingSubmissionAttachment, SessionSnapshot } from './snapshot.ts'
 
@@ -131,6 +131,16 @@ export interface ISession {
    * @returns completion once covered, exhausted, superseded, or failed soft.
    */
   loadThrough(seq: SessionSeq): Promise<void>
+  /**
+   * Permanently remove the turn containing `fromSeq` and every later event.
+   * @param fromSeq - visible event sequence in the turn to remove.
+   * @returns acknowledgement after durable history is rewritten.
+   */
+  deleteFrom(fromSeq: SessionSeq): Promise<RemoteResult<{ accepted: true }>>
+  /**
+   * Rebuild the local history window from the Host after durable truncation.
+   */
+  resync(): Promise<void>
   /**
    * Execute one slash-command line against this session's agent — pure
    * admission semantics (the host executor durably logs the lifecycle).

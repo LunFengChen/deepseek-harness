@@ -1,6 +1,6 @@
 /** HTML URL decoding stays local; ordinary Remote reads leave path resolution and authorization to the Host. */
 import { describe, expect, it, vi } from 'vitest'
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import { createReadHtmlRelative } from '../src/client/html/read-relative.ts'
 import type { ReadHtmlRelated } from '../src/client/html/read-relative.ts'
 

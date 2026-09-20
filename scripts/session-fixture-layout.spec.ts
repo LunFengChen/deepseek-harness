@@ -1,8 +1,8 @@
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { createAssistantMessage } from '@deepseek-ai/dsh-llm'
-import { SESSION_FORMAT_VERSION, SessionSeq, type SessionEvent } from '@deepseek-ai/dsh-session'
-import { parseSessionLog } from '@deepseek-ai/dsh-llm-replay'
+import { createAssistantMessage } from '@x1a0f3n9/dsh-llm'
+import { SESSION_FORMAT_VERSION, SessionSeq, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import { parseSessionLog } from '@x1a0f3n9/dsh-llm-replay'
 import {
   canonicalSessionFixture,
   inspectSessionFixtureLayouts,

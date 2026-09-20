@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { SessionFormatEventCollector } from '@deepseek-ai/dsh-session-format'
+import { SessionFormatEventCollector } from '@x1a0f3n9/dsh-session-format'
 import type {
   SessionFormatArtifact,
   SessionFormatArtifactDecoder,
@@ -8,7 +8,7 @@ import type {
   SessionFormatJsonValue,
   SessionFormatMigrationContext,
   SessionFormatRecovery,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import {
   releasedV0SessionFormatCodec,
   releasedV1SessionFormatCodec,

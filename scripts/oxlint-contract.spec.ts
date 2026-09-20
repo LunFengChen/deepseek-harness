@@ -270,7 +270,7 @@ export const longProbe = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 +
       `scripts/oxlint-contract-${suffix}.ts`,
     ]
     const paths = [...testPaths, ...productionPaths]
-    const reads = `import { Session, SessionSeq } from '@deepseek-ai/dsh-session'
+    const reads = `import { Session, SessionSeq } from '@x1a0f3n9/dsh-session'
 
 export function reads(session: Session): void {
   session.snapshotEvents()
@@ -278,7 +278,7 @@ export function reads(session: Session): void {
   session.ownEvents()
 }
 `
-    const existing = `import { Session, SessionSeq } from '@deepseek-ai/dsh-session'
+    const existing = `import { Session, SessionSeq } from '@x1a0f3n9/dsh-session'
 
 export function reads(session: Session): void {
   // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.

@@ -6,7 +6,7 @@ English | [中文](2026-09-10-built-bundle-css-exemption.zh.md)
 
 ## Problem
 
-The [Node import sweep](../../../../packages/experimental/webworker-runtime/tests/compile/transform-corpus-check.ts) exempts the Dockkit bundle because Node cannot load its stylesheets, and admitted one exact stylesheet path as the evidence: `packages/client/ui-dockkit/lib/components/dockkit.module.css`. The built bundle imports the workspace package `@deepseek-ai/dsh-client-ui-primitives` before its own stylesheet, and the `tsx` launcher resolves that specifier through tsconfig `paths` into the dependency's `src` tree, so the sweep reports `ERR_UNKNOWN_FILE_EXTENSION` for `packages/client/ui-primitives/src/StateDot.module.css`. The pinned path cannot match on a tree with client build output, and the Windows complete-gate inventory reported the exempt bundle as an unexpected baseline failure.
+The [Node import sweep](../../../../packages/experimental/webworker-runtime/tests/compile/transform-corpus-check.ts) exempts the Dockkit bundle because Node cannot load its stylesheets, and admitted one exact stylesheet path as the evidence: `packages/client/ui-dockkit/lib/components/dockkit.module.css`. The built bundle imports the workspace package `@x1a0f3n9/dsh-client-ui-primitives` before its own stylesheet, and the `tsx` launcher resolves that specifier through tsconfig `paths` into the dependency's `src` tree, so the sweep reports `ERR_UNKNOWN_FILE_EXTENSION` for `packages/client/ui-primitives/src/StateDot.module.css`. The pinned path cannot match on a tree with client build output, and the Windows complete-gate inventory reported the exempt bundle as an unexpected baseline failure.
 
 ## Decision
 

@@ -3,7 +3,7 @@ description: "面向用户与维护者的文件型设置提供方：选择、配
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-settings-file
+# @x1a0f3n9/dsh-settings-file
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-settings-file'
+- name: '@x1a0f3n9/dsh-settings-file'
   config:
     path: /absolute/path/to/settings.yaml
 ```
@@ -90,7 +90,7 @@ kind: "package-reference"
 | 文件 | 职责 |
 |---|---|
 | [`src/index.ts`](src/index.ts) | 提供方：spec 解析、加载/解析、写锁下的读-改-写、watcher 生命周期、YAML/JSON 渲染 |
-| — | 不发布运行时不变式伴生入口；文件往返、watcher 时序与原子写入行为由包测试证明，进程内提交关系归 `@deepseek-ai/dsh-settings` 所有。 |
+| — | 不发布运行时不变式伴生入口；文件往返、watcher 时序与原子写入行为由包测试证明，进程内提交关系归 `@x1a0f3n9/dsh-settings` 所有。 |
 
 ### 文档生命周期
 

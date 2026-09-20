@@ -9,9 +9,9 @@
  * `TranslateNS<'sidebarFiles'>` or `PropsLocale<'sidebarFiles'>` needs only this
  * file, whichever entry a program loads first.
  */
-import type {} from '@deepseek-ai/dsh-client-ui-slots'
+import type {} from '@x1a0f3n9/dsh-client-ui-slots'
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** File-tree type name, guide entry, row states, and failure lines. */
     sidebarFiles: SidebarFilesKey

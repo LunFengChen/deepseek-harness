@@ -12,7 +12,7 @@ Session 格式 v2 将每次模型尝试的紧凑流（`AssistantStreamRecord[]`�
 
 ## 决策
 
-`@deepseek-ai/dsh-llm` 直接从紧凑记录回答消费方问题；剩余消费方对记录做一次带提前退出的折叠。
+`@x1a0f3n9/dsh-llm` 直接从紧凑记录回答消费方问题；剩余消费方对记录做一次带提前退出的折叠。
 
 `packages/llm/llm/src/assistant-stream.ts` 在累加器与 `expandAssistantStream` 之外导出记录级读取器：
 

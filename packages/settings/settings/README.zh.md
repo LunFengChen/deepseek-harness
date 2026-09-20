@@ -3,7 +3,7 @@ description: "面向插件作者与维护者的用户设置服务：注册可配
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-settings
+# @x1a0f3n9/dsh-settings
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 服务本身不存储任何内容；请挂载一个提供方，例如随附的文件型提供方：
 
 ```yaml
-- name: '@deepseek-ai/dsh-settings-file'
+- name: '@x1a0f3n9/dsh-settings-file'
   config:
     path: /absolute/path/to/settings.yaml
 ```

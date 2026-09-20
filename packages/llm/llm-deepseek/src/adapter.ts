@@ -8,7 +8,7 @@
  * @module dsh-llm-deepseek/adapter
  */
 
-import { attributionHeaders, contentHasImage, CONTEXT_WINDOW_EXCEEDED_CODE, isContextWindowExceededError, isQuotaExceededError, LlmAdapter, LlmError, offloadedImageText, offloadRequestImagesWithPolicy, ProviderRequestId, QUOTA_EXCEEDED_CODE, ReasoningEffortId } from '@deepseek-ai/dsh-llm'
+import { attributionHeaders, contentHasImage, CONTEXT_WINDOW_EXCEEDED_CODE, isContextWindowExceededError, isQuotaExceededError, LlmAdapter, LlmError, offloadedImageText, offloadRequestImagesWithPolicy, ProviderRequestId, QUOTA_EXCEEDED_CODE, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 import type {
   ContentBlock,
   GenerateOptions,
@@ -21,21 +21,21 @@ import type {
   ResolvedRetryPolicy,
   StreamChunk,
   SystemPromptUpdate,
-} from '@deepseek-ai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 import type {
   AttachmentId,
   AttachmentStore,
   ImageAttachmentRef,
   RequestImageAttachment,
-} from '@deepseek-ai/dsh-attachment'
-import type { CredentialRef } from '@deepseek-ai/dsh-credentials'
-import { deadline, idleWatchdog, timeoutOf } from '@deepseek-ai/dsh-timeout'
-import type { AnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+} from '@x1a0f3n9/dsh-attachment'
+import type { CredentialRef } from '@x1a0f3n9/dsh-credentials'
+import { deadline, idleWatchdog, timeoutOf } from '@x1a0f3n9/dsh-timeout'
+import type { AnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
 import type {
   DeepSeekLlmApiExtensionRequest,
   DeepSeekLlmApiJson,
   PreparedDeepSeekLlmApiExtensions,
-} from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
+} from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
 import { serializeRequest, serializeRequestWithImages } from './serialize.ts'
 import type { ImageWireLocation, RequestDefaults } from './serialize.ts'
 import { deepSeekImageRequestPricing, resolveRequestImagePolicy } from './request-pricing.ts'
@@ -337,10 +337,10 @@ function requestId(headers: Headers): ReturnType<typeof ProviderRequestId> | und
  * @returns the normalized harness error code.
  */
 export function httpErrorCode(status: number, error?: WireError['error']): string {
-  if (status === 401 || status === 403) return 'AUTH'
-  if (status === 413) return 'INVALID_REQUEST'
   const detail = [error?.code, error?.type, error?.message].filter(Boolean).join(' ')
   if (isQuotaExceededError(detail)) return QUOTA_EXCEEDED_CODE
+  if (status === 401 || status === 403) return 'AUTH'
+  if (status === 413) return 'INVALID_REQUEST'
   if (status === 429) return 'RATE_LIMIT'
   if (status === 400) {
     if (isContextWindowExceededError(detail)) return CONTEXT_WINDOW_EXCEEDED_CODE
@@ -633,7 +633,12 @@ export class DeepSeekAdapter extends LlmAdapter {
           ...options.purpose === undefined ? {} : { purpose: options.purpose },
         })
       } catch (error) {
-        throw new LlmError('DeepSeek request extension preparation failed', 'REQUEST_EXTENSION', { cause: error })
+        const detail = error instanceof Error && error.message.length > 0 ? error.message : String(error)
+        throw new LlmError(
+          `DeepSeek request extension preparation failed: ${detail}`,
+          'REQUEST_EXTENSION',
+          { cause: error },
+        )
       }
       for (const field of Object.keys(extensions.fields)) {
         if (Object.hasOwn(body, field)) {

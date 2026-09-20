@@ -3,13 +3,13 @@ description: "Model-facing Cordis runtime tools for agents and maintainers choos
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-cordis
+# @x1a0f3n9/dsh-tool-cordis
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-tool-cordis` lets a model inspect the live Cordis runtime and create, run, stop, update, or remove temporary dynamic packages with host code, browser code, or both. Package versions are immutable, so a failed package can be corrected by adding a new version and updating the active one. Definitions exist only in process memory and disappear when DSH restarts; the package does not write repository files, install dependencies, or change `cordis.yml`. It also teaches the model this workflow. Compose it with `@deepseek-ai/dsh-cordis-host-runner`, which provides the sandbox and run round trip.
+`dsh-tool-cordis` lets a model inspect the live Cordis runtime and create, run, stop, update, or remove temporary dynamic packages with host code, browser code, or both. Package versions are immutable, so a failed package can be corrected by adding a new version and updating the active one. Definitions exist only in process memory and disappear when DSH restarts; the package does not write repository files, install dependencies, or change `cordis.yml`. It also teaches the model this workflow. Compose it with `@x1a0f3n9/dsh-cordis-host-runner`, which provides the sandbox and run round trip.
 
 ## Table of Contents
 
@@ -30,10 +30,10 @@ Mount this plugin when a session should be able to extend its own runtime tempor
 ### Minimal composition
 
 ```yaml
-- name: '@deepseek-ai/dsh-cordis-host-runner'
+- name: '@x1a0f3n9/dsh-cordis-host-runner'
   config:
     vmTimeoutMs: 5000
-- name: '@deepseek-ai/dsh-tool-cordis'
+- name: '@x1a0f3n9/dsh-tool-cordis'
 ```
 
 The CLI example [`apps/cli/config/examples/cordis/cordis.yml`](../../../apps/cli/config/examples/cordis/cordis.yml) composes both. A package with a browser half additionally needs the browser runner and the UI package in the client composition; a host-only package needs none of them.

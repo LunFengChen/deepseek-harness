@@ -8,10 +8,10 @@ import SessionStore, {
   SessionSeq,
   type CreateSessionOptions,
   type SessionEvent,
-} from '@deepseek-ai/dsh-session'
-import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
-import { createAssistantMessage, createSystemMessage, createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+} from '@x1a0f3n9/dsh-session'
+import DeepSeekLlmApiExtensionRegistry from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import { createAssistantMessage, createSystemMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import * as SessionLogDeepSeek from '../src/index.ts'
 import type { DeepSeekSessionLogExtension, DeepSeekSessionLogWireEvent, DeepSeekSessionLogWireSurfaceOp } from '../src/types.ts'
 

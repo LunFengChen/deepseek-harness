@@ -3,12 +3,12 @@
  * children. Kept apart from the service so composition helpers can read it
  * without importing the registry.
  *
- * @module @deepseek-ai/dsh-subagent/depth
+ * @module @x1a0f3n9/dsh-subagent/depth
  */
 
-import type { Agent } from '@deepseek-ai/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 
-declare module '@deepseek-ai/dsh-agent' {
+declare module '@x1a0f3n9/dsh-agent' {
   interface AgentOptions {
     /** Delegation depth: zero for a top-level agent and parent depth + 1 for a child. */
     subagentDepth?: number

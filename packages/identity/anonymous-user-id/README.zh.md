@@ -3,7 +3,7 @@ description: "面向用户与维护者的按 harness home 划分的匿名身份�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-anonymous-user-id
+# @x1a0f3n9/dsh-anonymous-user-id
 
 [English](README.md) | 中文
 
@@ -44,7 +44,7 @@ DeepSeek Harness 为每个 harness home 使用一个匿名标识符，以关联�
 当你构建的功能需要共享该安装的匿名 id 时，导入一次并复用该值即可——遥测、反馈与 DeepSeek 已经在使用同一个 id，因此你的记录能与它们相互对应：
 
 ```ts
-import { getOrCreateAnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
+import { getOrCreateAnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
 
 const userId = getOrCreateAnonymousUserId() // stable for the process lifetime
 ```

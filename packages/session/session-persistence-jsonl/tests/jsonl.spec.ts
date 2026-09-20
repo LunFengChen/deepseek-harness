@@ -1,14 +1,14 @@
-import { MessageId, createMessage } from '@deepseek-ai/dsh-llm'
+import { MessageId, createMessage } from '@x1a0f3n9/dsh-llm'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { appendFile, mkdtemp, mkdir, rm, readFile, writeFile, readdir, stat, symlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, relative, resolve } from 'node:path'
 import { scheduler } from 'node:timers/promises'
-import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader } from '@deepseek-ai/dsh-session'
-import type { SessionPersistence } from '@deepseek-ai/dsh-session-persistence'
-import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
+import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader } from '@x1a0f3n9/dsh-session'
+import type { SessionPersistence } from '@x1a0f3n9/dsh-session-persistence'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import {
   assertNoRetiredHeaderFields, encodeSegment, eventLines, generationLogFilename, generationLogPath,
   logPath, parseGenerationLogFilename, projectDir, projectKey, scanLog, sessionDir, SessionLogScanner,
@@ -20,7 +20,7 @@ import {
 import { runLiveWritePathContract } from '../../session-persistence/tests/live-write-contract.ts'
 import { LIVE_WRITE_BATCH_MAX_DELAY_MS, type JsonlSessionHandle } from '../src/storage.ts'
 import { JsonlGenerationSourceChangedError } from '../src/generation.ts'
-import SessionStore from '@deepseek-ai/dsh-session'
+import SessionStore from '@x1a0f3n9/dsh-session'
 
 const statRace = vi.hoisted(() => ({
   path: undefined as string | undefined,
@@ -199,7 +199,7 @@ function withMigratedEmptyHead(log: readonly SessionEvent[]): readonly unknown[]
       type: 'system/message', seq: 2, time: log[1]!.time, surfaceOp: 'append',
       data: { turn: 1, step: 1, message: {
         id: expect.stringMatching(/^v2-to-v3-system-[0-9a-f]{64}$/) as unknown,
-        role: 'system', content: [], source: { kind: 'plugin', plugin: '@deepseek-ai/dsh-system-prompt' },
+        role: 'system', content: [], source: { kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt' },
       } },
     },
     ...log.slice(2).map(event => ({ ...event, seq: SessionSeq(event.seq + 1) })),
@@ -346,6 +346,80 @@ runLiveWritePathContract('jsonl', LIVE_WRITE_BATCH_MAX_DELAY_MS, async () => {
     return ctx
   }
   return { ctx: await mount(), remount: mount }
+})
+
+describe('JsonlSessionPersistence: destructive truncate vs live buffer', () => {
+  it('drops live events published while rewrite is in flight', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'dsh-jsonl-truncate-live-'))
+    dirs.push(dir)
+    const ctx = new Context()
+    liveContexts.push(ctx)
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(JsonlSessionPersistence, { root: dir, compression: 'none' })
+    const session = ctx.sessions.create(SessionId('rewrite-race'))
+    const handle = await ctx.sessionPersistence.create(session.header)
+    session.append('turn/start', { turn: 1 })
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    await ctx.sessions.flush(session)
+    const retained = session.seq
+    session.append('turn/start', { turn: 2 })
+    session.append('turn/end', { turn: 2, reason: { kind: 'completed' } })
+    await ctx.sessions.flush(session)
+
+    const host = ctx.sessionPersistence as unknown as {
+      rewrite: (...args: unknown[]) => Promise<void>
+    }
+    const original = host.rewrite.bind(host)
+    const gate = Promise.withResolvers<undefined>()
+    const entered = Promise.withResolvers<undefined>()
+    vi.spyOn(host, 'rewrite').mockImplementationOnce(async (...args) => {
+      entered.resolve(undefined)
+      await gate.promise
+      return original(...args)
+    })
+
+    const truncating = ctx.sessionPersistence.truncate(session.id, retained)
+    await entered.promise
+    session.append('turn/start', { turn: 3 })
+    gate.resolve(undefined)
+    await truncating
+    session.truncate(retained)
+    await expect(ctx.sessions.flush(session)).resolves.toBe(true)
+    session.append('turn/start', { turn: 2 })
+    session.append('turn/end', { turn: 2, reason: { kind: 'completed' } })
+    await ctx.sessions.flush(session)
+    expect((await readAll(ctx.sessionPersistence, session.id)).events.map(event => event.seq)).toEqual([0, 1, 2, 3])
+    await handle.close()
+  })
+
+  it('drops a paused live tail after drain failure without waiting for another persist', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'dsh-jsonl-truncate-paused-'))
+    dirs.push(dir)
+    const ctx = new Context()
+    liveContexts.push(ctx)
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(JsonlSessionPersistence, { root: dir, compression: 'none' })
+    const session = ctx.sessions.create(SessionId('paused-tail'))
+    const handle = await ctx.sessionPersistence.create(session.header)
+    await handle.flush()
+    const warned = vi.spyOn(ctx.logger, 'warn').mockImplementation(() => undefined)
+    const host = ctx.sessionPersistence as unknown as { persistBatch: (...args: unknown[]) => Promise<void> }
+    const persist = vi.spyOn(host, 'persistBatch').mockRejectedValue(new Error('paused drain refused'))
+    vi.useFakeTimers()
+    session.append('turn/start', { turn: 1 })
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    await vi.advanceTimersByTimeAsync(LIVE_WRITE_BATCH_MAX_DELAY_MS)
+    vi.useRealTimers()
+    expect(persist).toHaveBeenCalledTimes(1)
+    const writer = handle as JsonlSessionHandle
+    writer.discardLiveFrom(1)
+    writer.discardLiveFrom(0)
+    persist.mockRestore()
+    await expect(ctx.sessions.flush(session)).resolves.toBe(true)
+    expect((await readAll(ctx.sessionPersistence, session.id)).events).toEqual([])
+    warned.mockRestore()
+    await handle.close()
+  })
 })
 
 describe('JsonlSessionPersistence: format helpers', () => {
@@ -1303,6 +1377,24 @@ describe('JsonlSessionPersistence: durability and crash semantics', () => {
     expect((await stat(rawLogPath(root, '/work', m.id))).isFile()).toBe(true)
     expect((await ctx.sessionPersistence.list()).map(s => s.header.id)).toContain(m.id)
     await handle.close()
+  })
+
+  it('destructively rewrites the retained prefix and survives reopen', async () => {
+    const m = meta('truncate-tail', '/work')
+    const handle = await ctx.sessionPersistence.create(m)
+    const log = oneTurnLog()
+    await handle.append(log)
+
+    await ctx.sessionPersistence.truncate(m.id, SessionLogOffset(log.length))
+    await ctx.sessionPersistence.truncate(m.id, SessionLogOffset(0))
+
+    expect((await handle.read()).events).toEqual([])
+    await handle.close()
+    await expect(readAll(ctx.sessionPersistence, m.id)).resolves.toMatchObject({
+      events: [],
+    })
+    await expect(ctx.sessionPersistence.truncate(m.id, SessionLogOffset(0)))
+      .rejects.toThrow(/no active write handle/)
   })
 
   it('flush materializes an explicitly durable empty session without an event row', async () => {

@@ -1,7 +1,7 @@
 /** Explicit local-coordinate remapping; captured generations and owner-local counters remain opaque. */
 
-import { SessionFormatError, sessionFormatCount } from '@deepseek-ai/dsh-session-format'
-import type { SessionFormatEvent, SessionFormatJsonObject, SessionFormatJsonValue } from '@deepseek-ai/dsh-session-format'
+import { SessionFormatError, sessionFormatCount } from '@x1a0f3n9/dsh-session-format'
+import type { SessionFormatEvent, SessionFormatJsonObject, SessionFormatJsonValue } from '@x1a0f3n9/dsh-session-format'
 import { record } from './payload.ts'
 
 /**

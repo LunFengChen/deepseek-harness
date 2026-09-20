@@ -9,10 +9,10 @@
  * @module dsh-llm-deepseek/request-pricing
  */
 
-import { offloadedImageText, offloadedImagePrefixCount, requestImageHandleText, textOnlyImageText } from '@deepseek-ai/dsh-llm'
-import type { ImageAttachmentAccessResolver, LlmImageRequestPrice, LlmImageRequestPricing } from '@deepseek-ai/dsh-llm'
-import { requestImageDimensions } from '@deepseek-ai/dsh-attachment'
-import type { ImageAttachmentRef, ImageRequestPolicy } from '@deepseek-ai/dsh-attachment'
+import { offloadedImageText, offloadedImagePrefixCount, requestImageHandleText, textOnlyImageText } from '@x1a0f3n9/dsh-llm'
+import type { ImageAttachmentAccessResolver, LlmImageRequestPrice, LlmImageRequestPricing } from '@x1a0f3n9/dsh-llm'
+import { requestImageDimensions } from '@x1a0f3n9/dsh-attachment'
+import type { ImageAttachmentRef, ImageRequestPolicy } from '@x1a0f3n9/dsh-attachment'
 import { deepSeekImageTokens } from './image-tokens.ts'
 import type { DeepSeekCatalogModel, DeepSeekConnectionOptions } from './adapter.ts'
 

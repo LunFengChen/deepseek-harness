@@ -66,8 +66,9 @@ interface SessionHandle extends AsyncDisposable {
 
   /**
    * Append a contiguous batch continuing the current logical end. The first
-   * event's `seq` MUST equal the stored next-seq; committed events are never
-   * rewritten. Persistence is best-effort: on resolution the batch is
+   * event's `seq` MUST equal the stored next-seq. Ordinary appends never
+   * rewrite committed events; an explicit persistence `truncate` is the
+   * destructive exception. Persistence is best-effort: on resolution the batch is
    * accepted, ordered, and visible to reads on this backend instance, but
    * only a resolved {@link flush} promises it survives a crash — a backend
    * may buffer or batch physical writes behind append. Rejects with
@@ -103,7 +104,7 @@ A created session is observable in this process from the moment `create` resolve
 
 ## The flush checkpoint
 
-`session/event` is a *synchronous* notification; the mounted backend routes it by session id into the active write handle's bounded write-behind window without blocking the producer (the backend installs these listeners once, because persistence already enforces one active write handle per id). The first pending event starts a fixed internal batching window, and later events join without resetting its deadline. Expiry starts one durable `append` through the session's write handle; events admitted during that write receive their own deadline and form a follow-up batch. `session/flush` cancels the wait and drains through quiescence, so the loop still uses it as the ordering and error-observation checkpoint before claiming the next ordinary turn. A rejected background write retains its events in order, pauses the automatic path, and is reported through the logger; the next explicit flush retries and rejects loudly to its caller. `session/disposed` performs the same final drain and closes the handle, and `close()` itself drains the routed buffer through the still-open storage, so backend teardown's close sweep loses nothing. The window bounds only intentional batching wait, not event-loop scheduling or backend durability latency.
+`session/event` is a *synchronous* notification; the mounted backend routes it by session id into the active write handle's bounded write-behind window without blocking the producer (the backend installs these listeners once, because persistence already enforces one active write handle per id). The first pending event starts a fixed internal batching window, and later events join without resetting its deadline. Expiry starts one durable `append` through the session's write handle; events admitted during that write receive their own deadline and form a follow-up batch. `session/flush` cancels the wait and drains through quiescence, so the loop still uses it as the ordering and error-observation checkpoint before claiming the next ordinary turn. A rejected background write retains its events in order, pauses the automatic path, and is reported through the logger; the next explicit flush retries and rejects loudly to its caller. `session/truncated` drops routed live events at or past the retained length so a later flush cannot replay a discarded tail. `session/disposed` performs the same final drain and closes the handle, and `close()` itself drains the routed buffer through the still-open storage, so backend teardown's close sweep loses nothing. The window bounds only intentional batching wait, not event-loop scheduling or backend durability latency.
 
 ## Crash recovery preserves an interrupted turn
 

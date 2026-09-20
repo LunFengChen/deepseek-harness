@@ -1,0 +1,68 @@
+# Point an npm dist-tag at versions this family already published.
+# Publication skips existing versions, so a later dist-tag policy change cannot
+# move `latest` by itself. Dispatch this after that policy change, or when a
+# tag has drifted.
+name: Release dist-tag (xfdsh)
+
+on:
+  workflow_dispatch:
+    inputs:
+      family:
+        description: Release family
+        required: true
+        default: dsh
+        type: choice
+        options:
+          - dsh
+          - vendor
+      tag:
+        description: npm dist-tag to point at each member's published version
+        required: true
+        default: latest
+        type: string
+      version:
+        description: Optional exact version. Empty uses each member's manifest version.
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  dist-tag:
+    name: Point npm dist-tag
+    runs-on: ubuntu-24.04
+    environment: npm-publish
+    concurrency:
+      group: Release-publish
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v4
+        with:
+          dest: ${{ runner.temp }}/setup-pnpm
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+
+      - name: Install (immutable, no package scripts)
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Point dist-tag
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          args=(--family '${{ inputs.family }}' --tag '${{ inputs.tag }}')
+          version='${{ inputs.version }}'
+          if [ -n "$version" ]; then
+            args+=(--version "$version")
+          fi
+          pnpm run release:dist-tag "${args[@]}"

@@ -1,13 +1,13 @@
 /**
  * Model-visible messages owned by continuable-subagent orchestration.
  *
- * @module @deepseek-ai/dsh-subagent/continuation-messages
+ * @module @x1a0f3n9/dsh-subagent/continuation-messages
  */
 
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import { boundContextSummary, createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import type { SessionId } from '@deepseek-ai/dsh-session'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import { boundContextSummary, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
 import type { ActivationTerminal } from './lifecycle.ts'
 import type { SubagentResult } from './types.ts'
 
@@ -37,7 +37,7 @@ export interface SubagentSettledMessageSource {
   readonly senderSessionId: SessionId
 }
 
-declare module '@deepseek-ai/dsh-llm' {
+declare module '@x1a0f3n9/dsh-llm' {
   interface MessageSourceMap {
     'agent-message': AgentMessageSource
     'subagent-settled': SubagentSettledMessageSource

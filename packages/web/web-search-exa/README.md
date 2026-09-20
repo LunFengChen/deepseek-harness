@@ -3,7 +3,7 @@ description: "The Exa-backed search provider for ctx.web: how deployments mount 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-exa
+# @x1a0f3n9/dsh-web-search-exa
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Choose this backend when a deployment holds an Exa API key and wants Exa's keywo
 Load the web service and the provider; the API key falls back to `$EXA_API_KEY` from the launch environment, and all other settings have safe defaults.
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-exa'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-exa'
   config:
     apiKey: !!js process.env.EXA_API_KEY
 ```
@@ -100,7 +100,7 @@ The provider is a thin adapter over Exa's API with two deliberate rules:
 Read these pages when the package-level contract is not enough. They move from the shared vocabulary to the service, the model-facing tools, and the design rationale.
 
 - [Web subsystem](../../../docs/subsystems/web.md) — the exhaustive search request/result vocabulary and error codes.
-- [Web package map](../README.md) — the six-package family and each role.
+- [Web package map](../README.md) — the web package family and each role.
 - [dsh-web](../web/README.md) — the web service this provider registers into.
 - [dsh-tool-web](../tool-web/README.md) — the model-facing `web_search` tool that renders this provider's sources.
 - [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web-search-exa) — every accepted config field and its source declaration.

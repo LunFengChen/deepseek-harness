@@ -5,7 +5,7 @@
  * cannot ride the `dsh-subprocess` service — this module is the seam's
  * documented exception for SDK-managed transports.
  *
- * @module @deepseek-ai/dsh-sdk-client/dispose
+ * @module @x1a0f3n9/dsh-sdk-client/dispose
  */
 
 import type { ChildProcess } from 'node:child_process'

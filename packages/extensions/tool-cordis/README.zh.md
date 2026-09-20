@@ -3,13 +3,13 @@ description: "面向 agent（智能体）与维护者的 Cordis 运行时工具�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-cordis
+# @x1a0f3n9/dsh-tool-cordis
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-tool-cordis` 让模型检查实时 Cordis 运行时，并创建、运行、停止、更新或移除包含 host 代码、浏览器代码或两者的临时动态包。包版本不可变，因此包失败后，模型可以添加新版本并更新当前运行的版本。定义只存在于进程内存中，DSH 重启即消失；本包不写仓库文件、不安装依赖，也不改 `cordis.yml`。它还会把这套工作流教给模型。请与 `@deepseek-ai/dsh-cordis-host-runner` 一同组合，后者提供沙箱与运行往返。
+`dsh-tool-cordis` 让模型检查实时 Cordis 运行时，并创建、运行、停止、更新或移除包含 host 代码、浏览器代码或两者的临时动态包。包版本不可变，因此包失败后，模型可以添加新版本并更新当前运行的版本。定义只存在于进程内存中，DSH 重启即消失；本包不写仓库文件、不安装依赖，也不改 `cordis.yml`。它还会把这套工作流教给模型。请与 `@x1a0f3n9/dsh-cordis-host-runner` 一同组合，后者提供沙箱与运行往返。
 
 ## 目录
 
@@ -30,10 +30,10 @@ kind: "package-reference"
 ### 最小组合
 
 ```yaml
-- name: '@deepseek-ai/dsh-cordis-host-runner'
+- name: '@x1a0f3n9/dsh-cordis-host-runner'
   config:
     vmTimeoutMs: 5000
-- name: '@deepseek-ai/dsh-tool-cordis'
+- name: '@x1a0f3n9/dsh-tool-cordis'
 ```
 
 CLI 示例 [`apps/cli/config/examples/cordis/cordis.yml`](../../../apps/cli/config/examples/cordis/cordis.yml) 同时组合了这两者。带浏览器半的包还额外需要客户端组合里的浏览器 runner 与 UI 包；纯 host 包则两者都不需要。

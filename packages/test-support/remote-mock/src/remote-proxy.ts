@@ -1,6 +1,6 @@
 /** Lazy namespace access for native Remote mocks; production Remote declarations stay unchanged. */
 import type { MaybeMockedDeep } from '@vitest/spy'
-import type { TypertRemoteNamespaceMap } from '@deepseek-ai/dsh-typert-protocol'
+import type { TypertRemoteNamespaceMap } from '@x1a0f3n9/dsh-typert-protocol'
 
 /**
  * Native mocks for every generated Remote namespace, or an unrestricted local proxy without generated types.

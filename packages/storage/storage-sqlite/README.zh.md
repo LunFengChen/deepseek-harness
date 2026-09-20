@@ -3,7 +3,7 @@ description: "SQLite 存储后端：面向在单个数据库文件中选择、�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-storage-sqlite
+# @x1a0f3n9/dsh-storage-sqlite
 
 [English](README.md) | 中文
 
@@ -36,11 +36,11 @@ kind: "package-reference"
 两个字段：数据库路径与 journal mode。`:memory:` 打开一个进程内数据库，其内容随进程消失。
 
 ```yaml
-- name: '@deepseek-ai/dsh-storage'
-- name: '@deepseek-ai/dsh-storage-sqlite'
+- name: '@x1a0f3n9/dsh-storage'
+- name: '@x1a0f3n9/dsh-storage-sqlite'
   config:
     path: /var/lib/dsh/data.db
-- name: '@deepseek-ai/dsh-storage-domain'
+- name: '@x1a0f3n9/dsh-storage-domain'
   config:
     backend: sqlite
 ```

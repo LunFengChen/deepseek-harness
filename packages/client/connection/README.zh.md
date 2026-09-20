@@ -3,7 +3,7 @@ description: "Web GUI 的浏览器与 Host 之间的协议层：Remote RPC、带
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-connection
+# @x1a0f3n9/dsh-client-connection
 
 [English](README.md) | 中文
 

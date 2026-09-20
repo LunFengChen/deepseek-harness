@@ -3,11 +3,11 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import type { Fiber } from '@deepseek-ai/cordis'
-import { SettingsProvider } from '@deepseek-ai/dsh-settings'
-import type { SettingsNamespace } from '@deepseek-ai/dsh-settings'
-import { SHELL_SETTINGS_NAMESPACE } from '@deepseek-ai/dsh-shell'
-import LocalSubprocessRuntime from '@deepseek-ai/dsh-subprocess-local'
-import { PwshLocalExecutor } from '@deepseek-ai/dsh-pwsh-local'
+import { SettingsProvider } from '@x1a0f3n9/dsh-settings'
+import type { SettingsNamespace } from '@x1a0f3n9/dsh-settings'
+import { SHELL_SETTINGS_NAMESPACE } from '@x1a0f3n9/dsh-shell'
+import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import { PwshLocalExecutor } from '@x1a0f3n9/dsh-pwsh-local'
 
 /** The smallest real provider: one in-memory document, always writable. */
 class MemorySettings extends SettingsProvider {

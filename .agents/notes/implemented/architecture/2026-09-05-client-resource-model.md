@@ -12,7 +12,7 @@ The tab record set the constraint. A tab must survive undo, redo, body remount, 
 
 ## Decision
 
-[`packages/client/resources`](../../../../packages/client/resources/README.md) (`@deepseek-ai/dsh-client-resources`) provides `ctx.resources` and the `useResource` global standard hook. Anything a consumer reads live is a **resource**, a resource is identified by its **address** and nothing else, and the address's protocol names the one **provider** that turns it into a frame stream.
+[`packages/client/resources`](../../../../packages/client/resources/README.md) (`@x1a0f3n9/dsh-client-resources`) provides `ctx.resources` and the `useResource` global standard hook. Anything a consumer reads live is a **resource**, a resource is identified by its **address** and nothing else, and the address's protocol names the one **provider** that turns it into a frame stream.
 
 ### Addresses
 

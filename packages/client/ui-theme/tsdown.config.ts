@@ -1,6 +1,6 @@
 import { clientBundle } from '../tsdown.client.ts'
 
 export default clientBundle(
-  '@deepseek-ai/dsh-client-ui-theme',
+  '@x1a0f3n9/dsh-client-ui-theme',
   ['lib/types/index.js'],
 )

@@ -1,11 +1,11 @@
 // Sessions remain resident after creation so their open Remote sources keep running off-screen.
 
 import type { Context } from '@deepseek-ai/cordis'
-import { randomUUID } from '@deepseek-ai/dsh-util-crypto'
-import type { AttachmentIdType, FileAttachmentRef, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import type { SubagentAddress } from '@deepseek-ai/dsh-subagent/client'
-import type { MessageId } from '@deepseek-ai/dsh-llm/brand'
-import { SessionLogOffset, SessionSeq, type SessionId } from '@deepseek-ai/dsh-session/types'
+import { randomUUID } from '@x1a0f3n9/dsh-util-crypto'
+import type { AttachmentIdType, FileAttachmentRef, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type { SubagentAddress } from '@x1a0f3n9/dsh-subagent/client'
+import type { MessageId } from '@x1a0f3n9/dsh-llm/brand'
+import { SessionLogOffset, SessionSeq, type SessionId } from '@x1a0f3n9/dsh-session/types'
 import { SessionEventStream } from '../transport.ts'
 import type { SessionJournalChange } from '../transport.ts'
 import type {
@@ -29,9 +29,9 @@ import type {
   SessionEventLikeEntry, SessionLiveEventEntry,
 } from '../contract/events.ts'
 import { Notifier } from './notifier.ts'
-import { isRemoteFailure } from '@deepseek-ai/dsh-api-gateway/client'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
-import type { RemoteFailure, RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+import { isRemoteFailure } from '@x1a0f3n9/dsh-api-gateway/client'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import type { RemoteFailure, RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import type { SessionRemotes } from './remotes.ts'
 import { ProjectionValueStore } from './projection-store.ts'
 import type { ProjectionsBaseline } from './projection-store.ts'
@@ -354,6 +354,26 @@ export class Session implements SessionFace {
    * @param title - raw title text (the host normalizes acceptance).
    * @returns the rename result (normalized accepted title + title event seq).
    */
+  /**
+   * Permanently remove the selected turn and all later history, then rebuild
+   * this client's journal window so the next prompt uses the rewritten prefix.
+   * @param fromSeq - visible event sequence in the turn to remove.
+   * @returns acceptance after the local history window is resynchronized.
+   */
+  async deleteFrom(fromSeq: SessionSeq): Promise<RemoteResult<{ accepted: true }>> {
+    const result = await this.remote.session.deleteFrom({
+      sessionId: this.sessionId,
+      fromSeq,
+    })
+    if (!result.ok) {
+      this.promptError = { op: 'send', error: result.error }
+      this.notifier.markDirty()
+      return result
+    }
+    await this.resync()
+    return result
+  }
+
   async rename(title: string): Promise<RemoteResult<{ title: string; seq: SessionSeq }>> {
     const result = await this.remote.session.rename({ sessionId: this.sessionId, title })
     if (!result.ok) return result

@@ -14,13 +14,13 @@
  */
 import { expect, test } from 'vitest'
 import { posix as nodePosix } from 'node:path'
-import * as shim from '@deepseek-ai/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/path.ts'
+import * as shim from '@x1a0f3n9/dsh-experimental-webworker-runtime/src/node/builtin_modules/implemented/path.ts'
 
 const CASES = [
   '', '.', '..', '/', '//', '///', 'a', '/a', 'a/', '/a/', 'a/b', '/a/b/c', 'a//b', '/a//b/',
   './a', '../a', 'a/./b', 'a/../b', '/a/../..', '/../a', 'a/b/../../c', '.hidden', 'a.b.c',
   '/a/b/c.txt', 'c.txt', '.txt', 'a/.txt', 'a/b.', '/a/b/.', '/a/b/..', 'foo/bar/../baz/./qux',
-  '/dsh/node_modules/@deepseek-ai/dsh-session/lib/index.js', 'node_modules/.bin/x',
+  '/dsh/node_modules/@x1a0f3n9/dsh-session/lib/index.js', 'node_modules/.bin/x',
 ]
 
 const JOINS: string[][] = [

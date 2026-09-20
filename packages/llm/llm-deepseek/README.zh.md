@@ -3,7 +3,7 @@ description: "面向用户与维护者的 DeepSeek chat-completions 适配器说
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-llm-deepseek
+# @x1a0f3n9/dsh-llm-deepseek
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-llm-deepseek'
+- name: '@x1a0f3n9/dsh-llm-deepseek'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY  # credential reference, resolved per request
     baseURL: https://api.deepseek.com # optional; $DEEPSEEK_BASE_URL then this default
@@ -68,7 +68,7 @@ kind: "package-reference"
 | `fileExpiresAfterSeconds` | `604,800` | 请求的上传图片生存期 |
 | `fileRefreshMarginSeconds` | `3,600` | 低于此剩余生存期时替换 id |
 | `fileQuotaCleanupBatch` | `100` | 配额重试前删除的、归 harness 所有的最旧文件数 |
-| `retryPolicy` | normal，5 次重试 | 由 `dsh-llm-retry` 执行的提供方自有重试策略 |
+| `retryPolicy` | normal，20 次重试，500 毫秒到 10 秒 | 由 `dsh-llm-retry` 执行的提供方自有重试策略 |
 
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-llm-deepseek)是每个受支持字段及其 JSDoc 的穷尽式真源。
 

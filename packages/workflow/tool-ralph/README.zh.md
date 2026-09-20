@@ -3,7 +3,7 @@ description: "面向模型的 ralph 工具：固定前台 agent loop（智能体
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-ralph
+# @x1a0f3n9/dsh-tool-ralph
 
 [English](README.md) | 中文
 

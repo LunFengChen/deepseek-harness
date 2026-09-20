@@ -127,7 +127,7 @@ dsh plugin --profile sdk-minimal add file:C:/work/my-plugin-bundle
 
 The first command initializes the shipped standalone profile. The second forwards package management to `pnpm`, then records any installed package that exports a `dsh.bundle` layer. Install `pnpm` only for this management command; launching the installed SDK does not need it. Edit `$DSH_HOME/profiles/sdk-minimal/cordis.patch.yml` for persistent row changes, or pass patch files from Python for per-launch changes.
 
-Another `profile` is valid when it includes `@deepseek-ai/dsh-sdk-app` or another JSON-RPC server row. Missing server rows, unresolved plugins, and invalid patches fail during startup instead of falling back to another composition.
+Another `profile` is valid when it includes `@x1a0f3n9/dsh-sdk-app` or another JSON-RPC server row. Missing server rows, unresolved plugins, and invalid patches fail during startup instead of falling back to another composition.
 
 <a id="opt-in-to-str_replace_editor"></a>
 ### Opt in to `str_replace_editor`
@@ -137,11 +137,11 @@ The bundled runtime includes `str_replace_editor`, but `sdk-minimal` omits it fr
 ```yaml
 - insert:
     - id: fs-local
-      name: '@deepseek-ai/dsh-fs-local'
+      name: '@x1a0f3n9/dsh-fs-local'
       config:
         cwd: !!js process.cwd()
     - id: tool-str-replace-editor
-      name: '@deepseek-ai/dsh-tool-str-replace-editor'
+      name: '@x1a0f3n9/dsh-tool-str-replace-editor'
 ```
 
 Pass `patches=("/absolute/path/to/editor.patch.yml",)` when constructing `DeepSeekHarness(profile="sdk-minimal", ...)`, or put the patch in `$DSH_HOME/profiles/sdk-minimal/cordis.patch.yml` for persistent configuration. On the next runtime launch, model requests include `str_replace_editor` beside the persistent shell. The local filesystem provider uses the runtime working directory for relative paths; like the minimal shell, it does not confine access to that directory. For the standard `sdk` profile, insert only the editor row so it uses the existing filesystem provider and policies.

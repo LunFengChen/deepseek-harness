@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { ToolCallId } from '@deepseek-ai/dsh-llm'
-import { SESSION_FORMAT_VERSION, Session, SessionId } from '@deepseek-ai/dsh-session'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import TerminalSessionService from '@deepseek-ai/dsh-terminal'
+import { ToolCallId } from '@x1a0f3n9/dsh-llm'
+import { SESSION_FORMAT_VERSION, Session, SessionId } from '@x1a0f3n9/dsh-session'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import TerminalSessionService from '@x1a0f3n9/dsh-terminal'
 import type {
   TerminalBackend,
   TerminalBackendSession,
@@ -14,11 +14,11 @@ import type {
   TerminalSessionStatus,
   TerminalSignal,
   TerminalWaitReason,
-} from '@deepseek-ai/dsh-terminal'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import ToolRegistry from '@deepseek-ai/dsh-tools'
-import * as ToolPwshPersistent from '@deepseek-ai/dsh-tool-pwsh-persistent'
-import { unsupportedInbox } from '@deepseek-ai/dsh-agent-loop-testkit'
+} from '@x1a0f3n9/dsh-terminal'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRegistry from '@x1a0f3n9/dsh-tools'
+import * as ToolPwshPersistent from '@x1a0f3n9/dsh-tool-pwsh-persistent'
+import { unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 const contexts: Context[] = []
 let callNumber = 0

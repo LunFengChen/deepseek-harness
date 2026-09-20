@@ -1,9 +1,9 @@
 /** Real JSONL publication and provider-neutral message preservation across the V2 PTC rename. */
 
 import { Context } from '@deepseek-ai/cordis'
-import { Session, SessionId } from '@deepseek-ai/dsh-session'
-import type { SessionFormatEvent } from '@deepseek-ai/dsh-session-format'
-import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
+import { Session, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionFormatEvent } from '@x1a0f3n9/dsh-session-format'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import { createHash } from 'node:crypto'
 import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -167,7 +167,7 @@ describe('JSONL V2 PTC publication and restore', () => {
     const systemMessage = {
       id: 'v2-to-v3-system-' + createHash('sha256')
         .update(JSON.stringify(['session-format-v2-to-v3', id, 1, 'step/start'])).digest('hex'),
-      role: 'system', source: { kind: 'plugin', plugin: '@deepseek-ai/dsh-system-prompt' }, content: [],
+      role: 'system', source: { kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt' }, content: [],
     }
     expectedEvents.splice(2, 0, {
       type: 'system/message', seq: 2, time: 1002, surfaceOp: 'append',

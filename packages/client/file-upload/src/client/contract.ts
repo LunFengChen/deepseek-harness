@@ -1,5 +1,5 @@
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import type { FileUploadValue } from '../types.ts'
 
 /** Browser request body accepted by the background file-upload service. */

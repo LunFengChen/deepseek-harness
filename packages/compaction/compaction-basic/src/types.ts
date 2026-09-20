@@ -1,10 +1,10 @@
 /**
  * Configuration vocabulary for the replay-aware basic compaction backend.
  *
- * @module @deepseek-ai/dsh-compaction-basic/types
+ * @module @x1a0f3n9/dsh-compaction-basic/types
  */
 
-import type { LlmCallConfig } from '@deepseek-ai/dsh-llm'
+import type { LlmCallConfig } from '@x1a0f3n9/dsh-llm'
 
 /** Policy fields shared by the default policy and exact model overrides. */
 export interface CompactionPolicyConfig {
@@ -18,11 +18,11 @@ export interface CompactionPolicyConfig {
   summarizationProvider?: string
   /** Summary model; set together with `summarizationProvider`, or inherit the conversation target. */
   summarizationModel?: string
-  /** Provider generation cap for summarization. Defaults to `8192`. */
+  /** Optional summarization output cap; unset uses the adapter default. */
   maxTokens?: number
   /** Extra attempts after the first compaction when pressure remains above threshold. Defaults to `1`. */
   compactionRetries?: number
-  /** Maximum retries after canonical context overflow; `0` disables recovery. Defaults to `1`. */
+  /** Maximum retries after canonical context overflow; `0` disables recovery. Defaults to `3`. */
   maxOverflowRetries?: number
 }
 
@@ -52,7 +52,7 @@ interface ResolvedPolicyFields {
   readonly thresholdRatio: number
   readonly summarizationProvider: string
   readonly summarizationModel: string
-  readonly maxTokens: number
+  readonly maxTokens?: number
   readonly compactionRetries: number
   readonly maxOverflowRetries: number
 }

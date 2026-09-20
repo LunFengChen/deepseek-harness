@@ -3,7 +3,7 @@ description: "生成的 Typert 产物所用的 Loader 集成：已挂载的包�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-typert-loader
+# @x1a0f3n9/dsh-typert-loader
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-reference"
 加载注册表与 loader；loader 默认发现每一个 Loader 配置项：
 
 ```yaml
-- name: '@deepseek-ai/dsh-typert-registry'
-- name: '@deepseek-ai/dsh-typert-loader'
+- name: '@x1a0f3n9/dsh-typert-registry'
+- name: '@x1a0f3n9/dsh-typert-loader'
 ```
 
 | 字段 | 默认值 | 含义 |

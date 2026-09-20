@@ -12,7 +12,7 @@ Moving the packages into product-role groups would remove their experimental nam
 
 ## Decision
 
-`packages/experimental/agent-team`, `packages/experimental/tool-agent-team`, `packages/experimental/agent-team-profile`, `packages/experimental/client-ui-agent-team`, and `packages/experimental/agent-team-web-profile` are public workspace packages. They retain their existing `@deepseek-ai/dsh-experimental-*` names and join the dsh release family. The [experimental package rules](../../../../packages/experimental/AGENTS.md) own the private default, this exception, and later promotion.
+`packages/experimental/agent-team`, `packages/experimental/tool-agent-team`, `packages/experimental/agent-team-profile`, `packages/experimental/client-ui-agent-team`, and `packages/experimental/agent-team-web-profile` are public workspace packages. They retain their existing `@x1a0f3n9/dsh-experimental-*` names and join the dsh release family. The [experimental package rules](../../../../packages/experimental/AGENTS.md) own the private default, this exception, and later promotion.
 
 The dsh pack and publish set and the local baseline publisher include exactly these five experimental package directories. Workspace constraints require them to omit `private`, set `publishConfig.access` to `public`, and keep the experimental npm prefix. Every other experimental package remains private and excluded from publication by default. Release packages and apps outside the experimental group, plus the Python runtime, cannot name experimental packages in `dependencies`, `optionalDependencies`, or `peerDependencies`; experimental packages may depend on release packages and each other.
 

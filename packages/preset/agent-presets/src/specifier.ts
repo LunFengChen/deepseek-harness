@@ -10,7 +10,7 @@
  * classify a row's name before they can act on it, and they must classify it
  * the same way — a row discovery resolves from one base and the mount imports
  * from another would be reported healthy and then fail to load.
- * @module @deepseek-ai/dsh-agent-presets/specifier
+ * @module @x1a0f3n9/dsh-agent-presets/specifier
  */
 
 import { isAbsolute } from 'node:path'

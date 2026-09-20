@@ -1,18 +1,18 @@
 /**
  * Replay-safe, model-free tool-result pruning service.
  *
- * @module @deepseek-ai/dsh-compaction-tool-result-pruner
+ * @module @x1a0f3n9/dsh-compaction-tool-result-pruner
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { freezeMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock } from '@deepseek-ai/dsh-llm'
-import type { Session, SessionEvent, SessionSeq, ToolResultMessage } from '@deepseek-ai/dsh-session'
+import { freezeMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
+import type { Session, SessionEvent, SessionSeq, ToolResultMessage } from '@x1a0f3n9/dsh-session'
 // Type-only: the `compaction/*` SessionEventMap merges (the shadow-price event).
-import type {} from '@deepseek-ai/dsh-compaction'
+import type {} from '@x1a0f3n9/dsh-compaction'
 // Type-only: the `ctx.tokenMeter` Context merge for the declared injection.
-import type {} from '@deepseek-ai/dsh-token-meter'
+import type {} from '@x1a0f3n9/dsh-token-meter'
 import { codePointLength, DEFAULTS, PRUNE_MARKER, resolveConfig } from './config.ts'
 import type {
   PrunedEntry,

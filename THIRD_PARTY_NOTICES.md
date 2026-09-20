@@ -56,6 +56,14 @@ External packages installed for runtime use or distributed inside the prebuilt b
 | [`@standard-schema/spec`](https://github.com/standard-schema/standard-schema) | MIT |
 | [`@tanstack/react-virtual`](https://github.com/TanStack/virtual) | MIT |
 | [`@vscode/ripgrep`](https://github.com/microsoft/vscode-ripgrep) | MIT |
+| [`@x1a0f3n9/dsh-better-sidebar`](https://github.com/LunFengChen/DSH-better-sidebar) | MIT |
+| [`@x1a0f3n9/dsh-context`](https://github.com/LunFengChen/dsh-context) | Apache-2.0 |
+| [`@x1a0f3n9/dsh-failover-queue`](https://github.com/LunFengChen/dsh-failover-queue) | MIT |
+| [`@x1a0f3n9/dsh-reasoning-effort`](https://github.com/LunFengChen/dsh-reasoning-effort) | MIT |
+| [`@x1a0f3n9/dsh-session-timeline`](https://github.com/LunFengChen/dsh-session-timeline) | MIT |
+| [`@x1a0f3n9/dsh-skills-manager`](https://github.com/LunFengChen/dsh-skills-manager) | Apache-2.0 |
+| [`@x1a0f3n9/dshmarket`](https://github.com/LunFengChen/dsh-market) | MIT |
+| [`@x1a0f3n9/hindsight-coding-agents`](https://github.com/LunFengChen/hindsight-coding-agents) | MIT |
 | [`@xterm/headless`](https://github.com/xtermjs/xterm.js) | MIT |
 | [`@yarnpkg/parsers`](https://github.com/yarnpkg/berry) | BSD-2-Clause |
 | [`acorn`](https://github.com/acornjs/acorn) | MIT |

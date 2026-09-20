@@ -7,8 +7,8 @@ import {
   extendWin32ProcessBindings,
   isNullPtr,
   throwLastError,
-} from '@deepseek-ai/dsh-win32-process'
-import type { NativePtr, Win32ProcessBindings } from '@deepseek-ai/dsh-win32-process'
+} from '@x1a0f3n9/dsh-win32-process'
+import type { NativePtr, Win32ProcessBindings } from '@x1a0f3n9/dsh-win32-process'
 import * as abi from './win32-abi.ts'
 
 export {
@@ -19,8 +19,8 @@ export {
   isNullPtr,
   throwLastError,
   throwWin32,
-} from '@deepseek-ai/dsh-win32-process'
-export type { NativePtr } from '@deepseek-ai/dsh-win32-process'
+} from '@x1a0f3n9/dsh-win32-process'
+export type { NativePtr } from '@x1a0f3n9/dsh-win32-process'
 
 type Ptr = ReturnType<typeof koffi.pointer>
 const PVOID: Ptr = koffi.pointer('void')

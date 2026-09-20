@@ -3,7 +3,7 @@ description: "Session-addressed browser file uploads with streaming intake, prog
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-file-upload
+# @x1a0f3n9/dsh-client-file-upload
 
 English | [中文](README.zh.md)
 
@@ -29,7 +29,7 @@ Mount the package before a consumer that injects `fileUpload`, then call `ctx.fi
 
 ```yaml
 - id: file-upload
-  name: '@deepseek-ai/dsh-client-file-upload'
+  name: '@x1a0f3n9/dsh-client-file-upload'
 ```
 
 The package has no Cordis configuration fields. A `Blob` uses XMLHttpRequest inside a dedicated Worker so the service can report browser upload progress, including the total when the browser provides it. A `ReadableStream` transfers to that Worker and feeds Fetch incrementally; progress reports consumed bytes without a total. An `AbortSignal` terminates the dedicated Worker or reaches a page-owned carrier. Exact bytes and fixture Blob inputs use the generated Remote.

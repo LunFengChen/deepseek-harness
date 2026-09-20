@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { createSessionFormatCatalog } from '@deepseek-ai/dsh-session-format'
-import type { SessionFormatArtifact, SessionFormatEvent, SessionFormatJsonObject } from '@deepseek-ai/dsh-session-format'
-import { releasedV0SessionFormatCodec, releasedV1SessionFormatCodec, sessionFormatV0ToV1 } from '@deepseek-ai/dsh-session-format-v0-to-v1'
-import { sessionFormatV1ToV2 } from '@deepseek-ai/dsh-session-format-v1-to-v2'
+import { createSessionFormatCatalog } from '@x1a0f3n9/dsh-session-format'
+import type { SessionFormatArtifact, SessionFormatEvent, SessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
+import { releasedV0SessionFormatCodec, releasedV1SessionFormatCodec, sessionFormatV0ToV1 } from '@x1a0f3n9/dsh-session-format-v0-to-v1'
+import { sessionFormatV1ToV2 } from '@x1a0f3n9/dsh-session-format-v1-to-v2'
 import { assertReleasedV3Header, releasedV2SessionFormatCodec, releasedV3SessionFormatCodec, restoreReleasedV3Artifact, sessionFormatV2ToV3 } from '../src/index.ts'
 
 const header = { version: 2, id: 'canonical:code:session', createdAt: 1, isSeeded: false, delegationDepth: 0 }

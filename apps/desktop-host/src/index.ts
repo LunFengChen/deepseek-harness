@@ -1,7 +1,7 @@
 /**
  * Electron child-process entry: boots the desktop project without a listening
  * socket and carries API plus validated Web assets over framed byte pipes.
- * @module @deepseek-ai/dsh-desktop-host
+ * @module @x1a0f3n9/dsh-desktop-host
  */
 
 import { createRequire } from 'node:module'
@@ -18,13 +18,13 @@ import {
   loadLayeredEnv,
   loadProfileDirectory,
   loadOverlayPatches,
-} from '@deepseek-ai/dsh-app-boot'
-import { provideCmdline } from '@deepseek-ai/dsh-cmdline'
-import { DSH_LAUNCH_ENVIRONMENT_KEY } from '@deepseek-ai/dsh-launch-environment'
-import type {} from '@deepseek-ai/dsh-api-gateway'
-import type { ConnectionFetchHandler } from '@deepseek-ai/dsh-client-connection'
-import type {} from '@deepseek-ai/dsh-client-modules'
-import { renderIndexInjections, type IndexInjection } from '@deepseek-ai/dsh-host-webserver'
+} from '@x1a0f3n9/dsh-app-boot'
+import { provideCmdline } from '@x1a0f3n9/dsh-cmdline'
+import { DSH_LAUNCH_ENVIRONMENT_KEY } from '@x1a0f3n9/dsh-launch-environment'
+import type {} from '@x1a0f3n9/dsh-api-gateway'
+import type { ConnectionFetchHandler } from '@x1a0f3n9/dsh-client-connection'
+import type {} from '@x1a0f3n9/dsh-client-modules'
+import { renderIndexInjections, type IndexInjection } from '@x1a0f3n9/dsh-host-webserver'
 import {
   DESKTOP_HOST_PROTOCOL_VERSION,
   DESKTOP_PIPE_CHUNK_BYTES,
@@ -150,7 +150,7 @@ function isProjectPath(projectDir: string, target: string): boolean {
 }
 
 function desktopPatches(runtimeDir: string, projectDir: string, allowLinkedPackages: boolean): PatchOptions[] {
-  const dshRoot = dirname(packageManifestPath(runtimeDir, '@deepseek-ai/dsh'))
+  const dshRoot = dirname(packageManifestPath(runtimeDir, '@x1a0f3n9/dsh'))
   const profile = loadProfileDirectory('dsh desktop', projectDir, join(dshRoot, 'package.json'))
   for (const layer of profile.layers) {
     if (!allowLinkedPackages && !isProjectPath(projectDir, layer.packageDir) && !isProjectPath(runtimeDir, layer.packageDir)) {
@@ -177,14 +177,14 @@ function desktopPatches(runtimeDir: string, projectDir: string, allowLinkedPacka
 }
 
 function dshVersion(runtimeDir: string): string {
-  const manifest = readManifest(packageManifestPath(runtimeDir, '@deepseek-ai/dsh'))
+  const manifest = readManifest(packageManifestPath(runtimeDir, '@x1a0f3n9/dsh'))
   if (typeof manifest.version !== 'string') throw new Error('dsh desktop: installed dsh manifest has no version')
   return manifest.version
 }
 
 function assetHandler(ctx: Context, runtimeDir: string): ConnectionFetchHandler {
   const require = createRequire(join(runtimeDir, 'package.json'))
-  const distIndex = require.resolve('@deepseek-ai/dsh-web-frontend/dist/index.html')
+  const distIndex = require.resolve('@x1a0f3n9/dsh-web-frontend/dist/index.html')
   const distRoot = realpathSync(dirname(distIndex))
   const renderIndex = async (): Promise<Response> => {
     const rows: IndexInjection[] = [{ kind: 'script', placement: 'head', text: DESKTOP_TRANSPORT_SCRIPT }]

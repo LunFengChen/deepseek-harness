@@ -3,7 +3,7 @@ description: "The sandbox-consuming Bash executor for deployments and maintainer
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-bash-sandbox
+# @x1a0f3n9/dsh-bash-sandbox
 
 English | [中文](README.zh.md)
 
@@ -45,14 +45,14 @@ The executor takes no sandbox configuration of its own: the default mode and wor
 
 ```yaml
 - id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'
+  name: '@x1a0f3n9/dsh-sandbox-local'
 - id: sandbox-policy
-  name: '@deepseek-ai/dsh-sandbox-policy'
+  name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: read-only
     workspaceRoot: !!js process.cwd() # fallback for calls without a session cwd
 - id: bash
-  name: '@deepseek-ai/dsh-bash-sandbox'
+  name: '@x1a0f3n9/dsh-bash-sandbox'
 ```
 
 ### Denials are result facts

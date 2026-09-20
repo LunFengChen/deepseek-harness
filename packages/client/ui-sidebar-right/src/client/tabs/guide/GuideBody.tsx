@@ -18,8 +18,8 @@
  * open.
  */
 import type { ReactNode } from 'react'
-import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
-import type { ChainRenderOpts, HookContextOf, InjectFace, PropsRenderSlots, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import type { ChainRenderOpts, HookContextOf, InjectFace, PropsRenderSlots, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { SidebarRightGuideBox } from '../../tab-registry.ts'
 import { CompassGlyph, CubeGlyph } from './GuideTitle.tsx'
 import css from './GuideBody.module.css'

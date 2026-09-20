@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { SpillLocator } from '@deepseek-ai/dsh-spill'
+import { SpillLocator } from '@x1a0f3n9/dsh-spill'
 import { formatSpillNotice, hasSpillNotice } from '../src/notice.ts'
 
 const ref = { locator: SpillLocator('/spill/output.txt'), retrievalHint: 'Read the file.' }

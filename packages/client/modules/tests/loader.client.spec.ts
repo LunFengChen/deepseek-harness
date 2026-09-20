@@ -7,7 +7,7 @@ import {
   type ClientModuleLoader, type ClientModuleLoaderTarget, type DshWindow,
 } from '../src/client/index.ts'
 
-const MODULES_ID = '@deepseek-ai/dsh-client-modules'
+const MODULES_ID = '@x1a0f3n9/dsh-client-modules'
 
 const comboUrl = (ids: readonly string[], rev: string): string =>
   `/plugins/??${ids.map(id => `${id}/client.js`).join(',')}&rev=${rev}`
@@ -249,6 +249,15 @@ describe('require resolution', () => {
     expect((exports as { dep: unknown }).dep).toBe(react)
     expect(await b.loader.import('react', '', {})).toBe(react)
     expect(b.loader.loadCache.has('react')).toBe(false)
+  })
+
+  it('require of an official dsh package name answers the fork seed word', async () => {
+    const primitives = { marker: 'primitives' }
+    const b = bench([row('dsh-context')], {
+      'dsh-context': req => ({ dep: req('@deepseek-ai/dsh-client-ui-primitives') }),
+    }, { seed: { '@x1a0f3n9/dsh-client-ui-primitives': primitives } })
+    const exports = await b.loader.import('dsh-context', '', {})
+    expect((exports as { dep: unknown }).dep).toBe(primitives)
   })
 
   it('require answers an already-materialized module from the cache', async () => {

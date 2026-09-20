@@ -5,7 +5,7 @@
  * It mounts no VFS image, boots no Cordis tree, and loads no plugins — the
  * only thing it shares with the host worker is the bundle it was started from.
  * Its filesystem is the host's, reached by message.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/shell/process/child
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/process/child
  */
 
 import { runShellCommand, runShellProgram } from '../interpret.ts'

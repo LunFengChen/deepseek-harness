@@ -1,7 +1,7 @@
 /** Shared indeterminate loading feedback for document reads and rendering. */
 import type { ReactNode } from 'react'
 import clsx from 'clsx'
-import { IconLoadingOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
+import { IconLoadingOutline16 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import css from './LoadingIndicator.module.css'
 
 /** @param props - localized status label and optional placement style. @returns an animated, accessible loading status. */

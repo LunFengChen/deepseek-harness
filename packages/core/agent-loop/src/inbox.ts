@@ -1,20 +1,20 @@
 /**
  * Driver-owned durable agent inbox projection and command facade.
  *
- * @module @deepseek-ai/dsh-agent-loop/inbox
+ * @module @x1a0f3n9/dsh-agent-loop/inbox
  */
 
-import type { MessageId } from '@deepseek-ai/dsh-llm'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
-import type SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { Session, SessionEventMap, UserMessage } from '@deepseek-ai/dsh-session'
+import type { MessageId } from '@x1a0f3n9/dsh-llm'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
+import type SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { Session, SessionEventMap, UserMessage } from '@x1a0f3n9/dsh-session'
 import type {
   AgentEventDispatch,
   Inbox as InboxContract,
   InboxState,
   InboxTarget,
   InboxWireState,
-} from '@deepseek-ai/dsh-agent'
+} from '@x1a0f3n9/dsh-agent'
 import { z } from 'zod'
 
 /** Wire validation for pending agent input reconstructed from durable inbox splices. */
@@ -23,11 +23,20 @@ export const inboxProjectionSchema = z.object({
   'next-step': z.array(z.custom<UserMessage>()).readonly(),
 }).readonly()
 
-/** Standard fold that reconstructs pending input and rejects invalid durable splice history. */
+function emptyInbox(): InboxState {
+  return { 'next-turn': [], 'next-step': [] }
+}
+
+/**
+ * Standard fold that reconstructs pending input and rejects invalid durable splice history.
+ * An inherited `session/end-seed` is not a queue cut: committed child splices may
+ * still address the reconstructed source queue. A fresh fork drops that queue by
+ * recording cancel splices after the marker.
+ */
 export const inboxProjectionDefinition = {
   key: 'inbox',
   stateSchema: inboxProjectionSchema,
-  init: (): InboxState => ({ 'next-turn': [], 'next-step': [] }),
+  init: (): InboxState => emptyInbox(),
   apply(state: InboxState, event) {
     if (event.type !== 'agent/inbox/spliced') return state
     const splice = event.data
@@ -61,7 +70,7 @@ export const inboxProjectionDefinition = {
     viewSchema: inboxProjectionSchema as unknown as z.ZodType<InboxWireState>,
     view: (state: InboxState) => state as unknown as InboxWireState,
   },
-  stateVersion: 1,
+  stateVersion: 2,
 } satisfies ProjectionDefinition<'inbox', InboxState>
 
 /**

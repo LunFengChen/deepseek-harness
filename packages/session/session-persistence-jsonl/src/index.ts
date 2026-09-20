@@ -1,9 +1,11 @@
 /**
  * JSONL durable session-persistence backend. It stores a header and contiguous
- * events in immutable generation files under one directory per session and serves the handle-based
+ * events in immutable historical generation files under one directory per session.
+ * Normal writes append to the current generation; explicit destructive deletion
+ * rewrites that current generation's retained prefix. It serves the handle-based
  * `SessionPersistence` API: `create`/`open` return per-session handles, and
  * every read validates the same fail-closed storage contract.
- * @module @deepseek-ai/dsh-session-persistence-jsonl
+ * @module @x1a0f3n9/dsh-session-persistence-jsonl
  */
 
 import { Context } from '@deepseek-ai/cordis'
@@ -11,9 +13,9 @@ import z from '@deepseek-ai/schemastery'
 import {
   SessionFormatUnsupportedMigrationError,
   sessionFormatCatalog,
-} from '@deepseek-ai/dsh-session-format-catalog'
+} from '@x1a0f3n9/dsh-session-format-catalog'
 import { readdirSync, type Dirent } from 'node:fs'
-import { open, mkdir, readdir, realpath, link, rm, stat, truncate } from 'node:fs/promises'
+import { open, mkdir, readdir, realpath, link, rename, rm, stat, truncate } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { scheduler } from 'node:timers/promises'
@@ -29,11 +31,12 @@ import {
   type SessionPersistenceListOptions, type SessionPersistenceOpenOptions,
   type SessionPersistenceSnapshot, type SessionPersistenceStatOptions,
   type SessionPersistenceRevision as PersistenceRevision,
-} from '@deepseek-ai/dsh-session-persistence'
+  type SessionHistorySuffix, type SessionHistorySuffixOptions,
+} from '@x1a0f3n9/dsh-session-persistence'
 import { JsonlBackendTracker, JsonlSessionHandle, type StorageHandleState } from './storage.ts'
 import { SessionWriteLease } from './lease.ts'
-import { SESSION_FORMAT_VERSION, SessionId as makeSessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionId, SessionHeader, SessionLogOffset as SessionLogOffsetType } from '@deepseek-ai/dsh-session'
+import { SESSION_FORMAT_VERSION, SessionId as makeSessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionId, SessionHeader, SessionLogOffset as SessionLogOffsetType } from '@x1a0f3n9/dsh-session'
 import {
   assertNoRetiredHeaderFields, encodeSegment, eventLines, generationLogFilename, generationLogPath, logPath, logSuffix,
   parseGenerationLogFilename, projectDir, scanLog, sessionDir, SessionLogScanner, toHeaderLine,
@@ -42,6 +45,7 @@ import {
 import {
   compressZstdFrame, createZstdFrameDecoder, decompressZstdFrame, decompressZstdPrefix, scanZstdFrames,
 } from './zstd.ts'
+import { readJsonlHistorySuffix } from './history-suffix.ts'
 import { ensureDurableDirectoryWin32, publishNewFileWin32 } from './win32.ts'
 import { verifyCurrentGenerationInWorker } from './migration-verifier.ts'
 import {
@@ -413,6 +417,44 @@ class JsonlSessionPersistence extends SessionPersistence {
    */
   flush(): Promise<void> {
     return this.tracker.flushAll()
+  }
+
+  /**
+   * Read a tail page of one current-generation JSONL log without restoring
+   * the whole artifact. Historical generations return `undefined` so the
+   * caller can migrate through a full observation.
+   * @param id - the stored session to read.
+   * @param options - page bounds and cancellation.
+   * @returns the covering suffix, or `undefined` when the selected generation
+   *   is older than this build.
+   */
+  override async readHistorySuffix(
+    id: SessionId,
+    options: SessionHistorySuffixOptions,
+  ): Promise<SessionHistorySuffix | undefined> {
+    options.signal?.throwIfAborted()
+    await this.ensureRootEncoding()
+    options.signal?.throwIfAborted()
+    const pending = this.tracker.pendingOf(id)
+    if (pending !== undefined) {
+      return {
+        header: pending.header,
+        inheritedEventCount: pending.inheritedEventCount,
+        events: [],
+        cursor: -1,
+      }
+    }
+    const selected = await this.findLog(id, options.signal)
+    if (selected === undefined) throw new SessionPersistenceNotFoundError(id)
+    if (selected.sourceVersion < SESSION_FORMAT_VERSION) return undefined
+    if (selected.sourceVersion > SESSION_FORMAT_VERSION) {
+      throw new SessionFormatUnsupportedError(
+        `${sessionFormatVersionRefusal(id, selected.sourceVersion)} (raw log: ${selected.sourcePath})`,
+        { kind: 'jsonl', path: selected.sourcePath },
+      )
+    }
+    const current = await readStableJsonlFile(selected.sourcePath, options.signal)
+    return readJsonlHistorySuffix(current.bytes, this.compression, options)
   }
 
   /**
@@ -798,6 +840,23 @@ class JsonlSessionPersistence extends SessionPersistence {
   }
 
   /**
+   * Rewrite one active session's current generation with an earlier event prefix.
+   * Historical format generations are left in place. Routed live events at or
+   * past `length` are dropped so a later drain cannot replay the discarded tail.
+   * @param id - the session whose write handle is active in this backend.
+   * @param length - number of events to retain.
+   * @returns resolution after the durable rewrite completes.
+   */
+  override async truncate(id: SessionId, length: SessionLogOffsetType): Promise<void> {
+    const writer = this.tracker.writerOf(id)
+    if (writer === undefined) {
+      throw new Error(`session "${id}" has no active write handle for destructive deletion`)
+    }
+    await writer.drainLive()
+    await writer.truncate(length)
+  }
+
+  /**
    * Durably append one validated batch; lazily materializes on the first write.
    * @param header - the session's stored header.
    * @param events - the validated contiguous batch, in seq order.
@@ -1093,6 +1152,48 @@ class JsonlSessionPersistence extends SessionPersistence {
   }
 
   // --- materialization / append / repair (file mechanics) ---
+
+  /**
+   * Rewrite the current generation with a contiguous event prefix.
+   * Predecessor format generations are not moved, overwritten, or deleted.
+   * @param header - immutable session metadata stored in the header line.
+   * @param inheritedEventCount - exact fork-inherited prefix count.
+   * @param events - complete retained event prefix.
+   * @returns resolution after the replacement is durable.
+   */
+  async rewrite(
+    header: SessionHeader,
+    inheritedEventCount: SessionLogOffsetType,
+    events: readonly SessionEvent[],
+  ): Promise<void> {
+    this.coldLogMemo.delete(header.id)
+    await this.ensureRootEncoding()
+    await this.rejectOppositeArtifact(header.cwd, header.id)
+    const finalPath = logPath(this.root, header.cwd, header.id, this.compression)
+    if (!await this.exists(finalPath)) {
+      if (this.tracker.hasPending(header.id)) {
+        await this.materialize(header, inheritedEventCount, events)
+        return
+      }
+      throw new SessionPersistenceNotFoundError(header.id)
+    }
+    const content = await this.encodeMaterialization(header, inheritedEventCount, events)
+    const tmp = await this.writeSyncedTempFile(finalPath, content)
+    let published = false
+    try {
+      /* v8 ignore next -- native Windows coverage exercises this platform dispatch; Linux covers the POSIX peer */
+      if (process.platform === 'win32') {
+        await rm(finalPath, { force: true })
+        await publishNewFileWin32(tmp, finalPath)
+      } else {
+        await rename(tmp, finalPath)
+        await this.syncDirPosix(dirname(finalPath))
+      }
+      published = true
+    } finally {
+      if (!published) await rm(tmp, { force: true })
+    }
+  }
 
   /** Atomically write the header line + first batch (temp-write, fsync, publish). */
   private async materialize(

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
+import { makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
 import type { ChatNode } from '../src/client/contract/chat-nodes.ts'
 import { SystemPromptNodeView } from '../src/client/chat/SystemPromptRow.tsx'
 import { en } from '../src/client/locale.ts'

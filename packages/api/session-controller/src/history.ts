@@ -1,24 +1,31 @@
 /** Cold Session history pagination and live-event source. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { Deque } from '@deepseek-ai/dsh-deque'
-import type { AssistantStreamFrame } from '@deepseek-ai/dsh-agent'
+import { Deque } from '@x1a0f3n9/dsh-deque'
+import type { AssistantStreamFrame } from '@x1a0f3n9/dsh-agent'
 import {
   isAppendSurfaceEvent,
   SessionLogOffset,
   SessionSeq,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import type {
+  Session,
   SessionEvent,
   SessionHeader,
   SessionId,
   SessionLogOffset as SessionLogOffsetType,
   SessionSeqCursor,
-} from '@deepseek-ai/dsh-session'
-import { SessionQueryError, type SessionObservation } from '@deepseek-ai/dsh-session-query'
-import type {} from '@deepseek-ai/dsh-subagent'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+} from '@x1a0f3n9/dsh-session'
+import {
+  SessionPersistenceNotFoundError,
+  type SessionHistorySuffix,
+  type SessionHistorySuffixOptions,
+} from '@x1a0f3n9/dsh-session-persistence'
+import type {} from '@x1a0f3n9/dsh-session-projection-cache'
+import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
+import type {} from '@x1a0f3n9/dsh-subagent'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import type {
   SessionAddress,
   SessionAssistantStreamFrame,
@@ -82,10 +89,20 @@ export class SessionHistoryController {
     const beforeSeq = request.beforeSeq === undefined
       ? undefined
       : SessionLogOffset(request.beforeSeq)
+    const maxMessages = request.maxMessages ?? DEFAULT_MAX_MESSAGES
+    const suffix = await this.readSuffix(request.address, {
+      maxMessages,
+      ...request.beforeSeq === undefined ? {} : { beforeSeq: request.beforeSeq },
+      throughSeq: request.throughSeq,
+      signal,
+    })
+    if (suffix !== undefined) {
+      return this.pageFromSuffix(request.address, suffix, beforeSeq, maxMessages, throughSeq)
+    }
     using source = await this.sourceFor(request.address, signal, false)
     signal.throwIfAborted()
-    const sourceLog = source.events
-    const sourceCursor: SessionSeqCursor = sourceLog.at(-1)?.seq ?? -1
+    const live = source.source === 'live' ? this.ctx.sessions.get(addressId(request.address)) : undefined
+    const sourceCursor = source.cursor
     if (throughSeq > sourceCursor) {
       throw new RemoteError(
         'gateway/bad-request',
@@ -93,19 +110,20 @@ export class SessionHistoryController {
         {},
       )
     }
-    /* v8 ignore next -- Session and persistence validation guarantee a dense zero-based event prefix. */
-    if (throughSeq >= 0 && sourceLog[throughSeq]?.seq !== throughSeq) {
-      throw new RemoteError('gateway/internal', `session log does not contain through seq ${String(throughSeq)}`, {})
+    if (throughSeq >= 0) {
+      const at = live === undefined
+        ? eventAtDense(source.events, throughSeq)
+        : live.eventAt(SessionSeq(throughSeq))
+      /* v8 ignore next -- Session and persistence validation guarantee a dense event prefix. */
+      if (at?.seq !== throughSeq) {
+        throw new RemoteError('gateway/internal', `session log does not contain through seq ${String(throughSeq)}`, {})
+      }
     }
-    const page = paginate(
-      sourceLog,
-      beforeSeq,
-      request.maxMessages ?? DEFAULT_MAX_MESSAGES,
-      throughSeq,
-    )
-    const records = pageRecords(page.events)
+    const page = live === undefined
+      ? paginate(source.events, beforeSeq, maxMessages, throughSeq)
+      : paginateLive(live, beforeSeq, maxMessages, throughSeq)
     return {
-      records,
+      records: pageRecords(page.events),
       hasMore: page.hasMore,
     }
   }
@@ -175,12 +193,40 @@ export class SessionHistoryController {
     const onAbort = (): void => { notify() }
     signal.addEventListener('abort', onAbort, { once: true })
     try {
-      using source = await this.sourceFor(address, signal, true)
-      const events = source.events
-      signal.throwIfAborted()
-      const cursor = source.cursor
+      const maxMessages = request.maxMessages ?? DEFAULT_MAX_MESSAGES
+      const suffix = await this.readSuffix(address, { maxMessages, signal })
+      let header: SessionHeader
+      let cursor: SessionSeqCursor
+      let page: { readonly events: readonly SessionEvent[]; readonly hasMore: boolean }
+      let projections: SessionObservation['projections']
+      let promoteSource: SessionObservation | undefined
+      if (suffix !== undefined) {
+        if (suffix.header.cwd === undefined) rejectNotFound(address)
+        validateAddress(address, suffix.header, suffix.inheritedEventCount, undefined)
+        header = suffix.header
+        cursor = suffix.cursor
+        page = paginate(suffix.events, undefined, maxMessages, cursor)
+        projections = this.ctx.get('sessionProjectionCache')?.cachedSnapshot(
+          suffix.header,
+          suffix.inheritedEventCount,
+        )
+      } else {
+        const source = await this.sourceFor(address, signal, true)
+        signal.throwIfAborted()
+        header = source.header
+        cursor = source.cursor
+        const live = source.source === 'live' ? this.ctx.sessions.get(target) : undefined
+        page = live === undefined
+          ? paginate(source.events, undefined, maxMessages, cursor)
+          : paginateLive(live, undefined, maxMessages, cursor)
+        projections = source.projections
+        if (address.kind === 'session' && source.source === 'prepared') {
+          promoteSource = source
+        } else {
+          source[Symbol.dispose]()
+        }
+      }
       snapshotCursor = cursor
-      const page = paginate(events, undefined, request.maxMessages ?? DEFAULT_MAX_MESSAGES)
       const assistantStream = request.assistantStream === true
         ? this.assistantStreams.get(target)?.snapshot() ?? { revision: 0 }
         : undefined
@@ -191,17 +237,18 @@ export class SessionHistoryController {
       const assistantStreamOrdinalCut = assistantStreamOrdinal
       yield {
         type: 'snapshot',
-        header: wireHeader(source.header),
+        header: wireHeader(header),
         cursor,
         records: pageRecords(page.events),
         hasMore: page.hasMore,
-        projections: source.projections === undefined
+        projections: projections === undefined
           ? { asOfSeq: cursor, values: {} }
-          : projectionBlock(source.projections),
+          : projectionBlock(projections),
         ...assistantStream === undefined ? {} : { assistantStream },
       }
-      if (address.kind === 'session' && source.source === 'prepared') {
-        const promotion = source.retain()
+      if (promoteSource !== undefined) {
+        const promotion = promoteSource.retain()
+        promoteSource[Symbol.dispose]()
         try {
           this.promote(promotion)
         } catch (error: unknown) {
@@ -270,6 +317,65 @@ export class SessionHistoryController {
       if (error instanceof SessionQueryError
         && error.code === 'SESSION_QUERY_SESSION_NOT_FOUND') rejectNotFound(address)
       throw error
+    }
+  }
+
+  /**
+   * Read a cheap tail page when the Session is cold and the backend can decode
+   * a suffix. Live Sessions and subagent addresses return `undefined`.
+   * @param address - durable address being paged or followed.
+   * @param options - page bounds and cancellation.
+   * @returns the suffix, or `undefined` to fall back to a full observation.
+   */
+  private async readSuffix(
+    address: SessionAddress,
+    options: SessionHistorySuffixOptions,
+  ): Promise<SessionHistorySuffix | undefined> {
+    if (address.kind !== 'session') return undefined
+    if (this.ctx.sessions.get(address.sessionId) !== undefined) return undefined
+    const persistence = this.ctx.get('sessionPersistence')
+    const read = persistence?.readHistorySuffix
+    if (read === undefined) return undefined
+    try {
+      return await read.call(persistence, address.sessionId, options)
+    } catch (error: unknown) {
+      if (error instanceof SessionPersistenceNotFoundError) rejectNotFound(address)
+      throw error
+    }
+  }
+
+  /**
+   * Paginate a persistence suffix without restoring a Session.
+   * @param address - durable address of the suffix.
+   * @param suffix - covering tail returned by persistence.
+   * @param beforeSeq - exclusive upper bound of an older page.
+   * @param maxMessages - append-surface message budget.
+   * @param throughSeq - inclusive newest seq the page may include.
+   * @returns the wire page.
+   */
+  private pageFromSuffix(
+    address: SessionAddress,
+    suffix: SessionHistorySuffix,
+    beforeSeq: SessionLogOffsetType | undefined,
+    maxMessages: number,
+    throughSeq: SessionSeqCursor,
+  ): SessionPage {
+    if (suffix.header.cwd === undefined) rejectNotFound(address)
+    validateAddress(address, suffix.header, suffix.inheritedEventCount, undefined)
+    if (throughSeq > suffix.cursor) {
+      throw new RemoteError(
+        'gateway/bad-request',
+        `session page through seq ${String(throughSeq)} is past cursor ${String(suffix.cursor)}`,
+        {},
+      )
+    }
+    if (throughSeq >= 0 && eventAtDense(suffix.events, throughSeq)?.seq !== throughSeq) {
+      throw new RemoteError('gateway/internal', `session log does not contain through seq ${String(throughSeq)}`, {})
+    }
+    const page = paginate(suffix.events, beforeSeq, maxMessages, throughSeq)
+    return {
+      records: pageRecords(page.events),
+      hasMore: page.hasMore,
     }
   }
 
@@ -385,13 +491,60 @@ function paginate(
   events: readonly SessionEvent[],
   beforeSeq: SessionLogOffsetType | undefined,
   maxMessages: number,
-  throughSeq: SessionSeqCursor = events.at(-1)?.seq ?? -1,
+  throughSeq: SessionSeqCursor,
 ): { readonly events: SessionEvent[]; readonly hasMore: boolean } {
-  const end = SessionLogOffset(Math.min(throughSeq + 1, beforeSeq ?? throughSeq + 1))
+  if (throughSeq === -1) return { events: [], hasMore: false }
+  if (events.length === 0) return { events: [], hasMore: false }
+  const origin = events[0]?.seq
+  /* v8 ignore next -- suffix and observation events always carry seq. */
+  if (origin === undefined) return { events: [], hasMore: false }
+  /* v8 ignore next -- a non-empty covering suffix always has a last seq. */
+  const last = events.at(-1)?.seq ?? origin
+  const endSeq = Math.min(Math.min(throughSeq, last), (beforeSeq ?? throughSeq + 1) - 1)
+  if (endSeq < origin) return { events: [], hasMore: origin > 0 }
+  const endIndex = endSeq - origin + 1
+  let count = 0
+  let cutSeq = origin
+  for (let index = endIndex - 1; index >= 0; index--) {
+    const event = events[index] as SessionEvent
+    if (!MESSAGE_TYPES.has(event.type) || !isAppendSurfaceEvent(event)) continue
+    count++
+    const sources = event.sourceEventSeqs
+    let groupStart = event.seq
+    if (sources !== undefined) {
+      for (const source of sources) {
+        if (source < groupStart) groupStart = source
+      }
+    }
+    if (count >= maxMessages) {
+      cutSeq = groupStart
+      break
+    }
+  }
+  const cutIndex = Math.max(0, cutSeq - origin)
+  return {
+    events: events.slice(cutIndex, endIndex) as SessionEvent[],
+    hasMore: cutSeq > 0,
+  }
+}
+
+function paginateLive(
+  session: Session,
+  beforeSeq: SessionLogOffsetType | undefined,
+  maxMessages: number,
+  throughSeq: SessionSeqCursor,
+): { readonly events: readonly SessionEvent[]; readonly hasMore: boolean } {
+  if (throughSeq === -1 || session.seq === 0) return { events: [], hasMore: false }
+  const last = SessionSeq(session.seq - 1)
+  const endSeq = Math.min(Math.min(throughSeq, last), (beforeSeq ?? throughSeq + 1) - 1)
+  if (endSeq < 0) return { events: [], hasMore: false }
+  const end = SessionLogOffset(endSeq + 1)
   let count = 0
   let cut = SessionLogOffset(0)
   for (let index = end - 1; index >= 0; index--) {
-    const event = events[index] as SessionEvent
+    const event = session.eventAt(SessionSeq(index))
+    /* v8 ignore next -- live Sessions are dense from seq 0 through seq-1. */
+    if (event === undefined) continue
     if (!MESSAGE_TYPES.has(event.type) || !isAppendSurfaceEvent(event)) continue
     count++
     const sources = event.sourceEventSeqs
@@ -406,7 +559,18 @@ function paginate(
       break
     }
   }
-  return { events: events.slice(cut, end), hasMore: cut > 0 }
+  return { events: session.snapshotEvents(cut, end), hasMore: cut > 0 }
+}
+
+function eventAtDense(events: readonly SessionEvent[], seq: number): SessionEvent | undefined {
+  if (events.length === 0) return undefined
+  const origin = events[0]?.seq
+  /* v8 ignore next -- covering suffixes always carry seq on the first event. */
+  if (origin === undefined) return undefined
+  const index = seq - origin
+  if (index < 0 || index >= events.length) return undefined
+  const event = events[index]
+  return event?.seq === seq ? event : undefined
 }
 
 /** Translate current logical Session metadata to the browser wire. */

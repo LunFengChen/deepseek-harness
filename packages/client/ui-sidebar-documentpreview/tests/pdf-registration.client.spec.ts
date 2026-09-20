@@ -1,9 +1,9 @@
 /** PDF metadata, keyed slot, dictionary, and tab-view lifetime registration. */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { TabId } from '@deepseek-ai/dsh-client-ui-dockkit'
-import { makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { TabId } from '@x1a0f3n9/dsh-client-ui-dockkit'
+import { makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
 import { DocumentPreviewRegistry } from '../src/client/document/registry.ts'
 import { createPdfStore } from '../src/client/pdf/store.ts'
 import type { PdfBodyInjected } from '../src/client/pdf/PdfBody.tsx'

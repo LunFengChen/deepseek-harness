@@ -3,7 +3,7 @@ description: "Client module system for the web GUI: the host composes the boot g
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-modules
+# @x1a0f3n9/dsh-client-modules
 
 English | [中文](README.zh.md)
 
@@ -71,7 +71,7 @@ The Node half snapshots each client bundle and available source map before publi
 
 ### Boot manifest injection
 
-The host contributes structured index rows that inject, into `<head>`: the `window.__ModuleLoader__` queue facade, advisory preloads for every application combo, the parser-blocking bootstrap combo scripts, then the boot graph before the shell reads it. A Web carrier renders those rows into its index response; a shell-owned carrier can render the same rows without a Web server. The facade's `create()` materializes the modules bundle, delegates construction to its `createClientModuleSystem` export, and leaves the same facade in live-registration mode.
+The host contributes structured index rows that inject, into `<head>`: the `window.__ModuleLoader__` queue facade, advisory preloads for immediately-tier application combos, the parser-blocking bootstrap combo scripts, then the boot graph before the shell reads it. A Web carrier renders those rows into its index response; a shell-owned carrier can render the same rows without a Web server. The facade's `create()` materializes the modules bundle, delegates construction to its `createClientModuleSystem` export, and leaves the same facade in live-registration mode.
 
 ### Source map
 
@@ -116,7 +116,7 @@ None; this package neither assembles nor sends a provider request.
 These limits define what the module system does not do. They are current package constraints, not a task backlog.
 
 - **Flat module graph by design** — every bundle is one module node whose edges point only at table leaves; the interface (`loadCache`/`edges`/`invalidate`) already supports a general module graph, so the externalization granularity can change without an interface change.
-- **No unload bookkeeping of its own** — style removal and fiber teardown ordering live with the HMR driver (`@deepseek-ai/dsh-client-hmr`); the loader only inventories owned style tag ids per record.
+- **No unload bookkeeping of its own** — style removal and fiber teardown ordering live with the HMR driver (`@x1a0f3n9/dsh-client-hmr`); the loader only inventories owned style tag ids per record.
 - **Snapshot delivery retains artifact bytes** — the Host holds each bundle, optional source map, generated one-resource response, and current startup combo responses in memory; HMR additionally retains one prior startup generation. Memory scales as several copies of the composed client artifacts in exchange for immutable responses and one-generation race tolerance.
 
 <a id="dev-note"></a>

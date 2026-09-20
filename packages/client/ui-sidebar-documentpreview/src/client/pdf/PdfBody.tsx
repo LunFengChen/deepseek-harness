@@ -1,8 +1,8 @@
 /** PDF page presentation; binary content and tab information come from the document owner. */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { Button } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { PropsLocale, PropsStore } from '@deepseek-ai/dsh-client-ui-slots'
-import type { TabId } from '@deepseek-ai/dsh-client-ui-dockkit'
+import { Button } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { PropsLocale, PropsStore } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { TabId } from '@x1a0f3n9/dsh-client-ui-dockkit'
 import type { DocumentPreviewProps } from '../document/contract.ts'
 import { LoadingIndicator } from '../LoadingIndicator.tsx'
 import { DEFAULT_PDF_VIEW, type PdfStore } from './store.ts'

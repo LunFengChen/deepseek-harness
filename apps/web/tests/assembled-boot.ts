@@ -13,9 +13,9 @@ import { dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { act, cleanup } from '@testing-library/react'
 import { afterEach, beforeEach, vi } from 'vitest'
-import { bootInjections, orderByModuleGraph } from '@deepseek-ai/dsh-client-modules'
-import type { ClientModuleLoaderTarget, WebBootEntry, WebBootGraph } from '@deepseek-ai/dsh-client-modules/client'
-import { AppWebEntry } from '@deepseek-ai/dsh-client-web'
+import { bootInjections, orderByModuleGraph } from '@x1a0f3n9/dsh-client-modules'
+import type { ClientModuleLoaderTarget, WebBootEntry, WebBootGraph } from '@x1a0f3n9/dsh-client-modules/client'
+import { AppWebEntry } from '@x1a0f3n9/dsh-client-web'
 
 interface AssembledPlugin extends WebBootEntry {
   /** Absolute path to the built client artifact declared by this package. */
@@ -70,7 +70,7 @@ const workspacePackageManifests = new Map(globSync('packages/*/*/package.json', 
   if (pkg.name === undefined) throw new Error(`assembled boot: workspace package has no name: ${path}`)
   return [pkg.name, path]
 }))
-const appBoot = await import(pathToFileURL(webBundleResolver.resolve('@deepseek-ai/dsh-app-boot')).href) as unknown as BootComposition
+const appBoot = await import(pathToFileURL(webBundleResolver.resolve('@x1a0f3n9/dsh-app-boot')).href) as unknown as BootComposition
 
 function resolvePackageManifest(specifier: string): string | undefined {
   return workspacePackageManifests.get(specifier)
@@ -123,7 +123,7 @@ function loadAssembledPlugins(): readonly AssembledPlugin[] {
 
 const PLUGINS = loadAssembledPlugins()
 
-const BOOTSTRAP_IDS = ['@deepseek-ai/dsh-client-modules'] as const
+const BOOTSTRAP_IDS = ['@x1a0f3n9/dsh-client-modules'] as const
 
 /** Build the fixture graph after applying per-scenario package exclusions. */
 function bootGraph(plugins: readonly AssembledPlugin[]): WebBootGraph {

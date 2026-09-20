@@ -2,16 +2,16 @@
  * Durable projection state for the two loop-owned surface messages the system
  * prompt plugin forms: the system prompt (surface node 0 and any in-history
  * replacement) and the dynamic runtime-context snapshot.
- * @module @deepseek-ai/dsh-agent-loop/runtime-context
+ * @module @x1a0f3n9/dsh-agent-loop/runtime-context
  */
 
-import { createSystemMessage, createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { ContextSnapshotSection, Message } from '@deepseek-ai/dsh-llm'
-import type { Session, SessionEvent, SessionSeq, SurfaceIntent, SystemMessage, UserMessage } from '@deepseek-ai/dsh-session'
-import { isReplacementSurfaceEvent } from '@deepseek-ai/dsh-session'
+import { createSystemMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContextSnapshotSection, Message } from '@x1a0f3n9/dsh-llm'
+import type { Session, SessionEvent, SessionSeq, SurfaceIntent, SystemMessage, UserMessage } from '@x1a0f3n9/dsh-session'
+import { isReplacementSurfaceEvent } from '@x1a0f3n9/dsh-session'
 import type { Context } from '@deepseek-ai/cordis'
 
-const SOURCE = '@deepseek-ai/dsh-system-prompt'
+const SOURCE = '@x1a0f3n9/dsh-system-prompt'
 const CLEARED = 'Current runtime context: none. Earlier runtime-context snapshots no longer apply.'
 
 function isOwned(message: UserMessage): boolean {
@@ -105,7 +105,10 @@ export class SystemPromptProjection {
   }
 }
 
-/** Tracks the last retained runtime-context snapshot without owning its commit. */
+/**
+ * Tracks the last retained runtime-context snapshot without owning its commit.
+ * A store-attached truncation restores that snapshot from the remaining surface.
+ */
 export class RuntimeContextProjection {
   /** `undefined` means no snapshot ever existed; `null` means none is retained. */
   private retained: { seq: SessionSeq; text: string | undefined } | null | undefined
@@ -116,15 +119,7 @@ export class RuntimeContextProjection {
    * @param session - session receiving projected messages.
    */
   constructor(ctx: Context, session: Session) {
-    const surface = new Set(session.surface.nodes)
-    for (const event of eventsNewestFirst(session)) {
-      if (event.type !== 'user/message' || !isOwned(event.data)) continue
-      this.retained ??= null
-      if (surface.has(event.seq)) {
-        this.retained = { seq: event.seq, text: textOf(event.data) }
-        break
-      }
-    }
+    this.restore(session)
 
     ctx.on('session/event', (subject, event) => {
       if (subject !== session) return
@@ -136,6 +131,24 @@ export class RuntimeContextProjection {
         this.retained = null
       }
     })
+    ctx.on('session/truncated', (subject) => {
+      if (subject !== session) return
+      this.restore(session)
+    })
+  }
+
+  /** Rebuild `retained` from the current surface and remaining owned snapshots. */
+  private restore(session: Session): void {
+    this.retained = undefined
+    const surface = new Set(session.surface.nodes)
+    for (const event of eventsNewestFirst(session)) {
+      if (event.type !== 'user/message' || !isOwned(event.data)) continue
+      this.retained ??= null
+      if (surface.has(event.seq)) {
+        this.retained = { seq: event.seq, text: textOf(event.data) }
+        break
+      }
+    }
   }
 
   /**

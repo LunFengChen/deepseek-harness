@@ -1,7 +1,7 @@
 /** Package-private continuation owners used to place deterministic lifecycle races. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type { SessionId } from '@deepseek-ai/dsh-session'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
 import type { Activation, ContinuableActivationRegistry } from '../src/continuation-activation.ts'
 import type SubagentContinuationManager from '../src/continuation.ts'
 

@@ -1,7 +1,7 @@
 {
-  "name": "@deepseek-ai/dsh-desktop",
+  "name": "@x1a0f3n9/dsh-desktop",
   "description": "Electron desktop shell for a bundled dsh runtime and external plugins",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.5",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "3.1067.0",
-    "@deepseek-ai/dsh-home-paths": "workspace:^",
+    "@x1a0f3n9/dsh-home-paths": "workspace:^",
     "@electron/notarize": "2.5.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.20.0",

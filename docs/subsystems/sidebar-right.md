@@ -37,7 +37,7 @@ Tab identity is the pair `(kind, address)`: the registry's claim uses the addres
 
 | Field | Meaning |
 |---|---|
-| `id` | The implementation's identity, unique across every registration; a package name is the natural value (`@deepseek-ai/dsh-client-ui-sidebar-files`). It is the key the body and title register under. |
+| `id` | The implementation's identity, unique across every registration; a package name is the natural value (`@x1a0f3n9/dsh-client-ui-sidebar-files`). It is the key the body and title register under. |
 | `kind` | The type's discriminator: what its tabs are, and what `openTab` names. Not unique — an extension may take over a builtin's kind. The shipped kinds are `guide`, `text`, `files`. |
 | `patterns` | Optional resource-address globs the type recognizes; a page type opened by kind omits them. A pattern containing `:` matches the whole address (`dsh-resource://file/**`); one without matches the URL's path at any depth (`*.md`), and an address that is not a URL matches no such pattern. Matching is case-insensitive and does not hide dotfiles; the syntax is picomatch's POSIX dialect. |
 | `priority` | One of three literal bands: `extension` (the default and the highest: a type from outside the product outranks every shipped viewer), `builtin` (types shipped with the product), `fallback` (plain-content viewers anything more specific should beat). |
@@ -51,7 +51,7 @@ One `kind` may carry one `builtin` and one `extension` registration at the same 
 
 ```ts ignore-check
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@deepseek-ai/dsh-client-ui-sidebar-right/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
 
 export const inject = ['sidebarRightTabs', 'slots']
 
@@ -124,7 +124,7 @@ A resource stays open while it has a holder — a subscribed `useResource` or a 
 
 ## Workspace Files
 
-The Host `ctx.workspaceFiles` service and generated `workspaceFiles` Remote namespace read files allowed by the Session filesystem backend: `stat(path)` returns `{ absolutePath, version, bytes? }`; `read(path, { offset?, limit? })` returns one page of lines (`offset` 1-based, `limit` capped by the configured page size) as `{ …stat, offset, text, eof }`; `readBytes(path, { offset?, length? })` returns one raw byte window (`offset` 0-based, `length` capped by the configured byte limit) as base64 `{ …stat, offset, data, eof }` with no text decoding. `list(path)` remains inside the workspace root and returns a directory's direct children (`name`, `type: 'file' | 'directory' | 'other'`, `size?`) cut to the configured cap with `truncated` set. `changes()` likewise remains workspace-scoped and yields `{ kind: 'ready' }` once subscribed, then `{ kind: 'change', change }` frames whose payload is `{ absolutePath, version }` or `{ absolutePath, absent: true }` ([README](../../packages/api/workspace-files/README.md#use-this-package)). File operations reject final symlinks and enforce transfer caps; `read` additionally requires UTF-8 text. Failures use `workspace-file/*` codes ([failures](../../packages/api/workspace-files/README.md)).
+The Host `ctx.workspaceFiles` service and generated `workspaceFiles` Remote namespace read files allowed by the Session filesystem backend: `stat(path)` returns `{ absolutePath, version, bytes? }`; `read(path, { offset?, limit? })` returns one page of lines (`offset` 1-based, `limit` capped by the configured page size) as `{ …stat, offset, text, eof }`; `readBytes(path, { offset?, length? })` returns one raw byte window (`offset` 0-based, `length` capped by the configured byte limit) as base64 `{ …stat, offset, data, eof }` with no text decoding. `list(path)` inherits that same read access and returns a directory's direct children (`name`, `type: 'file' | 'directory' | 'other'`, `size?`) cut to the configured cap with `truncated` set. `changes()` remains workspace-scoped and yields `{ kind: 'ready' }` once subscribed, then `{ kind: 'change', change }` frames whose payload is `{ absolutePath, version }` or `{ absolutePath, absent: true }` ([README](../../packages/api/workspace-files/README.md#use-this-package)). File operations reject final symlinks and enforce transfer caps; `read` additionally requires UTF-8 text. Failures use `workspace-file/*` codes ([failures](../../packages/api/workspace-files/README.md)).
 
 [`dsh-api-workspace-files`](../../packages/api/workspace-files/README.md) registers the `file` provider, with `ResourceProtocolMap.file` directly naming `WorkspaceFileStat`. A Session address carries the authorizing Session and a relative or absolute path, passed unchanged to the Host for resolution. The provider waits for Host `ready` before stat and filters changes by `stat.absolutePath`. Bare `absolute` addresses have no authorizing Session and fail with `workspace-file/unknown-workspace`, without borrowing current or Tab Session. Any UI, including Global components, shares the observation for the same complete address. Preview's ordinary Remote callbacks use the Session in that address; Host `readAll` and `readRelated` remain, and Preview's `rpc.ts` decodes byte results.
 

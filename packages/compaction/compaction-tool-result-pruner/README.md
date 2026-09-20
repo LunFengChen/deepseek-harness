@@ -3,7 +3,7 @@ description: "Tool-output trimming for deployments composing compaction: choosin
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-compaction-tool-result-pruner
+# @x1a0f3n9/dsh-compaction-tool-result-pruner
 
 English | [中文](README.zh.md)
 
@@ -32,9 +32,9 @@ Mount this package next to `dsh-compaction-basic` when tool output regularly dom
 Mount token measurement, this package, and the backend in this order:
 
 ```yaml
-- name: '@deepseek-ai/dsh-token-meter'
-- name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
-- name: '@deepseek-ai/dsh-compaction-basic'
+- name: '@x1a0f3n9/dsh-token-meter'
+- name: '@x1a0f3n9/dsh-compaction-tool-result-pruner'
+- name: '@x1a0f3n9/dsh-compaction-basic'
 ```
 
 With these rows, oversized tool results are trimmed automatically as part of condensation. You can verify success by checking that future requests show the trimmed results; the full originals remain in the session log.

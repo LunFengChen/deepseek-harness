@@ -10,9 +10,9 @@ import {
   type SessionNotification,
   type StopReason,
 } from '@agentclientprotocol/sdk'
-import type { Agent, AgentHandle, AgentOptions, ModelSelection } from '@deepseek-ai/dsh-agent'
-import { createUserMessage, errorChain, type UserMessage } from '@deepseek-ai/dsh-llm'
-import { type Session, type SessionEvent, type SessionId, type TurnEndReason } from '@deepseek-ai/dsh-session'
+import type { Agent, AgentHandle, AgentOptions, ModelSelection } from '@x1a0f3n9/dsh-agent'
+import { createUserMessage, errorChain, type UserMessage } from '@x1a0f3n9/dsh-llm'
+import { type Session, type SessionEvent, type SessionId, type TurnEndReason } from '@x1a0f3n9/dsh-session'
 import { AcpContentError, admitAcpPrompt } from './content.ts'
 import { turnEndToStopReason } from './codec.ts'
 import { mountAcpMcpServers } from './mcp.ts'

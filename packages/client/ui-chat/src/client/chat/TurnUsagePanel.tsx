@@ -4,7 +4,7 @@
 // branch action in the tail's IconActions row, ahead of the plain clock text.
 
 import { createPortal } from 'react-dom'
-import { IconClockOutline16, IconDatabaseOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
+import { IconClockOutline16, IconDatabaseOutline16 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { TurnTokenUsage } from '../contract/chat-nodes.ts'
 import type { ChatViewSlotProps } from '../contract/slots.ts'
 import { formatLatencySeconds, formatRunDuration, formatTokensPerSecond } from './message-chrome.ts'

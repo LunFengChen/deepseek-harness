@@ -9,7 +9,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import koffi from 'koffi'
 
-import { Win32Error } from '@deepseek-ai/dsh-win32-process'
+import { Win32Error } from '@x1a0f3n9/dsh-win32-process'
 import {
   allocBytes, decodePtrAt, getTempPath,
   isInvalidHandle, sameSidAt,

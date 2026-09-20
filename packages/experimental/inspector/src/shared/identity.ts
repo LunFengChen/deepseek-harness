@@ -1,6 +1,6 @@
 /** Shared branded-identifier construction without assigning protocol ownership. */
 
-import type { Branded } from '@deepseek-ai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /** String branded with one Inspector identity role. */
 export type InspectorId<Role extends string> = Branded<Role>

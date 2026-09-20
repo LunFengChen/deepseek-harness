@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { createSessionFormatCatalog, SessionFormatEventCollector } from '@deepseek-ai/dsh-session-format'
+import { createSessionFormatCatalog, SessionFormatEventCollector } from '@x1a0f3n9/dsh-session-format'
 import type {
   SessionFormatArtifact,
   SessionFormatEvent,
   SessionFormatHeader,
   SessionFormatJsonObject,
   SessionFormatJsonValue,
-} from '@deepseek-ai/dsh-session-format'
-import { releasedV0SessionFormatCodec, releasedV1SessionFormatCodec, sessionFormatV0ToV1 } from '@deepseek-ai/dsh-session-format-v0-to-v1'
-import { releasedV2SessionFormatCodec, sessionFormatV1ToV2 } from '@deepseek-ai/dsh-session-format-v1-to-v2'
+} from '@x1a0f3n9/dsh-session-format'
+import { releasedV0SessionFormatCodec, releasedV1SessionFormatCodec, sessionFormatV0ToV1 } from '@x1a0f3n9/dsh-session-format-v0-to-v1'
+import { releasedV2SessionFormatCodec, sessionFormatV1ToV2 } from '@x1a0f3n9/dsh-session-format-v1-to-v2'
 import { assertReleasedV3Header, releasedV3SessionFormatCodec, restoreReleasedV3Artifact, sessionFormatV2ToV3 } from '../src/index.ts'
 import { canonicalizeTransformedEvent } from '../src/payload.ts'
 

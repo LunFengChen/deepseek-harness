@@ -3,7 +3,7 @@ description: "jsdom slot test runtime for browser feature specs, for test author
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-test-runtime
+# @x1a0f3n9/dsh-client-test-runtime
 
 English | [中文](README.zh.md)
 
@@ -55,7 +55,7 @@ A registered snapshot serializer folds CSS-module class hashes (`_frame_a1b2c3` 
 Script a failure by the code the Host would answer with, and assert the same way production code discriminates — on `code`, never on the class:
 
 ```text
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 
 remote.goals.create.mockResolvedValue({
   ok: false,
@@ -70,8 +70,8 @@ The slot tier above mounts one feature against doubles. The whole-client tier bo
 
 ```text
 // @vitest-environment jsdom
-import { createClientTest, webApp } from '@deepseek-ai/dsh-client-test-runtime/src/assembly/index.ts'
-import { ok } from '@deepseek-ai/dsh-remote-mock'
+import { createClientTest, webApp } from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/index.ts'
+import { ok } from '@x1a0f3n9/dsh-remote-mock'
 
 const test = createClientTest({ roster: webApp }, { mount: true })
 test('registers into the sidebar', async ({ remote, start }) => {
@@ -87,7 +87,7 @@ The [generic Remote proxy](../remote-mock/README.md#remote-proxy) supports every
 
 ### Roster and startup behavior
 
-`webApp` is the `web` profile's browser roster, read when the assembly entry is first imported from its bundles (`dsh-base`, then `dsh-web-app`) as the launcher composes them, except that a patch matching nothing throws here where the launcher warns: each bundle's `dsh.bundle.patch` list is parsed with the include plugin's YAML dialect and composed by its `applyEntryPatches`, and every enabled row whose package declares `dsh.client.platform === 'web'` becomes a row carrying that declaration's `inject` and `immediately`; `bundleRoster(bundles)` does the same for any bundle list. Nothing is copied from the bundles, so a bundle change is visible at the next test run. `webApp.closure(names)` keeps the named rows plus everything they inject, transitively (the rows a spec needs to boot those plugins as the bundle composes them), `webApp.pick(names)` and `webApp.without(names)` cut it down by hand, all three throw on unknown names, and `ClientRoster.of(rows)` builds one inline. `remoteDefaultResponses` holds default responses for exactly the Remote endpoints the roster calls while booting with no sessions, no workspaces, and default settings; a spec layers its own `RemoteTable` on top with `mock.load(table)`, and any call without a rule fails the test at `dispose()` through `mock.assertNoUnmatched()`. `mount` requires a roster that provides `uiRenderer`; `start` fails loud otherwise instead of returning an empty container. `client.connection` is the roster's Connection service (no `Context` augmentation declares it), and `connectTimeoutMs` bounds the readiness wait, whose failure message lists the mock log. `reload(name)` rebuilds one Loader entry the way client-hmr does (registry-first teardown, then `entry.refresh()`), under the worker's boot turn with this client's carrier installed so a rebuilt `connection` row reads its own mock; `unload(name)` removes it; `flush()` settles React inside `act`. jsdom implements neither `EventSource` (client-hmr opens one at apply) nor `ResizeObserver` (layout components observe size at mount), so `start` installs inert stubs for whichever global is absent and `dispose` removes exactly those — a jsdom gap, not a product requirement. The `@deepseek-ai/dsh-api-remotes` row is dropped from every roster: its generated Remote clients exist only in built `lib/`, and `remote.<ns>` is what the tier replaces anyway. `start` instead provides one contract-free proxy per `remote.<ns>` service the roster injects (plus the namespaces the mock has rules for at that point; a namespace first registered later has no proxy); `ctx.remote.<ns>.<method>(...args)` becomes a call on the endpoint `<ns>/<method>` carrying the positional args, a stream when the mock registered a `stream()` script and a unary call otherwise, with the generated client's outcome folding (`gateway/internal` for carrier throws, `gateway/cancelled` on abort). An endpoint without a rule is still dispatched, so the mock logs it and `dispose()` fails the test.
+`webApp` is the `web` profile's browser roster, read when the assembly entry is first imported from its bundles (`dsh-base`, then `dsh-web-app`) as the launcher composes them, except that a patch matching nothing throws here where the launcher warns: each bundle's `dsh.bundle.patch` list is parsed with the include plugin's YAML dialect and composed by its `applyEntryPatches`, and every enabled row whose package declares `dsh.client.platform === 'web'` becomes a row carrying that declaration's `inject` and `immediately`; `bundleRoster(bundles)` does the same for any bundle list. Nothing is copied from the bundles, so a bundle change is visible at the next test run. `webApp.closure(names)` keeps the named rows plus everything they inject, transitively (the rows a spec needs to boot those plugins as the bundle composes them), `webApp.pick(names)` and `webApp.without(names)` cut it down by hand, all three throw on unknown names, and `ClientRoster.of(rows)` builds one inline. `remoteDefaultResponses` holds default responses for exactly the Remote endpoints the roster calls while booting with no sessions, no workspaces, and default settings; a spec layers its own `RemoteTable` on top with `mock.load(table)`, and any call without a rule fails the test at `dispose()` through `mock.assertNoUnmatched()`. `mount` requires a roster that provides `uiRenderer`; `start` fails loud otherwise instead of returning an empty container. `client.connection` is the roster's Connection service (no `Context` augmentation declares it), and `connectTimeoutMs` bounds the readiness wait, whose failure message lists the mock log. `reload(name)` rebuilds one Loader entry the way client-hmr does (registry-first teardown, then `entry.refresh()`), under the worker's boot turn with this client's carrier installed so a rebuilt `connection` row reads its own mock; `unload(name)` removes it; `flush()` settles React inside `act`. jsdom implements neither `EventSource` (client-hmr opens one at apply) nor `ResizeObserver` (layout components observe size at mount), so `start` installs inert stubs for whichever global is absent and `dispose` removes exactly those — a jsdom gap, not a product requirement. The `@x1a0f3n9/dsh-api-remotes` row is dropped from every roster: its generated Remote clients exist only in built `lib/`, and `remote.<ns>` is what the tier replaces anyway. `start` instead provides one contract-free proxy per `remote.<ns>` service the roster injects (plus the namespaces the mock has rules for at that point; a namespace first registered later has no proxy); `ctx.remote.<ns>.<method>(...args)` becomes a call on the endpoint `<ns>/<method>` carrying the positional args, a stream when the mock registered a `stream()` script and a unary call otherwise, with the generated client's outcome folding (`gateway/internal` for carrier throws, `gateway/cancelled` on abort). An endpoint without a rule is still dispatched, so the mock logs it and `dispose()` fails the test.
 
 ### When to use it
 

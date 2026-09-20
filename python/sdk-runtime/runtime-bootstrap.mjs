@@ -5,10 +5,10 @@ const selectorName = 'DSH_SUBPROCESS_RUNNER'
 const selection = process.env[selectorName]
 
 if (selection === undefined) {
-  const { runCli } = await import('@deepseek-ai/dsh/lib/bin.js')
+  const { runCli } = await import('@x1a0f3n9/dsh/lib/bin.js')
   await runCli()
 } else {
   Reflect.deleteProperty(process.env, selectorName)
-  const { runSelectedSubprocessRunner } = await import('@deepseek-ai/dsh-subprocess-local/runner')
+  const { runSelectedSubprocessRunner } = await import('@x1a0f3n9/dsh-subprocess-local/runner')
   await runSelectedSubprocessRunner(selection)
 }

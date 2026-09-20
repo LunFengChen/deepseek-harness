@@ -1,5 +1,5 @@
 /** Durable file deliveries produced by the present tool. */
-import type { ToolCallId } from '@deepseek-ai/dsh-llm/brand'
+import type { ToolCallId } from '@x1a0f3n9/dsh-llm/brand'
 
 /** A declared filesystem file whose current contents remain at its source path. */
 export interface PresentedFile {
@@ -9,7 +9,7 @@ export interface PresentedFile {
   description?: string
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /** Declared filesystem files from a successful final present result, including nested calls. */
     'deliverables/presented': { turn: number; callId: ToolCallId; files: PresentedFile[] }

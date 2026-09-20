@@ -1,7 +1,7 @@
 /** Enforced current-writer majority and retained migration coverage. */
 
-import { SESSION_FORMAT_VERSION } from '@deepseek-ai/dsh-session'
-import type { SnapshotSessionFormatManifest } from '@deepseek-ai/dsh-session-snapshot'
+import { SESSION_FORMAT_VERSION } from '@x1a0f3n9/dsh-session'
+import type { SnapshotSessionFormatManifest } from '@x1a0f3n9/dsh-session-snapshot'
 
 /** One owning scenario's selected parent and child generations. */
 export interface SnapshotCorpusScenarioGenerations {

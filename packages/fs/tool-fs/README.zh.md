@@ -3,7 +3,7 @@ description: "面向模型的 read、read_image、write 与 edit 工具：供组
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-fs
+# @x1a0f3n9/dsh-tool-fs
 
 [English](README.md) | 中文
 
@@ -32,9 +32,9 @@ kind: "package-reference"
 一个后端、策略插件，然后是工具；附件存储为可选，用于启用 `read_image`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
-- name: '@deepseek-ai/dsh-fs-observation-policy'
-- name: '@deepseek-ai/dsh-tool-fs'
+- name: '@x1a0f3n9/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-fs-observation-policy'
+- name: '@x1a0f3n9/dsh-tool-fs'
 ```
 
 策略插件是可选的：省略时，工具直接使用裸提供方（无条件写入、覆盖与编辑，无已观察状态）。加载这些工具的部署也应加载该插件，从而提供写入/编辑前读取行为。`read_image` 只在持久 `ctx.attachments` 服务已挂载时注册；执行时还拒绝确切模型未声明图像输入的路由，因此文本路由的持久历史不会出现图像块。

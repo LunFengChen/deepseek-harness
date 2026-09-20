@@ -5,7 +5,7 @@
  * retires only the toast the view finished showing.
  */
 import { describe, expect, it, vi } from 'vitest'
-import type { MessageId } from '@deepseek-ai/dsh-api-remotes/client'
+import type { MessageId } from '@x1a0f3n9/dsh-api-remotes/client'
 import type { MessageFeedbackActionResult } from '../src/client/controller.ts'
 import { FeedbackDialogController, type FeedbackSubmit } from '../src/client/dialog.ts'
 

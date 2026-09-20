@@ -24,7 +24,7 @@ Status: implemented
 
 ### 保留失败事实，不嵌入策略
 
-`@deepseek-ai/dsh-llm` 导出唯一的可 JSON 序列化 `LlmFailure` 载荷：
+`@x1a0f3n9/dsh-llm` 导出唯一的可 JSON 序列化 `LlmFailure` 载荷：
 
 ```ts ignore-check
 type ProviderRequestId = Branded<'ProviderRequestId'>
@@ -46,11 +46,11 @@ agent loop（智能体循环）会将终止 finish 的 `LlmFailure` 传给 `agen
 
 适配器会先提取结构化事实，再回退到消息检查。它们会验证 HTTP 状态，将 `Retry-After` 的秒数或日期解析为正的有限毫秒延迟，在提供方公开请求 id 时将其品牌化，并区分自身超时与调用方中止。提供方专用 code 和消息可以细化映射，但恢复监听器不会解析它们。
 
-共享的暂时性 code 集有意保持很小：适配器针对 `RATE_LIMIT` 和 `SERVER` 的映射，远程失败使用的显式 `TIMEOUT` 和 `TRANSPORT` code，以及提供方响应已完成却没有内容块时使用的 `EMPTY_RESPONSE`。两个适配器都会把最后一种情况归类为错误 finish；详见[空模型响应可重试](../../archived/bug-fix/2026-07-24-empty-model-response-is-retryable.md)。身份验证、配额、无效请求、上下文溢出、协议、中止和未知失败都保留不同的稳定 code，且默认不属于暂时性失败。新增 code 需要适配器 fixture（测试前置数据）和已记录的策略决策；无需扩展第二个失败类枚举。
+共享的暂时性 code 集有意保持很小：适配器针对 `RATE_LIMIT` 和 `SERVER` 的映射，远程失败使用的显式 `TIMEOUT` 和 `TRANSPORT` code，以及提供方响应已完成却没有内容块时使用的 `EMPTY_RESPONSE`。两个适配器都会把最后一种情况归类为错误 finish；详见[空模型响应可重试](../../archived/bug-fix/2026-07-24-empty-model-response-is-retryable.md)。身份验证、配额、无效请求、上下文溢出、中止和未知失败都保留不同的稳定 code，且默认不属于暂时性失败。OpenAI 兼容的 in-band SSE 错误码会映射到同一集合，而不是留在 `PI_AI_ERROR`；映射由 [pi-ai in-band 流错误分类](../bug-fix/2026-09-17-pi-ai-in-band-error-classification.zh.md) 拥有。新增 code 需要适配器 fixture（测试前置数据）和已记录的策略决策；无需扩展第二个失败类枚举。
 
 ### 将重试策略放在现有失败步骤扩展点上
 
-`@deepseek-ai/dsh-llm-retry` 是监听 `agent/request-error` 的函数插件。它不引入服务或新的循环分支；agent-loop 包仅会更改通过现有失败步骤恢复控制流携带的数据。
+`@x1a0f3n9/dsh-llm-retry` 是监听 `agent/request-error` 的函数插件。它不引入服务或新的循环分支；agent-loop 包仅会更改通过现有失败步骤恢复控制流携带的数据。
 
 `agent/request-error` waterfall 携带当前 `LlmFailure`、在连续恢复序列中授权重试的不可变先前失败列表，以及提供服务的注册项所携带的不可变重试策略。循环只传递而不解释该策略；它拥有连续失败历史，并在模型请求成功后清除。`dsh-llm-retry` 的 normal 策略统计由同一项确切提供方策略安排的持久重试记录，`dsh-compaction-basic` 则维护自己的上下文溢出预算。因此，暂时性失败与上下文溢出交替出现时，会各自独立消耗其有限预算；最大请求数等于 1 加上所有已加载有限预算之和。
 
@@ -76,7 +76,7 @@ agent loop（智能体循环）会将终止 finish 的 `LlmFailure` 传给 `agen
 
 每个适配器都公开一个经过验证的 `streamIdleTimeoutMs` 配置字段，默认值采用上文引用的五分钟先例。该间隔不超过 Node 的最大定时器延迟，因此不会被钳制为 1 毫秒。它覆盖每个尚未完成的迭代器 `next()`：从消费方请求下一项开始，到适配器识别到提供方活动为止；消费方在两次 `next()` 调用之间花费的时间不属于提供方空闲时间。DeepSeek SSE（Server-Sent Events）注释计为传输活动，但绝不会成为 `StreamChunk` 值或会话日志事件。
 
-`@deepseek-ai/dsh-timeout` 公开一个可重新布防的空闲看门狗原语。一个稳定的局部 `AbortController` 会与调用方信号融合，并在整个适配器调用期间传给传输层；每个尚未完成的 `next()` 都会布防看门狗，该调用完成时解除布防，下一次请求数据时再重新布防。带外传输活动会调用 `pulse()`，在不产生值的情况下为尚未完成的需求重新布防。超时会使用能力自身拥有的 `TimeoutReason` 中止这个稳定控制器，`finally` 则会清除定时器。适配器将自身看门狗归类为 `TIMEOUT`，将更早发生的上游中止归类为 `ABORTED`。现有的一次性 `deadline()` 不会被描述为滑动计时器。
+`@x1a0f3n9/dsh-timeout` 公开一个可重新布防的空闲看门狗原语。一个稳定的局部 `AbortController` 会与调用方信号融合，并在整个适配器调用期间传给传输层；每个尚未完成的 `next()` 都会布防看门狗，该调用完成时解除布防，下一次请求数据时再重新布防。带外传输活动会调用 `pulse()`，在不产生值的情况下为尚未完成的需求重新布防。超时会使用能力自身拥有的 `TimeoutReason` 中止这个稳定控制器，`finally` 则会清除定时器。适配器将自身看门狗归类为 `TIMEOUT`，将更早发生的上游中止归类为 `ABORTED`。现有的一次性 `deadline()` 不会被描述为滑动计时器。
 
 边界测试证明两个实际传输层都能终止。手写适配器会中止其 fetch／reader，pi-ai 适配器会把稳定信号映射到 SDK，并证明 SDK 会关闭响应。如果定时器只拒绝消费方 promise，却让请求继续运行，就不满足此约定。
 

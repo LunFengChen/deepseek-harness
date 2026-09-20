@@ -3,7 +3,7 @@ description: "纯函数式相邻会话格式规划、无损 JSON 值检查、仅
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-session-format
+# @x1a0f3n9/dsh-session-format
 
 [English](README.md) | 中文
 

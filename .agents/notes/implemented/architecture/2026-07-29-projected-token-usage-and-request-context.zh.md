@@ -12,7 +12,7 @@ Web 统计行原先从当前已加载的会话节点推导 token 总量。该窗
 
 ## 决策
 
-这两个值都是普通的持久会话投影状态。当 `ctx.sessionProjections` 存在时，`@deepseek-ai/dsh-token-meter` 会注册两个单元。
+这两个值都是普通的持久会话投影状态。当 `ctx.sessionProjections` 存在时，`@x1a0f3n9/dsh-token-meter` 会注册两个单元。
 
 `tokenUsage` 将完整持久日志归并为未缓存输入、输出、缓存读取和缓存写入四类计数项。它会展开每个 `assistant/message` 或 `assistant/attempt` stream 并采用最后一个 usage sample；message 顶层 usage 优先于其嵌入式 sample，因此不会重复计数。`assistant/attempt` 由此保留失败请求的 usage。匹配的 `llm/retry-started` 边界会打开新 attempt，因此复用同一 `(turn, step)` 的重试会单独贡献用量。推理（reasoning）仍是输出的细分项。compaction 和 surface replacement 不会抹除先前计费。
 

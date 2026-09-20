@@ -101,7 +101,7 @@ export function collectSessionFormatMigrations(
     const from = safeVersion(metadata['from'], `${rel} from`)
     const to = safeVersion(metadata['to'], `${rel} to`)
     if (to !== from + 1) throw new Error(`gen-session-format-catalog: ${rel} must declare adjacent v${from}->v${from + 1}`)
-    const expectedPackageName = `@deepseek-ai/dsh-session-format-v${from}-to-v${to}`
+    const expectedPackageName = `@x1a0f3n9/dsh-session-format-v${from}-to-v${to}`
     if (packageName !== expectedPackageName) {
       throw new Error(`gen-session-format-catalog: ${rel} name must be ${expectedPackageName}`)
     }
@@ -134,11 +134,11 @@ export function collectSessionFormatMigrations(
     throw new Error(`gen-session-format-catalog: migration inventory does not end exactly at current v${currentVersion}`)
   }
   const catalog = readJson(resolve(scanRoot, 'packages/session/session-format-catalog/package.json'))
-  if (catalog.dependencies?.['@deepseek-ai/dsh-session'] !== undefined
-    || catalog.peerDependencies?.['@deepseek-ai/dsh-session'] === undefined
-    || catalog.devDependencies?.['@deepseek-ai/dsh-session'] === undefined) {
+  if (catalog.dependencies?.['@x1a0f3n9/dsh-session'] !== undefined
+    || catalog.peerDependencies?.['@x1a0f3n9/dsh-session'] === undefined
+    || catalog.devDependencies?.['@x1a0f3n9/dsh-session'] === undefined) {
     throw new Error(
-      'gen-session-format-catalog: catalog must share @deepseek-ai/dsh-session through peer + dev dependencies',
+      'gen-session-format-catalog: catalog must share @x1a0f3n9/dsh-session through peer + dev dependencies',
     )
   }
   for (const [index, declaration] of declarations.entries()) {
@@ -201,8 +201,8 @@ export function renderSessionFormatCatalog(
     ' * The direct imports make historical readability independent of mounted plugins.',
     ' */',
     '',
-    "import { KNOWN_SESSION_EVENT_TYPES } from '@deepseek-ai/dsh-session'",
-    "import { createSessionFormatCatalog } from '@deepseek-ai/dsh-session-format'",
+    "import { KNOWN_SESSION_EVENT_TYPES } from '@x1a0f3n9/dsh-session'",
+    "import { createSessionFormatCatalog } from '@x1a0f3n9/dsh-session-format'",
     "import { validateInstalledCurrentSessionArtifact, validateInstalledCurrentSessionHeader } from './current.ts'",
     ...imports,
     '',

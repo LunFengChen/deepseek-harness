@@ -1,8 +1,8 @@
 /** One retained Markdown renderer over the document owner's accumulated text. */
 import { useMemo } from 'react'
 import type { ReactNode } from 'react'
-import { MarkdownText, type MarkdownLabels } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { PropsLocale } from '@deepseek-ai/dsh-client-ui-slots'
+import { MarkdownText, type MarkdownLabels } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { PropsLocale } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { DocumentPreviewProps } from '../document/contract.ts'
 import type {} from './locales.ts'
 import css from './MarkdownBody.module.css'

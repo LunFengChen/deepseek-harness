@@ -3,13 +3,13 @@ description: "DeepSeek Harness 主目录与用户数据路径的共享解析，�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-home-paths
+# @x1a0f3n9/dsh-home-paths
 
 [English](README.md) | 中文
 
 ## 概述
 
-`@deepseek-ai/dsh-home-paths` 让包作者能够解析统一的 DeepSeek Harness 数据根目录，并由它派生子路径。显式路径优先于 `$DSH_HOME`，后者优先于 `~/.dsh`；空白环境变量会被忽略。其公开辅助函数可以在不暴露机器绝对路径的情况下显示根目录，仅展开单独或当前用户的波浪号形式，并规范化最终路径段尚不存在的监听目标。请把它作为库依赖直接使用，不要通过 `cordis.yml` 加载。
+`@x1a0f3n9/dsh-home-paths` 让包作者能够解析统一的 DeepSeek Harness 数据根目录，并由它派生子路径。显式路径优先于 `$DSH_HOME`，后者优先于 `~/.dsh`；空白环境变量会被忽略。其公开辅助函数可以在不暴露机器绝对路径的情况下显示根目录，仅展开单独或当前用户的波浪号形式，并规范化最终路径段尚不存在的监听目标。请把它作为库依赖直接使用，不要通过 `cordis.yml` 加载。
 
 ## 目录
 
@@ -29,7 +29,7 @@ kind: "package-library"
 ### 解析主目录
 
 ```ts
-import { resolveDshHome, dshHomePath, dshCachePath } from '@deepseek-ai/dsh-home-paths'
+import { resolveDshHome, dshHomePath, dshCachePath } from '@x1a0f3n9/dsh-home-paths'
 
 const home = resolveDshHome()                // configured path, else $DSH_HOME, else ~/.dsh
 const settings = dshHomePath('settings')     // join one child onto the resolved home

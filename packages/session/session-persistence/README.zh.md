@@ -3,7 +3,7 @@ description: "面向用户与维护者的持久会话存储 seam 说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-persistence
+# @x1a0f3n9/dsh-session-persistence
 
 [English](README.md) | 中文
 
@@ -80,7 +80,7 @@ await ctx.sessionPersistence.flush()                           // backend-wide d
 
 ### 每个后端必须遵守的不变量
 
-- **仅追加，连续 `seq`。** 已提交事件绝不重写；`append` 的第一个 `seq` 必须等于已存储 next-seq，缺口会被拒绝。
+- **连续 `seq`。** 普通 `append` 绝不重写已提交事件；显式的 persistence `truncate` 是破坏性例外，它替换当前 generation 的保留前缀。`append` 的第一个 `seq` 必须等于已存储 next-seq，缺口会被拒绝。破坏性 truncate 会丢弃序号大于等于保留长度的已路由实时事件，避免后续 flush 重放被丢弃的尾部。
 - **撕裂的物理尾部绝不到达读取方。** 它属于一次从未完成的 append；写路径在第一次新 append 之前将其持久截断。
 - **无损 JSON 数据。** 批次与 header 经过共享的单遍校验并快照边界（`materializeAppendBatch`/`materializeCreateHeader`）；无法序列化的载荷在调用处被拒绝。
 - **持久性。** `append` 尽力而为地持久化；`flush`——逐句柄或服务级——是承诺存储并同时把空会话实体化的屏障。

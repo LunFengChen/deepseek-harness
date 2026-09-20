@@ -24,7 +24,7 @@ function fixture(options: {
   mkdirSync(join(packageDir, 'lib'), { recursive: true })
   const companion = options.companion ?? true
   writeFileSync(join(packageDir, 'package.json'), `${JSON.stringify({
-    name: '@deepseek-ai/dsh-probe',
+    name: '@x1a0f3n9/dsh-probe',
     type: 'module',
     files: companion ? ['lib/invariant.js'] : [],
     exports: companion ? {
@@ -88,7 +88,7 @@ describe('built package invariant verifier', () => {
     const brokenExport = fixture({ invariantExport: './lib/missing.js' })
     const exportResult = verify(brokenExport.root, brokenExport.loaderUrl, task.timeout)
     expect(exportResult.status).toBe(1)
-    expect(exportResult.stderr).toContain('@deepseek-ai/dsh-probe')
+    expect(exportResult.stderr).toContain('@x1a0f3n9/dsh-probe')
   })
 
   it('rejects an invariant bundle that needs an unstaged runtime chunk', ({ task }) => {

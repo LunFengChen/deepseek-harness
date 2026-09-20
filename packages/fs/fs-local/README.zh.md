@@ -3,7 +3,7 @@ description: "`ctx.fs` 的宿主文件系统后端：面向选择或排查本地
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-fs-local
+# @x1a0f3n9/dsh-fs-local
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 加载后端并给出基准目录；相对路径以它为基准解析，绝对路径忽略它。
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-fs-local'
   config:
     cwd: /absolute/path/to/workspace
 ```

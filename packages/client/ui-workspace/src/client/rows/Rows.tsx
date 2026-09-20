@@ -9,12 +9,12 @@ import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import {
   HoverCard, IconAlarmClockOutline16, IconArchiveOutline20, IconBranchOutline16,
-  IconEditOutline16, IconEllipsisOutline16, IconFolderClose16, IconFolderOpen16,
-  IconPlusOutline16, IconTrashOutline16, IconTriangleRightFill14, Menu, relativeTime,
-  StateDot,
-} from '@deepseek-ai/dsh-client-ui-primitives'
-import type { StateDotState } from '@deepseek-ai/dsh-client-ui-primitives'
-import { abbreviateHomePath } from '@deepseek-ai/dsh-util-workspace-path'
+  IconCopyOutline16, IconEditOutline16, IconEllipsisOutline16, IconFolderClose16, IconFolderOpen16,
+  IconPlusOutline16, IconTrashOutline16, IconTriangleRightFill14, Menu, relativeTime, StateDot,
+  writeClipboard,
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { StateDotState } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { abbreviateHomePath } from '@x1a0f3n9/dsh-util-workspace-path'
 import type { WorkspaceBrowserProps } from '../contract/slots.ts'
 import type { GroupNode, SearchResultNode, SessionNode } from '../tree.ts'
 import css from './Rows.module.css'
@@ -410,12 +410,30 @@ export function SessionNodeItem({
     rowRef.current?.scrollIntoView({ block: 'nearest' })
     onReveal()
   }, [onReveal])
+  // Copying the session id keeps the menu open so the one-second "Copied"
+  // feedback is visible; the id is the durable address of this log on disk
+  // (~/.dsh/sessions/<workspace>/<session id>/), so it survives renames.
+  const [copiedId, setCopiedId] = useState(false)
+  const copySessionId = (): void => {
+    if (copiedId) return
+    void writeClipboard(node.id).then((ok) => {
+      if (!ok) return
+      setCopiedId(true)
+      window.setTimeout(() => { setCopiedId(false) }, 1000)
+    })
+  }
   // Archive hides the row through the registry-global archive set and never
   // touches the session log, so it is not styled as destructive and needs no
   // confirmation dialog.
   const sessionMenuItems = [
     { id: 'rename', label: t('rename'), icon: <IconEditOutline16 /> },
     { id: 'fork', label: t('menu.fork'), icon: <IconBranchOutline16 /> },
+    {
+      id: 'copyId',
+      label: copiedId ? t('menu.copiedSessionId') : t('menu.copySessionId'),
+      icon: <IconCopyOutline16 size={16} />,
+      disabled: copiedId,
+    },
     // 20-native glyph in the menu's 16px icon slot (Menu.module.css .itemIcon).
     { id: 'archive', label: t('menu.archiveSession'), icon: <IconArchiveOutline20 size={16} /> },
   ]
@@ -478,6 +496,10 @@ export function SessionNodeItem({
             onClose={() => { setMenuOpen(false) }}
             items={sessionMenuItems}
             onSelect={(id) => {
+              if (id === 'copyId') {
+                copySessionId()
+                return
+              }
               setMenuOpen(false)
               if (id === 'rename') onRename(node.id, row.title)
               if (id === 'fork') onFork(node.id)

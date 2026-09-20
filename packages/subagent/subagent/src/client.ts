@@ -1,7 +1,7 @@
 /**
  * Browser-safe subagent projection and control vocabulary.
  *
- * @module @deepseek-ai/dsh-subagent/client
+ * @module @x1a0f3n9/dsh-subagent/client
  */
 
 export type * from './control-types.ts'

@@ -18,9 +18,9 @@ Status: implemented
 
 | 包 | 角色 |
 |---|---|
-| `@deepseek-ai/dsh-spill` | 接口：`ctx.spillStore`、词汇类型，不包含存储实现。 |
-| `@deepseek-ai/dsh-spill-local` | 本地后端：在宿主文件系统中提供私有、会话作用域的文件存储。 |
-| `@deepseek-ai/dsh-spill-policy` | 工具结果策略插件：包装分发后的最终文本结果，并以保留预览和 spill 定位符替换超大结果。 |
+| `@x1a0f3n9/dsh-spill` | 接口：`ctx.spillStore`、词汇类型，不包含存储实现。 |
+| `@x1a0f3n9/dsh-spill-local` | 本地后端：在宿主文件系统中提供私有、会话作用域的文件存储。 |
+| `@x1a0f3n9/dsh-spill-policy` | 工具结果策略插件：包装分发后的最终文本结果，并以保留预览和 spill 定位符替换超大结果。 |
 
 工具结果消费方是 `dsh-spill-policy`，它通过 `tools/post-execute` waterfall（瀑布式事件）使用最终工具结果。模型按照后端随定位符返回的检索提示读取内容。[会话引用 spill 复用](../bug-fix/2026-09-05-session-reference-spill-reuse.zh.md)增加一个直接存储消费方，采用独立的预览、来源信息与失败语义；它不改变工具结果策略。
 
@@ -119,15 +119,15 @@ ctx.tools.register(defineTool({
 
 ```yaml
 - id: web-fetch-http
-  name: '@deepseek-ai/dsh-web-fetch-http'
+  name: '@x1a0f3n9/dsh-web-fetch-http'
   config:
     maxBodyChars: 500000
 
 - id: spill-local
-  name: '@deepseek-ai/dsh-spill-local'
+  name: '@x1a0f3n9/dsh-spill-local'
 
 - id: spill-policy
-  name: '@deepseek-ai/dsh-spill-policy'
+  name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: 50000
 ```
@@ -138,9 +138,9 @@ ctx.tools.register(defineTool({
 
 保留与 spill 存储相互独立：
 
-- `@deepseek-ai/dsh-output-retention` 负责预览机制（`TextRetainer`、`ItemRetainer` 和省略元数据）。
-- `@deepseek-ai/dsh-spill` 负责保存最终文本，并返回定位符与检索提示。
-- `@deepseek-ai/dsh-spill-policy` 在工具流水线中应用默认的最终结果策略，将前两者组合起来。
+- `@x1a0f3n9/dsh-output-retention` 负责预览机制（`TextRetainer`、`ItemRetainer` 和省略元数据）。
+- `@x1a0f3n9/dsh-spill` 负责保存最终文本，并返回定位符与检索提示。
+- `@x1a0f3n9/dsh-spill-policy` 在工具流水线中应用默认的最终结果策略，将前两者组合起来。
 
 最终结果策略不能取代由工具负责的提前 spill。部分有用内容并不存在于最终 `ToolExecutionResult.content` 中：
 

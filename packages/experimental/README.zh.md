@@ -9,7 +9,7 @@ kind: "package-group"
 
 ## 概述
 
-实验组包含约定可能变更且不提供支持承诺的原型能力。包默认私有；五个 Agent Teams 包是显式公开发布的例外，并保留现有 `@deepseek-ai/dsh-experimental-*` 名称。本组还包含私有的跨 realm Inspector、CPython 子进程后端与浏览器 worker 预览包。组外已发布产品不得依赖实验性包。
+实验组包含约定可能变更且不提供支持承诺的原型能力。包默认私有；五个 Agent Teams 包是显式公开发布的例外，并保留现有 `@x1a0f3n9/dsh-experimental-*` 名称。本组还包含私有的跨 realm Inspector、CPython 子进程后端与浏览器 worker 预览包。组外已发布产品不得依赖实验性包。
 
 ## 目录
 

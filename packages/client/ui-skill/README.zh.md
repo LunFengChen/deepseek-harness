@@ -3,7 +3,7 @@ description: "dsh Web 客户端的 skill 引用与专属 skill 工具行：/ 触
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-skill
+# @x1a0f3n9/dsh-client-ui-skill
 
 [English](README.md) | 中文
 

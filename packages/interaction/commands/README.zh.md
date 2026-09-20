@@ -3,7 +3,7 @@ description: "交互式 UI 的面向用户斜杠命令注册表：插件拥有�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-commands
+# @x1a0f3n9/dsh-commands
 
 [English](README.md) | 中文
 
@@ -63,7 +63,7 @@ ctx.commands.register({
 
 ### 取消
 
-调用方的中止信号会让注册表停止等待处理器；无视信号的处理器可能在调用方停止等待后继续产生自身的外部副作用。被取消或抛异常的处理器在日志中以 `command/done` 错误结算。
+调用方的中止信号会让注册表停止等待处理器；无视信号的处理器可能在调用方停止等待后继续产生自身的外部副作用。`abortInflight(agent)` 会中止该 agent 上所有进行中的 execute，这样会话暂停就能把 rewind 这类斜杠命令结算掉，而不是留下不成对的 `command/run`。被取消或抛异常的处理器在日志中以 `command/done` 错误结算。
 
 -----
 

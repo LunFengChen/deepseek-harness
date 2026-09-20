@@ -1,6 +1,6 @@
 import type {
   SettingsSchemaService,
-} from '@deepseek-ai/dsh-client-ui-settings/client'
+} from '@x1a0f3n9/dsh-client-ui-settings/client'
 
 /** Plain schema callbacks exposed to Models stores and presentation components. */
 export type SettingsSchemaOperations = Pick<

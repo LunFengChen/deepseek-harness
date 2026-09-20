@@ -5,8 +5,8 @@
  */
 import type { ComponentType } from 'react'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { ClientSessionContext } from '@deepseek-ai/dsh-client-ui-input-trigger/client'
-import type { IconProps } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { ClientSessionContext } from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
+import type { IconProps } from '@x1a0f3n9/dsh-client-ui-primitives'
 
 /** Copy for an option that must be acknowledged before onSelect can run. */
 export interface SelectConfirmation {

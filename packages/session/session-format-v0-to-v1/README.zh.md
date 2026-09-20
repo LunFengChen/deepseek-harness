@@ -3,7 +3,7 @@ description: "冻结的已发布 v0 会话标头、事件与打包行解码器�
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-session-format-v0-to-v1
+# @x1a0f3n9/dsh-session-format-v0-to-v1
 
 [English](README.md) | 中文
 

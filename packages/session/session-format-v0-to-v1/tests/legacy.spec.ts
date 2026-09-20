@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { SessionFormatUnsupportedMigrationError } from '@deepseek-ai/dsh-session-format'
+import { SessionFormatUnsupportedMigrationError } from '@x1a0f3n9/dsh-session-format'
 import {
   sessionFormatV0ToV1,
 } from '../src/index.ts'
@@ -291,5 +291,36 @@ describe('released v0 legacy normalization', () => {
       type: 'session/title', seq: 2, time: 3,
       data: { title: 'Pinned', messageSeqs: [1], source: { kind: 'user' } },
     }])).toThrow(/empty exactly/)
+  })
+
+  it('stamps historical subagent descriptor version 2 onto the current version', () => {
+    const oneShot = migrate([
+      { type: 'subagent/descriptor', seq: 0, time: 1, data: { version: 2, mode: 'one-shot', provider: 'spawn' } },
+      { type: 'session/end-seed', seq: 1, time: 2, data: {} },
+    ]).events[0]
+    expect(oneShot?.data).toEqual({ version: 3, mode: 'one-shot', provider: 'spawn' })
+
+    const continuable = migrate([
+      {
+        type: 'subagent/descriptor', seq: 0, time: 1,
+        data: {
+          version: 2, mode: 'continuable', provider: 'spawn', label: 'child',
+          agentProvider: 'company', agentModel: 'deepseek-v4-flash',
+        },
+      },
+    ]).events[0]
+    expect(continuable?.data).toEqual({
+      version: 3, mode: 'continuable', provider: 'spawn', label: 'child',
+      agentProvider: 'company', agentModel: 'deepseek-v4-flash',
+    })
+  })
+
+  it('refuses an unknown historical subagent descriptor version', () => {
+    expect(() => migrate([
+      { type: 'subagent/descriptor', seq: 0, time: 1, data: { version: 4, mode: 'one-shot', provider: 'spawn' } },
+    ])).toThrow(SessionFormatUnsupportedMigrationError)
+    expect(() => migrate([
+      { type: 'subagent/descriptor', seq: 0, time: 1, data: { version: 4, mode: 'one-shot', provider: 'spawn' } },
+    ])).toThrow(/unsupported descriptor version 4/)
   })
 })

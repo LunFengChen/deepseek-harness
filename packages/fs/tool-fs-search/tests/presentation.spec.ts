@@ -9,7 +9,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import {
   globSearchMeta,
   grepSearchMeta,

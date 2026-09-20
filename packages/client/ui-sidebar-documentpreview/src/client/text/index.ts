@@ -5,7 +5,7 @@ import type { DocumentPreviewDefinition } from '../document/registry.ts'
 import { TextBody } from './TextBody.tsx'
 
 /** Stable plain-text implementation identity within this package. */
-export const PLAIN_BODY_ID = '@deepseek-ai/dsh-client-ui-sidebar-documentpreview/text'
+export const PLAIN_BODY_ID = '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/text'
 
 /**
  * Describe the plain-text fallback.

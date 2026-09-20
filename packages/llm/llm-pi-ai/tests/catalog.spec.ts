@@ -3,11 +3,11 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { createUserMessage, ReasoningEffortId } from '@deepseek-ai/dsh-llm'
-import type { StreamChunk } from '@deepseek-ai/dsh-llm'
-import FileSettingsProvider from '@deepseek-ai/dsh-settings-file'
-import * as LlmPiAi from '@deepseek-ai/dsh-llm-pi-ai'
-import { PiAiAdapter } from '@deepseek-ai/dsh-llm-pi-ai'
+import LlmRuntime, { createUserMessage, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
+import type { StreamChunk } from '@x1a0f3n9/dsh-llm'
+import FileSettingsProvider from '@x1a0f3n9/dsh-settings-file'
+import * as LlmPiAi from '@x1a0f3n9/dsh-llm-pi-ai'
+import { PiAiAdapter } from '@x1a0f3n9/dsh-llm-pi-ai'
 import { getBuiltinModels } from '@earendil-works/pi-ai/providers/all'
 import { createModels, getSupportedThinkingLevels } from '@earendil-works/pi-ai'
 import type { Api, Model, OpenAICompletionsCompat, Provider } from '@earendil-works/pi-ai'
@@ -174,14 +174,14 @@ describe('hand-declared providers', () => {
       resolved.get(route)?.piProvider?.getModels() ?? []
 
     expect(modelsOf('acme-gateway')).toMatchObject([
-      { id: 'bare', contextWindow: 262_144, maxTokens: 32_768 },
+      { id: 'bare', contextWindow: 262_144, maxTokens: 256_000 },
       { id: 'sized', contextWindow: 8192, maxTokens: 512 },
     ])
     // The fallback is a guess, so a deployment whose gateway serves smaller
     // models corrects it once for the whole route.
     expect(modelsOf('tuned-gateway')).toMatchObject([{ id: 'bare', contextWindow: 4096, maxTokens: 256 }])
-    // Only an explicitly configured cap is a request default; a fallback is
-    // the model's capability and stops there.
+    // The map still records only an explicit cap; the adapter then falls back
+    // to the model's capability for the request default.
     expect(resolved.get('acme-gateway')?.configuredMaxTokens.get('bare')).toBeUndefined()
     expect(resolved.get('acme-gateway')?.configuredMaxTokens.get('sized')).toBe(512)
   })
@@ -447,16 +447,16 @@ describe('catalog routes with per-model configuration', () => {
 
     const info = await ctx.llm.resolveModelInfo('deepseek', catalogModel.id)
     // The configured field wins and the name still comes from the catalog. The
-    // catalog's own output cap is the model's capability, not a cap anyone
-    // chose, so it must not arrive as the request default.
+    // catalog's own output cap is the request default when the profile names
+    // none, so a gateway cannot apply a smaller hidden default.
     expect(info.context).toEqual({ contextWindow: 4096 })
     expect(info.name).toBe(catalogModel.name)
-    expect(info.defaultMaxTokens).toBeUndefined()
+    expect(info.defaultMaxTokens).toBe(catalogModel.maxTokens)
     // An explicit list replaces the catalog rather than adding to it.
     expect((await ctx.llm.listModels('deepseek')).map(model => model.id)).toEqual([catalogModel.id])
   })
 
-  it('materializes a request default only from a configured output cap', async () => {
+  it('materializes a request default from a configured output cap', async () => {
     const server = await mockServer([])
     const [catalogModel] = getBuiltinModels('deepseek')
     if (catalogModel === undefined) throw new Error('the installed catalog ships no deepseek model')

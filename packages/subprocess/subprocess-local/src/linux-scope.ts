@@ -8,7 +8,7 @@ import type {
   SubprocessOutcome,
   SubprocessSpawnSpec,
   SubprocessTerminalSpawnSpec,
-} from '@deepseek-ai/dsh-subprocess'
+} from '@x1a0f3n9/dsh-subprocess'
 import { loadLinuxExecve } from './linux-execve.ts'
 import type { BoundProcessOwner, ManagedProcessLaunch } from './managed-owner.ts'
 import {

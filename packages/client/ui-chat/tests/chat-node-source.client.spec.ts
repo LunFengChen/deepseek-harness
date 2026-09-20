@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import type {
   ChatConversationViewNode, ChatNodeSource,
-} from '@deepseek-ai/dsh-client-ui-chat/client'
-import type { ConversationTimelineSnapshot } from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
+import type { ConversationTimelineSnapshot } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { ChatSnapshotBuilder } from '../src/client/conversation-nodes/chat-snapshot-builder.ts'
 
 const timeline: ConversationTimelineSnapshot = { turnOrder: [], turns: new Map() }

@@ -23,7 +23,7 @@
 
 - insert:
     - id: llm-replay
-      name: '@deepseek-ai/dsh-llm-replay'
+      name: '@x1a0f3n9/dsh-llm-replay'
 
     # Hold the parent's second step until the manager notice enters its inbox.
     - id: settlement-fence

@@ -3,18 +3,18 @@ import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { Context } from '@deepseek-ai/cordis'
-import { createUserMessage, ToolCallId, type Message } from '@deepseek-ai/dsh-llm'
-import { createScope, type Scope } from '@deepseek-ai/dsh-scope'
+import { createUserMessage, ToolCallId, type Message } from '@x1a0f3n9/dsh-llm'
+import { createScope, type Scope } from '@x1a0f3n9/dsh-scope'
 import {
   SESSION_FORMAT_VERSION, Session, SessionId, type SessionEvent, type UserMessage,
-} from '@deepseek-ai/dsh-session'
-import SystemPrompt, { renderPrompt } from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime, { defineContentToolFixture } from '@deepseek-ai/dsh-tools'
-import AgentRegistry, { agentEvents, type Agent, type PreStepDecision } from '@deepseek-ai/dsh-agent'
-import SkillRegistry from '@deepseek-ai/dsh-skill'
-import * as SkillFileSystem from '@deepseek-ai/dsh-skill-filesystem'
-import * as toolSkill from '@deepseek-ai/dsh-tool-skill'
-import { unsupportedInbox } from '@deepseek-ai/dsh-agent-loop-testkit'
+} from '@x1a0f3n9/dsh-session'
+import SystemPrompt, { renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
+import AgentRegistry, { agentEvents, type Agent, type PreStepDecision } from '@x1a0f3n9/dsh-agent'
+import SkillRegistry from '@x1a0f3n9/dsh-skill'
+import * as SkillFileSystem from '@x1a0f3n9/dsh-skill-filesystem'
+import * as toolSkill from '@x1a0f3n9/dsh-tool-skill'
+import { unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 const testToolSignal = new AbortController().signal
 

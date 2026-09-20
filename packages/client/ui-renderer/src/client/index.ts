@@ -1,7 +1,7 @@
 /**
  * Browser UI renderer. It installs the slot renderer after its Cordis
  * dependencies activate and exposes the mount operation used by the web boot
- * kernel after the complete client roster settles.
+ * kernel once `uiRenderer` exists.
  */
 import { createElement, useLayoutEffect, useState, type ReactNode } from 'react'
 import { flushSync } from 'react-dom'
@@ -18,7 +18,7 @@ export type {
   ChainRenderOpts, HostObservable, RenderOpts, SnapshotSelectorHook, SlotRenderer,
   ScopedStandardSourceBinding, SlotRendererHost, SlotScopeAdapter,
   StandardSourceBinding, StoreInstanceLike,
-} from '@deepseek-ai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 
 /** Mount operation exposed to the framework-free boot kernel. */
 export interface UiRendererService {
@@ -55,10 +55,16 @@ interface BootSnapshot {
   html: string
 }
 
-/** Hydrate the kernel-owned loading DOM before replacing it with the application. */
-function BootHandoff(props: { app: () => ReactNode; boot: BootSnapshot }): ReactNode {
+/** Hydrate the kernel-owned loading DOM until a layout entry occupies `root`. */
+function BootHandoff(props: { app: () => ReactNode; boot: BootSnapshot; slots: SlotRegistry }): ReactNode {
   const [ready, setReady] = useState(false)
-  useLayoutEffect(() => { setReady(true) }, [])
+  useLayoutEffect(() => {
+    const syncReady = (): void => {
+      setReady(props.slots.entries('root').length > 0)
+    }
+    syncReady()
+    return props.slots.subscribe('root', syncReady)
+  }, [props.slots])
   if (ready) return props.app()
   return createElement('div', {
     className: props.boot.className,
@@ -68,12 +74,13 @@ function BootHandoff(props: { app: () => ReactNode; boot: BootSnapshot }): React
 }
 
 /** Mount React while preserving the framework-free boot DOM through hydration. */
-function mountApp(container: HTMLElement, app: () => ReactNode): Root {
+function mountApp(container: HTMLElement, app: () => ReactNode, slots: SlotRegistry): Root {
   const boot = container.querySelector<HTMLElement>(':scope > [data-dsh-boot]')
   if (boot !== null) {
     return hydrateRoot(container, createElement(BootHandoff, {
       app,
       boot: { className: boot.className, html: boot.innerHTML },
+      slots,
     }))
   }
   const root = createRoot(container)
@@ -90,7 +97,7 @@ export function apply(ctx: Context): void {
   slots.install(createSlotRenderer())
   ctx.reflect.provide('uiRenderer', {
     mount: (container: HTMLElement): (() => void) => {
-      const root = mountApp(container, buildRenderApp({ ctx }))
+      const root = mountApp(container, buildRenderApp({ ctx }), slots)
       return () => { root.unmount() }
     },
   })

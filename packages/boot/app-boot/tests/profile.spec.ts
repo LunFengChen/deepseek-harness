@@ -10,7 +10,7 @@ import {
 } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { withFileLock } from '@deepseek-ai/dsh-atomic-write'
+import { withFileLock } from '@x1a0f3n9/dsh-atomic-write'
 import { afterAll, describe, expect, it } from 'vitest'
 import {
   composeEntries,
@@ -40,7 +40,7 @@ const tmp = (): string => {
 
 /** Stage a fake installed app: package.json with deps and a node_modules holding bundles. */
 function stageInstallation(
-  bundles: Record<string, { patch?: string; deps?: Record<string, string> }>,
+  bundles: Record<string, { patch?: string; deps?: Record<string, string>; plugins?: unknown }>,
   appName = 'dsh-app',
 ): string {
   const root = tmp()
@@ -57,7 +57,14 @@ function stageInstallation(
       type: 'module',
       main: './index.js',
       dependencies: spec.deps ?? {},
-      ...spec.patch === undefined ? {} : { dsh: { bundle: { patch: './cordis.patch.yml' } } },
+      ...spec.patch === undefined && spec.plugins === undefined ? {} : {
+        dsh: {
+          bundle: {
+            ...spec.patch === undefined ? {} : { patch: './cordis.patch.yml' },
+            ...spec.plugins === undefined ? {} : { plugins: spec.plugins },
+          },
+        },
+      },
     }))
     writeFileSync(join(dir, 'index.js'), `export const packageName = ${JSON.stringify(name)}\n`)
     if (spec.patch !== undefined) writeFileSync(join(dir, 'cordis.patch.yml'), spec.patch)
@@ -103,16 +110,16 @@ describe('initProfile', () => {
   it('creates manifest, user patch layer, and pnpm workspace once, never overwriting', () => {
     const home = tmp()
     const dir = resolveProfileDir('tui', home)
-    initProfile(dir, ['@deepseek-ai/dsh-base'])
+    initProfile(dir, ['@x1a0f3n9/dsh-base'])
     const manifest = readProfileManifest('t', dir)
-    expect(manifest.dsh?.profile?.bundles).toEqual(['@deepseek-ai/dsh-base'])
+    expect(manifest.dsh?.profile?.bundles).toEqual(['@x1a0f3n9/dsh-base'])
     expect(manifest.dsh?.profile?.patchReload).toBe('live')
     expect(readFileSync(join(dir, PROFILE_PATCH_FILENAME), 'utf8')).toContain('[]')
     expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain('nodeLinker: hoisted')
     // Re-init keeps user edits.
     writeFileSync(join(dir, PROFILE_PATCH_FILENAME), '- id: x\n  config: {}\n')
     initProfile(dir, ['other'], 'startup')
-    expect(readProfileManifest('t', dir).dsh?.profile?.bundles).toEqual(['@deepseek-ai/dsh-base'])
+    expect(readProfileManifest('t', dir).dsh?.profile?.bundles).toEqual(['@x1a0f3n9/dsh-base'])
     expect(readProfileManifest('t', dir).dsh?.profile?.patchReload).toBe('live')
     expect(readFileSync(join(dir, PROFILE_PATCH_FILENAME), 'utf8')).toContain('- id: x')
   })
@@ -209,19 +216,19 @@ describe('loadProfile', () => {
     // The web template auto-initializes on first load. Bundle resolution
     // cannot be asserted to fail here: the source-plane test runner resolves
     // @deepseek-ai/* through tsconfig paths regardless of the staged anchor.
-    expect(PROFILE_TEMPLATES.web?.bundles).toContain('@deepseek-ai/dsh-base')
+    expect(PROFILE_TEMPLATES.web?.bundles).toContain('@x1a0f3n9/dsh-base')
     expect(PROFILE_TEMPLATES.web?.patchReload).toBe('live')
     expect(PROFILE_TEMPLATES.headless?.patchReload).toBe('startup')
     expect(PROFILE_TEMPLATES.acp).toEqual({
-      bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-acp-app'],
+      bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-acp-app'],
       patchReload: 'startup',
     })
     expect(PROFILE_TEMPLATES.sdk).toEqual({
-      bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-sdk-app'],
+      bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-sdk-app'],
       patchReload: 'startup',
     })
     expect(PROFILE_TEMPLATES['sdk-minimal']).toEqual({
-      bundles: ['@deepseek-ai/dsh-sdk-minimal'],
+      bundles: ['@x1a0f3n9/dsh-sdk-minimal'],
       patchReload: 'startup',
     })
     try {
@@ -237,40 +244,40 @@ describe('loadProfile', () => {
 
   it('normalizes only the exact installation-owned headless bundle tuple', () => {
     const anchor = stageInstallation({
-      '@deepseek-ai/dsh-base': { patch: '[]\n' },
-      '@deepseek-ai/dsh-web-app': { patch: '[]\n' },
-      '@deepseek-ai/dsh-headless': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-base': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-web-app': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-headless': { patch: '[]\n' },
       'custom-bundle': { patch: '[]\n' },
     })
     const home = tmp()
     const stock = resolveProfileDir('headless', home)
     initProfile(stock, [
-      '@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', '@deepseek-ai/dsh-headless',
+      '@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless',
     ])
     const retiredManifest = readProfileManifest('t', stock)
     delete retiredManifest.dsh!.profile!.patchReload
     writeProfileManifest(stock, retiredManifest)
     loadProfile('t', 'headless', anchor, home)
     expect(readProfileManifest('t', stock).dsh?.profile).toEqual({
-      bundles: ['@deepseek-ai/dsh-base', '@deepseek-ai/dsh-headless'],
+      bundles: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-headless'],
       patchReload: 'startup',
     })
 
     const customHome = tmp()
     const custom = resolveProfileDir('headless', customHome)
     initProfile(custom, [
-      '@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', '@deepseek-ai/dsh-headless', 'custom-bundle',
+      '@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless', 'custom-bundle',
     ])
     loadProfile('t', 'headless', anchor, customHome)
     expect(readProfileManifest('t', custom).dsh?.profile?.bundles).toEqual([
-      '@deepseek-ai/dsh-base', '@deepseek-ai/dsh-web-app', '@deepseek-ai/dsh-headless', 'custom-bundle',
+      '@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless', 'custom-bundle',
     ])
   })
 
   it('adds a shipped reload default only to an exact stock tuple and preserves explicit choices', () => {
     const anchor = stageInstallation({
-      '@deepseek-ai/dsh-base': { patch: '[]\n' },
-      '@deepseek-ai/dsh-web-app': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-base': { patch: '[]\n' },
+      '@x1a0f3n9/dsh-web-app': { patch: '[]\n' },
     })
     const stockHome = tmp()
     const stock = resolveProfileDir('web', stockHome)
@@ -305,6 +312,44 @@ describe('loadProfile', () => {
     const dir = resolveProfileDir('demo', home)
     initProfile(dir, ['not-a-bundle'])
     expect(() => loadProfile('t', 'demo', anchor, home)).toThrow('declares no dsh.bundle')
+  })
+
+  it('keeps catalog author homepages that are GitHub https URLs', () => {
+    const plugin = {
+      id: 'hindsight',
+      entryId: 'hindsight',
+      packageName: '@vectorize-io/hindsight-coding-agents',
+      title: 'Hindsight memory',
+      author: 'vectorize-io',
+      homepage: 'https://github.com/vectorize-io/hindsight/tree/main/hindsight-integrations/coding-agents',
+      defaultEnabled: true,
+    }
+    const anchor = stageInstallation({
+      'memory-bundle': { patch: '[]\n', plugins: [plugin] },
+    })
+    const home = tmp()
+    const dir = resolveProfileDir('demo', home)
+    initProfile(dir, ['memory-bundle'])
+    expect(loadProfile('t', 'demo', anchor, home).layers[0]?.plugins).toEqual([plugin])
+  })
+
+  it('fails loud when a catalog homepage is not an https GitHub URL', () => {
+    const anchor = stageInstallation({
+      'memory-bundle': {
+        patch: '[]\n',
+        plugins: [{
+          id: 'hindsight',
+          entryId: 'hindsight',
+          packageName: '@vectorize-io/hindsight-coding-agents',
+          author: 'vectorize-io',
+          homepage: 'https://example.com/vectorize-io',
+        }],
+      },
+    })
+    const home = tmp()
+    const dir = resolveProfileDir('demo', home)
+    initProfile(dir, ['memory-bundle'])
+    expect(() => loadProfile('t', 'demo', anchor, home)).toThrow('homepage must be an https://github.com URL')
   })
 })
 

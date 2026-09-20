@@ -1,20 +1,20 @@
 /**
  * Default one-shot summarization and durable checkpoint framing.
  *
- * @module @deepseek-ai/dsh-compaction-basic/summarizer
+ * @module @x1a0f3n9/dsh-compaction-basic/summarizer
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { contentHasImage, createUserMessage, BlockAssembler, LlmError } from '@deepseek-ai/dsh-llm'
+import { contentHasImage, createUserMessage, BlockAssembler, LlmError } from '@x1a0f3n9/dsh-llm'
 import type {
   ContentBlock, FinishReason, GenerateOptions, Message, TokenUsage, ToolSchema,
-} from '@deepseek-ai/dsh-llm'
-import type { Agent } from '@deepseek-ai/dsh-agent'
+} from '@x1a0f3n9/dsh-llm'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
 
 interface SummaryConfig {
   readonly summarizationProvider: string
   readonly summarizationModel: string
-  readonly maxTokens: number
+  readonly maxTokens?: number
 }
 
 /** Tags wrapping the structured summary inside the landed checkpoint node. */
@@ -153,7 +153,7 @@ export async function summarizeWithLlm(
     model: target.model,
     messages,
     ...input.tools === undefined ? {} : { tools: [...input.tools] },
-    maxTokens: config.maxTokens,
+    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
     sessionId: agent.session.id,
     purpose: 'compaction',
     ...signal === undefined ? {} : { signal },
@@ -173,7 +173,7 @@ export async function summarizeWithLlm(
     llmStreamCall: true,
     provider: options.provider,
     model: options.model,
-    maxTokens: config.maxTokens,
+    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
     ...(assembler.usage === undefined ? {} : { usage: assembler.usage }),
   }
 }
@@ -198,11 +198,6 @@ function finishError(finish: FinishReason): Error | undefined {
     case 'aborted': {
       const error = new Error(finish.failure.message) as Error & { code?: string }
       error.code = finish.failure.code
-      return error
-    }
-    case 'max-tokens': {
-      const error = new Error('summarization truncated at the token cap (incomplete checkpoint)') as Error & { code?: string }
-      error.code = 'MAX_TOKENS'
       return error
     }
     default:

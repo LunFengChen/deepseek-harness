@@ -7,7 +7,7 @@ import Lsp, {
   type LspProvider,
   type LspProviderQuery,
   type LspQueryResult,
-} from '@deepseek-ai/dsh-lsp'
+} from '@x1a0f3n9/dsh-lsp'
 
 /** A scripted provider that records the queries it receives. */
 function makeProvider(

@@ -56,9 +56,9 @@ const ASSET_GLOBS = [
   'node_modules/**/*.yaml',
   'node_modules/**/*.yml',
   // web-app builds this path dynamically, so pkg cannot discover the static frontend.
-  'node_modules/@deepseek-ai/dsh-web-frontend/dist/**/*',
+  'node_modules/@x1a0f3n9/dsh-web-frontend/dist/**/*',
   // skill-badge resolves both Markdown and image resources through import.meta.url.
-  'node_modules/@deepseek-ai/dsh-skill-badge/assets/**/*',
+  'node_modules/@x1a0f3n9/dsh-skill-badge/assets/**/*',
 ]
 
 const PLATFORMS = ['linux', 'macos', 'win'] as const

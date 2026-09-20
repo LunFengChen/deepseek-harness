@@ -1,23 +1,23 @@
 /** Register the Chat Conversation target, renderers, stats, and details surface. */
 import type { Context } from '@deepseek-ai/cordis'
-import type { ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
-import type {} from '@deepseek-ai/dsh-api-remotes/client'
-import type { SessionBinding } from '@deepseek-ai/dsh-api-session-controller/client'
-import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type {} from '@deepseek-ai/dsh-client-ui-sidebar-right/client'
-import type {} from '@deepseek-ai/dsh-client-ui-input-trigger/client'
-// The `file` entry of `SidebarRightResourceParamsMap`, which types `{ params: { line } }` below.
-import type {} from '@deepseek-ai/dsh-client-ui-sidebar-documentpreview/client'
-import { fileAddressFor } from '@deepseek-ai/dsh-util-workspace-path'
+import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
+import type { SessionBinding } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
+// The `file` entry of `SidebarRightResourceParamsMap`, which types `{ params: { line, directory } }` below.
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/client'
+import { fileAddressFor } from '@x1a0f3n9/dsh-util-workspace-path'
 // Type-only service and declaration merges used by the apply world.
-import type {} from '@deepseek-ai/dsh-client-locale/client'
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type {} from '@deepseek-ai/dsh-client-ui-layout/client'
-import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
-import type {} from '@deepseek-ai/dsh-client-ui-session/client'
-import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
-import type {} from '@deepseek-ai/dsh-client-ui-workspace/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-layout/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-settings/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-workspace/client'
 import type {
   ChatNodeTurnDataInjected, ChatScrollPosition, ChatViewInjected,
   TurnTailOwnerProps,
@@ -126,15 +126,18 @@ export function apply(ctx: Context): void {
           // elsewhere keeps its absolute spelling in the same Session's address.
           // Which tab type claims the
           // address is the Sidebar's decision, not this call site's.
-          // A line travels as a navigation parameter, not as part of the
-          // address: the file is one piece of content whether it is opened at
-          // its top or at line 400, so the same tab is revealed and told where
-          // to land.
+          // A line or a directory flag travels as a navigation parameter, not
+          // as part of the address: the same tab is revealed, and the viewer
+          // either lands on that line or opens a folder window.
           openFile: async (path, options) => {
             const cwd = ctx.sessions.list.getSnapshot().byId[sessionId]?.cwd
             const url = fileAddressFor(sessionId, cwd, path)
-            if (options?.line === undefined) ctx.sidebarRight.openResource(url)
-            else ctx.sidebarRight.openResource(url, { params: { line: options.line } })
+            const params = {
+              ...options?.line === undefined ? {} : { line: options.line },
+              ...options?.directory === true ? { directory: true } : {},
+            }
+            if (params.line === undefined && params.directory !== true) ctx.sidebarRight.openResource(url)
+            else ctx.sidebarRight.openResource(url, { params })
             await Promise.resolve()
           },
           openSkill: (name) => {

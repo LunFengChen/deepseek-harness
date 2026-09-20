@@ -1,7 +1,7 @@
 /** Typed Agent Teams failures. */
 
 import { inspect } from 'node:util'
-import { HarnessError } from '@deepseek-ai/dsh-llm'
+import { HarnessError } from '@x1a0f3n9/dsh-llm'
 
 /** Stable failure raised by the Team domain. */
 export class TeamError extends HarnessError {

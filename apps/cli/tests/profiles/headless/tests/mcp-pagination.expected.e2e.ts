@@ -2,7 +2,7 @@
 
 import { fileURLToPath } from 'node:url'
 import { expect, it } from 'vitest'
-import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@deepseek-ai/dsh-loader-smoke'
+import { LOADER_SMOKE_TEST_TIMEOUT_MS, runLoaderSmoke } from '@x1a0f3n9/dsh-loader-smoke'
 
 const fixtureRoot = new URL('../../../../../../packages/mcp/mcp-client/tests/fixtures/', import.meta.url)
 const configPath = fileURLToPath(new URL('repeated-cursor.patch.yml', fixtureRoot))

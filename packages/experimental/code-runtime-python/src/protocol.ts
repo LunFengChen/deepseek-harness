@@ -3,7 +3,7 @@
  * travel on the child's fd 3 (one JSON object per line), leaving stdout/stderr free for the
  * program's own output. Host treats every inbound frame as hostile because model code can post
  * anything through the same fd; the Python bootstrap trusts host replies.
- * @module @deepseek-ai/dsh-experimental-code-runtime-python/src/protocol
+ * @module @x1a0f3n9/dsh-experimental-code-runtime-python/src/protocol
  */
 
 /**

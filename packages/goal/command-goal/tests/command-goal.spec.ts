@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import type { Agent, AgentStatus } from '@deepseek-ai/dsh-agent'
-import CommandRuntime from '@deepseek-ai/dsh-commands'
-import GoalService from '@deepseek-ai/dsh-goal'
-import type { GoalRef } from '@deepseek-ai/dsh-goal'
-import SessionStore, { Session, SessionId, type SessionEvent } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import * as commandGoal from '@deepseek-ai/dsh-command-goal'
-import { createInboxStub } from '@deepseek-ai/dsh-agent-loop-testkit'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentStatus } from '@x1a0f3n9/dsh-agent'
+import CommandRuntime from '@x1a0f3n9/dsh-commands'
+import GoalService from '@x1a0f3n9/dsh-goal'
+import type { GoalRef } from '@x1a0f3n9/dsh-goal'
+import SessionStore, { Session, SessionId, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import * as commandGoal from '@x1a0f3n9/dsh-command-goal'
+import { createInboxStub } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 interface Harness {
   readonly ctx: Context
@@ -88,7 +88,7 @@ function ref(goal: NonNullable<ReturnType<GoalService['get']>>): GoalRef {
   return { id: goal.id, revision: goal.revision }
 }
 
-describe('@deepseek-ai/dsh-command-goal registration', () => {
+describe('@x1a0f3n9/dsh-command-goal registration', () => {
   it('registers one global command with Loader-safe exports and disposes it', async () => {
     const test = await harness()
     expect(commandGoal.name).toBe('command-goal')
@@ -98,7 +98,7 @@ describe('@deepseek-ai/dsh-command-goal registration', () => {
     expect(loader.unwrapExports(commandGoal)).toBe(commandGoal)
 
     expect(test.ctx.commands.list(test.agent)).toContainEqual({
-      definitionId: '@deepseek-ai/dsh-command-goal',
+      definitionId: '@x1a0f3n9/dsh-command-goal',
       name: 'goal',
       description: 'Set or view the goal for a long-running task',
       input: { hint: '[<objective>|clear|edit <objective>|pause|resume]', attachments: true },
@@ -126,7 +126,7 @@ describe('/goal human command', () => {
     expect(created.kind).toBe('success')
     expect(created.text).toContain('Goal created\nStatus: active')
     expect(created.text).toContain('Objective: finish the release')
-    expect(created.text).toContain('Rounds: 0/256')
+    expect(created.text).toContain('Rounds: 0/100000')
     expect(created.text).toContain('Activation: armed')
     expect(test.ctx.goals.get(test.agent)?.objective).toBe('finish the release')
     expect(domainEvents(test.session).map(event => event.type)).toEqual(['goal/change'])

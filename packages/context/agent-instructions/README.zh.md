@@ -3,7 +3,7 @@ description: "面向用户与维护者的工作区指令上下文说明，用于
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-instructions
+# @x1a0f3n9/dsh-agent-instructions
 
 [English](README.md) | 中文
 
@@ -38,7 +38,7 @@ kind: "package-reference"
 只有确认项目根标记不存在时，项目根发现才会继续上溯。权限或 I/O 失败会停止发现，并抛出宿主或文件系统提供方的原始错误，而不会选择祖先项目。[根标记元数据决策](../../../.agents/notes/implemented/bug-fix/2026-09-03-root-marker-metadata-failures.zh.md)说明发现为何必须失败，而不能替换为其他根目录。
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-instructions'
+- name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 ```

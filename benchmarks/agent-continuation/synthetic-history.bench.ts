@@ -1,8 +1,8 @@
 /** Current-generation benchmark seeds retain the system head across continuation. */
 import { expect, it } from 'vitest'
-import { createSystemMessage } from '@deepseek-ai/dsh-llm'
-import { parseSessionLog } from '@deepseek-ai/dsh-llm-replay'
-import { Session, SessionId, SESSION_FORMAT_VERSION } from '@deepseek-ai/dsh-session'
+import { createSystemMessage } from '@x1a0f3n9/dsh-llm'
+import { parseSessionLog } from '@x1a0f3n9/dsh-llm-replay'
+import { Session, SessionId, SESSION_FORMAT_VERSION } from '@x1a0f3n9/dsh-session'
 import { syntheticHistory as browserHistory } from '../long-session-browser/synthetic-history.ts'
 import { syntheticHistory } from './workload.ts'
 
@@ -23,7 +23,7 @@ for (const [name, generate] of [
     session.append('turn/start', { turn })
     session.append('step/start', { turn, step: 1 })
     const replacement = session.append('system/message', {
-      turn, step: 1, message: createSystemMessage('Next synthetic prompt', '@deepseek-ai/dsh-system-prompt'),
+      turn, step: 1, message: createSystemMessage('Next synthetic prompt', '@x1a0f3n9/dsh-system-prompt'),
     }, { surfaceOp: { op: 'replace', startSeq: head, endSeq: head }, sourceEventSeqs: [head] })
     const restored = Session.create(SessionId(header.id), parseSessionLog([
       JSON.stringify(header), ...session.snapshotEvents().map(event => JSON.stringify(event)),

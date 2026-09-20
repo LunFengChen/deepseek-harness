@@ -70,7 +70,7 @@ interface WebBootGraph {
 }
 ```
 
-每个初始 row 的 `rev` 都是不透明的进程 nonce 加序号，因此组合图时不会哈希每个插件产物。HMR 观察到变化后，该 row 的 revision 才改为新 bundle 及其可用 sourcemap 的哈希。初始描述把 row 划入 bootstrap 与 application 两个调度阶段，每个阶段都可以包含多条描述。URL 只含有序 package 资源列表与 revision，阶段名不会进入路由。图组合保持 row 顺序，并在 map 形式 URL 超过 3 KiB 前贪心切分。启动 combo revision 对合并后的插件脚本字节与 indexed sourcemap 求哈希，图 revision 则对 row 与描述一并求哈希。`immediately` 标记第一阶段的 registration barrier；同一 combo 中的 row 共享脚本传输，不同 combo 则独立加载。
+每个初始 row 的 `rev` 都是不透明的进程 nonce 加序号，因此组合图时不会哈希每个插件产物。HMR 观察到变化后，该 row 的 revision 才改为新 bundle 及其可用 sourcemap 的哈希。初始描述把 row 划入 bootstrap 与 application 两个调度阶段，每个阶段都可以包含多条描述。URL 只含有序 package 资源列表与 revision，阶段名不会进入路由。图组合保持 row 顺序，并在 map 形式 URL 超过 3 KiB 或合并 source 超过 512 KiB 前贪心切分，且 immediately 层 row 不会进入延迟 combo。启动 combo revision 对合并后的插件脚本字节与 indexed sourcemap 求哈希，图 revision 则对 row 与描述一并求哈希。`immediately` 标记第一阶段的 registration barrier；同一 combo 中的 row 共享脚本传输，不同 combo 则独立加载。
 
 ## 扫描
 
@@ -82,7 +82,7 @@ interface WebBootGraph {
 
 ## bundle 路由与 index 注入
 
-`GET`／`HEAD /plugins/??<package-a>/client.js,<package-b>/client.js&rev=<rev>` 提供精确生成的 combo 脚本；单资源请求采用同一形式，也是 HMR 路径。其绝对 `sourceMappingURL` 平行改写每个资源后缀，得到 `/plugins/??<package-a>/client.js.map,<package-b>/client.js.map&rev=<rev>`。即使只有一个资源，map 仍采用 Indexed Source Map v3。组件有自带 map 时直接用于对应 section；没有时则获得 identity section，其 `sourcesContent` 是构建后 bundle，source 名取打包后的 `sourceURL` 或插件路由。每条启动请求 URL 按 UTF-8 字节计算都不超过 3 KiB；切分按更长的 map 形式计算。所有 application URL 都会预加载，所有 bootstrap URL 都会在图全局量与 Vite entry 之前执行。所有已发布响应都使用长期 immutable 缓存。未知或被修改的资源列表、缺少 revision 及陈旧 revision 都返回 404，绝不提供其他字节，也不会让 SPA fallback 把 HTML 当作 JavaScript 返回；其他方法返回 405。注入行在每次 index 渲染时携带当前图，因此重新加载总是基于实时组合启动。
+`GET`／`HEAD /plugins/??<package-a>/client.js,<package-b>/client.js&rev=<rev>` 提供精确生成的 combo 脚本；单资源请求采用同一形式，也是 HMR 路径。其绝对 `sourceMappingURL` 平行改写每个资源后缀，得到 `/plugins/??<package-a>/client.js.map,<package-b>/client.js.map&rev=<rev>`。即使只有一个资源，map 仍采用 Indexed Source Map v3。组件有自带 map 时直接用于对应 section；没有时则获得 identity section，其 `sourcesContent` 是构建后 bundle，source 名取打包后的 `sourceURL` 或插件路由。每条启动请求 URL 按 UTF-8 字节计算都不超过 3 KiB；切分按更长的 map 形式计算。immediately 层 application URL 会预加载，所有 bootstrap URL 都会在图全局量与 Vite entry 之前执行。所有已发布响应都使用长期 immutable 缓存。未知或被修改的资源列表、缺少 revision 及陈旧 revision 都返回 404，绝不提供其他字节，也不会让 SPA fallback 把 HTML 当作 JavaScript 返回；其他方法返回 405。注入行在每次 index 渲染时携带当前图，因此重新加载总是基于实时组合启动。
 
 ## 服务
 

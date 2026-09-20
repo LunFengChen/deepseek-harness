@@ -2,9 +2,9 @@
 // dispatch entry + list state, constructed and held by ClientSessions (one per browser client).
 // List data never enters zustand; React connects via subscribe/getListSnapshot.
 
-import type { SubagentAddress, SubagentCatalog } from '@deepseek-ai/dsh-subagent/client'
-import { SessionSeq, type SessionId, type SessionSeqCursor } from '@deepseek-ai/dsh-session/types'
-import type { WorkspaceId } from '@deepseek-ai/dsh-workspace/types'
+import type { SubagentAddress, SubagentCatalog } from '@x1a0f3n9/dsh-subagent/client'
+import { SessionSeq, type SessionId, type SessionSeqCursor } from '@x1a0f3n9/dsh-session/types'
+import type { WorkspaceId } from '@x1a0f3n9/dsh-workspace/types'
 import type {
   SessionControlBaseline,
   SessionControlFrame,
@@ -13,14 +13,14 @@ import type {
   SessionJob as JobView,
 } from '../../types.ts'
 import { mergeOrderedBaseline } from '../ordered-baseline.ts'
-import { isRemoteFailure } from '@deepseek-ai/dsh-api-gateway/client'
-import type { RemoteFailure, RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+import { isRemoteFailure } from '@x1a0f3n9/dsh-api-gateway/client'
+import type { RemoteFailure, RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import type { SessionListEntry, TitledSessionSummary } from './lineage.ts'
 import { flattenLineage } from './lineage.ts'
 // Type-only merge edge: the title domain's client-namespace outlet declares
 // the 'title' projection key this manager projects into list rows (and any
 // useProjection('title') consumer reads). Zero value imports by construction.
-import type {} from '@deepseek-ai/dsh-session-title/client'
+import type {} from '@x1a0f3n9/dsh-session-title/client'
 import { Notifier } from './notifier.ts'
 import { ProjectionValueStore } from './projection-store.ts'
 import { Session } from './session.ts'

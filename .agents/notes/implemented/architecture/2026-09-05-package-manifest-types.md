@@ -10,7 +10,7 @@ External packages need Harness manifest types without depending on boot or clien
 
 ## Decision
 
-[`@deepseek-ai/dsh-package-manifest`](../../../../packages/util/package-manifest/README.md) owns `DshManifest` and its member declarations in one type-only file. The package belongs to the existing utility group and exports no runtime values. The [public package metadata decision](2026-09-10-public-package-manifest.md) owns the public field set and the separation from internal tool metadata.
+[`@x1a0f3n9/dsh-package-manifest`](../../../../packages/util/package-manifest/README.md) owns `DshManifest` and its member declarations in one type-only file. The package belongs to the existing utility group and exports no runtime values. The [public package metadata decision](2026-09-10-public-package-manifest.md) owns the public field set and the separation from internal tool metadata.
 
 Readers import the shared declarations directly. Boot retains profile loading, raw JSON checks, defaults, and resolved runtime data. Client modules retain their normalized boot graph. The image packer resolves declared paths into directories. The Session catalog generator derives a read-only validated entry with a resolved import path; raw inputs and discovery rules remain local.
 

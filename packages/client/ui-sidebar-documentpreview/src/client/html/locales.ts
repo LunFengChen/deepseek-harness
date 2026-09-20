@@ -17,7 +17,7 @@ export const en = {
   failed: 'This HTML document could not be previewed.',
 } satisfies Record<HtmlPreviewKey, string>
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** HTML preview selection and status text. */
     documentHtml: HtmlPreviewKey

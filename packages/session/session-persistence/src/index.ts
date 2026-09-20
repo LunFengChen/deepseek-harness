@@ -3,16 +3,16 @@
  * {@link SessionEvent}s as the event-sourced log and carry non-replayable
  * {@link SessionHeader} metadata separately; callers address one stored
  * session through a {@link SessionHandle} obtained from `create`/`open`.
- * @module @deepseek-ai/dsh-session-persistence
+ * @module @x1a0f3n9/dsh-session-persistence
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import type { SessionEvent, SessionHeader, SessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
+import type { SessionEvent, SessionHeader, SessionId, SessionLogOffset, SessionSeqCursor } from '@x1a0f3n9/dsh-session'
 import type { SessionHandle, SessionAccess } from './handle.ts'
 import type { SessionPersistenceRevision } from './revision.ts'
 
 // Re-export the metadata vocabulary so Consumers import it from the Service Definition.
-export type { SessionHeader } from '@deepseek-ai/dsh-session'
+export type { SessionHeader } from '@x1a0f3n9/dsh-session'
 export { SessionPersistenceRevision } from './revision.ts'
 export type {
   SessionAccess,
@@ -106,6 +106,33 @@ export interface SessionPersistenceListOptions {
   readonly signal?: AbortSignal
 }
 
+/** Options for {@link SessionPersistence.readHistorySuffix}. */
+export interface SessionHistorySuffixOptions {
+  /** Maximum append-surface user/assistant messages the suffix must cover. */
+  readonly maxMessages: number
+  /** Exclusive upper bound of an older page; omit for the newest page. */
+  readonly beforeSeq?: number
+  /** Inclusive newest seq the page may include; omit for the durable cursor. */
+  readonly throughSeq?: number
+  /** Optional cancellation for backend suffix reads. */
+  readonly signal?: AbortSignal
+}
+
+/**
+ * A contiguous tail of one stored log that covers one history page without
+ * restoring the whole artifact.
+ */
+export interface SessionHistorySuffix {
+  /** Immutable stored header. */
+  readonly header: SessionHeader
+  /** Exact inherited prefix length, or `0` when a seeded cut is not in the suffix. */
+  readonly inheritedEventCount: SessionLogOffset
+  /** Contiguous events covering the requested page, possibly with interrupted-turn closers. */
+  readonly events: SessionEvent[]
+  /** Last logical seq in this view, including in-memory closers. */
+  readonly cursor: SessionSeqCursor
+}
+
 declare module '@deepseek-ai/cordis' {
   interface Context {
     sessionPersistence: SessionPersistence
@@ -113,10 +140,12 @@ declare module '@deepseek-ai/cordis' {
 }
 
 /**
- * Durable append-only session storage addressed through per-session handles.
+ * Durable session storage addressed through per-session handles. Normal
+ * writes append to a contiguous log; an explicit destructive tail truncation
+ * may rewrite the retained prefix when a backend supports it.
  *
- * Storage semantics shared by every backend: events are contiguous from seq 0
- * and never rewritten; a torn physical tail is never returned to a reader and
+ * Storage semantics shared by every backend: events are contiguous from seq 0;
+ * a torn physical tail is never returned to a reader and
  * is truncated by the write path before its first append; reads validate
  * current-format records only and refuse unknown vocabulary fail-closed.
  * `append` persists best-effort; `flush` — per handle or service-wide — is
@@ -196,6 +225,36 @@ export abstract class SessionPersistence extends Service {
    * @returns one snapshot per stored session.
    */
   abstract list(options?: SessionPersistenceListOptions): Promise<readonly SessionPersistenceSnapshot[]>
+
+  /**
+   * Permanently replace one session's durable event log with an earlier prefix.
+   * The caller must apply the matching in-memory truncation only after this
+   * promise resolves. The backend must drop routed live events at or past
+   * `_length` so a later flush cannot replay the discarded tail. Backends that
+   * do not support rewriting reject loudly.
+   * @param _id - the live session whose durable log is being rewritten.
+   * @param _length - number of events to retain.
+   * @returns resolution after the retained prefix is durable.
+   */
+  truncate(_id: SessionId, _length: SessionLogOffset): Promise<void> {
+    return Promise.reject(new Error('this session persistence backend does not support destructive session deletion'))
+  }
+
+  /**
+   * Read a contiguous tail covering one history page without restoring the
+   * whole log. Backends that cannot cheaply decode a suffix return `undefined`
+   * so callers fall back to a full observation.
+   * @param _id - the stored session to read.
+   * @param _options - page bounds and cancellation.
+   * @returns the suffix, or `undefined` when this backend has no suffix reader
+   *   or the stored generation must be migrated first.
+   */
+  readHistorySuffix(
+    _id: SessionId,
+    _options: SessionHistorySuffixOptions,
+  ): Promise<SessionHistorySuffix | undefined> {
+    return Promise.resolve(undefined)
+  }
 }
 
 export default SessionPersistence

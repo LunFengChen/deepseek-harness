@@ -3,10 +3,10 @@ import { FiberState } from '@deepseek-ai/cordis'
 import { describe, expect, vi } from 'vitest'
 import { createClientTest, webApp } from '../src/assembly/index.ts'
 
-const HMR = '@deepseek-ai/dsh-client-hmr'
-const MODULES = '@deepseek-ai/dsh-client-modules'
-const SESSIONS = '@deepseek-ai/dsh-api-session-controller'
-const FILE_UPLOAD = '@deepseek-ai/dsh-client-file-upload'
+const HMR = '@x1a0f3n9/dsh-client-hmr'
+const MODULES = '@x1a0f3n9/dsh-client-modules'
+const SESSIONS = '@x1a0f3n9/dsh-api-session-controller'
+const FILE_UPLOAD = '@x1a0f3n9/dsh-client-file-upload'
 const hmrRoster = webApp.closure([HMR])
 const sessionRoster = webApp.closure([SESSIONS])
 const hmrTest = createClientTest({ roster: hmrRoster }, { awaitConnected: false })

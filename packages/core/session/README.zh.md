@@ -3,13 +3,13 @@ description: "面向用户与维护者的事件溯源会话日志与内存存储
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session
+# @x1a0f3n9/dsh-session
 
 [English](README.md) | 中文
 
 ## 概述
 
-`dsh-session` 在仅追加的会话日志中记录每个模型可见事实，并从该记录派生模型历史。消费方可以检查、回放、fork 和刷新会话，同时保留历史事件；压缩（compaction）会在活跃对话中隐藏被取代的条目，但不会删除它们。除非添加持久化后端，否则会话仅保留在内存中；持久性检查点会等待配置的后端。agent 需要可重建的会话记录时请选择本包；它本身不调用模型。
+`dsh-session` 在仅追加的会话日志中记录每个模型可见事实，并从该记录派生模型历史。消费方可以检查、回放、fork 和刷新会话，同时保留历史事件；压缩（compaction）会在活跃对话中隐藏被取代的条目，但不会删除它们。`Session.truncate` 是 persistence 重写同一前缀之后使用的破坏性例外；挂到 store 上的会话随后发出 `session/truncated`。除非添加持久化后端，否则会话仅保留在内存中；持久性检查点会等待配置的后端。agent 需要可重建的会话记录时请选择本包；它本身不调用模型。
 
 ## 目录
 

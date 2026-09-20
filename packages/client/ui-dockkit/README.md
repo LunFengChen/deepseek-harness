@@ -3,7 +3,7 @@ description: "Docking layout kit for the dsh web client: a split tree of tabbed 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-dockkit
+# @x1a0f3n9/dsh-client-ui-dockkit
 
 English | [中文](README.zh.md)
 

@@ -3,7 +3,7 @@ description: "The managed DSH_* shell environment for users and maintainers choo
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-shell-env
+# @x1a0f3n9/dsh-shell-env
 
 English | [中文](README.zh.md)
 
@@ -37,7 +37,7 @@ Other plugins contribute facts by registering a contributor with a stable name, 
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@deepseek-ai/dsh-shell-env'
+import type {} from '@x1a0f3n9/dsh-shell-env'
 
 export const inject = ['shellEnv']
 

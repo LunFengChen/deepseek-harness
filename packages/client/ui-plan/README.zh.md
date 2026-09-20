@@ -3,7 +3,7 @@ description: "Web GUI 的 plan 模式状态徽章：显示 plan 模式已开启�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-plan
+# @x1a0f3n9/dsh-client-ui-plan
 
 [English](README.md) | 中文
 

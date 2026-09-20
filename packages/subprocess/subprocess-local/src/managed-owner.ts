@@ -1,7 +1,7 @@
 /** Minimal managed-range ownership bound to one ordinary subprocess handle. */
 
 import type { Readable, Writable } from 'node:stream'
-import type { SubprocessOutcome } from '@deepseek-ai/dsh-subprocess'
+import type { SubprocessOutcome } from '@x1a0f3n9/dsh-subprocess'
 
 /** Platform owner used by termination and whole-range settlement. */
 export interface BoundProcessOwner {

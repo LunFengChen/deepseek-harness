@@ -11,7 +11,7 @@ export const DESKTOP_PACKAGE_SET_FILE = 'desktop-packages.json'
 export const DESKTOP_PACKAGES_DIR = 'desktop-packages'
 
 /** Private package installed beside dsh to boot the Desktop Host process. */
-export const DESKTOP_HOST_PACKAGE = '@deepseek-ai/dsh-desktop-host'
+export const DESKTOP_HOST_PACKAGE = '@x1a0f3n9/dsh-desktop-host'
 
 /** Package-relative Desktop Host files required before a profile can boot. */
 export const DESKTOP_HOST_RUNTIME_FILES = [
@@ -38,7 +38,7 @@ const PACKAGE_NAME_PATTERN = /^(?:@[a-z0-9][a-z0-9._~-]*\/[a-z0-9][a-z0-9._~-]*|
 const VERSION_PATTERN = /^[0-9A-Za-z][0-9A-Za-z.+_-]*$/u
 const FILE_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._-]*\.tgz$/u
 const INTEGRITY_PATTERN = /^sha512-[A-Za-z0-9+/]+={0,2}$/u
-const DSH_PACKAGE = '@deepseek-ai/dsh'
+const DSH_PACKAGE = '@x1a0f3n9/dsh'
 const RELEASE_PACKAGES = [DSH_PACKAGE, DESKTOP_HOST_PACKAGE] as const
 
 function isRecord(value: unknown): value is Record<string, unknown> {

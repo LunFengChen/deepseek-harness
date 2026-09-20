@@ -66,8 +66,9 @@ interface SessionHandle extends AsyncDisposable {
 
   /**
    * Append a contiguous batch continuing the current logical end. The first
-   * event's `seq` MUST equal the stored next-seq; committed events are never
-   * rewritten. Persistence is best-effort: on resolution the batch is
+   * event's `seq` MUST equal the stored next-seq. Ordinary appends never
+   * rewrite committed events; an explicit persistence `truncate` is the
+   * destructive exception. Persistence is best-effort: on resolution the batch is
    * accepted, ordered, and visible to reads on this backend instance, but
    * only a resolved {@link flush} promises it survives a crash — a backend
    * may buffer or batch physical writes behind append. Rejects with
@@ -103,7 +104,7 @@ interface SessionHandle extends AsyncDisposable {
 
 ## flush 检查点
 
-`session/event` 是一个*同步*通知；挂载的后端按会话 id 把它路由进活跃写句柄的有界 write-behind 窗口，而不阻塞生产方（后端一次性安装这些监听器，因为持久化已保证每个 id 只有一个活跃写句柄）。第一个待处理事件会开启固定的内部批处理窗口，后续事件会加入但不会重置其截止时间。窗口到期后会通过该会话的写句柄启动一次持久化 `append`；该次写入期间接纳的事件会获得自己的截止时间，并形成后续批次。`session/flush` 会取消等待并排空至完全停稳，因此循环仍将其用作在领取下一个普通轮次之前的顺序与错误观察检查点。后台写入被拒绝时会按序保留对应事件、暂停自动路径，并通过 logger 报告；下一次显式 flush 会重试，并向其调用方响亮地拒绝。`session/disposed` 会执行同样的最终排空并关闭句柄，而 `close()` 本身会经由仍然打开的存储排空已路由的缓冲，因此后端 teardown 的关闭清扫不丢任何数据。该窗口只限制有意的批处理等待，不限制事件循环调度或后端完成持久化的延迟。
+`session/event` 是一个*同步*通知；挂载的后端按会话 id 把它路由进活跃写句柄的有界 write-behind 窗口，而不阻塞生产方（后端一次性安装这些监听器，因为持久化已保证每个 id 只有一个活跃写句柄）。第一个待处理事件会开启固定的内部批处理窗口，后续事件会加入但不会重置其截止时间。窗口到期后会通过该会话的写句柄启动一次持久化 `append`；该次写入期间接纳的事件会获得自己的截止时间，并形成后续批次。`session/flush` 会取消等待并排空至完全停稳，因此循环仍将其用作在领取下一个普通轮次之前的顺序与错误观察检查点。后台写入被拒绝时会按序保留对应事件、暂停自动路径，并通过 logger 报告；下一次显式 flush 会重试，并向其调用方响亮地拒绝。`session/truncated` 会丢弃序号大于等于保留长度的已路由实时事件，避免后续 flush 重放被丢弃的尾部。`session/disposed` 会执行同样的最终排空并关闭句柄，而 `close()` 本身会经由仍然打开的存储排空已路由的缓冲，因此后端 teardown 的关闭清扫不丢任何数据。该窗口只限制有意的批处理等待，不限制事件循环调度或后端完成持久化的延迟。
 
 ## 崩溃恢复保留被中断的轮次
 

@@ -6,7 +6,7 @@
  * committed semantic updates, cancellation, and one-shot permission decisions;
  * presentation and human-interaction features stay with the harness's UI modules.
  *
- * @module @deepseek-ai/dsh-acp
+ * @module @x1a0f3n9/dsh-acp
  */
 
 import type { Context } from '@deepseek-ai/cordis'
@@ -16,8 +16,8 @@ import { realpath } from 'node:fs/promises'
 import { isAbsolute, resolve } from 'node:path'
 import { Readable, Writable } from 'node:stream'
 import Schema from '@deepseek-ai/schemastery'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import { errorChain } from '@deepseek-ai/dsh-llm'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { errorChain } from '@x1a0f3n9/dsh-llm'
 import {
   agent as createAcpAgentApp,
   methods,
@@ -45,11 +45,11 @@ import {
   type SessionNotification,
   type Stream,
 } from '@agentclientprotocol/sdk'
-import type { ModelSelection } from '@deepseek-ai/dsh-agent'
-import type { SessionId } from '@deepseek-ai/dsh-session'
-import type {} from '@deepseek-ai/dsh-session-persistence'
+import type { ModelSelection } from '@x1a0f3n9/dsh-agent'
+import type { SessionId } from '@x1a0f3n9/dsh-session'
+import type {} from '@x1a0f3n9/dsh-session-persistence'
 // Side-effect type import: declaration-merges the approval waterfall answered below.
-import type {} from '@deepseek-ai/dsh-user-approval'
+import type {} from '@x1a0f3n9/dsh-user-approval'
 import { supportsAcpImagePrompts } from './content.ts'
 import { AcpMcpConfigError } from './mcp.ts'
 import { AcpModelConfigError } from './model-control.ts'
@@ -200,7 +200,7 @@ export function apply(ctx: Context, config: AcpConfig): void {
       // No preset composition: the ACP bundle keeps the model-facing rows in
       // the host plane, so this agent reads them from the global layer. A
       // deployment that configures a roster has to join one here first
-      // (@deepseek-ai/dsh-agent-presets README, "Composing a child agent").
+      // (@x1a0f3n9/dsh-agent-presets README, "Composing a child agent").
       let record: AcpSession
       try {
         record = await AcpSession.create(ctx, {

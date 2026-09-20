@@ -9,29 +9,29 @@ function validLayout(): NpmPackageLock {
   return {
     lockfileVersion: 3,
     packages: {
-      '': { dependencies: { '@deepseek-ai/dsh': '0.2.0', 'dsh-previous': 'npm:@deepseek-ai/dsh@0.1.0' } },
+      '': { dependencies: { '@x1a0f3n9/dsh': '0.2.0', 'dsh-previous': 'npm:@x1a0f3n9/dsh@0.1.0' } },
       'node_modules/@deepseek-ai/cordis': { version: '4.0.1' },
-      'node_modules/@deepseek-ai/dsh': {
+      'node_modules/@x1a0f3n9/dsh': {
         version: '0.2.0',
-        dependencies: { '@deepseek-ai/dsh-child': '^0.2.0' },
+        dependencies: { '@x1a0f3n9/dsh-child': '^0.2.0' },
         peerDependencies: { '@deepseek-ai/cordis': '^4.0.1' },
       },
-      'node_modules/@deepseek-ai/dsh-child': {
+      'node_modules/@x1a0f3n9/dsh-child': {
         version: '0.2.0',
-        dependencies: { '@deepseek-ai/dsh-leaf': '^0.2.0' },
+        dependencies: { '@x1a0f3n9/dsh-leaf': '^0.2.0' },
       },
-      'node_modules/@deepseek-ai/dsh-leaf': { version: '0.2.0' },
+      'node_modules/@x1a0f3n9/dsh-leaf': { version: '0.2.0' },
       'node_modules/dsh-previous': {
-        name: '@deepseek-ai/dsh',
+        name: '@x1a0f3n9/dsh',
         version: '0.1.0',
-        dependencies: { '@deepseek-ai/dsh-child': '^0.1.0' },
+        dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0' },
         peerDependencies: { '@deepseek-ai/cordis': '^4.0.1' },
       },
-      'node_modules/dsh-previous/node_modules/@deepseek-ai/dsh-child': {
+      'node_modules/dsh-previous/node_modules/@x1a0f3n9/dsh-child': {
         version: '0.1.0',
-        dependencies: { '@deepseek-ai/dsh-leaf': '^0.1.0' },
+        dependencies: { '@x1a0f3n9/dsh-leaf': '^0.1.0' },
       },
-      'node_modules/dsh-previous/node_modules/@deepseek-ai/dsh-leaf': { version: '0.1.0' },
+      'node_modules/dsh-previous/node_modules/@x1a0f3n9/dsh-leaf': { version: '0.1.0' },
     },
   }
 }
@@ -39,14 +39,14 @@ function validLayout(): NpmPackageLock {
 describe('npm install layout verifier', () => {
   it('creates two incompatible versions of every DSH package', () => {
     const index: RegistryIndex = new Map([
-      ['@deepseek-ai/dsh', new Map([['0.1.1-rc.2', {
-        name: '@deepseek-ai/dsh',
+      ['@x1a0f3n9/dsh', new Map([['0.1.1-rc.2', {
+        name: '@x1a0f3n9/dsh',
         version: '0.1.1-rc.2',
-        dependencies: { '@deepseek-ai/dsh-child': '^0.1.1-rc.2' },
+        dependencies: { '@x1a0f3n9/dsh-child': '^0.1.1-rc.2', '@deepseek-ai/dsh-child': '^0.1.1-rc.2', 'dsh-better-sidebar': '0.19.0-alpha.1' },
         peerDependencies: { '@deepseek-ai/cordis': '^4.0.1' },
       }]])],
-      ['@deepseek-ai/dsh-child', new Map([['0.1.1-rc.2', {
-        name: '@deepseek-ai/dsh-child',
+      ['@x1a0f3n9/dsh-child', new Map([['0.1.1-rc.2', {
+        name: '@x1a0f3n9/dsh-child',
         version: '0.1.1-rc.2',
       }]])],
       ['@deepseek-ai/cordis', new Map([['4.0.1', {
@@ -57,17 +57,86 @@ describe('npm install layout verifier', () => {
 
     const dual = buildDualDshRegistry(index, '0.1.1-rc.2')
 
-    expect([...dual.get('@deepseek-ai/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
-    expect(dual.get('@deepseek-ai/dsh')?.get('0.1.0')).toMatchObject({
+    expect([...dual.get('@x1a0f3n9/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
+    expect(dual.get('@x1a0f3n9/dsh')?.get('0.1.0')).toMatchObject({
       version: '0.1.0',
-      dependencies: { '@deepseek-ai/dsh-child': '^0.1.0' },
+      dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0', '@deepseek-ai/dsh-child': '^0.1.0' },
       peerDependencies: { '@deepseek-ai/cordis': '^4.0.1' },
     })
-    expect(dual.get('@deepseek-ai/dsh')?.get('0.2.0')).toMatchObject({
+    expect(dual.get('@x1a0f3n9/dsh')?.get('0.2.0')).toMatchObject({
       version: '0.2.0',
-      dependencies: { '@deepseek-ai/dsh-child': '^0.2.0' },
+      dependencies: { '@x1a0f3n9/dsh-child': '^0.2.0' },
     })
     expect(dual.get('@deepseek-ai/cordis')).toBe(index.get('@deepseek-ai/cordis'))
+    expect(dual.get('@x1a0f3n9/dsh')?.get('0.1.0')?.dependencies).not.toHaveProperty('dsh-better-sidebar')
+    expect([...dual.get('@deepseek-ai/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
+    expect(dual.get('@deepseek-ai/dsh')?.get('0.1.0')).toMatchObject({
+      name: '@deepseek-ai/dsh',
+      version: '0.1.0',
+      dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0' },
+    })
+    expect(dual.get('@deepseek-ai/dsh-child')?.get('0.2.0')).toMatchObject({
+      name: '@deepseek-ai/dsh-child',
+      version: '0.2.0',
+    })
+  })
+
+  it('keeps a fork-scoped preinstalled plugin on its own version', () => {
+    const index: RegistryIndex = new Map([
+      ['@x1a0f3n9/dsh', new Map([['0.1.5-rc.2', {
+        name: '@x1a0f3n9/dsh',
+        version: '0.1.5-rc.2',
+        dependencies: { '@x1a0f3n9/dsh-session-timeline': '0.1.0' },
+      }]])],
+      ['@x1a0f3n9/dsh-session-timeline', new Map([['0.1.0', {
+        name: '@x1a0f3n9/dsh-session-timeline',
+        version: '0.1.0',
+      }]])],
+    ])
+
+    const dual = buildDualDshRegistry(index, '0.1.5-rc.2')
+
+    expect([...dual.get('@x1a0f3n9/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
+    expect(dual.get('@x1a0f3n9/dsh')?.get('0.1.0')?.dependencies).not.toHaveProperty(
+      '@x1a0f3n9/dsh-session-timeline',
+    )
+    expect([...dual.get('@x1a0f3n9/dsh-session-timeline')?.keys() ?? []]).toEqual(['0.1.0'])
+    expect(dual.get('@x1a0f3n9/dsh-session-timeline')?.get('0.1.0')).toMatchObject({
+      name: '@x1a0f3n9/dsh-session-timeline',
+      version: '0.1.0',
+    })
+  })
+
+  it('does not rewrite a scoped preinstalled plugin onto the synthetic versions', () => {
+    const index: RegistryIndex = new Map([
+      ['@x1a0f3n9/dsh-web-app', new Map([['0.1.5-rc.3', {
+        name: '@x1a0f3n9/dsh-web-app',
+        version: '0.1.5-rc.3',
+        dependencies: {
+          '@x1a0f3n9/dsh-child': 'workspace:^',
+          '@x1a0f3n9/dsh-better-sidebar': '0.19.3',
+        },
+      }]])],
+      ['@x1a0f3n9/dsh-child', new Map([['0.1.5-rc.3', {
+        name: '@x1a0f3n9/dsh-child',
+        version: '0.1.5-rc.3',
+      }]])],
+      ['@x1a0f3n9/dsh-better-sidebar', new Map([['0.19.3', {
+        name: '@x1a0f3n9/dsh-better-sidebar',
+        version: '0.19.3',
+      }]])],
+    ])
+
+    const dual = buildDualDshRegistry(index, '0.1.5-rc.3')
+
+    expect(dual.get('@x1a0f3n9/dsh-web-app')?.get('0.2.0')?.dependencies).toEqual({
+      '@x1a0f3n9/dsh-child': '^0.2.0',
+    })
+    expect(dual.get('@x1a0f3n9/dsh-better-sidebar')?.get('0.19.3')).toMatchObject({
+      name: '@x1a0f3n9/dsh-better-sidebar',
+      version: '0.19.3',
+    })
+    expect(dual.get('@x1a0f3n9/dsh-better-sidebar')?.has('0.2.0')).toBe(false)
   })
 
   it('accepts isolated DSH releases with one shared Cordis installation', () => {
@@ -93,11 +162,11 @@ describe('npm install layout verifier', () => {
   it('rejects an internal edge that crosses release versions', () => {
     const layout = validLayout()
     const packages = { ...layout.packages }
-    Reflect.deleteProperty(packages, 'node_modules/dsh-previous/node_modules/@deepseek-ai/dsh-leaf')
+    Reflect.deleteProperty(packages, 'node_modules/dsh-previous/node_modules/@x1a0f3n9/dsh-leaf')
 
     expect(() => assertDualDshInstallLayout({ ...layout, packages })).toThrow(
-      'node_modules/dsh-previous/node_modules/@deepseek-ai/dsh-child: dependencies '
-      + '@deepseek-ai/dsh-leaf resolves to node_modules/@deepseek-ai/dsh-leaf@0.2.0, expected 0.1.0',
+      'node_modules/dsh-previous/node_modules/@x1a0f3n9/dsh-child: dependencies '
+      + '@x1a0f3n9/dsh-leaf resolves to node_modules/@x1a0f3n9/dsh-leaf@0.2.0, expected 0.1.0',
     )
   })
 

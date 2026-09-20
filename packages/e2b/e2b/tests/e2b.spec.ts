@@ -7,7 +7,7 @@ import E2BRuntime, {
   FileType,
   SandboxNotFoundError,
   quoteE2BShellArg,
-} from '@deepseek-ai/dsh-e2b'
+} from '@x1a0f3n9/dsh-e2b'
 
 const sdk = vi.hoisted(() => ({
   create: vi.fn(),

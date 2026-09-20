@@ -6,14 +6,14 @@ import { afterEach, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
-import MessageFeedback from '@deepseek-ai/dsh-message-feedback'
-import { recordFeedback } from '@deepseek-ai/dsh-command-feedback'
-import LlmRuntime, { createAssistantMessage, createUserMessage } from '@deepseek-ai/dsh-llm'
-import * as LlmDeepSeek from '@deepseek-ai/dsh-llm-deepseek'
-import DeepSeekLlmApiExtensions from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
-import { startMockLlmServer, type MockLlmServer } from '@deepseek-ai/dsh-llm-mock-server'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
+import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import MessageFeedback from '@x1a0f3n9/dsh-message-feedback'
+import { recordFeedback } from '@x1a0f3n9/dsh-command-feedback'
+import LlmRuntime, { createAssistantMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import DeepSeekLlmApiExtensions from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import { startMockLlmServer, type MockLlmServer } from '@x1a0f3n9/dsh-llm-mock-server'
 import * as SessionLogDeepSeek from '../src/index.ts'
 import type { DeepSeekSessionLogExtension } from '../src/types.ts'
 
@@ -37,24 +37,24 @@ it('uploads freeform feedback and message put/edit/delete through the unchanged 
   vi.stubEnv('DEEPSEEK_API_KEY', 'feedback-test-key')
   server = await startMockLlmServer({ sequence: ['invalid_request', 'success', 'success'] })
   const modules = new Map<string, unknown>([
-    ['@deepseek-ai/dsh-session', SessionStore],
-    ['@deepseek-ai/dsh-session-persistence-jsonl', JsonlSessionPersistence],
-    ['@deepseek-ai/dsh-message-feedback', MessageFeedback],
-    ['@deepseek-ai/dsh-llm', LlmRuntime],
-    ['@deepseek-ai/dsh-llm-deepseek', LlmDeepSeek],
-    ['@deepseek-ai/dsh-deepseek-llm-api-extensions', DeepSeekLlmApiExtensions],
-    ['@deepseek-ai/dsh-session-log-deepseek', SessionLogDeepSeek],
+    ['@x1a0f3n9/dsh-session', SessionStore],
+    ['@x1a0f3n9/dsh-session-persistence-jsonl', JsonlSessionPersistence],
+    ['@x1a0f3n9/dsh-message-feedback', MessageFeedback],
+    ['@x1a0f3n9/dsh-llm', LlmRuntime],
+    ['@x1a0f3n9/dsh-llm-deepseek', LlmDeepSeek],
+    ['@x1a0f3n9/dsh-deepseek-llm-api-extensions', DeepSeekLlmApiExtensions],
+    ['@x1a0f3n9/dsh-session-log-deepseek', SessionLogDeepSeek],
   ])
   const config = join(root, 'cordis.yml')
   await writeFile(config, JSON.stringify([...modules.keys()].map(name => ({
     name,
-    ...name === '@deepseek-ai/dsh-session-persistence-jsonl'
+    ...name === '@x1a0f3n9/dsh-session-persistence-jsonl'
       ? { config: { root: join(root!, 'sessions'), compression: 'none' } }
-      : name === '@deepseek-ai/dsh-message-feedback'
+      : name === '@x1a0f3n9/dsh-message-feedback'
         ? { config: { maxNoteBytes: 1024 } }
-        : name === '@deepseek-ai/dsh-llm-deepseek'
+        : name === '@x1a0f3n9/dsh-llm-deepseek'
           ? { config: { baseURL: server!.baseURL } }
-          : name === '@deepseek-ai/dsh-session-log-deepseek'
+          : name === '@x1a0f3n9/dsh-session-log-deepseek'
             ? { config: { enabled: true } }
             : {},
   }))))

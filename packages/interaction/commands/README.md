@@ -3,7 +3,7 @@ description: "Human slash-command registry for interactive UIs: plugin-owned com
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-commands
+# @x1a0f3n9/dsh-commands
 
 English | [中文](README.zh.md)
 
@@ -63,7 +63,7 @@ An interactive adapter calls `execute(agent, line, attachments, signal)` with th
 
 ### Cancellation
 
-The caller's abort signal stops the registry from awaiting a handler; a handler that ignores the signal may continue its own external side effects after the caller stops waiting. A cancelled or thrown handler settles as a `command/done` error in the log.
+The caller's abort signal stops the registry from awaiting a handler; a handler that ignores the signal may continue its own external side effects after the caller stops waiting. `abortInflight(agent)` aborts every in-flight execute for that agent so session pause can settle slash commands such as rewind instead of leaving an unpaired `command/run`. A cancelled or thrown handler settles as a `command/done` error in the log.
 
 -----
 

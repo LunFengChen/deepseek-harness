@@ -8,10 +8,10 @@
 - button "2 次工具调用 · 1 条消息" [expanded]:
   - text: 2 次工具调用 · 1 条消息
   - img
-- button "上下文注入 @deepseek-ai/dsh-system-prompt":
+- button "上下文注入 @x1a0f3n9/dsh-system-prompt":
   - img
   - img
-  - text: 上下文注入 @deepseek-ai/dsh-system-prompt
+  - text: 上下文注入 @x1a0f3n9/dsh-system-prompt
 - button "思考 The user wants a simple SVG diagram of the von Neumann architecture, saved as von-neumann.svg. Let me create a clean SVG showing CPU (control unit, ALU), memory, input, and output with bidirectional data/control buses.":
   - img
   - img

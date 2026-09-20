@@ -8,8 +8,8 @@
  * right-panel show/hide from ui-sidebar-right) — writes stay inside the
  * store's declared action set, shared with the root registration.
  */
-import type { BoundActions } from '@deepseek-ai/dsh-client-ui-slots'
-import type { Branded } from '@deepseek-ai/dsh-brand'
+import type { BoundActions } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 import type { createLayoutStore } from './stores.ts'
 
 /** Identity shared by a sidebar panel entry and its main-slot occupant. */

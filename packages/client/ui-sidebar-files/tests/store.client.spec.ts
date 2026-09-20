@@ -7,10 +7,10 @@
  * for again.
  */
 import { describe, expect, it } from 'vitest'
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import { createFilesStore } from '../src/client/store.ts'
 import type { DirLevel } from '../src/client/store.ts'
-import type { TabId } from '@deepseek-ai/dsh-client-ui-dockkit'
+import type { TabId } from '@x1a0f3n9/dsh-client-ui-dockkit'
 
 const ROOT = '/work/app'
 const TAB = 'tab-1' as TabId

@@ -3,7 +3,7 @@ description: "Web GUI 的 agent（智能体） preset 界面：选择器可见�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-agent-preset
+# @x1a0f3n9/dsh-client-ui-agent-preset
 
 [English](README.md) | 中文
 

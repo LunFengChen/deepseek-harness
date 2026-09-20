@@ -2,14 +2,14 @@
 
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import type { Agent, AgentHandle, AssistantStreamFrame, CreateAgentOptions } from '@deepseek-ai/dsh-agent'
-import AgentDefaultModelConfig from '@deepseek-ai/dsh-agent-default-model'
-import { LlmAttemptId, createAssistantMessage, type StreamChunk } from '@deepseek-ai/dsh-llm'
-import SessionStore from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { Session, UserMessage } from '@deepseek-ai/dsh-session'
-import { createInboxStub } from '@deepseek-ai/dsh-agent-loop-testkit'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import type { Agent, AgentHandle, AssistantStreamFrame, CreateAgentOptions } from '@x1a0f3n9/dsh-agent'
+import AgentDefaultModelConfig from '@x1a0f3n9/dsh-agent-default-model'
+import { LlmAttemptId, createAssistantMessage, type StreamChunk } from '@x1a0f3n9/dsh-llm'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { Session, UserMessage } from '@x1a0f3n9/dsh-session'
+import { createInboxStub } from '@x1a0f3n9/dsh-agent-loop-testkit'
 import { apply, Config, internals } from '../src/index.ts'
 
 const originalInternals = { ...internals }

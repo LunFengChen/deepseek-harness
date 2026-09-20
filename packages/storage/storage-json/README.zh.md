@@ -3,7 +3,7 @@ description: "JSON 存储后端：面向在配置根目录下选择、配置或�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-storage-json
+# @x1a0f3n9/dsh-storage-json
 
 [English](README.md) | 中文
 
@@ -36,11 +36,11 @@ kind: "package-reference"
 唯一的插件字段是 `root`，用于保存单元文件与目录。它是必填项，因为本后端不回退到 `process.cwd()`。后端按需以 `0o700` 模式创建根目录。领域规范选择其布局；本插件不提供布局覆盖项。
 
 ```yaml
-- name: '@deepseek-ai/dsh-storage'
-- name: '@deepseek-ai/dsh-storage-json'
+- name: '@x1a0f3n9/dsh-storage'
+- name: '@x1a0f3n9/dsh-storage-json'
   config:
     root: /var/lib/dsh/data
-- name: '@deepseek-ai/dsh-storage-domain'
+- name: '@x1a0f3n9/dsh-storage-domain'
   config:
     backend: json
 ```

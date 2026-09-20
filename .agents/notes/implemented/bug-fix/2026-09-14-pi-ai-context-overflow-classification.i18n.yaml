@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-14-pi-ai-context-overflow-classification.md
+2026-09-14-pi-ai-context-overflow-classification.md: a34c043ea802026fa23a202c99327de4baff7daa
+2026-09-14-pi-ai-context-overflow-classification.zh.md: 4cb2e89f92e06dfdca7a368343efb7d5c6a33db2

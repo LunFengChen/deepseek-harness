@@ -1,6 +1,6 @@
 import { Context } from '@deepseek-ai/cordis'
-import type { Agent } from '@deepseek-ai/dsh-agent'
-import type { FileReferenceCandidate } from '@deepseek-ai/dsh-file-reference/types'
+import type { Agent } from '@x1a0f3n9/dsh-agent'
+import type { FileReferenceCandidate } from '@x1a0f3n9/dsh-file-reference/types'
 import { describe, expect, it, vi } from 'vitest'
 import { SessionFileReferences } from '../src/file-references.ts'
 

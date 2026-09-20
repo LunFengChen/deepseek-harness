@@ -3,7 +3,7 @@ description: "Runtime invariant checks for live compositions: the registry servi
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-invariants
+# @x1a0f3n9/dsh-invariants
 
 English | [中文](README.zh.md)
 
@@ -36,11 +36,11 @@ Use the registry for compositions that want live diagnostics. [`dsh-sdk-minimal`
 The registry is enabled by default and checks every registered package unless filters say otherwise. Use `enabled` as a global switch, `package_allowlist` to admit only named packages, and `package_blocklist` to exclude packages after allowlist matching — a blocklist match overrides an allowlist match. Patterns are case-sensitive JavaScript regular-expression sources (unanchored unless they supply `^` and `$`), and an invalid, blank, or duplicate entry fails service startup instead of being skipped.
 
 ```yaml
-- name: '@deepseek-ai/dsh-invariants'
+- name: '@x1a0f3n9/dsh-invariants'
   config:
     enabled: true
     package_allowlist:
-      - '^@deepseek-ai/dsh-'
+      - '^@x1a0f3n9/dsh-'
 ```
 
 | Field | Default | Meaning |
@@ -76,8 +76,8 @@ A companion is a normal plugin you mount beside the registry. It declares any se
 
 ```ts
 import type { Context } from '@deepseek-ai/cordis'
-import InvariantRegistry from '@deepseek-ai/dsh-invariants'
-import * as SessionInvariant from '@deepseek-ai/dsh-session/invariant'
+import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
+import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
 
 declare const ctx: Context
 

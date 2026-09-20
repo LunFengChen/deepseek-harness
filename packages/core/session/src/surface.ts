@@ -5,10 +5,10 @@
  * Browser-safe: web clients consume this subpath export, so it must stay free
  * of `node:` imports (they break the vite bundle).
  *
- * @module @deepseek-ai/dsh-session/surface
+ * @module @x1a0f3n9/dsh-session/surface
  */
 
-import type { Message } from '@deepseek-ai/dsh-llm'
+import type { Message } from '@x1a0f3n9/dsh-llm'
 import { SessionLogOffset, SessionSeq } from './types.ts'
 import { KNOWN_SESSION_EVENT_TYPES } from './known-event-types.ts'
 import type {
@@ -532,6 +532,13 @@ export class SurfaceManager implements SessionSurface {
       expectedSeq,
       plan: planSurfaceEvent(this._state, event, expectedSeq, this.log, this.baseSeq),
     }
+  }
+
+  /** Reset incremental state after the owning event log is truncated. */
+  reset(): void {
+    this._state = createFoldState()
+    this._lastProcessedSeq = this.baseSeq === 0 ? -1 : SessionSeq(this.baseSeq - 1)
+    this._pendingPlan = undefined
   }
 
   /** Monotonic count of folded positional replacements. */

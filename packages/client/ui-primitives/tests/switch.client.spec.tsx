@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { Switch } from '@deepseek-ai/dsh-client-ui-primitives'
+import { Switch } from '@x1a0f3n9/dsh-client-ui-primitives'
 
 afterEach(cleanup)
 

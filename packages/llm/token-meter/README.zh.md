@@ -3,7 +3,7 @@ description: "面向用户与维护者的具备回放感知的 token 与上下�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-token-meter
+# @x1a0f3n9/dsh-token-meter
 
 [English](README.md) | 中文
 
@@ -55,8 +55,8 @@ const price = ctx.tokenMeter.estimateMessage(message)
 ### 组合
 
 ```yaml
-- name: '@deepseek-ai/dsh-token-meter'
-- name: '@deepseek-ai/dsh-compaction-basic'
+- name: '@x1a0f3n9/dsh-token-meter'
+- name: '@x1a0f3n9/dsh-compaction-basic'
 ```
 
 两个插件都有可用默认值。meter 只消费可选的 `llm` 服务，且仅用于解析路由声明的请求图片定价；压缩保持可选。部署会在 LLM（大语言模型）适配器上配置容量与图片定价，并在 `dsh-compaction-basic` 上配置压缩策略。
@@ -94,7 +94,7 @@ const price = ctx.tokenMeter.estimateMessage(message)
 
 ### Fold 流程
 
-每次 `measure()` 调用都把 fold 同步到当前持久尾部，然后读取一份连贯快照。fold 跟踪完整请求标头快照、步骤边界、表面追加与替换、成功 assistant 消息及提供方用量。用量锚点的提供方输出从 assistant 消息的精确内嵌流重新组装，与监听器对持久内容的改写相互独立；空的重组内容计价为零。
+每次 `measure()` 调用都把 fold 同步到当前持久尾部，然后读取一份连贯快照。活日志截断若把日志缩短到已消费游标以下，会丢弃该会话的回放状态，并重新折叠保留前缀。fold 跟踪完整请求标头快照、步骤边界、表面追加与替换、成功 assistant 消息及提供方用量。用量锚点的提供方输出从 assistant 消息的精确内嵌流重新组装，与监听器对持久内容的改写相互独立；空的重组内容计价为零。
 
 ### 投影语义
 

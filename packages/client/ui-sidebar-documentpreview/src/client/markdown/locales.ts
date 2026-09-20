@@ -17,7 +17,7 @@ export const en = {
   'footnotes': 'Footnotes',
 } satisfies Record<MarkdownPreviewKey, string>
 
-declare module '@deepseek-ai/dsh-client-ui-slots' {
+declare module '@x1a0f3n9/dsh-client-ui-slots' {
   interface LocaleNamespaceMap {
     /** Markdown document renderer and its code/footnote controls. */
     documentMarkdown: MarkdownPreviewKey

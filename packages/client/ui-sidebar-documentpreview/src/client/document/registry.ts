@@ -1,5 +1,5 @@
 /** File-extension preview registrations; component dispatch belongs to the keyed document slot. */
-import { notifySubscribers } from '@deepseek-ai/dsh-client-store'
+import { notifySubscribers } from '@x1a0f3n9/dsh-client-store'
 
 /** How the document owner delivers file contents to a renderer. */
 export type DocumentLoadMode = 'text-pages' | 'bytes-complete'

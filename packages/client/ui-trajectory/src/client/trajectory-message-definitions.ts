@@ -2,8 +2,8 @@ import type { Context } from '@deepseek-ai/cordis'
 import type {
   ContextMessageNode, ConversationNodeDefinition, ConversationPreviousContext,
   SteeringMessageNode, UserMessageNode,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type {} from '@deepseek-ai/dsh-agent/types'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-agent/types'
 import { trajectoryNode } from './trajectory-definition-common.ts'
 import { contextForm, contextProvenance } from './trajectory-event-projection.ts'
 

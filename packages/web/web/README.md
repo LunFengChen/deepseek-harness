@@ -3,7 +3,7 @@ description: "The web access service (ctx.web): how deployments and plugin autho
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web
+# @x1a0f3n9/dsh-web
 
 English | [中文](README.zh.md)
 
@@ -36,14 +36,15 @@ Choose the service when a plugin or tool must search or fetch without hard-codin
 Load the service and let a single mounted backend auto-select, or pin a provider id with `searchProvider`/`fetchProvider`. The environment variables `$DSH_WEB_SEARCH_PROVIDER` and `$DSH_WEB_FETCH_PROVIDER` feed the same fields and are not a separate priority chain.
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-exa'
-- name: '@deepseek-ai/dsh-web-fetch-http'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-exa'
+- name: '@x1a0f3n9/dsh-web-fetch-http'
 ```
 
 | Field | Default | Meaning |
 |---|---|---|
 | `searchProvider` | (unset) | Pinned search provider id; unset auto-selects when exactly one is usable |
+| `searchProviderOrder` | (unset) | Exclusive search allowlist when no id is pinned; unusable ids are skipped, and an unlisted provider such as `deepseek-official` is not selected |
 | `fetchProvider` | (unset) | Pinned fetch provider id; unset auto-selects when exactly one is usable |
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web) is the exhaustive source for every accepted field and its JSDoc.
@@ -71,9 +72,11 @@ Each call resolves its provider at execution time, and registration or load orde
 | configured id registered and usable | runs that provider |
 | configured id not registered | `WEB_PROVIDER_CONFIGURED_MISSING` |
 | configured id registered but unavailable | `WEB_PROVIDER_CONFIGURED_UNAVAILABLE` |
-| no id, exactly one registered usable provider | runs it |
+| no id, first ordered provider usable | runs that provider |
+| no id, order set, none of those usable | `WEB_PROVIDER_UNAVAILABLE` |
+| no id, no order, exactly one registered usable provider | runs it |
 | no id, no usable provider | `WEB_PROVIDER_UNAVAILABLE` |
-| no id, multiple usable providers | `WEB_PROVIDER_AMBIGUOUS` |
+| no id, no order, multiple usable providers | `WEB_PROVIDER_AMBIGUOUS` |
 
 A provider's availability is a cheap local check — for example whether its API key is present — and never makes network calls, so selection stays fast and deterministic.
 
@@ -125,7 +128,7 @@ At call time the service resolves the provider — configured id first, then the
 Read these pages when the package-level contract is not enough. They move from the shared vocabulary to the shipped backends, the model-facing tools, and the design rationale.
 
 - [Web subsystem](../../../docs/subsystems/web.md) — the exhaustive search/fetch requests and results, provider availability, and error codes.
-- [Web package map](../README.md) — the six-package family and each role.
+- [Web package map](../README.md) — the web package family and each role.
 - [dsh-tool-web](../tool-web/README.md) — the model-facing `web_search` and `web_fetch` tools over this service.
 - [dsh-web-fetch-http](../web-fetch-http/README.md) — the shipped anonymous HTTP(S) fetch backend.
 - [Generated configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-web) — every accepted config field and its source declaration.

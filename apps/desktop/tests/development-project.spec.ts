@@ -38,8 +38,8 @@ describe('desktop development project', () => {
     mkdirSync(join(host, 'lib'), { recursive: true })
     mkdirSync(join(dependencies, '@scope'), { recursive: true })
     mkdirSync(join(dependencies, '@deepseek-ai', 'dsh'), { recursive: true })
-    writeFileSync(join(cli, 'package.json'), '{"name":"@deepseek-ai/dsh","version":"1.2.3"}\n')
-    writeFileSync(join(host, 'package.json'), '{"name":"@deepseek-ai/dsh-desktop-host","version":"1.2.3"}\n')
+    writeFileSync(join(cli, 'package.json'), '{"name":"@x1a0f3n9/dsh","version":"1.2.3"}\n')
+    writeFileSync(join(host, 'package.json'), '{"name":"@x1a0f3n9/dsh-desktop-host","version":"1.2.3"}\n')
     writeFileSync(join(host, 'lib', 'index.js'), '')
     writeFileSync(join(dependencies, '@deepseek-ai', 'dsh', 'package.json'), '{}\n')
     mkdirSync(join(dependencies, 'plain-dependency'))
@@ -63,8 +63,8 @@ describe('desktop development project', () => {
     const manifest = JSON.parse(readFileSync(join(project, 'package.json'), 'utf8')) as {
       dependencies: Record<string, string>
     }
-    expect(manifest.dependencies['@deepseek-ai/dsh']).toBe('1.2.3')
-    expect(manifest.dependencies['@deepseek-ai/dsh-desktop-host']).toBe('1.2.3')
+    expect(manifest.dependencies['@x1a0f3n9/dsh']).toBe('1.2.3')
+    expect(manifest.dependencies['@x1a0f3n9/dsh-desktop-host']).toBe('1.2.3')
   })
 
   it('rejects a CLI package from another release', () => {
@@ -75,8 +75,8 @@ describe('desktop development project', () => {
     mkdirSync(join(cli, 'lib'), { recursive: true })
     mkdirSync(join(host, 'lib'), { recursive: true })
     mkdirSync(dependencies, { recursive: true })
-    writeFileSync(join(cli, 'package.json'), '{"name":"@deepseek-ai/dsh","version":"2.0.0"}\n')
-    writeFileSync(join(host, 'package.json'), '{"name":"@deepseek-ai/dsh-desktop-host","version":"1.2.3"}\n')
+    writeFileSync(join(cli, 'package.json'), '{"name":"@x1a0f3n9/dsh","version":"2.0.0"}\n')
+    writeFileSync(join(host, 'package.json'), '{"name":"@x1a0f3n9/dsh-desktop-host","version":"1.2.3"}\n')
     writeFileSync(join(host, 'lib', 'index.js'), '')
     expect(() => prepareDevelopmentProject({
       projectDir: join(root, 'development'),

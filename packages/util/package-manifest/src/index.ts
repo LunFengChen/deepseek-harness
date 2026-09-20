@@ -1,6 +1,6 @@
 /**
  * Public package manifest types, with no runtime exports.
- * @module @deepseek-ai/dsh-package-manifest
+ * @module @x1a0f3n9/dsh-package-manifest
  */
 
 export type {
@@ -8,7 +8,9 @@ export type {
   DshClientManifest,
   DshEnginesManifest,
   DshManifest,
+  DshModuleFallbackManifest,
   DshPackageManifest,
+  DshPluginCatalogEntry,
   DshProfileManifest,
   ProfilePatchReload,
 } from './types.ts'

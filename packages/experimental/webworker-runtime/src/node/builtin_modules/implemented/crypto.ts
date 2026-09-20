@@ -5,7 +5,7 @@
  */
 import { sha1 } from '@noble/hashes/legacy.js'
 import { sha256, sha512 } from '@noble/hashes/sha2.js'
-import { randomUUID as mintUUID } from '@deepseek-ai/dsh-util-crypto'
+import { randomUUID as mintUUID } from '@x1a0f3n9/dsh-util-crypto'
 import { Buffer } from 'buffer'
 
 type Hasher = (input: Uint8Array) => Uint8Array

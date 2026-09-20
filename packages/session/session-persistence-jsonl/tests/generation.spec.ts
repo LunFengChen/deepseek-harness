@@ -29,13 +29,13 @@ import {
 import { createJsonlGenerationTestRuntime } from '../src/testing/generation.ts'
 import { compressZstdFrame, decompressZstdFrame, scanZstdFrames } from '../src/zstd.ts'
 import type { JsonlCompression } from '../src/format.ts'
-import { sessionFormatCatalog } from '@deepseek-ai/dsh-session-format-catalog'
+import { sessionFormatCatalog } from '@x1a0f3n9/dsh-session-format-catalog'
 import type {
   SessionFormatArtifact,
   SessionFormatEvent,
   SessionFormatJsonValue,
   SessionFormatRestore,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 
 const roots: string[] = []
 

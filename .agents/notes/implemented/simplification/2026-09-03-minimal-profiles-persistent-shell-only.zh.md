@@ -12,7 +12,7 @@ Status: implemented
 
 ## 决策
 
-随附的极简组合只提供一个按平台选择的持久 shell：Linux 与 macOS 使用 `bash`，Windows 使用 `pwsh`。两份组合都不挂载 `@deepseek-ai/dsh-tool-str-replace-editor`、文件系统工具或支撑 editor 的 `fs-local` 服务。固定的 complete persona、运行时上下文与 compaction 的缺失、shell 超时和各启动路径的宿主服务保持不变。
+随附的极简组合只提供一个按平台选择的持久 shell：Linux 与 macOS 使用 `bash`，Windows 使用 `pwsh`。两份组合都不挂载 `@x1a0f3n9/dsh-tool-str-replace-editor`、文件系统工具或支撑 editor 的 `fs-local` 服务。固定的 complete persona、运行时上下文与 compaction 的缺失、shell 超时和各启动路径的宿主服务保持不变。
 
 独立 editor 包仍可用于显式自定义组合。受信任的用户自定义 preset 或更高优先级的 profile patch 必须将 editor 插入 Cordis tree，并在同一服务作用域内提供文件系统后端；随附的 `minimal` 与 `sdk-minimal` 默认组合不会插入它。[Python SDK 指南](../../../../docs/user/guide/python-sdk.zh.md#opt-in-to-str_replace_editor)提供可执行的 patch 示例。
 

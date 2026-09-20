@@ -1,7 +1,7 @@
 /** A directory listing the spec settles by hand, one deferred result per call. */
 import { vi } from 'vitest'
 import type { Mock } from 'vitest'
-import type { RemoteResult } from '@deepseek-ai/dsh-api-remotes/client'
+import type { RemoteResult } from '@x1a0f3n9/dsh-api-remotes/client'
 import type { ListWorkspaceDirectory } from '../src/client/face.ts'
 import type { DirLevel } from '../src/client/store.ts'
 

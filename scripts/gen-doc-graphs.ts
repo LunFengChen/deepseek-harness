@@ -8,9 +8,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import ts from 'typescript'
-import { projectCordisCatalog } from '@deepseek-ai/dsh-typert-generator'
+import { projectCordisCatalog } from '@x1a0f3n9/dsh-typert-generator'
 import { CORDIS_CATALOG_POLICY } from './gen-cordis-catalog.ts'
-import type { EventEntry, ServiceEntry } from '@deepseek-ai/dsh-typert-generator'
+import type { EventEntry, ServiceEntry } from '@x1a0f3n9/dsh-typert-generator'
 import {
   collectPackageGraph,
   escapeMermaidLabel as escLabel,
@@ -197,7 +197,7 @@ const SERVICE_ROLES: ServiceRole[] = [
     pkg: 'api-workspace-files',
     title: 'Host workspace file Remote service',
     mode: 'core',
-    note: 'Serves stat, paged text, byte windows, directory listings, and the change feed for files inside a Session\'s workspace root, confined by lstat, containment, and a stat re-check.',
+    note: 'Serves stat, paged text, byte windows, named directory listings, and a workspace-scoped change feed. File reads and listings follow the Session filesystem backend\'s read access, including paths outside the workspace; lstat, file-kind, and size caps still apply.',
   },
   {
     key: 'workspaceController',
@@ -606,7 +606,7 @@ const SERVICE_ROLES: ServiceRole[] = [
     pkg: 'web',
     title: 'Web access provider registry',
     mode: 'seam',
-    implementations: ['web-search-exa', 'web-search-perplexity', 'web-search-deepseek', 'web-fetch-http'],
+    implementations: ['web-search-exa', 'web-search-perplexity', 'web-search-deepseek', 'web-search-free', 'web-search-pool', 'web-fetch-http'],
     consumers: ['tool-web'],
     note: 'Search and fetch providers register into one ctx.web seam; tool-web owns the stable model-facing names.',
   },
@@ -1338,6 +1338,7 @@ function renderLifecycle(): string {
     '  Note over Agent,Driver: claim pending next-step input plus one queued prompt',
     `  Driver-->>SDK: ${mermaidCode('agent/inbox/spliced')} pure deletion`,
     `  Driver-->>SDK: ${mermaidCode('agent/inbox/claimed')} { message, turn } per message`,
+    '  Note over Driver,SDK: yield one setImmediate',
     `  Driver->>Prompt: ${mermaidCode('system-prompt/assemble')} waterfall`,
     `  Driver->>Hooks: ${mermaidCode('agent/pre-step')} waterfall`,
     '  Hooks-->>Driver: authoritative reject or enter(messages)',
@@ -1384,6 +1385,7 @@ function renderLifecycle(): string {
     '  opt next-step input is pending',
     '    Driver-->>Driver: claim pending next-step input',
     `    Driver-->>SDK: ${mermaidCode('agent/inbox/claimed')} { message, turn } per message`,
+    '    Note over Driver,SDK: yield one setImmediate',
     `    Driver->>Hooks: ${mermaidCode('agent/pre-step')} waterfall`,
     '    Hooks-->>Driver: authoritative reject or enter(messages)',
     '  end',

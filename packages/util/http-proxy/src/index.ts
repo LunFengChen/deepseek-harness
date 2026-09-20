@@ -11,7 +11,7 @@
  *
  * Four functions, one per way a caller needs the policy — install it, ask how to send one request,
  * build a child's environment, and strip the ambient one for a replay.
- * @module @deepseek-ai/dsh-http-proxy
+ * @module @x1a0f3n9/dsh-http-proxy
  */
 
 export {

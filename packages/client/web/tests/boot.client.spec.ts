@@ -1,14 +1,14 @@
 // @vitest-environment jsdom
 import type { Context } from '@deepseek-ai/cordis'
-import * as modulesClient from '@deepseek-ai/dsh-client-modules/client'
+import * as modulesClient from '@x1a0f3n9/dsh-client-modules/client'
 import type {
   ClientBundleRegistration, ClientModuleCreateOptions, ClientModuleLoaderTarget, DshWindow,
   WebBootEntry,
-} from '@deepseek-ai/dsh-client-modules/client'
+} from '@x1a0f3n9/dsh-client-modules/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppWebEntry } from '../src/boot.ts'
 
-const MODULES_ID = '@deepseek-ai/dsh-client-modules'
+const MODULES_ID = '@x1a0f3n9/dsh-client-modules'
 const PROVIDER_CLIENT_ID = 'provider/client'
 const RUNTIME_CLIENT_ID = 'runtime/client'
 const win = globalThis as DshWindow
@@ -213,8 +213,71 @@ describe('plugin activation', () => {
     await entry.run()
 
     expect(target.mode).toBe('live')
-    expect(events).toEqual(['consumer', 'mount'])
+    expect(events).toEqual(expect.arrayContaining(['consumer', 'mount']))
+    expect(new Set(events).size).toBe(events.length)
     expect(container.textContent).toBe('mounted')
+    await entry.dispose()
+  })
+
+  it('hydrates when uiRenderer exists without waiting for a later combo', async () => {
+    const container = document.createElement('div')
+    document.body.append(container)
+    const target = installFacade()
+    const rendererUrl = '/renderer.js'
+    const deferredUrl = '/deferred.js'
+    win.__DSH_BOOT__ = {
+      rev: 'graph',
+      entries: [
+        { id: 'renderer', url: rendererUrl, rev: '1', immediately: true },
+        { id: 'deferred', url: '/deferred-row.js', rev: '1' },
+      ],
+      batches: [
+        { phase: 'application', url: rendererUrl, rev: 'renderer', entries: ['renderer'] },
+        { phase: 'application', url: deferredUrl, rev: 'deferred', entries: ['deferred'] },
+      ],
+    }
+    let releaseDeferred: () => void = () => {}
+    const deferredGate = new Promise<void>((resolve) => { releaseDeferred = resolve })
+    let deferredApply = 0
+    const entry = new AppWebEntry(container, {
+      loadBundle: async (url) => {
+        if (url === rendererUrl) {
+          target.load({
+            id: 'renderer',
+            factory: () => ({
+              apply: (ctx: Context) => {
+                ctx.reflect.provide('uiRenderer', {
+                  mount: (element: HTMLElement) => {
+                    element.textContent = 'mounted'
+                    return () => {}
+                  },
+                })
+              },
+            }),
+          })
+          return
+        }
+        if (url !== deferredUrl) throw new Error(`unexpected bundle ${url}`)
+        await deferredGate
+        target.load({
+          id: 'deferred',
+          factory: () => ({
+            apply: () => { deferredApply += 1 },
+          }),
+        })
+      },
+    })
+
+    const running = entry.run()
+    const deadline = Date.now() + 1000
+    while (container.textContent !== 'mounted') {
+      if (Date.now() > deadline) throw new Error('timed out waiting for uiRenderer mount')
+      await new Promise<void>((resolve) => { setTimeout(resolve, 0) })
+    }
+    expect(deferredApply).toBe(0)
+    releaseDeferred()
+    await running
+    expect(deferredApply).toBe(1)
     await entry.dispose()
   })
 })

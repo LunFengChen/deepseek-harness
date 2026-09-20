@@ -1,21 +1,21 @@
 // @vitest-environment jsdom
 /** Model-list editing, endpoint interrogation, and hand-declared provider creation. */
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Schema from '@deepseek-ai/schemastery'
-import { bindSnapshotSelector, RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
-import type { SettingsNamespaceView } from '@deepseek-ai/dsh-api-remotes/client'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import { bindSnapshotSelector, RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { SettingsNamespaceView } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import { ModelsSection, providerCopy } from '../src/client/ModelsSection.tsx'
 import type { ModelsSectionInjected, ModelsSectionProps } from '../src/client/ModelsSection.tsx'
 import { CustomProviderCard } from '../src/client/CustomProviderCard.tsx'
 import { formatCapacity, parseCapacity } from '../src/client/DeepSeekModelsEditor.tsx'
-import { SettingsDescribeMirror } from '@deepseek-ai/dsh-client-ui-settings/src/client/settings-mirror.ts'
+import { SettingsDescribeMirror } from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
 import { ModelsSettingsStore, deriveKeyRef, protocolChoices } from '../src/client/store.ts'
 import { createModelsOperations } from '../src/client/operations.ts'
 import type { ModelsOperations } from '../src/client/operations.ts'
 import { en } from '../src/client/locales.ts'
-import { settingsSchema } from './settings-schema.client.ts'
+import { RetryPolicyConfig, settingsSchema } from './settings-schema.client.ts'
 
 afterEach(cleanup)
 
@@ -36,8 +36,10 @@ const PiAiConfig = Schema.object({
       name: Schema.string(),
       contextWindow: Schema.number(),
       maxTokens: Schema.number(),
+      input: Schema.array(Schema.string()),
     })),
     reasoning: Schema.union(['off', 'high']),
+    retryPolicy: RetryPolicyConfig,
   })),
 })
 
@@ -447,6 +449,200 @@ describe('model list editing', () => {
       .toContainEqual({ op: 'unset', path: ['providers', 'openai', 'models'] })
   })
 
+  it('writes custom reasoning efforts on a model row', async () => {
+    const { mutate } = await mountSection({
+      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'grok-4.6' }] } },
+    })
+    openEditor('openai')
+    expandModel(1)
+
+    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortCustom }))
+    expect(within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` })).getAllByRole('radio')).toHaveLength(2)
+    expect(screen.queryByText(`${en.model} 1: ${en.modelReasoningEmpty}`)).toBeNull()
+    expect(buttonNamed(en.apply).disabled).toBe(false)
+
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} off 1`))
+    expect(screen.getByText(en.modelReasoningEmpty)).toBeTruthy()
+    expect(buttonNamed(en.apply).disabled).toBe(true)
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} off 1`))
+
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} high 1`))
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} xhigh 1`))
+    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} xhigh 1`), { target: { value: 'xhigh' } })
+    expect(screen.queryByText(en.modelReasoningEmpty)).toBeNull()
+    expect(buttonNamed(en.apply).disabled).toBe(false)
+    fireEvent.click(screen.getByText(en.apply))
+
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
+      id: 'grok-4.6',
+      reasoningEfforts: { high: 'high', xhigh: 'xhigh' },
+    }])
+  })
+
+  it('refuses a blank wire value and keeps off empty', async () => {
+    const { mutate } = await mountSection({
+      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'grok-4.6' }] } },
+    })
+    openEditor('openai')
+    expandModel(1)
+
+    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortCustom }))
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} high 1`))
+    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} high 1`), { target: { value: '   ' } })
+    expect(screen.getByText(`${en.model} 1: ${en.modelReasoningWireRequired}`)).toBeTruthy()
+    expect(buttonNamed(en.apply).disabled).toBe(true)
+
+    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} high 1`), { target: { value: 'high' } })
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} off 1`))
+    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} off 1`), { target: { value: '   ' } })
+    fireEvent.click(screen.getByText(en.apply))
+
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
+      id: 'grok-4.6',
+      reasoningEfforts: { high: 'high', off: null },
+    }])
+  })
+
+  it('unchecks a level and reindexes customizing after a removal', async () => {
+    const { mutate } = await mountSection({
+      providers: {
+        openai: {
+          baseURL: 'https://proxy.example/v1',
+          models: [{ id: 'first' }, { id: 'second', reasoningEfforts: { high: 'high', low: 'low' } }],
+        },
+      },
+    })
+    openEditor('openai')
+    fireEvent.click(screen.getByLabelText(`${en.removeModel} 1`))
+    expandModel(1)
+
+    expect(screen.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} low 1`))
+    fireEvent.click(screen.getByText(en.apply))
+
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
+      id: 'second',
+      reasoningEfforts: { high: 'high' },
+    }])
+  })
+
+
+  it('drops customizing when the custom row itself is removed', async () => {
+    await mountSection({
+      providers: {
+        openai: {
+          baseURL: 'https://proxy.example/v1',
+          models: [
+            { id: 'custom', reasoningEfforts: { high: 'high' } },
+            { id: 'kept' },
+          ],
+        },
+      },
+    })
+    openEditor('openai')
+    fireEvent.click(screen.getByLabelText(`${en.removeModel} 1`))
+    expandModel(1)
+    const group = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` }))
+    expect(group.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortNone }).checked).toBe(true)
+    expect(screen.queryByLabelText(`${en.reasoningEffort} high 1`)).toBeNull()
+  })
+
+  it('keeps an earlier custom row and writes beside an untouched neighbour', async () => {
+    const { mutate } = await mountSection({
+      providers: {
+        openai: {
+          baseURL: 'https://proxy.example/v1',
+          models: [
+            { id: 'first', reasoningEfforts: { high: 'high' } },
+            { id: 'second' },
+          ],
+        },
+      },
+    })
+    openEditor('openai')
+    expandModel(1)
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} xhigh 1`))
+    fireEvent.click(screen.getByLabelText(`${en.removeModel} 2`))
+    const group = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` }))
+    expect(group.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
+    fireEvent.click(screen.getByText(en.apply))
+
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
+      id: 'first',
+      reasoningEfforts: { high: 'high', xhigh: 'xhigh' },
+    }])
+  })
+
+  it('fills a missing custom map when a wire value is typed', async () => {
+    const { mutate } = await mountSection({
+      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'grok-4.6' }] } },
+    })
+    openEditor('openai')
+    expandModel(1)
+    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortCustom }))
+    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} high 1`))
+    expect(buttonNamed(en.apply).disabled).toBe(false)
+    fireEvent.click(screen.getByText(en.apply))
+
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
+      id: 'grok-4.6',
+      reasoningEfforts: { high: 'high' },
+    }])
+  })
+
+  it('treats a stored empty map as custom and false as default none', async () => {
+    const { mutate } = await mountSection({
+      providers: {
+        openai: {
+          baseURL: 'https://proxy.example/v1',
+          models: [
+            { id: 'empty-custom', reasoningEfforts: {} },
+            { id: 'explicit-none', reasoningEfforts: false },
+          ],
+        },
+      },
+    })
+    openEditor('openai')
+    expandModel(1)
+    const first = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` }))
+    expect(first.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
+    expect(screen.getByText(`${en.model} 1: ${en.modelReasoningEmpty}`)).toBeTruthy()
+    expect(buttonNamed(en.apply).disabled).toBe(true)
+
+    fireEvent.click(screen.getByLabelText(`${en.modelAdvanced} 1`))
+    expandModel(2)
+    const second = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 2` }))
+    expect(second.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortNone }).checked).toBe(true)
+    expect(screen.queryByLabelText(`${en.reasoningEffort} high 2`)).toBeNull()
+    expect(mutate).not.toHaveBeenCalled()
+  })
+
+  it('drops reasoning efforts when the row returns to default none', async () => {
+    const { mutate } = await mountSection({
+      providers: {
+        openai: {
+          baseURL: 'https://proxy.example/v1',
+          models: [{ id: 'grok-4.6', reasoningEfforts: { high: 'high' } }],
+        },
+      },
+    })
+    openEditor('openai')
+    expandModel(1)
+
+    expect(screen.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.reasoningEffort} high 1`).checked).toBe(true)
+    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortNone }))
+    fireEvent.click(screen.getByText(en.apply))
+
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([{ id: 'grok-4.6' }])
+  })
+
 })
 
 describe('capacity spellings', () => {
@@ -556,6 +752,65 @@ describe('endpoint interrogation', () => {
     expect(firstMutate(mutate).ops[0]?.value).toEqual([
       { id: 'kept', contextWindow: 111 },
       { id: 'fresh', contextWindow: 4096, maxTokens: 2048, name: 'Fresh' },
+    ])
+  })
+
+  it('writes input [text, image] from the Supports images switch', async () => {
+    const { mutate } = await mountSection({
+      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'kept' }] } },
+    })
+    openEditor('openai')
+    expandModel(1)
+    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
+    expect(imageSwitch.getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(imageSwitch)
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([
+      { id: 'kept', input: ['text', 'image'] },
+    ])
+  })
+
+  it('drops input when the Supports images switch is turned off', async () => {
+    const { mutate } = await mountSection({
+      providers: {
+        openai: {
+          baseURL: 'https://proxy.example/v1',
+          models: [{ id: 'kept', input: ['text', 'image'] }],
+        },
+      },
+    })
+    openEditor('openai')
+    expandModel(1)
+    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
+    expect(imageSwitch.getAttribute('aria-checked')).toBe('true')
+    fireEvent.click(imageSwitch)
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([
+      { id: 'kept' },
+    ])
+  })
+
+  it('adopts a candidate\'s disclosed image input onto the new row', async () => {
+    const discover = vi.fn(() => Promise.resolve(ok([
+      { id: 'vision-preview', name: 'Vision', inputModalities: ['text', 'image'] as const },
+    ])))
+    const { mutate } = await mountSection({
+      discover,
+      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [] } },
+    })
+    openEditor('openai')
+    fireEvent.click(screen.getByText(en.fetchModels))
+    await screen.findByText(en.fetchTitle)
+    fireEvent.click(screen.getByText(en.fetchAdopt))
+    expandModel(1)
+    expect(screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` }).getAttribute('aria-checked'))
+      .toBe('true')
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops[0]?.value).toEqual([
+      { id: 'vision-preview', name: 'Vision', input: ['text', 'image'] },
     ])
   })
 
@@ -813,6 +1068,40 @@ describe('hand-declared providers', () => {
       expectedRevision: 7,
     })
     expect(set).toHaveBeenCalledWith('ACME_GATEWAY_API_KEY', 'gw-key')
+  })
+
+  it('includes a custom retry policy only when Custom is selected', async () => {
+    const { mutate, onClose } = mountCard()
+
+    fireEvent.change(screen.getByLabelText(en.customRoute), { target: { value: 'acme-gateway' } })
+    fireEvent.change(screen.getByLabelText(en.baseUrl), { target: { value: 'https://gateway.acme.example/v1' } })
+    fireEvent.click(screen.getByRole('button', { name: en.addModel }))
+    fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
+    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '2' } })
+    fireEvent.change(screen.getByLabelText(en.retryInitialDelay), { target: { value: '800' } })
+    fireEvent.click(screen.getByText(en.create))
+
+    await waitFor(() => { expect(onClose).toHaveBeenCalledWith(true) })
+    expect(firstMutate(mutate).ops[0]?.value).toMatchObject({
+      retryPolicy: {
+        mode: 'normal',
+        maxRetries: 2,
+        backoff: { initialDelayMs: 800, maxDelayMs: 10_000 },
+      },
+    })
+  })
+
+  it('disables create when a custom retry count is blank', () => {
+    mountCard()
+    fireEvent.change(screen.getByLabelText(en.customRoute), { target: { value: 'acme-gateway' } })
+    fireEvent.change(screen.getByLabelText(en.baseUrl), { target: { value: 'https://gateway.acme.example/v1' } })
+    fireEvent.click(screen.getByRole('button', { name: en.addModel }))
+    fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
+    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '' } })
+    expect((screen.getByRole('button', { name: en.create }) as HTMLButtonElement).disabled).toBe(true)
+    expect(screen.getByText(en.retryCountInvalid)).toBeTruthy()
   })
 
   it('scopes each card to fields a provider can actually own', async () => {

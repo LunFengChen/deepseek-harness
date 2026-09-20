@@ -5,15 +5,15 @@
  * only contributes entries, so no SlotMap merge lives here. Live state
  * arrives through the `hooks` compartment (the framework standard kit binds
  * `feedback` into `useFeedback` and `dialog` into `useDialog`).
- * @module @deepseek-ai/dsh-client-ui-message-feedback/client/slots
+ * @module @x1a0f3n9/dsh-client-ui-message-feedback/client/slots
  */
 
 import type {
   HostObservable, InjectFace, PropsLocale, PropsRuntime,
-} from '@deepseek-ai/dsh-client-ui-slots'
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type { MessageId } from '@deepseek-ai/dsh-api-remotes/client'
-import type { MessageFeedbackItem, MessageFeedbackRating } from '@deepseek-ai/dsh-message-feedback/types'
+} from '@x1a0f3n9/dsh-client-ui-slots'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { MessageId } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { MessageFeedbackItem, MessageFeedbackRating } from '@x1a0f3n9/dsh-message-feedback/types'
 // Type-only: pulls this package's LocaleNamespaceMap merge (the 'feedback' seat).
 import type {} from './locales.ts'
 import type { MessageFeedbackActionResult, MessageFeedbackView } from './controller.ts'

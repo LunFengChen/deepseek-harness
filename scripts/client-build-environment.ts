@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { execFileSync, spawnSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import {
   existsSync,
   globSync,
@@ -45,19 +45,41 @@ export type ClientBuildEnvironment = Readonly<Record<string, string>>
  * Resolve the short source commit used by browser build metadata.
  * @param root - repository root used when no explicit value is supplied.
  * @param environment - environment that may already carry a commit value.
- * @returns lowercase 7-character Git commit prefix.
+ * @returns lowercase 7-character Git commit prefix, or a version-derived hex
+ *   prefix when the tree is not a Git checkout and no explicit hash is set.
  */
 export function repositoryCommitHash(root: string, environment: NodeJS.ProcessEnv = process.env): string {
   const explicit = environment[CLIENT_COMMIT_HASH_VARIABLE]
-  const value = explicit ?? execFileSync('git', ['rev-parse', 'HEAD'], {
-    cwd: root,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'ignore'],
-  }).trim()
+  const value = explicit ?? gitHeadHash(root) ?? synthesizedCommitHash(root)
   if (!/^[0-9a-f]{7,40}$/iu.test(value)) {
     throw new Error(`${CLIENT_COMMIT_HASH_VARIABLE} must be a Git commit hash; got ${JSON.stringify(value)}`)
   }
   return value.slice(0, 7).toLowerCase()
+}
+
+/**
+ * Read HEAD from a Git checkout without throwing when `.git` is absent.
+ * @param root - directory that may or may not be a Git worktree.
+ * @returns the raw HEAD hash, or undefined when Git metadata is unavailable.
+ */
+function gitHeadHash(root: string): string | undefined {
+  const probe = spawnSync('git', ['rev-parse', 'HEAD'], {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })
+  if (probe.error !== undefined || probe.status !== 0) return undefined
+  const value = probe.stdout.trim()
+  return value === '' ? undefined : value
+}
+
+/**
+ * Build a stable hex prefix for zip/source trees that are not Git checkouts.
+ * @param root - repository root whose package version seeds the digest.
+ * @returns lowercase 7-character hex prefix.
+ */
+function synthesizedCommitHash(root: string): string {
+  return createHash('sha256').update(repositoryVersion(root)).digest('hex').slice(0, 7)
 }
 
 /**

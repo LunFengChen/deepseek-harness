@@ -169,7 +169,7 @@ export function readDesktopRuntime(root: string): DesktopRuntimeDescriptor {
     throw new Error('desktop runtime: duplicate shared package')
   }
   const files = value.files as DesktopRuntimeFile[]
-  for (const name of ['@deepseek-ai/dsh', DESKTOP_HOST_PACKAGE]) {
+  for (const name of ['@x1a0f3n9/dsh', DESKTOP_HOST_PACKAGE]) {
     if (sharedPackages.find(entry => entry.name === name)?.version !== release.version) {
       throw new Error(`desktop runtime: missing or mismatched ${name}`)
     }

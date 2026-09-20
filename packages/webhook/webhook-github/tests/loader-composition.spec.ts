@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import WebServer from '@deepseek-ai/dsh-host-webserver'
+import WebServer from '@x1a0f3n9/dsh-host-webserver'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import * as GitHubAdapter from '../src/index.ts'
 
@@ -26,11 +26,11 @@ describe('real Loader composition', () => {
     const configPath = join(root, 'cordis.yml')
     await writeFile(configPath, [
       '- name: fixture-dependencies',
-      "- name: '@deepseek-ai/dsh-host-webserver'",
+      "- name: '@x1a0f3n9/dsh-host-webserver'",
       '  config:',
       "    host: '127.0.0.1'",
       '    port: 0',
-      "- name: '@deepseek-ai/dsh-webhook-github'",
+      "- name: '@x1a0f3n9/dsh-webhook-github'",
       '  config:',
       '    source: loader',
       '    path: /github',
@@ -55,8 +55,8 @@ describe('real Loader composition', () => {
     context.loader.builtins.include = Include
     const modules = new Map<string, unknown>([
       ['fixture-dependencies', dependencies],
-      ['@deepseek-ai/dsh-host-webserver', WebServer],
-      ['@deepseek-ai/dsh-webhook-github', GitHubAdapter],
+      ['@x1a0f3n9/dsh-host-webserver', WebServer],
+      ['@x1a0f3n9/dsh-webhook-github', GitHubAdapter],
     ])
     context.loader.internal = {
       version: 'v2',

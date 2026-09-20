@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import type { GlobalStandardProps } from '@deepseek-ai/dsh-client-ui-slots'
+import type { GlobalStandardProps } from '@x1a0f3n9/dsh-client-ui-slots'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { useEffect } from 'react'
@@ -10,22 +10,22 @@ import type {
   LegacyConversationSlice, ModelRetryNode, RunningToolCall, SteeringMessageNode,
   ToolCallBlock, ToolResultNode, TurnErrorNode, TurnMaxTokensNode, UseChatNodeTurnData,
   TranscriptViewMode, UserMessageNode,
-} from '@deepseek-ai/dsh-client-ui-chat/client'
+} from '@x1a0f3n9/dsh-client-ui-chat/client'
 import type {
   SessionListState, SessionSnapshot,
-} from '@deepseek-ai/dsh-api-session-controller/client'
+} from '@x1a0f3n9/dsh-api-session-controller/client'
 import type {
   ConversationLocationDataStore, ConversationTurnDataMap,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type { WorkspaceSnapshot } from '@deepseek-ai/dsh-api-workspace-controller/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { SessionPendingInteractionSnapshot } from '@deepseek-ai/dsh-client-ui-session/client'
-import type { KeyedSnapshotSelectorHook, SnapshotSelectorHook } from '@deepseek-ai/dsh-client-ui-slots'
-import { bindSnapshotSelector, makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
-import { createSnapshotStore, type ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
-import { EMPTY_CONVERSATION_SNAPSHOT } from '@deepseek-ai/dsh-client-ui-conversation/client'
-import { en as commonEn } from '@deepseek-ai/dsh-client-locale/src/locales/en.ts'
-import { zh as commonZh } from '@deepseek-ai/dsh-client-locale/src/locales/zh.ts'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SessionPendingInteractionSnapshot } from '@x1a0f3n9/dsh-client-ui-session/client'
+import type { KeyedSnapshotSelectorHook, SnapshotSelectorHook } from '@x1a0f3n9/dsh-client-ui-slots'
+import { bindSnapshotSelector, makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { createSnapshotStore, type ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
+import { EMPTY_CONVERSATION_SNAPSHOT } from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { en as commonEn } from '@x1a0f3n9/dsh-client-locale/src/locales/en.ts'
+import { zh as commonZh } from '@x1a0f3n9/dsh-client-locale/src/locales/zh.ts'
 import { createChatStore } from '../src/client/stores.ts'
 import { ChatView } from '../src/client/chat/ChatView.tsx'
 import { ChatNodeSeat } from '../src/client/chat/ChatNodeSeat.tsx'
@@ -157,10 +157,10 @@ const steering = (seq: number, text: string, turn: number): SteeringMessageNode 
   kind: 'steering', messageId: `steering-${String(seq)}` as SteeringMessageNode['messageId'],
   seq, time: seq * 1_000, turn, content: [{ type: 'text', text }], source: null,
 })
-const retry = (seq: number): ModelRetryNode => ({
+const retry = (seq: number, retryState: ModelRetryNode['retryState'] = 'scheduled'): ModelRetryNode => ({
   kind: 'model-retry', retryId: 'chat-view-retry' as ModelRetryNode['retryId'],
   seq, time: seq * 1_000, turn: 1, step: 0,
-  retryState: 'scheduled',
+  retryState,
   provider: 'mock', mode: 'normal', policyKey: 'mock-normal',
   retry: 1, maxRetries: 2, delayMs: 450,
   failure: { code: 'TRANSPORT', message: '连接被重置' },
@@ -277,6 +277,8 @@ function makeHarness(
   }> = []
   const renderCommandSlot = ((_key: string, _owner: object, opts?: { fallback?: React.ReactNode }) =>
     opts?.fallback ?? null) as unknown as React.ComponentProps<typeof CommandNodeView>['renderSlot']
+  const renderUserActionsSlot = ((_key: string, _owner: object, opts?: { fallback?: React.ReactNode }) =>
+    opts?.fallback ?? null) as unknown as React.ComponentProps<typeof UserMessageNodeView>['renderSlot']
   const renderTurnTail = ((_key: string, _owner: object) => null) as unknown as
     React.ComponentProps<typeof TurnTailNodeView>['renderSlotChain']
   const renderTurnTailSlot = (() => null) as unknown as
@@ -295,10 +297,12 @@ function makeHarness(
     const nodeProps = <Kind extends ChatNode['kind']>(): ChatNodeViewProps<Kind> => (
       { ...props, ...nodeOwner, useTurnData } as unknown as ChatNodeViewProps<Kind>
     )
-    switch (nodeOwner.node.kind) {
+    const entryKey = (opts as { entryKey?: string } | undefined)?.entryKey ?? nodeOwner.node.kind
+    switch (entryKey) {
       case 'user':
+        return <UserMessageNodeView {...nodeProps<'user'>()} renderSlot={renderUserActionsSlot} SessionProvider={props.SessionProvider} />
       case 'steering':
-        return <UserMessageNodeView {...nodeProps<'user' | 'steering'>()} />
+        return <UserMessageNodeView {...nodeProps<'steering'>()} renderSlot={renderUserActionsSlot} SessionProvider={props.SessionProvider} />
       case 'context':
         return <ContextMessageNodeView {...nodeProps<'context'>()} />
       case 'assistant-step':
@@ -337,7 +341,9 @@ function makeHarness(
       case 'unknown':
         return <UnknownNodeView {...nodeProps<'unknown'>()} />
       case 'tool-call': {
-        const block = nodeOwner.node.data.root
+        const node = nodeOwner.node
+        if (node.kind !== 'tool-call') return opts?.fallback ?? null
+        const block = node.data.root
         const toolName = 'kind' in block ? block.call?.name ?? '' : block.name
         const tool = {
           callId: block.callId,
@@ -1007,6 +1013,7 @@ describe('ChatView', () => {
     })
     expect(view.getAllByText('interrupt now')).toHaveLength(1)
     expect(view.container.querySelector('[data-pending-steering]')).toBeNull()
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
     // Only the durable steering bubble: the turn is still running, so its
     // assistant narration owns no footer yet, and a steering bubble never
     // carries a branch action.
@@ -1018,6 +1025,8 @@ describe('ChatView', () => {
       h.setSession({ running: false })
       h.setChat({ turnEnds: new Map([[1, 3]]) })
     })
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.getByText('interrupt now').closest('[class*="userRow"]')).not.toBeNull()
     // The Turn Tail belongs to the closed Turn, independently of a later
     // steering bubble's placement in the Chat list.
     const branchButtons = view.getAllByRole('button', { name: '在新对话中分支' })
@@ -1025,6 +1034,69 @@ describe('ChatView', () => {
     expect(branchButtons[0]!.getAttribute('aria-disabled')).toBeNull()
     fireEvent.click(branchButtons[0]!)
     expect(h.forkAt).toHaveBeenCalledWith(1)
+  })
+
+  it('keeps a steering message as a user bubble when the keyed node renderer is absent', () => {
+    const h = makeHarness({ nodes: [steering(2, 'interrupt now', 1)] })
+    h.setNodeRenderer(((_key: string, _owner: object, opts?: { fallback?: React.ReactNode }) =>
+      opts?.fallback ?? null) as React.ComponentProps<typeof ChatNodeSeat>['renderSlot'])
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('interrupt now')).toBeTruthy()
+    expect(view.getByText('interrupt now').closest('[class*="userRow"]')).not.toBeNull()
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.container.querySelector('[data-chat-flow-kind="steering"]')).not.toBeNull()
+  })
+
+  it('keeps the unknown-surface dump for kinds that are not user messages', () => {
+    const h = makeHarness({ nodes: [toolResult(3, 'a')] })
+    h.setNodeRenderer(((_key: string, _owner: object, opts?: { fallback?: React.ReactNode }) =>
+      opts?.fallback ?? null) as React.ComponentProps<typeof ChatNodeSeat>['renderSlot'])
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText(/未知 surface 事件：tool-call/)).toBeTruthy()
+  })
+
+  it('keeps a settled steering interrupt as a user bubble', () => {
+    const h = makeHarness({
+      nodes: [steering(2, 'interrupt now', 1), assistant(3, 'final answer')],
+      turnEnds: new Map([[1, 4]]),
+    })
+    h.setSession({ running: false })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('interrupt now').closest('[class*="userRow"]')).not.toBeNull()
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.container.querySelector('[data-chat-flow-kind="steering"]')).not.toBeNull()
+  })
+
+  it('paints settled steering through the user keyed occupant', () => {
+    const h = makeHarness({
+      nodes: [steering(2, 'interrupt now', 1)],
+    })
+    h.setSession({ running: false })
+    const keys: string[] = []
+    h.setNodeRenderer(((_key: string, owner: object, opts?: {
+      entryKey?: string
+      fallback?: React.ReactNode
+    }) => {
+      if (opts?.entryKey !== undefined) keys.push(opts.entryKey)
+      if (opts?.entryKey === 'steering') {
+        throw new Error('settled steering must not require a steering keyed occupant')
+      }
+      if (opts?.entryKey === 'user') {
+        const node = (owner as RoutedChatNodeOwner).node
+        const text = node.kind === 'user' || node.kind === 'steering'
+          ? node.data.content
+            .map(block => block.type === 'text' ? block.text : '')
+            .join('')
+          : ''
+        return <div data-testid="user-occupant">{text}</div>
+      }
+      return opts?.fallback ?? null
+    }) as React.ComponentProps<typeof ChatNodeSeat>['renderSlot'])
+    const view = render(<h.ChatView {...h.props} />)
+    expect(keys).toEqual(['user'])
+    expect(view.getByTestId('user-occupant').textContent).toBe('interrupt now')
+    expect(view.queryByText(/未知 surface 事件：steering/)).toBeNull()
+    expect(view.container.querySelector('[data-chat-flow-kind="steering"]')).not.toBeNull()
   })
 
   it('keeps a later pending occurrence visible when it reuses a durable MessageId', () => {
@@ -2178,7 +2250,7 @@ describe('ChatView', () => {
     const view = render(<h.ChatView {...h.props} />)
     // Freshly mounted (as after a reload) yet already past the 15s gate.
     const status = view.getByRole('status')
-    expect(status.textContent).toMatch(/^深度求索中\.\.\.2分0\d秒$/)
+    expect(status.textContent).toMatch(/^正在准备\.\.\.2分0\d秒$/)
     expect(status.querySelector('[aria-hidden="true"]')).not.toBeNull()
     act(() => {
       h.setSession({ queue: [{
@@ -2190,7 +2262,7 @@ describe('ChatView', () => {
         text: 'also',
       }] })
     })
-    expect(status.textContent).toMatch(/^深度求索中\.\.\.2分0\d秒$/)
+    expect(status.textContent).toMatch(/^正在准备\.\.\.2分0\d秒$/)
   })
 
   it('the running clock reads hours once the turn passes an hour', () => {
@@ -2201,7 +2273,101 @@ describe('ChatView', () => {
       { running: true },
     )
     const view = render(<h.ChatView {...h.props} />)
-    expect(view.getByRole('status').textContent).toMatch(/^深度求索中\.\.\.1小时05分0\d秒$/)
+    expect(view.getByRole('status').textContent).toMatch(/^正在准备\.\.\.1小时05分0\d秒$/)
+  })
+
+  it('labels a running session with no open turn as preparing', () => {
+    const h = makeHarness({ nodes: [] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels a running session after a closed turn as preparing', () => {
+    const h = makeHarness({
+      nodes: [user(1, 'q'), assistant(2, 'a')],
+      turnEnds: new Map([[1, 3]]),
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels a transcript echo as preparing before the host marks the session running', () => {
+    const h = makeHarness(
+      { nodes: [] },
+      {
+        pendingSubmissions: [{
+          requestId: 'req-prepare' as never, placement: 'transcript',
+          time: 5_000, text: '先发出来', attachments: [],
+        }],
+      },
+    )
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels an in-flight assistant stream as generating', () => {
+    const h = makeHarness({
+      nodes: [user(1, 'go')],
+      partial: { turn: 1, step: 1, blocks: [{ kind: 'text', text: 'hello' }] },
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('深度求索中...')
+  })
+
+  it('labels a scheduled model retry at the tip as retrying', () => {
+    const h = makeHarness({ nodes: [user(1, 'try'), retry(2)] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('正在重试...')).toBeTruthy()
+  })
+
+  it('labels a settled assistant in an open turn as preparing', () => {
+    const h = makeHarness({ nodes: [user(1, 'go'), assistant(2, 'done')] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('正在准备...')
+  })
+
+  it('labels a started model retry without a live stream as preparing', () => {
+    const h = makeHarness({
+      nodes: [user(1, 'try'), retry(2, 'started')],
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByText('正在准备...')).toBeTruthy()
+  })
+
+  it('labels a live tool call as generating', () => {
+    const h = makeHarness({ runningCalls: [runningCall('r1')] }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('深度求索中...')
+  })
+
+  it('labels an open step as generating before the first token', () => {
+    const snapshot = chatSnapshotFixture({
+      nodes: [user(1, 'go')],
+      turnTimings: new Map([[1, { startTime: Date.now() }]]),
+    })
+    const turn = snapshot.timeline.turns.get(1)
+    if (turn === undefined) throw new Error('expected open turn')
+    const h = makeHarness({
+      chat: {
+        ...snapshot,
+        timeline: {
+          turnOrder: snapshot.timeline.turnOrder,
+          turns: new Map([[1, {
+            ...turn,
+            steps: [{
+              turn: 1,
+              step: 1,
+              start: undefined,
+              end: undefined,
+              status: 'open',
+              data: turn.data as never,
+            }],
+          }]]),
+        },
+      },
+    }, { running: true })
+    const view = render(<h.ChatView {...h.props} />)
+    expect(view.getByRole('status').textContent).toBe('深度求索中...')
   })
 
   it('hands each ordered root call to the keyed business-node slot', () => {

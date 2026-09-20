@@ -1,9 +1,9 @@
 /** Scoped Remote Event wiring for the browser question consumer. */
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it, vi } from 'vitest'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { QuestionComposer } from '../src/client/QuestionComposer.tsx'
 import { PendingQuestion } from '../src/client/contract/slots.ts'
 import { createQuestionDraftStore } from '../src/client/draft-store.ts'

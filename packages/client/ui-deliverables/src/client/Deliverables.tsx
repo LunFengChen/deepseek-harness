@@ -1,9 +1,9 @@
 /** Existing changed-file chips and explicitly declared files for a closing turn. */
 import { useEffect, useState } from 'react'
-import type { TurnTailOwnerProps } from '@deepseek-ai/dsh-client-ui-chat/client'
-import { Button, IconChevronDownOutline14, IconChevronUpOutline14 } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { GlobalStandardProps, InjectFace, PropsLocale, SessionStandardProps } from '@deepseek-ai/dsh-client-ui-slots'
-import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-store'
+import type { TurnTailOwnerProps } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { Button, IconChevronDownOutline14, IconChevronUpOutline14 } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { GlobalStandardProps, InjectFace, PropsLocale, SessionStandardProps } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type { PresentedOpenController } from './present-open.ts'
 import { ProducedFiles } from './ProducedFiles.tsx'
 import { presentedForClosing, selectProducedFiles, type PresentedPath } from './turn-deliverables.ts'

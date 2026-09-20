@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-18-failover-queue-inline-schemastery.md
+2026-09-18-failover-queue-inline-schemastery.md: 592cd0af464dab7d270c6e0d89195f8e66afd505
+2026-09-18-failover-queue-inline-schemastery.zh.md: 71eacca14bab04cc413e08b217fb56ca5f0076a0

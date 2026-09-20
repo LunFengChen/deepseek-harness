@@ -3,7 +3,7 @@ description: "面向选择、组合或排查 get_goal、create_goal 与 update_g
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-goal
+# @x1a0f3n9/dsh-tool-goal
 
 [English](README.md) | 中文
 
@@ -34,16 +34,16 @@ kind: "package-reference"
 | 工具 | 作用 |
 |---|---|
 | `get_goal()` | 读取当前 goal；没有当前 goal 时返回 `null` |
-| `create_goal(objective, max_goal_rounds?)` | 根据人类直接发起的顶层轮次创建一个 goal |
-| `update_goal(goal_id, revision, action, objective?, max_goal_rounds?, blocked_reason?)` | 对精确 goal revision 执行 `edit`、`pause`、`resume`、`complete` 或 `blocked` |
+| `create_goal(objective)` | 根据人类直接发起的顶层轮次创建一个 goal |
+| `update_goal(goal_id, revision, action, objective?, blocked_reason?)` | 对精确 goal revision 执行 `edit`、`pause`、`resume`、`complete` 或 `blocked` |
 
-在 `update_goal` 之前调用 `get_goal`，并复制精确的 `goal_id` 与 `revision`；所有调用都互斥，因此模型排序的批次能观察到更早变更及其新 revision。替换值只属于 `edit`；`blocked_reason` 只有在 `blocked` 时才必填，并以稳定代码 `model-reported` 持久化。严格 schema 下的空字符串和零填充值视为省略，而有意义的值仍限定到各自 action。
+在 `update_goal` 之前调用 `get_goal`，并复制精确的 `goal_id` 与 `revision`；所有调用都互斥，因此模型排序的批次能观察到更早变更及其新 revision。替换值只属于 `edit`；`blocked_reason` 只有在 `blocked` 时才必填，并以稳定代码 `model-reported` 持久化。严格 schema 下的空字符串填充值视为省略，而有意义的值仍限定到各自 action。续行轮次预算由 harness 持有；`create_goal` 和 `update_goal` 不暴露 `max_goal_rounds`，同名额外参数会被忽略。
 
 ### 配置
 
 ```yaml
 - id: tool-goal
-  name: '@deepseek-ai/dsh-tool-goal'
+  name: '@x1a0f3n9/dsh-tool-goal'
   config:
     blockedAfterConsecutiveRounds: 3
 ```

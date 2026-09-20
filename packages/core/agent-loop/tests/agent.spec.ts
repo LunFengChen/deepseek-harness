@@ -1,13 +1,13 @@
-import { createUserMessage } from '@deepseek-ai/dsh-llm'
+import { createUserMessage } from '@x1a0f3n9/dsh-llm'
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import AgentRegistry, { type Agent } from '@deepseek-ai/dsh-agent'
-import AgentLoop from '@deepseek-ai/dsh-agent-loop'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import LlmRuntime from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
-import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
-import ToolRuntime from '@deepseek-ai/dsh-tools'
+import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
+import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import LlmRuntime from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
+import ToolRuntime from '@x1a0f3n9/dsh-tools'
 import { MockAdapter, textResponse } from './mock-adapter.ts'
 
 async function harness(adapter: MockAdapter): Promise<Context> {
@@ -90,6 +90,48 @@ describe('Agent', () => {
     expect(lifecycle).toEqual(['turn/start', 'agent/inbox/claimed'])
   })
 
+  it('starts prompt assembly on a later macrotask after claiming', async () => {
+    const ctx = await harness(new MockAdapter([textResponse('ok')]))
+    const agent = await ctx.agentLoop.create(SessionId('yield-assemble'), { provider: 'mock', model: 'mock' })
+    const assemble = vi.spyOn(ctx.systemPrompt, 'assemble')
+    const lifecycle: string[] = []
+    ctx.on('session/event', (session, event) => {
+      if (session === agent.session && event.type === 'turn/start') lifecycle.push('turn/start')
+    })
+    ctx.on('agent/inbox/claimed', ({ agent: subject }) => {
+      if (subject === agent) lifecycle.push('agent/inbox/claimed')
+    })
+
+    try {
+      send(agent, 'run')
+      expect(lifecycle).toEqual(['turn/start', 'agent/inbox/claimed'])
+      expect(assemble).not.toHaveBeenCalled()
+
+      await new Promise<void>((resolve) => { setImmediate(resolve) })
+      expect(assemble).toHaveBeenCalledTimes(1)
+      await agent.whenIdle()
+    } finally {
+      assemble.mockRestore()
+    }
+  })
+
+  it('skips prompt assembly when cancelled during the post-claim yield', async () => {
+    const ctx = await harness(new MockAdapter([textResponse('ok')]))
+    const agent = await ctx.agentLoop.create(SessionId('yield-cancel'), { provider: 'mock', model: 'mock' })
+    const assemble = vi.spyOn(ctx.systemPrompt, 'assemble')
+
+    try {
+      send(agent, 'run')
+      expect(assemble).not.toHaveBeenCalled()
+      agent.cancel({ kind: 'user' })
+      await new Promise<void>((resolve) => { setImmediate(resolve) })
+      expect(assemble).not.toHaveBeenCalled()
+      await agent.whenIdle()
+    } finally {
+      assemble.mockRestore()
+    }
+  })
+
   it('idle inject() rejects invalid input before enqueue', async () => {
     const ctx = await harness(new MockAdapter([textResponse('ok')]))
     const agent = await ctx.agentLoop.create(SessionId('a1'), { provider: 'mock', model: 'mock' })
@@ -165,5 +207,47 @@ describe('Agent', () => {
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('agent event "agent/status" listener threw'),
     )
+  })
+})
+
+describe('seeded create', () => {
+  it('drops the reconstructed source queue as cancel splices and leaves the parent queued', async () => {
+    const ctx = await harness(new MockAdapter([]))
+    const parent = await ctx.agentLoop.create(SessionId('inbox-fork-parent'), {
+      provider: 'mock', model: 'mock',
+    })
+    const queued = createUserMessage({
+      content: [{ type: 'text', text: 'parent pending' }],
+      source: { kind: 'user' },
+    })
+    const nextStep = createUserMessage({
+      content: [{ type: 'text', text: 'parent next-step' }],
+      source: { kind: 'user' },
+    })
+    parent.inbox.append('next-turn', queued)
+    parent.inbox.append('next-step', nextStep)
+    const seed = parent.session.snapshotEvents()
+    const { agent: child } = await ctx.agents.create({
+      sessionId: SessionId('inbox-fork-child'),
+      seed,
+      inheritedEventCount: SessionLogOffset(seed.length),
+      meta: { parentSession: parent.id, isSeeded: true },
+      agentOptions: { provider: 'mock', model: 'mock' },
+    })
+
+    expect(parent.inbox.nextTurn).toEqual([queued])
+    expect(parent.inbox.nextStep).toEqual([nextStep])
+    expect(child.inbox.nextTurn).toEqual([])
+    expect(child.inbox.nextStep).toEqual([])
+    expect(child.session.snapshotEvents().at(seed.length)).toMatchObject({
+      type: 'session/end-seed',
+      data: { inherited: true },
+    })
+    expect(child.session.snapshotEvents().slice(seed.length + 1).map(event => (
+      event.type === 'agent/inbox/spliced' ? event.data : event.type
+    ))).toEqual([
+      { target: 'next-step', start: 0, removedCount: 1, inserted: [], outcome: 'canceled' },
+      { target: 'next-turn', start: 0, removedCount: 1, inserted: [], outcome: 'canceled' },
+    ])
   })
 })

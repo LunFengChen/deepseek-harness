@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import type { PropsRenderSlots } from '@deepseek-ai/dsh-client-ui-slots'
+import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ChatNodeViewProps, TurnTailOwnerProps } from '../contract/slots.ts'
 import { MessageIconActions } from './MessageIconActions.tsx'
 import { TurnTimePanel, TurnUsagePanel } from './TurnUsagePanel.tsx'
@@ -33,7 +33,10 @@ export const TurnTailNodeView = memo(function TurnTailNodeView({
   const messageId = closing.finalNode.messageId
   const assistantActions = messageId === undefined
     ? null
-    : renderSlot('conversation.chat.assistant-actions', { messageId })
+    : renderSlot('conversation.chat.assistant-actions', {
+      messageId,
+      seq: closing.finalNode.seq,
+    })
   return (
     <div
       className={css.root}

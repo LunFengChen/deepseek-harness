@@ -3,7 +3,7 @@ description: "面向需要在各项负责强制执行的能力之间组合、配
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-sandbox-policy
+# @x1a0f3n9/dsh-sandbox-policy
 
 [English](README.md) | 中文
 
@@ -36,7 +36,7 @@ kind: "package-reference"
 用默认模式加载本包；故障安全默认值是 `read-only`，需要 agent（智能体）可写入工作区的部署必须显式选择 `workspace-write`。
 
 ```yaml
-- name: '@deepseek-ai/dsh-sandbox-policy'
+- name: '@x1a0f3n9/dsh-sandbox-policy'
   config:
     mode: workspace-write
     workspaceRoot: /absolute/path/to/workspace

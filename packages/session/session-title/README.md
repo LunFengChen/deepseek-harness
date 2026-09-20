@@ -3,7 +3,7 @@ description: "Log-backed session titles for users and maintainers choosing a tit
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-title
+# @x1a0f3n9/dsh-session-title
 
 English | [中文](README.zh.md)
 
@@ -36,8 +36,8 @@ Titles come from three sources, newest wins. The built-in fallback derives from 
 All limits are required; the library supplies no defaults. Mount the service with the three bounds:
 
 ```yaml
-- name: '@deepseek-ai/dsh-session'
-- name: '@deepseek-ai/dsh-session-title'
+- name: '@x1a0f3n9/dsh-session'
+- name: '@x1a0f3n9/dsh-session-title'
   config:
     fallbackMaxWords: 8
     fallbackMaxBytes: 96
@@ -88,7 +88,7 @@ Titles are durable, log-only state: every accepted revision is a `session/title`
 
 ### Lifecycle and concurrency
 
-Per-session work state tracks a revision counter, an in-flight fallback, and pending and active provider work. A newer user message, provider disposal, session disposal, or explicit refresh aborts older work through an `AbortController`; a completion whose provider, revision, session, or signal is stale cannot append. Explicit refreshes reserve their revision before provider work; overlapping automatic and explicit fallback requests share one session-local in-flight append. Service teardown cancels queued work and drains calls that ignore cancellation before unloading completes.
+Per-session work state tracks a revision counter, an in-flight fallback, and pending and active provider work. A newer user message, provider disposal, session disposal, live truncation past the scheduled watermark, or explicit refresh aborts older work through an `AbortController`; a completion whose provider, revision, session, or signal is stale cannot append. Explicit refreshes reserve their revision before provider work; overlapping automatic and explicit fallback requests share one session-local in-flight append. Service teardown cancels queued work and drains calls that ignore cancellation before unloading completes.
 
 ### Normalization
 

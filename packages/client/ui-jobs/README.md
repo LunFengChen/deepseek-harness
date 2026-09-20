@@ -3,7 +3,7 @@ description: "Web background-job surface: the session-header action listing the 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-jobs
+# @x1a0f3n9/dsh-client-ui-jobs
 
 English | [中文](README.zh.md)
 

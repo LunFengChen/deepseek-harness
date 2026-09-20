@@ -4,10 +4,14 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentProps } from 'react'
 import type {
   ConversationTimelineSnapshot, RenderMessageImages,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type { SessionSeq } from '@deepseek-ai/dsh-session/types'
-import { Button, IconChevronDownOutline14, Modal } from '@deepseek-ai/dsh-client-ui-primitives'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import { Button, IconChevronDownOutline14, Modal } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { ChatViewSlotProps, OpenFileOptions } from '../contract/slots.ts'
+import type {
+  AssistantChatData, ChatConversationViewNode, RetryChatData, ToolChatData,
+} from '../contract/chat-nodes.ts'
+import { isRunningTool } from '../contract/chat-nodes.ts'
 import type { ChatSnapshot } from '../contract/snapshot.ts'
 import { PendingSteeringBubble, PendingSubmissionBubble } from './MessageItem.tsx'
 import { ChatNodeSeat } from './ChatNodeSeat.tsx'
@@ -164,11 +168,52 @@ function runningTurnStartTime(timeline: ConversationTimelineSnapshot): number | 
   return latest
 }
 
-/** Turn-level model activity label retained across first-token, tool, and streaming phases. */
-function TurnStatus({ startTime, t }: {
+type TurnActivityPhase = 'preparing' | 'retrying' | 'generating'
+
+const ACTIVITY_COPY = {
+  preparing: 'chat.preparing',
+  retrying: 'chat.retrying',
+  generating: 'chat.deepDiving',
+} as const
+
+function lastStepOpen(timeline: ConversationTimelineSnapshot): boolean {
+  const turnId = timeline.turnOrder.at(-1)
+  if (turnId === undefined) return false
+  const turn = timeline.turns.get(turnId)
+  return turn?.status === 'open' && turn.steps.at(-1)?.status === 'open'
+}
+
+/** Derive the footer label from host running, a local transcript echo, and the timeline. */
+function turnActivityPhase(input: {
+  readonly running: boolean
+  readonly admitting: boolean
+  readonly timeline: ConversationTimelineSnapshot
+  readonly lastNode: ChatConversationViewNode | undefined
+}): TurnActivityPhase | null {
+  if (!input.running && !input.admitting) return null
+  if (!input.running) return 'preparing'
+  const last = input.lastNode
+  if (last?.kind === 'model-retry') {
+    const current = (last.data as RetryChatData).current
+    if (current.retryState === 'scheduled') return 'retrying'
+  }
+  if (lastStepOpen(input.timeline)) return 'generating'
+  if (last?.kind === 'assistant-step' && (last.data as AssistantChatData).status === 'running') {
+    return 'generating'
+  }
+  if (last?.kind === 'tool-call' && isRunningTool((last.data as ToolChatData).root)) {
+    return 'generating'
+  }
+  return 'preparing'
+}
+
+/** Turn-level activity label for preparing, retrying, and generating phases. */
+function TurnStatus({ startTime, label, t }: {
   /** The running turn's logged `turn/start` time; null falls back to mount
    *  time when that boundary is outside the window. */
   startTime: number | null
+  /** Locale-owned activity copy for the current phase. */
+  label: string
   /** The owning view's locale seat. */
   t: ChatViewSlotProps['t']
 }) {
@@ -190,7 +235,7 @@ function TurnStatus({ startTime, t }: {
   const showClock = elapsedMs >= 15_000
   return (
     <div className={css.turnStatus} role="status" aria-live="polite">
-      {t('chat.deepDiving')}
+      {label}
       {showClock && (
         <span className={css.turnStatusClock} aria-hidden>
           {formatRunDuration(elapsedMs, t)}
@@ -300,6 +345,16 @@ export function ChatView({
     [loadImage, renderSlot],
   )
   const runningTurnStart = useMemo(() => runningTurnStartTime(timeline), [timeline])
+  const lastNode = useChat((snapshot) => {
+    const key = snapshot.order.at(-1)
+    return key === undefined ? undefined : snapshot.nodes.get(key)
+  })
+  const activityPhase = useMemo(() => turnActivityPhase({
+    running,
+    admitting: !running && visibleSubmissions.some(item => item.placement === 'transcript'),
+    timeline,
+    lastNode,
+  }), [running, visibleSubmissions, timeline, lastNode])
 
   const listRef = useRef<HTMLDivElement | null>(null)
   const columnRef = useRef<HTMLDivElement | null>(null)
@@ -339,7 +394,6 @@ export function ChatView({
   const firstKey = order[0]
   const firstSeq = firstKey === undefined ? null : nodeStore.get(firstKey)?.anchorSeq ?? null
   const lastKey = order.at(-1) ?? null
-  const lastNode = lastKey === null ? undefined : nodeStore.get(lastKey)
   const lastSteeringId = pendingSteering[pendingSteering.length - 1]?.id ?? null
   const lastSubmissionId = visibleSubmissions[visibleSubmissions.length - 1]?.requestId ?? null
   const followSig = `${openState}:${firstSeq}:${lastKey}:${order.length}:${running ? 1 : 0}:${lastSteeringId ?? ''}:${lastSubmissionId ?? ''}`
@@ -803,9 +857,14 @@ export function ChatView({
           {/* No pending placeholders: questions (ui-user-questions) and approvals
               (ApprovalPanel) both take over the composer, so a flow card would
               double-render the same wait. */}
-          {/* Turn-level loading signal: rides the whole running turn (first-token
-              wait, tool execution, streaming) so it never flickers per step. */}
-          {running && <TurnStatus startTime={runningTurnStart} t={t} />}
+          {/* Turn-level activity: preparing, retrying, or generating. */}
+          {activityPhase !== null && (
+            <TurnStatus
+              startTime={runningTurnStart}
+              label={t(ACTIVITY_COPY[activityPhase])}
+              t={t}
+            />
+          )}
           {pendingSteering.map(item => (
             <PendingSteeringBubble
               key={item.id}

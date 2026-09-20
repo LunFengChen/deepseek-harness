@@ -3,7 +3,7 @@ description: "面向部署方与维护者的 MCP 客户端桥接说明，用于�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-mcp-client
+# @x1a0f3n9/dsh-mcp-client
 
 [English](README.md) | 中文
 
@@ -33,7 +33,7 @@ kind: "package-reference"
 
 ```yaml
 - id: mcp-github
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: '@x1a0f3n9/dsh-mcp-client'
   config:
     serverName: github
     transport: stdio
@@ -43,7 +43,7 @@ kind: "package-reference"
       GITHUB_TOKEN: !!js process.env.GITHUB_TOKEN
 
 - id: mcp-web
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: '@x1a0f3n9/dsh-mcp-client'
   config:
     serverName: web
     transport: streamable-http

@@ -3,10 +3,23 @@ import { createServer } from 'node:http'
 import type { IncomingMessage, Server, ServerResponse } from 'node:http'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import LlmRuntime, { userAgent } from '@deepseek-ai/dsh-llm'
-import * as LlmPiAi from '@deepseek-ai/dsh-llm-pi-ai'
+import LlmRuntime, { userAgent } from '@x1a0f3n9/dsh-llm'
+import * as LlmPiAi from '@x1a0f3n9/dsh-llm-pi-ai'
 import { getBuiltinModels } from '@earendil-works/pi-ai/providers/all'
+import { catalogModels, catalogProviderIds } from '../src/catalog.ts'
 import { discoverModels } from '../src/discovery.ts'
+
+/** First installed-catalog model matching `predicate`, if any. */
+function catalogModel(
+  predicate: (model: { id: string; input: readonly string[] }) => boolean,
+): { id: string; input: readonly string[] } | undefined {
+  for (const provider of catalogProviderIds()) {
+    for (const model of catalogModels(provider).values()) {
+      if (predicate(model)) return { id: model.id, input: model.input }
+    }
+  }
+  return undefined
+}
 
 const servers: Server[] = []
 /** Credential variables a test set, cleared so the next one starts unset. */
@@ -85,6 +98,10 @@ describe('catalog-route model discovery', () => {
     expect(models.map(model => model.id).sort())
       .toEqual(getBuiltinModels('deepseek').map(model => model.id).sort())
     expect(models.every(model => (model.contextWindow ?? 0) > 0 && (model.maxTokens ?? 0) > 0)).toBe(true)
+    const builtin = new Map(getBuiltinModels('deepseek').map(model => [model.id, model]))
+    for (const model of models) {
+      expect(model.inputModalities).toEqual([...(builtin.get(model.id)?.input ?? [])])
+    }
     expect(server.paths).toEqual([])
   })
 
@@ -133,6 +150,30 @@ describe('draft-provider model discovery', () => {
     expect(server.paths).toEqual(['/v1/models'])
     expect(server.headers[0]?.authorization).toBe('Bearer probe-key')
     expect(server.headers[0]?.['user-agent']).toBe(userAgent())
+  })
+
+  it('copies installed-catalog input onto a listing id the registry already describes', async () => {
+    const vision = catalogModel(model => model.input.includes('image'))
+    const textOnly = catalogModel(model => model.input.length > 0 && !model.input.includes('image'))
+    if (vision === undefined) throw new Error('installed catalog has no image model')
+    const server = await listingServer({
+      body: JSON.stringify({
+        data: [
+          { id: vision.id },
+          ...textOnly === undefined ? [] : [{ id: textOnly.id }],
+          { id: 'unknown-gateway-model' },
+        ],
+      }),
+    })
+    const ctx = await harness()
+
+    const models = await ctx.llm.discoverModels('llm-pi-ai', { baseURL: `${server.url}/v1` })
+
+    expect(models.find(model => model.id === vision.id)?.inputModalities).toEqual([...vision.input])
+    if (textOnly !== undefined) {
+      expect(models.find(model => model.id === textOnly.id)?.inputModalities).toEqual([...textOnly.input])
+    }
+    expect(models.find(model => model.id === 'unknown-gateway-model')?.inputModalities).toBeUndefined()
   })
 
   it('reads an enriched models map using route ids and nested capacities', async () => {
@@ -496,10 +537,10 @@ const RECORDED_LISTINGS = [
     file: 'openrouter-2026-09-02.json',
     api: 'openai-completions',
     models: [
-      { id: 'anthropic/claude-fable-5.1', name: 'Anthropic: Claude Fable 5.1', contextWindow: 1_000_000, maxTokens: 128_000 },
+      { id: 'anthropic/claude-fable-5.1', name: 'Anthropic: Claude Fable 5.1', contextWindow: 1_000_000, maxTokens: 128_000, inputModalities: ['text', 'image'] },
       // The router's own aggregate route reports no completion cap.
-      { id: 'openrouter/auto-beta', name: 'Auto Router (Beta)', contextWindow: 2_000_000 },
-      { id: 'deepseek/deepseek-v4-flash', name: 'DeepSeek: DeepSeek V4 Flash 0423', contextWindow: 1_048_576, maxTokens: 384_000 },
+      { id: 'openrouter/auto-beta', name: 'Auto Router (Beta)', contextWindow: 2_000_000, inputModalities: ['text', 'image'] },
+      { id: 'deepseek/deepseek-v4-flash', name: 'DeepSeek: DeepSeek V4 Flash 0423', contextWindow: 1_048_576, maxTokens: 384_000, inputModalities: ['text'] },
     ],
   },
   {
@@ -507,9 +548,9 @@ const RECORDED_LISTINGS = [
     file: 'models-dev-anthropic-2026-09-02.json',
     api: 'openai-completions',
     models: [
-      { id: 'claude-opus-4-7', name: 'Claude Opus 4.7', contextWindow: 1_000_000, maxTokens: 128_000 },
-      { id: 'claude-fable-5-1', name: 'Claude Fable 5.1', contextWindow: 1_000_000, maxTokens: 128_000 },
-      { id: 'claude-haiku-4-5', name: 'Claude Haiku 4.5 (latest)', contextWindow: 200_000, maxTokens: 64_000 },
+      { id: 'claude-opus-4-7', name: 'Claude Opus 4.7', contextWindow: 1_000_000, maxTokens: 128_000, inputModalities: ['text', 'image'] },
+      { id: 'claude-fable-5-1', name: 'Claude Fable 5.1', contextWindow: 1_000_000, maxTokens: 128_000, inputModalities: ['text', 'image'] },
+      { id: 'claude-haiku-4-5', name: 'Claude Haiku 4.5 (latest)', contextWindow: 200_000, maxTokens: 64_000, inputModalities: ['text', 'image'] },
     ],
   },
   {
@@ -517,9 +558,9 @@ const RECORDED_LISTINGS = [
     file: 'deepseek-2026-09-02.json',
     api: 'openai-completions',
     models: [
-      { id: 'deepseek-v4-flash', name: 'deepseek-v4-flash' },
-      { id: 'deepseek-v4-pro', name: 'deepseek-v4-pro' },
-      { id: 'deepseek-v4-flash-vision-exp', name: 'deepseek-v4-flash-vision-exp' },
+      { id: 'deepseek-v4-flash', name: 'deepseek-v4-flash', inputModalities: ['text'] },
+      { id: 'deepseek-v4-pro', name: 'deepseek-v4-pro', inputModalities: ['text'] },
+      { id: 'deepseek-v4-flash-vision-exp', name: 'deepseek-v4-flash-vision-exp', inputModalities: ['text', 'image'] },
     ],
   },
   {
@@ -528,7 +569,7 @@ const RECORDED_LISTINGS = [
     api: 'anthropic-messages',
     // The reference example fills both capacities with 0, which is not a
     // usable capacity, so the row carries the name alone.
-    models: [{ id: 'claude-opus-5', name: 'Claude Opus 5' }],
+    models: [{ id: 'claude-opus-5', name: 'Claude Opus 5', inputModalities: ['text', 'image'] }],
   },
 ]
 

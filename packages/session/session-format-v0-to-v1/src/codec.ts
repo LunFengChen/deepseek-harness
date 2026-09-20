@@ -3,7 +3,7 @@ import {
   sessionFormatCount,
   sessionFormatSafeInteger,
   snapshotSessionFormatJson,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import type {
   SessionFormatArtifactDecoder,
   SessionFormatCodec,
@@ -14,7 +14,7 @@ import type {
   SessionFormatJsonValue,
   SessionFormatMigrationContext,
   SessionFormatRecovery,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import { assertReleasedSessionFormatHeader } from './validation.ts'
 import { assertReleasedV0Keys, releasedV0Record } from './validation-helpers.ts'
 

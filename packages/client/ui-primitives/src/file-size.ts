@@ -1,4 +1,4 @@
-/** Compact human-readable byte counts shared by attachment presenters. @module @deepseek-ai/dsh-client-ui-primitives/file-size */
+/** Compact human-readable byte counts shared by attachment presenters. @module @x1a0f3n9/dsh-client-ui-primitives/file-size */
 
 /**
  * Byte count as compact user-facing size text (`312B`, `4.2KB`, `1.5MB`, `2.4GB`).

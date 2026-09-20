@@ -3,7 +3,7 @@ description: "Replay-aware token and context-pressure measurement for users and 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-token-meter
+# @x1a0f3n9/dsh-token-meter
 
 English | [中文](README.zh.md)
 
@@ -55,8 +55,8 @@ When the composition provides `ctx.sessionProjections`, token-meter registers th
 ### Composition
 
 ```yaml
-- name: '@deepseek-ai/dsh-token-meter'
-- name: '@deepseek-ai/dsh-compaction-basic'
+- name: '@x1a0f3n9/dsh-token-meter'
+- name: '@x1a0f3n9/dsh-compaction-basic'
 ```
 
 Both plugins have usable defaults. The meter consumes only the optional `llm` service, and only to resolve route-declared request-image pricing; compaction remains optional. A deployment configures capacity and image pricing on its LLM adapter and compaction policy on `dsh-compaction-basic`.
@@ -94,7 +94,7 @@ The service is built on one fold and one anchor. Each session gets an isolated r
 
 ### Fold flow
 
-Each `measure()` call synchronizes the fold to the current durable tail, then reads one coherent snapshot. The fold tracks full request-header snapshots, step boundaries, surface appends and replacements, successful assistant messages, and provider usage. Provider output for a usage anchor is reassembled from the assistant message's exact embedded stream, independently of listener rewrites to durable content; empty assembled content costs zero.
+Each `measure()` call synchronizes the fold to the current durable tail, then reads one coherent snapshot. A live truncation that shortens the log below the consumed cursor discards that session's replay state and folds the retained prefix again. The fold tracks full request-header snapshots, step boundaries, surface appends and replacements, successful assistant messages, and provider usage. Provider output for a usage anchor is reassembled from the assistant message's exact embedded stream, independently of listener rewrites to durable content; empty assembled content costs zero.
 
 ### Projection semantics
 

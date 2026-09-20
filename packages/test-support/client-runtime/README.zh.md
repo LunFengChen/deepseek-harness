@@ -3,7 +3,7 @@ description: "面向浏览器功能测试的 jsdom slot 测试运行时，供测
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-test-runtime
+# @x1a0f3n9/dsh-client-test-runtime
 
 [English](README.md) | 中文
 
@@ -55,7 +55,7 @@ await runtime.dispose()
 按 Host 会答的码来脚本化失败，并以生产代码同样的方式断言——判 `code`，绝不判类：
 
 ```text
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 
 remote.goals.create.mockResolvedValue({
   ok: false,
@@ -70,8 +70,8 @@ expect(view.getByRole('alert')).toHaveTextContent('goal/not-found')
 
 ```text
 // @vitest-environment jsdom
-import { createClientTest, webApp } from '@deepseek-ai/dsh-client-test-runtime/src/assembly/index.ts'
-import { ok } from '@deepseek-ai/dsh-remote-mock'
+import { createClientTest, webApp } from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/index.ts'
+import { ok } from '@x1a0f3n9/dsh-remote-mock'
 
 const test = createClientTest({ roster: webApp }, { mount: true })
 test('registers into the sidebar', async ({ remote, start }) => {
@@ -87,7 +87,7 @@ test('registers into the sidebar', async ({ remote, start }) => {
 
 ### Roster 与启动行为
 
-`webApp` 是 `web` profile 的浏览器 roster，首次 import 装配入口时从它的 bundle（先 `dsh-base`、再 `dsh-web-app`）按启动器的方式现读，只是匹配不到任何行的补丁在这里抛错、启动器只警告：每个 bundle 的 `dsh.bundle.patch` 列表用 include 插件的 YAML 方言解析、用它的 `applyEntryPatches` 合成，每个未禁用且其包声明 `dsh.client.platform === 'web'` 的行成为一行，带上该声明的 `inject` 与 `immediately`；`bundleRoster(bundles)` 对任意 bundle 列表做同样的事。没有任何东西从 bundle 拷贝出来，bundle 一改下次跑测试就能看见。`webApp.closure(names)` 保留点名的行及其传递注入的全部行（即按 bundle 组合方式起这些插件所需的行），`webApp.pick(names)` 与 `webApp.without(names)` 手工裁剪，三者都对未知名字抛错，`ClientRoster.of(rows)` 内联构造一份。`remoteDefaultResponses` 是 roster 在没有 session、没有 workspace、默认设置下启动时恰好会打的那些 Remote 端点的默认响应；测试用 `mock.load(table)` 在其上叠加自己的 `RemoteTable`，任何没有规则的调用都会在 `dispose()` 时经 `mock.assertNoUnmatched()` 让测试失败。`mount` 要求 roster 提供 `uiRenderer`；否则 `start` 响亮失败而不是返回一个空容器。`client.connection` 是 roster 的 Connection 服务（没有任何 `Context` 增强声明它），`connectTimeoutMs` 限定等就绪的时长，超时消息列出 mock log。`reload(name)` 按 client-hmr 的方式重建一个 Loader entry（先拆 registry，再 `entry.refresh()`），并在 worker 的启动轮次内装上本客户端的载体，重建的 `connection` 行因此读到自己的 mock；`unload(name)` 移除它；`flush()` 在 `act` 内让 React 落定。jsdom 既没有 `EventSource`（client-hmr 在 apply 时打开一个）也没有 `ResizeObserver`（布局组件挂载时观察尺寸），所以 `start` 对缺失的全局装惰性桩、`dispose` 只移除它装的那些——这是 jsdom 的缺口，不是产品需求。每个 roster 里的 `@deepseek-ai/dsh-api-remotes` 行都会被去掉：它生成的 Remote 客户端只存在于构建后的 `lib/`，而 `remote.<ns>` 正是本档要替掉的东西。`start` 改为给 roster 注入的每个 `remote.<ns>` 服务（加上此刻 mock 登记过规则的命名空间；之后才首次登记的命名空间没有代理）提供一个无契约代理；`ctx.remote.<ns>.<method>(...args)` 变成对端点 `<ns>/<method>` 的调用，携带位置参数，mock 登记了 `stream()` 脚本的走流、否则走一元，并沿用生成客户端的结果折叠（载体抛错折成 `gateway/internal`，中止折成 `gateway/cancelled`）。没有规则的端点照样发出，所以 mock 会记下它、`dispose()` 让测试失败。
+`webApp` 是 `web` profile 的浏览器 roster，首次 import 装配入口时从它的 bundle（先 `dsh-base`、再 `dsh-web-app`）按启动器的方式现读，只是匹配不到任何行的补丁在这里抛错、启动器只警告：每个 bundle 的 `dsh.bundle.patch` 列表用 include 插件的 YAML 方言解析、用它的 `applyEntryPatches` 合成，每个未禁用且其包声明 `dsh.client.platform === 'web'` 的行成为一行，带上该声明的 `inject` 与 `immediately`；`bundleRoster(bundles)` 对任意 bundle 列表做同样的事。没有任何东西从 bundle 拷贝出来，bundle 一改下次跑测试就能看见。`webApp.closure(names)` 保留点名的行及其传递注入的全部行（即按 bundle 组合方式起这些插件所需的行），`webApp.pick(names)` 与 `webApp.without(names)` 手工裁剪，三者都对未知名字抛错，`ClientRoster.of(rows)` 内联构造一份。`remoteDefaultResponses` 是 roster 在没有 session、没有 workspace、默认设置下启动时恰好会打的那些 Remote 端点的默认响应；测试用 `mock.load(table)` 在其上叠加自己的 `RemoteTable`，任何没有规则的调用都会在 `dispose()` 时经 `mock.assertNoUnmatched()` 让测试失败。`mount` 要求 roster 提供 `uiRenderer`；否则 `start` 响亮失败而不是返回一个空容器。`client.connection` 是 roster 的 Connection 服务（没有任何 `Context` 增强声明它），`connectTimeoutMs` 限定等就绪的时长，超时消息列出 mock log。`reload(name)` 按 client-hmr 的方式重建一个 Loader entry（先拆 registry，再 `entry.refresh()`），并在 worker 的启动轮次内装上本客户端的载体，重建的 `connection` 行因此读到自己的 mock；`unload(name)` 移除它；`flush()` 在 `act` 内让 React 落定。jsdom 既没有 `EventSource`（client-hmr 在 apply 时打开一个）也没有 `ResizeObserver`（布局组件挂载时观察尺寸），所以 `start` 对缺失的全局装惰性桩、`dispose` 只移除它装的那些——这是 jsdom 的缺口，不是产品需求。每个 roster 里的 `@x1a0f3n9/dsh-api-remotes` 行都会被去掉：它生成的 Remote 客户端只存在于构建后的 `lib/`，而 `remote.<ns>` 正是本档要替掉的东西。`start` 改为给 roster 注入的每个 `remote.<ns>` 服务（加上此刻 mock 登记过规则的命名空间；之后才首次登记的命名空间没有代理）提供一个无契约代理；`ctx.remote.<ns>.<method>(...args)` 变成对端点 `<ns>/<method>` 的调用，携带位置参数，mock 登记了 `stream()` 脚本的走流、否则走一元，并沿用生成客户端的结果折叠（载体抛错折成 `gateway/internal`，中止折成 `gateway/cancelled`）。没有规则的端点照样发出，所以 mock 会记下它、`dispose()` 让测试失败。
 
 ### 何时使用
 

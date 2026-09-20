@@ -2,8 +2,8 @@
 
 import type { Context } from '@deepseek-ai/cordis'
 import type { SessionConfigOption, SessionConfigValueId } from '@agentclientprotocol/sdk'
-import { installModelSelection, type ModelSelection, type ModelSelectionRef } from '@deepseek-ai/dsh-agent'
-import { ReasoningEffortId, type LlmCallConfig, type LlmRuntime } from '@deepseek-ai/dsh-llm'
+import { installModelSelection, type ModelSelection, type ModelSelectionRef } from '@x1a0f3n9/dsh-agent'
+import { ReasoningEffortId, type LlmCallConfig, type LlmRuntime } from '@x1a0f3n9/dsh-llm'
 
 const MODEL_CONFIG_ID = 'model'
 const REASONING_CONFIG_ID = 'reasoning_effort'

@@ -1,4 +1,4 @@
-import type { SessionFormatArtifact } from '@deepseek-ai/dsh-session-format'
+import type { SessionFormatArtifact } from '@x1a0f3n9/dsh-session-format'
 import { RELEASED_V0_EVENT_DISPOSITIONS } from '../dispositions.ts'
 import { assertReleasedArtifactRelationships } from '../relationships.ts'
 import {

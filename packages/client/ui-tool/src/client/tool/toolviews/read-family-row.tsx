@@ -7,8 +7,8 @@
 // row assembly lives here once instead of being copied per tool.
 
 import type { ReactNode } from 'react'
-import { IconBrowseOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { PropsRenderSlots } from '@deepseek-ai/dsh-client-ui-slots'
+import { IconBrowseOutline16 } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ToolCallViewProps } from '../../contract/slots.ts'
 import { toolRowModel } from '../models/tool-call-model.ts'
 import { ToolRow, type ToolRowProps } from '../components/ToolRow.tsx'

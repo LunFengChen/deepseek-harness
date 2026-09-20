@@ -3,7 +3,7 @@ description: "Shared TypeScript declarations for package identity, runtime requi
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-package-manifest
+# @x1a0f3n9/dsh-package-manifest
 
 English | [中文](README.zh.md)
 
@@ -28,7 +28,7 @@ Use `DshPackageManifest` for package metadata, `DshManifest` for the public fiel
 Import from the package root. Use a development dependency when only checking your own source; use a production dependency if your published declarations reference these types.
 
 ```ts
-import type { DshClientManifest, DshPackageManifest } from '@deepseek-ai/dsh-package-manifest'
+import type { DshClientManifest, DshPackageManifest } from '@x1a0f3n9/dsh-package-manifest'
 
 const client: DshClientManifest = { platform: 'web' }
 const manifest: DshPackageManifest = {

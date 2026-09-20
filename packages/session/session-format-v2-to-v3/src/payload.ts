@@ -1,9 +1,9 @@
 /** Audited V2 migration admission and V3 payload validation, independent of installed core Session types. */
 
-import { SessionFormatError, SessionFormatUnsupportedMigrationError, isSessionFormatJsonObject, sessionFormatCount, sessionFormatSafeInteger } from '@deepseek-ai/dsh-session-format'
-import type { SessionFormatEvent, SessionFormatJsonObject, SessionFormatJsonValue } from '@deepseek-ai/dsh-session-format'
-import { assertReleasedPayloadSemantics, assertReleasedSurfaceMetadata } from '@deepseek-ai/dsh-session-format-v0-to-v1'
-import { RELEASED_V2_EVENT_DISPOSITIONS } from '@deepseek-ai/dsh-session-format-v1-to-v2'
+import { SessionFormatError, SessionFormatUnsupportedMigrationError, isSessionFormatJsonObject, sessionFormatCount, sessionFormatSafeInteger } from '@x1a0f3n9/dsh-session-format'
+import type { SessionFormatEvent, SessionFormatJsonObject, SessionFormatJsonValue } from '@x1a0f3n9/dsh-session-format'
+import { assertReleasedPayloadSemantics, assertReleasedSurfaceMetadata } from '@x1a0f3n9/dsh-session-format-v0-to-v1'
+import { RELEASED_V2_EVENT_DISPOSITIONS } from '@x1a0f3n9/dsh-session-format-v1-to-v2'
 
 /** Audited surface event names; all other admitted events are log-only. */
 export const SURFACE_TYPES: ReadonlySet<string> = new Set(['system/message', 'user/message', 'assistant/message', 'tool/result'])

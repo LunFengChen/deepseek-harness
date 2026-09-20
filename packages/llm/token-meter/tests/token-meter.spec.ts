@@ -1,12 +1,12 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { AssistantStreamAccumulator, createUserMessage, createSystemMessage, ToolCallId, createMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, Message, TokenUsage } from '@deepseek-ai/dsh-llm'
-import SessionStore, { Session, SessionId, SessionSeq, canonicalHeader } from '@deepseek-ai/dsh-session'
-import type { EpochHeader, SessionEvent, SessionSeq as SessionSeqType } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import TokenMeter from '@deepseek-ai/dsh-token-meter'
-import type { TokenMeasurement, TokenMeterConfig } from '@deepseek-ai/dsh-token-meter'
+import { AssistantStreamAccumulator, createUserMessage, createSystemMessage, ToolCallId, createMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, Message, TokenUsage } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { Session, SessionId, SessionLogOffset, SessionSeq, canonicalHeader } from '@x1a0f3n9/dsh-session'
+import type { EpochHeader, SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import type { TokenMeasurement, TokenMeterConfig } from '@x1a0f3n9/dsh-token-meter'
 
 function header(model: string, extras: Omit<EpochHeader, 'config'> = {}): EpochHeader {
   return canonicalHeader({ config: { provider: 'mock', model }, ...extras })
@@ -26,7 +26,7 @@ function appendHeader(session: Session, value: EpochHeader): void {
   session.append('request/header', { header: value, reason: 'initial' })
 }
 
-const SYSTEM_PLUGIN = '@deepseek-ai/dsh-system-prompt'
+const SYSTEM_PLUGIN = '@x1a0f3n9/dsh-system-prompt'
 
 /** Append the rendered system prompt as surface node 0, the way the loop does. */
 function appendSystem(session: Session, text: string): SessionSeqType {
@@ -216,6 +216,48 @@ describe('TokenMeter pricing', () => {
     expect(snapshot).toEqual(snapshotCopy)
     expect(snapshot.logRevision).toBe(1)
     expect(snapshot.nodes).toHaveLength(1)
+  })
+
+  it('rebuilds the replay fold after a live log prefix rewrite', () => {
+    const service = meter()
+    const session = Session.create(SessionId('truncate-replay'))
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'first' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'second' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    const before = service.measure(session)
+    expect(before.nodes).toHaveLength(2)
+    expect(before.logRevision).toBe(2)
+
+    session.truncate(SessionLogOffset(1))
+    const after = service.measure(session)
+    expect(after.logRevision).toBe(1)
+    expect(after.nodes).toHaveLength(1)
+    expect(after.nodes[0]?.seq).toBe(0)
+    expectSurfaceTotal(after)
+  })
+
+  it('drops an open step across truncation so the next step can fold', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(TokenMeter)
+    const session = ctx.sessions.create(SessionId('truncate-open-step'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'question' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('step/start', { turn: 1, step: 1 })
+    expect(ctx.tokenMeter.measure(session).logRevision).toBe(3)
+
+    session.truncate(SessionLogOffset(2))
+    session.append('step/start', { turn: 1, step: 1 })
+    expect(ctx.tokenMeter.measure(session).logRevision).toBe(3)
   })
 
   it('prices tools, the system node, and the surface when no reusable usage exists', () => {

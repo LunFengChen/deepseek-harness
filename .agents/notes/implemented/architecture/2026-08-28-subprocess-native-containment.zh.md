@@ -36,7 +36,7 @@ parent 会在收到经过校验、只含数字的 `target-exit` 时立即永久�
 
 ### 私有分派与协议
 
-source 启动通过 TypeScript source launcher 执行包内 runner 入口，built 启动解析 `@deepseek-ai/dsh-subprocess-local/runner` export，Python SDK 单文件可执行程序则从 [`python/sdk-runtime/runtime-bootstrap.mjs`](../../../../python/sdk-runtime/runtime-bootstrap.mjs) 进入。该 bootstrap 由 Python runtime 拥有；私有 selector 不存在时，它调用公共 CLI export；否则会删除 selector，并分派到同一 subprocess runner core。公共 `dsh` 参数解析器没有隐藏 runner mode，`apps/cli` 只构建公共入口，打包也不提供第二个 Node 可执行程序。
+source 启动通过 TypeScript source launcher 执行包内 runner 入口，built 启动解析 `@x1a0f3n9/dsh-subprocess-local/runner` export，Python SDK 单文件可执行程序则从 [`python/sdk-runtime/runtime-bootstrap.mjs`](../../../../python/sdk-runtime/runtime-bootstrap.mjs) 进入。该 bootstrap 由 Python runtime 拥有；私有 selector 不存在时，它调用公共 CLI export；否则会删除 selector，并分派到同一 subprocess runner core。公共 `dsh` 参数解析器没有隐藏 runner mode，`apps/cli` 只构建公共入口，打包也不提供第二个 Node 可执行程序。
 
 selector 是 per-spawn locator 或 sentinel，不是凭据或持久格式。Linux 使用一个严格 request 与一个可选严格 startup-error 文件。Windows 使用一条 IPC channel，承载闭集的 `start` 与 `terminate` request，以及恰好两个 result 分支：只含数字 `exitCode` 的 `target-exit`，以及必含 `name`、`message` 且只允许可选 `code`、`syscall`、`path` 的 `error`；parent 会派生 `signal: null`。提交前取消使用同一种普通 `error` record。取消 reason 不跨 wire 传递，因此 parent cancellation latch 会原样恢复第一个本地 reason，包括 `null` 或 `undefined`。缺失、额外、类型错误或未知字段都会 fail closed。target 环境可以包含 selector 名称及其 Windows 大小写变体，因为 provider 会单独传递 target 状态，并且只在私有选择值消费后才恢复该状态。
 

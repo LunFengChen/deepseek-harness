@@ -2,10 +2,10 @@
  * Vocabulary for the web capability seam (`ctx.web`). Search and fetch deliberately share one
  * seam so provider selection, cancellation, errors, and product configuration have one owner,
  * while retaining separate request and result types.
- * @module @deepseek-ai/dsh-web/types
+ * @module @x1a0f3n9/dsh-web/types
  */
 
-import { HarnessError } from '@deepseek-ai/dsh-llm'
+import { HarnessError } from '@x1a0f3n9/dsh-llm'
 
 /**
  * What one search-capable backend is asked to search. Each request carries one

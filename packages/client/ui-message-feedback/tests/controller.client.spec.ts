@@ -7,11 +7,11 @@
  */
 import { describe, expect, it, vi } from 'vitest'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { MessageId, SessionId } from '@deepseek-ai/dsh-api-remotes/client'
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import type { MessageId, SessionId } from '@x1a0f3n9/dsh-api-remotes/client'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import type {
   MessageFeedbackItem, MessageFeedbackVersion,
-} from '@deepseek-ai/dsh-message-feedback/types'
+} from '@x1a0f3n9/dsh-message-feedback/types'
 import { MessageFeedbackController } from '../src/client/controller.ts'
 
 const SESSION = 's-1' as SessionId

@@ -26,8 +26,8 @@ import {
   renderPageRegion,
   REGION_BEGIN,
   REGION_END,
-} from '@deepseek-ai/dsh-typert-generator'
-import type { CordisCatalogPolicy } from '@deepseek-ai/dsh-typert-generator'
+} from '@x1a0f3n9/dsh-typert-generator'
+import type { CordisCatalogPolicy } from '@x1a0f3n9/dsh-typert-generator'
 import { renderCordisCoreApiPages } from './cordis-core-api.ts'
 import { contextKeyMap, contextMergeFiles, eventNameList } from './cordis-walk.ts'
 import {
@@ -346,6 +346,8 @@ export const LINK_MAP: Readonly<Record<string, string>> = {
   SessionPromptValue: 'session.md',
   SessionRenameRequest: 'session.md',
   SessionRenameValue: 'session.md',
+  SessionDeleteFromRequest: 'session.md',
+  SessionDeleteFromValue: 'session.md',
   SessionRespondReceipt: 'session.md',
   SessionRespondRequest: 'session.md',
   SessionSearchValue: 'session.md',

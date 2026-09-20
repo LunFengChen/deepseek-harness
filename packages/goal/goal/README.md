@@ -3,13 +3,13 @@ description: "The persisted same-session goal service for users and maintainers 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-goal
+# @x1a0f3n9/dsh-goal
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-goal` lets one long-running completion objective persist across turns, session resume, fork, and process restarts. Users and agents can create, edit, pause, resume, complete, block, or clear it; compare-and-set updates reject stale views. A configurable round cap (256 by default) bounds automatic continuation, and blocked goals retain a stable policy code with a human-readable explanation. The package stores goal state but does not schedule work, and continuation permission remains process-local rather than durable. Choose it for one objective spanning many turns; skip it for routine single-turn work or parallel objectives.
+`dsh-goal` lets one long-running completion objective persist across turns, session resume, fork, and process restarts. Users and agents can create, edit, pause, resume, complete, block, or clear it; compare-and-set updates reject stale views. A configurable round cap (100000 by default) bounds automatic continuation, and blocked goals retain a stable policy code with a human-readable explanation. The package stores goal state but does not schedule work, and continuation permission remains process-local rather than durable. Choose it for one objective spanning many turns; skip it for routine single-turn work or parallel objectives.
 
 ## Table of Contents
 
@@ -36,20 +36,20 @@ A goal suits one long-running completion objective that should continue across a
 Load the package with a composition entry; the only deployment choice is the default round cap applied to creates that do not name their own.
 
 ```yaml
-- name: '@deepseek-ai/dsh-goal'
+- name: '@x1a0f3n9/dsh-goal'
   config:
-    defaultMaxGoalRounds: 256
+    defaultMaxGoalRounds: 100000
 ```
 
 | Field | Default | Meaning |
 |---|---|---|
-| `defaultMaxGoalRounds` | `256` | Round cap applied when a create request omits its own |
+| `defaultMaxGoalRounds` | `100000` | Round cap applied when a create request omits its own |
 
 `defaultMaxGoalRounds` must be a positive safe integer; a create request that names its own cap overrides it. The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-goal) is the exhaustive source for every accepted field.
 
 ### Session projection
 
-`GoalService` requires `ctx.sessionProjections` ([`@deepseek-ai/dsh-session-projection`](../../session/session-projection/README.md)) and registers the `goal` projection unit at startup; a composition that omits the projection registry cannot activate `ctx.goals`. The unit's version 6 host state retains the latest valid current goal, every previously used goal id, and the first strict replay failure. Its client view exposes the current goal or `null` before the first create and after a clear tombstone. The key merges into both `SessionProjectionStateMap` and `SessionProjectionMap`; carriers serve the client value on the history tail page and the `session/projection` push frame.
+`GoalService` requires `ctx.sessionProjections` ([`@x1a0f3n9/dsh-session-projection`](../../session/session-projection/README.md)) and registers the `goal` projection unit at startup; a composition that omits the projection registry cannot activate `ctx.goals`. The unit's version 6 host state retains the latest valid current goal, every previously used goal id, and the first strict replay failure. Its client view exposes the current goal or `null` before the first create and after a clear tombstone. After a retained replay failure, a matching clear against that last valid current goal recovers the host stream so a later create can proceed. The key merges into both `SessionProjectionStateMap` and `SessionProjectionMap`; carriers serve the client value on the history tail page and the `session/projection` push frame.
 
 ### Drive the lifecycle
 
@@ -98,7 +98,7 @@ This section explains how the service realizes the behavior above; the observabl
 - **Compare-and-set mutations.** `ctx.goals` accepts only the exact live `Agent` registered under its id. `get()` returns a detached `GoalView`; mutations take a `GoalRef { id, revision }` and reject stale refs. Creation resolves the deployment default internally before committing.
 - **Activation is process-local.** `armed` and `disarmed` live in a per-session cache and are never persisted. A fresh cache and every `agent/session-start` edge disarm continuation even when replay finds an active durable phase; `disarm()` removes authority without writing a revision or emitting a mutation.
 - **Strict replay.** The fold derives lifecycle mutations only from `goal/change` and rejects malformed shapes, discontinuous revisions, illegal phase transitions, non-monotonic per-goal timestamps, and non-sequential admitted rounds. Positive rounds advance only on admitted goal-sourced `user/message` events, and mutation timestamps clamp against the preceding update when wall time moves backward.
-- **Projection unit.** The package requires the projection registry and registers a strict `goal` unit. Its host state retains replay validation data and the first failure, while its client view exposes the latest valid whole goal or `null`; `GoalService` rejects access after a retained replay failure.
+- **Projection unit.** The package requires the projection registry and registers a strict `goal` unit. Its host state retains replay validation data and the first failure, while its client view exposes the latest valid whole goal or `null`. After a retained replay failure, `get` and `clear` still use the last valid current goal; other mutations stay rejected until that clear recovers the stream.
 
 ### Source map
 
@@ -159,7 +159,7 @@ These limits define when the goal service is a poor fit or needs special care. T
 - **Round-count budget only** — `maxGoalRounds` does not meter tokens, currency, wall time, or provider quotas.
 - **No independent evaluator** — the caller that records completion or blocking is authoritative; evaluator-backed certification is deferred to a separate policy layer.
 - **One current goal** — parallel objectives and a separate goal database are intentionally absent; history remains available in the session log after replacement or clear.
-- **Trusted in-process producers** — a plugin with direct `Session` access can append counterfeit `goal/change` data. Strict replay detects malformed or inconsistent records and leaves goal access failed at that record until the log is repaired; this is integrity detection, not plugin isolation.
+- **Trusted in-process producers** — a plugin with direct `Session` access can append counterfeit `goal/change` data. Strict replay detects malformed or inconsistent records and leaves later non-clear mutations failed at that record; a matching clear tombstones the last valid goal and restores host access, while the invalid record stays in the log. This is integrity detection, not plugin isolation.
 
 <a id="dev-note"></a>
 ### Dev Note

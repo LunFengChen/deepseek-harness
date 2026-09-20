@@ -4,10 +4,10 @@
  * carries no content, the disappearance that stats again, failures
  * as frames, and the life bounded by the signal.
  */
-import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { RemoteFailure } from '@deepseek-ai/dsh-typert-protocol'
-import { absoluteFileAddress, sessionFileAddress } from '@deepseek-ai/dsh-util-workspace-path'
+import { RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { RemoteFailure } from '@x1a0f3n9/dsh-typert-protocol'
+import { absoluteFileAddress, sessionFileAddress } from '@x1a0f3n9/dsh-util-workspace-path'
 import type { WorkspaceFileStat } from '../src/types.ts'
 import { describe, expect, it, onTestFinished } from 'vitest'
 import { ChangeFeed } from '../src/client/change-feed.ts'

@@ -4,10 +4,10 @@
  * Remote request and result types. Types only; the runtime category tuple is
  * exported by the package entry, and a browser plugin imports types alone
  * because its bundle may not carry Host values.
- * @module @deepseek-ai/dsh-command-feedback/types
+ * @module @x1a0f3n9/dsh-command-feedback/types
  */
 
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 
 /** One of the fixed feedback categories; the ids are durable log vocabulary. */
 export type FeedbackCategory =
@@ -31,7 +31,7 @@ export interface FeedbackRecord {
   readonly category?: FeedbackCategory
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     /**
      * One recorded human remark about this session. Log-only and independent

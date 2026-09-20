@@ -71,8 +71,6 @@ interface ToolArgsMap {
   create_goal: {
     /** The concrete completion objective inferred from the direct human request. */
     objective: string;
-    /** Optional positive safe-integer limit on automatic continuation rounds. */
-    max_goal_rounds?: number;
   } & Record<string, JsonValue>;
   /** Edit an existing UTF-8 text file by replacing literal text. */
   edit: {
@@ -209,8 +207,6 @@ interface ToolArgsMap {
     action: "edit" | "pause" | "resume" | "complete" | "blocked";
     /** Replacement objective; valid only with action edit. */
     objective?: string;
-    /** Replacement cap; valid only with action edit. */
-    max_goal_rounds?: number;
     /** Concrete blocking condition; required only with action blocked. */
     blocked_reason?: string;
   } & Record<string, JsonValue>;

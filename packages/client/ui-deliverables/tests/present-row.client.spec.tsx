@@ -2,8 +2,8 @@
 /** Present UI derives statuses and details from durable tool records. */
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest'
-import type { RunningToolCall, ToolResultNode } from '@deepseek-ai/dsh-client-ui-chat/client'
-import { makeTranslate } from '@deepseek-ai/dsh-client-test-runtime'
+import type { RunningToolCall, ToolResultNode } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
 import { PresentRow } from '../src/client/PresentRow.tsx'
 import { en } from '../src/client/locales.ts'
 

@@ -1,7 +1,7 @@
 {"version":3,"isSeeded":false,"createdAt":0,"cwd":"{{cwd}}","delegationDepth":0,"type":"session","id":"{{session:1}}"}
 {"type":"turn/start","data":{"turn":1}}
 {"type":"step/start","data":{"turn":1,"step":1}}
-{"type":"system/message","data":{"turn":1,"step":1,"message":{"role":"system","content":[{"type":"text","text":"{{system}}"}],"source":{"kind":"plugin","plugin":"@deepseek-ai/dsh-system-prompt"},"id":"{{message:1}}"}},"surfaceOp":"append"}
+{"type":"system/message","data":{"turn":1,"step":1,"message":{"role":"system","content":[{"type":"text","text":"{{system}}"}],"source":{"kind":"plugin","plugin":"@x1a0f3n9/dsh-system-prompt"},"id":"{{message:1}}"}},"surfaceOp":"append"}
 {"type":"user/message","data":{"content":[{"type":"text","text":"NavScenario: first run bash to print exactly NAVIGATION_OK, then read nav-a.md and nav-b.md using two read calls in ONE assistant message, then reply with the single word FIRST_DONE and stop."}],"source":{"kind":"user","rpcId":"{{rpc:1}}"},"role":"user","id":"{{message:2}}"},"surfaceOp":"append"}
 {"type":"session/title","data":{"title":"NavScenario: first run bash to","messageSeqs":[3],"source":{"kind":"fallback"}}}
 {"type":"request/header","data":{"header":{"config":{"provider":"deepseek-official","model":"deepseek-v4-flash"},"tools":"{{tools}}","messagePrefix":["{{messagePrefix}}"]},"reason":"initial"}}

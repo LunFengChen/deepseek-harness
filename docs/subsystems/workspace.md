@@ -299,9 +299,9 @@ Host Remote file reads and workspace directory observations over the composed fi
 @Remote async stat(workspaceFileScope: WorkspaceFileScope, path: string, signal: AbortSignal): Promise<WorkspaceFileStat>
 
 /**
- * List the direct children of one directory inside the Session's workspace.
+ * List the direct children of one directory readable by the filesystem backend.
  * @param workspaceFileScope - header-derived workspace root for the Session identity on the wire.
- * @param path - workspace path, absolute or relative to the workspace root.
+ * @param path - absolute path or path relative to the workspace root; directories outside it are allowed.
  * @param signal - caller cancellation.
  * @returns the directory's children in the backend's stable name order, bounded by the entry cap.
  */

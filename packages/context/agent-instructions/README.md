@@ -3,7 +3,7 @@ description: "Workspace-instruction context for users and maintainers enabling, 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-instructions
+# @x1a0f3n9/dsh-agent-instructions
 
 English | [中文](README.zh.md)
 
@@ -38,7 +38,7 @@ The defaults suit a typical checkout: `.git` marks the project root, `AGENTS.md`
 Root discovery climbs only when a marker probe confirms that the marker is absent. A permission or I/O failure stops discovery and surfaces the host or filesystem-provider error instead of selecting an ancestor project. The [root-marker metadata decision](../../../.agents/notes/implemented/bug-fix/2026-09-03-root-marker-metadata-failures.md) records why discovery fails instead of substituting another root.
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-instructions'
+- name: '@x1a0f3n9/dsh-agent-instructions'
   config:
     maxBytes: 65536
 ```

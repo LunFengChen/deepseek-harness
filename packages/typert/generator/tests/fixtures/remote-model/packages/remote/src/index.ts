@@ -1,4 +1,4 @@
-import { TypertRemoteService, Remote, RemoteScope } from '@deepseek-ai/dsh-typert-protocol'
+import { TypertRemoteService, Remote, RemoteScope } from '@x1a0f3n9/dsh-typert-protocol'
 import type { Agent } from '@fixture/domain'
 import type {
   CreateGoalRequest,

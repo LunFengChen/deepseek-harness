@@ -8,19 +8,19 @@
 import { Context } from '@deepseek-ai/cordis'
 import { cleanup, fireEvent, render, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { SessionLiveEventEntry, SessionListState } from '@deepseek-ai/dsh-api-session-controller/client'
+import type { SessionLiveEventEntry, SessionListState } from '@x1a0f3n9/dsh-api-session-controller/client'
 import {
   ConversationNodeAssembler, UiConversation,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type {
   ConversationLocationDataSource, ConversationLocationDataStore, ConversationMatch, ConversationNodeDefinition,
   ConversationStartMatch, ConversationTimelineSnapshot, ConversationTurnDataMap, ConversationViewDefinition,
   ConversationViewNode, TurnLocation,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
-import { apply as applyLocale, inject as localeInject } from '@deepseek-ai/dsh-client-locale/client'
-import type { ChatFileMentions, TurnTailOwnerProps } from '@deepseek-ai/dsh-client-ui-chat/client'
-import { makeTranslate, stubSettingsScope } from '@deepseek-ai/dsh-client-test-runtime'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import { apply as applyLocale, inject as localeInject } from '@x1a0f3n9/dsh-client-locale/client'
+import type { ChatFileMentions, TurnTailOwnerProps } from '@x1a0f3n9/dsh-client-ui-chat/client'
+import { makeTranslate, stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
 import { Deliverables, selectDeliverables, type DeliverablesInjected } from '../src/client/Deliverables.tsx'
 import { PresentedOpenController } from '../src/client/present-open.ts'
 import { ProducedFiles } from '../src/client/ProducedFiles.tsx'
@@ -30,8 +30,8 @@ import {
 } from '../src/client/turn-deliverables.ts'
 import { apply, inject } from '../src/client/index.ts'
 import { en, zh } from '../src/client/locales.ts'
-import { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { SessionEvent } from '@deepseek-ai/dsh-session/types'
+import { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 
 function openProps(controller = new PresentedOpenController()) {
   controller.host.set({ name: 'desktop', available: true, fileManager: 'finder' })

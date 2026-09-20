@@ -70,6 +70,29 @@ function verifyTag(family: ReleaseFamily, members: readonly ReleaseMember[], ref
   }
 }
 
+/**
+ * Assert the workflow is allowed to publish this family from `ref`.
+ *
+ * `RELEASE_PUBLISH_ALLOW_REF` is the branch-publish escape used by
+ * `dev-x1a0f3n9` and `master`. When it is unset, publication still requires the family's
+ * version tag.
+ * @param family - the release family.
+ * @param members - the family's members.
+ * @param ref - the `GITHUB_REF` value.
+ */
+export function verifyPublishRef(family: ReleaseFamily, members: readonly ReleaseMember[], ref: string): void {
+  const allowedRef = process.env.RELEASE_PUBLISH_ALLOW_REF?.trim() ?? ''
+  if (allowedRef !== '') {
+    if (ref !== allowedRef) {
+      throw new Error(
+        `publishing release family ${family.id} requires running from ${allowedRef}, got ${ref || '(no ref)'}`,
+      )
+    }
+    return
+  }
+  verifyTag(family, members, ref)
+}
+
 /** Run the verification for the family named by `--family`. */
 function main(): void {
   const { values } = parseArgs({
@@ -95,7 +118,7 @@ function main(): void {
   const publishing = process.env.RELEASE_PUBLISH === 'true'
   if (publishing) {
     verifyPublishable(members)
-    verifyTag(family, members, process.env.GITHUB_REF ?? '')
+    verifyPublishRef(family, members, process.env.GITHUB_REF ?? '')
   }
 
   const versions = [...new Set(members.map(member => member.version))]

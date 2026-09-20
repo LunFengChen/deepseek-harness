@@ -3,13 +3,13 @@ description: "The event-sourced session log and in-memory store for users and ma
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session
+# @x1a0f3n9/dsh-session
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-session` records every model-visible fact in an append-only session log and derives model history from that record. Consumers can inspect, replay, fork, and flush sessions while preserving historical events; compaction hides superseded entries from the active conversation without deleting them. Sessions remain in memory unless a persistence backend is added, and durability checkpoints wait for configured backends. Choose this package wherever an agent needs a reconstructable session record; it does not call models.
+`dsh-session` records every model-visible fact in a contiguous session log and derives model history from that record. Consumers can inspect, replay, fork, and flush sessions while preserving historical events; compaction hides superseded entries from the active conversation without deleting them. `Session.truncate` is the destructive exception used after persistence rewrites the same prefix; a store-attached session then emits `session/truncated`. Sessions remain in memory unless a persistence backend is added, and durability checkpoints wait for configured backends. Choose this package wherever an agent needs a reconstructable session record; it does not call models.
 
 ## Table of Contents
 

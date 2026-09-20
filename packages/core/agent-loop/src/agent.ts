@@ -14,23 +14,23 @@ import type {
   InboxTarget,
   PreStepDecision,
   RequestErrorAction,
-} from '@deepseek-ai/dsh-agent'
-import { agentEvents, assembleContextFor } from '@deepseek-ai/dsh-agent'
-import type { GenerateOptions, LlmCallConfig, Message, PreparedLlmCall } from '@deepseek-ai/dsh-llm'
+} from '@x1a0f3n9/dsh-agent'
+import { agentEvents, assembleContextFor } from '@x1a0f3n9/dsh-agent'
+import type { GenerateOptions, LlmCallConfig, Message, PreparedLlmCall } from '@x1a0f3n9/dsh-llm'
 import {
   LlmError,
   createAssistantMessage,
   errorChain,
   markAgentLoopRequest,
-} from '@deepseek-ai/dsh-llm'
-import { deepFreeze } from '@deepseek-ai/dsh-util-values'
-import type { Scope } from '@deepseek-ai/dsh-scope'
-import { createScope } from '@deepseek-ai/dsh-scope'
-import type { EpochHeader, RequestContext, Session, SessionId, TurnEndReason, UserMessage } from '@deepseek-ai/dsh-session'
-import { canonicalHeader, headerEquals } from '@deepseek-ai/dsh-session'
-import { joinContextSections, renderContextSections, renderPrompt } from '@deepseek-ai/dsh-system-prompt'
-import type { PromptAssembly } from '@deepseek-ai/dsh-system-prompt'
-import type {} from '@deepseek-ai/dsh-session-projection'
+} from '@x1a0f3n9/dsh-llm'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
+import type { Scope } from '@x1a0f3n9/dsh-scope'
+import { createScope } from '@x1a0f3n9/dsh-scope'
+import type { EpochHeader, RequestContext, Session, SessionId, TurnEndReason, UserMessage } from '@x1a0f3n9/dsh-session'
+import { canonicalHeader, headerEquals } from '@x1a0f3n9/dsh-session'
+import { joinContextSections, renderContextSections, renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
+import type { PromptAssembly } from '@x1a0f3n9/dsh-system-prompt'
+import type {} from '@x1a0f3n9/dsh-session-projection'
 import type { Context } from '@deepseek-ai/cordis'
 import { ReactLoopInbox } from './inbox.ts'
 import { RuntimeContextProjection } from './runtime-context.ts'
@@ -242,6 +242,9 @@ export class ReactLoopAgent implements Agent {
     if (this.phase.kind !== 'running') throw new Error(`agent "${this.id}": pre-step outside running phase`)
     const signal = this.phase.abort.signal
     const claimed = this.inbox.claim(target, position.turn)
+    // Flush running status and turn/start before assemble's synchronous prefix.
+    await new Promise<void>((resolve) => { setImmediate(resolve) })
+    signal.throwIfAborted()
     const assembly = await this.loopCtx.systemPrompt.assemble(assembleContextFor(this, signal))
     signal.throwIfAborted()
     const sections = renderContextSections(assembly)

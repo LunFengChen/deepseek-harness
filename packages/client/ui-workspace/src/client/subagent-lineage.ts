@@ -1,6 +1,6 @@
 /** UI Workspace-owned projection of descendant counts from Session summaries. */
 
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 
 interface LineageEntry {
   readonly id: SessionId

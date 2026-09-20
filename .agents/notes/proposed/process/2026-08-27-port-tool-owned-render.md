@@ -6,7 +6,7 @@ English | [中文](2026-08-27-port-tool-owned-render.zh.md)
 
 ## Problem
 
-The `dsh-tool-owned-render` prototype (`Chinesezjc/dsh-tool-owned-render`) ships tool-owned render registrants for `read`, `bash`, `write`/`edit`, `grep`/`glob`, and `web_search`/`web_fetch`, written against an older API where `ToolCallBlock` exposed `callView` / `resultView` and the client received host `presentResult` output. Current master derives client cards from raw `block.call` / `block.content` / `block.meta`, and `ctx.slots` requires the `@deepseek-ai/dsh-client-ui-renderer/client` module augmentation. A direct merge of the prototype does not typecheck, so its registrants cannot ship without a port.
+The `dsh-tool-owned-render` prototype (`Chinesezjc/dsh-tool-owned-render`) ships tool-owned render registrants for `read`, `bash`, `write`/`edit`, `grep`/`glob`, and `web_search`/`web_fetch`, written against an older API where `ToolCallBlock` exposed `callView` / `resultView` and the client received host `presentResult` output. Current master derives client cards from raw `block.call` / `block.content` / `block.meta`, and `ctx.slots` requires the `@x1a0f3n9/dsh-client-ui-renderer/client` module augmentation. A direct merge of the prototype does not typecheck, so its registrants cannot ship without a port.
 
 ## Proposal
 

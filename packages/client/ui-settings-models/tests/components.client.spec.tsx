@@ -3,11 +3,11 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Schema from '@deepseek-ai/schemastery'
-import { bindSnapshotSelector, RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
+import { bindSnapshotSelector, RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import type {
   CredentialInfo, RemoteResult, SettingsNamespaceView,
-} from '@deepseek-ai/dsh-api-remotes/client'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+} from '@x1a0f3n9/dsh-api-remotes/client'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import {
   ModelsSection, needsSetup, providerCopy, providerTargetLabel, removeProviderProfile,
 } from '../src/client/ModelsSection.tsx'
@@ -17,13 +17,13 @@ import {
   DeepSeekModelsEditor, formatCapacity, modelDrafts, parseCapacity, validateDeepSeekModels,
 } from '../src/client/DeepSeekModelsEditor.tsx'
 import { apiKeyFailure } from '../src/client/apiKey.ts'
-import { SettingsDescribeMirror } from '@deepseek-ai/dsh-client-ui-settings/src/client/settings-mirror.ts'
+import { SettingsDescribeMirror } from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
 import { deriveKeyRef, ModelsSettingsStore } from '../src/client/store.ts'
 import { createModelsOperations } from '../src/client/operations.ts'
 import type { ModelsOperations } from '../src/client/operations.ts'
 import type { ProviderRow } from '../src/client/store.ts'
 import { en } from '../src/client/locales.ts'
-import { settingsSchema } from './settings-schema.client.ts'
+import { RetryPolicyConfig, settingsSchema } from './settings-schema.client.ts'
 
 afterEach(cleanup)
 
@@ -49,6 +49,7 @@ const PiAiConfig = Schema.object({
     baseURL: Schema.string(),
     reasoning: Schema.union(['off', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max']),
     headers: Schema.dict(Schema.string()),
+    retryPolicy: RetryPolicyConfig,
   })),
 })
 
@@ -56,12 +57,14 @@ const DeepSeekConfig = Schema.object({
   apiKeyEnv: Schema.string().role('credential-ref'),
   baseURL: Schema.string().pattern(/^https:\/\//),
   reasoningEffort: Schema.union(['off', 'low', 'high', 'max']),
+  retryPolicy: RetryPolicyConfig,
   defaultContextWindow: Schema.number().step(1).min(1),
   models: Schema.array(Schema.object({
     id: Schema.string().required(),
     name: Schema.string(),
     description: Schema.string(),
     contextWindow: Schema.number().step(1).min(1),
+    inputModalities: Schema.array(Schema.string()),
   // The adapter declares its catalog as a schema default rather than a
   // composition entry, which is what the restore-defaults path has to read.
   })).default([
@@ -70,12 +73,14 @@ const DeepSeekConfig = Schema.object({
       name: 'DeepSeek-V4-Flash',
       description: '',
       contextWindow: 1_000_000,
+      inputModalities: [],
     },
     {
       id: 'deepseek-v4-pro',
       name: 'DeepSeek-V4-Pro',
       description: '',
       contextWindow: 1_000_000,
+      inputModalities: [],
     },
   ]),
 })
@@ -610,6 +615,59 @@ describe('ModelsSection', () => {
     expect(onClose).toHaveBeenCalledWith(true)
   })
 
+  it('writes a custom retry policy as a path op and omits the adapter default', async () => {
+    const { mutate } = await mountDeepSeekCard({
+      mutate: vi.fn(() => Promise.resolve(remoteOk(wireNamespaces()[0]))),
+    })
+    fireEvent.click(screen.getByText(en.customized))
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
+    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '3' } })
+    fireEvent.change(screen.getByLabelText(en.retryInitialDelay), { target: { value: '250' } })
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    expect(mutate.mock.calls[0]).toEqual([
+      'llm-deepseek',
+      [{
+        op: 'set',
+        path: ['retryPolicy'],
+        value: {
+          mode: 'normal',
+          maxRetries: 3,
+          backoff: { initialDelayMs: 250, maxDelayMs: 10_000 },
+        },
+      }],
+      0,
+    ])
+  })
+
+  it('unsets retryPolicy when returning from Custom to Default', async () => {
+    const { mutate } = await mountDeepSeekCard({
+      mutate: vi.fn(() => Promise.resolve(remoteOk(wireNamespaces()[0]))),
+    })
+    fireEvent.click(screen.getByText(en.customized))
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyNone }))
+    fireEvent.change(screen.getByLabelText<HTMLInputElement>(en.baseUrl), { target: { value: 'https://next2' } })
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    expect(mutate.mock.calls[0]).toEqual([
+      'llm-deepseek',
+      [{ op: 'set', path: ['baseURL'], value: 'https://next2' }],
+      0,
+    ])
+  })
+
+  it('disables Apply when a custom retry count is blank', async () => {
+    const { mutate } = await mountDeepSeekCard()
+    fireEvent.click(screen.getByText(en.customized))
+    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
+    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '' } })
+    expect((screen.getByRole('button', { name: en.apply }) as HTMLButtonElement).disabled).toBe(true)
+    fireEvent.click(screen.getByText(en.apply))
+    expect(mutate).not.toHaveBeenCalled()
+    expect(screen.getByText(en.retryCountInvalid)).toBeTruthy()
+  })
+
   it('applies customized deepseek fields as path ops', async () => {
     const { mutate } = await mountDeepSeekCard({
       mutate: vi.fn(() => Promise.resolve(remoteOk(wireNamespaces()[0]))),
@@ -699,6 +757,16 @@ describe('ModelsSection', () => {
     expect(validateDeepSeekModels([{ id: 'model', maxTokens: 0 }]))
       .toEqual({ index: 0, key: 'modelMaxTokensInvalid' })
     expect(validateDeepSeekModels([{ id: 'model', maxTokens: 8192 }])).toBeUndefined()
+    expect(validateDeepSeekModels([{ id: 'model', reasoningEfforts: false }])).toBeUndefined()
+    expect(validateDeepSeekModels([{ id: 'model', reasoningEfforts: {} }]))
+      .toEqual({ index: 0, key: 'modelReasoningEmpty' })
+    expect(validateDeepSeekModels([{ id: 'model', reasoningEfforts: { off: null } }]))
+      .toEqual({ index: 0, key: 'modelReasoningEmpty' })
+    expect(validateDeepSeekModels([{ id: 'model', reasoningEfforts: { high: '' } }]))
+      .toEqual({ index: 0, key: 'modelReasoningWireRequired' })
+    expect(validateDeepSeekModels([{ id: 'model', reasoningEfforts: { high: 'high' } }])).toBeUndefined()
+    expect(validateDeepSeekModels([{ id: 'model', reasoningEfforts: { off: null, high: 'xhigh' } }]))
+      .toBeUndefined()
   })
 
   it('reads context windows written as counts, thousands, or millions', () => {
@@ -979,6 +1047,42 @@ describe('ModelsSection', () => {
       .toBe(en.contextWindowPlaceholder)
     expect(screen.getByLabelText<HTMLInputElement>(`${en.maxTokens} 1`).placeholder)
       .toBe(en.maxTokensPlaceholder)
+  })
+
+  it('writes inputModalities [text, image] from the Supports images switch', async () => {
+    const { mutate } = await mountDeepSeekCard({
+      mutate: vi.fn(() => Promise.resolve(remoteOk(wireNamespaces()[0]))),
+    })
+    fireEvent.click(screen.getByText(en.customized))
+    expandRow(1)
+    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
+    expect(imageSwitch.getAttribute('aria-checked')).toBe('false')
+    fireEvent.click(imageSwitch)
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    const models = (mutate.mock.calls[0] as [string, { op: string; path: string[]; value?: unknown }[]])[1]
+      .find(op => op.path[0] === 'models')?.value as Record<string, unknown>[]
+    expect(models[0]).toMatchObject({
+      id: 'deepseek-v4-flash',
+      inputModalities: ['text', 'image'],
+    })
+  })
+
+  it('drops inputModalities when the Supports images switch is turned off', () => {
+    const onChange = vi.fn()
+    render(<DeepSeekModelsEditor
+      models={[{ id: 'flash', inputModalities: ['text', 'image'] }]}
+      overridden={true}
+      defaultContextWindow={undefined}
+      defaultMaxTokens={undefined}
+      t={t}
+      disabled={false}
+      onChange={onChange}
+      onReset={vi.fn()}
+    />)
+    expandRow(1)
+    fireEvent.click(screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` }))
+    expect(onChange).toHaveBeenCalledWith([{ id: 'flash' }])
   })
 
   it('can empty and reset the model override, then clear optional fields without dropping hidden data', async () => {

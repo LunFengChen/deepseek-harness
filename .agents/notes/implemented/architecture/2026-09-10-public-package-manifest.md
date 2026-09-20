@@ -24,7 +24,7 @@ Each consumer owns JSON parsing, field validation, default resolution, and adapt
 
 **Put DSH compatibility under `dsh.engines`.** [VS Code](https://code.visualstudio.com/api/references/extension-manifest) places its host requirement in top-level `engines.vscode`. Top-level `engines.dsh` gives authors one location for runtime requirements; DSH still owns enforcement of its custom key.
 
-**Use peer dependencies as the sole host requirement.** Peer dependencies constrain installed npm packages, including the CLI package `@deepseek-ai/dsh`. They do not identify the currently running DSH process when plugins live in a separate profile project.
+**Use peer dependencies as the sole host requirement.** Peer dependencies constrain installed npm packages, including the CLI package `@x1a0f3n9/dsh`. They do not identify the currently running DSH process when plugins live in a separate profile project.
 
 **Parse every domain through one mandatory parser.** Existing readers consume different subsets and own different errors and defaults. Combining them would make a client reader validate unrelated profile declarations. The public types remain independent of filesystem access and parsing policy.
 

@@ -3,7 +3,7 @@ description: "The standalone str_replace_editor tool over ctx.fs for users and m
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-str-replace-editor
+# @x1a0f3n9/dsh-tool-str-replace-editor
 
 English | [中文](README.zh.md)
 
@@ -32,9 +32,9 @@ Mount the tool alongside a `ctx.fs` backend (and, for guarded mutations, the pol
 A backend, optionally the policy plugin, then the tool; the editor composes with any terminal surface.
 
 ```yaml
-- name: '@deepseek-ai/dsh-fs-local'
-- name: '@deepseek-ai/dsh-fs-observation-policy'
-- name: '@deepseek-ai/dsh-tool-str-replace-editor'
+- name: '@x1a0f3n9/dsh-fs-local'
+- name: '@x1a0f3n9/dsh-fs-observation-policy'
+- name: '@x1a0f3n9/dsh-tool-str-replace-editor'
 ```
 
 ### Configuration

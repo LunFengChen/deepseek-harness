@@ -3,7 +3,7 @@ description: "Workspace-authorized model-facing session history tools for agent 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-session-query
+# @x1a0f3n9/dsh-tool-session-query
 
 English | [中文](README.zh.md)
 
@@ -54,7 +54,7 @@ Workspace authority is conservative: cross-session access requires exact `cwd` e
 
 ### Failures and recovery
 
-Every trusted query-service call crosses one error sanitizer: caller cancellation is preserved exactly, corpus and provider diagnostics go to the internal log, and unsafe or unprintable failures fall back to the fixed `SESSION_QUERY_TOOL_FAILED` code and message. Local argument-validation and authorization errors keep their precise tool-owned messages (`SESSION_QUERY_TOOL_UNAUTHORIZED` for a target outside the caller workspace). The package performs no byte or character truncation and does not import a spill backend; deployments that need bounded inline output mount `@deepseek-ai/dsh-spill-policy`, which can replace oversized rendered text while retaining the complete result.
+Every trusted query-service call crosses one error sanitizer: caller cancellation is preserved exactly, corpus and provider diagnostics go to the internal log, and unsafe or unprintable failures fall back to the fixed `SESSION_QUERY_TOOL_FAILED` code and message. Local argument-validation and authorization errors keep their precise tool-owned messages (`SESSION_QUERY_TOOL_UNAUTHORIZED` for a target outside the caller workspace). The package performs no byte or character truncation and does not import a spill backend; deployments that need bounded inline output mount `@x1a0f3n9/dsh-spill-policy`, which can replace oversized rendered text while retaining the complete result.
 
 -----
 

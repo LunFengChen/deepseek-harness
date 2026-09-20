@@ -1,8 +1,8 @@
 /** Slot-owned tab information derived from framework-bound store and navigation hooks. */
 import { useMemo } from 'react'
-import { findTabPane } from '@deepseek-ai/dsh-client-ui-dockkit'
-import type { TabId } from '@deepseek-ai/dsh-client-ui-dockkit'
-import type { KeyedSnapshotSelectorHook, PropsStore, SlotHookFactory } from '@deepseek-ai/dsh-client-ui-slots'
+import { findTabPane } from '@x1a0f3n9/dsh-client-ui-dockkit'
+import type { TabId } from '@x1a0f3n9/dsh-client-ui-dockkit'
+import type { KeyedSnapshotSelectorHook, PropsStore, SlotHookFactory } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { SidebarRightTabActions, SidebarRightTabNavigation, UseSidebarRightTabInfo } from './contract/slots.ts'
 import type { createSidebarRightStore } from './stores.ts'
 

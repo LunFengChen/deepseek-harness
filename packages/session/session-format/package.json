@@ -1,7 +1,7 @@
 {
-  "name": "@deepseek-ai/dsh-session-format",
+  "name": "@x1a0f3n9/dsh-session-format",
   "description": "Streaming adjacent Session format migration machinery",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.5-rc.5",
   "publishConfig": {
     "access": "public"
   },
@@ -27,7 +27,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@deepseek-ai/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^"

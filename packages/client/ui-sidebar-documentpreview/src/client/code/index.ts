@@ -5,7 +5,7 @@ import { CodeBody } from './CodeBody.tsx'
 import { CODE_EXTENSIONS } from './languages.ts'
 import { en, zh } from './locales.ts'
 
-const ID = '@deepseek-ai/dsh-client-ui-sidebar-documentpreview/code'
+const ID = '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/code'
 const NS = 'sidebarCodePreview'
 
 /** @param ctx - owning plugin context. Register localized metadata and the matching keyed document body. */

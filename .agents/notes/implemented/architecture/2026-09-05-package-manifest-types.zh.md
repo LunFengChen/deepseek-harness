@@ -10,7 +10,7 @@ Status: implemented
 
 ## 决策
 
-[`@deepseek-ai/dsh-package-manifest`](../../../../packages/util/package-manifest/README.zh.md) 在一个纯类型文件中拥有 `DshManifest` 及其成员声明。本包属于现有工具库分组，不导出运行时值。[公共包元数据决策](2026-09-10-public-package-manifest.zh.md) 拥有公共字段范围及其与内部工具元数据的划分。
+[`@x1a0f3n9/dsh-package-manifest`](../../../../packages/util/package-manifest/README.zh.md) 在一个纯类型文件中拥有 `DshManifest` 及其成员声明。本包属于现有工具库分组，不导出运行时值。[公共包元数据决策](2026-09-10-public-package-manifest.zh.md) 拥有公共字段范围及其与内部工具元数据的划分。
 
 各读取方直接导入共享声明。启动器保留 profile 加载、原始 JSON 检查、默认值和解析后的运行时数据。客户端模块保留归一化的启动图。镜像打包器将声明路径解析为目录。Session 目录生成器派生带有已解析导入路径的只读校验结果；原始输入和发现规则仍由本地负责。
 

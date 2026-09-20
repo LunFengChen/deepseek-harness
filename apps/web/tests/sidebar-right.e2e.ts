@@ -23,7 +23,7 @@ import { fileURLToPath } from 'node:url'
 import type { Browser, ConsoleMessage, Locator, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
-import { createMessage, createUserMessage } from '@deepseek-ai/dsh-llm'
+import { createMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
 import { launchWebScaffold, watchConsole, type WebScaffold } from './scaffold.ts'
 import {
   connectFreshWorkspace, newEnglishPage, saveFailureShot, ZH_BROWSER_LOCALE,

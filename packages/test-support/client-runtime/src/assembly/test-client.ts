@@ -2,15 +2,15 @@
  * Whole-client test carrier: boots an {@link AssemblyPlan} through the
  * production `bootClient` over an in-process module table, with a
  * `RemoteMock` installed as the Connection carrier through `__DSH_TRANSPORT__.rpc`.
- * @module @deepseek-ai/dsh-client-test-runtime/src/assembly/test-client
+ * @module @x1a0f3n9/dsh-client-test-runtime/src/assembly/test-client
  */
 import { Context, type Plugin } from '@deepseek-ai/cordis'
 import type { Entry } from '@deepseek-ai/cordis-plugin-loader'
-import { tearDownEntryFiber } from '@deepseek-ai/dsh-client-hmr/client'
-import type { ClientTransportHooks, ConnectionHandle } from '@deepseek-ai/dsh-client-connection/client'
-import { bootClient } from '@deepseek-ai/dsh-client-web/src/boot-client.ts'
-import { mountClient } from '@deepseek-ai/dsh-client-web/src/mount.ts'
-import type { RemoteMock } from '@deepseek-ai/dsh-remote-mock'
+import { tearDownEntryFiber } from '@x1a0f3n9/dsh-client-hmr/client'
+import type { ClientTransportHooks, ConnectionHandle } from '@x1a0f3n9/dsh-client-connection/client'
+import { bootClient } from '@x1a0f3n9/dsh-client-web/src/boot-client.ts'
+import { mountClient } from '@x1a0f3n9/dsh-client-web/src/mount.ts'
+import type { RemoteMock } from '@x1a0f3n9/dsh-remote-mock'
 import { act } from '@testing-library/react'
 import { createInProcessModules, loadPluginModules } from './modules.ts'
 import { assertPlan, graphFromRoster, type AssemblyPlan } from './roster.ts'
@@ -197,7 +197,7 @@ export class TestClient {
    * Load the roster's modules, then, holding this worker's boot turn, install
    * the mock as the Connection carrier and the jsdom shims and boot through
    * `bootClient` over the synthesized boot graph; afterwards optionally mount
-   * and wait for the connection. The `@deepseek-ai/dsh-api-remotes` row is
+   * and wait for the connection. The `@x1a0f3n9/dsh-api-remotes` row is
    * dropped from the roster: its generated Remote clients exist only in built
    * `lib/`, and the `remote.<ns>` services the roster injects (plus the
    * namespaces the mock has rules for at this point) are provided as

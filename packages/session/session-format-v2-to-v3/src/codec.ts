@@ -1,13 +1,13 @@
 /** V3 framing with hard structural admission and recoverable canonical event validation. */
 
-import { SessionFormatError, isSessionFormatJsonObject, snapshotSessionFormatJson } from '@deepseek-ai/dsh-session-format'
+import { SessionFormatError, isSessionFormatJsonObject, snapshotSessionFormatJson } from '@x1a0f3n9/dsh-session-format'
 import type {
   SessionFormatCodec,
   SessionFormatCurrentEncoder,
   SessionFormatEvent,
   SessionFormatHeader,
-} from '@deepseek-ai/dsh-session-format'
-import { releasedV2SessionFormatCodec } from '@deepseek-ai/dsh-session-format-v1-to-v2'
+} from '@x1a0f3n9/dsh-session-format'
+import { releasedV2SessionFormatCodec } from '@x1a0f3n9/dsh-session-format-v1-to-v2'
 import { assertReleasedV3Header, assertV3EventAdmission } from './validation.ts'
 import { assertV3Event, assertV3StructuralRow } from './payload.ts'
 

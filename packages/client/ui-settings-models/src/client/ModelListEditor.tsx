@@ -16,12 +16,22 @@
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import type { LlmDiscoveredModel } from '@deepseek-ai/dsh-api-remotes/client'
-import { Button, Modal } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { LlmDiscoveredModel } from '@x1a0f3n9/dsh-api-remotes/client'
+import {
+  Button, IconChevronDownOutline14, IconChevronRightOutline14, IconTrashOutline16, Modal, Switch,
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import { IMAGE_INPUT, acceptsImages, withImageInput } from './image-input.ts'
 import { formatCapacity, parseCapacity } from './DeepSeekModelsEditor.tsx'
 import type { ModelsOperations } from './operations.ts'
 import type { DeepSeekModelDraft } from './DeepSeekModelsEditor.tsx'
 import type { en } from './locales.ts'
+import {
+  REASONING_EFFORT_LEVELS,
+  hasCustomReasoningEfforts,
+  reasoningEffortsMap,
+  validateReasoningEfforts,
+} from './reasoning-efforts.ts'
+import type { ReasoningEffortLevel, ReasoningEffortsMap } from './reasoning-efforts.ts'
 import styles from './ModelsSection.module.css'
 
 /**
@@ -87,30 +97,6 @@ export interface ModelListEditorProps {
   disabled: boolean
 }
 
-/** Disclosure chevron; rotates to point down while its row is open. */
-function IconChevron({ open }: { open: boolean }): ReactNode {
-  return (
-    <svg
-      width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden
-      style={{ transform: open ? 'rotate(90deg)' : undefined, transition: 'transform 120ms ease' }}
-    >
-      <path d="M6 3.5L10.5 8L6 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-/** Removal glyph for one model row. */
-function IconTrash(): ReactNode {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path
-        d="M2.5 4h11M6.5 4V2.5h3V4M4 4l.7 9a1 1 0 001 .9h4.6a1 1 0 001-.9L12 4M6.5 6.8v4.4M9.5 6.8v4.4"
-        stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 /** The two token counts edited as K/M-suffixed text behind a row's disclosure. */
 type CapacityField = 'contextWindow' | 'maxTokens'
 
@@ -148,7 +134,14 @@ function adopt(candidate: LlmDiscoveredModel): ModelDraft {
     ...candidate.name === undefined ? {} : { name: candidate.name },
     ...candidate.contextWindow === undefined ? {} : { contextWindow: candidate.contextWindow },
     ...candidate.maxTokens === undefined ? {} : { maxTokens: candidate.maxTokens },
+    ...acceptsImages(candidate.inputModalities) ? { input: [...IMAGE_INPUT] } : {},
   }
+}
+
+/** Row-local copy for a custom reasoning map the adapter will refuse. */
+function reasoningFailureCopy(model: ModelDraft, t: ModelListEditorProps['t']): ReactNode {
+  const reasoning = validateReasoningEfforts(model['reasoningEfforts'])
+  return reasoning === undefined ? null : <p className={styles['error']}>{t(reasoning)}</p>
 }
 
 /**
@@ -173,6 +166,15 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
   // FIELD: a single buffer would be displaced by editing any other field, and
   // the abandoned one would render its stored NaN as the literal `NaN`.
   const [editing, setEditing] = useState<ReadonlyMap<string, string>>(new Map())
+  // Custom is a radio choice, not the stored map: a row can be Custom with
+  // every level still unchecked, and that must not look like Default (none).
+  const [customizing, setCustomizing] = useState<ReadonlySet<number>>(() => new Set(
+    models.flatMap((model, index) => {
+      const value = model['reasoningEfforts']
+      if (hasCustomReasoningEfforts(value)) return [index]
+      return typeof value === 'object' && value !== null && !Array.isArray(value) ? [index] : []
+    }),
+  ))
 
   /** Buffer key for one capacity field; the row half moves when rows do. */
   const bufferKey = (index: number, field: CapacityField): string => `${String(index)}:${field}`
@@ -224,6 +226,45 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
         Object.entries({ ...model, ...next }).filter(([key]) => !cleared.has(key)),
       )
     }))
+  }
+
+  const setImageInput = (index: number, enabled: boolean): void => {
+    onChange(models.map((model, at) => at === index ? withImageInput(model, 'input', enabled) : model))
+  }
+
+  const setEfforts = (index: number, efforts: ReasoningEffortsMap | undefined): void => {
+    const stored = efforts === undefined || Object.keys(efforts).length === 0 ? undefined : efforts
+    onChange(models.map((model, at) => {
+      if (at !== index) return model
+      const copy = { ...model }
+      if (stored === undefined) Reflect.deleteProperty(copy, 'reasoningEfforts')
+      else copy['reasoningEfforts'] = stored
+      return copy
+    }))
+  }
+
+  const setCustomMode = (index: number, custom: boolean): void => {
+    setCustomizing((current) => {
+      const next = new Set(current)
+      if (custom) next.add(index)
+      else next.delete(index)
+      return next
+    })
+    if (!custom) setEfforts(index, undefined)
+  }
+
+  const toggleLevel = (index: number, model: ModelDraft, level: ReasoningEffortLevel, checked: boolean): void => {
+    const current = { ...reasoningEffortsMap(model['reasoningEfforts']) ?? {} }
+    if (checked) current[level] = level === 'off' ? null : level
+    else Reflect.deleteProperty(current, level)
+    setEfforts(index, current)
+  }
+
+  const editWire = (index: number, model: ModelDraft, level: ReasoningEffortLevel, text: string): void => {
+    const current = { ...reasoningEffortsMap(model['reasoningEfforts']) ?? {} }
+    const trimmed = text.trim()
+    current[level] = trimmed.length === 0 ? (level === 'off' ? null : '') : trimmed
+    setEfforts(index, current)
   }
 
   const fetchModels = async (): Promise<void> => {
@@ -376,7 +417,7 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
               title={t('modelAdvanced')}
               onClick={() => { toggleExpanded(index) }}
             >
-              <IconChevron open={expanded.has(index)} />
+              {expanded.has(index) ? <IconChevronDownOutline14 /> : <IconChevronRightOutline14 />}
             </button>
             <button
               type="button"
@@ -398,15 +439,32 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
                   }
                   return next
                 })
+                setCustomizing((current) => {
+                  const next = new Set<number>()
+                  for (const at of current) {
+                    if (at < index) next.add(at)
+                    else if (at > index) next.add(at - 1)
+                  }
+                  return next
+                })
                 setEditing(current => reindexOnRemove(current, index))
               }}
             >
-              <IconTrash />
+              <IconTrashOutline16 size={14} />
             </button>
           </div>
           {expanded.has(index)
             ? (
               <div className={styles['modelAdvanced']}>
+                <div className={styles['modelImageInput']}>
+                  <span className={styles['modelFieldLabel']}>{t('modelSupportsImages')}</span>
+                  <Switch
+                    checked={acceptsImages(model['input'])}
+                    label={`${t('modelSupportsImages')} ${index + 1}`}
+                    disabled={disabled}
+                    onChange={(next) => { setImageInput(index, next) }}
+                  />
+                </div>
                 <label className={styles['modelField']}>
                   <span className={styles['modelFieldLabel']}>{t('modelContextWindow')}</span>
                   <input
@@ -433,6 +491,66 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
                     onChange={(event) => { editCapacity(index, 'maxTokens', event.target.value) }}
                   />
                 </label>
+                <fieldset className={styles['modelReasoning']}>
+                  <legend className={styles['modelFieldLabel']}>{t('reasoningEffort')}</legend>
+                  <div className={styles['modelReasoningModes']} role="radiogroup" aria-label={`${t('reasoningEffort')} ${index + 1}`}>
+                    <label className={styles['modelReasoningMode']}>
+                      <input
+                        type="radio"
+                        name={`reasoning-effort-${String(index)}`}
+                        checked={!customizing.has(index)}
+                        disabled={disabled}
+                        onChange={() => { setCustomMode(index, false) }}
+                      />
+                      {t('reasoningEffortNone')}
+                    </label>
+                    <label className={styles['modelReasoningMode']}>
+                      <input
+                        type="radio"
+                        name={`reasoning-effort-${String(index)}`}
+                        checked={customizing.has(index)}
+                        disabled={disabled}
+                        onChange={() => { setCustomMode(index, true) }}
+                      />
+                      {t('reasoningEffortCustom')}
+                    </label>
+                  </div>
+                  {customizing.has(index)
+                    ? (
+                      <div className={styles['modelReasoningLevels']}>
+                        {REASONING_EFFORT_LEVELS.map((level) => {
+                          const efforts = reasoningEffortsMap(model['reasoningEfforts']) ?? {}
+                          const checked = Object.hasOwn(efforts, level)
+                          const wire = efforts[level]
+                          return (
+                            <div key={level} className={styles['modelReasoningLevel']}>
+                              <label className={styles['modelReasoningLevelLabel']}>
+                                <input
+                                  type="checkbox"
+                                  checked={checked}
+                                  disabled={disabled}
+                                  aria-label={`${t('reasoningEffort')} ${level} ${index + 1}`}
+                                  onChange={(event) => { toggleLevel(index, model, level, event.target.checked) }}
+                                />
+                                {level}
+                              </label>
+                              <input
+                                className={styles['input']}
+                                type="text"
+                                value={wire === undefined || wire === null ? '' : wire}
+                                placeholder={t('reasoningEffortWire')}
+                                aria-label={`${t('reasoningEffortWire')} ${level} ${index + 1}`}
+                                disabled={disabled || !checked}
+                                onChange={(event) => { editWire(index, model, level, event.target.value) }}
+                              />
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )
+                    : null}
+                  {reasoningFailureCopy(model, t)}
+                </fieldset>
               </div>
             )
             : null}

@@ -5,9 +5,9 @@ import {
   createSystemMessage,
   createToolResultMessage,
   createUserMessage,
-} from '@deepseek-ai/dsh-llm/message'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { MessageId, ToolCallId } from '@deepseek-ai/dsh-llm/brand'
+} from '@x1a0f3n9/dsh-llm/message'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type { MessageId, ToolCallId } from '@x1a0f3n9/dsh-llm/brand'
 import type {
   AssistantMessage,
   ContentBlock,
@@ -16,30 +16,30 @@ import type {
   TokenUsage,
   ToolResultMessage,
   UserMessage,
-} from '@deepseek-ai/dsh-llm'
-import { LlmAttemptId } from '@deepseek-ai/dsh-llm/brand'
+} from '@x1a0f3n9/dsh-llm'
+import { LlmAttemptId } from '@x1a0f3n9/dsh-llm/brand'
 import {
   AssistantStreamAccumulator,
   expandAssistantStream,
   type AssistantStreamRecord,
-} from '@deepseek-ai/dsh-llm/assistant-stream'
-import type { AttachmentIdType, ImageAttachmentRef } from '@deepseek-ai/dsh-attachment'
+} from '@x1a0f3n9/dsh-llm/assistant-stream'
+import type { AttachmentIdType, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
 import type {
   SessionEvent,
   SessionId,
   SessionSeqCursor,
-} from '@deepseek-ai/dsh-session/types'
-import { SESSION_FORMAT_VERSION, SessionSeq } from '@deepseek-ai/dsh-session/types'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
-import type { TodoItem } from '@deepseek-ai/dsh-tool-todo/client'
+} from '@x1a0f3n9/dsh-session/types'
+import { SESSION_FORMAT_VERSION, SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
+import type { TodoItem } from '@x1a0f3n9/dsh-tool-todo/client'
 // Type-only: the brand constructor is host-side; the fixture casts at its
 // wire-fabrication boundary (the schema layer's one-cast-point posture).
-import type { CommandDefinitionId, CommandId } from '@deepseek-ai/dsh-commands/brand'
-import type { CommandDescriptor, CommandExecution, CommandResult } from '@deepseek-ai/dsh-commands/types'
-import type { CredentialInfo } from '@deepseek-ai/dsh-credentials/types'
-import type { DirectoryListing as FixtureDirectoryListing } from '@deepseek-ai/dsh-host-directory-picker/types'
-import type { SettingsDescribeValue, SettingsNamespaceView } from '@deepseek-ai/dsh-settings/types'
-import { deriveEventMessage, foldSurface } from '@deepseek-ai/dsh-session/surface'
+import type { CommandDefinitionId, CommandId } from '@x1a0f3n9/dsh-commands/brand'
+import type { CommandDescriptor, CommandExecution, CommandResult } from '@x1a0f3n9/dsh-commands/types'
+import type { CredentialInfo } from '@x1a0f3n9/dsh-credentials/types'
+import type { DirectoryListing as FixtureDirectoryListing } from '@x1a0f3n9/dsh-host-directory-picker/types'
+import type { SettingsDescribeValue, SettingsNamespaceView } from '@x1a0f3n9/dsh-settings/types'
+import { deriveEventMessage, foldSurface } from '@x1a0f3n9/dsh-session/surface'
 import type { RpcResult } from './api.ts'
 import { randomUuid } from './random-uuid.ts'
 import type {
@@ -727,7 +727,7 @@ function buildAlphaLog(): SessionEvent[] {
     if (turn === 0) {
       push({
         type: 'system/message', surfaceOp: 'append',
-        data: { turn, step: 0, message: createSystemMessage(FIXTURE_SYSTEM_PROMPT, '@deepseek-ai/dsh-system-prompt') },
+        data: { turn, step: 0, message: createSystemMessage(FIXTURE_SYSTEM_PROMPT, '@x1a0f3n9/dsh-system-prompt') },
       })
     }
     const userSeq = push({
@@ -1971,9 +1971,9 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
    * roster a GUI journey sees after writing is the text it wrote.
    */
   const fixturePresets = new Map<string, { trust: 'system' | 'user'; content: string }>([
-    ['standard', { trust: 'system', content: "- id: tool-bash\n  name: '@deepseek-ai/dsh-tool-bash'\n" }],
-    ['minimal', { trust: 'system', content: "- id: tool-web-search\n  name: '@deepseek-ai/dsh-tool-web-search'\n" }],
-    ['my-agent', { trust: 'user', content: "- id: tool-read\n  name: '@deepseek-ai/dsh-tool-read'\n" }],
+    ['standard', { trust: 'system', content: "- id: tool-bash\n  name: '@x1a0f3n9/dsh-tool-bash'\n" }],
+    ['minimal', { trust: 'system', content: "- id: tool-web-search\n  name: '@x1a0f3n9/dsh-tool-web-search'\n" }],
+    ['my-agent', { trust: 'user', content: "- id: tool-read\n  name: '@x1a0f3n9/dsh-tool-read'\n" }],
   ])
   let fixtureDefaultPreset = 'standard'
   const nextTurn = new Map<SessionId, number>([[sid('fx-alpha'), 75]])
@@ -2262,9 +2262,9 @@ function createFixtureWorld(options: FixtureOptions): FixtureWorld {
         value: [
           { name: 'compact', description: 'fixture：压缩当前会话上下文' },
           { name: 'echo', description: 'fixture：回显参数', input: { hint: 'text to echo' } },
-          { definitionId: brandString<CommandDefinitionId>('@deepseek-ai/dsh-command-goal'), name: 'goal', description: 'Set or view the goal for a long-running task', input: { hint: '<objective>', attachments: true } },
-          { definitionId: brandString<CommandDefinitionId>('@deepseek-ai/dsh-permission-presets'), name: 'permission', description: 'Switch the permission preset (sandbox mode + approval policy)', input: { hint: '<preset>' } },
-          { definitionId: brandString<CommandDefinitionId>('@deepseek-ai/dsh-plan-mode'), name: 'plan', description: 'Enter or leave plan mode', input: { hint: '[off|message]', attachments: true } },
+          { definitionId: brandString<CommandDefinitionId>('@x1a0f3n9/dsh-command-goal'), name: 'goal', description: 'Set or view the goal for a long-running task', input: { hint: '<objective>', attachments: true } },
+          { definitionId: brandString<CommandDefinitionId>('@x1a0f3n9/dsh-permission-presets'), name: 'permission', description: 'Switch the permission preset (sandbox mode + approval policy)', input: { hint: '<preset>' } },
+          { definitionId: brandString<CommandDefinitionId>('@x1a0f3n9/dsh-plan-mode'), name: 'plan', description: 'Enter or leave plan mode', input: { hint: '[off|message]', attachments: true } },
         ],
       }
     },

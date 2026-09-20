@@ -35,12 +35,12 @@ Time-based `/loop` or scheduled execution is a third policy and is not implement
 
 | Package | Repository category | Owned structures and verbs |
 |---|---|---|
-| `@deepseek-ai/dsh-goal` | `packages/goal/goal/`, domain service | Owns `GoalId`, compare-and-set `GoalRef`, `GoalSnapshot`, four-state `GoalPhase`, structured `GoalBlockReason`, process-local `GoalActivation`, replay folding, and `get`, `create`, `edit`, `pause`, `resume`, `complete`, `block`, `clear`, and `disarm` verbs. |
-| `@deepseek-ai/dsh-tool-goal` | `packages/goal/tool-goal/`, model-facing consumer | Registers exclusive `get_goal`, `create_goal`, and `update_goal`; requires a direct human message in a live root-agent turn and narrows autonomous-round authority to completion or blocking reports with machine-routable reason codes. |
-| `@deepseek-ai/dsh-goal-round-driver` | `packages/goal/goal-round-driver/`, continuation policy | Reserves, fences, admits, attributes, settles, cancels, and quiescently drains same-session goal rounds without importing the concrete loop. |
-| `@deepseek-ai/dsh-commands` | `packages/interaction/commands/`, UI registry | Owns `CommandDefinition`, discovery, scoped registration, direct dispatch, `CommandResult`, and request cancellation for human-only commands. |
-| `@deepseek-ai/dsh-command-goal` | `packages/goal/command-goal/`, human-command producer | Registers `/goal` status, creation, edit, pause, resume, and clear over the goal domain for TUI. |
-| `@deepseek-ai/dsh-tool-ralph` | `packages/workflow/tool-ralph/`, fixed workflow consumer | Registers `ralph({ objective, maxRounds? })`, validates the fresh structured provider and bounded `RalphRoundReport`, and returns `complete`, `blocked`, or `budget-limited`. |
+| `@x1a0f3n9/dsh-goal` | `packages/goal/goal/`, domain service | Owns `GoalId`, compare-and-set `GoalRef`, `GoalSnapshot`, four-state `GoalPhase`, structured `GoalBlockReason`, process-local `GoalActivation`, replay folding, and `get`, `create`, `edit`, `pause`, `resume`, `complete`, `block`, `clear`, and `disarm` verbs. |
+| `@x1a0f3n9/dsh-tool-goal` | `packages/goal/tool-goal/`, model-facing consumer | Registers exclusive `get_goal`, `create_goal`, and `update_goal`; requires a direct human message in a live root-agent turn and narrows autonomous-round authority to completion or blocking reports with machine-routable reason codes. |
+| `@x1a0f3n9/dsh-goal-round-driver` | `packages/goal/goal-round-driver/`, continuation policy | Reserves, fences, admits, attributes, settles, cancels, and quiescently drains same-session goal rounds without importing the concrete loop. |
+| `@x1a0f3n9/dsh-commands` | `packages/interaction/commands/`, UI registry | Owns `CommandDefinition`, discovery, scoped registration, direct dispatch, `CommandResult`, and request cancellation for human-only commands. |
+| `@x1a0f3n9/dsh-command-goal` | `packages/goal/command-goal/`, human-command producer | Registers `/goal` status, creation, edit, pause, resume, and clear over the goal domain for TUI. |
+| `@x1a0f3n9/dsh-tool-ralph` | `packages/workflow/tool-ralph/`, fixed workflow consumer | Registers `ralph({ objective, maxRounds? })`, validates the fresh structured provider and bounded `RalphRoundReport`, and returns `complete`, `blocked`, or `budget-limited`. |
 
 The detailed contracts live in the [goal-domain](2026-07-19-persisted-same-session-goal-domain.md), [goal-owned event](../architecture/2026-07-31-goal-owned-durable-events.md), [model goal-tools](2026-07-19-model-facing-goal-tools.md), [goal-round driver](../../archived/feature/2026-07-19-same-session-goal-round-driver.md), [command registry](2026-07-19-plugin-command-registration.md), [human goal-command](../../archived/feature/2026-07-19-human-goal-command.md), and [Ralph workflow-tool](../../archived/feature/2026-07-19-fresh-agent-ralph-workflow-tool.md) Agent Notes.
 
@@ -54,7 +54,7 @@ This separation makes session restoration observable and unsurprising. Reopening
 
 Forked sessions inherit the durable goal prefix because that is the natural replay result. The fork starts disarmed, so inheritance does not imply execution authority and no synthetic goal cancellation is inserted into history.
 
-`defaultMaxGoalRounds` is configurable and defaults to `256`. The cap counts only admitted goal rounds. `blockedAfterConsecutiveRounds` is separately configurable in the model-tool policy and defaults to `3`; it is a mechanical lower bound before an autonomous round may report a repeated blocker, not an evaluator of semantic sameness.
+`defaultMaxGoalRounds` is configurable and defaults to `100000`. The cap counts only admitted goal rounds. `blockedAfterConsecutiveRounds` is separately configurable in the model-tool policy and defaults to `3`; it is a mechanical lower bound before an autonomous round may report a repeated blocker, not an evaluator of semantic sameness.
 
 ### Same-session continuation
 
@@ -62,7 +62,7 @@ The goal-round driver owns at most one pending reservation per exact live agent.
 
 Only an admitted positive-round goal-sourced `user/message` charges a round. A stale reservation closes a blocked no-step turn without consuming the cap. A concurrent goal revision wins over settlement from an older round.
 
-Normal turn completion schedules another round only while the goal remains active, armed, and below its cap. Cancellation pauses. Rate limiting or quota exhaustion blocks with code `usage-limited`; cap exhaustion blocks with `round-limit`; queue failure uses `queue-failed`; turn errors, max-token stops, policy rejection, and unknown terminal results use their corresponding blocker codes. An independently composed request-recovery plugin may retry transient provider failures within that same turn; the goal driver never invents another round after an abnormal terminal outcome. A human can later resume through `/goal resume` or the Web control; a blocked goal also remains eligible for model `update_goal resume`, while a durable paused goal does not.
+Normal turn completion schedules another round only while the goal remains active, armed, and below its cap. Cancellation pauses. Rate limiting or quota exhaustion blocks with code `usage-limited`; cap exhaustion blocks with `round-limit`; queue failure uses `queue-failed`; turn errors, policy rejection, and unknown terminal results use their corresponding blocker codes. A max-token stop completes the admitted round and, while the goal stays active and armed, the next idle drive schedules the following round. An independently composed request-recovery plugin may retry transient provider failures within that same turn; the goal driver never invents another round after an abnormal terminal outcome other than max-token truncation. A human can later resume through `/goal resume` or the Web control; a blocked goal also remains eligible for model `update_goal resume`, while a durable paused goal does not.
 
 ### Human and model interactions
 

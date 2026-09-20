@@ -1,9 +1,9 @@
 /** Client Session object layer, Agent scopes, and Remote lifecycle wiring. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@deepseek-ai/dsh-agent/types'
-import type {} from '@deepseek-ai/dsh-client-connection/client'
-import type {} from '@deepseek-ai/dsh-client-file-upload/client'
+import type {} from '@x1a0f3n9/dsh-agent/types'
+import type {} from '@x1a0f3n9/dsh-client-connection/client'
+import type {} from '@x1a0f3n9/dsh-client-file-upload/client'
 import { createSessionControlStream } from './transport.ts'
 import { ClientSessions } from './sessions/service.ts'
 import type { SessionRemotes } from './sessions/remotes.ts'

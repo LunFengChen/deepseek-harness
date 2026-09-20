@@ -3,18 +3,18 @@
  * the derived LLM message history. Persistence is a plugin concern (subscribe
  * to `session/event`, drain on `session/flush`).
  *
- * @module @deepseek-ai/dsh-session
+ * @module @x1a0f3n9/dsh-session
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import { isAbsolute } from 'node:path'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import { assertNever, deepFreeze, snapshotJsonValue } from '@deepseek-ai/dsh-util-values'
-import { scopeOf, scopeTarget } from '@deepseek-ai/dsh-scope'
-import type { Scoped } from '@deepseek-ai/dsh-scope'
-import type { Message } from '@deepseek-ai/dsh-llm'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import { assertNever, deepFreeze, snapshotJsonValue } from '@x1a0f3n9/dsh-util-values'
+import { scopeOf, scopeTarget } from '@x1a0f3n9/dsh-scope'
+import type { Scoped } from '@x1a0f3n9/dsh-scope'
+import type { Message } from '@x1a0f3n9/dsh-llm'
 import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq } from './types.ts'
-import type { TypertLookup } from '@deepseek-ai/dsh-typert-protocol'
+import type { TypertLookup } from '@x1a0f3n9/dsh-typert-protocol'
 import type { CreateSessionOptions, EpochHeader, PrepareSessionOptions, RequestContext, SessionEvent, SessionEventMap, SessionEventType, SessionHeader, SessionId, SessionSeedEventState, SurfaceIntent, SurfaceEventType } from './types.ts'
 import { deriveEventMessage, SurfaceManager, validateSessionEventData, validateSurfaceMetadata } from './surface.ts'
 import type { SessionSurface } from './surface.ts'
@@ -23,7 +23,7 @@ import { foldRequestHeader } from './request-header.ts'
 export * from './types.ts'
 export { SessionPreparation } from './preparation.ts'
 export type { SessionPreparationOptions } from './preparation.ts'
-export type { AssistantMessage, SystemMessage, ToolResultMessage, UserMessage } from '@deepseek-ai/dsh-llm'
+export type { AssistantMessage, SystemMessage, ToolResultMessage, UserMessage } from '@x1a0f3n9/dsh-llm'
 export { interruptedTurnClosers, TOOL_NOT_STARTED, TOOL_OUTCOME_UNKNOWN } from './repair.ts'
 export type { SessionSurface, SurfaceFoldReplacement, SurfaceFoldResult } from './surface.ts'
 export { deriveEventMessage, foldSurface, isAppendSurfaceEvent, isReplacementSurfaceEvent, isSurfaceEvent, isSurfaceEligibleType } from './surface.ts'
@@ -41,7 +41,7 @@ declare module '@deepseek-ai/cordis' {
      * back with a paired disposal; detach requested during dispatch is deferred.
      * A returned-promise rejection is logged but cannot retroactively veto this
      * synchronous boundary.
-     * Scope-filtered dispatch (`@deepseek-ai/dsh-scope`): agent-scoped listeners
+     * Scope-filtered dispatch (`@x1a0f3n9/dsh-scope`): agent-scoped listeners
      * receive only sessions entered through that agent's context.
      * @param session - the session just entered and announced.
      * @dshScopeScan unsupported
@@ -52,7 +52,7 @@ declare module '@deepseek-ai/cordis' {
      * Emitted once when an announced session leaves the store, including
      * publication rollback, but never for an entry whose creation announcement
      * did not begin. Listener failures are logged and contained.
-     * Scope-filtered dispatch (`@deepseek-ai/dsh-scope`) reuses the owner scope.
+     * Scope-filtered dispatch (`@x1a0f3n9/dsh-scope`) reuses the owner scope.
      * @param session - the session that is no longer live in the store.
      * @dshScopeScan unsupported
      * @mode emit
@@ -62,7 +62,7 @@ declare module '@deepseek-ai/cordis' {
      * Post-commit, fire-and-forget append feed. The listener snapshot resolves
      * before the log push, but callbacks run after it; observer failures are
      * logged and contained without making the committed append fail.
-     * Scope-filtered dispatch (`@deepseek-ai/dsh-scope`): agent-scoped listeners
+     * Scope-filtered dispatch (`@x1a0f3n9/dsh-scope`): agent-scoped listeners
      * receive only events from sessions entered through that agent's context.
      * @param session - the session whose log grew.
      * @param event - the appended event, exactly as recorded.
@@ -71,9 +71,21 @@ declare module '@deepseek-ai/cordis' {
      */
     'session/event'(this: Scoped<Session>, session: Session, event: SessionEvent): void
     /**
+     * Emitted after a live session log is rewritten to an earlier prefix.
+     * The log already has the retained length when listeners run; observer
+     * failures are logged and contained. That prefix is the new authority:
+     * persistence drops routed live events at or past that length, projection
+     * cells rebuild, and any other seq-indexed cache must drop or rescan.
+     * Scope-filtered dispatch (`@x1a0f3n9/dsh-scope`) reuses the owner scope.
+     * @param session - the session whose log shrank.
+     * @dshScopeScan unsupported
+     * @mode emit
+     */
+    'session/truncated'(this: Scoped<Session>, session: Session): void
+    /**
      * Awaited parallel durability checkpoint: every listener runs and the
      * caller awaits all of them, with no waterfall veto. Scope-filtered dispatch
-     * (`@deepseek-ai/dsh-scope`) reuses the session's owner scope.
+     * (`@x1a0f3n9/dsh-scope`) reuses the session's owner scope.
      * @param session - the session whose buffered events must reach durable storage.
      * @dshScopeScan unsupported
      * @mode parallel
@@ -82,7 +94,7 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
-declare module '@deepseek-ai/dsh-typert-protocol' {
+declare module '@x1a0f3n9/dsh-typert-protocol' {
   interface TypertLookupMap {
     session: TypertLookup<Session, SessionId>
   }
@@ -402,7 +414,7 @@ function collectSessionCallbacks(ctx: Context, args: unknown[]): SessionCallback
 /** Invoke one resolved observe-only listener snapshot with per-listener containment. */
 function invokeContainedSessionObservers(
   ctx: Context,
-  name: 'session/event' | 'session/disposed',
+  name: 'session/event' | 'session/disposed' | 'session/truncated',
   id: SessionId,
   args: unknown[],
   callbacks: SessionCallback[],
@@ -436,7 +448,8 @@ interface SessionEntry {
 const attachments = new WeakMap<Session, SessionEntry>()
 
 /**
- * An event-sourced session: an append-only log of {@link SessionEvent}s.
+ * An event-sourced session: a contiguous log of {@link SessionEvent}s.
+ * Ordinary writes append; {@link truncate} is the destructive prefix rewrite.
  *
  * Plain class (not a Service) — create live instances via
  * `ctx.sessions.create()` and detached instances via {@link create}.
@@ -663,6 +676,56 @@ export class Session {
    */
   isOwnSeq(seq: SessionSeq): boolean {
     return seq >= this.inheritedEventCount && seq < this.seq
+  }
+
+  /**
+   * Find the beginning of the logical turn containing one visible event.
+   * Deletion is turn-granular so the retained prefix never ends inside a turn.
+   * @param seq - visible event sequence in the turn to remove.
+   * @returns the first event sequence of the containing turn.
+   */
+  deletionStart(seq: SessionSeq): SessionLogOffset {
+    if (seq < 0 || seq >= this.log.length) {
+      throw new RangeError(`session deletion sequence ${String(seq)} is outside the log`)
+    }
+    for (let index = Number(seq); index >= 0; index -= 1) {
+      if (this.log[index]?.type === 'turn/start') return SessionLogOffset(index)
+    }
+    throw new Error(`session deletion sequence ${String(seq)} is not inside a turn`)
+  }
+
+  /**
+   * Replace this live log with the prefix `[0, length)`. Persistence must
+   * already contain that prefix. A store-attached session then emits
+   * `session/truncated`; detached sessions do not, so a seq-indexed reader
+   * must notice `session.seq` shrank.
+   * @param length - retained event-prefix length.
+   */
+  truncate(length: SessionLogOffset): void {
+    if (length < this.inheritedEventCount) {
+      throw new RangeError(`session truncation length ${String(length)} would remove inherited events`)
+    }
+    if (length > this.log.length) {
+      throw new RangeError(`session truncation length ${String(length)} is outside the log`)
+    }
+    const entry = attachments.get(this)
+    /* v8 ignore next -- same publication flag as append reentry; observers cannot reenter truncate in tests */
+    if (entry?.appending) throw new Error('session cannot be truncated while an append is being published')
+    if (length === this.log.length) return
+    this.log.splice(length)
+    this.eventsSnapshot = undefined
+    this.surfaceManager.reset()
+    this.headerFold = undefined
+    this.headerFoldSeq = 0
+    this.contextFold = undefined
+    this.contextFoldSeq = 0
+    this.derived = []
+    this.derivedNodes = 0
+    this.derivedGeneration = this.surfaceManager.replaceGeneration
+    if (entry === undefined) return
+    const callbackArgs: unknown[] = [this]
+    const callbacks = collectSessionCallbacks(entry.emitCtx, [entry.carrier, 'session/truncated', this])
+    invokeContainedSessionObservers(entry.emitCtx, 'session/truncated', entry.id, callbackArgs, callbacks)
   }
 
   /** The next event's sequence number — always the log length (the `seq = log.length` contiguity contract). */
@@ -906,8 +969,8 @@ export class SessionStore extends Service {
       typeCtx.typert.lookups.register('session', {
         parameter: 'session',
         wire: 'sessionId',
-        hostTypeSymbol: '@deepseek-ai/dsh-session#Session',
-        wireTypeSymbol: '@deepseek-ai/dsh-session/types#SessionId',
+        hostTypeSymbol: '@x1a0f3n9/dsh-session#Session',
+        wireTypeSymbol: '@x1a0f3n9/dsh-session/types#SessionId',
         resolve: sessionId => this.get(sessionId),
       })
     })

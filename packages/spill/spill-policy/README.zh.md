@@ -3,7 +3,7 @@ description: "工具结果 spill 策略：部署如何用预览和可检索的 s
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-spill-policy
+# @x1a0f3n9/dsh-spill-policy
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-reference"
 以 UTF-8 字节计的 `maxInlineBytes` 预算加载策略，并同时挂载 spill 后端：
 
 ```yaml
-- name: '@deepseek-ai/dsh-spill-local'
-- name: '@deepseek-ai/dsh-spill-policy'
+- name: '@x1a0f3n9/dsh-spill-local'
+- name: '@x1a0f3n9/dsh-spill-policy'
   config:
     maxInlineBytes: 50000
 ```
@@ -89,7 +89,7 @@ kind: "package-reference"
 <a id="shared-notice-ownership"></a>
 ### 共享通知的所有权
 
-浏览器安全入口 `@deepseek-ai/dsh-spill-policy/notice` 同时负责生产方使用的 `formatSpillNotice(omitted, ref)` 和展示消费方使用的 `hasSpillNotice(text)`。格式化与识别共用通知分隔符；省略信息通过现有的 `describeOmitted` 格式化函数校验，而非复制一套文案。识别支持预览之后或单独出现的完整末尾通知，并保留持久化通知的原有拼写。它只读取已记录的文本，不改写文本。
+浏览器安全入口 `@x1a0f3n9/dsh-spill-policy/notice` 同时负责生产方使用的 `formatSpillNotice(omitted, ref)` 和展示消费方使用的 `hasSpillNotice(text)`。格式化与识别共用通知分隔符；省略信息通过现有的 `describeOmitted` 格式化函数校验，而非复制一套文案。识别支持预览之后或单独出现的完整末尾通知，并保留持久化通知的原有拼写。它只读取已记录的文本，不改写文本。
 
 ### 源码地图
 

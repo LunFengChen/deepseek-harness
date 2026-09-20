@@ -4,23 +4,23 @@
  * acknowledgement and failure toasts in conversation.input.overlay, and the `/feedback`
  * decoration that opens the dialog from the composer menu or a bare typed
  * command. One FeedbackSurface per Session backs every entry in that Session.
- * @module @deepseek-ai/dsh-client-ui-message-feedback/client
+ * @module @x1a0f3n9/dsh-client-ui-message-feedback/client
  */
 
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 // Type-only: pulls the generated Remote API and ctx.remote merge through the Client assembly boundary.
-import type {} from '@deepseek-ai/dsh-api-remotes/client'
+import type {} from '@x1a0f3n9/dsh-api-remotes/client'
 // Type-only: pulls the ui-conversation SlotMap merge (the assistant-actions and overlay entries).
-import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 // Type-only: pulls the command UI's Context merge (ctx.commandUi).
-import type {} from '@deepseek-ai/dsh-client-ui-commands/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-commands/client'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
-import type {} from '@deepseek-ai/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-locale/client'
 // Type-only: pulls the SlotRegistry service merge (ctx.slots).
-import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
-import type {} from '@deepseek-ai/dsh-client-ui-chat/client'
-import type {} from '@deepseek-ai/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-chat/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
 import { FeedbackDialog } from './FeedbackDialog.tsx'
 import { MessageFeedbackActions } from './MessageFeedbackActions.tsx'
 import type { FeedbackDialogInjected, MessageFeedbackInjected } from './slots.ts'

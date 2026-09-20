@@ -3,7 +3,7 @@ description: "JSON storage backend for hosts and maintainers choosing, configuri
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-storage-json
+# @x1a0f3n9/dsh-storage-json
 
 English | [中文](README.zh.md)
 
@@ -36,11 +36,11 @@ Choose the default `single` layout for small units that benefit from one complet
 The only plugin field is `root`, which holds the unit files and directories. It is required because the backend does not fall back to `process.cwd()`. The backend creates the root with mode `0o700` on demand. A domain specification selects its layout; this plugin has no layout override.
 
 ```yaml
-- name: '@deepseek-ai/dsh-storage'
-- name: '@deepseek-ai/dsh-storage-json'
+- name: '@x1a0f3n9/dsh-storage'
+- name: '@x1a0f3n9/dsh-storage-json'
   config:
     root: /var/lib/dsh/data
-- name: '@deepseek-ai/dsh-storage-domain'
+- name: '@x1a0f3n9/dsh-storage-domain'
   config:
     backend: json
 ```

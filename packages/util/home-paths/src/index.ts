@@ -1,7 +1,7 @@
 /**
  * Shared filesystem path helpers for DeepSeek Harness user data.
  *
- * @module @deepseek-ai/dsh-home-paths
+ * @module @x1a0f3n9/dsh-home-paths
  */
 
 import { opendir, realpath } from 'node:fs/promises'
@@ -16,6 +16,9 @@ export const DEFAULT_DSH_HOME_DISPLAY = `~/${DSH_HOME_DIR_NAME}`
 
 /** Environment variable that overrides the default DeepSeek Harness home. */
 export const DSH_HOME_ENV = 'DSH_HOME'
+
+/** Environment variable that overrides the shared session-data home. */
+export const DSH_SESSION_HOME_ENV = 'DSH_SESSION_HOME'
 
 /**
  * Give a native filesystem watcher one canonical spelling of a path, even
@@ -97,6 +100,37 @@ export function resolveDshHome(configured?: string, env: Record<string, string |
  */
 export function dshHomePath(...segments: string[]): string {
   return join(resolveDshHome(), ...segments)
+}
+
+/**
+ * Resolve the home for durable sessions, attachments, projections, and storage.
+ *
+ * An explicit configured path wins, followed by `$DSH_SESSION_HOME`; when the
+ * variable is absent, session data follows the resolved harness home. This
+ * preserves the official `dsh` layout while allowing `xfdsh` to isolate its
+ * profile/plugin home without requiring a history migration.
+ * @param configured - explicit shared session-home override.
+ * @param env - environment mapping used to read the session-home override.
+ * @returns the normalized absolute shared session-data home path.
+ */
+export function resolveDshSessionHome(
+  configured?: string,
+  env: Record<string, string | undefined> = process.env,
+): string {
+  const fromEnv = env[DSH_SESSION_HOME_ENV]
+  const selected = configured ?? (fromEnv !== undefined && fromEnv.trim().length > 0
+    ? fromEnv
+    : resolveDshHome(undefined, env))
+  return resolve(expandHomePath(selected))
+}
+
+/**
+ * Join path segments onto the resolved shared session-data home.
+ * @param segments - path segments appended to the shared session home.
+ * @returns the normalized absolute joined path.
+ */
+export function dshSessionPath(...segments: string[]): string {
+  return join(resolveDshSessionHome(), ...segments)
 }
 
 /**

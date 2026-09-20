@@ -7,7 +7,7 @@ import WebRuntime, {
   type WebSearchProvider,
   type WebSearchRequest,
   type WebSearchResult,
-} from '@deepseek-ai/dsh-web'
+} from '@x1a0f3n9/dsh-web'
 
 /** A scripted search provider for contract tests. */
 function makeSearchProvider(
@@ -104,6 +104,31 @@ describe('WebRuntime execution resolution', () => {
     web.registerSearchProvider(makeSearchProvider('exa', available, () => Promise.resolve(searchResult('exa'))))
     web.registerSearchProvider(makeSearchProvider('perplexity', available, () => Promise.resolve(searchResult('perplexity'))))
     await expect(web.search({ query: 'q' })).rejects.toThrow(expect.objectContaining({ code: 'WEB_PROVIDER_AMBIGUOUS' }))
+  })
+
+  it('uses the configured provider order before ambiguity resolution', async () => {
+    const { web } = await mountWeb({ searchProviderOrder: ['perplexity', 'exa'] })
+    web.registerSearchProvider(makeSearchProvider('exa', available, () => Promise.resolve(searchResult('exa'))))
+    web.registerSearchProvider(makeSearchProvider('perplexity', available, () => Promise.resolve(searchResult('perplexity'))))
+    await expect(web.search({ query: 'q' })).resolves.toMatchObject({ content: 'perplexity' })
+  })
+
+  it('skips unavailable providers in the configured order', async () => {
+    const { web } = await mountWeb({ searchProviderOrder: ['perplexity', 'exa'] })
+    web.registerSearchProvider(makeSearchProvider('perplexity', unavailable, () => Promise.resolve(searchResult('perplexity'))))
+    web.registerSearchProvider(makeSearchProvider('exa', available, () => Promise.resolve(searchResult('exa'))))
+    await expect(web.search({ query: 'q' })).resolves.toMatchObject({ content: 'exa' })
+  })
+
+  it('does not fall through to an unlisted usable provider when the order misses', async () => {
+    const { web } = await mountWeb({ searchProviderOrder: ['perplexity', 'exa'] })
+    web.registerSearchProvider(makeSearchProvider('perplexity', unavailable, () => Promise.resolve(searchResult('perplexity'))))
+    web.registerSearchProvider(makeSearchProvider('exa', unavailable, () => Promise.resolve(searchResult('exa'))))
+    web.registerSearchProvider(makeSearchProvider('deepseek-official', available, () => Promise.resolve(searchResult('deepseek'))))
+    await expect(web.search({ query: 'q' })).rejects.toThrow(expect.objectContaining({
+      code: 'WEB_PROVIDER_UNAVAILABLE',
+      message: 'none of the ordered web providers are usable (perplexity, exa)',
+    }))
   })
 
   it('runs the configured provider even when another usable provider is registered', async () => {

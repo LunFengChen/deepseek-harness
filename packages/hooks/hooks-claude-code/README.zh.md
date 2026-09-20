@@ -3,7 +3,7 @@ description: "在 agent 运行期间使用你现有的 Claude Code hooks.json �
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-hooks-claude-code
+# @x1a0f3n9/dsh-hooks-claude-code
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-reference"
 ### 最小配置
 
 ```yaml
-- name: '@deepseek-ai/dsh-hooks-claude-code'
+- name: '@x1a0f3n9/dsh-hooks-claude-code'
   config:
     configPath: ./.claude/hooks.json
     pluginRoot: ./.claude/plugins/my-plugin

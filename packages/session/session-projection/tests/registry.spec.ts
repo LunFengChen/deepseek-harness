@@ -16,12 +16,12 @@ import SessionStore, {
   SessionId,
   SessionLogOffset,
   SessionSeq,
-} from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
+} from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     'test/marks': MarksState
     'test/count': number
@@ -35,7 +35,7 @@ declare module '@deepseek-ai/dsh-session-projection/types' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     'test/mark': { marks: string[] }
   }
@@ -208,6 +208,30 @@ describe('SessionProjectionRegistry drive', () => {
     const snapshot = ctx.sessionProjections.snapshot(session)
     expect(snapshot.values['test/marks']).toEqual({ marks: ['a', 'b'] })
     expect(snapshot.asOfSeq).toBe(session.seq - 1)
+  })
+
+  it('rebuilds unit cells after the live session log is truncated', async () => {
+    const { ctx, session } = await harness()
+    ctx.sessionProjections.register(countUnit())
+    ctx.sessionProjections.register(marksUnit())
+    session.append('turn/start', { turn: 1 })
+    mark(session, ['keep'])
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    session.append('turn/start', { turn: 2 })
+    mark(session, ['drop'])
+    expect(ctx.sessionProjections.stateOf(session, 'test/count')).toBe(5)
+    expect(ctx.sessionProjections.snapshot(session).values['test/marks']).toEqual({ marks: ['drop'] })
+    ctx.on('session/truncated', (truncated) => {
+      expect(ctx.sessionProjections.snapshot(truncated).values['test/marks']).toEqual({ marks: ['keep'] })
+    }, { prepend: true })
+    session.truncate(SessionLogOffset(3))
+    expect(ctx.sessionProjections.stateOf(session, 'test/count')).toBe(3)
+    expect(ctx.sessionProjections.snapshot(session).values['test/marks']).toEqual({ marks: ['keep'] })
+    expect(ctx.sessionProjections.snapshot(session).asOfSeq).toBe(2)
+    mark(session, ['after'])
+    expect(ctx.sessionProjections.stateOf(session, 'test/count')).toBe(4)
+    expect(ctx.sessionProjections.snapshot(session).values['test/marks']).toEqual({ marks: ['after'] })
+    await ctx.fiber.dispose()
   })
 
   it('builds the cell lazily from the full log for a unit registered after events flowed', async () => {

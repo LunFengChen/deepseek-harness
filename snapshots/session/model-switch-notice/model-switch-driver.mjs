@@ -1,6 +1,6 @@
 /** Test-only driver that selects another model after the first step's tool call. */
 
-import { installModelSelection } from '@deepseek-ai/dsh-agent'
+import { installModelSelection } from '@x1a0f3n9/dsh-agent'
 
 const SELECTED = { provider: 'deepseek-official', model: 'deepseek-v4-pro' }
 const selections = new WeakMap()

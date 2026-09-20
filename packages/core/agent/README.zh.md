@@ -3,7 +3,7 @@ description: "面向插件、UI 与编排器的 Agent 句柄、实时注册表�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent
+# @x1a0f3n9/dsh-agent
 
 [English](README.md) | 中文
 

@@ -3,7 +3,7 @@ description: "dsh Web 客户端的 Trajectory 视图：按轮次组织的事件�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-trajectory
+# @x1a0f3n9/dsh-client-ui-trajectory
 
 [English](README.md) | 中文
 

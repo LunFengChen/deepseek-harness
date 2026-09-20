@@ -3,13 +3,13 @@ description: "面向用户与维护者的一次性 Codex subagent 提供方，�
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-subagent-codex
+# @x1a0f3n9/dsh-subagent-codex
 
 [English](README.md) | 中文
 
 ## 概述
 
-当委派工作需要在父会话工作区中的真实无人值守 Codex 会话内运行时，把 `@deepseek-ai/dsh-subagent-codex` 安装进 Profile。每次委派都会为一个自包含文本任务使用全新且隔离的 Codex 线程，并且只返回其最终答案或安全失败诊断。原生 Codex 配置和身份验证继续作为权威来源，而 `permissionMode` 选择非交互式审批和沙箱行为。Bundle 会提供兼容的原生 Codex 载荷，但只有配置委派工具后才会向模型公开相应能力。
+当委派工作需要在父会话工作区中的真实无人值守 Codex 会话内运行时，把 `@x1a0f3n9/dsh-subagent-codex` 安装进 Profile。每次委派都会为一个自包含文本任务使用全新且隔离的 Codex 线程，并且只返回其最终答案或安全失败诊断。原生 Codex 配置和身份验证继续作为权威来源，而 `permissionMode` 选择非交互式审批和沙箱行为。Bundle 会提供兼容的原生 Codex 载荷，但只有配置委派工具后才会向模型公开相应能力。
 
 ## 目录
 
@@ -32,8 +32,8 @@ kind: "package-bundle"
 把包安装进目标 Profile，然后重启该 Profile。安装会把官方 wrapper 与一个兼容的原生平台载荷带入 Profile；声明的 patch 层只注册休眠的提供方，不启动任何 Codex 进程。
 
 ```sh
-dsh plugin --profile <name> add @deepseek-ai/dsh-subagent-codex
-dsh plugin --profile <name> remove @deepseek-ai/dsh-subagent-codex
+dsh plugin --profile <name> add @x1a0f3n9/dsh-subagent-codex
+dsh plugin --profile <name> remove @x1a0f3n9/dsh-subagent-codex
 dsh --profile <name>
 ```
 
@@ -63,11 +63,11 @@ dsh --profile <name>
 
 ```yaml
 - id: jobs
-  name: '@deepseek-ai/dsh-jobs-local'
+  name: '@x1a0f3n9/dsh-jobs-local'
 - id: tool-jobs
-  name: '@deepseek-ai/dsh-tool-jobs'
+  name: '@x1a0f3n9/dsh-tool-jobs'
 - id: tool-subagent-codex
-  name: '@deepseek-ai/dsh-tool-subagent'
+  name: '@x1a0f3n9/dsh-tool-subagent'
   config:
     provider: codex
     toolName: subagent_codex

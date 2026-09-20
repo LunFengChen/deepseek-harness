@@ -3,12 +3,12 @@ import { Context } from '@deepseek-ai/cordis'
 import {
   createClientModuleSystem, parseBootManifest,
   type ClientBundleRegistration, type ClientModuleLoader, type ClientModuleLoaderTarget, type WebBootEntry, type WebBootGraph,
-} from '@deepseek-ai/dsh-client-modules/client'
+} from '@x1a0f3n9/dsh-client-modules/client'
 import { describe, expect, it } from 'vitest'
 import { assertEntriesActive, bootClient, type EntryStateLabel } from '../src/boot-client.ts'
 import { FIBER_STATE } from '../src/loader-status.ts'
 
-const BOOTSTRAP_ID = '@deepseek-ai/dsh-client-modules'
+const BOOTSTRAP_ID = '@x1a0f3n9/dsh-client-modules'
 
 function graphOf(ids: readonly string[]): WebBootGraph {
   const entries: WebBootEntry[] = ids.map(id => ({ id, url: `/${id}.js`, rev: '1' }))

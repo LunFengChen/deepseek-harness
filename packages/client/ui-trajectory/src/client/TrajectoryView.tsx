@@ -4,9 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type {
   AssistantBlock, AssistantMessageNode, ConvViewProps, MessageImageLoader, RenderMessageImages,
   ToolCallBlock,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
-import type { InjectFace, PropsLocale, PropsRenderSlots } from '@deepseek-ai/dsh-client-ui-slots'
-import type { SnapshotStore } from '@deepseek-ai/dsh-client-store'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import type { InjectFace, PropsLocale, PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
+import type { SnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import {
   TrajectoryTable,
   type TrajectoryRequestNumber,

@@ -1,6 +1,6 @@
 /** Baseline-and-delta protocol layered over a reconnecting Remote stream. */
 
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
 import type { RemoteStream } from './remote-stream.ts'
 
 /** Host-side stream protocol violation, marked so consumers surface it as an error state. */

@@ -2,26 +2,27 @@
 
 import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
-import { brandString } from '@deepseek-ai/dsh-brand'
-import type { Agent, ModelSelection as AgentModelSelection } from '@deepseek-ai/dsh-agent'
-import { AttachmentError } from '@deepseek-ai/dsh-attachment'
+import { brandString } from '@x1a0f3n9/dsh-brand'
+import type { Agent, ModelSelection as AgentModelSelection } from '@x1a0f3n9/dsh-agent'
+import { AttachmentError } from '@x1a0f3n9/dsh-attachment'
 import type {
   AttachmentAdmissionPart, FileAttachmentRef, ImageAttachmentRef,
-} from '@deepseek-ai/dsh-attachment'
-import type { FileUploadReceiptId } from '@deepseek-ai/dsh-client-file-upload/types'
-import type {} from '@deepseek-ai/dsh-client-file-upload'
+} from '@x1a0f3n9/dsh-attachment'
+import type { FileUploadReceiptId } from '@x1a0f3n9/dsh-client-file-upload/types'
+import type {} from '@x1a0f3n9/dsh-client-file-upload'
 import {
   ReasoningEffortId, assistantStreamChunks, createUserMessage, freezeMessage,
-} from '@deepseek-ai/dsh-llm'
-import type { MessageSource } from '@deepseek-ai/dsh-llm'
-import { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@deepseek-ai/dsh-session'
-import { SessionQueryError, type SessionObservation } from '@deepseek-ai/dsh-session-query'
-import { SessionTitleInvalidError } from '@deepseek-ai/dsh-session-title'
-import { canonicalClientTimeZone } from '@deepseek-ai/dsh-util-time'
-import { assertNever } from '@deepseek-ai/dsh-util-values'
-import { RemoteError, remoteErrorOf } from '@deepseek-ai/dsh-typert-protocol'
-import type { Workspace } from '@deepseek-ai/dsh-workspace'
+} from '@x1a0f3n9/dsh-llm'
+import type { MessageSource } from '@x1a0f3n9/dsh-llm'
+import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@x1a0f3n9/dsh-session'
+import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
+import { SessionTitleInvalidError } from '@x1a0f3n9/dsh-session-title'
+import { canonicalClientTimeZone } from '@x1a0f3n9/dsh-util-time'
+import { assertNever } from '@x1a0f3n9/dsh-util-values'
+import { RemoteError, remoteErrorOf } from '@x1a0f3n9/dsh-typert-protocol'
+import type {} from '@x1a0f3n9/dsh-commands'
+import type { Workspace } from '@x1a0f3n9/dsh-workspace'
 import {
   ApiSessionAgentController,
   ApiSessionCwdConflict,
@@ -47,10 +48,16 @@ import type {
   SessionRenameValue,
   SessionSelectModelRequest,
   SessionSelectModelValue,
+  SessionDeleteFromRequest,
+  SessionDeleteFromValue,
   SessionUpdateQueueRequest,
   SessionUpdateQueueValue,
   SessionRequestId,
 } from './types.ts'
+
+type SessionPersistenceForDeletion = {
+  truncate(id: SessionId, length: SessionLogOffset): Promise<void>
+}
 
 interface SessionReadState {
   readonly id: SessionId
@@ -64,6 +71,29 @@ type PromptContentCandidate =
 
 function hasPromptContent(content: readonly PromptContentCandidate[]): boolean {
   return content.some(part => part.type !== 'text' || part.text.trim().length > 0)
+}
+
+/**
+ * Wait until an Agent reaches quiescence, or the deadline hits.
+ * @param agent - Agent whose activity promise is awaited.
+ * @param timeoutMs - maximum wait before treating the Agent as still busy.
+ * @returns whether the Agent became idle in time.
+ */
+async function waitForAgentIdle(agent: Agent, timeoutMs = 15_000): Promise<boolean> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    await Promise.race([
+      agent.whenIdle(),
+      new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => reject(new Error('deleteFrom idle wait timed out')), timeoutMs)
+      }),
+    ])
+    return true
+  } catch {
+    return false
+  } finally {
+    if (timer !== undefined) clearTimeout(timer)
+  }
 }
 
 /** Implements Session business commands delegated by the Session Controller Remote service. */
@@ -196,6 +226,7 @@ export class SessionCommandController {
 
   /**
    * Create a new ordinary Session from one completed-turn prefix.
+   * Pending inbox input stays on the source; the child starts with empty lists.
    * @param request - source Session and optional event anchor.
    * @returns the new Session identity.
    */
@@ -491,6 +522,8 @@ export class SessionCommandController {
 
   /**
    * Cancel one live ordinary Agent while retaining pending inbox work.
+   * Also abort in-flight slash commands for that Agent so pause/stop can
+   * settle a hanging rewind instead of leaving an unpaired `command/run`.
    * @param request - Session whose active Agent turn is cancelled.
    * @returns acknowledgement that cancellation was requested.
    */
@@ -507,6 +540,66 @@ export class SessionCommandController {
       throw apiSessionSubagentOwnershipError(request.sessionId)
     }
     agent.cancel({ kind: 'user' }, { keepInbox: true })
+    this.ctx.get('commands')?.abortInflight(agent)
+    return { accepted: true }
+  }
+
+  /**
+   * Rewrite one live Session to the prefix before the selected turn.
+   * A live turn is cancelled first so delete/rewind/regenerate can finish
+   * instead of leaving the UI blocked on an executing command card.
+   * @param request - Session identity and event sequence inside the turn to remove.
+   * @returns acknowledgement after durable and in-memory logs agree.
+   */
+  async deleteFrom(request: SessionDeleteFromRequest): Promise<SessionDeleteFromValue> {
+    const agent = await this.resolveAgent(request.sessionId)
+    if (hasApiSessionSubagentOwner(this.ctx, agent.session, agent)) {
+      throw apiSessionSubagentOwnershipError(request.sessionId)
+    }
+    if (agent.status === 'running') {
+      agent.cancel({ kind: 'user' }, { keepInbox: true })
+      this.ctx.get('commands')?.abortInflight(agent)
+      const stopped = await waitForAgentIdle(agent)
+      if (!stopped || agent.status === 'running') {
+        throw new RemoteError(
+          'session/agent-busy',
+          'cannot delete conversation history while the session is running',
+          { reason: 'DELETE_ACTIVE_TURN' },
+        )
+      }
+    }
+    let sequence: SessionSeq
+    try {
+      sequence = SessionSeq(request.fromSeq)
+    } catch (error: unknown) {
+      throw new RemoteError(
+        'gateway/bad-request',
+        `invalid deletion sequence: ${error instanceof Error ? error.message : String(error)}`,
+        {},
+      )
+    }
+    let length: SessionLogOffset
+    try {
+      length = agent.session.deletionStart(sequence)
+    } catch (error: unknown) {
+      throw new RemoteError(
+        'gateway/bad-request',
+        error instanceof Error ? error.message : String(error),
+        {},
+      )
+    }
+    const persistence = this.ctx.get('sessionPersistence') as SessionPersistenceForDeletion | undefined
+    if (persistence === undefined) {
+      throw new RemoteError(
+        'gateway/internal',
+        'session persistence is unavailable; cannot delete conversation history',
+        {},
+      )
+    }
+    await agent.runMaintenance(async () => {
+      await persistence.truncate(agent.session.id, length)
+      agent.session.truncate(length)
+    })
     return { accepted: true }
   }
 

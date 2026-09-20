@@ -3,7 +3,7 @@ description: "Worker-thread code execution for users and maintainers composing, 
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-code-runtime-worker-thread
+# @x1a0f3n9/dsh-code-runtime-worker-thread
 
 English | [中文](README.zh.md)
 
@@ -30,8 +30,8 @@ Mount this backend with the code-runtime seam when a composition should execute 
 ### Minimal configuration
 
 ```yaml
-- name: '@deepseek-ai/dsh-code-runtime'
-- name: '@deepseek-ai/dsh-code-runtime-worker-thread'
+- name: '@x1a0f3n9/dsh-code-runtime'
+- name: '@x1a0f3n9/dsh-code-runtime-worker-thread'
   config:
     computeMs: 60000            # busy-time budget (measured event-loop active time)
     maxWallMs: 600000           # wall-clock ceiling; never pauses for anything

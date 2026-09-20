@@ -3,7 +3,7 @@ description: "Plan mode for users and maintainers choosing, configuring, or debu
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-plan-mode
+# @x1a0f3n9/dsh-plan-mode
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Choose plan mode when the agent should explore and design before executing and y
 The only required configuration is the guidance text the agent follows while planning; anything else you add fails at load.
 
 ```yaml
-- name: '@deepseek-ai/dsh-plan-mode'
+- name: '@x1a0f3n9/dsh-plan-mode'
   config:
     section: |
       You are in plan mode. Explore and design before presenting the complete

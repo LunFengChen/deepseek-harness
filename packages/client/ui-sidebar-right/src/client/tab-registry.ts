@@ -26,8 +26,8 @@
  */
 import type { ComponentType } from 'react'
 import type { Context } from '@deepseek-ai/cordis'
-import type { IconProps } from '@deepseek-ai/dsh-client-ui-primitives'
-import { notifySubscribers } from '@deepseek-ai/dsh-client-store'
+import type { IconProps } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { notifySubscribers } from '@x1a0f3n9/dsh-client-store'
 // The POSIX build: the browser bundle must not reach for node's `path`, and
 // addresses are `/`-separated regardless of the host platform.
 import picomatch from 'picomatch/posix'

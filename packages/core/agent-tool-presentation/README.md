@@ -3,7 +3,7 @@ description: "The agent-plane presentation selector for users and maintainers ch
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-agent-tool-presentation
+# @x1a0f3n9/dsh-agent-tool-presentation
 
 English | [中文](README.zh.md)
 
@@ -30,7 +30,7 @@ Add this row to an agent preset to fix how every agent joined to that preset see
 ### Add the row to a preset
 
 ```yaml
-- name: '@deepseek-ai/dsh-agent-tool-presentation'
+- name: '@x1a0f3n9/dsh-agent-tool-presentation'
   config:
     mode: ptc
 ```

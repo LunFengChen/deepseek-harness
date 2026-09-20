@@ -2,7 +2,7 @@
 // call/result slice.
 
 import { describe, expect, it } from 'vitest'
-import type { RunningToolCall, ToolResultNode } from '@deepseek-ai/dsh-client-ui-chat/client'
+import type { RunningToolCall, ToolResultNode } from '@x1a0f3n9/dsh-client-ui-chat/client'
 import { cordisActionCard, cordisDefineCard } from '../src/client/card-model.ts'
 
 const ARGS = '{"name":"clock","purpose":"顶栏时钟","code":{"client":"return {}","host":"harness.handle(\'now\', () => Date.now())"}}'

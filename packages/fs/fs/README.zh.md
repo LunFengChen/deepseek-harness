@@ -3,7 +3,7 @@ description: "`ctx.fs` 文件系统服务约定：面向选择或挂载文件系
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-fs
+# @x1a0f3n9/dsh-fs
 
 [English](README.md) | 中文
 

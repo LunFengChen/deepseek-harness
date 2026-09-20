@@ -1,14 +1,14 @@
 /** Test-only direct Remote face over the Session Controller's internal controllers. */
 
-import { SessionLogOffset } from '@deepseek-ai/dsh-session'
+import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import type { Context } from '@deepseek-ai/cordis'
-import type { ModelSelection as AgentModelSelection } from '@deepseek-ai/dsh-agent'
+import type { ModelSelection as AgentModelSelection } from '@x1a0f3n9/dsh-agent'
 import type {
   AdmittedPromptContentPart,
   AttachmentAdmissionPart,
   ImageAttachmentLimits,
-} from '@deepseek-ai/dsh-attachment'
-import type { SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-attachment'
+import type { SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
 import {
   SessionPersistenceNotFoundError,
   SessionPersistenceRevision,
@@ -20,15 +20,15 @@ import {
   type SessionPersistenceOpenOptions,
   type SessionPersistenceSnapshot,
   type SessionPersistenceStatOptions,
-} from '@deepseek-ai/dsh-session-persistence'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import SessionQueryEngine from '@deepseek-ai/dsh-session-query'
+} from '@x1a0f3n9/dsh-session-persistence'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import SessionQueryEngine from '@x1a0f3n9/dsh-session-query'
 import { vi } from 'vitest'
 import {
   RemoteError,
   remoteErrorOf,
   type RemoteResult,
-} from '@deepseek-ai/dsh-typert-protocol'
+} from '@x1a0f3n9/dsh-typert-protocol'
 import SessionController from '../src/index.ts'
 import type {
   ModelCatalog,
@@ -39,6 +39,8 @@ import type {
   SessionControlFrame,
   SessionCreateRequest,
   SessionCreateValue,
+  SessionDeleteFromRequest,
+  SessionDeleteFromValue,
   SessionForkRequest,
   SessionForkValue,
   SessionFollowFrame,
@@ -71,6 +73,7 @@ export interface TestSessionRemote {
   modelCatalog(): Promise<RemoteResult<ModelCatalog>>
   rename(request: SessionRenameRequest): Promise<RemoteResult<SessionRenameValue>>
   fork(request: SessionForkRequest): Promise<RemoteResult<SessionForkValue>>
+  deleteFrom(request: SessionDeleteFromRequest): Promise<RemoteResult<SessionDeleteFromValue>>
   prompt(request: SessionPromptRequest, signal?: AbortSignal): Promise<RemoteResult<SessionPromptValue>>
   attachment(request: SessionAttachmentRequest): Promise<RemoteResult<SessionAttachmentValue>>
   updateQueue(request: SessionUpdateQueueRequest): Promise<RemoteResult<SessionUpdateQueueValue>>
@@ -345,6 +348,7 @@ export function createSessionTestRemote(
     modelCatalog: () => remoteResult(() => direct.modelCatalog()),
     rename: request => remoteResult(() => direct.rename(request)),
     fork: request => remoteResult(() => direct.fork(request)),
+    deleteFrom: request => remoteResult(() => direct.deleteFrom(request)),
     prompt: (request, signal = new AbortController().signal) => remoteResult(
       () => direct.prompt(request, signal),
       signal,

@@ -1,11 +1,11 @@
 /**
  * Load-time validation and routed-model policy resolution for compaction-basic.
  *
- * @module @deepseek-ai/dsh-compaction-basic/config
+ * @module @x1a0f3n9/dsh-compaction-basic/config
  */
 
-import type { LlmCallConfig } from '@deepseek-ai/dsh-llm'
-import { deepFreeze } from '@deepseek-ai/dsh-util-values'
+import type { LlmCallConfig } from '@x1a0f3n9/dsh-llm'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
 import type {
   BasicCompactionConfig,
   CompactionPolicyConfig,
@@ -88,9 +88,9 @@ export function resolveConfig(config: BasicCompactionConfig = {}): ResolvedConfi
     ...retention,
     summarizationProvider: config.summarizationProvider ?? '',
     summarizationModel: config.summarizationModel ?? '',
-    maxTokens: config.maxTokens ?? 8192,
+    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
     compactionRetries: config.compactionRetries ?? 1,
-    maxOverflowRetries: config.maxOverflowRetries ?? 1,
+    maxOverflowRetries: config.maxOverflowRetries ?? 3,
     modelPolicies,
     auto: config.auto ?? true,
   })
@@ -112,13 +112,14 @@ export function resolveTargetPolicy(
   const inheritedRetention: ResolvedRetention = config.retainTokens === undefined
     ? { retainRatio: config.retainRatio }
     : { retainTokens: config.retainTokens }
+  const maxTokens = override?.maxTokens ?? config.maxTokens
   return deepFreeze({
     target: { provider: target.provider, model: target.model },
     thresholdRatio: override?.thresholdRatio ?? config.thresholdRatio,
     ...resolveRetention(override ?? {}, inheritedRetention),
     summarizationProvider: override?.summarizationProvider ?? config.summarizationProvider,
     summarizationModel: override?.summarizationModel ?? config.summarizationModel,
-    maxTokens: override?.maxTokens ?? config.maxTokens,
+    ...maxTokens === undefined ? {} : { maxTokens },
     compactionRetries: override?.compactionRetries ?? config.compactionRetries,
     maxOverflowRetries: override?.maxOverflowRetries ?? config.maxOverflowRetries,
   })
@@ -160,7 +161,7 @@ export function resolveCompactSpec(
     retainTokens,
     summarizationProvider: policy.summarizationProvider,
     summarizationModel: policy.summarizationModel,
-    maxTokens: policy.maxTokens,
+    ...policy.maxTokens === undefined ? {} : { maxTokens: policy.maxTokens },
     compactionRetries: policy.compactionRetries,
     maxOverflowRetries: policy.maxOverflowRetries,
   })

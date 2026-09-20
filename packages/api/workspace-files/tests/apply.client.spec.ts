@@ -3,8 +3,8 @@
  * fiber's lifetime, reading through `ctx.remote` in the Session each address names.
  */
 import { Context } from '@deepseek-ai/cordis'
-import type { ResourceProvider } from '@deepseek-ai/dsh-client-resources/client'
-import { sessionFileAddress } from '@deepseek-ai/dsh-util-workspace-path'
+import type { ResourceProvider } from '@x1a0f3n9/dsh-client-resources/client'
+import { sessionFileAddress } from '@x1a0f3n9/dsh-util-workspace-path'
 import { describe, expect, it, onTestFinished } from 'vitest'
 import { apply, inject } from '../src/client/index.ts'
 import { FakeRemote, settle } from './fake-remote.client.ts'

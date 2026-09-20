@@ -3,9 +3,9 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { AttachmentId, ImageVariantId } from '@deepseek-ai/dsh-attachment'
-import type { AttachmentStore, ImageAttachmentRef, RequestImageAttachment } from '@deepseek-ai/dsh-attachment'
-import { createLaunchEnvironmentSnapshot } from '@deepseek-ai/dsh-launch-environment'
+import { AttachmentId, ImageVariantId } from '@x1a0f3n9/dsh-attachment'
+import type { AttachmentStore, ImageAttachmentRef, RequestImageAttachment } from '@x1a0f3n9/dsh-attachment'
+import { createLaunchEnvironmentSnapshot } from '@x1a0f3n9/dsh-launch-environment'
 import LlmRuntime, { ToolCallId, createUserMessage,
   CONTEXT_WINDOW_EXCEEDED_CODE,
   LlmError,
@@ -13,14 +13,14 @@ import LlmRuntime, { ToolCallId, createUserMessage,
   QUOTA_EXCEEDED_CODE,
   ReasoningEffortId,
   userAgent,
-} from '@deepseek-ai/dsh-llm'
-import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
-import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@deepseek-ai/dsh-anonymous-user-id'
-import { SessionId } from '@deepseek-ai/dsh-session'
-import DeepSeekLlmApiExtensionRegistry from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
-import type { PreparedDeepSeekLlmApiExtensions } from '@deepseek-ai/dsh-deepseek-llm-api-extensions'
-import * as LlmDeepSeek from '@deepseek-ai/dsh-llm-deepseek'
-import { DeepSeekAdapter, resolveAdapterOptions } from '@deepseek-ai/dsh-llm-deepseek'
+} from '@x1a0f3n9/dsh-llm'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
+import { getOrCreateAnonymousUserId, type AnonymousUserId } from '@x1a0f3n9/dsh-anonymous-user-id'
+import { SessionId } from '@x1a0f3n9/dsh-session'
+import DeepSeekLlmApiExtensionRegistry from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import type { PreparedDeepSeekLlmApiExtensions } from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import { DeepSeekAdapter, resolveAdapterOptions } from '@x1a0f3n9/dsh-llm-deepseek'
 import { httpErrorCode } from '../src/adapter.ts'
 import { resolveRequestImagePolicy } from '../src/request-pricing.ts'
 import { assemble } from './assemble.ts'
@@ -220,7 +220,20 @@ describe('DeepSeekAdapter against a mock server', () => {
       prepareExtensions: () => Promise.reject(new Error('metadata unavailable')),
     })
     await expect(drain(failed.stream({ provider: 'deepseek-official', model: 'm', messages: [] })))
-      .rejects.toMatchObject({ code: 'REQUEST_EXTENSION' })
+      .rejects.toMatchObject({
+        code: 'REQUEST_EXTENSION',
+        message: 'DeepSeek request extension preparation failed: metadata unavailable',
+      })
+
+    const failedNonError = new DeepSeekAdapter({
+      ...base,
+      prepareExtensions: () => Promise.reject('inventory missing'),
+    })
+    await expect(drain(failedNonError.stream({ provider: 'deepseek-official', model: 'm', messages: [] })))
+      .rejects.toMatchObject({
+        code: 'REQUEST_EXTENSION',
+        message: 'DeepSeek request extension preparation failed: inventory missing',
+      })
 
     const collision = new DeepSeekAdapter({
       ...base,
@@ -1290,6 +1303,7 @@ describe('DeepSeekAdapter against a mock server', () => {
     [429, 'RATE_LIMIT'],
     [400, 'INVALID_REQUEST'],
     [500, 'SERVER'],
+    [502, 'SERVER'],
     [503, 'SERVER'],
   ])('maps HTTP %d to failure code %s with the body message', async (status, code) => {
     const behavior: Behavior = {
@@ -1426,6 +1440,10 @@ describe('DeepSeekAdapter against a mock server', () => {
     expect(httpErrorCode(429, { code: 'insufficient_quota', message: 'account credits exhausted' }))
       .toBe(QUOTA_EXCEEDED_CODE)
     expect(httpErrorCode(429, { message: 'request rate limit exceeded' })).toBe('RATE_LIMIT')
+    expect(httpErrorCode(429, { message: 'You have exceeded the 5-hour usage quota. It will reset soon.' }))
+      .toBe(QUOTA_EXCEEDED_CODE)
+    expect(httpErrorCode(403, { type: 'permission_error', message: "You've reached your usage limit for this billing cycle." }))
+      .toBe(QUOTA_EXCEEDED_CODE)
   })
 
   it('keeps the status-line message for JSON error bodies without a message', async () => {

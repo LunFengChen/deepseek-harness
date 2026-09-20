@@ -3,7 +3,7 @@ description: "面向用户与维护者的 web GUI 启动内核说明：客户端
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-client-web
+# @x1a0f3n9/dsh-client-web
 
 [English](README.md) | 中文
 
@@ -31,7 +31,7 @@ kind: "package-library"
 
 ### 启动过程是怎样的
 
-启动分两个阶段：模块阶段接纳 parser 已加载的 bootstrap 批次，从 Host 提供的启动图构建模块系统，并通过只执行一次的共享 application 批次 URL 预取 `immediately` 层级。插件阶段随后激活每个图 entry 并等待全部就绪，之后才把带标记的启动 DOM 交给 UI 渲染器，由它 hydrate 并切换到完整 UI。
+启动分两个阶段：模块阶段接纳 parser 已加载的 bootstrap 批次，从 Host 提供的启动图构建模块系统，并通过该层的 application combo URL 预取 `immediately` 层级。插件阶段随后创建 immediately 层 entry，并在 `uiRenderer` 一出现就把带标记的启动 DOM 交给 UI 渲染器；延迟 entry 在这一波之后开始。
 
 ### 启动页
 

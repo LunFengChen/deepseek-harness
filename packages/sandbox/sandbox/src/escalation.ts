@@ -1,6 +1,6 @@
 /**
  * The escalation vocabulary and choreography shared by every sandbox-enforcing
- * tool family (`@deepseek-ai/dsh-tool-bash`, `@deepseek-ai/dsh-tool-fs`): the
+ * tool family (`@x1a0f3n9/dsh-tool-bash`, `@x1a0f3n9/dsh-tool-fs`): the
  * strictly-wider ladder, the argument-pairing validation, the model-facing
  * denial/hint markers, and {@link approveEscalation} — the ordered fail-closed
  * sequence that resolves a `sandbox_permissions` request through a
@@ -16,7 +16,7 @@
  * @module dsh-sandbox/escalation
  */
 
-import { assertNever } from '@deepseek-ai/dsh-util-values'
+import { assertNever } from '@x1a0f3n9/dsh-util-values'
 import type { SandboxMode } from './index.ts'
 
 /**
@@ -39,6 +39,19 @@ export const WIDER_MODES: Record<string, readonly SandboxMode[]> = {
  * while a narrower-switched session stays confined with no lever).
  */
 export const ESCALATION_TARGETS: readonly SandboxMode[] = ['workspace-write', 'danger-full-access']
+
+/**
+ * Return whether an advertised target is already covered by a full-access
+ * standing policy. Model calls can retain stale retry arguments after the
+ * session has reached the maximum mode; those arguments must not trigger a
+ * second approval or a strict-widening failure.
+ * @param requestedMode - the raw `sandbox_permissions` target.
+ * @param effectiveMode - the call's effective standing mode.
+ * @returns `true` for the closed target vocabulary under `danger-full-access`.
+ */
+export function isEscalationSatisfiedByStandingMode(requestedMode: string, effectiveMode: SandboxMode): boolean {
+  return effectiveMode === 'danger-full-access' && ESCALATION_TARGETS.includes(requestedMode as SandboxMode)
+}
 
 /**
  * Validate the escalation argument pairing a tool schema cannot express:
@@ -156,6 +169,9 @@ export interface EscalationRequest {
  */
 export async function approveEscalation<A, C>(request: EscalationRequest, approval: EscalationApproval<A, C>): Promise<SandboxMode> {
   const { requestedMode: mode, effectiveMode, justification, subject } = request
+  // A stale retry can still name a target after the session already granted
+  // full access. That is already satisfied, not a second widening.
+  if (isEscalationSatisfiedByStandingMode(mode, effectiveMode)) return effectiveMode
   // Strict widening is an EXECUTION check against the call's effective mode —
   // deliberately not a schema constraint (the enum is the closed target
   // vocabulary; the effective mode is per-call truth).

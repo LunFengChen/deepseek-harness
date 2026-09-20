@@ -1,5 +1,5 @@
 /** ClientRoster: construction, duplicate refusal, order-preserving pick/closure/without with loud unknown names; graphFromRoster. */
-import { createClientModuleSystem, parseBootManifest, type ClientBundleRegistration, type ClientModuleLoaderTarget } from '@deepseek-ai/dsh-client-modules/client'
+import { createClientModuleSystem, parseBootManifest, type ClientBundleRegistration, type ClientModuleLoaderTarget } from '@x1a0f3n9/dsh-client-modules/client'
 import { describe, expect, it } from 'vitest'
 import { ClientRoster, graphFromRoster, type ClientRosterRow } from '../src/assembly/roster.ts'
 import { MODULES_PACKAGE } from '../src/assembly/modules.ts'
@@ -106,7 +106,7 @@ describe('ClientRoster', () => {
   })
 
   it('closure treats the platform seed modules as satisfied without a row', () => {
-    const seeded = { name: 'seeded', inject: ['@deepseek-ai/dsh-client-ui-primitives', 'react', 'a'], immediately: false }
+    const seeded = { name: 'seeded', inject: ['@x1a0f3n9/dsh-client-ui-primitives', 'react', 'a'], immediately: false }
     expect(ClientRoster.of([A, seeded]).closure(['seeded']).rows.map(row => row.name)).toEqual(['a', 'seeded'])
   })
 })

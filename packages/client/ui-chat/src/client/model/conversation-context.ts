@@ -1,6 +1,6 @@
 import type {
   ConversationNode, ConversationPromptSnapshot,
-} from '@deepseek-ai/dsh-client-ui-conversation/client'
+} from '@x1a0f3n9/dsh-client-ui-conversation/client'
 
 /** Operation that started a new append-only model context. */
 export type ConversationContextOriginKind = 'compaction' | 'rewind' | 'rewrite'

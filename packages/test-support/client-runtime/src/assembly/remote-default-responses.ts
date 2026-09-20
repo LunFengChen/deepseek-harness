@@ -4,9 +4,9 @@
  * The comment above each row names the plugin that calls it; endpoints boot
  * never touches stay absent so a new call fails loud. `$events` is built into
  * `RemoteMock`.
- * @module @deepseek-ai/dsh-client-test-runtime/src/assembly/remote-default-responses
+ * @module @x1a0f3n9/dsh-client-test-runtime/src/assembly/remote-default-responses
  */
-import { ok, openStream, type RemoteTable } from '@deepseek-ai/dsh-remote-mock'
+import { ok, openStream, type RemoteTable } from '@x1a0f3n9/dsh-remote-mock'
 
 /** Default responses of the boot-time Remote endpoints; a spec loads it first and layers its own table on top. */
 export const remoteDefaultResponses: RemoteTable = {

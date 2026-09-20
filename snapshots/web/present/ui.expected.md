@@ -20,10 +20,10 @@
 - button "1 tool call" [expanded]:
   - text: 1 tool call
   - img
-- button "Context injection @deepseek-ai/dsh-system-prompt":
+- button "Context injection @x1a0f3n9/dsh-system-prompt":
   - img
   - img
-  - text: Context injection @deepseek-ai/dsh-system-prompt
+  - text: Context injection @x1a0f3n9/dsh-system-prompt
 - button "Think The user wants one run_code program that:":
   - img
   - img

@@ -3,7 +3,7 @@ description: "The worker-thread workflow engine: executes model-written orchestr
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-workflow-worker-thread
+# @x1a0f3n9/dsh-workflow-worker-thread
 
 English | [中文](README.zh.md)
 
@@ -32,8 +32,8 @@ Mount this engine when a composition needs the workflow capability: each orchest
 Loading the engine registers `ctx.workflowEngine`; adding `dsh-tool-workflow` on top gives the model the `workflow` tool. Every config field is optional:
 
 ```yaml
-- name: '@deepseek-ai/dsh-workflow-worker-thread'
-- name: '@deepseek-ai/dsh-tool-workflow'
+- name: '@x1a0f3n9/dsh-workflow-worker-thread'
+- name: '@x1a0f3n9/dsh-tool-workflow'
 ```
 
 | Field | Default | Meaning |

@@ -3,7 +3,7 @@ description: "面向部署方与维护者的持久会话投影缓存说明，用
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-projection-cache
+# @x1a0f3n9/dsh-session-projection-cache
 
 [English](README.md) | 中文
 
@@ -39,7 +39,7 @@ kind: "package-reference"
 
 ```yaml
 - id: session-projection-cache
-  name: '@deepseek-ai/dsh-session-projection-cache'
+  name: '@x1a0f3n9/dsh-session-projection-cache'
   config:
     writeEveryEvents: 200
     writeIntervalMs: 5000
@@ -54,11 +54,11 @@ kind: "package-reference"
 
 ### 检查点如何写入
 
-三个必写点总是写入：会话创建保存由种子派生的切面，`turn/end` 保存列表读取所需的轮次终值，会话释放保存活会话的最终切面。其间，配置的条数与间隔节流随事件累积写入。每次写入通过领域写入链以原子方式替换该会话的完整记录；失败会记录警告并让缓存保持陈旧，后续写入会自行修复。
+四个必写点总是写入：会话创建保存由种子派生的切面，`turn/end` 保存列表读取所需的轮次终值，`session/truncated` 在破坏性删除后保存保留前缀，会话释放保存活会话的最终切面。其间，配置的条数与间隔节流随事件累积写入。每次写入通过领域写入链以原子方式替换该会话的完整记录；失败会记录警告并让缓存保持陈旧，后续写入会自行修复。
 
 ### 读取缓存值
 
-`cachedSnapshot(meta, inheritedEventCount)` 以零 I/O 从存储域的内存表同步提供客户端值。它只接受身份匹配的记录以及版本和 schema 均匹配的 key，再按所服务行的最低水位返回 `{ asOfSeq, values }` 切面。`cachedPredecessorTitle(meta, inheritedEventCount)` 是更窄的列表专用例外：生命周期匹配且已通过结构准入的 predecessor record 只能公开与当前版本兼容的 `title` row。该 title 是 durable prefix 中可能过时的事实，而不是 fold seed；它携带 sentinel `asOfSeq: -1`，因为改变事件数量的 Session 迁移会使 predecessor row 的数字序号失效。其他 predecessor row 仍不可用。未 seeded 的列表知道切点为零；仅 header 的 seeded 列表不知道数字切点，因此两条快速路径都要跳过，直到权威正文读取提供它。`coldSnapshot(meta, inheritedEventCount, events)` 接受精确切点与完整有序日志，在折叠时跳过已检查点化的前缀，并在自身不读取持久化层的情况下刷新记录。
+`cachedSnapshot(meta, inheritedEventCount)` 以零 I/O 从存储域的内存表同步提供客户端值。它只接受身份匹配的记录以及版本和 schema 均匹配的 key，再按所服务行的最低水位返回 `{ asOfSeq, values }` 切面。`cachedPredecessorTitle(meta, inheritedEventCount)` 是更窄的列表专用例外：生命周期匹配且已通过结构准入的 predecessor record 只能公开与当前版本兼容的 `title` row。该 title 是 durable prefix 中可能过时的事实，而不是 fold seed；它携带 sentinel `asOfSeq: -1`，因为改变事件数量的 Session 迁移会使 predecessor row 的数字序号失效。其他 predecessor row 仍不可用。`cachedListedHint(meta)` 是 Session 列表入口：未 seeded 行使用切点 0；仅 header 的 seeded 行在 `createdAt`、`cwd` 与 seeded lineage 匹配后取存储检查点的 `inheritedEventCount`，再提供当前 snapshot 或 predecessor title。hydrate 仍要求调用方传入权威切点。`coldSnapshot(meta, inheritedEventCount, events)` 接受精确切点与完整有序日志，在折叠时跳过已检查点化的前缀，并在自身不读取持久化层的情况下刷新记录。
 
 ### 缓存保证什么
 

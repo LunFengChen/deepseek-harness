@@ -3,21 +3,21 @@ import {
   assertReleasedV2Header,
   releasedV2SessionFormatCodec,
   sessionFormatV1ToV2,
-} from '@deepseek-ai/dsh-session-format-v1-to-v2'
+} from '@x1a0f3n9/dsh-session-format-v1-to-v2'
 import { assertReleasedV2Artifact } from '../src/testing/validation.ts'
 import {
   releasedV0SessionFormatCodec,
   releasedV1SessionFormatCodec,
   sessionFormatV0ToV1,
-} from '@deepseek-ai/dsh-session-format-v0-to-v1'
+} from '@x1a0f3n9/dsh-session-format-v0-to-v1'
 import type {
   SessionFormatArtifact,
   SessionFormatEvent,
   SessionFormatEventRun,
   SessionFormatHeader,
   SessionFormatJsonObject,
-} from '@deepseek-ai/dsh-session-format'
-import { createSessionFormatCatalog, SessionFormatEventCollector } from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
+import { createSessionFormatCatalog, SessionFormatEventCollector } from '@x1a0f3n9/dsh-session-format'
 
 const message = {
   id: 'assistant-1',
@@ -889,6 +889,37 @@ describe('sessionFormatV1ToV2', () => {
       })
     },
   )
+
+  it('refuses leftover message provenance when no chunk attempt is open', () => {
+    const source: SessionFormatArtifact = {
+      header: {
+        version: 1, id: 'v1-leftover-message-provenance', createdAt: 1,
+        isSeeded: false, delegationDepth: 0,
+      },
+      inheritedEventCount: 0,
+      events: [
+        event('turn/start', 0, 1, { turn: 1 }),
+        event('step/start', 1, 2, { turn: 1, step: 1 }),
+        { ...event('user/message', 2, 3, userMessage), surfaceOp: 'append' },
+        event('assistant/chunk', 3, 4, {
+          turn: 1, step: 1, chunk: { type: 'text-delta', index: 0, text: 'hello' },
+        }),
+        event('assistant/chunk', 4, 5, {
+          turn: 1, step: 1, chunk: { type: 'finish', reason: { kind: 'stop' } },
+        }),
+        event('step/end', 5, 6, { turn: 1, step: 1 }),
+        event('step/start', 6, 7, { turn: 1, step: 2 }),
+        {
+          ...event('assistant/message', 7, 8, { turn: 1, step: 2, message }),
+          sourceEventSeqs: [2],
+          surfaceOp: 'append',
+        },
+        event('step/end', 8, 9, { turn: 1, step: 2 }),
+        event('turn/end', 9, 10, { turn: 1, reason: { kind: 'completed' } }),
+      ],
+    }
+    expect(() => migrateV1ToV2(source)).toThrow(/complete ordered attempt/)
+  })
 
   it('refuses missing, partial, or reordered provenance for a present v1 attempt', () => {
     const build = (sourceEventSeqs: readonly number[] | undefined): SessionFormatArtifact => ({

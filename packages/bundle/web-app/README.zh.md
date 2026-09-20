@@ -3,7 +3,7 @@ description: "dsh 的浏览器 GUI：交互式聊天、模型与设置管理、�
 kind: "package-bundle"
 ---
 
-# @deepseek-ai/dsh-web-app
+# @x1a0f3n9/dsh-web-app
 
 [English](README.md) | 中文
 

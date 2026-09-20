@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import type { CodeFileType, FileType } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { CodeFileType, FileType } from '@x1a0f3n9/dsh-client-ui-primitives'
 
 const css = readFileSync(fileURLToPath(new URL('../src/FileTypeIcon.module.css', import.meta.url)), 'utf8')
 

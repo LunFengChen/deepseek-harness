@@ -4,14 +4,14 @@
  * Adapters expose one resolved policy per registered provider route; the
  * optional dsh-llm-retry plugin executes it on the agent's failed-step extension point.
  *
- * @module @deepseek-ai/dsh-llm/retry-policy
+ * @module @x1a0f3n9/dsh-llm/retry-policy
  */
 
 import z from '@deepseek-ai/schemastery'
-import { MAX_TIMER_DELAY_MS } from '@deepseek-ai/dsh-timeout'
+import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
 import { EMPTY_RESPONSE_CODE } from './error.ts'
 
-const DEFAULT_MAX_RETRIES = 5
+const DEFAULT_MAX_RETRIES = 20
 const DEFAULT_INITIAL_DELAY_MS = 500
 const DEFAULT_MAX_DELAY_MS = 10_000
 const DEFAULT_JITTER_RATIO = 0.1
@@ -37,7 +37,7 @@ export interface BackoffConfig {
 export interface NormalRetryPolicyConfig {
   /** Retry only configured transient failure codes. */
   mode: 'normal'
-  /** Maximum eligible retries after the first request (default 5). */
+  /** Maximum eligible retries after the first request (default 20). */
   maxRetries?: number
   /** Stable failure codes eligible for this policy. */
   retryableCodes?: string[]

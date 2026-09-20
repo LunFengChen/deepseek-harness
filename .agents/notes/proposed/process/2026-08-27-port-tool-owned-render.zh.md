@@ -6,7 +6,7 @@ Status: proposed
 
 ## 问题
 
-`dsh-tool-owned-render` 原型（`Chinesezjc/dsh-tool-owned-render`）带有 `read`、`bash`、`write`/`edit`、`grep`/`glob`、`web_search`/`web_fetch` 的 tool-owned render 注册项，基于旧 API 编写：`ToolCallBlock` 暴露 `callView` / `resultView`，客户端能拿到 host `presentResult` 输出。当前 master 从原始 `block.call` / `block.content` / `block.meta` 推导客户端卡片，`ctx.slots` 也需要 `@deepseek-ai/dsh-client-ui-renderer/client` 模块增强。直接合并原型不能通过类型检查，因此这些注册项不经移植无法发布。
+`dsh-tool-owned-render` 原型（`Chinesezjc/dsh-tool-owned-render`）带有 `read`、`bash`、`write`/`edit`、`grep`/`glob`、`web_search`/`web_fetch` 的 tool-owned render 注册项，基于旧 API 编写：`ToolCallBlock` 暴露 `callView` / `resultView`，客户端能拿到 host `presentResult` 输出。当前 master 从原始 `block.call` / `block.content` / `block.meta` 推导客户端卡片，`ctx.slots` 也需要 `@x1a0f3n9/dsh-client-ui-renderer/client` 模块增强。直接合并原型不能通过类型检查，因此这些注册项不经移植无法发布。
 
 ## 提案
 

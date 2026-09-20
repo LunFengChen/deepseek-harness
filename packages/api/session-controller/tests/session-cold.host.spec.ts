@@ -4,25 +4,25 @@
  * isolation, and prompt failure mapping.
  */
 
-import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
+import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore from '@deepseek-ai/dsh-session'
-import AgentRegistry from '@deepseek-ai/dsh-agent'
-import { SessionHistoryController } from '@deepseek-ai/dsh-api-session-controller/src/history.ts'
-import { subagentIdentityProjectionDefinition } from '@deepseek-ai/dsh-subagent/src/projection.ts'
-import TypertRegistry from '@deepseek-ai/dsh-typert-registry'
-import { createUserMessage, MessageId } from '@deepseek-ai/dsh-llm'
-import { snapshotSubagentDescriptor } from '@deepseek-ai/dsh-subagent'
-import { createInboxStub } from '@deepseek-ai/dsh-agent-loop-testkit'
-import type { Agent, Inbox } from '@deepseek-ai/dsh-agent'
-import type { SessionEvent, SessionHeader, SessionId } from '@deepseek-ai/dsh-session'
-import AttachmentStore from '@deepseek-ai/dsh-attachment'
+import SessionStore from '@x1a0f3n9/dsh-session'
+import AgentRegistry from '@x1a0f3n9/dsh-agent'
+import { SessionHistoryController } from '@x1a0f3n9/dsh-api-session-controller/src/history.ts'
+import { subagentIdentityProjectionDefinition } from '@x1a0f3n9/dsh-subagent/src/projection.ts'
+import TypertRegistry from '@x1a0f3n9/dsh-typert-registry'
+import { createUserMessage, MessageId } from '@x1a0f3n9/dsh-llm'
+import { snapshotSubagentDescriptor } from '@x1a0f3n9/dsh-subagent'
+import { createInboxStub } from '@x1a0f3n9/dsh-agent-loop-testkit'
+import type { Agent, Inbox } from '@x1a0f3n9/dsh-agent'
+import type { SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import AttachmentStore from '@x1a0f3n9/dsh-attachment'
 import type { SessionPromptRequest, SessionRequestId } from '../src/types.ts'
 import {
   SessionPersistenceRevision,
   type SessionPersistenceSnapshot,
-} from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-persistence'
 import {
   createSessionTestRemote,
   testSessionPersistence,
@@ -94,8 +94,7 @@ describe('sessions.list cold merge', () => {
       inspect,
     })
     ctx.provide('sessionProjectionCache', {
-      cachedSnapshot: () => undefined,
-      cachedPredecessorTitle: (meta: SessionHeader) => meta.id === sid('legacy-title')
+      cachedListedHint: (meta: SessionHeader) => meta.id === sid('legacy-title')
         ? { asOfSeq: -1, values: { title: 'Cached predecessor title' } }
         : undefined,
     } as never)
@@ -143,7 +142,7 @@ describe('sessions.list cold merge', () => {
     })
     const cacheCalls: string[] = []
     ctx.provide('sessionProjectionCache', {
-      cachedSnapshot: (meta: SessionHeader) => {
+      cachedListedHint: (meta: SessionHeader) => {
         cacheCalls.push(String(meta.id))
         if (meta.id === sid('cached-blank')) {
           return { asOfSeq: 0, values: { sessionListMetadata: { blank: true, lastPromptAt: null } } }
@@ -151,9 +150,11 @@ describe('sessions.list cold merge', () => {
         if (meta.id === sid('cached-conversation')) {
           return { asOfSeq: 1, values: { sessionListMetadata: { blank: false, lastPromptAt: 1000 } } }
         }
+        if (meta.id === sid('seeded-cold')) {
+          return { asOfSeq: 12, values: { title: 'Seeded cached title' } }
+        }
         return undefined
       },
-      cachedPredecessorTitle: () => undefined,
     } as never)
     const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
 
@@ -171,10 +172,14 @@ describe('sessions.list cold merge', () => {
       origin: 'subagent',
     })
     expect(byId['missing-cwd']).toBeUndefined()
-    // A cold seeded header never consults the cache: its cut is not 0, so a
-    // cut-0 lookup would alias a different projection identity.
-    expect(byId['seeded-cold']).toMatchObject({ blank: false, updatedAt: 450 })
-    expect(cacheCalls).not.toContain('seeded-cold')
+    // A cold seeded header has no inherited cut; listing still reads the
+    // cache hint so fork titles survive restart without a body read.
+    expect(byId['seeded-cold']).toMatchObject({
+      blank: false,
+      updatedAt: 450,
+      projections: { asOfSeq: 12, values: { title: 'Seeded cached title' } },
+    })
+    expect(cacheCalls).toContain('seeded-cold')
     expect(inspect).not.toHaveBeenCalled()
   })
 
@@ -283,7 +288,7 @@ describe('Remote Agent and Session lookup policy', () => {
       list: () => Promise.resolve([meta]),
       inspect,
     })
-    const resumedSession = { id: sessionId, header: meta, events: [] } as unknown as import('@deepseek-ai/dsh-session').Session
+    const resumedSession = { id: sessionId, header: meta, events: [] } as unknown as import('@x1a0f3n9/dsh-session').Session
     const resumedAgent = { id: sessionId, session: resumedSession, status: 'idle', ctx } as Agent
     const release = Promise.withResolvers<undefined>()
     const resume = vi.spyOn(ctx.agents, 'resume').mockImplementation(async () => {

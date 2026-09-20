@@ -8,7 +8,7 @@ import {
   type ParameterSchemaSpec,
   type ValueSchemaSpec,
 } from '../src/index.ts'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 
 describe('the unified author schema DSL', () => {
   it('compiles every value root and the author-only json node', () => {

@@ -3,7 +3,7 @@ description: "Web GUI 的外壳布局：三栏 AppFrame（右栏作为贴边面�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-layout
+# @x1a0f3n9/dsh-client-ui-layout
 
 [English](README.md) | 中文
 

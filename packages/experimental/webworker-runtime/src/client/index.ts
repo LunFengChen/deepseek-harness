@@ -6,10 +6,10 @@
  * is later loaded through, so it cannot itself be a graph row. A page imports
  * it directly and decides where the worker bundle and image live; nothing
  * here mounts into a shipped roster.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/client
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/client
  */
 import { IMAGE_FILE_NAME } from '../image-layout.ts'
-import type { ClientFileUploadHooks } from '@deepseek-ai/dsh-client-file-upload/types'
+import type { ClientFileUploadHooks } from '@x1a0f3n9/dsh-client-file-upload/types'
 import { PREVIEW_FIXTURE_MANIFEST_FILE } from '../fixture-manifest.ts'
 import { WorkerTunnel, type TunnelFetch } from './client.ts'
 import { applyIndexInjections } from './apply-injections.ts'

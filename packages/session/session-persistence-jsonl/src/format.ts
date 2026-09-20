@@ -12,23 +12,23 @@ import { isAbsolute, join } from 'node:path'
 import {
   SESSION_FORMAT_VERSION,
   SessionLogOffset,
-} from '@deepseek-ai/dsh-session'
+} from '@x1a0f3n9/dsh-session'
 import type {
   SessionEvent,
   SessionHeader,
   SessionId,
   SessionLogOffset as SessionLogOffsetType,
-} from '@deepseek-ai/dsh-session'
-import { parseSessionFormatLogFilename, sessionFormatLogFilename, SessionFormatUnsupportedMigrationError } from '@deepseek-ai/dsh-session-format'
-import type { SessionFormatEvent } from '@deepseek-ai/dsh-session-format'
-import type { SessionFormatRecovery, SessionFormatRestore } from '@deepseek-ai/dsh-session-format'
-import { sessionFormatCatalog } from '@deepseek-ai/dsh-session-format-catalog'
-import { assertV3RowAdmission } from '@deepseek-ai/dsh-session-format-v2-to-v3'
+} from '@x1a0f3n9/dsh-session'
+import { parseSessionFormatLogFilename, sessionFormatLogFilename, SessionFormatUnsupportedMigrationError } from '@x1a0f3n9/dsh-session-format'
+import type { SessionFormatEvent } from '@x1a0f3n9/dsh-session-format'
+import type { SessionFormatRecovery, SessionFormatRestore } from '@x1a0f3n9/dsh-session-format'
+import { sessionFormatCatalog } from '@x1a0f3n9/dsh-session-format-catalog'
+import { assertV3RowAdmission } from '@x1a0f3n9/dsh-session-format-v2-to-v3'
 import {
   SessionFormatUnsupportedError,
   sessionFormatVersionRefusal,
   type SessionStorageMetadata,
-} from '@deepseek-ai/dsh-session-persistence'
+} from '@x1a0f3n9/dsh-session-persistence'
 
 /** Physical encoding selected for JSONL session artifacts. */
 export type JsonlCompression = 'zstd' | 'none'
@@ -344,8 +344,12 @@ function refuseForeignFormatVersion(parsed: object): void {
   )
 }
 
-/** Parse one complete header record supplied independently from event rows. */
-function parseHeaderRecord(record: Buffer): { readonly meta: SessionHeader; readonly restore: SessionFormatRestore } {
+/**
+ * Parse one complete header record supplied independently from event rows.
+ * @param record - the complete first JSONL record, including its newline.
+ * @returns logical metadata and a restore stream positioned after the header.
+ */
+export function parseHeaderRecord(record: Buffer): { readonly meta: SessionHeader; readonly restore: SessionFormatRestore } {
   if (record.length === 0 || record.at(-1) !== 0x0A || record.indexOf(0x0A) !== record.length - 1) {
     throw new Error('empty or header-less session log')
   }

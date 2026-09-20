@@ -24,7 +24,7 @@ The default policy provides bounded recovery from transient failures of the same
 
 ### Preserve failure facts without embedding policy
 
-`@deepseek-ai/dsh-llm` exports one JSON-serializable `LlmFailure` payload:
+`@x1a0f3n9/dsh-llm` exports one JSON-serializable `LlmFailure` payload:
 
 ```ts ignore-check
 type ProviderRequestId = Branded<'ProviderRequestId'>
@@ -46,11 +46,11 @@ The agent loop passes the terminal finish's `LlmFailure` to `agent/request-error
 
 Adapters extract structured facts before falling back to message inspection. They validate HTTP status, parse `Retry-After` seconds or dates into a positive finite millisecond delay, brand the provider request id when exposed, and distinguish their own timeout from the caller's abort. Provider-specific codes and messages may refine a mapping, but no recovery listener parses them.
 
-The shared transient-code set is intentionally small: adapter mappings for `RATE_LIMIT` and `SERVER`, explicit `TIMEOUT` and `TRANSPORT` codes for remote failures, and `EMPTY_RESPONSE` for a completed provider response with no content blocks. Both adapters classify the last case as an error finish; see [empty model responses are retryable](../../archived/bug-fix/2026-07-24-empty-model-response-is-retryable.md). Authentication, quota, invalid request, context overflow, protocol, abort, and unknown failures keep distinct stable codes and are not transient by default. Adding a code requires adapter fixtures and a documented policy decision; it does not require expanding a second failure-class enum.
+The shared transient-code set is intentionally small: adapter mappings for `RATE_LIMIT` and `SERVER`, explicit `TIMEOUT` and `TRANSPORT` codes for remote failures, and `EMPTY_RESPONSE` for a completed provider response with no content blocks. Both adapters classify the last case as an error finish; see [empty model responses are retryable](../../archived/bug-fix/2026-07-24-empty-model-response-is-retryable.md). Authentication, quota, invalid request, context overflow, abort, and unknown failures keep distinct stable codes and are not transient by default. OpenAI-compatible in-band SSE error codes map onto this same set rather than remaining `PI_AI_ERROR`; the mapping is owned by [pi-ai in-band stream error classification](../bug-fix/2026-09-17-pi-ai-in-band-error-classification.md). Adding a code requires adapter fixtures and a documented policy decision; it does not require expanding a second failure-class enum.
 
 ### Put retry policy on the existing failed-step extension point
 
-`@deepseek-ai/dsh-llm-retry` is a function plugin that listens to `agent/request-error`. It introduces no service or new loop branch; the agent-loop package changes only the data carried through its existing failed-step recovery control flow.
+`@x1a0f3n9/dsh-llm-retry` is a function plugin that listens to `agent/request-error`. It introduces no service or new loop branch; the agent-loop package changes only the data carried through its existing failed-step recovery control flow.
 
 The `agent/request-error` waterfall carries the current `LlmFailure`, an immutable list of prior failures that authorized retries in the consecutive recovery sequence, and the serving registration's immutable retry policy. The loop transports but does not interpret that policy, owns the consecutive failure history, and clears it after a successful model request. Normal `dsh-llm-retry` policy counts durable retry records scheduled by the same exact-provider policy, while `dsh-compaction-basic` keeps its own context-overflow budget. Alternating transient and context-overflow failures therefore consume their owning finite budgets independently; the maximum request count is one plus the sum of the loaded finite budgets.
 
@@ -76,7 +76,7 @@ Adapters perform one provider request per `stream()` call. The pi-ai adapter rem
 
 Each adapter exposes a validated `streamIdleTimeoutMs` configuration field with the five-minute prior-art default cited above. The interval is capped at Node's maximum timer delay so it cannot be clamped to one millisecond. It covers each outstanding iterator `next()` from demand to adapter-recognized provider activity; time a consumer spends between `next()` calls is not provider idle time. DeepSeek SSE comments count as transport activity but never become `StreamChunk` values or session-log events.
 
-`@deepseek-ai/dsh-timeout` exposes a rearmable idle-watchdog primitive. One stable local `AbortController` is fused with the caller signal and passed to the transport for the whole adapter call; each outstanding `next()` arms the watchdog, resolution disarms it, and the next demand rearms it. Out-of-band transport activity calls `pulse()` to rearm an outstanding demand without yielding a value. Timeout aborts that stable controller with a capability-owned `TimeoutReason`, and `finally` clears the timer. The adapter classifies its watchdog as `TIMEOUT` and an earlier upstream abort as `ABORTED`. The existing one-shot `deadline()` is not presented as a sliding timer.
+`@x1a0f3n9/dsh-timeout` exposes a rearmable idle-watchdog primitive. One stable local `AbortController` is fused with the caller signal and passed to the transport for the whole adapter call; each outstanding `next()` arms the watchdog, resolution disarms it, and the next demand rearms it. Out-of-band transport activity calls `pulse()` to rearm an outstanding demand without yielding a value. Timeout aborts that stable controller with a capability-owned `TimeoutReason`, and `finally` clears the timer. The adapter classifies its watchdog as `TIMEOUT` and an earlier upstream abort as `ABORTED`. The existing one-shot `deadline()` is not presented as a sliding timer.
 
 Boundary tests prove termination at both actual transports. The hand-written adapter aborts its fetch/reader, and the pi-ai adapter maps the stable signal through the SDK and proves the SDK closes the response. A timer that merely rejects a consumer promise while leaving the request running does not satisfy the contract.
 

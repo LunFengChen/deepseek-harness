@@ -24,7 +24,7 @@ Status: implemented
 
 **将 DSH 兼容性放在 `dsh.engines` 下。** [VS Code](https://code.visualstudio.com/api/references/extension-manifest) 将宿主要求放在顶层 `engines.vscode`。顶层 `engines.dsh` 让作者在同一位置声明运行时要求；自定义键的检查仍由 DSH 负责。
 
-**仅用 peer dependency 声明宿主要求。** Peer dependency 约束已安装的 npm 包，包括 CLI 包 `@deepseek-ai/dsh`。插件位于独立 profile 项目时，它们无法标识当前运行的 DSH 进程。
+**仅用 peer dependency 声明宿主要求。** Peer dependency 约束已安装的 npm 包，包括 CLI 包 `@x1a0f3n9/dsh`。插件位于独立 profile 项目时，它们无法标识当前运行的 DSH 进程。
 
 **通过统一的强制解析器解析所有领域。** 现有读取方消费不同字段子集，并各自拥有错误与默认值。合并它们会让客户端读取方校验无关的 profile 声明。公共类型保持独立于文件系统访问和解析策略。
 

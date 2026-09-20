@@ -2,7 +2,7 @@
  * Root-owned frame measurement, panel preferences, and presentation reports.
  * The registration supplies a fresh store and binds its actions to ctx.layout.
  */
-import { defineStore, type EngineStoreHandle } from '@deepseek-ai/dsh-client-store'
+import { defineStore, type EngineStoreHandle } from '@x1a0f3n9/dsh-client-store'
 import type { MainPanelId } from './service.ts'
 import {
   clampWidth, RIGHTBAR_DEFAULT_RATIO, RIGHTBAR_MAX_RATIO, RIGHTBAR_MIN,

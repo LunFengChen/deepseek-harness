@@ -8,8 +8,8 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { Deque } from '@deepseek-ai/dsh-deque'
-import type { FsObservation, FsTarget } from '@deepseek-ai/dsh-fs'
+import { Deque } from '@x1a0f3n9/dsh-deque'
+import type { FsObservation, FsTarget } from '@x1a0f3n9/dsh-fs'
 import type { WorkspaceFileWatchFrame } from './types.ts'
 
 /** One `fs/observed` emission as received, before any generation filters it. */

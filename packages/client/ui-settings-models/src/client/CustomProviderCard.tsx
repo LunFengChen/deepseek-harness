@@ -14,21 +14,23 @@
  * and at least one model — are required here rather than at load, so the
  * failure names the field while the user is still looking at it.
  *
- * There is deliberately no reasoning-effort control, here or on the editor
- * card: effort is a per-MODEL capability, and the models under one provider
- * disagree about it, so a provider-scoped control can only be set to a value
- * some of them reject. The composer's model picker offers each model its own
- * levels instead.
+ * There is no provider-scoped reasoning-effort control: effort is a per-MODEL
+ * capability, and the models under one provider disagree about it. Each model
+ * row offers Default (none) or Custom levels written as `reasoningEfforts`.
+ * Retry count and delay are provider-route fields: Default omits `retryPolicy`,
+ * and Custom writes a normal-mode policy with those two values.
  */
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 import { apiKeyFailure } from './apiKey.ts'
 import { EditorFooter } from './EditorFooter.tsx'
 import { validateDeepSeekModels } from './DeepSeekModelsEditor.tsx'
 import { ModelListEditor } from './ModelListEditor.tsx'
 import type { ModelDraft } from './ModelListEditor.tsx'
+import { RetryPolicyFields } from './retry-policy-fields.tsx'
+import { validateRetryPolicy } from './retry-policy.ts'
 import { deriveKeyRef } from './store.ts'
 import type { ModelsOperations } from './operations.ts'
 import type { en } from './locales.ts'
@@ -93,6 +95,7 @@ export function CustomProviderCard(props: CustomProviderCardProps): ReactNode {
   const [protocol, setProtocol] = useState(protocols[0] ?? '')
   const [keyDraft, setKeyDraft] = useState('')
   const [models, setModels] = useState<readonly ModelDraft[]>([])
+  const [retryPolicy, setRetryPolicy] = useState<unknown>(undefined)
   const [busy, setBusy] = useState(false)
   const [failure, setFailure] = useState<string | undefined>(undefined)
   /**
@@ -118,9 +121,10 @@ export function CustomProviderCard(props: CustomProviderCardProps): ReactNode {
   // string, which the create path reads as "no key supplied" — a route may
   // legitimately authenticate through the provider's own ambient discovery.
   const keyValue = keyDraft.trim()
+  const retryFailure = validateRetryPolicy(retryPolicy)
   const ready = route.length > 0 && !routeInvalid && !routeTaken
     && normalizedBaseURL.length > 0 && !baseUrlInvalid && models.length > 0 && modelFailure === undefined
-    && keyFailure === undefined
+    && keyFailure === undefined && retryFailure === undefined
   // The one blocked gate worth a line under the form. A satisfied card says
   // nothing at all rather than printing an empty paragraph.
   const hint = failure !== undefined || ready
@@ -144,6 +148,8 @@ export function CustomProviderCard(props: CustomProviderCardProps): ReactNode {
     const keyRef = deriveKeyRef(route)
     const storesKey = keyValue.length > 0
     if (!committed) {
+      /* v8 ignore next -- unreachable from the card: the same failure disables submit */
+      if (retryFailure !== undefined) return t(retryFailure)
       const profile = {
         ...displayName.length === 0 ? {} : { displayName },
         // The profile names the conventional reference only when this card is
@@ -154,6 +160,7 @@ export function CustomProviderCard(props: CustomProviderCardProps): ReactNode {
         api: protocol,
         baseURL: normalizedBaseURL,
         models: models.map(model => ({ ...model })),
+        ...retryPolicy === undefined ? {} : { retryPolicy: retryPolicy as JsonValue },
       }
       // `taken` is a snapshot too, so the id check alone cannot see a route
       // declared after this card opened; the revision makes that race a
@@ -275,6 +282,13 @@ export function CustomProviderCard(props: CustomProviderCardProps): ReactNode {
           ? null
           : <p className={styles['error']}>{t(keyFailure === 'keyBlank' ? 'keyBlankNew' : keyFailure)}</p>}
       </div>
+      <RetryPolicyFields
+        value={retryPolicy}
+        onChange={setRetryPolicy}
+        t={t}
+        disabled={profileDisabled}
+        name="provider-retry-policy-new"
+      />
       <ModelListEditor
         models={models}
         onChange={setModels}

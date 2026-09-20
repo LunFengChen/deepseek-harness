@@ -2,7 +2,7 @@
 import { Fragment, type ReactNode } from 'react'
 import type {
   SessionAreaProps, StandardSourceBinding,
-} from '@deepseek-ai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 
 /**
  * Render the selected Session body or its empty branch.

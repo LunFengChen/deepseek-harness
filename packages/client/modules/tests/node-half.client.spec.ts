@@ -9,13 +9,13 @@ import { pathToFileURL } from 'node:url'
 import { runInNewContext } from 'node:vm'
 import { Context, type Fiber } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { renderIndexInjections, type WebServer, type WebRoute } from '@deepseek-ai/dsh-host-webserver'
+import { renderIndexInjections, type WebServer, type WebRoute } from '@x1a0f3n9/dsh-host-webserver'
 import * as modulesClient from '../src/client/index.ts'
 import { ClientModuleRegistry, bootInjections, orderByModuleGraph } from '../src/index.ts'
 import type { ClientModuleLoaderTarget, WebBootEntry, WebBootGraph } from '../src/client/index.ts'
 
-const MODULES_ID = '@deepseek-ai/dsh-client-modules'
-const UI_RENDERER_ID = '@deepseek-ai/dsh-client-ui-renderer'
+const MODULES_ID = '@x1a0f3n9/dsh-client-modules'
+const UI_RENDERER_ID = '@x1a0f3n9/dsh-client-ui-renderer'
 
 const comboUrl = (ids: readonly string[], rev: string): string =>
   `/plugins/??${ids.map(id => `${id}/client.js`).join(',')}&rev=${rev}`
@@ -143,7 +143,7 @@ const bootGraph = (): WebBootGraph => ({
   rev: 'graph',
   entries: [
     { id: MODULES_ID, url: comboUrl([MODULES_ID], 'm'), rev: 'm' },
-    { id: UI_RENDERER_ID, url: comboUrl([UI_RENDERER_ID], 'r'), rev: 'r' },
+    { id: UI_RENDERER_ID, url: comboUrl([UI_RENDERER_ID], 'r'), rev: 'r', immediately: true },
   ],
   batches: [
     {
@@ -195,14 +195,14 @@ describe('HTML bootstrap facade', () => {
       .toThrow('create called after module-system boot')
   })
 
-  it('preloads every application combo', () => {
+  it('preloads only immediately-tier application combos', () => {
     const graph = bootGraph()
     const secondId = '@fixture/second-application-combo'
     const secondUrl = comboUrl([secondId], 'app-2')
     graph.entries.push({ id: secondId, url: comboUrl([secondId], 'row-2'), rev: 'row-2' })
     graph.batches.push({ phase: 'application', url: secondUrl, rev: 'app-2', entries: [secondId] })
     expect(bootInjections(graph).flatMap(row => row.kind === 'script-preload' ? [row.src] : []))
-      .toEqual([APPLICATION_URL, secondUrl])
+      .toEqual([APPLICATION_URL])
   })
 
   it('rejects a page that did not preload the modules bundle', () => {
@@ -825,6 +825,32 @@ describe('module graph order', () => {
   it('rejects a row requesting its own package name', () => {
     expect(() => orderByModuleGraph([entry('solo', { external: ['solo'] })]))
       .toThrow('client-modules: "solo" requests module "solo" that it answers itself')
+  })
+
+  it('isolates immediately-tier rows from deferred application combos', () => {
+    const immediateName = '@fixture/immediate-combo'
+    const deferredName = '@fixture/deferred-combo'
+    writeBuiltPackage(immediateName, { immediately: true })
+    writeBuiltPackage(deferredName, {})
+    const graph = construct([immediateName, deferredName]).graph()
+    const batches = graph.batches.filter(batch => batch.phase === 'application')
+    expect(batches).toEqual([
+      expect.objectContaining({ entries: [immediateName] }),
+      expect.objectContaining({ entries: [deferredName] }),
+    ])
+    expect(bootInjections(graph).flatMap(row => row.kind === 'script-preload' ? [row.src] : []))
+      .toEqual([expect.stringContaining(`${immediateName}/client.js`)])
+  })
+
+  it('isolates a startup combo whose source exceeds the payload cap', () => {
+    const largeName = '@fixture/large-combo'
+    const smallName = '@fixture/small-combo'
+    const clientPath = writePackage(largeName, { dsh: { client: { platform: 'web' } } })
+    mkdirSync(dirname(clientPath), { recursive: true })
+    writeFileSync(clientPath, `${'module.exports = {};\n'.padEnd(512 * 1024 + 1, 'a')}\n`)
+    writeBuiltPackage(smallName, {})
+    const batches = construct([largeName, smallName]).graph().batches.filter(batch => batch.phase === 'application')
+    expect(batches.map(batch => batch.entries)).toEqual([[largeName], [smallName]])
   })
 
   it('composes the served graph in module-graph order', () => {

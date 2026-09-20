@@ -8,14 +8,14 @@ English | [中文](2026-07-24-single-harness-home-resolver.zh.md)
 
 The harness had two inconsistent conventions for "where does DeepSeek Harness user data live":
 
-- `@deepseek-ai/dsh-home` resolved `configured ?? $DSH_HOME ?? ~/.dsh`.
-- `@deepseek-ai/dsh-home-paths` shipped a **second** `resolveDshHome` with the same precedence plus tilde expansion — a near-duplicate of `dsh-home` that no gate flagged because the two lived in different packages and had already drifted (only one expanded tildes).
+- `@x1a0f3n9/dsh-home` resolved `configured ?? $DSH_HOME ?? ~/.dsh`.
+- `@x1a0f3n9/dsh-home-paths` shipped a **second** `resolveDshHome` with the same precedence plus tilde expansion — a near-duplicate of `dsh-home` that no gate flagged because the two lived in different packages and had already drifted (only one expanded tildes).
 
 Two resolvers for the same cross-cutting fact meant there was no single home policy.
 
 ## Decision
 
-One resolver owns the harness home, in `@deepseek-ai/dsh-home-paths`, single-root:
+One resolver owns the harness home, in `@x1a0f3n9/dsh-home-paths`, single-root:
 
 ```
 explicit configured path  >  $DSH_HOME  >  ~/.dsh
@@ -25,7 +25,7 @@ An empty or whitespace-only `$DSH_HOME` is treated as unset; otherwise `resolve(
 
 `dshCachePath(...segments)` derives paths below the resolved home's `cache` directory. An initial `{ dshHome }` option preserves a provider's explicit home override. It resolves paths without creating directories; callers own directory creation. `attachment-local` uses this helper for regenerable request-image variants while retaining durable attachment objects in their versioned storage tree, so clearing the cache cannot remove Session attachments. Existing request-image cache entries are left in place and are not read or copied; a cache miss regenerates the variant from its durable attachment.
 
-`@deepseek-ai/dsh-home` is deleted. Home-owning providers and boot packages import `resolveDshHome` from `dsh-home-paths`; composition bundles contain only the resolved configuration rows.
+`@x1a0f3n9/dsh-home` is deleted. Home-owning providers and boot packages import `resolveDshHome` from `dsh-home-paths`; composition bundles contain only the resolved configuration rows.
 
 `dsh-telemetry` and its separate home policy are absent under the [SDK project toolchain removal](../../archived/simplification/2026-08-11-remove-sdk-project-toolchain.md), leaving this resolver as the sole home policy.
 

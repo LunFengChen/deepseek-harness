@@ -3,7 +3,7 @@ description: "Outbound HTTP proxy support for the harness: how one policy resolv
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-http-proxy
+# @x1a0f3n9/dsh-http-proxy
 
 English | [中文](README.zh.md)
 

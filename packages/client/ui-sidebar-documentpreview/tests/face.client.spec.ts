@@ -6,16 +6,16 @@
  * runs under the session the file names, not the one the face was injected for.
  */
 import { describe, expect, it, onTestFinished, vi } from 'vitest'
-import type { RemoteResult } from '@deepseek-ai/dsh-api-remotes/client'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import { sessionFileAddress } from '@deepseek-ai/dsh-util-workspace-path'
-import type { WorkspaceFileBytes, WorkspaceFileText } from '@deepseek-ai/dsh-api-workspace-files/types'
+import type { RemoteResult } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { sessionFileAddress } from '@x1a0f3n9/dsh-util-workspace-path'
+import type { WorkspaceFileBytes, WorkspaceFileText } from '@x1a0f3n9/dsh-api-workspace-files/types'
 import { textFace } from '../src/client/face.ts'
 import type { DocumentFileBytes, ReadDocumentBytes, ReadWorkspaceFilePage } from '../src/client/rpc.ts'
 import { hostFileOf } from '../src/client/rpc.ts'
 import { createTextStore } from '../src/client/store.ts'
 import { ABSOLUTE_PATH, FILE, PATH, SESSION, failure, page } from './fixtures.client.ts'
-import type { TabId } from '@deepseek-ai/dsh-client-ui-dockkit'
+import type { TabId } from '@x1a0f3n9/dsh-client-ui-dockkit'
 
 const TAB_1 = 'tab-1' as TabId
 

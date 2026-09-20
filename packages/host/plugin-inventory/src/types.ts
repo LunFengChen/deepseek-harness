@@ -1,4 +1,4 @@
-import type { Branded } from '@deepseek-ai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /** Stable Loader-tree identity of one configured plugin entry. */
 export type PluginEntryId = Branded<'PluginEntryId'>
@@ -20,6 +20,34 @@ export interface PluginInventoryEntry {
   /** Effective Loader enablement, including disabled ancestor groups. */
   readonly enabled: boolean
   readonly fiberPhase: PluginFiberPhase
+}
+
+/** One package-owned prebundled feature exposed for profile-level toggling. */
+export interface PluginInventoryCatalogEntry {
+  readonly id: string
+  readonly entryId: PluginEntryId
+  readonly packageName: string
+  /** Version from the package's `package.json` when the bundle layer can resolve it. */
+  readonly version?: string
+  readonly title?: string
+  readonly description?: string
+  readonly author?: string
+  readonly homepage?: string
+  readonly required: boolean
+  readonly defaultEnabled: boolean
+  readonly installed: boolean
+  readonly enabled: boolean
+}
+
+/** Request to persist the enablement of one cataloged prebundled feature. */
+export interface PluginInventorySetEnabledRequest {
+  readonly entryId: PluginEntryId
+  readonly enabled: boolean
+}
+
+/** Result of a prebundled feature enablement mutation. */
+export interface PluginInventorySetEnabledValue {
+  readonly enabled: boolean
 }
 
 /** Effective enablement of one preset composition row. */
@@ -62,6 +90,8 @@ export interface AgentPresetPluginGroup {
 /** Point-in-time inventory returned by the plugin inventory Remote. */
 export interface PluginInventorySnapshot {
   readonly entries: readonly PluginInventoryEntry[]
+  /** Optional prebundled features declared by the selected profile bundles. */
+  readonly catalog?: readonly PluginInventoryCatalogEntry[]
   /**
    * Per-preset compositions, present only when an agent-preset roster is
    * composed in this deployment.

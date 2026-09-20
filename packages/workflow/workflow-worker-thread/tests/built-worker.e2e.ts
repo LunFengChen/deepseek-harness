@@ -22,9 +22,9 @@ describe.skipIf(!existsSync(builtIndex) || !existsSync(builtWorker))('built work
     try {
       await writeFile(driver, `
 import { Context } from '@deepseek-ai/cordis'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import SubagentRuntime from '@deepseek-ai/dsh-subagent'
-import WorkerThreadWorkflowEngine from '@deepseek-ai/dsh-workflow-worker-thread'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
+import WorkerThreadWorkflowEngine from '@x1a0f3n9/dsh-workflow-worker-thread'
 
 const ctx = new Context()
 await ctx.plugin(SessionProjectionRegistry)

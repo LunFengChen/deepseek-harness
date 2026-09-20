@@ -10,7 +10,8 @@ import {
   type RegistryIndex,
 } from './benchmark-npm-resolution.ts'
 
-const DSH_PACKAGE = '@deepseek-ai/dsh'
+const DSH_PACKAGE = '@x1a0f3n9/dsh'
+const OFFICIAL_DSH_PACKAGE = '@deepseek-ai/dsh'
 const CORDIS_PACKAGE = '@deepseek-ai/cordis'
 const NESTED_DSH_ALIAS = 'dsh-previous'
 const NESTED_DSH_PATH = `node_modules/${NESTED_DSH_ALIAS}`
@@ -35,21 +36,102 @@ export interface DshInstallLayoutSummary {
   readonly checkedDshEdges: number
 }
 
-function isDshPackage(name: string): boolean {
+function isForkDshPackage(name: string): boolean {
   return name === DSH_PACKAGE || name.startsWith(`${DSH_PACKAGE}-`)
 }
 
-function cloneForVersion(manifest: object, version: string): MutableRegistryManifest {
+function isOfficialDshPackage(name: string): boolean {
+  return name === OFFICIAL_DSH_PACKAGE || name.startsWith(`${OFFICIAL_DSH_PACKAGE}-`)
+}
+
+function isDshPackage(name: string): boolean {
+  return isForkDshPackage(name)
+}
+
+/**
+ * Official product name that community plugins still declare.
+ * @param name - a fork-scoped dsh package name.
+ * @returns the `@deepseek-ai/dsh*` alias, or `undefined` when `name` is not a fork dsh package.
+ */
+function officialDshAlias(name: string): string | undefined {
+  if (name === DSH_PACKAGE) return OFFICIAL_DSH_PACKAGE
+  if (!name.startsWith(`${DSH_PACKAGE}-`)) return undefined
+  return `${OFFICIAL_DSH_PACKAGE}${name.slice(DSH_PACKAGE.length)}`
+}
+
+const PREINSTALLED_PLUGIN_PACKAGES = new Set([
+  'dshmarket',
+  'dsh-reasoning-effort',
+  'dsh-context',
+  'dsh-better-sidebar',
+  '@vectorize-io/hindsight-coding-agents',
+  '@x1a0f3n9/dshmarket',
+  '@x1a0f3n9/dsh-reasoning-effort',
+  '@x1a0f3n9/dsh-session-timeline',
+  '@x1a0f3n9/dsh-context',
+  '@x1a0f3n9/dsh-better-sidebar',
+  '@x1a0f3n9/hindsight-coding-agents',
+  '@x1a0f3n9/dsh-failover-queue',
+  '@x1a0f3n9/dsh-skills-manager',
+])
+
+/**
+ * Workspace DSH packages cloned into the two synthetic releases.
+ * Preinstalled plugins may use the fork `@x1a0f3n9/dsh-*` scope while living
+ * outside this workspace, so they keep their own versions.
+ * @param name - package name in the registry index or lock.
+ * @returns True when `name` is a workspace DSH package.
+ */
+function isWorkspaceDshPackage(name: string): boolean {
+  return isDshPackage(name) && !PREINSTALLED_PLUGIN_PACKAGES.has(name)
+}
+
+function cloneForVersion(
+  manifest: object,
+  version: string,
+  rewriteNames: ReadonlySet<string>,
+): MutableRegistryManifest {
   const cloned = structuredClone(manifest) as MutableRegistryManifest
   cloned.version = version
   for (const field of DEPENDENCY_FIELDS) {
     const dependencies = cloned[field]
     if (dependencies === undefined) continue
-    for (const name of Object.keys(dependencies)) {
-      if (isDshPackage(name)) dependencies[name] = `^${version}`
+    const next: Record<string, string> = {}
+    for (const [name, range] of Object.entries(dependencies)) {
+      if (PREINSTALLED_PLUGIN_PACKAGES.has(name)) continue
+      if (isForkDshPackage(name) || isOfficialDshPackage(name)) {
+        // Preinstalled @x1a0f3n9/dsh-* plugins keep their own versions. Rewriting
+        // them to ^0.2.0 makes npm look for a version that does not exist.
+        if (!rewriteNames.has(name)) continue
+        next[name] = `^${version}`
+        continue
+      }
+      next[name] = range
     }
+    cloned[field] = next
   }
   return cloned
+}
+
+/**
+ * Workspace DSH names at `sourceVersion`, plus the official aliases the dual
+ * registry will publish for them. Preinstalled plugins at other versions stay out.
+ * @param index - Registry metadata containing the working release.
+ * @param sourceVersion - Workspace version copied into each synthetic release.
+ * @returns Names whose ranges may be rewritten to the synthetic versions.
+ */
+function syntheticRewriteNames(index: RegistryIndex, sourceVersion: string): Set<string> {
+  const names = new Set<string>()
+  for (const [name, versions] of index) {
+    if (!versions.has(sourceVersion)) continue
+    if (isForkDshPackage(name)) {
+      names.add(name)
+      const alias = officialDshAlias(name)
+      if (alias !== undefined) names.add(alias)
+    }
+    if (isOfficialDshPackage(name)) names.add(name)
+  }
+  return names
 }
 
 /**
@@ -60,19 +142,32 @@ function cloneForVersion(manifest: object, version: string): MutableRegistryMani
  */
 export function buildDualDshRegistry(index: RegistryIndex, sourceVersion: string): RegistryIndex {
   const output = new Map(index)
+  const rewriteNames = syntheticRewriteNames(index, sourceVersion)
   let dshPackages = 0
   for (const [name, versions] of index) {
-    if (!isDshPackage(name)) {
+    if (!isWorkspaceDshPackage(name)) {
       output.set(name, versions)
       continue
     }
     const source = versions.get(sourceVersion)
-    if (source === undefined) throw new Error(`${name} has no workspace version ${sourceVersion}`)
+    if (source === undefined) {
+      output.set(name, versions)
+      continue
+    }
     dshPackages++
-    output.set(name, new Map(SYNTHETIC_DSH_VERSIONS.map(version => [
+    const cloned = new Map(SYNTHETIC_DSH_VERSIONS.map(version => [
       version,
-      cloneForVersion(source, version),
-    ])))
+      cloneForVersion(source, version, rewriteNames),
+    ]))
+    output.set(name, cloned)
+    const alias = officialDshAlias(name)
+    if (alias !== undefined) {
+      output.set(alias, new Map([...cloned].map(([version, manifest]) => {
+        const aliased = structuredClone(manifest)
+        aliased.name = alias
+        return [version, aliased]
+      })))
+    }
   }
   if (dshPackages === 0) throw new Error('registry contains no DSH packages')
   return output
@@ -129,7 +224,7 @@ export function assertDualDshInstallLayout(packageLock: NpmPackageLock): DshInst
     if (name === 'react' || name === 'react-dom') {
       errors.push(`${path}: ${name} is a browser build input, not a dependency of the synthetic DSH-only consumer`)
     }
-    if (name === undefined || !isDshPackage(name)) continue
+    if (name === undefined || !isWorkspaceDshPackage(name)) continue
     const version = manifest.version
     if (version !== nestedVersion && version !== rootVersion) {
       errors.push(`${path}: expected DSH version ${nestedVersion} or ${rootVersion}, got ${String(version)}`)
@@ -147,7 +242,7 @@ export function assertDualDshInstallLayout(packageLock: NpmPackageLock): DshInst
 
     for (const field of DEPENDENCY_FIELDS) {
       for (const dependency of Object.keys(manifest[field] ?? {})) {
-        if (!isDshPackage(dependency)) continue
+        if (!isWorkspaceDshPackage(dependency)) continue
         const targetPath = resolvePackagePath(packageLock.packages, path, dependency)
         const optionalPeer = field === 'peerDependencies'
           && manifest.peerDependenciesMeta?.[dependency]?.optional === true

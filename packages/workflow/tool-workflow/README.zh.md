@@ -3,7 +3,7 @@ description: "面向模型的工作流工具：运行扇出 subagent 的 JavaScr
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-tool-workflow
+# @x1a0f3n9/dsh-tool-workflow
 
 [English](README.md) | 中文
 

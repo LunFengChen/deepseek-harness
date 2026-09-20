@@ -3,8 +3,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { FsError, FsTargetKey, FsVersion } from '@deepseek-ai/dsh-fs'
-import { LocalFileSystem } from '@deepseek-ai/dsh-fs-local'
+import { FsError, FsTargetKey, FsVersion } from '@x1a0f3n9/dsh-fs'
+import { LocalFileSystem } from '@x1a0f3n9/dsh-fs-local'
 import { SessionMediaReferences } from '../src/media-references.ts'
 
 const PNG_BYTES = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3, 4])

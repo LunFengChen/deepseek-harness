@@ -3,8 +3,8 @@
  * expresses a mode as a canonical allow-list: `workspace-write` means "the
  * workspace root plus the platform temp areas", and this module is that
  * meaning's one home. The Seatbelt profile
- * (`@deepseek-ai/dsh-sandbox-local`) and the in-process filesystem fence
- * (`@deepseek-ai/dsh-fs-sandbox`) both derive their allow-list here, so "the
+ * (`@x1a0f3n9/dsh-sandbox-local`) and the in-process filesystem fence
+ * (`@x1a0f3n9/dsh-fs-sandbox`) both derive their allow-list here, so "the
  * write tool cannot write /tmp but bash can" asymmetries cannot arise between
  * them. The bwrap and Landlock dialects keep their own grant spellings (an
  * ephemeral `/tmp` mount, launcher-owned flags) — the honest per-runner

@@ -5,13 +5,13 @@ import {
   isInvalidHandle,
   windowsProcessTree,
   WindowsProcessInspector,
-} from '@deepseek-ai/dsh-subprocess-local/src/windows-inspector.ts'
+} from '@x1a0f3n9/dsh-subprocess-local/src/windows-inspector.ts'
 import type {
   NativePtr,
   ProcessEntry,
   WindowsProcessInspectorInternals,
   WindowsProcessState,
-} from '@deepseek-ai/dsh-subprocess-local/src/windows-inspector.ts'
+} from '@x1a0f3n9/dsh-subprocess-local/src/windows-inspector.ts'
 
 vi.mock('node:child_process', async (importOriginal) => {
   const actual = await importOriginal<typeof import('node:child_process')>()

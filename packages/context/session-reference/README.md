@@ -3,7 +3,7 @@ description: "Cross-session snapshot references and durable untrusted model cont
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-reference
+# @x1a0f3n9/dsh-session-reference
 
 English | [中文](README.zh.md)
 

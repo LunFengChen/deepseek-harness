@@ -3,7 +3,7 @@
  * prefix hits first, alignment score next, source order for ties.
  */
 import { describe, expect, it } from 'vitest'
-import { rankByName } from '@deepseek-ai/dsh-client-ui-primitives'
+import { rankByName } from '@x1a0f3n9/dsh-client-ui-primitives'
 
 const named = (...names: string[]) => names.map(name => ({ name }))
 const names = (items: readonly { name: string }[]) => items.map(item => item.name)

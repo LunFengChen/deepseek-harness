@@ -12,7 +12,7 @@ After v2 embedded streams settlement widened with the message content and Chat a
 
 ## Decision
 
-`@deepseek-ai/dsh-llm` answers consumer questions directly from compact records; every remaining consumer folds records once with early exit.
+`@x1a0f3n9/dsh-llm` answers consumer questions directly from compact records; every remaining consumer folds records once with early exit.
 
 `packages/llm/llm/src/assistant-stream.ts` exports record-level readers beside the accumulator and `expandAssistantStream`:
 

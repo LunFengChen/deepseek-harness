@@ -4,7 +4,7 @@ import { act, cleanup } from '@testing-library/react'
 import { Context } from '@deepseek-ai/cordis'
 import { SlotRegistry } from '../src/client/registry.ts'
 import type { SlotScopeAdapter, StandardSourceBinding } from '../src/client/index.ts'
-import { apply as nodeApply } from '@deepseek-ai/dsh-client-ui-renderer'
+import { apply as nodeApply } from '@x1a0f3n9/dsh-client-ui-renderer'
 import * as UiRenderer from '../src/client/index.ts'
 
 const mounted: (() => void)[] = []
@@ -82,6 +82,27 @@ describe('UI renderer plugin', () => {
     error.mockRestore()
     expect(el.querySelector('[data-testid="root-probe"]')).toBeTruthy()
     expect(records.some(record => record.target === boot)).toBe(false)
+  })
+
+  it('keeps the boot page until a layout entry occupies root', async () => {
+    const { ctx, slots } = await bench()
+    const el = container()
+    el.innerHTML = '<div class="boot" data-dsh-boot=""><div>Loading plugins…</div></div>'
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    act(() => { mounted.push(ctx.get('uiRenderer')!.mount(el)) })
+
+    expect(error).not.toHaveBeenCalled()
+    expect(el.querySelector('[data-dsh-boot]')).toBeTruthy()
+    expect(el.querySelector('[data-testid="root-probe"]')).toBeNull()
+
+    await act(async () => {
+      slots.register({ name: 'root' }, () => <div data-testid="root-probe" />)
+      await Promise.resolve()
+    })
+
+    expect(error).not.toHaveBeenCalled()
+    expect(el.querySelector('[data-testid="root-probe"]')).toBeTruthy()
   })
 
   it('returns an unmount disposer', async () => {

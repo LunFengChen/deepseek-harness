@@ -3,7 +3,7 @@ description: "ctx.web 的 Perplexity 搜索提供方：部署方如何挂载 Ope
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-search-perplexity
+# @x1a0f3n9/dsh-web-search-perplexity
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 加载 web 服务与本提供方；API 密钥回退到启动环境中的 `$PERPLEXITY_API_KEY`，其余设置都有安全默认值。
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-search-perplexity'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-search-perplexity'
   config:
     apiKey: !!js process.env.PERPLEXITY_API_KEY
 ```
@@ -100,7 +100,7 @@ kind: "package-reference"
 当包级约定不够用时阅读以下页面。它们从共享词汇逐步进入服务、面向模型的工具与设计依据。
 
 - [web 子系统](../../../docs/subsystems/web.zh.md)——穷尽式的搜索请求／结果词汇与错误码。
-- [web 包映射](../README.zh.md)——六包家族与各角色。
+- [web 包映射](../README.zh.md)——web 包族与各角色。
 - [dsh-web](../web/README.zh.md)——本提供方注册进入的 web 服务。
 - [dsh-tool-web](../tool-web/README.zh.md)——渲染本提供方来源的面向模型 `web_search` 工具。
 - [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-search-perplexity)——每个受支持配置字段及其源声明。

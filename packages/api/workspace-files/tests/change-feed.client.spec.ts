@@ -3,7 +3,7 @@
  * path, and a follower's life bounded by its signal or by
  * the stream's end.
  */
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { describe, expect, it } from 'vitest'
 import { ChangeFeed } from '../src/client/change-feed.ts'
 import type { WorkspaceFileWatchFrame } from '../src/types.ts'

@@ -65,7 +65,7 @@ function projectWithHost(source: string): string {
   roots.push(project)
   const packageRoot = join(project, 'node_modules', '@deepseek-ai', 'dsh-desktop-host')
   mkdirSync(join(packageRoot, 'lib'), { recursive: true })
-  writeFileSync(join(packageRoot, 'package.json'), '{"name":"@deepseek-ai/dsh-desktop-host","type":"module"}\n')
+  writeFileSync(join(packageRoot, 'package.json'), '{"name":"@x1a0f3n9/dsh-desktop-host","type":"module"}\n')
   writeFileSync(join(packageRoot, 'lib', 'index.js'), `${HOST_WIRE}\n${source}`)
   return project
 }

@@ -4,11 +4,11 @@
  */
 
 import { describe, expect, it, vi } from 'vitest'
-import type { SessionId } from '@deepseek-ai/dsh-api-remotes/client'
-import { SessionSeq } from '@deepseek-ai/dsh-session/types'
-import { RemoteError } from '@deepseek-ai/dsh-typert-protocol'
-import type { SessionControlFrame } from '@deepseek-ai/dsh-api-session-controller/types'
-import type {} from '@deepseek-ai/dsh-session-title/client'
+import type { SessionId } from '@x1a0f3n9/dsh-api-remotes/client'
+import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
+import type { SessionControlFrame } from '@x1a0f3n9/dsh-api-session-controller/types'
+import type {} from '@x1a0f3n9/dsh-session-title/client'
 import { SessionManager } from '../src/client/sessions/manager.ts'
 import { FakeApiClient, deferred, err, fakeRemote, ok } from './fake-api.client.ts'
 import { entries, plainTurn } from './event-script.client.ts'

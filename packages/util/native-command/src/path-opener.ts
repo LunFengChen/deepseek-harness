@@ -6,7 +6,7 @@
  * the platform can name one, then falls back to the default application. WSL
  * translates every path for the Windows desktop instead of assuming a Linux
  * GUI. The text-editor intent never consults the browser.
- * @module @deepseek-ai/dsh-native-command/path-opener
+ * @module @x1a0f3n9/dsh-native-command/path-opener
  */
 
 import { release as osRelease } from 'node:os'

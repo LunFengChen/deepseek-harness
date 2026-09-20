@@ -3,7 +3,7 @@ description: "User-facing permission presets for users and maintainers choosing,
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-permission-presets
+# @x1a0f3n9/dsh-permission-presets
 
 English | [中文](README.zh.md)
 
@@ -32,7 +32,7 @@ Choose this service when a deployment wants to offer users one Permissions selec
 The plugin config defines the preset table and the default for fresh sessions. Each preset name bundles one sandbox mode with one approval policy; `name` and `description` are optional client presentation.
 
 ```yaml
-- name: '@deepseek-ai/dsh-permission-presets'
+- name: '@x1a0f3n9/dsh-permission-presets'
   config:
     presets:
       workspace-write:

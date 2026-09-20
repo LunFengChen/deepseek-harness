@@ -4,17 +4,17 @@
  * window.__ModuleLoader__.load, resolves externals through the injected
  * require, returns the exports (apply + inject), and a mounted apply
  * registers the view tab into a real SlotRegistry ring. Skips when dist/ is
- * not built (`pnpm --filter @deepseek-ai/dsh-client-ui-trajectory bundle`).
+ * not built (`pnpm --filter @x1a0f3n9/dsh-client-ui-trajectory bundle`).
  */
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { stubSettingsScope } from '@deepseek-ai/dsh-client-test-runtime'
+import { stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
 import { afterEach, describe, expect, it } from 'vitest'
-import { UiConversation } from '@deepseek-ai/dsh-client-ui-conversation/client'
-import { SlotRegistry } from '@deepseek-ai/dsh-client-ui-renderer/client'
+import { UiConversation } from '@x1a0f3n9/dsh-client-ui-conversation/client'
+import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
 
-const PLUGIN_ID = '@deepseek-ai/dsh-client-ui-trajectory'
+const PLUGIN_ID = '@x1a0f3n9/dsh-client-ui-trajectory'
 
 interface Handoff { id: string; factory: (require: (spec: string) => unknown) => Record<string, unknown> }
 type Win = { __ModuleLoader__?: { load(h: Handoff): void } }
@@ -49,9 +49,9 @@ describe('tsdown client artifact', () => {
       ['react', await import('react')],
       ['react/jsx-runtime', await import('react/jsx-runtime')],
       ['react-dom', await import('react-dom')],
-      ['@deepseek-ai/dsh-client-store', await import('@deepseek-ai/dsh-client-store')],
-      ['@deepseek-ai/dsh-client-ui-conversation/client', await import('@deepseek-ai/dsh-client-ui-conversation/client')],
-      ['@deepseek-ai/dsh-client-ui-primitives', await import('@deepseek-ai/dsh-client-ui-primitives')],
+      ['@x1a0f3n9/dsh-client-store', await import('@x1a0f3n9/dsh-client-store')],
+      ['@x1a0f3n9/dsh-client-ui-conversation/client', await import('@x1a0f3n9/dsh-client-ui-conversation/client')],
+      ['@x1a0f3n9/dsh-client-ui-primitives', await import('@x1a0f3n9/dsh-client-ui-primitives')],
     ])
     const exports = handoff!.factory((spec) => {
       if (!modules.has(spec)) throw new Error(`unexpected require: ${spec}`)
@@ -90,7 +90,7 @@ describe('tsdown client artifact', () => {
     ctx.provide('connection', { api: { settings: {} }, isLoopback: false } as never)
     ctx.provide('remote', { $on: () => () => {} } as never)
     ctx.provide('settingsScope', { bind: () => stubSettingsScope().scope } as never)
-    const locale = await import('@deepseek-ai/dsh-client-locale/client')
+    const locale = await import('@x1a0f3n9/dsh-client-locale/client')
     ctx.plugin({ inject: [...locale.inject], apply: locale.apply })
     const fiber = ctx.plugin(exports as { apply: (ctx: Context) => void })
     await fiber.await()

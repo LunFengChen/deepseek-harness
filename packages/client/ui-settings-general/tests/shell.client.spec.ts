@@ -6,14 +6,14 @@
  * roster's Connection, and it survives a Loader rebuild of the declarer.
  */
 import { describe, expect, vi } from 'vitest'
-import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
-import { createClientTest, type TestClient, webApp } from '@deepseek-ai/dsh-client-test-runtime/src/assembly/index.ts'
+import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
+import { createClientTest, type TestClient, webApp } from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/index.ts'
 import { inject } from '../src/client/index.ts'
 import type { SettingsRootInjected } from '../src/client/shell-contract.ts'
 import { SettingsRoot } from '../src/client/SettingsRoot.tsx'
 
-const SELF = '@deepseek-ai/dsh-client-ui-settings-general'
-const SIDEBAR = '@deepseek-ai/dsh-client-ui-sidebar'
+const SELF = '@x1a0f3n9/dsh-client-ui-settings-general'
+const SIDEBAR = '@x1a0f3n9/dsh-client-ui-sidebar'
 const it = createClientTest({ roster: webApp })
 /** The whole roster's first boot pays the cold module transform of every plugin package. */
 const COLD_BOOT_TIMEOUT_MS = 60_000

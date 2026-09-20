@@ -3,7 +3,7 @@ description: "Signed GitHub webhook adapter for deployments routing authenticate
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-webhook-github
+# @x1a0f3n9/dsh-webhook-github
 
 English | [中文](README.zh.md)
 

@@ -5,7 +5,7 @@
  * map the routes serve and launch from, so a click never re-runs detection.
  * PATH names resolve in-process through the injected subprocess capability;
  * the remaining host commands (`xcode-select`, `reg.exe`) run through
- * `@deepseek-ai/dsh-native-command` (argv, never a shell). Application
+ * `@x1a0f3n9/dsh-native-command` (argv, never a shell). Application
  * adapters spawn detached with a credential-scrubbed environment and their
  * declared Windows visibility policy ({@link launchDetachedApp}); `shell-open`
  * launches (the file managers) go through the same package's path opener —
@@ -18,8 +18,8 @@ import { homedir, platform as osPlatform } from 'node:os'
 import { dirname, isAbsolute, join } from 'node:path'
 import {
   canOpenNativePath, openNativePath, runNativeCommand, type NativeCommandRunner,
-} from '@deepseek-ai/dsh-native-command'
-import { scrubbedParentEnv } from '@deepseek-ai/dsh-subprocess'
+} from '@x1a0f3n9/dsh-native-command'
+import { scrubbedParentEnv } from '@x1a0f3n9/dsh-subprocess'
 import {
   OPEN_IN_APP_CATALOG, PATH_TOKEN,
   type OpenInAppApp, type OpenInAppLaunch, type OpenInAppLocator, type OpenInAppPlatformSpec,

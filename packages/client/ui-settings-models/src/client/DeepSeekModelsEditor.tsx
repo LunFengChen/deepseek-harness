@@ -8,9 +8,11 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import {
-  IconChevronDownOutline14, IconChevronRightOutline14, IconPlusOutline16, IconTrashOutline16,
-} from '@deepseek-ai/dsh-client-ui-primitives'
+  IconChevronDownOutline14, IconChevronRightOutline14, IconPlusOutline16, IconTrashOutline16, Switch,
+} from '@x1a0f3n9/dsh-client-ui-primitives'
+import { acceptsImages, withImageInput } from './image-input.ts'
 import type { en } from './locales.ts'
+import { validateReasoningEfforts } from './reasoning-efforts.ts'
 import styles from './ModelsSection.module.css'
 
 /** One catalog entry kept structurally open so hidden or future fields survive an edit. */
@@ -74,7 +76,7 @@ export interface DeepSeekModelsValidationFailure {
   index: number
   /** Message key owned by the Models settings section. */
   key: 'modelIdRequired' | 'modelIdDuplicate' | 'modelNameInvalid' | 'modelContextInvalid'
-  | 'modelMaxTokensInvalid'
+  | 'modelMaxTokensInvalid' | 'modelReasoningEmpty' | 'modelReasoningWireRequired'
 }
 
 /** Convert a schema-validated catalog value into records without dropping hidden fields. */
@@ -118,6 +120,8 @@ export function validateDeepSeekModels(value: unknown): DeepSeekModelsValidation
       && (typeof maxTokens !== 'number' || !Number.isInteger(maxTokens) || maxTokens <= 0)) {
       return { index, key: 'modelMaxTokensInvalid' }
     }
+    const reasoning = validateReasoningEfforts(model['reasoningEfforts'])
+    if (reasoning !== undefined) return { index, key: reasoning }
   }
   return undefined
 }
@@ -144,7 +148,7 @@ export interface DeepSeekModelsEditorProps {
 
 /**
  * Render the direct DeepSeek adapter's model catalog: id and display name on
- * each row, capacities behind the row's own disclosure.
+ * each row, image-input and capacities behind the row's own disclosure.
  * @param props - effective rows plus the array-level override actions.
  * @returns the catalog editor.
  */
@@ -172,6 +176,12 @@ export function DeepSeekModelsEditor(props: DeepSeekModelsEditorProps): ReactNod
       return copy
     })
     props.onChange(next)
+  }
+
+  const setImageInput = (index: number, enabled: boolean): void => {
+    props.onChange(props.models.map((model, at) => (
+      at === index ? withImageInput(model, 'inputModalities', enabled) : { ...model }
+    )))
   }
 
   const remove = (index: number): void => {
@@ -341,6 +351,15 @@ export function DeepSeekModelsEditor(props: DeepSeekModelsEditorProps): ReactNod
                 {expanded.has(index)
                   ? (
                     <div className={styles['modelAdvanced']}>
+                      <div className={styles['modelImageInput']}>
+                        <span className={styles['modelFieldLabel']}>{props.t('modelSupportsImages')}</span>
+                        <Switch
+                          checked={acceptsImages(model['inputModalities'])}
+                          label={`${props.t('modelSupportsImages')} ${String(index + 1)}`}
+                          disabled={props.disabled}
+                          onChange={(next) => { setImageInput(index, next) }}
+                        />
+                      </div>
                       {capacityField(model, index, 'contextWindow', props.defaultContextWindow)}
                       {capacityField(model, index, 'maxTokens', props.defaultMaxTokens)}
                     </div>

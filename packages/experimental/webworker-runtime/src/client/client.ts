@@ -5,7 +5,7 @@
  * (boot payload, bundle transport, ApiClient, Typert RPC) speaks plain HTTP.
  */
 
-import type { IndexInjection } from '@deepseek-ai/dsh-host-webserver'
+import type { IndexInjection } from '@x1a0f3n9/dsh-host-webserver'
 import type {
   TunnelAbortFrame as AbortFrame,
   TunnelOutboundFrame as ResponseFrame,

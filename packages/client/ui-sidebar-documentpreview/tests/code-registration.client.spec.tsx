@@ -2,15 +2,15 @@
 /** Code renderer registration lifetimes through the production document and Slot registries. */
 import { afterEach, describe, expect, it } from 'vitest'
 import { act } from '@testing-library/react'
-import { SlotTestRuntime } from '@deepseek-ai/dsh-client-test-runtime'
-import { LocaleRuntime } from '@deepseek-ai/dsh-client-locale/client'
+import { SlotTestRuntime } from '@x1a0f3n9/dsh-client-test-runtime'
+import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import { apply } from '../src/client/code/index.ts'
 import { CodeBody } from '../src/client/code/CodeBody.tsx'
 import { CODE_EXTENSIONS } from '../src/client/code/languages.ts'
 import { DocumentPreviewRegistry } from '../src/client/document/registry.ts'
 import { documentTabInfoFactory } from '../src/client/document/contract.ts'
 
-const ID = '@deepseek-ai/dsh-client-ui-sidebar-documentpreview/code'
+const ID = '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/code'
 const SLOT = 'sidebar.right.tab.document'
 const plugin = { inject: ['slots', 'locale', 'documentPreviews'], apply }
 let runtime: SlotTestRuntime | undefined

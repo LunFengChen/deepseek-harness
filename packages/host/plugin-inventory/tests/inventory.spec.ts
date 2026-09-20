@@ -1,9 +1,14 @@
 import { afterEach, describe, expect, it } from 'vitest'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
 import { Context, FiberState, type Plugin } from '@deepseek-ai/cordis'
 import Loader from '@deepseek-ai/cordis-plugin-loader'
-import { remoteMethods } from '@deepseek-ai/dsh-typert-protocol'
-import type { AgentPresets } from '@deepseek-ai/dsh-agent-presets'
+import { remoteMethods } from '@x1a0f3n9/dsh-typert-protocol'
+import type { AgentPresets } from '@x1a0f3n9/dsh-agent-presets'
 import PluginInventoryGateway from '../src/index.ts'
+import type { PluginEntryId } from '../src/types.ts'
+import type { DshProfileRuntime } from '@x1a0f3n9/dsh-app-boot'
 
 const contexts: Context[] = []
 
@@ -38,9 +43,11 @@ describe('PluginInventoryGateway', () => {
       serviceKey: 'pluginInventory',
       namespace: 'pluginInventory',
     })
-    expect(remoteMethods(inventory)).toEqual([
+    expect(remoteMethods(inventory)).toEqual(expect.arrayContaining([
       { method: 'list', invocation: { kind: 'direct' } },
-    ])
+      { method: 'setEnabled', invocation: { kind: 'direct' } },
+    ]))
+    expect(remoteMethods(inventory)).toHaveLength(2)
   })
 
   it('projects current non-group Loader entries without a second cache', async () => {
@@ -88,6 +95,245 @@ describe('PluginInventoryGateway', () => {
 
     await ctx.loader.remove(pendingId)
     expect((await inventory.list()).entries.some(entry => entry.entryId === pendingId)).toBe(false)
+  })
+
+
+
+  it('projects and persists the selected profile catalog state', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-'))
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir: profileDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'optional',
+            entryId: catalogEntryId,
+            packageName: '@x1a0f3n9/dsh-client-optional',
+            title: 'Optional feature',
+            description: 'A selectable feature',
+            author: 'LunFengChen',
+            homepage: 'https://github.com/LunFengChen/deepseek-harness',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog).toEqual([{
+      id: 'optional',
+      entryId: catalogEntryId,
+      packageName: '@x1a0f3n9/dsh-client-optional',
+      title: 'Optional feature',
+      description: 'A selectable feature',
+      author: 'LunFengChen',
+      homepage: 'https://github.com/LunFengChen/deepseek-harness',
+      required: false,
+      defaultEnabled: true,
+      installed: true,
+      enabled: true,
+    }])
+
+    await expect(inventory.setEnabled({ entryId: catalogEntryId, enabled: false })).resolves.toEqual({ enabled: false })
+    expect((await inventory.list()).catalog?.[0]?.enabled).toBe(false)
+    expect(JSON.parse(readFileSync(join(profileDir, 'package.json'), 'utf8'))).toMatchObject({
+      dsh: { profile: { pluginOverrides: { [entryId]: false } } },
+    })
+  })
+
+  it('projects the installed package version onto catalog rows', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-version-'))
+    const packageDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-bundle-'))
+    mkdirSync(join(packageDir, 'node_modules', '@x1a0f3n9', 'dsh-client-optional'), { recursive: true })
+    writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ name: '@x1a0f3n9/dsh-web-app' }))
+    writeFileSync(
+      join(packageDir, 'node_modules', '@x1a0f3n9', 'dsh-client-optional', 'package.json'),
+      JSON.stringify({ name: '@x1a0f3n9/dsh-client-optional', version: '2.4.1' }),
+    )
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'optional',
+            entryId: catalogEntryId,
+            packageName: '@x1a0f3n9/dsh-client-optional',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog?.[0]).toMatchObject({
+      packageName: '@x1a0f3n9/dsh-client-optional',
+      version: '2.4.1',
+    })
+  })
+
+  it('omits catalog version when package.json version is empty', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-empty-version-'))
+    const packageDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-empty-bundle-'))
+    mkdirSync(join(packageDir, 'node_modules', 'dsh-context'), { recursive: true })
+    writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ name: '@x1a0f3n9/dsh-web-app' }))
+    writeFileSync(
+      join(packageDir, 'node_modules', 'dsh-context', 'package.json'),
+      JSON.stringify({ name: 'dsh-context', version: '' }),
+    )
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'context',
+            entryId: catalogEntryId,
+            packageName: 'dsh-context',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog?.[0]?.version).toBeUndefined()
+  })
+
+  it('omits catalog version when package.json version is not a string', async () => {
+    const { ctx, inventory } = await harness()
+    const entryId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = entryId as PluginEntryId
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-number-version-'))
+    const packageDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-number-bundle-'))
+    mkdirSync(join(packageDir, 'node_modules', 'dsh-context'), { recursive: true })
+    writeFileSync(join(packageDir, 'package.json'), JSON.stringify({ name: '@x1a0f3n9/dsh-web-app' }))
+    writeFileSync(
+      join(packageDir, 'node_modules', 'dsh-context', 'package.json'),
+      JSON.stringify({ name: 'dsh-context', version: 1 }),
+    )
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'context',
+            entryId: catalogEntryId,
+            packageName: 'dsh-context',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog?.[0]?.version).toBeUndefined()
+  })
+
+  it('matches include-prefixed runtime ids to catalog entry ids', async () => {
+    const { ctx, inventory } = await harness()
+    const localId = await ctx.loader.create({ name: 'cordis:active' })
+    const catalogEntryId = localId as PluginEntryId
+    const runtime = [...ctx.loader.entries()].find(entry => entry.options.id === localId)
+    if (runtime === undefined) throw new Error('expected created loader entry')
+    Object.defineProperty(runtime, 'id', {
+      configurable: true,
+      get: () => `include:${localId}`,
+    })
+    const profileDir = mkdtempSync(join(tmpdir(), 'dsh-plugin-inventory-nested-'))
+    writeFileSync(join(profileDir, 'package.json'), JSON.stringify({ name: 'web', dsh: { profile: {} } }))
+    ctx.provide('dshProfile', {
+      binName: 'xfdsh',
+      profile: {
+        name: 'web',
+        dir: profileDir,
+        layers: [{
+          packageName: '@x1a0f3n9/dsh-web-app',
+          packageDir: profileDir,
+          patchPath: join(profileDir, 'cordis.patch.yml'),
+          patches: [],
+          plugins: [{
+            id: 'context',
+            entryId: catalogEntryId,
+            packageName: 'dsh-context',
+            title: 'Context dashboard',
+            defaultEnabled: true,
+          }],
+        }],
+        pluginOverrides: {},
+        patchPath: join(profileDir, 'cordis.patch.yml'),
+        patches: [],
+        patchReload: 'live',
+      },
+      installAnchor: join(profileDir, 'package.json'),
+    } satisfies DshProfileRuntime)
+
+    expect((await inventory.list()).catalog).toMatchObject([{
+      id: 'context',
+      entryId: catalogEntryId,
+      packageName: 'dsh-context',
+      title: 'Context dashboard',
+      required: false,
+      defaultEnabled: true,
+      installed: true,
+      enabled: true,
+    }])
+    await expect(inventory.setEnabled({ entryId: catalogEntryId, enabled: false })).resolves.toEqual({ enabled: false })
+    expect((await inventory.list()).catalog?.[0]?.enabled).toBe(false)
+    expect(JSON.parse(readFileSync(join(profileDir, 'package.json'), 'utf8'))).toMatchObject({
+      dsh: { profile: { pluginOverrides: { [localId]: false } } },
+    })
   })
 
   it('carries each composed preset with root-fiber states mapped to phases', async () => {

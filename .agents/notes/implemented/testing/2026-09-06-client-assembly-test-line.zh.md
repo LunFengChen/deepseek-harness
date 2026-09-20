@@ -14,13 +14,13 @@ API 客户端 spec 用一个可编程的 Remote 面假件驱动对象。这个�
 
 ## 决定
 
-整机档放在 `@deepseek-ai/dsh-client-test-runtime` 的深 import `src/assembly/` 下，新的 test-support 包 `@deepseek-ai/dsh-remote-mock` 按端点名应答 Remote 流量。两者的用法由各自 README 描述（[client-runtime](../../../../packages/test-support/client-runtime/README.zh.md)、[remote-mock](../../../../packages/test-support/remote-mock/README.zh.md)）；本文记录它们背后的决定。
+整机档放在 `@x1a0f3n9/dsh-client-test-runtime` 的深 import `src/assembly/` 下，新的 test-support 包 `@x1a0f3n9/dsh-remote-mock` 按端点名应答 Remote 流量。两者的用法由各自 README 描述（[client-runtime](../../../../packages/test-support/client-runtime/README.zh.md)、[remote-mock](../../../../packages/test-support/remote-mock/README.zh.md)）；本文记录它们背后的决定。
 
 **roster 从 bundle 现读，绝不拷贝。** `bundleRoster(bundles)` 用 include 插件自己的 YAML 方言（带 `!!js` 的 `entryListSchema`）解析每个 bundle 的 `dsh.bundle.patch`，用它的 `applyEntryPatches` 合成各层，再保留每个未禁用且其包声明 `dsh.client.platform === 'web'` 的行，带上该声明的 `inject` 与 `immediately`。`webApp` 是 `web` profile 的 roster（先 `dsh-base`、再 `dsh-web-app`），import 时算出。spec 点名它要测的东西，其余推导：`webApp.closure([row])` 保留一行及其传递 `inject` 锥；`pick` 与 `without` 留给刻意裁剪。测试运行时仍是 Client 面的包：它不 import 任何 Host 模块，此处不用动态 import，其 client 面的 `types` 在 `client-build-environment` 之外加了 `node`，好让读取器使用 `node:fs`。`closure` 把 shell 静态种入的平台模块（`PLATFORM_MODULES`）视为无需行即已满足。
 
 **生产启动路径原样运行。** `TestClient.start(plan, mock)` 把 mock 装成 Connection 载体（`__DSH_TRANSPORT__ = { rpc: mock.rpc }`），加载每个 roster 行的 `/client` 模块，经生产模块 facade 的 `pendingQueue` 登记其工厂，经 `bootClient` 启动，可选经 `mountClient` 挂载，然后等 `connected`。`reload(name)` 经 client-hmr 导出的 `tearDownEntryFiber` 重建一个 Loader entry；`unload(name)` 移除它；`dispose()` 拆掉一切，然后对任何没有规则的端点让测试失败。jsdom 没有 `EventSource` 与 `ResizeObserver`；`start` 只在全局缺失处装惰性替身。每个 worker 内启动与 entry 重建逐个进行，因为 `connection` 插件在 apply 时读传输全局，每次都先装上当事客户端的传输；传输与替身按引用计数持有，第一个客户端安装、最后一次 dispose 恢复，因此同一测试里重叠的客户端各连各的 mock，`reload` 了 `connection` 行之后也是。
 
-**`remote.<ns>` 是无契约代理，不是生成客户端。** `@deepseek-ai/dsh-api-remotes` 行被去掉，因为它生成的客户端只存在于构建后的 `lib/`。对 roster 行注入的每个 `remote.<ns>`，加上 mock 有规则的每个命名空间，本档各提供一个 Proxy：`ctx.remote.<ns>.<method>(...args)` 经 roster 自己的 Connection 用位置参数调用端点 `<ns>/<method>`，mock 为它登记了流脚本就走流、否则走一元。Cordis 把 `ctx.remote.<ns>` 解析到服务 `remote.<ns>`，所以 Gateway 客户端本身不动。一元应答原样返回；一元拒绝按生成客户端折叠载体抛错的方式折叠，经 Gateway 客户端导出的 `carrierFailure` 与 `cancelledFailure`，因此不等待就发出 Remote 调用的产品代码看不到任何 reject。流的项与失败按流吐出的样子直传。
+**`remote.<ns>` 是无契约代理，不是生成客户端。** `@x1a0f3n9/dsh-api-remotes` 行被去掉，因为它生成的客户端只存在于构建后的 `lib/`。对 roster 行注入的每个 `remote.<ns>`，加上 mock 有规则的每个命名空间，本档各提供一个 Proxy：`ctx.remote.<ns>.<method>(...args)` 经 roster 自己的 Connection 用位置参数调用端点 `<ns>/<method>`，mock 为它登记了流脚本就走流、否则走一元。Cordis 把 `ctx.remote.<ns>` 解析到服务 `remote.<ns>`，所以 Gateway 客户端本身不动。一元应答原样返回；一元拒绝按生成客户端折叠载体抛错的方式折叠，经 Gateway 客户端导出的 `carrierFailure` 与 `cancelledFailure`，因此不等待就发出 Remote 调用的产品代码看不到任何 reject。流的项与失败按流吐出的样子直传。
 
 **原生 mock 负责响应配置和调用断言。** 测试通过 `mock.remote.<namespace>.<method>` 使用 `mockResolvedValue`、`mockResolvedValueOnce`、`mockReturnValueOnce` 或 `mockImplementation`，签名由生成的 API 提供。每个 mock 实例独立持有原生响应队列。可复用的表只登记默认值或位置参数 handler，每个端点仅保留最新默认响应。有状态回调和 deferred promise 归各测试所有。`ok` 构造成功信封。流需要显式声明，可提供接收打开参数与句柄（`push`、`end`、`fail`）的脚本；无脚本的声明产生流漏配，未声明端点默认走一元。值不校验。`mock.streams` 控制脚本流并提供打开／排空等待；`mock.log` 记录载体调用（`pending`、`answered`、`failed`）、脚本流状态、首参数 `requests(endpoint?)` 和未匹配请求。`RemoteMock.create()` 为 `$events` 应答 ready 帧，让客户端可以连接。
 
@@ -68,7 +68,7 @@ API 客户端 spec 用一个可编程的 Remote 面假件驱动对象。这个�
 
 spec 起的是真插件：整个 `web` roster 冷启动约五秒、热启动远低于一秒，三行的锥每例约二十毫秒。断言读的是产品事实——真实的 section 清单、真实的声明者、一次 Loader 重建、重连时的第二代 `$events`——并随产品变化而变化。
 
-代理跳过了生成客户端的 zod 校验、wire 字段名映射与 scoped 身份注入；mock 规则读位置 `args`，生成客户端仍由构建产物 e2e 车道覆盖。插件新增启动期调用时 `remoteDefaultResponses` 必须加一行，加之前会响亮失败。`web` profile 的两个 bundle 名在 `WEB_PROFILE_BUNDLES` 里重复了一次，对应启动器的 `PROFILE_TEMPLATES.web`，且两者之间没有机检联系：客户端测试程序不能 import `@deepseek-ai/dsh-app-boot`（其 Host `Context` 合并与 Client 的冲突），而测试运行时连测试也不引入 Host 依赖。模板变更因此要靠人工带到这个常量。
+代理跳过了生成客户端的 zod 校验、wire 字段名映射与 scoped 身份注入；mock 规则读位置 `args`，生成客户端仍由构建产物 e2e 车道覆盖。插件新增启动期调用时 `remoteDefaultResponses` 必须加一行，加之前会响亮失败。`web` profile 的两个 bundle 名在 `WEB_PROFILE_BUNDLES` 里重复了一次，对应启动器的 `PROFILE_TEMPLATES.web`，且两者之间没有机检联系：客户端测试程序不能 import `@x1a0f3n9/dsh-app-boot`（其 Host `Context` 合并与 Client 的冲突），而测试运行时连测试也不引入 Host 依赖。模板变更因此要靠人工带到这个常量。
 
 共享函数让生产和测试调用方使用同一份实现。`AppWebEntry.run()` 在立即层预取落定后挂载 Loader；应用 entry 仍在预取之后创建，因此让 Loader 安装与预取串行不会提前应用激活。
 

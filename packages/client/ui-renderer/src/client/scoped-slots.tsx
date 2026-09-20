@@ -9,7 +9,7 @@ import {
   type ScopedStandardSourceBinding, type SessionAreaProps, type SessionProviderComponent, type SlotRenderer,
   type SlotRendererHost, type SlotScope, type SlotScopeAdapter, type StandardSourceBinding,
   type StoredEntry, type Translate,
-} from '@deepseek-ai/dsh-client-ui-slots'
+} from '@x1a0f3n9/dsh-client-ui-slots'
 import {
   HostContext, RootStandardProvider, ScopeProvider, SlotAssemblyError,
   keyedObservableHook, maybeObservableHook, observableHook, useHost, useRootBinding,
@@ -892,7 +892,7 @@ function renderChainResult(
   )
 }
 
-/** Root outlet: the shell's single ctx-level render entry — an unregistered 'root' is a boot-order failure, never a silent blank. */
+/** Root outlet: the shell's single ctx-level render entry. */
 function RootOutlet({ ownerProps }: { ownerProps: object }) {
   const host = useHost()
   useSyncExternalStore(
@@ -904,9 +904,11 @@ function RootOutlet({ ownerProps }: { ownerProps: object }) {
   if (!entry) {
     // Registrations exist but every one abdicated: the shadowing collapse ran
     // dry, so the crash face replaces the tree (registered-but-broken is a
-    // crash, not the boot-order assembly failure below).
+    // crash, not a boot-order wait).
     if (host.entriesOf('root').length > 0) return <div data-slot-error="root" />
-    throw new SlotAssemblyError("renderSlot('root') before any 'root' registration (boot order)")
+    // Progressive boot mounts as soon as uiRenderer exists; layout may still
+    // be arriving, so wait for the first live root registration.
+    return <div data-dsh-boot-pending="" />
   }
   // Same anchor contract as SlotOutlet: 'root' is a slot like any other, and
   // display:contents keeps the wrapper out of the shell's layout.

@@ -1,6 +1,6 @@
 /**
  * Persistent append-only lists with bounded copying and JSON checkpoint validation.
- * @module @deepseek-ai/dsh-chunked-list
+ * @module @x1a0f3n9/dsh-chunked-list
  */
 
 import { z } from 'zod'

@@ -3,7 +3,7 @@ description: "Advisory loop-hygiene guard that nudges the model out of identical
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-repeat-tool-reminder
+# @x1a0f3n9/dsh-repeat-tool-reminder
 
 English | [中文](README.zh.md)
 
@@ -36,7 +36,7 @@ Choose it when the model works autonomously for long stretches and a stuck loop 
 When you want to change when reminders fire or which tools they cover, mount the plugin with configuration:
 
 ```yaml
-- name: '@deepseek-ai/dsh-repeat-tool-reminder'
+- name: '@x1a0f3n9/dsh-repeat-tool-reminder'
   config:
     thresholds: [3, 5, 8]        # remind at 3, 5, and 8 consecutive repeats
     include: []                  # track every tool; list patterns to track only some

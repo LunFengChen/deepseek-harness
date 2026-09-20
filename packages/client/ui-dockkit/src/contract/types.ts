@@ -12,7 +12,7 @@
  * or for a bare string, and only a mint (or a DOM round trip of an id the kit
  * wrote itself) produces one.
  */
-import type { Branded } from '@deepseek-ai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /** Identity of a pane node in `LayoutState.nodes`. */
 export type PaneId = Branded<'PaneId'>

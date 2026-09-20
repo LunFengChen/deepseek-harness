@@ -1,4 +1,4 @@
-import type { Branded } from '@deepseek-ai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 /** Stable identity shared by every attempt in one request-step retry chain. */
 export type RetryId = Branded<'RetryId'>

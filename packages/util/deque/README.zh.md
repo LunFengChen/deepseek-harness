@@ -3,7 +3,7 @@ description: "供 Host 和浏览器包使用的环形双端队列，提供摊销
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-deque
+# @x1a0f3n9/dsh-deque
 
 [English](README.md) | 中文
 
@@ -34,7 +34,7 @@ kind: "package-library"
 导入双端队列，在尾部追加条目；当条目类型可能包含 `undefined` 时，在移除前检查 `size`：
 
 ```ts
-import { Deque } from '@deepseek-ai/dsh-deque'
+import { Deque } from '@x1a0f3n9/dsh-deque'
 
 const frames = new Deque<string>()
 frames.pushBack('first')

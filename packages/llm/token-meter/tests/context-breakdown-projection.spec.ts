@@ -3,14 +3,14 @@
 
 import { afterEach, describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createMessage, createSystemMessage, createUserMessage } from '@deepseek-ai/dsh-llm'
-import type { ContentBlock, ToolSchema } from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionLogOffset, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { Session, SessionEvent, SessionSeq as SessionSeqType } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import TokenMeter from '@deepseek-ai/dsh-token-meter'
-import type { ContextBreakdownProjection } from '@deepseek-ai/dsh-token-meter/client'
-import { CompactionId } from '@deepseek-ai/dsh-compaction'
+import { createMessage, createSystemMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContentBlock, ToolSchema } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session, SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import TokenMeter from '@x1a0f3n9/dsh-token-meter'
+import type { ContextBreakdownProjection } from '@x1a0f3n9/dsh-token-meter/client'
+import { CompactionId } from '@x1a0f3n9/dsh-compaction'
 import { contextBreakdownProjectionDefinition } from '../src/breakdown-projection.ts'
 import {
   estimateContent,
@@ -54,7 +54,7 @@ function appendUser(session: Session, text: string): SessionSeqType {
   }), { surfaceOp: 'append' }).seq
 }
 
-const SYSTEM_PLUGIN = '@deepseek-ai/dsh-system-prompt'
+const SYSTEM_PLUGIN = '@x1a0f3n9/dsh-system-prompt'
 
 /** Append the rendered system prompt as surface node 0, the way the loop does before the first user message. */
 function appendSystem(session: Session, text: string): SessionSeqType {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { SessionId } from '@deepseek-ai/dsh-session'
+import { SessionId } from '@x1a0f3n9/dsh-session'
 import {
   settleRun,
   settleRunResult,

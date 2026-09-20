@@ -3,7 +3,7 @@ description: "worker-thread 工作流引擎：在宿主事件循环之外执行�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-workflow-worker-thread
+# @x1a0f3n9/dsh-workflow-worker-thread
 
 [English](README.md) | 中文
 
@@ -32,8 +32,8 @@ kind: "package-reference"
 加载本引擎即注册 `ctx.workflowEngine`；在其上添加 `dsh-tool-workflow` 会把 `workflow` 工具交给模型。每个配置字段都是可选的：
 
 ```yaml
-- name: '@deepseek-ai/dsh-workflow-worker-thread'
-- name: '@deepseek-ai/dsh-tool-workflow'
+- name: '@x1a0f3n9/dsh-workflow-worker-thread'
+- name: '@x1a0f3n9/dsh-tool-workflow'
 ```
 
 | 字段 | 默认值 | 含义 |

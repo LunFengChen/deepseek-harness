@@ -20,7 +20,7 @@
  * the browser module; distinct active Loader sources for that package are a
  * composition error. Bundle content changes reach the graph only through
  * {@link ClientModuleRegistry.rebuilt}.
- * @module @deepseek-ai/dsh-client-modules
+ * @module @x1a0f3n9/dsh-client-modules
  */
 
 import { createHash, randomBytes } from 'node:crypto'
@@ -32,7 +32,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { Service } from '@deepseek-ai/cordis'
 import type { Context } from '@deepseek-ai/cordis'
 import type { Entry } from '@deepseek-ai/cordis-plugin-loader'
-import type { IndexInjection } from '@deepseek-ai/dsh-host-webserver'
+import type { IndexInjection } from '@x1a0f3n9/dsh-host-webserver'
 import { exactPackageSpecifier, parseDshClient, stripClientSuffix } from './client/manifest.ts'
 import type { WebBootBatch, WebBootBatchPhase, WebBootEntry, WebBootGraph } from './client/manifest.ts'
 
@@ -164,6 +164,8 @@ type BatchArtifact = ComboArtifact & { descriptor: WebBootBatch }
 const IMMUTABLE_CACHE = 'public, max-age=31536000, immutable'
 /** Generated request URLs stay below conservative browser and intermediary request-target limits. */
 const MAX_COMBO_URL_BYTES = 3 * 1024
+/** Cap one startup combo's raw plugin bytes so a preview or editor bundle cannot block first paint. */
+const MAX_COMBO_SOURCE_BYTES = 512 * 1024
 const HASH_REVISION_LENGTH = 12
 const COMBO_REVISION_PLACEHOLDER = '0'.repeat(HASH_REVISION_LENGTH)
 
@@ -217,14 +219,19 @@ function projectedComboUrlBytes(records: readonly WebPluginRecord[]): number {
   ))
 }
 
-/** Partition one phase in graph order without allowing a generated URL above the protocol limit. */
+/** Partition one phase in graph order without allowing a generated URL or source payload above the protocol limits. */
 function partitionComboRecords(records: readonly WebPluginRecord[]): WebPluginRecord[][] {
   const chunks: WebPluginRecord[][] = []
   let current: WebPluginRecord[] = []
+  let currentBytes = 0
   for (const record of records) {
     const candidate = [...current, record]
-    if (projectedComboUrlBytes(candidate) <= MAX_COMBO_URL_BYTES) {
+    const nextBytes = currentBytes + record.bundle.byteLength
+    const urlFits = projectedComboUrlBytes(candidate) <= MAX_COMBO_URL_BYTES
+    const sourceFits = current.length === 0 || nextBytes <= MAX_COMBO_SOURCE_BYTES
+    if (urlFits && sourceFits) {
       current = candidate
+      currentBytes = nextBytes
       continue
     }
     if (current.length === 0) {
@@ -234,6 +241,7 @@ function partitionComboRecords(records: readonly WebPluginRecord[]): WebPluginRe
     }
     chunks.push(current)
     current = [record]
+    currentBytes = record.bundle.byteLength
     if (projectedComboUrlBytes(current) > MAX_COMBO_URL_BYTES) {
       throw new Error(
         `client-modules: ${record.entry.id} exceeds the ${String(MAX_COMBO_URL_BYTES)}-byte combo URL limit`,
@@ -422,7 +430,7 @@ export function orderByModuleGraph(entries: readonly WebBootEntry[]): WebBootEnt
 }
 
 /** Bootstrap package whose ordinary client bundle supplies the module-system implementation. */
-const CLIENT_MODULES_ID = '@deepseek-ai/dsh-client-modules'
+const CLIENT_MODULES_ID = '@x1a0f3n9/dsh-client-modules'
 
 /** Dynamic bundles grouped into the parser bootstrap batch before the Vite shell. */
 const PARSER_PRELOAD_IDS = [CLIENT_MODULES_ID] as const
@@ -435,7 +443,7 @@ const PARSER_PRELOAD_IDS = [CLIENT_MODULES_ID] as const
  * in live-registration mode. The graph global follows before the shell reads
  * it.
  * @param graph - the composed entry graph.
- * @returns head rows in execution order: queue script, application preloads,
+ * @returns head rows in execution order: queue script, immediately-tier application preloads,
  * blocking bootstrap scripts, graph global.
  */
 export function bootInjections(graph: WebBootGraph): IndexInjection[] {
@@ -464,9 +472,14 @@ window.__ModuleLoader__={
 })()`
   const bootstrap = graph.batches.filter(batch => batch.phase === 'bootstrap')
   const application = graph.batches.filter(batch => batch.phase === 'application')
+  const immediateIds = new Set(
+    graph.entries.filter(entry => entry.immediately === true).map(entry => entry.id),
+  )
   const rows: IndexInjection[] = [{ kind: 'script', placement: 'head', text: queue }]
   for (const batch of application) {
-    rows.push({ kind: 'script-preload', src: batch.url })
+    if (batch.entries.some(id => immediateIds.has(id))) {
+      rows.push({ kind: 'script-preload', src: batch.url })
+    }
   }
   for (const batch of bootstrap) {
     rows.push({ kind: 'script-src', placement: 'head', src: batch.url })
@@ -657,11 +670,16 @@ export class ClientModuleRegistry extends Service {
       .filter(entry => !bootstrapIds.has(entry.id))
       .map(entry => this.table.get(entry.id))
       .filter((record): record is WebPluginRecord => record !== undefined)
+    const immediate = application.filter(record => record.entry.immediately === true)
+    const deferred = application.filter(record => record.entry.immediately !== true)
     const artifacts: BatchArtifact[] = []
     for (const records of partitionComboRecords(bootstrap)) {
       artifacts.push(buildBatch('bootstrap', records))
     }
-    for (const records of partitionComboRecords(application)) {
+    for (const records of partitionComboRecords(immediate)) {
+      artifacts.push(buildBatch('application', records))
+    }
+    for (const records of partitionComboRecords(deferred)) {
       artifacts.push(buildBatch('application', records))
     }
 

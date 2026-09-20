@@ -4,15 +4,15 @@ import {
   spawnInheritedJobProcess,
   spawnPipedProcess,
   waitForProcessExit,
-} from '@deepseek-ai/dsh-win32-process'
+} from '@x1a0f3n9/dsh-win32-process'
 import type {
   NativePtr,
   SpawnedJobProcess,
   SpawnedPipedProcess,
-} from '@deepseek-ai/dsh-win32-process'
+} from '@x1a0f3n9/dsh-win32-process'
 import type { Win32Bindings } from './ffi.ts'
 
-export { drainPipe } from '@deepseek-ai/dsh-win32-process'
+export { drainPipe } from '@x1a0f3n9/dsh-win32-process'
 
 /** Restricted-token child with piped stdio resources. */
 export interface SpawnedNative extends SpawnedPipedProcess {}

@@ -1,7 +1,7 @@
 /**
  * Verify that no package builds its own undici agent or hands `fetch` an explicit dispatcher.
  *
- * Node's built-in `fetch` routes through undici's global dispatcher, which `@deepseek-ai/dsh-http-proxy`
+ * Node's built-in `fetch` routes through undici's global dispatcher, which `@x1a0f3n9/dsh-http-proxy`
  * installs at launch. An explicitly supplied `dispatcher` overrides that global one, so a call site
  * that constructs `new Agent(...)` itself connects directly no matter what proxy the user configured
  * — the exact defect `web-fetch-http` carried before proxy support existed, where its DNS-pinning
@@ -213,12 +213,12 @@ function main(): void {
     console.log(`verify-no-bare-dispatcher: no bare dispatcher outside ${DISPATCHER_OWNER}.`)
     return
   }
-  console.error('verify-no-bare-dispatcher: a dispatcher built outside @deepseek-ai/dsh-http-proxy bypasses the configured proxy.\n')
+  console.error('verify-no-bare-dispatcher: a dispatcher built outside @x1a0f3n9/dsh-http-proxy bypasses the configured proxy.\n')
   for (const violation of violations) {
     console.error(`  ${relative('.', violation.file)}:${String(violation.line)} ${violation.what}`)
     console.error(`    ${violation.text}`)
   }
-  console.error('\nUse `proxyRouteFor(url)` from @deepseek-ai/dsh-http-proxy, or annotate the line')
+  console.error('\nUse `proxyRouteFor(url)` from @x1a0f3n9/dsh-http-proxy, or annotate the line')
   console.error(`with a \`${ALLOW_MARKER} <reason>\` comment when the request must genuinely ignore the proxy.`)
   process.exit(1)
 }

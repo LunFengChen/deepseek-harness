@@ -19,23 +19,23 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import { z } from 'zod'
-import SessionStore, { SESSION_FORMAT_VERSION, SessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
-import type { SessionHeader } from '@deepseek-ai/dsh-session'
-import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
-import Storage from '@deepseek-ai/dsh-storage'
+import SessionStore, { SESSION_FORMAT_VERSION, SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { SessionHeader } from '@x1a0f3n9/dsh-session'
+import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
+import Storage from '@x1a0f3n9/dsh-storage'
 import {
   apply as storageJsonApply, Config as storageJsonConfig, inject as storageJsonInject, name as storageJsonName,
-} from '@deepseek-ai/dsh-storage-json'
+} from '@x1a0f3n9/dsh-storage-json'
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
-} from '@deepseek-ai/dsh-storage-domain'
+} from '@x1a0f3n9/dsh-storage-domain'
 import SessionProjectionCache from '../src/index.ts'
 import { projectionCacheDomainSpec } from '../src/spec.ts'
 
 // Declarations must match the shipped title unit's exactly (the repo-wide
 // compile face sees both).
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     title: string | null
   }
@@ -44,7 +44,7 @@ declare module '@deepseek-ai/dsh-session-projection/types' {
   }
 }
 
-declare module '@deepseek-ai/dsh-session/types' {
+declare module '@x1a0f3n9/dsh-session/types' {
   interface SessionEventMap {
     'fixtures-test/set-title': { title: string }
   }
@@ -259,6 +259,10 @@ describe('archived version recovery', () => {
     const seeded = { ...headerFor(id, doc.record.identity), isSeeded: true }
     expect(cache.cachedSnapshot(seeded, SessionLogOffset(2), ['title'])).toBeUndefined()
     expect(cache.cachedPredecessorTitle(seeded, SessionLogOffset(2))).toBeUndefined()
+    expect(cache.cachedListedHint(seeded)).toEqual({
+      asOfSeq: -1,
+      values: { title: doc.record.rows.title?.val },
+    })
   })
 
   it('backs up and skips a record that fails schema validation instead of failing the boot', async () => {

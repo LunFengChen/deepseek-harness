@@ -8,14 +8,14 @@ Status: implemented
 
 对于"DeepSeek Harness 用户数据存放在哪里"，harness 里存在两套互不一致的约定：
 
-- `@deepseek-ai/dsh-home` 按 `configured ?? $DSH_HOME ?? ~/.dsh` 解析。
-- `@deepseek-ai/dsh-home-paths` 又提供了**第二个** `resolveDshHome`，优先级相同但额外做了波浪号展开——它几乎是 `dsh-home` 的重复实现，却没有任何门禁发现，因为两者分属不同的包，而且早已漂移（只有一个会展开波浪号）。
+- `@x1a0f3n9/dsh-home` 按 `configured ?? $DSH_HOME ?? ~/.dsh` 解析。
+- `@x1a0f3n9/dsh-home-paths` 又提供了**第二个** `resolveDshHome`，优先级相同但额外做了波浪号展开——它几乎是 `dsh-home` 的重复实现，却没有任何门禁发现，因为两者分属不同的包，而且早已漂移（只有一个会展开波浪号）。
 
 同一条横切事实有两个解析器，意味着不存在单一的 home 策略。
 
 ## 决策
 
-由一个解析器统一掌管 harness home，落在 `@deepseek-ai/dsh-home-paths`，采用单一根目录：
+由一个解析器统一掌管 harness home，落在 `@x1a0f3n9/dsh-home-paths`，采用单一根目录：
 
 ```
 explicit configured path  >  $DSH_HOME  >  ~/.dsh
@@ -25,7 +25,7 @@ explicit configured path  >  $DSH_HOME  >  ~/.dsh
 
 `dshCachePath(...segments)` 在解析出的主目录下的 `cache` 目录中派生路径。首个 `{ dshHome }` 选项保留提供方显式配置的主目录覆盖值。它只解析路径，不创建目录；目录创建由调用方负责。`attachment-local` 将此函数用于可重新生成的请求图片版本，持久附件对象仍保留在其带版本的存储树中，因此清空缓存不会删除 Session 附件。已有请求图片缓存条目保留在原处，不再读取或复制；缓存未命中时从持久附件重新生成请求版本。
 
-`@deepseek-ai/dsh-home` 被删除。拥有 home 配置的提供方与 boot 包从 `dsh-home-paths` 导入 `resolveDshHome`；组合包只包含解析后的配置行。
+`@x1a0f3n9/dsh-home` 被删除。拥有 home 配置的提供方与 boot 包从 `dsh-home-paths` 导入 `resolveDshHome`；组合包只包含解析后的配置行。
 
 `dsh-telemetry` 及其独立 home 策略已随 [SDK 项目工具链移除](../../archived/simplification/2026-08-11-remove-sdk-project-toolchain.md)一并消失，因此该解析器是唯一的 home 策略。
 

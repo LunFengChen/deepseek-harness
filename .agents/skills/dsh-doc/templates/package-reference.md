@@ -14,7 +14,7 @@ kind: "package-reference"
 ## Skeleton
 
 ```markdown
-# @deepseek-ai/dsh-<name>
+# @x1a0f3n9/dsh-<name>
 
 English | [中文](README.zh.md)
 

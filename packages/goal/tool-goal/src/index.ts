@@ -1,16 +1,16 @@
 /**
  * Model-facing `get_goal`, `create_goal`, and `update_goal` tools over the
  * persisted same-session goal domain.
- * @module @deepseek-ai/dsh-tool-goal
+ * @module @x1a0f3n9/dsh-tool-goal
  */
 
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import { GoalId } from '@deepseek-ai/dsh-goal'
-import type { GoalRef, GoalView } from '@deepseek-ai/dsh-goal'
-import { boundContextSummary, createUserMessage, HarnessError } from '@deepseek-ai/dsh-llm'
-import { defineTool } from '@deepseek-ai/dsh-tools'
-import type { GenericCallView } from '@deepseek-ai/dsh-tools'
+import { GoalId } from '@x1a0f3n9/dsh-goal'
+import type { GoalRef, GoalView } from '@x1a0f3n9/dsh-goal'
+import { boundContextSummary, createUserMessage, HarnessError } from '@x1a0f3n9/dsh-llm'
+import { defineTool } from '@x1a0f3n9/dsh-tools'
+import type { GenericCallView } from '@x1a0f3n9/dsh-tools'
 import {
   completionAuthority,
   goalToolExecution,
@@ -135,11 +135,6 @@ function hasText(value: string | undefined): value is string {
   return value !== undefined && value !== ''
 }
 
-/** Whether an optional round cap is meaningful rather than a strict-schema zero filler. */
-function hasRoundCap(value: number | undefined): value is number {
-  return value !== undefined && value !== 0
-}
-
 /** Build the exact compare-and-set ref from model arguments. */
 function goalRef(goalId: string, revision: number): GoalRef {
   if (goalId.length === 0 || goalId !== goalId.trim()
@@ -212,10 +207,6 @@ export function apply(ctx: Context, config: Config): void {
         required: true,
         description: 'The concrete completion objective inferred from the direct human request.',
       },
-      max_goal_rounds: {
-        type: 'number',
-        description: 'Optional positive safe-integer limit on automatic continuation rounds.',
-      },
     },
     output: GOAL_OUTPUT,
     execute(args, exec) {
@@ -223,7 +214,6 @@ export function apply(ctx: Context, config: Config): void {
       requireDirectHuman(ctx, execution)
       const goal = ctx.goals.create(execution.agent, {
         objective: args.objective,
-        ...args.max_goal_rounds === undefined ? {} : { maxGoalRounds: args.max_goal_rounds },
       })
       return Promise.resolve(goalValue(goal))
     },
@@ -246,7 +236,6 @@ export function apply(ctx: Context, config: Config): void {
         description: 'edit | pause | resume | complete | blocked',
       },
       objective: { type: 'string', description: 'Replacement objective; valid only with action edit.' },
-      max_goal_rounds: { type: 'number', description: 'Replacement cap; valid only with action edit.' },
       blocked_reason: {
         type: 'string',
         description: 'Concrete blocking condition; required only with action blocked.',
@@ -258,7 +247,6 @@ export function apply(ctx: Context, config: Config): void {
       const ref = goalRef(args.goal_id, args.revision)
       const replacements = {
         ...hasText(args.objective) ? { objective: args.objective } : {},
-        ...hasRoundCap(args.max_goal_rounds) ? { maxGoalRounds: args.max_goal_rounds } : {},
       }
       if (args.action === 'edit') {
         requireDirectHuman(ctx, execution)
@@ -270,9 +258,9 @@ export function apply(ctx: Context, config: Config): void {
       }
       if (args.action === 'pause' || args.action === 'resume') {
         requireDirectHuman(ctx, execution)
-        if (hasText(args.objective) || hasRoundCap(args.max_goal_rounds) || hasText(args.blocked_reason)) {
+        if (hasText(args.objective) || hasText(args.blocked_reason)) {
           throw new HarnessError(
-            'objective and max_goal_rounds are valid only with action edit; blocked_reason is valid only with action blocked',
+            'objective is valid only with action edit; blocked_reason is valid only with action blocked',
             'GOAL_TOOL_INVALID_UPDATE',
           )
         }
@@ -290,9 +278,9 @@ export function apply(ctx: Context, config: Config): void {
         return Promise.resolve(goalValue(goal))
       }
       const authority = completionAuthority(ctx, execution)
-      if (hasText(args.objective) || hasRoundCap(args.max_goal_rounds)) {
+      if (hasText(args.objective)) {
         throw new HarnessError(
-          'objective and max_goal_rounds are valid only with action edit',
+          'objective is valid only with action edit',
           'GOAL_TOOL_INVALID_UPDATE',
         )
       }
@@ -339,7 +327,7 @@ export function apply(ctx: Context, config: Config): void {
         ? args.blocked_reason
         : hasText(args.objective)
           ? args.objective
-          : hasRoundCap(args.max_goal_rounds) ? args.max_goal_rounds : args.goal_id,
+          : args.goal_id,
     ),
   }))
 }

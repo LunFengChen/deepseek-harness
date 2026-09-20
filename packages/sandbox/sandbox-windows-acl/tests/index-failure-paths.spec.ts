@@ -11,9 +11,9 @@
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
-import { Win32Error } from '@deepseek-ai/dsh-win32-process'
-import { ERROR_BROKEN_PIPE } from '@deepseek-ai/dsh-win32-process/src/abi.ts'
-import { PROCESS_INFORMATION } from '@deepseek-ai/dsh-win32-process/src/ffi.ts'
+import { Win32Error } from '@x1a0f3n9/dsh-win32-process'
+import { ERROR_BROKEN_PIPE } from '@x1a0f3n9/dsh-win32-process/src/abi.ts'
+import { PROCESS_INFORMATION } from '@x1a0f3n9/dsh-win32-process/src/ffi.ts'
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import koffi from 'koffi'
 

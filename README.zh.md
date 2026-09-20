@@ -2,51 +2,118 @@
 
 [English](README.md) | 中文
 
-DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的开源 agent harness（智能体框架）。
+这个仓库是 **xfdsh**，[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）的 fork。
+发布出来的命令是 `xfdsh`。官方 `dsh` 可以继续装着。
 
-它构建于**一切皆插件**的架构之上，由 [Cordis](https://github.com/cordiverse/cordis) 驱动，其设计参见论文 [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。
+## 使用这个 fork
 
-文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
+安装 Node.js，然后在 `http://127.0.0.1:7777` 打开 Web UI。
+
+两种安装方式。都会启动 `xfdsh web`。会话、分组、附件、settings 和 API key 仍在 `~/.dsh`，所以不用做历史迁移。插件和 profile 放在 `~/.xfdsh`。预装的额外插件可在 Settings → xfdsh预置插件 关闭。
+
+运行前请阅读[安全说明](SAFETY.zh.md)。
+
+### npm
+
+```sh
+npm install --global @xfcodeai/dsh
+xfdsh web
+```
+
+该命令默认会在 `http://127.0.0.1:7777` 启动 Web UI，本机启动时还会用默认浏览器打开页面。通过 SSH 启动时只打印宿主机 URL，因为本地转发地址由 SSH 客户端或编辑器持有。传入 `--no-open` 可仅运行服务器而不打开浏览器。详见 [Web UI 指南](docs/user/guide/index.zh.md)。
+
+不装全局包的一次性运行：
+
+```sh
+npx --package @xfcodeai/dsh xfdsh web
+```
+
+PATH 上的裸 `xfdsh` 来自全局 npm 安装。`dev-x1a0f3n9` 开发线在同样的命令里使用 `@x1a0f3n9/dsh`。
+
+### 源码
+
+```sh
+git clone -b dev-x1a0f3n9 https://github.com/LunFengChen/deepseek-harness.git
+cd deepseek-harness
+pnpm install
+pnpm run build
+pnpm xfdsh web
+```
+
+GitHub 默认分支是 `dev-x1a0f3n9`，不带 `-b` 克隆也会落到这里。日常启动用 `pnpm xfdsh web`，不会重新编译。克隆后、拉取大改动后，或使用 `pnpm exec xfdsh` 时才需要重新编译。`pnpm exec xfdsh web` 走编好的 bin，需要当前的 `lib/`。
+
+## 官方 dsh
+
+官方 DeepSeek Harness 是 [DeepSeek AI](https://deepseek.com) 的另一套产品。
+
+```sh
+npm install --global @deepseek-ai/dsh
+dsh web
+```
+
+官方 `dsh web` 监听 `http://127.0.0.1:3080`，插件和 profile 仍在 `~/.dsh`。两套 CLI 可以同时开。会话历史共用，插件安装分开。
+
+它构建于**一切皆插件**的架构之上，由 [Cordis](https://github.com/cordiverse/cordis) 驱动，设计参见 [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)。
+
+## 这个 fork 改了什么
+
+下面的表格只汇总这个 fork 的用户可见和发布相关改动；合并上游的提交只负责集成，不单独展开。
+
+开发线使用 `@x1a0f3n9/dsh-*`。`master` 从同一棵树发布 `@xfcodeai/dsh-*`。vendor 和 native 包继续使用 `@deepseek-ai/*`。
+
+### 预置插件
+
+预置插件放在 **Settings → xfdsh预置插件**。卡片显示包版本，包名链到 GitHub。插件列表只保留会话/全局清单，并去掉这些包。
+
+| 插件 | 包 | 做什么 |
+| --- | --- | --- |
+| Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2` | 回退、删除、重新生成，以及输入框压缩按钮。 |
+| 插件市场 | `@x1a0f3n9/dshmarket@1.45.2` | 浏览社区插件。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 |
+| 思考强度 | `@x1a0f3n9/dsh-reasoning-effort@0.7.3` | Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。之后输入框才能选思考强度。 |
+| 上下文面板 | `@x1a0f3n9/dsh-context@0.49.7` | Context 页和 `/context` 能看组成、压缩和 token 用量。版本探测读本 fork。 |
+| Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.19.3` | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
+| Hindsight 记忆 | `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4` | 默认打开。走本机 daemon，不走 Cloud。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
+| 故障转移队列 | `@x1a0f3n9/dsh-failover-queue@0.1.11` | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3。在 `llm-retry` 用尽后切下一档，或在 `AUTH` / `RATE_LIMIT` / `NO_ADAPTER` 时立即切换。P1 恢复后会探活切回。 |
+| 技能管理 | `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1` | 加载、开关、创建并导入本机 Agent 技能。卡片打开时出现 Settings → 技能。 |
+| Web 搜索池 | `@x1a0f3n9/dsh-web-search-pool` | 默认顺序是搜索池，然后是 Perplexity、Exa 和无需密钥的 Bing/DuckDuckGo。DeepSeek 搜索仍可选手动选择。任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。 |
+
+### 其他改动
+
+| 领域 | 改动 | 结果 |
+| --- | --- | --- |
+| Hindsight git 报错 | LunFengChen fork 把 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
+| 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
+| 内存与续跑 | 会话持久化限制内存读取；context overflow 会压缩并重试。从大模型切到小模型时，会按待选模型先计价压力再发下一次请求。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |
+| 纯文本模型 | 历史图片和新图片会变成稳定文本占位符。 | 切到不支持图片的模型不会让会话停摆。 |
+| 多回答 / session git graph | 还没做。等 timeline 回退 UI 完成后再扩展。 | 只记在文档里，本轮不做。 |
+
+## 分支
+
+GitHub 默认分支是 `dev-x1a0f3n9`。不带 `-b` 克隆也会落到这条 fork 线。fork 功能不要直接提交到 `master`。
+
+| 分支 | 作用 | npm |
+| --- | --- | --- |
+| `master` | 稳定 fork 线。在这里合并上游，再合进 `dev-x1a0f3n9`。 | 推送后发布 `@xfcodeai/*`。 |
+| `dev-x1a0f3n9` | fork 集成线。在这里测试，再推送。 | 推送后发布 `@x1a0f3n9/*`。 |
+| `feat/<topic>` 或 `fix/<topic>` | 一个小改动，从 `dev-x1a0f3n9` 拉出。 | 不发布。完成后 `--no-ff` 合回 `dev-x1a0f3n9`。 |
+
+1. 把上游 `deepseek-ai/deepseek-harness` 合进 `master`。
+2. 把这次的 `master` 合进 `dev-x1a0f3n9`。剩下的 fork 线冲突在这里解。
+3. 从 `dev-x1a0f3n9` 拉出 `feat/<topic>` 或 `fix/<topic>`。
+4. `--no-ff` 合回 `dev-x1a0f3n9`。这些短分支不要合进 `master`。
+5. 本地用 `pnpm xfdsh web` 测 `dev-x1a0f3n9`。
+6. 推送 `dev-x1a0f3n9`。CI 会编译并发布 `@x1a0f3n9/*`。
+7. 把 `dev-x1a0f3n9` 合进 `master` 并推送。CI 会发布 `@xfcodeai/*`。
+
+遇到 npm 新包名额度会暂停这一轮发布但不把 job 判失败，下次再推会继续发剩下的名字。
 
 ## 开发者预览
 
 DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来将出现破坏兼容性的变更。**
 
-运行本项目前，请阅读[安全说明](SAFETY.zh.md)。
-
-<a id="run"></a>
-
-## 运行
-
-### 通过 `npm` 运行
-
-安装 `Node.js`，然后运行：
-
-```sh
-npx @deepseek-ai/dsh web
-```
-
-该命令默认会在 `http://127.0.0.1:3080` 启动 Web UI，本机启动时还会用默认浏览器打开页面。通过 SSH 启动时只打印宿主机 URL，因为本地转发地址由 SSH 客户端或编辑器持有。传入 `--no-open` 可仅运行服务器而不打开浏览器。详见 [Web UI 指南](docs/user/guide/index.zh.md)。
-
-<a id="run-from-source"></a>
-
-### 从源码运行
-
-如需从仓库源码运行：
-
-```sh
-git clone https://github.com/deepseek-ai/deepseek-harness.git
-cd deepseek-harness
-pnpm install
-pnpm run build
-pnpm dsh web
-```
-
-`pnpm run build` 会准备仓库产物。`pnpm dsh web` 会直接使用这些已构建产物，不会重新构建。
-
 ## 社区与支持
 
-- 通过 [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions) 提交反馈或 bug 报告。
+- 通过 [GitHub Discussions](https://github.com/LunFengChen/deepseek-harness/discussions) 提交反馈或 bug 报告。
 - 为你的插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) 话题，便于被发现。
 - 欢迎加入 DeepSeek Harness 企微群：扫码添加企微小助手并填写入群问卷，完成后小助手会邀请你入群。
 

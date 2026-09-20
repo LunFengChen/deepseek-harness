@@ -8,7 +8,7 @@ import { mkdtempSync, realpathSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { canonicalPath, writableRoots } from '@deepseek-ai/dsh-sandbox'
+import { canonicalPath, writableRoots } from '@x1a0f3n9/dsh-sandbox'
 
 /** Every temp root created by this file, removed after each test. */
 const roots: string[] = []

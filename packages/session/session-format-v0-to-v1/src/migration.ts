@@ -3,7 +3,7 @@ import {
   SessionFormatUnsupportedMigrationError,
   defineSessionFormatMigration,
   sessionFormatCount,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import type {
   SessionFormatEvent,
   SessionFormatEventRun,
@@ -13,7 +13,7 @@ import type {
   SessionFormatMigrationContext,
   SessionFormatMigrationStage,
   SessionFormatMigrationStageInput,
-} from '@deepseek-ai/dsh-session-format'
+} from '@x1a0f3n9/dsh-session-format'
 import { isReleasedAssistantChunkRun } from './codec.ts'
 import {
   assertReleasedEventPayload,
@@ -23,7 +23,7 @@ import { assertReleasedV0Keys, releasedV0Record } from './validation-helpers.ts'
 
 /** Identity format edge that promotes released v0 into released v1. */
 export const sessionFormatV0ToV1 = defineSessionFormatMigration({
-  name: '@deepseek-ai/dsh-session-format-v0-to-v1',
+  name: '@x1a0f3n9/dsh-session-format-v0-to-v1',
   fromVersion: 0,
   toVersion: 1,
   migrateHeader(header) {
@@ -94,10 +94,18 @@ function normalizeReleasedV0Event(
   const retry = normalizeLegacyRetry(steering, sessionId, state.retryIds)
   const compaction = normalizeLegacyCompaction(retry, sessionId, state)
   const message = normalizeLegacyMessage(compaction, sessionId, state.messageIds)
-  if (message.type !== 'assistant/chunk') assertReleasedEventPayload(message, 0)
-  const messageId = eventMessageId(message)
-  if (messageId !== undefined) state.messageIds.set(message.seq, messageId)
-  return message
+  const descriptor = normalizeLegacySubagentDescriptor(message)
+  if (descriptor.type !== 'assistant/chunk') assertReleasedEventPayload(descriptor, 0)
+  const messageId = eventMessageId(descriptor)
+  if (messageId !== undefined) state.messageIds.set(descriptor.seq, messageId)
+  return descriptor
+}
+
+function normalizeLegacySubagentDescriptor(event: SessionFormatEvent): SessionFormatEvent {
+  if (event.type !== 'subagent/descriptor') return event
+  const data = releasedV0Record(event.data, `${event.type} ${event.seq} data`)
+  if (data['version'] !== 2) return event
+  return { ...event, data: { ...data, version: 3 } }
 }
 
 function normalizeLegacyCompactionType(event: SessionFormatEvent): SessionFormatEvent {

@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-goal-continue-after-max-tokens.md
+2026-09-11-goal-continue-after-max-tokens.md: 7d6bff23a878fccf30cde237508cb14ba05ac990
+2026-09-11-goal-continue-after-max-tokens.zh.md: b73db828c12341f5a92c8d2fbec03c6d729529b0

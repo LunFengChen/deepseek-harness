@@ -4,16 +4,16 @@
  * the real Connection, and Agent Context identity through the Typert registry.
  */
 import type { Context } from '@deepseek-ai/cordis'
-import { RemoteStreamCarrierError } from '@deepseek-ai/dsh-api-gateway/client'
-import { ok, type RemoteMock } from '@deepseek-ai/dsh-remote-mock'
-import { createClientTest, type TestClient, webApp } from '@deepseek-ai/dsh-client-test-runtime/src/assembly/index.ts'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { RemoteResult } from '@deepseek-ai/dsh-typert-protocol'
+import { RemoteStreamCarrierError } from '@x1a0f3n9/dsh-api-gateway/client'
+import { ok, type RemoteMock } from '@x1a0f3n9/dsh-remote-mock'
+import { createClientTest, type TestClient, webApp } from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/index.ts'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { RemoteResult } from '@x1a0f3n9/dsh-typert-protocol'
 import { afterEach, describe, expect, vi, type MockInstance } from 'vitest'
 import { ClientSessions } from '../src/client/sessions/service.ts'
 import type { SessionListValue } from '../src/types.ts'
 
-const SELF = '@deepseek-ai/dsh-api-session-controller'
+const SELF = '@x1a0f3n9/dsh-api-session-controller'
 const ROSTER = webApp.closure([SELF])
 const it = createClientTest({ roster: ROSTER })
 const EVENTS = '$events'

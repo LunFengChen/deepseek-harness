@@ -1,7 +1,7 @@
 /** Validate declared workspace paths and address their native-open actions. */
-import type { PresentedFile } from '@deepseek-ai/dsh-tool-present/types'
-import type { SessionId } from '@deepseek-ai/dsh-session/types'
-import type { ToolCallId } from '@deepseek-ai/dsh-llm/brand'
+import type { PresentedFile } from '@x1a0f3n9/dsh-tool-present/types'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import type { ToolCallId } from '@x1a0f3n9/dsh-llm/brand'
 
 /** Authenticated POST route for opening a workspace file on the Host desktop. */
 export const PRESENT_OPEN_PATH = '/api/present.open'

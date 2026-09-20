@@ -3,7 +3,7 @@ description: "Web GUI 的输入触发流水线：光标处的 / 与 @ 检测、�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-input-trigger
+# @x1a0f3n9/dsh-client-ui-input-trigger
 
 [English](README.md) | 中文
 

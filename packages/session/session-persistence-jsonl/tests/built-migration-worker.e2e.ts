@@ -16,7 +16,7 @@ describe.skipIf(!built)('built migration verifier (plain node)', () => {
       import { join } from 'node:path'
       import { Worker } from 'node:worker_threads'
       import { Context } from '@deepseek-ai/cordis'
-      import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
+      import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 
       const root = await mkdtemp(join(tmpdir(), 'dsh-built-migration-'))
       const id = 'built-migration-worker'

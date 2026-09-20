@@ -1,8 +1,8 @@
 /** Native V3 system-head validation with a private view for frozen non-system relationships. */
 
-import { SessionFormatError, SessionFormatUnsupportedMigrationError } from '@deepseek-ai/dsh-session-format'
-import type { SessionFormatArtifact, SessionFormatEvent, SessionFormatHeader } from '@deepseek-ai/dsh-session-format'
-import { assertReleasedV2Header, restoreReleasedV2Artifact } from '@deepseek-ai/dsh-session-format-v1-to-v2'
+import { SessionFormatError, SessionFormatUnsupportedMigrationError } from '@x1a0f3n9/dsh-session-format'
+import type { SessionFormatArtifact, SessionFormatEvent, SessionFormatHeader } from '@x1a0f3n9/dsh-session-format'
+import { assertReleasedV2Header, restoreReleasedV2Artifact } from '@x1a0f3n9/dsh-session-format-v1-to-v2'
 import { assertV3Event, isRepairIdentity, record, SURFACE_TYPES } from './payload.ts'
 
 /**

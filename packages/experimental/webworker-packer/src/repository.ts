@@ -5,13 +5,13 @@
  * The library half takes all of this as parameters. Keeping the lookup here is what
  * lets the same library pack a different tree, and what keeps `pack.ts` free of
  * assumptions about pnpm workspaces or the `dsh` CLI.
- * @module @deepseek-ai/dsh-experimental-webworker-packer/src/repository
+ * @module @x1a0f3n9/dsh-experimental-webworker-packer/src/repository
  */
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, relative } from 'node:path'
-import { DSH_HOME_ENV } from '@deepseek-ai/dsh-home-paths'
+import { DSH_HOME_ENV } from '@x1a0f3n9/dsh-home-paths'
 import type { ConfigTree, ImageTree, PackResult } from './pack.ts'
 
 /**

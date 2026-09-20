@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-goal-continue-after-turn-error.md
+2026-09-11-goal-continue-after-turn-error.md: 8663d8c0ae868bc095d6d86365ca98ef7c536568
+2026-09-11-goal-continue-after-turn-error.zh.md: 4c51c6223f3594dcdec83ebad5d35053e4280fbc

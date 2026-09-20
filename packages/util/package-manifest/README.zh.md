@@ -3,7 +3,7 @@ description: "包身份、运行时要求和 DSH 插件元数据的共享 TypeSc
 kind: "package-library"
 ---
 
-# @deepseek-ai/dsh-package-manifest
+# @x1a0f3n9/dsh-package-manifest
 
 [English](README.md) | 中文
 
@@ -28,7 +28,7 @@ kind: "package-library"
 从包根导入类型。仅检查自己的源码时使用开发依赖；若发布的声明文件引用这些类型，则使用生产依赖。
 
 ```ts
-import type { DshClientManifest, DshPackageManifest } from '@deepseek-ai/dsh-package-manifest'
+import type { DshClientManifest, DshPackageManifest } from '@x1a0f3n9/dsh-package-manifest'
 
 const client: DshClientManifest = { platform: 'web' }
 const manifest: DshPackageManifest = {

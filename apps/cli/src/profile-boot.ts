@@ -8,7 +8,7 @@
  * App flags are not the launcher's business: the invocation's inner arguments
  * are provided to the tree through `ctx.cmdlineArgs`, where any injected app
  * plugin may read the same immutable snapshot.
- * @module @deepseek-ai/dsh/profile-boot
+ * @module @x1a0f3n9/dsh/profile-boot
  */
 
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
@@ -26,16 +26,17 @@ import {
   loadOptionalPatches,
   loadOverlayPatches,
   loadProfile,
+  pluginOverridePatches,
   PROFILE_PATCH_FILENAME,
   PROFILE_TEMPLATES,
   resolveProfileDir,
   watchUserPatches,
   type Profile,
-} from '@deepseek-ai/dsh-app-boot'
-import { resolveDshHome } from '@deepseek-ai/dsh-home-paths'
-import { installProxyFromEnvironment } from '@deepseek-ai/dsh-http-proxy'
-import { DSH_LAUNCH_ENVIRONMENT_KEY, type LaunchEnvironmentSnapshot } from '@deepseek-ai/dsh-launch-environment'
-import { provideCmdline, type AppReady } from '@deepseek-ai/dsh-cmdline'
+} from '@x1a0f3n9/dsh-app-boot'
+import { resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
+import { installProxyFromEnvironment } from '@x1a0f3n9/dsh-http-proxy'
+import { DSH_LAUNCH_ENVIRONMENT_KEY, type LaunchEnvironmentSnapshot } from '@x1a0f3n9/dsh-launch-environment'
+import { provideCmdline, type AppReady } from '@x1a0f3n9/dsh-cmdline'
 import { createProcessShutdown, type ProcessShutdown } from './process-shutdown.ts'
 
 const NAME = 'dsh'
@@ -231,7 +232,10 @@ async function composeProfile(
   const profile = prepareProfile(name, true, fromDefaultProfile)
   await healProfilesModuleFallback({ installAnchor: INSTALL_ANCHOR, profile })
   const homePatches = loadOptionalPatches(NAME, homePatchPath()) ?? []
-  const overlays = patchFiles.flatMap(file => loadOverlayPatches(NAME, resolve(file)))
+  const overlays = [
+    ...patchFiles.flatMap(file => loadOverlayPatches(NAME, resolve(file))),
+    ...pluginOverridePatches(profile.pluginOverrides),
+  ]
   const bundlePatches = profile.layers.flatMap(layer => layer.patches)
   const rows = new Map<string, EntryOptions>()
   for (const row of composeEntries([bundlePatches, profile.patches, homePatches, overlays])) {
@@ -338,6 +342,11 @@ export async function runProfile(options: RunProfileOptions): Promise<{ ctx: Con
     // Before any config-tree entry mounts, so plugins resolve all launch-time
     // environment values from the same immutable provenance snapshot.
     hostCtx.provide(DSH_LAUNCH_ENVIRONMENT_KEY, options.environment)
+    hostCtx.provide('dshProfile', {
+      binName: NAME,
+      profile: composed.profile,
+      installAnchor: INSTALL_ANCHOR,
+    })
     // The command line and bounded exit request are launcher facts available
     // to every app plugin that injects the argument snapshot.
     provideCmdline(hostCtx, {

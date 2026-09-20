@@ -12,10 +12,11 @@ import {
   WIDER_MODES,
   approveEscalation,
   escalationHintMarker,
+  isEscalationSatisfiedByStandingMode,
   sandboxDenialMarker,
   validateEscalationArgs,
-} from '@deepseek-ai/dsh-sandbox'
-import type { EscalationApprover, EscalationOutcome } from '@deepseek-ai/dsh-sandbox'
+} from '@x1a0f3n9/dsh-sandbox'
+import type { EscalationApprover, EscalationOutcome } from '@x1a0f3n9/dsh-sandbox'
 
 describe('the strictly-wider ladder', () => {
   it('read-only escalates to either wider mode; workspace-write only to full access', () => {
@@ -86,9 +87,23 @@ describe('approveEscalation', () => {
     const spy = ingredients({ approver: approver('allowed-once', r => seen.push(r)) })
     await expect(approveEscalation(req({ requestedMode: 'read-only' }), spy))
       .rejects.toThrow(/not strictly wider than this call's current "read-only" mode/)
-    await expect(approveEscalation(req({ requestedMode: 'workspace-write', effectiveMode: 'danger-full-access' as never }), spy))
-      .rejects.toThrow(/not strictly wider/)
     expect(seen).toEqual([])
+  })
+
+  it('a full-access standing mode already covers later target retries without asking', async () => {
+    const seen: unknown[] = []
+    const spy = ingredients({ approver: approver('allowed-once', r => seen.push(r)) })
+    await expect(approveEscalation(req({
+      requestedMode: 'workspace-write',
+      effectiveMode: 'danger-full-access',
+    }), spy)).resolves.toBe('danger-full-access')
+    await expect(approveEscalation(req({
+      requestedMode: 'danger-full-access',
+      effectiveMode: 'danger-full-access',
+    }), spy)).resolves.toBe('danger-full-access')
+    expect(seen).toEqual([])
+    expect(isEscalationSatisfiedByStandingMode('workspace-write', 'danger-full-access')).toBe(true)
+    expect(isEscalationSatisfiedByStandingMode('read-only', 'danger-full-access')).toBe(false)
   })
 
   it('a missing approval service and an agent-less call each fail closed with distinct text', async () => {

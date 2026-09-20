@@ -5,14 +5,14 @@
  */
 
 import { z } from 'zod'
-import { canonicalHeader, isSurfaceEvent, SessionSeq } from '@deepseek-ai/dsh-session'
-import type { ProjectionDefinition } from '@deepseek-ai/dsh-session-projection'
+import { canonicalHeader, isSurfaceEvent, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import { estimateToolsTokens } from './estimate.ts'
 import { commitSurfaceTokens, planSurfaceTokens } from './surface-fold.ts'
 // Import for the `contextBreakdown` SessionProjectionStateMap key merge.
 import type {} from './projection.ts'
 
-declare module '@deepseek-ai/dsh-session-projection/types' {
+declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
     contextBreakdown: ContextBreakdownState
   }

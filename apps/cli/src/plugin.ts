@@ -7,7 +7,7 @@
  * removed or bundle-less dependency leaves it). Reconciling by installed
  * state, not by dependency diff, means `update` activates a package that
  * gained its `dsh.bundle` declaration in a newer version.
- * @module @deepseek-ai/dsh/plugin
+ * @module @x1a0f3n9/dsh/plugin
  */
 
 import { spawnSync } from 'node:child_process'
@@ -22,7 +22,7 @@ import {
   resolveProfileDir,
   writeProfileManifest,
   type ProfileManifest,
-} from '@deepseek-ai/dsh-app-boot'
+} from '@x1a0f3n9/dsh-app-boot'
 import { INSTALL_ANCHOR } from './profile-boot.ts'
 
 const NAME = 'dsh'
@@ -56,15 +56,53 @@ function exportsPatch(packageName: string, profileDir: string): boolean {
  * per newly-added bundle-less dependency (a plain library is fine; the
  * warning is orientation).
  */
+function prebundledPluginEntries(profileDir: string): ReadonlyMap<string, string> {
+  const profile = readProfileManifest(NAME, profileDir)
+  const entries = new Map<string, string>()
+  for (const bundleName of profile.dsh?.profile?.bundles ?? []) {
+    let bundleDir: string
+    try {
+      bundleDir = resolveBundleDir(NAME, bundleName, INSTALL_ANCHOR, profileDir)
+    } catch {
+      continue
+    }
+    const manifest = readProfileManifest(NAME, bundleDir)
+    for (const plugin of manifest.dsh?.bundle?.plugins ?? []) {
+      if (typeof plugin?.packageName === 'string' && typeof plugin.entryId === 'string') {
+        entries.set(plugin.packageName, plugin.entryId)
+      }
+    }
+  }
+  return entries
+}
+
+/**
+ * Reconcile `dsh.profile.bundles` against the installed state. Prebundled
+ * catalog entries are enabled through `pluginOverrides` instead of being
+ * mounted a second time as profile layers; mounting both creates duplicate
+ * Loader entry ids.
+ */
 function reconcilePlugins(before: ProfileManifest, profileDir: string): void {
   const after = readProfileManifest(NAME, profileDir)
   const beforeDeps = new Set(Object.keys(before.dependencies ?? {}))
   const dependencies = Object.keys(after.dependencies ?? {})
   const plugins = after.dsh?.profile?.bundles ?? []
+  const prebundled = prebundledPluginEntries(profileDir)
+  let overrides = { ...after.dsh?.profile?.pluginOverrides }
   let changed = false
   for (const packageName of dependencies) {
     const isBundle = exportsPatch(packageName, profileDir)
-    if (isBundle && !plugins.includes(packageName)) {
+    const prebundledEntryId = prebundled.get(packageName)
+    if (isBundle && prebundledEntryId !== undefined) {
+      if (plugins.includes(packageName)) {
+        plugins.splice(plugins.indexOf(packageName), 1)
+        changed = true
+      }
+      if (overrides[prebundledEntryId] !== true) {
+        overrides[prebundledEntryId] = true
+        changed = true
+      }
+    } else if (isBundle && !plugins.includes(packageName)) {
       plugins.push(packageName)
       changed = true
     } else if (!isBundle && !beforeDeps.has(packageName)) {
@@ -85,8 +123,18 @@ function reconcilePlugins(before: ProfileManifest, profileDir: string): void {
       changed = true
     }
   }
+  for (const [packageName, entryId] of prebundled) {
+    if (beforeDeps.has(packageName) && !dependencySet.has(packageName) && overrides[entryId] !== undefined) {
+      const { [entryId]: _removed, ...remainingOverrides } = overrides
+      overrides = remainingOverrides
+      changed = true
+    }
+  }
   if (!changed) return
-  after.dsh = { ...after.dsh, profile: { ...after.dsh?.profile, bundles: plugins } }
+  const profile = { ...after.dsh?.profile, bundles: plugins }
+  if (Object.keys(overrides).length === 0) delete profile.pluginOverrides
+  else profile.pluginOverrides = overrides
+  after.dsh = { ...after.dsh, profile }
   writeProfileManifest(profileDir, after)
 }
 
@@ -112,6 +160,21 @@ function anchorPathSpec(argument: string, cwd: string): string {
 }
 
 /**
+ * Make dependency mutations explicit for the profile's pnpm workspace root.
+ *
+ * A profile is intentionally a one-package workspace. pnpm otherwise rejects
+ * `add` at that root unless `--workspace-root` is supplied, which makes the
+ * documented `dsh plugin ... add` command fail on initialized profiles.
+ * @param args - pnpm arguments supplied by the user.
+ * @returns arguments with the root mutation flag when required.
+ */
+function profilePnpmArgs(args: readonly string[]): string[] {
+  const command = args[0]
+  if (command !== 'add' || args.includes('--workspace-root') || args.includes('-w')) return [...args]
+  return [...args, '--workspace-root']
+}
+
+/**
  * Run one `dsh plugin` invocation: init if needed, forward to pnpm, reconcile.
  * @param profile - the profile name.
  * @param args - pnpm arguments with relative path specs anchored to the invoking directory.
@@ -131,7 +194,8 @@ export function runPlugin(profile: string, args: readonly string[]): number {
   const before = readProfileManifest(NAME, dir)
   // Windows resolves pnpm through its .cmd shim, which spawn() refuses
   // without a shell since the CVE-2024-27980 hardening.
-  const result = spawnSync('pnpm', args.map(argument => anchorPathSpec(argument, process.cwd())), {
+  const pnpmArgs = profilePnpmArgs(args).map(argument => anchorPathSpec(argument, process.cwd()))
+  const result = spawnSync('pnpm', pnpmArgs, {
     cwd: dir,
     stdio: 'inherit',
     shell: process.platform === 'win32',

@@ -3,7 +3,7 @@
 import { EventEmitter } from 'node:events'
 import { Context } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it } from 'vitest'
-import { internals, provideCmdline } from '@deepseek-ai/dsh-cmdline'
+import { internals, provideCmdline } from '@x1a0f3n9/dsh-cmdline'
 import { apply, type Config, SDK_APP_STARTUP_SERVICE } from '../src/index.ts'
 
 /** Controllable stdin for one startup invocation. */

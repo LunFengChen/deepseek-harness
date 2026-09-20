@@ -16,7 +16,7 @@
 import { useState } from 'react'
 import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react'
 import clsx from 'clsx'
-import { IconCloseOutline16, IconPanelLeftOutline16, Tooltip } from '@deepseek-ai/dsh-client-ui-primitives'
+import { IconCloseOutline16, IconPanelLeftOutline16, Tooltip } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { DockIntents, DockLabels, TabRenderer } from '../contract/adapter.ts'
 import type { FloatRect, LayoutState, PaneId, TabId } from '../contract/types.ts'
 import { FLOAT_MIN_SIZE } from '../engine/constraints.ts'

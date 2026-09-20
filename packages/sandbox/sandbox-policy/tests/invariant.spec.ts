@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import SessionStore, { type Session, type SessionEvent } from '@deepseek-ai/dsh-session'
-import InvariantRegistry, { InvariantError } from '@deepseek-ai/dsh-invariants'
-import * as SandboxPolicyInvariant from '@deepseek-ai/dsh-sandbox-policy/invariant'
+import SessionStore, { type Session, type SessionEvent } from '@x1a0f3n9/dsh-session'
+import InvariantRegistry, { InvariantError } from '@x1a0f3n9/dsh-invariants'
+import * as SandboxPolicyInvariant from '@x1a0f3n9/dsh-sandbox-policy/invariant'
 
 async function setup(): Promise<Context> {
   const ctx = new Context()
@@ -36,7 +36,7 @@ describe('sandbox-policy invariants', () => {
   it('rejects and attributes an unknown durable sandbox mode', async () => {
     const ctx = await setup()
     expect(() => { ctx.emit('session/event', {} as Session, modeEvent('host-root')) })
-      .toThrow(new InvariantError('@deepseek-ai/dsh-sandbox-policy', 'sandbox/mode carries unknown mode "host-root"'))
+      .toThrow(new InvariantError('@x1a0f3n9/dsh-sandbox-policy', 'sandbox/mode carries unknown mode "host-root"'))
   })
 
   it('rejects an unknown mode already present on late registration', async () => {
@@ -47,7 +47,7 @@ describe('sandbox-policy invariants', () => {
 
     await expect(ctx.plugin(SandboxPolicyInvariant).then(() => undefined)).rejects.toMatchObject({
       code: 'INVARIANT',
-      packageName: '@deepseek-ai/dsh-sandbox-policy',
+      packageName: '@x1a0f3n9/dsh-sandbox-policy',
     })
   })
 })

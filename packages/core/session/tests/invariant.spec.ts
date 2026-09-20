@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { createScope, scopeTarget } from '@deepseek-ai/dsh-scope'
-import { createSystemMessage, createUserMessage, ToolCallId, createMessage, createToolResultMessage, freezeMessage } from '@deepseek-ai/dsh-llm'
-import SessionStore, { SessionId, SessionSeq, TOOL_NOT_STARTED } from '@deepseek-ai/dsh-session'
-import * as SessionInvariant from '@deepseek-ai/dsh-session/invariant'
-import InvariantRegistry, { InvariantError } from '@deepseek-ai/dsh-invariants'
+import { createScope, scopeTarget } from '@x1a0f3n9/dsh-scope'
+import { createSystemMessage, createUserMessage, ToolCallId, createMessage, createToolResultMessage, freezeMessage } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId, SessionSeq, TOOL_NOT_STARTED } from '@x1a0f3n9/dsh-session'
+import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
+import InvariantRegistry, { InvariantError } from '@x1a0f3n9/dsh-invariants'
 
 async function setup(): Promise<{ ctx: Context; fiber: Awaited<ReturnType<Context['plugin']>> }> {
   const ctx = new Context()
@@ -237,7 +237,7 @@ describe('session-log invariants', () => {
   it('requires a system/message to name the open step', async () => {
     const session = (await setup()).ctx.sessions.create()
     session.append('turn/start', { turn: 1 })
-    const message = createSystemMessage('You are terse.', '@deepseek-ai/dsh-system-prompt')
+    const message = createSystemMessage('You are terse.', '@x1a0f3n9/dsh-system-prompt')
     expect(() => session.append('system/message', { turn: 1, step: 1, message }, { surfaceOp: 'append' }))
       .toThrow(/open is turn 1\/step null/)
     session.append('step/start', { turn: 1, step: 1 })

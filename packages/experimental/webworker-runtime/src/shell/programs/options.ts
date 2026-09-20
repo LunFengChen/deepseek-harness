@@ -1,7 +1,7 @@
 /**
  * Argument splitting shared by the command table: short flags (bundled or
  * separate), long flags, `--`, and the operands that follow.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/shell/programs/options
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/programs/options
  */
 
 /** One parsed argv: which flags were given, and what is left to act on. */

@@ -3,7 +3,7 @@ description: "Subagent conversation catalog, continuation routing UI, and '@' re
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-client-ui-subagent
+# @x1a0f3n9/dsh-client-ui-subagent
 
 English | [中文](README.zh.md)
 

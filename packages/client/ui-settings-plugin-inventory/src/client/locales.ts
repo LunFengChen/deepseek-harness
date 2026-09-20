@@ -3,6 +3,7 @@
 /** Simplified Chinese dictionary and key source of truth. */
 export const zh = {
   tab: '插件列表',
+  presetTab: 'xfdsh预置插件',
   loading: '正在读取插件…',
   error: '暂时无法读取插件。',
   retry: '重试',
@@ -15,6 +16,14 @@ export const zh = {
   switcherLabel: '选择要查看的 Agent 预设',
   presetOptionDefault: '{name}（默认）',
   presetOptionBroken: '{name}（加载失败）',
+  catalogTitle: 'xfdsh预置插件',
+  catalogSubtitle: '已随当前 profile 预置，可直接启用或停用',
+  catalogVersion: 'v{version}',
+  openPackageGithub: '在 GitHub 打开 {name}',
+  enablePlugin: '启用 {name}',
+  disablePlugin: '停用 {name}',
+  requiredTag: '必需',
+  updateError: '插件状态保存失败：{message}',
   globalTitle: '全局插件',
   globalSubtitle: '系统与所有会话共用',
   presetProvidedDetail: '全局已停用，由 Agent 预设按会话提供',
@@ -38,6 +47,7 @@ export const zh = {
   active: '运行中',
   failed: '启动失败',
   unloading: '卸载中',
+
 } satisfies Record<string, string>
 
 /** Plugin inventory locale key union. */
@@ -46,6 +56,7 @@ export type PluginInventoryLocaleKey = keyof typeof zh
 /** English dictionary checked against the Chinese key set. */
 export const en = {
   tab: 'Plugin list',
+  presetTab: 'xfdsh preset plugins',
   loading: 'Reading plugins…',
   error: 'Plugins are temporarily unavailable.',
   retry: 'Retry',
@@ -58,6 +69,14 @@ export const en = {
   switcherLabel: 'Choose the agent preset to inspect',
   presetOptionDefault: '{name} (default)',
   presetOptionBroken: '{name} (failed to load)',
+  catalogTitle: 'xfdsh preset plugins',
+  catalogSubtitle: 'Prebundled with this profile; enable or disable them here',
+  catalogVersion: 'v{version}',
+  openPackageGithub: 'Open {name} on GitHub',
+  enablePlugin: 'Enable {name}',
+  disablePlugin: 'Disable {name}',
+  requiredTag: 'Required',
+  updateError: 'The plugin state could not be saved: {message}',
   globalTitle: 'Global plugins',
   globalSubtitle: 'Shared by the system and every session',
   presetProvidedDetail: 'Disabled globally; agent presets provide it per session',
@@ -81,4 +100,5 @@ export const en = {
   active: 'Running',
   failed: 'Failed to start',
   unloading: 'Unloading',
+
 } satisfies Record<PluginInventoryLocaleKey, string>

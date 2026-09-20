@@ -101,8 +101,6 @@ class BashOutput2(TypedDict):
 class CreateGoalArgs(TypedDict):
     # The concrete completion objective inferred from the direct human request.
     objective: str
-    # Optional positive safe-integer limit on automatic continuation rounds.
-    max_goal_rounds: NotRequired[float]
     # Additional keys beyond those declared are allowed.
 
 class CreateGoalOutput1(TypedDict):
@@ -441,8 +439,6 @@ class UpdateGoalArgs(TypedDict):
     action: Literal["edit", "pause", "resume", "complete", "blocked"]
     # Replacement objective; valid only with action edit.
     objective: NotRequired[str]
-    # Replacement cap; valid only with action edit.
-    max_goal_rounds: NotRequired[float]
     # Concrete blocking condition; required only with action blocked.
     blocked_reason: NotRequired[str]
     # Additional keys beyond those declared are allowed.

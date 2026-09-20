@@ -18,7 +18,7 @@ Status: implemented
 
 ### 事件
 
-`system/message` 是 `SurfaceEventType` 的成员，与 `user/message`、`assistant/message`、`tool/result` 并列（`packages/core/session/src/types.ts`）。它的载荷与 `tool/result` 对称：`{ turn, step, message }`，其中 `message` 是 `role: 'system'` 的 `SystemMessage`，一个文本块承载渲染后的提示词，source 为 `{ kind: 'plugin', plugin: '@deepseek-ai/dsh-system-prompt' }`。空的 `content` 记录「没有系统提示词」：该节点保持其 surface 位置，`deriveEventMessage` 把它投影为 `null`，因此不贡献任何协议消息。非空节点逐字投影，因此 `deriveMessages()` 在其 surface 位置返回系统消息，而原样透传 `role: 'system'` 历史消息的 DeepSeek 序列化器把它作为协议消息 0 发出。`EpochHeader` 是 `{ config, adapterDefaults?, tools? }`；`packages/core/session/src/request-header.ts` 中的 `canonicalHeader` 与 `headerEquals` 只比较 config、适配器默认值和工具。
+`system/message` 是 `SurfaceEventType` 的成员，与 `user/message`、`assistant/message`、`tool/result` 并列（`packages/core/session/src/types.ts`）。它的载荷与 `tool/result` 对称：`{ turn, step, message }`，其中 `message` 是 `role: 'system'` 的 `SystemMessage`，一个文本块承载渲染后的提示词，source 为 `{ kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt' }`。空的 `content` 记录「没有系统提示词」：该节点保持其 surface 位置，`deriveEventMessage` 把它投影为 `null`，因此不贡献任何协议消息。非空节点逐字投影，因此 `deriveMessages()` 在其 surface 位置返回系统消息，而原样透传 `role: 'system'` 历史消息的 DeepSeek 序列化器把它作为协议消息 0 发出。`EpochHeader` 是 `{ config, adapterDefaults?, tools? }`；`packages/core/session/src/request-header.ts` 中的 `canonicalHeader` 与 `headerEquals` 只比较 config、适配器默认值和工具。
 
 ### 操作
 

@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-compaction-model-switch-and-truncated-summary.md
+2026-09-10-compaction-model-switch-and-truncated-summary.md: 8c79a56fcc51c3733b3b986ef9b23764ca18a084
+2026-09-10-compaction-model-switch-and-truncated-summary.zh.md: 66478afc7366124adbc9bf314f840b3b488808aa

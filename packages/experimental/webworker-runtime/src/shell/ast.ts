@@ -6,7 +6,7 @@
  * directly, so the three missing members are derived from the ones it does
  * publish. `CommandChain` is `Command` plus an optional pipeline link, which
  * makes it usable wherever a command node is expected.
- * @module @deepseek-ai/dsh-experimental-webworker-runtime/src/shell/ast
+ * @module @x1a0f3n9/dsh-experimental-webworker-runtime/src/shell/ast
  */
 
 import type { Argument, CommandChain } from '@yarnpkg/parsers'

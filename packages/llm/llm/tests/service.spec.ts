@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
-import { AttachmentId } from '@deepseek-ai/dsh-attachment'
+import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
 import LlmRuntime, {
   errorChain,
   GenerateOptions,
@@ -15,7 +15,7 @@ import LlmRuntime, {
   StreamChunk,
   createMessage,
   createUserMessage,
-} from '@deepseek-ai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 import type {
   LlmModelContext,
   LlmModelInfo,
@@ -23,7 +23,7 @@ import type {
   LlmProviderInfo,
   LlmResolvedModelInfo,
   SystemPromptUpdate,
-} from '@deepseek-ai/dsh-llm'
+} from '@x1a0f3n9/dsh-llm'
 
 class ScriptedAdapter extends LlmAdapter {
   constructor(private script: StreamChunk[]) {
@@ -113,6 +113,15 @@ describe('LlmRuntime', () => {
     expect(isContextWindowExceededError('input is too long for this model')).toBe(true)
     expect(isContextWindowExceededError('request too large for model context')).toBe(true)
     expect(isContextWindowExceededError('input exceeds the model context window limit')).toBe(true)
+    expect(isContextWindowExceededError(
+      "This model's maximum prompt length is 131072 but the request contains 136973 tokens.",
+    )).toBe(true)
+    expect(isContextWindowExceededError('prompt is too long: 213462 tokens > 200000 maximum')).toBe(true)
+    expect(isContextWindowExceededError('Please reduce the length of the messages or completion')).toBe(true)
+    expect(isContextWindowExceededError('The text is too long for this model.')).toBe(true)
+    expect(isContextWindowExceededError('CONTEXT_WINDOW_EXCEEDED')).toBe(true)
+    expect(isContextWindowExceededError('上下文长度超过限制')).toBe(true)
+    expect(isContextWindowExceededError('提示词过长，请缩短后重试')).toBe(true)
   })
 
   it('does not mistake unrelated input validation for context-window overflow', () => {
@@ -129,6 +138,8 @@ describe('LlmRuntime', () => {
       'usage-limit-exceeded',
       'out of credits',
       'OpenAI API error (429): You exceeded your current quota, please check your plan and billing details.',
+      'You have exceeded the 5-hour usage quota. It will reset at 2026-08-28 18:52:12 +0800 CST.',
+      "You've reached your usage limit for this billing cycle. Your quota will reset soon.",
     ]) expect(isQuotaExceededError(detail)).toBe(true)
     expect(isQuotaExceededError('HTTP 429: rate limit reached')).toBe(false)
     expect(isQuotaExceededError('quota resets in one minute')).toBe(false)
@@ -291,7 +302,7 @@ describe('LlmRuntime', () => {
     expect(ctx.llm.providerRetryPolicy('configured')).toBe(configured)
     expect(ctx.llm.providerRetryPolicy('defaulted')).toMatchObject({
       mode: 'normal',
-      maxRetries: 5,
+      maxRetries: 20,
     })
     expect(() => ctx.llm.providerRetryPolicy('missing')).toThrow(
       expect.objectContaining({ code: 'NO_ADAPTER' }),
@@ -1332,7 +1343,7 @@ describe('LlmRuntime', () => {
   })
 
   it('LlmError extends the shared HarnessError base', async () => {
-    const { HarnessError, isHarnessError } = await import('@deepseek-ai/dsh-llm')
+    const { HarnessError, isHarnessError } = await import('@x1a0f3n9/dsh-llm')
     const cause = new Error('root cause')
     const err = new LlmError('boom', 'AUTH', { cause })
     expect(err).toBeInstanceOf(HarnessError)
@@ -1342,7 +1353,7 @@ describe('LlmRuntime', () => {
   })
 
   it('HarnessError carries a code, names itself by subclass, and chains cause', async () => {
-    const { HarnessError, isHarnessError } = await import('@deepseek-ai/dsh-llm')
+    const { HarnessError, isHarnessError } = await import('@x1a0f3n9/dsh-llm')
     const root = new Error('root cause')
     const err = new HarnessError('wrapper', 'UNKNOWN', { cause: root })
     expect(err).toBeInstanceOf(Error)

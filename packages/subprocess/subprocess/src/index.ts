@@ -4,12 +4,12 @@
  * collected stdio, and one terminal-process primitive. Command defaulting,
  * shell semantics, deadlines, protocol framing, terminal readiness, and
  * presentation belong to consumers. The local implementation lives in
- * `@deepseek-ai/dsh-subprocess-local`.
- * @module @deepseek-ai/dsh-subprocess
+ * `@x1a0f3n9/dsh-subprocess-local`.
+ * @module @x1a0f3n9/dsh-subprocess
  */
 
 import { Context, Service } from '@deepseek-ai/cordis'
-import { proxyEnvironmentForChild } from '@deepseek-ai/dsh-http-proxy'
+import { proxyEnvironmentForChild } from '@x1a0f3n9/dsh-http-proxy'
 import { DSH_ENV_PREFIX } from './types.ts'
 import type { SubprocessHandle, SubprocessSpawnSpec } from './types.ts'
 import type { SubprocessTerminalHandle, SubprocessTerminalSpawnSpec } from './types.ts'

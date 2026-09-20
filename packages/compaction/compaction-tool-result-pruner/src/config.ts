@@ -1,6 +1,6 @@
 /** Configuration resolution for deterministic tool-result pruning. */
 
-import { deepFreeze } from '@deepseek-ai/dsh-util-values'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
 import type { ResolvedConfig, ToolResultPruneConfig } from './types.ts'
 
 /** Fixed marker substituted for every removed middle span. */

@@ -1,5 +1,5 @@
-import { SessionFormatError, isSessionFormatJsonObject } from '@deepseek-ai/dsh-session-format'
-import type { SessionFormatJsonValue } from '@deepseek-ai/dsh-session-format'
+import { SessionFormatError, isSessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
+import type { SessionFormatJsonValue } from '@x1a0f3n9/dsh-session-format'
 
 /**
  * Require one plain JSON object.

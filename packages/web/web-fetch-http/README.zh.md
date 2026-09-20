@@ -3,7 +3,7 @@ description: "ctx.web 的匿名公共 HTTP(S) 抓取后端：部署方如何挂�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-web-fetch-http
+# @x1a0f3n9/dsh-web-fetch-http
 
 [English](README.md) | 中文
 
@@ -36,8 +36,8 @@ kind: "package-reference"
 加载 web 服务与本提供方；可配置上限都有安全默认值，并在插件构造时验证，因此无效值会直接报错，而不是构造出上限荒谬的提供方。URL 安全上限固定为 2,048 个字符。
 
 ```yaml
-- name: '@deepseek-ai/dsh-web'
-- name: '@deepseek-ai/dsh-web-fetch-http'
+- name: '@x1a0f3n9/dsh-web'
+- name: '@x1a0f3n9/dsh-web-fetch-http'
 ```
 
 | 字段 | 默认值 | 含义 |
@@ -108,7 +108,7 @@ const page = await ctx.web.fetch({ url: 'https://example.com' })
 当包级约定不够用时阅读以下页面。它们从共享词汇逐步进入服务、面向模型的工具与设计依据。
 
 - [web 子系统](../../../docs/subsystems/web.zh.md)——穷尽式的抓取请求／结果词汇与错误码。
-- [web 包映射](../README.zh.md)——六包家族与各角色。
+- [web 包映射](../README.zh.md)——web 包族与各角色。
 - [dsh-web](../web/README.zh.md)——本提供方注册进入的 web 服务。
 - [dsh-tool-web](../tool-web/README.zh.md)——渲染本提供方正文的面向模型 `web_fetch` 工具。
 - [生成配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-web-fetch-http)——每个受支持配置字段及其源声明。

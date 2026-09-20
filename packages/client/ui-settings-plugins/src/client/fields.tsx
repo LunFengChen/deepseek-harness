@@ -6,7 +6,7 @@
  * card's save is the single point where a draft becomes a document mutation.
  */
 
-import { Tag } from '@deepseek-ai/dsh-client-ui-primitives'
+import { Tag } from '@x1a0f3n9/dsh-client-ui-primitives'
 import css from './fields.module.css'
 
 /** What every field control needs regardless of its value type. */
@@ -81,6 +81,52 @@ export function ValueField(props: FieldProps & {
         disabled={props.disabled}
         onChange={(event) => { props.onEdit(event.target.value) }}
       />
+      <p className={props.invalid ? css.invalid : css.hint}>
+        {props.invalid ? props.invalidLabel : props.hint}
+      </p>
+    </div>
+  )
+}
+
+/**
+ * Render one staged choice field.
+ * @param props - the field's copy, staged value, choices, and edit actions.
+ * @returns the labelled select control.
+ */
+export function SelectField(props: FieldProps & {
+  /** Choices rendered in the same order as the provider policy. */
+  options: readonly { value: string; label: string }[]
+}) {
+  return (
+    <div className={css.field}>
+      <div className={css.head}>
+        <label className={css.label} htmlFor={props.id}>{props.label}</label>
+        {props.overridden
+          ? (
+            <span className={css.badges}>
+              <span className={css.badge}>{props.overriddenLabel}</span>
+              <button
+                type="button"
+                className={css.reset}
+                disabled={props.disabled}
+                onClick={props.onReset}
+              >
+                {props.resetLabel}
+              </button>
+            </span>
+          )
+          : null}
+      </div>
+      <select
+        id={props.id}
+        className={props.invalid ? css.inputInvalid : css.input}
+        value={props.text}
+        disabled={props.disabled}
+        {...props.invalid ? { 'aria-invalid': true } : {}}
+        onChange={(event) => { props.onEdit(event.target.value) }}
+      >
+        {props.options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+      </select>
       <p className={props.invalid ? css.invalid : css.hint}>
         {props.invalid ? props.invalidLabel : props.hint}
       </p>

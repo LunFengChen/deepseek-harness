@@ -3,7 +3,7 @@ description: "冻结的已发布 v1 Session 读取器，以及把 Assistant 流�
 kind: "package-reference"
 ---
 
-# @deepseek-ai/dsh-session-format-v1-to-v2
+# @x1a0f3n9/dsh-session-format-v1-to-v2
 
 [English](README.md) | 中文
 

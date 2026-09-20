@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { CodeJsonValue } from '@deepseek-ai/dsh-code-runtime'
+import type { CodeJsonValue } from '@x1a0f3n9/dsh-code-runtime'
 import { jsonStringBytesUpTo, jsonValueBytesUpTo, truncateJsonStringBytes } from '../src/output-json.ts'
 
 describe('truncateJsonStringBytes', () => {
