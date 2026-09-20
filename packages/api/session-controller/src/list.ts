@@ -3,7 +3,6 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type {} from '@x1a0f3n9/dsh-agent-presets'
 import type { ImageAttachmentLimits } from '@x1a0f3n9/dsh-attachment'
-import { SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import type { Session, SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
 import type {} from '@x1a0f3n9/dsh-session-projection'
 import type {} from '@x1a0f3n9/dsh-session-projection-cache'
@@ -272,10 +271,7 @@ export class ApiSessionList {
     try {
       const cache = this.ctx.get('sessionProjectionCache')
       const block = session === undefined
-        ? header.isSeeded
-          ? undefined
-          : cache?.cachedSnapshot(header, SessionLogOffset(0))
-            ?? cache?.cachedPredecessorTitle(header, SessionLogOffset(0))
+        ? cache?.cachedListedHint(header)
         : this.ctx.sessionProjections.cachedSnapshot(session)
       return block !== undefined && Object.keys(block.values).length > 0
         ? {
