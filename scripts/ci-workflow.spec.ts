@@ -1009,11 +1009,17 @@ describe('npm release workflows', () => {
     if (!isRecord(dshRelease.on) || !isRecord(dshRelease.jobs)) {
       throw new TypeError('release.yml must define on and jobs')
     }
-    expect(Object.keys(dshRelease.jobs).sort()).toEqual(['dependencies', 'pack', 'publish'])
-    expect(dshRelease.on).toMatchObject({ push: { branches: ['dev-x1a0f3n9'] } })
+    expect(Object.keys(dshRelease.jobs).sort()).toEqual(['dependencies', 'pack', 'publish', 'publish-xfcodeai'])
+    expect(dshRelease.on).toMatchObject({ push: { branches: ['dev-x1a0f3n9', 'master'] } })
     expect(dshRelease.jobs.publish).toMatchObject({
       if: "github.ref == 'refs/heads/dev-x1a0f3n9'",
       environment: 'npm-publish',
+    })
+    expect(dshRelease.jobs['publish-xfcodeai']).toMatchObject({
+      if: "github.ref == 'refs/heads/master'",
+      needs: ['dependencies', 'pack'],
+      environment: 'npm-publish-xfcodeai',
+      concurrency: { group: 'Release-publish-xfcodeai', 'cancel-in-progress': false },
     })
     const publish = workflowJob(dshRelease, 'publish')
     if (!Array.isArray(publish.steps)) throw new TypeError('DSH publish job must define steps')
@@ -1025,13 +1031,27 @@ describe('npm release workflows', () => {
       },
       run: 'pnpm run release:publish --family dsh --from dist/npm',
     })
+    const xfcodeai = workflowJob(dshRelease, 'publish-xfcodeai')
+    if (!Array.isArray(xfcodeai.steps)) throw new TypeError('xfcodeai publish job must define steps')
+    const rewrite = xfcodeai.steps.filter(isRecord).find(step => step.name === 'Rewrite packed scope onto @xfcodeai')
+    expect(rewrite).toMatchObject({
+      run: 'pnpm run release:rewrite-scope --family dsh --from dist/npm --out dist/npm-xfcodeai --to-scope @xfcodeai',
+    })
+    const xfPublish = xfcodeai.steps.filter(isRecord).find(step => step.name === 'Publish tarballs')
+    expect(xfPublish).toMatchObject({
+      env: {
+        NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}',
+        RELEASE_PUBLISH_ALLOW_REF: "${{ github.ref == 'refs/heads/master' && 'refs/heads/master' || '' }}",
+      },
+      run: 'pnpm run release:publish --family dsh --from dist/npm-xfcodeai',
+    })
     const pack = workflowJob(dshRelease, 'pack')
     if (!Array.isArray(pack.steps)) throw new TypeError('DSH pack job must define steps')
     const verify = pack.steps.filter(isRecord).find(step => step.name === 'Verify release version')
     expect(verify).toMatchObject({
       env: {
-        RELEASE_PUBLISH: "${{ github.ref == 'refs/heads/dev-x1a0f3n9' && 'true' || 'false' }}",
-        RELEASE_PUBLISH_ALLOW_REF: "${{ github.ref == 'refs/heads/dev-x1a0f3n9' && 'refs/heads/dev-x1a0f3n9' || '' }}",
+        RELEASE_PUBLISH: "${{ (github.ref == 'refs/heads/dev-x1a0f3n9' || github.ref == 'refs/heads/master') && 'true' || 'false' }}",
+        RELEASE_PUBLISH_ALLOW_REF: "${{ (github.ref == 'refs/heads/dev-x1a0f3n9' || github.ref == 'refs/heads/master') && github.ref || '' }}",
       },
       run: 'pnpm run release:verify --family dsh',
     })

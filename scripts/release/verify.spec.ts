@@ -1,4 +1,4 @@
-/** Publication ref gates for tagged releases and the development branch. */
+/** Publication ref gates for tagged releases and branch allow-refs. */
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { releaseFamily, type ReleaseMember } from './families.ts'
@@ -33,6 +33,13 @@ describe('release verify refs', () => {
     vi.stubEnv('RELEASE_PUBLISH_ALLOW_REF', 'refs/heads/dev-x1a0f3n9')
     expect(() => {
       verifyPublishRef(family, members, 'refs/heads/dev-x1a0f3n9')
+    }).not.toThrow()
+  })
+
+  it('accepts the master allow-ref', () => {
+    vi.stubEnv('RELEASE_PUBLISH_ALLOW_REF', 'refs/heads/master')
+    expect(() => {
+      verifyPublishRef(family, members, 'refs/heads/master')
     }).not.toThrow()
   })
 

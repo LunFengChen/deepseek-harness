@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-dev-branch-npm-publish.md
-2026-09-10-dev-branch-npm-publish.md: cbd55f29fb0fec77b5daefe81f718ba03f0c8bc3
-2026-09-10-dev-branch-npm-publish.zh.md: 62262532838708d04820b8af605c7e2194fdea43
+2026-09-10-dev-branch-npm-publish.md: ab2482038b435367dc2b88604c97e26b7e108ee3
+2026-09-10-dev-branch-npm-publish.zh.md: 11cd6fc4f75b79f5128a2a678fe568088b1205b1

@@ -24,5 +24,5 @@ Unit tests cover family discovery, tag names, the branch allow-ref, and the rele
 
 ## Consequences
 
-- `master` remains a pure upstream mirror and does not publish this fork.
-- A later stable line can still publish `@xfcodeai/*` from `master` once that token and rescope are in place.
+- `dev-x1a0f3n9` publishes `@x1a0f3n9/*` and does not publish `@xfcodeai/*`.
+- `master` publishes `@xfcodeai/*` from the same packed tarballs after a complete-name rewrite ([master xfcodeai publish](../process/2026-09-20-master-xfcodeai-publish.md)).

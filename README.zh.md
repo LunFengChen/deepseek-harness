@@ -16,7 +16,7 @@
 ### npm
 
 ```sh
-npm install --global @x1a0f3n9/dsh
+npm install --global @xfcodeai/dsh
 xfdsh web
 ```
 
@@ -25,10 +25,10 @@ xfdsh web
 不装全局包的一次性运行：
 
 ```sh
-npx --package @x1a0f3n9/dsh xfdsh web
+npx --package @xfcodeai/dsh xfdsh web
 ```
 
-PATH 上的裸 `xfdsh` 来自全局 npm 安装。
+PATH 上的裸 `xfdsh` 来自全局 npm 安装。`dev-x1a0f3n9` 开发线在同样的命令里使用 `@x1a0f3n9/dsh`。
 
 ### 源码
 
@@ -59,7 +59,7 @@ dsh web
 
 下面的表格只汇总这个 fork 的用户可见和发布相关改动；合并上游的提交只负责集成，不单独展开。
 
-开发线使用 `@x1a0f3n9/dsh-*`。`master` 跟踪上游 `@deepseek-ai/dsh-*`。之后的稳定 fork 线发布 `@xfcodeai/dsh-*`。vendor 和 native 包继续使用 `@deepseek-ai/*`。
+开发线使用 `@x1a0f3n9/dsh-*`。`master` 从同一棵树发布 `@xfcodeai/dsh-*`。vendor 和 native 包继续使用 `@deepseek-ai/*`。
 
 ### 预置插件
 
@@ -93,17 +93,17 @@ GitHub 默认分支是 `dev-x1a0f3n9`。不带 `-b` 克隆也会落到这条 for
 
 | 分支 | 作用 | npm |
 | --- | --- | --- |
-| `master` | 跟踪上游 dsh。在这里同步上游。 | 当前不发布这个 fork。 |
+| `master` | 稳定 fork 线。在这里合并上游，再合进 `dev-x1a0f3n9`。 | 推送后发布 `@xfcodeai/*`。 |
 | `dev-x1a0f3n9` | fork 集成线。在这里测试，再推送。 | 推送后发布 `@x1a0f3n9/*`。 |
 | `feat/<topic>` 或 `fix/<topic>` | 一个小改动，从 `dev-x1a0f3n9` 拉出。 | 不发布。完成后 `--no-ff` 合回 `dev-x1a0f3n9`。 |
 
-1. 从上游 `deepseek-ai/deepseek-harness` 更新 `master`。
-2. 把这次的 `master` 合进 `dev-x1a0f3n9`。冲突在 fork 线上解，不要解在 `master`。
+1. 把上游 `deepseek-ai/deepseek-harness` 合进 `master`。
+2. 把这次的 `master` 合进 `dev-x1a0f3n9`。剩下的 fork 线冲突在这里解。
 3. 从 `dev-x1a0f3n9` 拉出 `feat/<topic>` 或 `fix/<topic>`。
 4. `--no-ff` 合回 `dev-x1a0f3n9`。这些短分支不要合进 `master`。
 5. 本地用 `pnpm xfdsh web` 测 `dev-x1a0f3n9`。
 6. 推送 `dev-x1a0f3n9`。CI 会编译并发布 `@x1a0f3n9/*`。
-7. 功能够多后，再把 `dev-x1a0f3n9` 合进 `master`，走 `@xfcodeai/*` 这条线。
+7. 把 `dev-x1a0f3n9` 合进 `master` 并推送。CI 会发布 `@xfcodeai/*`。
 
 遇到 npm 新包名额度会暂停这一轮发布但不把 job 判失败，下次再推会继续发剩下的名字。
 
