@@ -20,7 +20,7 @@ Pinned versions:
 - `@x1a0f3n9/dsh-context@0.49.7`
 - `@x1a0f3n9/dsh-better-sidebar@0.19.3`
 - `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4`
-- `@x1a0f3n9/dsh-failover-queue@0.1.11`
+- `@x1a0f3n9/dsh-failover-queue@0.1.12`
 - `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1`
 
 `@x1a0f3n9/dsh-web-search-pool` stays a workspace package and publishes with the harness family. Catalog `homepage` values stay the LunFengChen GitHub URLs.

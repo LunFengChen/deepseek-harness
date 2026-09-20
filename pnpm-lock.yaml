@@ -1970,8 +1970,8 @@ importers:
         specifier: workspace:^
         version: link:../../extensions/cordis-host-runner
       '@x1a0f3n9/dsh-failover-queue':
-        specifier: 0.1.11
-        version: 0.1.11(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
+        specifier: 0.1.12
+        version: 0.1.12(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
       '@x1a0f3n9/dsh-file-reference':
         specifier: workspace:^
         version: link:../../context/file-reference
@@ -15083,8 +15083,8 @@ packages:
       react:
         optional: true
 
-  '@x1a0f3n9/dsh-failover-queue@0.1.11':
-    resolution: {integrity: sha512-Me9qXcI6OTa8AW0kCUh7MQWekQDF+fRNN/7/UK8wtVlgBiPrC0IuIeq55XScA/Xsb1ZttG7OhpLHjP70ljgd3Q==}
+  '@x1a0f3n9/dsh-failover-queue@0.1.12':
+    resolution: {integrity: sha512-GAX+N7xrpRXysdyUNpLfc+w3RXHNU4Fv1LRnO/8TbjpNic4eRZ4J1KvoAaS+Mv7QPV7DRTjblmM7D0fGIkzNCQ==}
     engines: {node: '>=22.19'}
     peerDependencies:
       '@deepseek-ai/cordis': '>=4.0.0'
@@ -22541,7 +22541,7 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
-  '@x1a0f3n9/dsh-failover-queue@0.1.11(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)':
+  '@x1a0f3n9/dsh-failover-queue@0.1.12(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)':
     dependencies:
       '@deepseek-ai/cordis': link:vendor/cordis
       '@deepseek-ai/schemastery': link:vendor/schemastery

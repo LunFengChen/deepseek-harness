@@ -20,7 +20,7 @@ Status: implemented
 - `@x1a0f3n9/dsh-context@0.49.7`
 - `@x1a0f3n9/dsh-better-sidebar@0.19.3`
 - `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4`
-- `@x1a0f3n9/dsh-failover-queue@0.1.11`
+- `@x1a0f3n9/dsh-failover-queue@0.1.12`
 - `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1`
 
 `@x1a0f3n9/dsh-web-search-pool` 仍是 workspace 包，跟 harness 家族一起发。catalog 的 `homepage` 仍是 LunFengChen 的 GitHub 地址。
