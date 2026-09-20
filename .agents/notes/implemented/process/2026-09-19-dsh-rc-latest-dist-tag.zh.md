@@ -10,13 +10,13 @@ Status: implemented
 
 ## Decision
 
-`DshFamily` 把 `alpha` 和 `canary` 映射到同名 tag，`rc`、其他预发布版本和稳定版本都返回 undefined，从而走 npm 默认的 `latest`。vendor 发布的预发布版本仍走 `next`。
+`DshFamily` 把 `alpha` 和 `canary` 映射到同名 tag，`rc`、其他预发布版本和稳定版本都返回 undefined。`publish.ts` 总会传入 `--tag`；家族返回 undefined 时用 `latest`，因为 npm 拒绝不带 `--tag` 的预发布。vendor 发布的预发布版本仍走 `next`。
 
 `pnpm run release:dist-tag --family dsh` 在不打包的情况下，把 `latest` 指到每个成员已经发布的版本。`.github/workflows/release-dist-tag.yml` 是挂在 `npm-publish` 上的 `workflow_dispatch` job，用来跑这条命令。重复跑是幂等的：tag 已经指向该版本时会跳过。
 
 ## Verification
 
-`pnpm exec vitest run scripts/release/families.spec.ts scripts/release/dist-tag.spec.ts scripts/ci-workflow.spec.ts` 覆盖映射、skip/add 判断，以及 dispatch workflow。
+`pnpm exec vitest run scripts/release/families.spec.ts scripts/release/dist-tag.spec.ts scripts/release/publish.spec.ts scripts/ci-workflow.spec.ts` 覆盖映射、skip/add 判断、`--tag latest` argv，以及 dispatch workflow。
 
 ## Alternatives considered
 
@@ -34,4 +34,4 @@ Status: implemented
 
 ## Related
 
-[三条独立序列的私有 NPM 发布](2026-08-10-npm-release-sequences.zh.md) 仍然负责家族发布顺序和 vendor 的 `next` 排练。
+[三条独立序列的私有 NPM 发布](2026-08-10-npm-release-sequences.zh.md) 仍然负责家族发布顺序和 vendor 的 `next` 排练。[npm publish always passes --tag](../bug-fix/2026-09-20-npm-publish-prerelease-tag.zh.md) 负责 `--tag` argv。

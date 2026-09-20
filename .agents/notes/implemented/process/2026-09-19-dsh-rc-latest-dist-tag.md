@@ -10,13 +10,13 @@ This fork's friend-facing install is `npm install --global @x1a0f3n9/dsh`. `DshF
 
 ## Decision
 
-`DshFamily` maps `alpha` and `canary` to those named tags and returns undefined for `rc`, other prereleases, and stable versions so npm's `latest` default applies. Vendor publication still uses `next` for prereleases.
+`DshFamily` maps `alpha` and `canary` to those named tags and returns undefined for `rc`, other prereleases, and stable versions. `publish.ts` always passes `--tag`, using `latest` when the family returns undefined, because npm refuses a prerelease publish without `--tag`. Vendor publication still uses `next` for prereleases.
 
 `pnpm run release:dist-tag --family dsh` points `latest` at each member's already-published version without packing. `.github/workflows/release-dist-tag.yml` is a `workflow_dispatch` job on `npm-publish` that runs that command. Re-running it is idempotent: a tag that already names the version is skipped.
 
 ## Verification
 
-`pnpm exec vitest run scripts/release/families.spec.ts scripts/release/dist-tag.spec.ts scripts/ci-workflow.spec.ts` covers the mapping, the skip/add judgement, and the dispatch workflow.
+`pnpm exec vitest run scripts/release/families.spec.ts scripts/release/dist-tag.spec.ts scripts/release/publish.spec.ts scripts/ci-workflow.spec.ts` covers the mapping, the skip/add judgement, `--tag latest` argv, and the dispatch workflow.
 
 ## Alternatives considered
 
@@ -34,4 +34,4 @@ This fork's friend-facing install is `npm install --global @x1a0f3n9/dsh`. `DshF
 
 ## Related
 
-[Private npm publication as three independent sequences](2026-08-10-npm-release-sequences.md) still owns family publish order and vendor `next` rehearsals.
+[Private npm publication as three independent sequences](2026-08-10-npm-release-sequences.md) still owns family publish order and vendor `next` rehearsals. [npm publish always passes --tag](../bug-fix/2026-09-20-npm-publish-prerelease-tag.md) owns the `--tag` argv.
