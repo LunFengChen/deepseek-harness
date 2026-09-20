@@ -24,5 +24,5 @@ Status: implemented
 
 ## Consequences
 
-- `master` 继续纯跟踪上游，不发布这个 fork。
-- 以后稳定线仍可在 token 和 rescope 就绪后，从 `master` 发布 `@xfcodeai/*`。
+- `dev-x1a0f3n9` 发布 `@x1a0f3n9/*`，不发布 `@xfcodeai/*`。
+- `master` 在 packed tarball 上做完整包名改写后发布 `@xfcodeai/*`（[从 master 发布 xfcodeai](../process/2026-09-20-master-xfcodeai-publish.zh.md)）。

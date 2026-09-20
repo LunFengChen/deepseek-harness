@@ -16,7 +16,7 @@ Read the [safety notice](SAFETY.md) before running.
 ### npm
 
 ```sh
-npm install --global @x1a0f3n9/dsh
+npm install --global @xfcodeai/dsh
 xfdsh web
 ```
 
@@ -25,10 +25,10 @@ The command starts the Web UI at `http://127.0.0.1:7777` by default and opens it
 One-off without a global install:
 
 ```sh
-npx --package @x1a0f3n9/dsh xfdsh web
+npx --package @xfcodeai/dsh xfdsh web
 ```
 
-A bare `xfdsh` on PATH comes from the global npm install.
+A bare `xfdsh` on PATH comes from the global npm install. The development line from `dev-x1a0f3n9` uses `@x1a0f3n9/dsh` in the same commands.
 
 ### Source
 
@@ -59,7 +59,7 @@ It is built on an **everything-is-a-plugin** architecture and powered by [Cordis
 
 The rows below summarize user-visible and release-impacting fork changes. Merge commits that only integrate upstream are not listed.
 
-Development packages use `@x1a0f3n9/dsh-*`. `master` tracks upstream `@deepseek-ai/dsh-*`. A later stable fork line publishes `@xfcodeai/dsh-*`. Vendor and native packages keep `@deepseek-ai/*`.
+Development packages use `@x1a0f3n9/dsh-*`. `master` publishes `@xfcodeai/dsh-*` from the same tree. Vendor and native packages keep `@deepseek-ai/*`.
 
 ### Preset plugins
 
@@ -93,17 +93,17 @@ GitHub's default branch is `dev-x1a0f3n9`. Clone without `-b` already lands on t
 
 | Branch | Role | npm |
 | --- | --- | --- |
-| `master` | Tracks upstream dsh. Sync upstream here. | Does not publish this fork today. |
+| `master` | Stable fork line. Merge upstream here, then into `dev-x1a0f3n9`. | Push publishes `@xfcodeai/*`. |
 | `dev-x1a0f3n9` | Fork integration. Test here, then push. | Push publishes `@x1a0f3n9/*`. |
 | `feat/<topic>` or `fix/<topic>` | One small change, cut from `dev-x1a0f3n9`. | None. Merge `--no-ff` into `dev-x1a0f3n9`. |
 
-1. Update `master` from upstream `deepseek-ai/deepseek-harness`.
-2. Merge that `master` into `dev-x1a0f3n9`. Resolve conflicts on the fork line, not on `master`.
+1. Merge upstream `deepseek-ai/deepseek-harness` into `master`.
+2. Merge that `master` into `dev-x1a0f3n9`. Resolve remaining fork-line conflicts there.
 3. Cut `feat/<topic>` or `fix/<topic>` from `dev-x1a0f3n9`.
 4. Merge `--no-ff` back into `dev-x1a0f3n9`. Do not merge those short-lived branches into `master`.
 5. Test `dev-x1a0f3n9` locally with `pnpm xfdsh web`.
 6. Push `dev-x1a0f3n9`. CI builds and publishes `@x1a0f3n9/*`.
-7. When the fork set is ready, merge `dev-x1a0f3n9` into `master` for the `@xfcodeai/*` line.
+7. Merge `dev-x1a0f3n9` into `master` and push. CI publishes `@xfcodeai/*`.
 
 An npm new-name quota pause stops a publish run without failing it; the next push continues remaining names.
 

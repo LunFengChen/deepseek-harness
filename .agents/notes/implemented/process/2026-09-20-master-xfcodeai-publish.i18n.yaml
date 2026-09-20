@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-09-20-master-xfcodeai-publish.md
+2026-09-20-master-xfcodeai-publish.md: 108db3b2c7ad0021d907d3e7a423e7ccaf066445
+2026-09-20-master-xfcodeai-publish.zh.md: 8e4d22df6651848b314eb21cbd661a14d91f3b96

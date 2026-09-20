@@ -74,7 +74,7 @@ function verifyTag(family: ReleaseFamily, members: readonly ReleaseMember[], ref
  * Assert the workflow is allowed to publish this family from `ref`.
  *
  * `RELEASE_PUBLISH_ALLOW_REF` is the branch-publish escape used by
- * `dev-x1a0f3n9`. When it is unset, publication still requires the family's
+ * `dev-x1a0f3n9` and `master`. When it is unset, publication still requires the family's
  * version tag.
  * @param family - the release family.
  * @param members - the family's members.
