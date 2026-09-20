@@ -5,11 +5,11 @@
 这个仓库是 **xfdsh**，[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（`dsh`）的 fork。
 发布出来的命令是 `xfdsh`。官方 `dsh` 可以继续装着。
 
-安装 Node.js，然后在 `http://127.0.0.1:7777` 打开 Web UI。
-
 ## 使用这个 fork
 
-两种安装方式。都会启动 `xfdsh web`。会话、分组、附件、settings 和 API key 仍在 `~/.dsh`，所以不用做历史迁移。
+安装 Node.js，然后在 `http://127.0.0.1:7777` 打开 Web UI。
+
+两种安装方式。都会启动 `xfdsh web`。会话、分组、附件、settings 和 API key 仍在 `~/.dsh`，所以不用做历史迁移。插件和 profile 放在 `~/.xfdsh`。预装的额外插件可在 Settings → xfdsh预置插件 关闭。
 
 运行前请阅读[安全说明](SAFETY.zh.md)。
 
@@ -42,37 +42,24 @@ pnpm xfdsh web
 
 GitHub 默认分支是 `dev-x1a0f3n9`，不带 `-b` 克隆也会落到这里。日常启动用 `pnpm xfdsh web`，不会重新编译。克隆后、拉取大改动后，或使用 `pnpm exec xfdsh` 时才需要重新编译。`pnpm exec xfdsh web` 走编好的 bin，需要当前的 `lib/`。
 
-### 数据
-
-`xfdsh` 的插件和 profile 放在 `~/.xfdsh`，不会写 `~/.dsh/profiles`。官方 `dsh` 的插件和 profile 仍在 `~/.dsh`。共用的会话数据见上文。预装的额外插件可在 Settings → xfdsh预置插件 关闭。
-
 ## 官方 dsh
 
-官方 DeepSeek Harness 是 [DeepSeek AI](https://deepseek.com) 的另一套产品。它构建于**一切皆插件**的架构之上，由 [Cordis](https://github.com/cordiverse/cordis) 驱动，设计参见 [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。
-
-文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
+官方 DeepSeek Harness 是 [DeepSeek AI](https://deepseek.com) 的另一套产品。
 
 ```sh
 npm install --global @deepseek-ai/dsh
 dsh web
 ```
 
-官方 `dsh web` 监听 `http://127.0.0.1:3080`，插件、profile、会话、settings 和 key 都在 `~/.dsh`。
+官方 `dsh web` 监听 `http://127.0.0.1:3080`，插件和 profile 仍在 `~/.dsh`。两套 CLI 可以同时开。会话历史共用，插件安装分开。
 
-两套 CLI 可以同时开。会话历史共用，插件安装分开。
+它构建于**一切皆插件**的架构之上，由 [Cordis](https://github.com/cordiverse/cordis) 驱动，设计参见 [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)。
 
 ## 这个 fork 改了什么
 
 下面的表格只汇总这个 fork 的用户可见和发布相关改动；合并上游的提交只负责集成，不单独展开。
 
-### 运行时
-
-| 领域 | 改动 | 结果 |
-| --- | --- | --- |
-| 包命名空间 | 开发线使用 `@x1a0f3n9/dsh-*`。`master` 跟踪上游 `@deepseek-ai/dsh-*`。之后的稳定 fork 线发布 `@xfcodeai/dsh-*`。vendor 和 native 包继续使用 `@deepseek-ai/*`。 | 两条 fork 线和官方 `dsh` 不会抢同一个 npm scope。 |
-| 启动器 | 发布出来的命令是 `xfdsh`。官方 `dsh` 仍是上游 CLI。 | 两套产品可以并装。 |
-| 数据目录 | `xfdsh` 的插件和 profile 放在 `~/.xfdsh`。会话、分组、附件、settings 和 API key 共用 `~/.dsh`。 | 不用迁移向导就能读到同一份历史。 |
-| Web 端口 | `xfdsh web` 默认监听 `127.0.0.1:7777`。官方 `dsh web` 仍是 `3080`。 | 两套 UI 可以同时开。 |
+开发线使用 `@x1a0f3n9/dsh-*`。`master` 跟踪上游 `@deepseek-ai/dsh-*`。之后的稳定 fork 线发布 `@xfcodeai/dsh-*`。vendor 和 native 包继续使用 `@deepseek-ai/*`。
 
 ### 预置插件
 
