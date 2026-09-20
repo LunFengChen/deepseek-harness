@@ -295,7 +295,7 @@ export abstract class ReleaseFamily {
   /**
    * The npm dist-tag assigned while publishing a version.
    * @param version - package version from the packed manifest.
-   * @returns `next` for a prerelease, or undefined so npm uses `latest`.
+   * @returns `next` for a prerelease, or undefined for the latest channel.
    */
   distTagForVersion(version: string): string | undefined {
     return version.includes('-') ? 'next' : undefined
@@ -365,7 +365,7 @@ class DshFamily extends ReleaseFamily {
    * npm's `latest` default
    * ([rationale](../../.agents/notes/implemented/process/2026-09-19-dsh-rc-latest-dist-tag.md)).
    * @param version - package version from the packed manifest.
-   * @returns `alpha` or `canary`, or undefined so npm uses `latest`.
+   * @returns `alpha` or `canary`, or undefined for the latest channel.
    */
   override distTagForVersion(version: string): string | undefined {
     const separator = version.indexOf('-')

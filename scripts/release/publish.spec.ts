@@ -8,6 +8,7 @@ import {
   existingPublishedVersionAction,
   isRateLimited,
   isTransientFailure,
+  npmPublishTagArgs,
   partitionPublishPasses,
   rateLimitedPublishAction,
   retryBackoffMs,
@@ -71,5 +72,14 @@ describe('release publish pass order', () => {
     const passes = partitionPublishPasses(members)
     expect(passes.absent.map(member => member.name)).toEqual(['missing-b', 'missing-d'])
     expect(passes.present.map(member => member.name)).toEqual(['already-a', 'already-c'])
+  })
+})
+
+describe('release publish dist-tag argv', () => {
+  it('always passes --tag, using latest when the family omits a channel', () => {
+    expect(npmPublishTagArgs(undefined)).toEqual(['--tag', 'latest'])
+    expect(npmPublishTagArgs('alpha')).toEqual(['--tag', 'alpha'])
+    expect(npmPublishTagArgs('canary')).toEqual(['--tag', 'canary'])
+    expect(npmPublishTagArgs('next')).toEqual(['--tag', 'next'])
   })
 })
