@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-open-in-app",
   "description": "Web Session-header \"Open In...\" split button opening the session workspace directory in a locally installed application",
-  "version": "0.1.5-rc.4",
+  "version": "0.1.5-rc.5",
   "publishConfig": {
     "access": "public"
   },
