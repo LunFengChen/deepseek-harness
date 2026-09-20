@@ -209,6 +209,20 @@ async function registryState(name: string, version: string): Promise<RegistrySta
 }
 
 /**
+ * npm publish `--tag` argv.
+ *
+ * npm refuses a prerelease PUT unless `--tag` is present; omitting the flag is
+ * not `latest`. Always pass the channel, and materialize `latest` when the
+ * family left it implied
+ * ([rationale](../../.agents/notes/implemented/bug-fix/2026-09-20-npm-publish-prerelease-tag.md)).
+ * @param distTag - family channel, or undefined for latest.
+ * @returns `['--tag', distTag ?? 'latest']`.
+ */
+export function npmPublishTagArgs(distTag: string | undefined): string[] {
+  return ['--tag', distTag ?? 'latest']
+}
+
+/**
  * Publish one tarball, retrying a registry write that did not settle.
  *
  * Every retry re-reads the registry first, because `E409` can answer a write
@@ -217,7 +231,7 @@ async function registryState(name: string, version: string): Promise<RegistrySta
  * @param tarball - absolute tarball path.
  * @param name - package name the tarball declares.
  * @param version - package version the tarball declares.
- * @param distTag - explicit npm dist-tag, or undefined for npm's `latest` default.
+ * @param distTag - explicit npm dist-tag, or undefined for the latest channel.
  */
 async function publishTarball(
   tarball: string,
@@ -225,7 +239,7 @@ async function publishTarball(
   version: string,
   distTag: string | undefined,
 ): Promise<void> {
-  const tagArgs = distTag === undefined ? [] : ['--tag', distTag]
+  const tagArgs = npmPublishTagArgs(distTag)
   for (let tries = 1; tries <= PUBLISH_ATTEMPTS; tries += 1) {
     // No --access: every release member declares its own publishConfig, and
     // a command-line flag would override it. check-workspace-constraints
