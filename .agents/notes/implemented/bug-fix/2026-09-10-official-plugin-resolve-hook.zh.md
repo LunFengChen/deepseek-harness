@@ -6,11 +6,11 @@ Status: implemented
 
 ## Problem
 
-预装的社区插件会 import `@deepseek-ai/dsh-session` 和 `@deepseek-ai/dsh-settings`。工作区 override 写成 `npm:@x1a0f3n9/dsh-*@workspace:*` 会生成坏软链。于是 `xfdsh web` 加载 `dsh-context` 和 `dsh-better-sidebar` 失败。
+预装的社区插件会 import `@x1a0f3n9/dsh-session` 和 `@x1a0f3n9/dsh-settings`。工作区 override 写成 `npm:@x1a0f3n9/dsh-*@workspace:*` 会生成坏软链。于是 `xfdsh web` 加载 `dsh-context` 和 `dsh-better-sidebar` 失败。
 
 ## Decision
 
-在 CLI 启动时注册 Node resolve hook，把 `@deepseek-ai/dsh-*` 改写成 `@x1a0f3n9/dsh-*`。源码启动再通过 tsx path mapping 解析到 fork 包。不要改成 `link:packages/...` override：pnpm 会忽略 package.json 名不匹配的 link，然后去拉官方 registry 包。
+在 CLI 启动时注册 Node resolve hook，把 `@x1a0f3n9/dsh-*` 改写成 `@x1a0f3n9/dsh-*`。源码启动再通过 tsx path mapping 解析到 fork 包。不要改成 `link:packages/...` override：pnpm 会忽略 package.json 名不匹配的 link，然后去拉官方 registry 包。
 
 ## Verification
 
@@ -18,7 +18,7 @@ Status: implemented
 
 ## Alternatives considered
 
-**给每个工作区包加 `link:packages/...` override。** 否决：pnpm 会跳过这些 link，并向 npm 请求 `@deepseek-ai/dsh-client-locale`。
+**给每个工作区包加 `link:packages/...` override。** 否决：pnpm 会跳过这些 link，并向 npm 请求 `@x1a0f3n9/dsh-client-locale`。
 
 **把预装插件从 Web bundle 拿掉。** 否决：官方 import 能解析之后，它们应继续作为可关闭的目录项。
 

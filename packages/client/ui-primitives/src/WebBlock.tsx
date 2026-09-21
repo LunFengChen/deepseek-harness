@@ -112,7 +112,7 @@ function SafeLink({ url, label, className }: { url: string; label: string; class
   if (href === undefined) return <span className={className}>{label}</span>
   return (
     <a className={className} href={href} target="_blank" rel="noopener noreferrer">
-      <LinkIcon kind="url" className={css.linkIcon} />
+      <LinkIcon kind="url" href={href} className={css.linkIcon} />
       {label}
     </a>
   )

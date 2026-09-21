@@ -20,7 +20,7 @@ import {
   KEY_ESCAPE_COMMAND, KEY_SPACE_COMMAND, KEY_TAB_COMMAND, PASTE_COMMAND,
 } from 'lexical'
 import { mergeRegister } from '@lexical/utils'
-import type { ArbitrateKey, ArbitrateOutcome } from '../../contract/input.ts'
+import type { ArbitrateKey, ArbitrateOutcome } from '../../contract/draft-editor.ts'
 
 /** The bar-supplied behavior behind each intercepted gesture. */
 export interface ComposerKeymapHandlers {
@@ -100,9 +100,15 @@ export function registerComposerKeymap(editor: LexicalEditor, handlers: Composer
     editor.registerUpdateListener(syncComposition),
     editor.registerCommand(KEY_ARROW_UP_COMMAND, arrow('up'), COMMAND_PRIORITY_CRITICAL),
     editor.registerCommand(KEY_ARROW_DOWN_COMMAND, arrow('down'), COMMAND_PRIORITY_CRITICAL),
-    // Tab acts only when the trigger menu has a highlighted completion;
-    // otherwise it passes so the browser keeps its native focus traversal.
-    editor.registerCommand(KEY_TAB_COMMAND, arrow('tab'), COMMAND_PRIORITY_CRITICAL),
+    // Tab settles the highlighted completion and passes without one, keeping
+    // native focus traversal; Shift+Tab leaves the menu like Escape whenever it
+    // is open, highlight or not, so the two Tab gestures never disagree about
+    // consuming the draft.
+    editor.registerCommand(
+      KEY_TAB_COMMAND,
+      event => arrow(event.shiftKey ? 'tabBack' : 'tab')(event),
+      COMMAND_PRIORITY_CRITICAL,
+    ),
     editor.registerCommand(KEY_ESCAPE_COMMAND, (event) => {
       // Escape layering: an open overlay closes; claimed without an overlay
       // does NOT release (backspacing the token is the only exit gesture).

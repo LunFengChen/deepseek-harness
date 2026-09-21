@@ -16,7 +16,7 @@ Linux PR 的 `node 24 / snapshots and artifacts` 必须运行完整 Web 浏览�
 
 本地 `pnpm run test:web` 仍先构建，再串行运行完整浏览器套件；`test:web:built` 是已有构建产物的串行执行入口。开发者只在确认用户可见输出有意变化后显式运行 `DSH_SNAPSHOT=refresh pnpm run test:web`，评审每一处预期输出 diff，再以 replay 模式复验不再写文件。
 
-CI 的 `scripts/run-web-snapshots.ts` 先用相互独立的 Vitest 调用串行运行 `hmr-live.e2e.ts` 与 `cordis-tool-round.e2e.ts`。HMR 场景会修改已构建工作区状态；Cordis 场景则拥有一条对生命周期时序敏感的批准与 steering（中途引导）序列，它通过在批准前等待初始轮次结束来确定轮次分组。两者通过后，其余全部文件进入同一个 6-worker Vitest 池。所有子进程都继承 stdio，外围门禁再通过 `run-gates` 流式传递输出。
+CI 的 `scripts/run-web-snapshots.ts` 单独运行会修改构建产物的 `hmr-live.e2e.ts`。随后由一个六 worker Vitest 池运行其余文件，包括历史 Cordis 卡片渲染。所有子进程继承 stdio，由 `run-gates` 流式转发输出。
 
 对 PR 而言，门禁仅在 Linux 消费方 job 中运行：这些场景面向 POSIX，其他 PR job 不安装 Chromium。自托管的默认分支 Linux 串行热备也包含该比较，而 macOS 和 Windows 串行 job 仍不使用浏览器（不存在托管的 Linux 串行聚合）。PR 的 `all checks passed` 已依赖消费方 job，因此浏览器比较失败会阻止合并，无需新增 branch-protection check 名称。
 
@@ -30,7 +30,7 @@ CI 的 `scripts/run-web-snapshots.ts` 先用相互独立的 Vitest 调用串行�
 
 **新建独立 browser job 并重新构建全仓。** 已否决：它会重复依赖安装和发布构建。现有 Linux 消费方 job 已负责该构建，并已被统一的 required verdict 聚合。
 
-**把 HMR 与 Cordis 也放进并行池。** 不予采用，因为 HMR 会修改共享的已构建状态，Cordis 批准 continuation 则需要串行预检。其余全部文件共用一个有界池；专用长文件进程会增加调度代码，并在这些文件结束后让缩减后的部分 worker 预算闲置。
+**在并行池中运行 HMR。** 拒绝，因为它会修改共享构建产物。其他浏览器 fixture 拥有隔离状态，共用一个有界池。
 
 **用 jsdom 快照代替真实 Chromium。** 已否决：jsdom 不覆盖浏览器、HTTP/SSE 承载及真实客户端插件包的组合；它仍可用于快速的下层反馈，但不能替代组装后的浏览器链路。
 

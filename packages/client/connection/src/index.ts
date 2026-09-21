@@ -1,5 +1,6 @@
 /** Host HTTP bridge for browser-client RPC. */
 import type { Context } from '@deepseek-ai/cordis'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import z from '@deepseek-ai/schemastery'
 import type {} from '@x1a0f3n9/dsh-attachment'
 import type {} from '@x1a0f3n9/dsh-credentials'
@@ -47,6 +48,20 @@ export { API_PATH } from './api-path.ts'
 
 /** Stable Cordis plugin name. */
 export const name = 'client-connection'
+
+declare module '@deepseek-ai/cordis' {
+  interface Events {
+    /**
+     * Admit or wrap an authenticated shared API request, including body transfer.
+     * Existing requests continue when a listener refuses subsequent requests.
+     * @param request - Authenticated incoming HTTP request.
+     * @param response - Response owned until the delegated bridge settles.
+     * @param next - Delegate to the next listener or the shared API bridge.
+     * @mode waterfall
+     */
+    'connection/request'(request: IncomingMessage, response: ServerResponse, next: () => Promise<void>): Promise<void>
+  }
+}
 
 /** Headroom for RPC JSON fields around aggregate base64 image payloads. */
 const REQUEST_ENVELOPE_HEADROOM_BYTES = 1024 * 1024
@@ -132,7 +147,7 @@ export async function apply(ctx: Context, config?: ConnectionConfig): Promise<vo
           res.end(rejection === 401 ? 'unauthorized' : 'forbidden')
           return
         }
-        await bridge(req, res, fetchHandler, maxRequestBodyBytes)
+        await webCtx.waterfall('connection/request', req, res, () => bridge(req, res, fetchHandler, maxRequestBodyBytes))
       },
     }
     webCtx.effect(() => webCtx.webServer.register(route), 'client-connection: /api route')

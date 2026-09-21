@@ -21,7 +21,7 @@ afterEach(async () => { await dispose?.(); dispose = undefined })
 describe('HTML registration', () => {
   it('claims HTML suffixes as a builtin complete-byte renderer without wrap', () => {
     const title = vi.fn(() => 'localized HTML')
-    expect(htmlBodyDefinition(title)).toEqual({
+    expect(htmlBodyDefinition(title)).toMatchObject({
       id: HTML_BODY_ID, extensions: ['html', 'htm'], priority: 'builtin', title, loading: 'bytes-complete', wrap: false,
     })
     expect(title).not.toHaveBeenCalled()

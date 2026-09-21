@@ -11,7 +11,7 @@ The Web Client is a browser-side Cordis application assembled from independently
 | Host application | business services and `packages/api/*-controller` Host entries | Own authoritative state, persistence, mutation ordering, access policy, and stream production. |
 | Transport and API assembly | `client/connection`, `api/gateway`, `api/remotes` | Establish a Client generation, expose generated `ctx.remote` methods and streams, forward selected Cordis events, and carry cancellation and results. |
 | Client models | `api/session-controller/client`, `api/workspace-controller/client` | Maintain React-free mirrors of Host state, resolve stream/unary races, own object identities and subscriptions, and expose narrow command services. |
-| UI adapters | `client/ui-session`, `client/ui-workspace` | Convert model observables into root or Session-scoped standard Slot sources without taking ownership of business state. |
+| UI adapters | `client/ui-session`, `client/ui-workspace` | Convert model observables into root or Provider-bound Session Slot sources and own view-level navigation and status policy. |
 | Conversation data | `client/ui-conversation`, target packages such as `ui-chat` and `ui-trajectory` | Assemble standard events and compact historical Assistant runs into independent target snapshots and own the shared conversation shell and input flow. |
 | Composition and rendering | `client/ui-slots`, `client/ui-renderer`, `client/ui-layout`, feature UI packages | Declare extension locations, derive component props, bind observables to React hooks, and mount the final tree. |
 
@@ -37,9 +37,9 @@ Each API controller package owns a paired Host and Client face. The Host side ow
 
 ### Sessions
 
-[`api/session-controller`](../../packages/api/session-controller/README.md) exposes Host commands for list, search, creation, selection data, prompt, queue, cancellation, pagination, and follow/control streams. Its Client side is organized as `ClientSessions → SessionManager → Session`:
+[`api/session-controller`](../../packages/api/session-controller/README.md) exposes Host commands for list, search, creation, prompt, queue, cancellation, pagination, and follow/control streams. Its Client side is organized as `ClientSessions → SessionManager → Session`:
 
-- `ClientSessions` provides `ctx.sessions`, owns Session scopes and stable `SessionBinding` objects, and projects the selected list state.
+- `ClientSessions` provides `ctx.sessions`, owns references, source counts, Session scopes, and stable `SessionBinding` objects, and projects catalog state without selecting a global current Session.
 - `SessionManager` owns the list baseline, live list/control updates, lazy Session instances, queues, projection stores, subagent catalogs, and conflict ordering between pulls and later updates.
 - Each `Session` owns one contiguous logical-event window represented by `SessionEventLikeEntry` values, paging, follow, prompt/control state, and the observable snapshot consumed by adapters.
 
@@ -47,13 +47,13 @@ The durable event path opens `follow()`, whose first frame contains the current 
 
 ### Workspaces
 
-[`api/workspace-controller`](../../packages/api/workspace-controller/README.md) keeps Workspace mutation policy and the authoritative follow feed on the Host. `ClientWorkspaceModel` owns the browser rows, order, archived Session ids, command echoes, and stream/unary race resolution. Every stream generation starts with a complete baseline followed by `upsert`, `remove`, `order`, and `archived` increments; reconnect replaces the model from the new baseline. `WorkspaceController` exposes that model as `ctx.workspaces`, while `ui-workspace` contributes `useWorkspaces` and navigation callbacks to the UI.
+[`api/workspace-controller`](../../packages/api/workspace-controller/README.md) keeps Workspace mutation policy and the authoritative follow feed on the Host. `ClientWorkspaceModel` owns the browser rows, order, archived Session ids, command echoes, and stream/unary race resolution. Every stream generation starts with a complete baseline followed by `upsert`, `remove`, `order`, and `archived` increments; reconnect replaces the model from the new baseline. `WorkspaceController` exposes that model as `ctx.workspaces`, while `ui-workspace` contributes `useWorkspaces` and navigation callbacks to the UI. The archived Session ids filter every grouping surface and feed the archived-sessions Settings page, which joins the set with the loaded Session summaries and offers one Unarchive action per row; a restore calls the `workspace.unarchiveSession` Remote, and the complete returned set reaches every Client through the `archived` increment.
 
 This pairing is not a second source of business truth. Host controllers decide durable state and mutation outcomes; Client models maintain the latest usable local projection, preserve object identity where useful to rendering, and encode how delayed responses and replacement baselines merge.
 
 ## Conversation and presentation
 
-`ui-session` installs the `session` scope adapter and publishes `useSessions`, `useSession`, `sessionId`, and `useProjection`. Domain adapters add further standard sources without putting React hooks on the model objects.
+`ui-session` installs the Session scope adapter and publishes `useSessions`, `useSessionStatus`, `useSessionRetainInfo`, `useSession`, `sessionId`, and `useProjection`. `SessionProvider` inherits an outer binding or binds an explicit `SessionReference`, so concurrent subtrees can target different Sessions. Domain adapters add further standard sources without putting React hooks on the model objects.
 
 `ui-conversation` binds once to each `SessionBinding.eventSource`. Its event registry correlates durable Session events and Client-only `assistant/live-chunk` updates into stable business Contexts, and its view registry materializes target snapshots. Chat Assistant, Trajectory Assistant, and Turn Tail interpret both live chunks and the compact streams embedded in durable settlements, so reconnect and paged history reproduce the same Assistant state without durable token rows. `ui-chat` and `ui-trajectory` register separate Definitions and builders: they may interpret the same event family, but they do not import or share each other's final display model. The shell selects a registered view and passes its snapshot through standard hooks and Slots. [Conversation](conversation.md) defines Context identity, replay, Location data, target builders, and keyed renderers.
 

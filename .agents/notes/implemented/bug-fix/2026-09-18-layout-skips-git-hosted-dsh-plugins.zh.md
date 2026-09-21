@@ -10,7 +10,7 @@ Status: implemented
 
 ## Decision
 
-只有当某个 dsh 名在工作区源版本里存在时，才把它的依赖改写到合成版本。其他 `@x1a0f3n9/dsh-*` 和 `@deepseek-ai/dsh-*` 名从合成图里丢掉，与现有的未加 scope 插件跳过名单一致。插件的真实版本留在 index 里。
+只有当某个 dsh 名在工作区源版本里存在时，才把它的依赖改写到合成版本。其他 `@x1a0f3n9/dsh-*` 和 `@x1a0f3n9/dsh-*` 名从合成图里丢掉，与现有的未加 scope 插件跳过名单一致。插件的真实版本留在 index 里。
 
 ## Alternatives considered
 

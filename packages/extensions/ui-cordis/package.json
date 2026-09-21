@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-cordis",
   "description": "Cordis dynamic-plugin definition card: the keyed cordis_define tool row with its run/stop switch",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +32,6 @@
         "@x1a0f3n9/dsh-cordis-client-runner",
         "@x1a0f3n9/dsh-api-remotes",
         "@x1a0f3n9/dsh-client-locale",
-        "@x1a0f3n9/dsh-client-ui-input-trigger",
         "@x1a0f3n9/dsh-client-ui-renderer",
         "@x1a0f3n9/dsh-client-ui-session",
         "@x1a0f3n9/dsh-client-ui-tool",
@@ -57,7 +56,6 @@
     "@x1a0f3n9/dsh-session": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-sidebar": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-input-trigger": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",

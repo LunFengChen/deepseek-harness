@@ -94,8 +94,7 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
 
 // OwnerShare contracts — the render-side share the slot owner supplies at
 // renderSlot. Registrants IMPORT these and compose their full component props
-// through the four-share intersection (PropsRuntime & PropsRenderSlots &
-// PropsStore & I). Conversation business state and actions arrive through
+// from the framework-derived shares. Conversation business state and actions arrive through
 // framework-standard hooks and each registrant's inject face, not owner props.
 
 /** Sidebar owner share: live column state from the frame's concession solve. */

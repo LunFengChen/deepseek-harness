@@ -204,6 +204,7 @@ describe('package dependency scope', () => {
     })
     expect(PACKAGE_DEPENDENCY_POLICY.duplicateSafePackages).toEqual([
       '@x1a0f3n9/dsh-brand',
+      '@x1a0f3n9/dsh-lazy-require',
       '@x1a0f3n9/dsh-typert-protocol',
       '@x1a0f3n9/dsh-util-crypto',
       '@x1a0f3n9/dsh-util-values',
@@ -612,12 +613,20 @@ describe('face-aware source classification', () => {
       "export * from '@f/star'",
       "void import('@f/dynamic')",
       "void require('@f/required')",
+      "import { createLazyRequire as lazy } from '@x1a0f3n9/dsh-lazy-require'",
+      "import * as lazyModule from '@x1a0f3n9/dsh-lazy-require'",
+      "void lazy('@f/lazy', import.meta.url)",
+      "void lazyModule.createLazyRequire('@f/lazy-namespace', import.meta.url)",
       'void defaultValue; void local; void namespace',
     ].join('\n')
     const uses = collectRuntimeSourceExportUses('probe.ts', source)
     expect(uses.map(({ specifier, exportName }) => ({ specifier, exportName }))).toEqual([
+      { specifier: '@x1a0f3n9/dsh-lazy-require', exportName: '*' },
+      { specifier: '@x1a0f3n9/dsh-lazy-require', exportName: 'createLazyRequire' },
       { specifier: '@f/dynamic', exportName: '*' },
       { specifier: '@f/effect', exportName: '(side effect)' },
+      { specifier: '@f/lazy', exportName: '*' },
+      { specifier: '@f/lazy-namespace', exportName: '*' },
       { specifier: '@f/namespace', exportName: '*' },
       { specifier: '@f/reexport', exportName: 'source' },
       { specifier: '@f/required', exportName: '*' },

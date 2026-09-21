@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-chat",
   "description": "Chat Conversation target, node definitions, renderers, and details surface",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -69,6 +69,7 @@
     "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
+    "@x1a0f3n9/dsh-client-ui-sidebar-browser": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
@@ -81,6 +82,7 @@
     "@x1a0f3n9/dsh-session-stats": "workspace:^",
     "@x1a0f3n9/dsh-session-turn-outline": "workspace:^",
     "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
     "@x1a0f3n9/dsh-token-meter": "workspace:^",
     "@x1a0f3n9/dsh-tools": "workspace:^",
     "@x1a0f3n9/dsh-util-workspace-path": "workspace:^",

@@ -6,6 +6,7 @@ import type { SessionBinding } from '@x1a0f3n9/dsh-api-session-controller/client
 import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-browser/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-input-trigger/client'
 // The `file` entry of `SidebarRightResourceParamsMap`, which types `{ params: { line, directory } }` below.
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview/client'
@@ -46,7 +47,7 @@ const CHAT_NODE_INJECT: ChatNodeTurnDataInjected = {
 
 /** Services required by the Chat target and its presentation registrations. */
 export const inject = [
-  'slots', 'sessions', 'uiSession', 'uiConversation', 'locale',
+  'slots', 'sessions', 'uiWorkspace', 'uiSession', 'uiConversation', 'locale',
   'settingsScope', 'remote', 'remote.session', 'sidebarRight',
 ]
 
@@ -145,6 +146,13 @@ export function apply(ctx: Context): void {
             if (scope === undefined) return
             ctx.get('inputTriggers')?.sessionOf(scope).openReference('skill', { ref: `/${name}` })
           },
+          openExternalLink: (url) => {
+            if (ctx.get('sidebarRightTabs')?.get('browser') !== undefined) {
+              ctx.sidebarRight.openTab('browser', { params: { url } })
+            } else {
+              window.open(url, '_blank', 'noopener,noreferrer')
+            }
+          },
           loadOlder: () => { void session.loadOlder() },
           loadThrough: seq => session.loadThrough(seq),
           loadImage: Object.assign(
@@ -160,7 +168,7 @@ export function apply(ctx: Context): void {
           },
           forkAt: (seq) => {
             ctx.sessions.fork({ sessionId, atSeq: seq, increaseTitle: true })
-              .then((childId) => { ctx.sessions.open(childId) })
+              .then((childId) => { ctx.uiWorkspace.openSession(childId) })
               .catch(() => {
                 // Fork or child-title failure leaves the source view unchanged.
               })

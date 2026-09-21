@@ -1,6 +1,6 @@
 /** Resolve the Desktop auto-update channel and its Tencent COS destination. */
 
-import { prerelease, valid } from 'semver'
+import { valid } from 'semver'
 
 /** Environment variable that selects the Desktop update deployment. */
 export const DESKTOP_AUTO_UPDATE_ENV = 'DSH_DESKTOP_AUTO_UPDATE_ENV'
@@ -77,9 +77,7 @@ export function desktopUpdateMetadataFilename(version, platform) {
   if (platform !== 'darwin' && platform !== 'win32') {
     throw new Error(`desktop auto-update: unsupported metadata platform ${platform}`)
   }
-  const release = prerelease(version)
-  const channel = release === null ? 'latest' : String(release[0])
-  return `${channel}${platform === 'darwin' ? '-mac' : ''}.yml`
+  return `nightly${platform === 'darwin' ? '-mac' : ''}.yml`
 }
 
 /**
@@ -139,7 +137,7 @@ export function resolveDesktopAutoUpdateConfig(env, platform, arch) {
     if (originEnvName === undefined) throw new Error('desktop auto-update: selected deployment has no origin')
     origin = httpsOrigin(requiredEnvironmentValue(env, originEnvName), originEnvName)
   }
-  const keyPrefix = `_/harness/desktop/stable/${target}`
+  const keyPrefix = `dsh-desk/feeds/${target}`
   return {
     environment,
     target,

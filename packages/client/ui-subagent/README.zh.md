@@ -25,7 +25,9 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-会话页头保留当前会话 title 作为谱系面包屑，并在会话存在 subagent 后代时，于页头操作行之前追加 `/` 数量触发器；触发器打开后代目录，统计仅含 subagent 的完整谱系、在普通 fork 处停止，并在任一计入统计的后代处于 `running` 时显示活动仍在进行。选择任意深度，即可用该子会话的确切 `{parentSessionId, childSessionId, mode}` 地址打开其对话。
+会话页头保留当前会话 title 作为谱系面包屑，并在会话存在 subagent 后代时，于页头操作行之前追加 `/` 数量触发器；触发器打开后代目录，统计仅含 subagent 的完整谱系、在普通 fork 处停止，并在任一计入统计的后代处于 `running` 时显示活动仍在进行。选择任意深度，即可用该子会话的确切 `{parentSessionId, childSessionId, mode}` 地址打开其对话；也可以使用行尾箭头在右侧 Sidebar 打开同一地址，并在空间允许时优先使用独立分栏。
+
+本包注册 `dsh-resource://subagentchat/session/<child>?parent=<parent>&mode=<mode>` 资源与 builtin Sidebar tab 类型。资源先刷新直接 parent 目录，再保留 child 的 `SessionReference`，并在 tab 记录关闭时释放 reference。tab 通过 `sidebar.chat.conversation` 渲染共享 `conversation.content` Factory，把局部 View 固定为 Chat，并省略主 Conversation 的 Header 与宽度控制。
 
 ### 浏览目录
 

@@ -32,7 +32,7 @@ import type {
 } from '@x1a0f3n9/dsh-api-session-controller/client'
 import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
-import type { SessionPendingInteractionSnapshot } from '@x1a0f3n9/dsh-client-ui-session/client'
+import type { SessionStatusSnapshot } from '@x1a0f3n9/dsh-client-ui-session/client'
 import {
   ConversationSession, ConversationSessionHeader,
   type ConversationSessionHeaderProps, type ConversationSessionProps,
@@ -117,7 +117,6 @@ function historySnapshot(
 function sessionSnapshot(nodes: LegacyConversationSlice['nodes']): SessionSnapshot {
   return {
     sessionId: SID,
-    queue: [],
     pendingSubmissions: [],
     running: false,
     subagent: null,
@@ -173,7 +172,7 @@ function standaloneDuration(): Pick<
 /** Empty sessions-list hook; breadcrumbs therefore fall back to the raw id. */
 function emptySessions() {
   const store = createSnapshotStore<SessionListState>(
-    { ids: [], byId: {}, current: undefined, phase: 'ready', subagentsByParent: {}, jobsBySession: {}, currentAddress: undefined })
+    { ids: [], byId: {}, phase: 'ready', subagentsByParent: {}, jobsBySession: {} })
   return bindSnapshotSelector(store)
 }
 
@@ -226,9 +225,10 @@ function standaloneProps(
     useChat: bindSnapshotSelector(createSnapshotStore(EMPTY_CHAT_SNAPSHOT)),
     useSessions: emptySessions(),
     usePanelInfo, useResource,
-    useSessionPendingInteraction: bindSnapshotSelector(
-      createSnapshotStore<SessionPendingInteractionSnapshot>(new Map()),
+    useSessionStatus: bindSnapshotSelector(
+      createSnapshotStore<SessionStatusSnapshot>(new Map()),
     ),
+    useSessionRetainInfo: () => undefined,
     useWorkspaces: emptyWorkspaces(),
     useConversation: bindSnapshotSelector(createSnapshotStore(conversationSnapshot(trajectory))),
     useInput: bindSnapshotSelector(input),
@@ -263,6 +263,8 @@ async function bench(snapshot = historySnapshot(NODES)) {
     snapshot: { blank: false },
     session: { loadOlder },
   })
+  const reference = runtime.sessions.retain(SID)
+  await reference.ready
   const trajectoryStore = createSnapshotStore(snapshot)
   const conversationStore = createSnapshotStore<ConversationSnapshot>(conversationSnapshot(snapshot))
   const uiConversation = new UiConversation(ctx, runtime.sessions)
@@ -286,10 +288,8 @@ async function bench(snapshot = historySnapshot(NODES)) {
   slots.register(
     { name: 'conversation.view', id: 'chat', order: 0, label: 'Chat' } as never, chatBody as never)
   // The locale plugin backs the locale-aware view tab label ('locale' in
-  // inject); its settings scope needs a connection handle and the
-  // forwarded-event port.
+  // inject); its settings scope needs a connection handle.
   ctx.provide('connection', { api: { settings: {} }, isLoopback: false } as never)
-  ctx.provide('remote', { $on: () => () => {} } as never)
   ctx.provide('settingsScope', { bind: () => stubSettingsScope().scope } as never)
   await runtime.mount({ inject: [...localeInject], apply: localeApply })
   const provide = vi.spyOn(ctx.uiSession, 'provide')
@@ -298,7 +298,7 @@ async function bench(snapshot = historySnapshot(NODES)) {
   if (sourceDescriptor === undefined) throw new Error('ui-trajectory did not provide its standard source')
   return {
     runtime, ctx, slots, feature, loadOlder, trajectoryStore, conversationStore,
-    events, views, sourceDescriptor,
+    events, views, sourceDescriptor, reference,
   }
 }
 
@@ -318,16 +318,15 @@ function isConvViewOwner(owner: object): owner is ConvViewOwner {
 
 /** Mount the strict Session header/body over the ring ledger with outlet-faithful render shares. */
 function mount(fixture: Awaited<ReturnType<typeof bench>>) {
-  const { runtime, slots, trajectoryStore, conversationStore } = fixture
-  const session = runtime.sessions.binding(SID)?.session
-  if (session === undefined) throw new Error('trajectory fixture session is unavailable')
+  const { slots, trajectoryStore, conversationStore } = fixture
+  const session = fixture.reference.binding.session
   const useSession = bindSnapshotSelector<SessionSnapshot>(session)
   const useTrajectory = bindSnapshotSelector<TrajectorySnapshot>(trajectoryStore)
   const useConversation = bindSnapshotSelector<ConversationSnapshot>(conversationStore)
   const useChat = bindSnapshotSelector(createSnapshotStore(EMPTY_CHAT_SNAPSHOT))
   const useSessions = emptySessions()
-  const useSessionPendingInteraction = bindSnapshotSelector(
-    createSnapshotStore<SessionPendingInteractionSnapshot>(new Map()),
+  const useSessionStatus = bindSnapshotSelector(
+    createSnapshotStore<SessionStatusSnapshot>(new Map()),
   )
   const useWorkspaces = emptyWorkspaces()
   const conversation = createConversationStore().create()
@@ -353,7 +352,8 @@ function mount(fixture: Awaited<ReturnType<typeof bench>>) {
     useConversationViews,
     useSessions,
     usePanelInfo, useResource,
-    useSessionPendingInteraction,
+    useSessionStatus,
+    useSessionRetainInfo: () => undefined,
     useWorkspaces,
     useProjection,
     useInput,
@@ -439,15 +439,16 @@ describe('plugin registration', () => {
 
   it('keeps one total standard source for a Session binding', async () => {
     const b = await bench()
-    const binding = b.runtime.sessions.binding(SID)
-    if (binding === undefined) throw new Error('Trajectory source test Session binding is unavailable')
+    using reference = b.runtime.sessions.retain(SID)
+    await reference.ready
+    const binding = reference.binding
     const resolveSource = (owner: SessionBinding): ObservableSnapshot<TrajectorySnapshot> => {
       const contribution = b.sourceDescriptor.resolve(owner) as {
         hooks: { trajectory: ObservableSnapshot<TrajectorySnapshot> }
       }
       return contribution.hooks.trajectory
     }
-    const source = b.runtime.ctx.uiSession.adapter.resolve(SID)!.hooks.trajectory as
+    const source = b.runtime.ctx.uiSession.adapter.bindingSource(reference).getSnapshot().hooks.trajectory as
       ObservableSnapshot<TrajectorySnapshot>
 
     expect(resolveSource(binding)).toBe(source)
@@ -468,8 +469,10 @@ describe('plugin registration', () => {
       sessionId: SessionId,
     ) => TrajectoryViewInjected
     const first = injectEntry(SID)
-    await b.runtime.sessions.add({ id: 's2' }, { current: false })
-    const second = injectEntry('s2' as SessionId)
+    await b.runtime.sessions.add({ id: 's2' })
+    using reference = b.runtime.sessions.retain('s2' as SessionId)
+    await reference.ready
+    const second = injectEntry(reference.sessionId)
 
     expect(second.hooks.duration).toBe(first.hooks.duration)
     first.setActualDuration(true)
@@ -538,7 +541,7 @@ describe('tab switching in ConversationRoot', () => {
 
     fireEvent.keyDown(screen.getByRole('row', { name: /工具/ }), { key: 'Enter' })
     expect(screen.getByRole('complementary', { name: '事件详情' })).toBeTruthy()
-    expect(screen.getByText('第 1 轮 · 步骤 1')).toBeTruthy()
+    expect(screen.getByText('第 1 轮 · 第 1 步')).toBeTruthy()
     expect(screen.getByText('已完成')).toBeTruthy()
     expect(screen.getByRole('tab', { name: '结果' })).toBeTruthy()
 

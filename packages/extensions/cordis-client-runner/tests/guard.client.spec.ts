@@ -171,6 +171,22 @@ describe('slots seat', () => {
     expect(bench.ledger).toEqual([{ slot: 'root', priority: 5 }])
   })
 
+  it('ledgers and claims Factory definitions without assigning Slot priority', async () => {
+    const bench = await boot(['slots'])
+    const slots = bench.facade.slots as {
+      registerFactory(options: object, component: unknown): () => void
+    }
+    slots.registerFactory({ name: 'guard.factory', scope: 'root' }, C)
+
+    expect(bench.ledger).toEqual([{ slot: 'factory:guard.factory', priority: undefined }])
+    expect(bench.claimed).toEqual([C])
+    expect(bench.slots.snapshot('factory:guard.factory')).toMatchObject([{
+      type: 'factory', name: 'guard.factory', scope: 'root',
+    }])
+    await bench.dispose()
+    expect(bench.slots.snapshot('factory:guard.factory')).toEqual([])
+  })
+
   it('rejects a malformed register call before touching the registry', async () => {
     const bench = await boot(['slots'])
     const slots = bench.facade.slots as { register(options: unknown, component: unknown): () => void }

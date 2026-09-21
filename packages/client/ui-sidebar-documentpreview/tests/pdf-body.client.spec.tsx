@@ -8,11 +8,14 @@ import type { TabId } from '@x1a0f3n9/dsh-client-ui-dockkit'
 import type { PdfDocument } from '../src/client/pdf/document.ts'
 import type { renderPdfPage } from '../src/client/pdf/document.ts'
 import type { openPdf } from '../src/client/pdf/runtime.ts'
+import type { PageViewport, PDFPageProxy } from 'pdfjs-dist'
 
 const engine = vi.hoisted(() => ({ open: vi.fn<typeof openPdf>(), render: vi.fn<typeof renderPdfPage>() }))
+const overlay = vi.hoisted(() => ({ create: vi.fn(), render: vi.fn(), cancel: vi.fn() }))
+vi.mock('../src/client/pdf/text.ts', () => ({ pdfTextRenderer: (host: HTMLDivElement) => { overlay.create(host); return overlay.render } }))
 vi.mock('../src/client/pdf/runtime.ts', () => ({ openPdf: engine.open }))
 vi.mock('../src/client/pdf/document.ts', () => ({ renderPdfPage: engine.render }))
-import { PdfBody, type PdfBodyProps } from '../src/client/pdf/PdfBody.tsx'
+import { PdfBody, type PdfBodyProps } from '../src/client/pdf/pdf.tsx'
 import { createPdfStore, type PdfState } from '../src/client/pdf/store.ts'
 import { en } from '../src/client/pdf/locales.ts'
 import { PdfWorkerFailure } from '../src/client/pdf/errors.ts'
@@ -31,6 +34,9 @@ beforeEach(() => {
     return { document: deferred.promise, dispose }
   })
   engine.render.mockReset().mockResolvedValue({ width: 100, height: 100 })
+  overlay.create.mockReset()
+  overlay.render.mockReset()
+  overlay.cancel.mockReset()
 })
 
 afterEach(() => {
@@ -99,7 +105,7 @@ describe('PDF body', () => {
   it('shows loading, omits the paging toolbar, and renders a continuous page sequence', async () => {
     const h = harness()
     const view = render(<h.View />)
-    expect(screen.getByRole('status').textContent).toBe('Opening PDF…')
+    expect(screen.getByRole('status').getAttribute('aria-label')).toBe('Reading…')
     expect(screen.getByRole('status').hasAttribute('data-document-loading')).toBe(true)
     await act(async () => { loads[0]!.deferred.resolve(documentOf()) })
     await act(async () => {})
@@ -121,6 +127,25 @@ describe('PDF body', () => {
     await act(async () => { loads[0]!.deferred.resolve(documentOf(99)) })
     expect(screen.getAllByRole('img')).toHaveLength(2)
     expect(engine.render.mock.calls.every(([document]) => document === latest)).toBe(true)
+  })
+
+  it('mounts selectable text with the page and cancels it when the body unmounts', async () => {
+    const pdfPage = { pageNumber: 1 } as PDFPageProxy
+    const viewport = { width: 100, height: 100, scale: 1 } as PageViewport
+    overlay.render.mockReturnValue({ promise: Promise.resolve(), cancel: overlay.cancel })
+    engine.render.mockImplementation(async (_document, _number, _canvas, _signal, _ratio, renderText) => {
+      await renderText!(pdfPage, viewport).promise
+      return { width: viewport.width, height: viewport.height }
+    })
+    const h = harness()
+    const view = render(<h.View />)
+    await act(async () => { loads[0]!.deferred.resolve(documentOf(1)) })
+    expect(overlay.create).toHaveBeenCalledExactlyOnceWith(view.container.querySelector('[data-pdf-text]'))
+    expect(overlay.render).toHaveBeenCalledExactlyOnceWith(pdfPage, viewport)
+    expect(screen.getByRole('img', { name: 'PDF page 1' })).toBeDefined()
+    expect(overlay.cancel).not.toHaveBeenCalled()
+    view.unmount()
+    expect(overlay.cancel).toHaveBeenCalledOnce()
   })
 
   it('shows localized load errors and retries without replacing the file resource', async () => {

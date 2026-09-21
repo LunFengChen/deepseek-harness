@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-21-strip-inherited-reasoning-effort-on-reroute.md
+2026-09-21-strip-inherited-reasoning-effort-on-reroute.md: 40095d9f99ad3806d7abe881a5bfd5a4d9de4cb0
+2026-09-21-strip-inherited-reasoning-effort-on-reroute.zh.md: 566a7c09af8bf8042a5d60c9ebfe0bb85db67581

@@ -5,6 +5,7 @@ import type {
   ISessions, SessionBinding, SessionEventSource, SessionEventWindow,
 } from '@x1a0f3n9/dsh-api-session-controller/client'
 import type { SessionEvent, SessionId } from '@x1a0f3n9/dsh-session/types'
+import { WeakMapWithValues } from '@x1a0f3n9/dsh-util-values'
 import {
   createSnapshotStore, type ObservableSnapshot, type SnapshotStore,
 } from '@x1a0f3n9/dsh-client-store'
@@ -177,7 +178,7 @@ export class UiConversation extends Service {
   readonly events: ConversationEventRegistry
   /** Registry of target View definitions. */
   readonly views: ConversationViewRegistry
-  private readonly bindings = new Map<SessionId, BindingRecord>()
+  private readonly bindings = new WeakMapWithValues<SessionBinding, BindingRecord>()
   private readonly images: HistoricalImageCache
 
   /**
@@ -190,7 +191,7 @@ export class UiConversation extends Service {
     this.views = new ConversationViewRegistry(ctx)
     this.images = new HistoricalImageCache(ctx, sessions)
     const rebuild = (): void => {
-      for (const record of this.bindings.values()) record.binding.rebuild()
+      for (const record of this.bindings.values) record.binding.rebuild()
     }
     let rebuildQueued = false
     const scheduleRebuild = (): void => {
@@ -207,7 +208,7 @@ export class UiConversation extends Service {
       return () => {
         disposeViews()
         disposeEvents()
-        for (const record of [...this.bindings.values()]) this.drop(record, true)
+        for (const record of [...this.bindings.values]) this.drop(record, true)
       }
     }, 'ui-conversation assembly')
   }
@@ -221,15 +222,17 @@ export class UiConversation extends Service {
     const sessionId = typeof source === 'string' ? source : source.sessionId
     const owner = typeof source === 'string' ? this.sessions.binding(source) : source
     if (owner === undefined) throw new Error(`uiConversation.binding: unknown session "${sessionId}"`)
-    const current = this.bindings.get(owner.sessionId)
-    if (current?.source === owner) return current.binding
-    if (current !== undefined) this.drop(current, true)
+    if (this.sessions.binding(sessionId) !== owner) {
+      throw new Error(`uiConversation.binding: inactive session "${sessionId}"`)
+    }
+    const current = this.bindings.get(owner)
+    if (current !== undefined) return current.binding
     const binding = new BoundConversation(
       owner.eventSource,
       new ConversationNodeAssembler(this.events, this.views),
     )
     const record: BindingRecord = { source: owner, binding, disposeScope: () => {} }
-    this.bindings.set(owner.sessionId, record)
+    this.bindings.set(owner, record)
     const disposeScope = owner.ctx.effect(
       () => () => { this.drop(record, false) },
       'ui-conversation binding',
@@ -303,8 +306,8 @@ export class UiConversation extends Service {
   }
 
   private drop(record: BindingRecord, releaseScope: boolean): void {
-    if (this.bindings.get(record.source.sessionId) !== record) return
-    this.bindings.delete(record.source.sessionId)
+    if (this.bindings.get(record.source) !== record) return
+    this.bindings.delete(record.source)
     record.binding.dispose()
     if (releaseScope) record.disposeScope()
   }

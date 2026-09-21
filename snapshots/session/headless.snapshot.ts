@@ -1,10 +1,11 @@
 /** Recorded-session replay through the shipped headless `dsh` profile. */
 
+import { startHttpMcpFixture } from '../../packages/mcp/mcp-client/tests/http-fixture.ts'
 import { cp, copyFile, mkdir, mkdtemp, readFile, readdir, rm, utimes, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
-import { basename, delimiter, dirname, join, relative, sep } from 'node:path'
+import { basename, delimiter, dirname, isAbsolute, join, relative, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import ts from 'typescript'
@@ -459,6 +460,9 @@ async function seedWorkspace(scenario: HeadlessScenario, cwd: string): Promise<v
 }
 
 const workspaceSetups: Record<string, (cwd: string) => Promise<void>> = {
+  async 'office-skills'(cwd) {
+    await cp(join(repoRoot, 'packages/skill/skill-office/assets'), join(cwd, 'office-skills'), { recursive: true })
+  },
   async 'editing-cordis-skill'(cwd) {
     const target = join(cwd, '.dsh', 'skills', 'editing-cordis-compositions', 'SKILL.md')
     await mkdir(dirname(target), { recursive: true })
@@ -575,6 +579,135 @@ async function verifySessionQuerySpill(log: string, spillRoot: string, locatorRo
   expect(header).toBeDefined()
   expect(JSON.parse(json![1]!)).toEqual(header)
   expect(full).toContain('session_event_search')
+}
+
+/** Require real resource results and literal instructions before recording or replay succeeds. */
+function verifyMcpResources(log: string, ptc: boolean): void {
+  const events = parseSessionLog(log)
+  const nativeResults = events.flatMap(event => event.type === 'tool/result'
+    ? event.data.message.content.filter(block => block.type === 'tool-result')
+    : [])
+  const dispatches = events.flatMap(event => event.type === 'tool/ptc-dispatch' ? [event.data] : [])
+  const results = ptc ? dispatches : nativeResults
+  expect(results.length).toBeGreaterThanOrEqual(5)
+  expect(results.every(result => !result.isError)).toBe(true)
+  const calls = ptc ? dispatches.map(dispatch => dispatch.name)
+    : events.flatMap(event => event.type === 'tool/call' ? [event.data.name] : [])
+  expect(calls).toEqual(expect.arrayContaining(['list_mcp_resources', 'list_mcp_resource_templates', 'read_mcp_resource']))
+  const text = results.flatMap(result => result.content
+    .flatMap(block => block.type === 'text' ? [block.text] : [])).join('\n')
+  expect(text).toContain('memo://text')
+  expect(text).toContain('memo://greeting/{name}')
+  expect(text).toContain('MCP resource text with {{braces}} intact.')
+  expect(text).toContain('binary resource')
+  expect(text).toContain('Hello, reader.')
+  if (ptc) {
+    const output = nativeResults.flatMap(result => result.content
+      .flatMap(block => block.type === 'text' ? [block.text] : [])).join('\n')
+    expect(output).toMatch(/"binaryAvailable"\s*:\s*true/)
+  }
+  expect(log).not.toContain('bWNwLXJlc291cmNlLWJpbmFyeQ==')
+  expect(normalizedSystemPrompts(log, contextOf([log])).join('\n'))
+    .toContain('MCP_RESOURCE_INSTRUCTION: keep {{braces}} literal.')
+  expect(normalizedSystemPrompts(log, contextOf([log])).join('\n'))
+    .toContain('server argument: ["catalog"]')
+}
+
+function verifyNoMcpServers(log: string, ptc: boolean): void {
+  const events = parseSessionLog(log)
+  const headers = events.flatMap(event => event.type === 'request/header' ? [event.data.header] : [])
+  const prompts = events.flatMap(event => event.type === 'system/message'
+    ? event.data.message.content.filter(block => block.type === 'text').map(block => block.text) : [])
+  expect(headers.length).toBeGreaterThan(0)
+  expect(prompts.length).toBeGreaterThan(0)
+  for (const header of headers) {
+    const names = header.tools?.map(tool => tool.name) ?? []
+    expect(names.filter(name => name.includes('mcp'))).toEqual([])
+    if (ptc) expect(names).toEqual(['run_code'])
+    else expect(names).toContain('bash')
+  }
+  for (const prompt of prompts) {
+    expect(prompt).not.toMatch(/\bMCP\b|mcp__/)
+    expect(prompt).not.toMatch(/list_mcp_resources|list_mcp_resource_templates|read_mcp_resource/)
+    if (ptc) expect(prompt).toContain('declare const tools:')
+  }
+}
+
+/** Require an admitted failed job and zero process allocations before updating its recorded oracle. */
+async function verifyBackgroundConfinementFailure(log: string, cwd: string): Promise<void> {
+  const results = parseSessionLog(log).flatMap(event => event.type === 'tool/result'
+    ? event.data.message.content.filter(block => block.type === 'tool-result') : [])
+  const started = results.find(result => result.toolCallId === 'async-confinement-start')
+  const inspected = results.find(result => result.toolCallId === 'async-confinement-result')
+  expect(started).toMatchObject({ isError: false, content: [{ type: 'text', text: 'started background job bash-1' }] })
+  expect(inspected?.isError).toBe(false)
+  const text = inspected?.content.flatMap(block => block.type === 'text' ? [block.text] : []).join('')
+  expect(text).toContain('[status: failed,')
+  expect(text).toContain('fixture asynchronous confinement refused')
+  expect(JSON.parse(await readFile(join(cwd, 'confinement-audit.json'), 'utf8'))).toEqual({ confineCalls: 1, spawnCalls: 0 })
+}
+
+/** Exercise provider-cwd adoption through the shipped launcher without normalizing away the observation. */
+async function verifyProviderCwdResume(
+  scenario: HeadlessScenario,
+  cwd: string,
+  initial: readonly SessionLog[],
+  patches: readonly string[],
+  model: { provider: string; model: string },
+  fixture: string,
+  task: string,
+): Promise<void> {
+  const providerCwd = scenario.manifest.environment?.DSH_SNAPSHOT_PROVIDER_CWD
+  const primary = initial[0]
+  expect(providerCwd).toBeDefined()
+  expect(primary?.header.cwd).toBe(providerCwd)
+  expect(primary?.header.cwd).not.toBe(cwd)
+  const otherHostCwd = await mkdtemp(join(tmpdir(), 'dsh-provider-resume-'))
+  const env = {
+    DSH_HOME: join(cwd, '.dsh'),
+    DSH_SNAPSHOT: 'replay',
+    DSH_SNAPSHOT_FILE: fixture,
+    DSH_SNAPSHOT_PROVIDER: model.provider,
+    DSH_SNAPSHOT_MODEL: model.model,
+    DSH_PERMISSION_MODE: 'read-only',
+    DSH_TELEMETRY_DISABLED: '1',
+    NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
+  }
+  const launch = {
+    cwd: otherHostCwd,
+    binScript: dshBin,
+    configPath: patches[0] as string,
+    tsconfigPath,
+    binArgs: [
+      '--profile', 'headless',
+      ...patches.flatMap(file => ['--patch', isAbsolute(file) ? file : join(cwd, file)]),
+      '--session-id', String(primary?.header.id), task,
+    ],
+  }
+  try {
+    const refused = await runLoaderSmoke({
+      ...launch, label: 'provider-cwd mismatched resume', expectedExitCode: 1,
+      env: { ...env, DSH_SNAPSHOT_PROVIDER_CWD: `${providerCwd}/other` },
+    })
+    expect(refused.stdout).toBe('')
+    expect(refused.stderr).toContain(`was recorded in "${providerCwd}", not "${providerCwd}/other"`)
+    expect(await persistedSessions(cwd)).toEqual(initial)
+    const resumed = await runLoaderSmoke({
+      ...launch, label: 'provider-cwd matching resume',
+      binArgs: [...launch.binArgs.slice(0, -1), '--json', task],
+      env: { ...env, DSH_SNAPSHOT_PROVIDER_CWD: providerCwd },
+    })
+    const output = records(resumed.stdout)
+    expect(output[0]).toEqual({ type: 'session', sessionId: primary?.header.id, cwd: providerCwd })
+    expect(output.at(-1)).toEqual({ type: 'final', text: finalTextFromSession(primary!.content) })
+    const continued = await persistedSessions(cwd)
+    expect(continued).toHaveLength(1)
+    expect(continued[0]?.header).toEqual(primary?.header)
+    expect(continued[0]?.content.startsWith(primary!.content)).toBe(true)
+    expect(records(continued[0]!.content).filter(event => event.type === 'turn/start')).toHaveLength(2)
+  } finally {
+    await rm(otherHostCwd, { recursive: true, force: true })
+  }
 }
 
 async function verifyHeaders(scenario: HeadlessScenario, actualLogs: readonly SessionLog[], ctx: NormalizeContext): Promise<void> {
@@ -910,6 +1043,7 @@ describe('headless recorded-session snapshots', () => {
       let finalWorkspace: WorkspaceSnapshotEntry[] | undefined
       const spillRoot = await mkdtemp(join(tmpdir(), 'acp-snap-spill-'))
       const locatorRoot = snapshotSpillRoot(join(scenario.dir, fixtureFiles[0] as string))
+      const mcpDemo = scenario.name === 'plugin-manager-mcp' ? await startHttpMcpFixture() : undefined
       let result: Awaited<ReturnType<typeof runLoaderSmoke>>
       try {
         result = await runLoaderSmoke({
@@ -945,17 +1079,26 @@ describe('headless recorded-session snapshots', () => {
               ? {}
               : { DSH_PERMISSION_MODE: scenario.manifest.permission }),
             ...scenario.manifest.environment,
+            ...(scenario.name === 'mcp-resources' || scenario.name === 'mcp-resources-ptc' ? {
+              DSH_MCP_RESOURCES_FIXTURE: join(repoRoot, 'packages/mcp/mcp-client/tests/fixtures/resources-server.ts'),
+            } : {}),
             NODE_OPTIONS: [process.env.NODE_OPTIONS, '--disable-warning=ExperimentalWarning'].filter(Boolean).join(' '),
             DSH_TELEMETRY_DISABLED: '1',
+            ...(mcpDemo === undefined ? {} : { DSH_MCP_DEMO_URL: mcpDemo.url }),
           },
           prepare: async (cwd) => {
             if (scenario.manifest.workspace?.parent === 'outside-temp') assertWorkspaceOutsideTemp(cwd)
             await mkdir(join(cwd, patchRoot), { recursive: true })
             patchSources.forEach((source, index) => {
               if (source.endsWith('.snapshot.yml')) {
-                materializeProfilePatch(source, cwd, join(cwd, patchRoot), index)
+                materializeProfilePatch(source, cwd, 'headless', join(cwd, patchRoot), index)
               }
             })
+            if (mcpDemo !== undefined) {
+              const profileDir = join(cwd, '.dsh/profiles/headless')
+              await mkdir(profileDir, { recursive: true })
+              await copyFile(join(scenario.dir, 'profile.patch.yml'), join(profileDir, 'cordis.patch.yml'))
+            }
             await seedWorkspace(scenario, cwd)
             initialWorkspace = await captureWorkspaceSnapshot(cwd, {
               ignoredRootEntries: RUNTIME_WORKSPACE_ENTRIES,
@@ -963,8 +1106,31 @@ describe('headless recorded-session snapshots', () => {
           },
           inspect: async (cwd) => {
             actualLogs = await persistedSessions(cwd)
+            if (mcpDemo !== undefined) {
+              const log = actualLogs[0]!.content
+              expect(log).toContain('mcp__demo__ping')
+              expect(log).toContain('pong')
+              expect(mcpDemo.calls).toEqual(['ping'])
+              const saved = await readFile(join(cwd, '.dsh/profiles/headless/cordis.patch.yml'), 'utf8')
+              expect(saved).toContain('id: demo')
+              expect(saved).toContain('disabled: false')
+            }
             if (scenario.name === 'session-query-spill') {
               await verifySessionQuerySpill(actualLogs[0]!.content, spillRoot, locatorRoot)
+            }
+            if (scenario.name === 'mcp-resources' || scenario.name === 'mcp-resources-ptc') {
+              verifyMcpResources(actualLogs[0]!.content, scenario.name === 'mcp-resources-ptc')
+            }
+            if (scenario.name === 'mcp-empty' || scenario.name === 'mcp-empty-ptc') {
+              verifyNoMcpServers(actualLogs[0]!.content, scenario.name === 'mcp-empty-ptc')
+            }
+            if (scenario.name === 'provider-cwd') {
+              await verifyProviderCwdResume(
+                scenario, cwd, actualLogs, patches, model, join(scenario.dir, fixtureFiles[0] as string), task,
+              )
+            }
+            if (scenario.name === 'background-confinement-failure') {
+              await verifyBackgroundConfinementFailure(actualLogs[0]!.content, cwd)
             }
             finalWorkspace = await captureWorkspaceSnapshot(cwd, {
               ignoredRootEntries: RUNTIME_WORKSPACE_ENTRIES,
@@ -972,6 +1138,7 @@ describe('headless recorded-session snapshots', () => {
           },
         })
       } finally {
+        await mcpDemo?.close()
         await rm(spillRoot, { recursive: true, force: true })
       }
 
@@ -1027,6 +1194,6 @@ describe('headless recorded-session snapshots', () => {
       } else {
         expect(finalWorkspace, `${scenario.name}: a changed workspace requires workspace.final`).toEqual(initialWorkspace)
       }
-    }, LOADER_SMOKE_TEST_TIMEOUT_MS)
+    }, scenario.name === 'provider-cwd' ? 3 * LOADER_SMOKE_TEST_TIMEOUT_MS : LOADER_SMOKE_TEST_TIMEOUT_MS)
   }
 })

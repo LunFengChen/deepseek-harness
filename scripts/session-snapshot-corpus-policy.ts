@@ -58,11 +58,13 @@ export function assertSnapshotCorpusPolicy(
       currentRoles += scenario.selectedVersions.length
       continue
     }
+    const retiredTools = scenario.retained.coverage.length === 1 && scenario.retained.coverage[0] === 'retired-tools'
     if (!Number.isSafeInteger(scenario.retained.version)
-      || scenario.retained.version < 0 || scenario.retained.version >= SESSION_FORMAT_VERSION) {
-      throw new Error(`${scenario.key}: retained Session format must precede current v${SESSION_FORMAT_VERSION}`)
+      || scenario.retained.version < 0 || scenario.retained.version > SESSION_FORMAT_VERSION
+      || (scenario.retained.version === SESSION_FORMAT_VERSION && !retiredTools)) {
+      throw new Error(`${scenario.key}: retained Session format must precede current v${SESSION_FORMAT_VERSION} unless it pins retired tools at that version`)
     }
-    const allowedCoverage = scenario.retained.version === 0
+    const allowedCoverage = retiredTools ? new Set(['retired-tools']) : scenario.retained.version === 0
       ? REQUIRED_V0_COVERAGE
       : REQUIRED_ADJACENT_COVERAGE
     if (scenario.retained.coverage.some(item => !allowedCoverage.has(item))) {

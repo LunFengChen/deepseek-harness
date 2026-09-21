@@ -45,6 +45,7 @@ describe('dsh-sdk-minimal bundle', () => {
       ['session-title', '@x1a0f3n9/dsh-session-title'],
       ['system-prompt', '@x1a0f3n9/dsh-system-prompt'],
       ['tools', '@x1a0f3n9/dsh-tools'],
+      ['mcp-resources', '@x1a0f3n9/dsh-mcp-resources'],
       ['agent', '@x1a0f3n9/dsh-agent'],
       ['llm-retry', '@x1a0f3n9/dsh-llm-retry'],
       ['jobs', '@x1a0f3n9/dsh-jobs-local'],

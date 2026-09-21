@@ -7,12 +7,10 @@ import { describe, expect, it, vi } from 'vitest'
 import type { SettingsPathOpView } from '@x1a0f3n9/dsh-api-remotes/client'
 import { RemoteError, stubSettingsScope, type StubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
 import { CardForm, numberField, textField } from '../src/client/card-form.ts'
+import { SubagentLimitsCardController, type SubagentLimitsSettings } from '../src/client/subagent-limits-card-controller.ts'
+import { subagentCardFace, subagentCardShell } from '../src/client/subagent-card-controller.ts'
 import { AgentLoopCardController, type AgentLoopSettings } from '../src/client/agent-loop-card-controller.ts'
 import { BashCardController, type BashSettings } from '../src/client/bash-card-controller.ts'
-import {
-  SettingsDescribeMirror, type SettingsMirrorSnapshot,
-} from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
-import { ConfigurablePluginsTabController } from '../src/client/tab-store.ts'
 import {
   SubagentModelSelectionCardController,
   subagentModelCandidates,
@@ -1019,142 +1017,134 @@ describe('WebSearchCardController', () => {
   })
 })
 
-describe('ConfigurablePluginsTabController', () => {
-  function settingsApi(namespaces: string[]) {
-    const describe = vi.fn(() => Promise.resolve({
-      ok: true as const,
-      value: {
-        writable: true,
-        hasDocument: true,
-        namespaces: namespaces.map(ns => ({
-          ns, schema: {}, value: {}, applies: 'live' as const, secrets: [], revision: 0,
-        })),
-      },
-    }))
-    return { mirror: new SettingsDescribeMirror(ctxWith({ settings: { describe } })), describe }
+describe('SubagentLimitsCardController', () => {
+  it('validates staged limits, saves them, and restores composed defaults', async () => {
+    const host = stubSettingsScope<SubagentLimitsSettings>()
+    const face = new SubagentLimitsCardController(host.scope).inject()
+    const state = () => face.hooks.subagentLimitsCard.getSnapshot()
+    host.publish({ status: 'ready', writable: true, value: { maxDepth: 3, maxActiveSubagents: 8 }, base: { maxDepth: 3, maxActiveSubagents: 8 }, user: {} })
+    acceptWrites(host)
+    expect(state().maxActiveSubagents.text).toBe('8')
+    for (const draft of ['-1', '1.5', '9007199254740992', 'wat', '-0']) {
+      face.edit('maxDepth', draft)
+      expect(state().invalid).toBe(true)
+    }
+    face.edit('maxDepth', '0')
+    face.edit('maxActiveSubagents', '0')
+    expect(state().invalid).toBe(true)
+    face.edit('maxActiveSubagents', '12')
+    expect(host.set).not.toHaveBeenCalled()
+    face.save()
+    await vi.waitFor(() => { expect(state().saving).toBe(false) })
+    expect(host.scope.getSnapshot().value).toEqual({ maxDepth: 0, maxActiveSubagents: 12 })
+    face.resetField('maxDepth')
+    face.edit('maxActiveSubagents', '')
+    expect(state().invalid).toBe(false)
+    face.save()
+    await vi.waitFor(() => { expect(state().saving).toBe(false) })
+    expect(host.scope.getSnapshot().value).toEqual({ maxDepth: 3, maxActiveSubagents: 8 })
+  })
+})
+
+describe('shared Subagent card actions', () => {
+  function card() {
+    const limits = stubSettingsScope<SubagentLimitsSettings>()
+    const models = stubSettingsScope<SubagentModelSelectionSettings>()
+    const limitFace = new SubagentLimitsCardController(limits.scope).inject()
+    const modelFace = new SubagentModelSelectionCardController(models.scope, modelsApi().ctx).inject()
+    limits.publish({
+      status: 'ready', writable: true, revision: 2,
+      value: { maxDepth: 3, maxActiveSubagents: 8 },
+      base: { maxDepth: 3, maxActiveSubagents: 8 }, user: {},
+    })
+    models.publish({
+      status: 'ready', writable: true, revision: 5,
+      value: { enabled: false, allowedModels: [{ provider: 'alpha', model: 'fast' }] }, user: {},
+    })
+    acceptWrites(limits)
+    acceptWrites(models)
+    const face = subagentCardFace(limitFace, modelFace)
+    const state = () => subagentCardShell(
+      face.hooks.subagentLimitsCard.getSnapshot(),
+      face.hooks.subagentModelSelectionCard.getSnapshot(),
+    )
+    return { limits, models, face, state }
   }
 
-  /** Slot ledger stand-in: one stored entry per registered card key. */
-  function ledger(...keys: string[]) {
-    return keys.map(key => ({ component: null, options: { key } }))
-  }
-
-  it('dispatches the served namespaces a card claims, in card registration order', async () => {
-    const settings = settingsApi(['bash', 'ui-theme', 'agent-loop'])
-    const controller = new ConfigurablePluginsTabController(settings.mirror, () => ledger('agent-loop', 'bash'))
-
-    await settings.mirror.ensure()
-
-    // ui-theme is served but claimed by no card here — another surface owns
-    // it. The order is the cards', not the Host's: plugin activation can
-    // reorder the description between boots.
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot().namespaces)
-      .toEqual(['agent-loop', 'bash'])
+  it('saves both drafts through their existing namespaces from one action', async () => {
+    const { limits, models, face, state } = card()
+    face.editLimit('maxDepth', '2')
+    face.toggleEnabled()
+    face.save()
+    await vi.waitFor(() => { expect(state()).toMatchObject({ saving: false, dirty: false, failed: false }) })
+    expect(limits.set).toHaveBeenCalledWith('maxDepth', 2)
+    expect(models.mutate).toHaveBeenCalledWith([
+      { op: 'set', path: ['enabled'], value: true },
+      { op: 'set', path: ['allowedModels'], value: [{ provider: 'alpha', model: 'fast' }] },
+    ], 5)
   })
 
-  it('never dispatches a card whose namespace this deployment does not serve', async () => {
-    const settings = settingsApi(['bash'])
-    const controller = new ConfigurablePluginsTabController(settings.mirror, () => ledger('bash', 'web-search-deepseek'))
-
-    await settings.mirror.ensure()
-
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot().namespaces).toEqual(['bash'])
+  it('saves a limit-only draft without rewriting model authorization', async () => {
+    const { limits, models, face, state } = card()
+    face.editLimit('maxDepth', '2')
+    face.save()
+    await vi.waitFor(() => { expect(state()).toMatchObject({ saving: false, dirty: false, failed: false }) })
+    expect(limits.scope.getSnapshot().value?.maxDepth).toBe(2)
+    expect(models.mutate).not.toHaveBeenCalled()
+    expect(models.scope.getSnapshot().value?.enabled).toBe(false)
   })
 
-  it('takes a card registered after the read without asking the Host again', async () => {
-    const settings = settingsApi(['bash'])
-    let entries = ledger()
-    const controller = new ConfigurablePluginsTabController(settings.mirror, () => entries)
-    await settings.mirror.ensure()
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot().namespaces).toEqual([])
-
-    entries = ledger('bash')
-    controller.refresh()
-
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot().namespaces).toEqual(['bash'])
-    expect(settings.describe).toHaveBeenCalledOnce()
-  })
-
-  it('keeps the namespaces it knew when a refresh fails', async () => {
-    const settings = settingsApi(['bash'])
-    const controller = new ConfigurablePluginsTabController(settings.mirror, () => ledger('bash'))
-    await settings.mirror.ensure()
-    settings.describe.mockRejectedValueOnce(new Error('offline'))
-
-    await settings.mirror.load()
-
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot().namespaces).toEqual(['bash'])
-  })
-
-  it('stops following the mirror once disposed, and never claims it was answered', async () => {
-    const settings = settingsApi(['bash'])
-    const controller = new ConfigurablePluginsTabController(settings.mirror, () => ledger('bash'))
-
-    controller.dispose()
-    await settings.mirror.load()
-
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot())
-      .toEqual({ loaded: false, namespaces: [] })
-  })
-
-  it('ignores a slot-ledger change that arrives after disposal', async () => {
-    const settings = settingsApi(['bash'])
-    let entries = ledger()
-    const controller = new ConfigurablePluginsTabController(settings.mirror, () => entries)
-    await settings.mirror.ensure()
-
-    controller.dispose()
-    entries = ledger('bash')
-    controller.refresh()
-
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot().namespaces).toEqual([])
-  })
-
-  it('ignores a mirror notification already queued when disposal starts', () => {
-    let notify = (): void => {}
-    let snapshot: SettingsMirrorSnapshot = {
-      status: 'ready' as const,
-      view: { writable: true, hasDocument: true, namespaces: [] },
-      error: null,
+  it('retains the pending draft when discard is requested before both writes finish', async () => {
+    const { limits, face, state } = card()
+    const pending = deferred<undefined>()
+    const set = vi.spyOn(limits.scope, 'set').mockImplementationOnce(async () => {
+      await pending.promise
+      limits.publish({ value: { maxDepth: 2, maxActiveSubagents: 8 }, user: { maxDepth: 2 } })
+    })
+    face.editLimit('maxDepth', '2')
+    face.toggleEnabled()
+    face.save()
+    try {
+      await vi.waitFor(() => {
+        expect(face.hooks.subagentModelSelectionCard.getSnapshot()).toMatchObject({ saving: false, dirty: false })
+      })
+      expect(state().saving).toBe(true)
+      expect(set).toHaveBeenCalledWith('maxDepth', 2)
+      face.discard()
+      expect(face.hooks.subagentLimitsCard.getSnapshot()).toMatchObject({ dirty: true, maxDepth: { text: '2' } })
+    } finally {
+      pending.resolve(undefined)
+      await vi.waitFor(() => { expect(state().saving).toBe(false) })
     }
-    const describeFace = {
-      getSnapshot: () => snapshot,
-      subscribe: (listener: () => void) => {
-        notify = listener
-        return () => {}
-      },
-      ensure: () => Promise.resolve(),
-      acceptView: vi.fn(),
-    } as never
-    const controller = new ConfigurablePluginsTabController(describeFace, () => ledger('bash'))
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot())
-      .toEqual({ loaded: true, namespaces: [] })
-
-    controller.dispose()
-    snapshot = {
-      status: 'ready',
-      view: {
-        writable: true,
-        hasDocument: true,
-        namespaces: [{
-          ns: 'bash', schema: {}, value: {}, applies: 'live', secrets: [], revision: 1,
-        }],
-      },
-      error: null,
-    }
-    notify()
-
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot())
-      .toEqual({ loaded: true, namespaces: [] })
+    expect(state()).toMatchObject({ dirty: false, failed: false })
+    expect(limits.scope.getSnapshot().value?.maxDepth).toBe(2)
   })
 
-  it('reports the Host answered even when it serves nothing this tab shows', async () => {
-    const settings = settingsApi(['ui-theme'])
-    const controller = new ConfigurablePluginsTabController(settings.mirror, () => ledger('bash'))
+  it('writes neither namespace when either draft is invalid and discards both', () => {
+    const { limits, models, face, state } = card()
+    face.editLimit('maxDepth', '1.5')
+    face.toggleEnabled()
+    face.save()
+    expect(limits.set).not.toHaveBeenCalled()
+    expect(models.mutate).not.toHaveBeenCalled()
+    face.discard()
+    expect(state()).toMatchObject({ dirty: false, invalid: false })
+    expect(face.hooks.subagentLimitsCard.getSnapshot().maxDepth.text).toBe('3')
+    expect(face.hooks.subagentModelSelectionCard.getSnapshot().enabled).toBe(false)
+  })
 
-    await settings.mirror.ensure()
-
-    expect(controller.inject().hooks.configurablePlugins.getSnapshot())
-      .toEqual({ loaded: true, namespaces: [] })
+  it('retains a rejected model draft after limits save, and retries only that draft', async () => {
+    const { limits, models, face, state } = card()
+    models.mutate.mockImplementationOnce(() => {})
+    face.editLimit('maxDepth', '2')
+    face.toggleEnabled()
+    face.save()
+    await vi.waitFor(() => { expect(state()).toMatchObject({ saving: false, dirty: true, failed: true }) })
+    expect(face.hooks.subagentLimitsCard.getSnapshot().dirty).toBe(false)
+    expect(face.hooks.subagentModelSelectionCard.getSnapshot()).toMatchObject({ enabled: true, dirty: true })
+    face.save()
+    await vi.waitFor(() => { expect(state()).toMatchObject({ saving: false, dirty: false, failed: false }) })
+    expect(limits.set).toHaveBeenCalledOnce()
+    expect(models.mutate).toHaveBeenCalledTimes(2)
   })
 })

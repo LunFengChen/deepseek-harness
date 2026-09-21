@@ -8,9 +8,13 @@ The dsh-base bundle patch shared by the web, headless, sdk, and acp profiles; th
 ```mermaid
 flowchart LR
   cfg["packages/bundle/base/cordis.patch.yml<br/>cordis.yml"]
+  plugin_dsh_base_tool_plugin_manager["tool-plugin-manager<br/>@x1a0f3n9/dsh-plugin-manager/tools"]
+  cfg --> plugin_dsh_base_tool_plugin_manager
+  plugin_dsh_base_plugin_manager["plugin-manager<br/>@x1a0f3n9/dsh-plugin-manager"]
+  cfg --> plugin_dsh_base_plugin_manager
   plugin_dsh_base_timer["timer<br/>@deepseek-ai/cordis-plugin-timer"]
   cfg --> plugin_dsh_base_timer
-  plugin_dsh_base_hmr["hmr<br/>@deepseek-ai/cordis-plugin-hmr"]
+  plugin_dsh_base_hmr["hmr<br/>@x1a0f3n9/dsh-hmr"]
   cfg --> plugin_dsh_base_hmr
   plugin_dsh_base_llm["llm<br/>@x1a0f3n9/dsh-llm"]
   cfg --> plugin_dsh_base_llm
@@ -136,8 +140,10 @@ flowchart LR
   cfg --> plugin_dsh_base_tool_subagent
   plugin_dsh_base_tool_subagent_fork["tool-subagent-fork<br/>@x1a0f3n9/dsh-tool-subagent"]
   cfg --> plugin_dsh_base_tool_subagent_fork
-  plugin_dsh_base_workflow_worker_thread["workflow-worker-thread<br/>@x1a0f3n9/dsh-workflow-worker-thread"]
-  cfg --> plugin_dsh_base_workflow_worker_thread
+  plugin_dsh_base_ptc_runtime["ptc-runtime<br/>@x1a0f3n9/dsh-ptc-runtime-node"]
+  cfg --> plugin_dsh_base_ptc_runtime
+  plugin_dsh_base_workflow_ptc["workflow-ptc<br/>@x1a0f3n9/dsh-workflow-ptc"]
+  cfg --> plugin_dsh_base_workflow_ptc
   plugin_dsh_base_tool_workflow["tool-workflow<br/>@x1a0f3n9/dsh-tool-workflow"]
   cfg --> plugin_dsh_base_tool_workflow
   plugin_dsh_base_timeout_policy["timeout-policy<br/>@x1a0f3n9/dsh-tool-call-timeout-policy"]
@@ -150,6 +156,8 @@ flowchart LR
   cfg --> plugin_dsh_base_session_checkpoint_policy
   plugin_dsh_base_tool_result_pruner["tool-result-pruner<br/>@x1a0f3n9/dsh-compaction-tool-result-pruner"]
   cfg --> plugin_dsh_base_tool_result_pruner
+  plugin_dsh_base_image_offload["image-offload<br/>@x1a0f3n9/dsh-compaction-image-offload"]
+  cfg --> plugin_dsh_base_image_offload
   plugin_dsh_base_tool_todo["tool-todo<br/>@x1a0f3n9/dsh-tool-todo"]
   cfg --> plugin_dsh_base_tool_todo
   plugin_dsh_base_tool_goal["tool-goal<br/>@x1a0f3n9/dsh-tool-goal"]
@@ -166,6 +174,8 @@ flowchart LR
   cfg --> plugin_dsh_base_web_fetch_http
   plugin_dsh_base_tool_web["tool-web<br/>@x1a0f3n9/dsh-tool-web"]
   cfg --> plugin_dsh_base_tool_web
+  plugin_dsh_base_mcp_resources["mcp-resources<br/>@x1a0f3n9/dsh-mcp-resources"]
+  cfg --> plugin_dsh_base_mcp_resources
   plugin_dsh_base_tools["tools<br/>@x1a0f3n9/dsh-tools"]
   cfg --> plugin_dsh_base_tools
   plugin_dsh_base_system_prompt["system-prompt<br/>@x1a0f3n9/dsh-system-prompt"]
@@ -180,8 +190,10 @@ flowchart LR
 
 | Plugin id | Package / module |
 | --- | --- |
+| `tool-plugin-manager` | `@x1a0f3n9/dsh-plugin-manager/tools` |
+| `plugin-manager` | `@x1a0f3n9/dsh-plugin-manager` |
 | `timer` | `@deepseek-ai/cordis-plugin-timer` |
-| `hmr` | `@deepseek-ai/cordis-plugin-hmr` |
+| `hmr` | `@x1a0f3n9/dsh-hmr` |
 | `llm` | `@x1a0f3n9/dsh-llm` |
 | `deepseek-llm-api-extensions` | `@x1a0f3n9/dsh-deepseek-llm-api-extensions` |
 | `session` | `@x1a0f3n9/dsh-session` |
@@ -244,13 +256,15 @@ flowchart LR
 | `tool-subagent-list-agents` | `@x1a0f3n9/dsh-tool-subagent-control/list-agents` |
 | `tool-subagent` | `@x1a0f3n9/dsh-tool-subagent` |
 | `tool-subagent-fork` | `@x1a0f3n9/dsh-tool-subagent` |
-| `workflow-worker-thread` | `@x1a0f3n9/dsh-workflow-worker-thread` |
+| `ptc-runtime` | `@x1a0f3n9/dsh-ptc-runtime-node` |
+| `workflow-ptc` | `@x1a0f3n9/dsh-workflow-ptc` |
 | `tool-workflow` | `@x1a0f3n9/dsh-tool-workflow` |
 | `timeout-policy` | `@x1a0f3n9/dsh-tool-call-timeout-policy` |
 | `spill-local` | `@x1a0f3n9/dsh-spill-local` |
 | `spill-policy` | `@x1a0f3n9/dsh-spill-policy` |
 | `session-checkpoint-policy` | `@x1a0f3n9/dsh-session-checkpoint-policy` |
 | `tool-result-pruner` | `@x1a0f3n9/dsh-compaction-tool-result-pruner` |
+| `image-offload` | `@x1a0f3n9/dsh-compaction-image-offload` |
 | `tool-todo` | `@x1a0f3n9/dsh-tool-todo` |
 | `tool-goal` | `@x1a0f3n9/dsh-tool-goal` |
 | `tool-ralph` | `@x1a0f3n9/dsh-tool-ralph` |
@@ -259,6 +273,7 @@ flowchart LR
 | `web-search-deepseek` | `@x1a0f3n9/dsh-web-search-deepseek` |
 | `web-fetch-http` | `@x1a0f3n9/dsh-web-fetch-http` |
 | `tool-web` | `@x1a0f3n9/dsh-tool-web` |
+| `mcp-resources` | `@x1a0f3n9/dsh-mcp-resources` |
 | `tools` | `@x1a0f3n9/dsh-tools` |
 | `system-prompt` | `@x1a0f3n9/dsh-system-prompt` |
 | `agent-loop` | `@x1a0f3n9/dsh-agent-loop` |

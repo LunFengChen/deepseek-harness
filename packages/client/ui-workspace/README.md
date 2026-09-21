@@ -29,7 +29,13 @@ Use the sidebar to browse Workspaces and their Sessions, reorder them, and start
 
 ### Reordering and view options
 
-View options combine grouping with one browser-persisted Session order per account: **Manual** and **Last updated** apply in either presentation. Entering Last updated performs a complete recency sort and later user prompts or steers promote their Session once; entering Manual preserves every current position and disables later promotion. Dragging edits the current order in either mode; Manual-mode drags for real Workspaces also update the Host Session account, while Ungrouped and flat-list orders remain browser-local. In a collapsed group, drag boundaries follow rendered rows and place the source before intervening hidden rows, so a drag cannot hide its source. Workspace drag order is Host-durable in either Session order mode.
+**Last updated** orders ordinary Sessions by their latest user prompt or steer time, newest first, in both grouped and flat views. **Manual** freezes the current displayed order and holds positions when activity changes; newly discovered ordinary Sessions append to the end, newest first when several arrive together. Returning to Last updated discards every manual position, and entering Manual again freezes the then-current recency order. The browser defaults to Last updated and remembers the selected mode across reloads. Dragging an ordinary Session applies the move locally and selects Manual. The selected blank **New Session** is always pinned first and cannot be dragged; after its first prompt it becomes an ordinary draggable row, retaining its first position in Manual or following its current timestamp in Last updated. In a collapsed group, drag boundaries follow rendered rows and place the source before intervening hidden rows, so a drag cannot hide its source. Session display orders for real Workspaces, Ungrouped, and the flat list are browser-local; Workspace group drag order remains Host-durable.
+
+### Workspace hierarchy
+
+Choose **Add workspace** and select a directory to register it and open a Session. **View options → Group by** defaults to **WorkSpace**, which lists Workspaces as sibling sections. Select **Workspace Tree** to nest each Workspace under its nearest registered ancestor, including Workspaces added later. Each Workspace keeps its own Sessions and row actions. Child Workspaces appear before the parent's own Sessions. Ancestors start expanded unless a saved collapsed state exists. A saved collapse also hides the current Session; ancestor folder icons stay highlighted when a descendant Workspace contains it. Row fills and hit targets span the same width at every level; only the contents indent. Workspace dragging reorders siblings; dropping on a descendant targets the nearest compatible ancestor, so an expanded parent can be moved past without collapsing it. Search-result navigation expands every ancestor. Grouping and expansion are saved in the current browser; switching modes preserves each Workspace's expansion preference, and the single-list view stays flat.
+
+Hierarchy uses registered canonical paths only. It does not scan for projects or resolve symlink aliases. Nesting does not change Session working directories, logs, or Workspace membership. Deleting a parent Workspace leaves its child Workspaces registered and places them under their next registered ancestor, or at the root.
 
 ### Search
 
@@ -37,7 +43,9 @@ Collapsed search is one header action beside the view and add actions: activatin
 
 ### Managing sessions
 
-The Session row's Rename action opens a dialog prefilled with the row's display title; confirming an unchanged title is deliberately allowed — it pins the current automatic title against regeneration. Archive commits without a confirmation dialog and the row disappears from every grouping surface when the archive-set echo lands. Fork forks at the source's last completed turn, increments the inherited persisted title on the client, and then opens the child. Workspace Delete opens a confirmation that states the retention boundary; success removes the group while its Sessions remain under Ungrouped.
+The Session row's Rename action opens a dialog prefilled with the row's display title; confirming an unchanged title is deliberately allowed — it pins the current automatic title against regeneration. Rename uses a temporary `workspaceOperation` reference, while fork-title assignment uses a temporary `controllerOperation` reference inside Session Controller; both await the reference's initial history opening. Archive commits without a confirmation dialog and the row disappears from every grouping surface when the archive-set echo lands. Fork forks at the source's last completed turn, increments the inherited persisted title on the client, and then opens the child. Workspace Delete opens a confirmation that states the retention boundary; success removes the group while its Sessions remain under Ungrouped.
+
+A Session title wider than its row is clipped with an ellipsis at rest. Hovering the row scrolls the title to its far edge — the incremented title of a fork, for example — and reveals it without the ellipsis; leaving the row returns the title to its start.
 
 ### Pending interactions
 
@@ -51,7 +59,7 @@ The value is intentionally best effort for cold Sessions. An identity-matching u
 
 -----
 
-`ctx.uiWorkspace.openSession(id)` selects the Session and returns the main area to the Conversation as one UI navigation action, including when that Session was already current. `openWorkspace(id, beforeOpen?)` and `forkSession(id)` open their result only if no later navigation has superseded the request; New Session uses `openWorkspace`. The optional synchronous preparation callback runs only for a current Workspace request, so superseded requests do not move composer drafts. Navigation or owner disposal suppresses the late UI commit, not the underlying Session creation. Selection failure leaves a global panel visible. Session rows read `usePanelInfo` to suppress their selected appearance while a global panel is active; search and directory-picker focus alone do not leave that panel.
+`ctx.uiWorkspace.openSession(target)` synchronously replaces the owned `mainView` reference and returns the main area to Conversation without waiting for `reference.ready`, so history loading renders inside the selected Session view. The target may be a known Session id or a durable direct-parent subagent address; an explicit address does not require a preloaded parent catalog. `openWorkspace(id, beforeOpen?)` and `forkSession(id)` open their result only if no later navigation has superseded the request; New Session uses `openWorkspace`. The optional synchronous preparation callback runs after the target is retained and only for a current Workspace request, so superseded requests do not move composer drafts. Navigation or owner disposal suppresses the late UI commit, not the underlying Session creation. Archiving the main Session releases its reference and clears the main selection. Selection failure leaves a global panel visible. Session rows read `usePanelInfo` to suppress their selected appearance while a global panel is active; search and directory-picker focus alone do not leave that panel.
 
 <a id="understand-the-implementation"></a>
 ## Understand the implementation
@@ -67,7 +75,7 @@ Each registration declares a **directory-flow child hole** (`single` kind: `conv
 
 ### View state
 
-Once the Workspace list baseline is ready, browser-persisted expansion and Session-order records retain only current Workspace ids plus Ungrouped and the flat-list account. Real Workspaces initialize from `WorkspaceView.sessionIds`, while Ungrouped and the cross-Workspace flat list initialize from recency. The shared sidebar projection hides rows whose durable Session summary has `origin: 'subagent'`, and each visible ordinary row inherits the blue activity indicator while any descendant reached through uninterrupted subagent-origin lineage is running. The same pure derivation reads the Schedule key from list projection values for grouped, flat, and search nodes; the package uses only the type-only `@x1a0f3n9/dsh-schedule/client` dependency and does not import the Schedule runtime or `ui-schedule`.
+Once the Workspace list baseline is ready, browser-persisted expansion and manual Session-order records retain only current Workspace ids plus Ungrouped and the flat-list account. `WorkspaceView.sessionIds` supplies real-Workspace membership, not Session display order. View actions require the current account orders explicitly. Flat-list membership and ordering use Session ids; row rendering adds status indicators once. Entering Manual snapshots every active account from the current display; reconciliation retains saved members that still belong to the account, removes departed members, and appends newly known members by recency. A new membership entry without a Session summary is omitted until that summary arrives, while an already saved slot survives a temporarily missing summary. During Workspace reconnection, Manual records an observed blank Session at the front of its saved flat and known group orders without removing other saved members; full membership reconciliation waits for the Workspace baseline. This reconciliation remains mounted while the sidebar is a rail or search replaces its body. Last updated derives directly from each current list snapshot without reading or writing saved positions; equal timestamps use Session ids as a stable tie-break. The shared sidebar projection hides rows whose durable Session summary has `origin: 'subagent'`, and each visible ordinary row inherits the blue activity indicator while any descendant reached through uninterrupted subagent-origin lineage is running. The same pure derivation reads the Schedule key from list projection values for grouped, flat, and search nodes; the package uses only the type-only `@x1a0f3n9/dsh-schedule/client` dependency and does not import the Schedule runtime or `ui-schedule`.
 
 ### Hover cards
 
@@ -85,7 +93,7 @@ These pages cover the sidebar host, the hero surface, and the picking backends.
 - [ui-sidebar](../ui-sidebar/README.md) — the sidebar shell hosting the `sidebar.workspaces` hole.
 - [ui-conversation](../ui-conversation/README.md) — the chat surface hosting the Session Intent hero's picker hole.
 - [directory-picker-native](../../host/directory-picker-native/README.md) — the OS-chooser backend filling the directory-flow hole.
-- [Workspace Controller](../../api/workspace-controller/README.md) — the Host mutations and framework-neutral Client projection that own workspaces and ordering.
+- [Workspace Controller](../../api/workspace-controller/README.md) — the Host mutations and framework-neutral Client projection that own Workspaces, membership, and Workspace group order.
 
 -----
 
@@ -106,7 +114,7 @@ None; this package neither assembles nor sends a provider request.
 These limits define the search depth, the archive surface, and the picking carrier; they are current package constraints.
 
 - **No fuzzy content search or event deep links** — the content backend uses literal token/phrase matching, and selecting a result opens the Session rather than the matching event.
-- **No Session deletion or unarchive control** — sessions can be archived, but archived sessions have no viewing or unarchive surface, and Workspace registration deletion does not delete Sessions.
+- **No Session deletion, and unarchive lives in Settings** — sessions can be archived but never deleted; the archived-sessions Settings page ([ui-settings-unarchive-sessions](../ui-settings-unarchive-sessions/README.md)) owns viewing and restoring them, and Workspace registration deletion does not delete Sessions.
 - **Pending user interaction is not aggregated into collapsed groups** — a waiting row inside a collapsed group lights no group-header indicator and becomes visible only after that group is expanded.
 - **Native folder selection depends on the local Host carrier** — under the `-native` composition, in-process or remote browser deployments cannot open a local operating-system dialog; remote-capable picking is the `-browse` composition's in-app flow.
 

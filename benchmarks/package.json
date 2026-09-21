@@ -6,6 +6,9 @@
   "type": "module",
   "devDependencies": {
     "playwright": "^1.49.0",
+    "@xterm/headless": "^6.0.0",
+    "@x1a0f3n9/dsh-terminal": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess": "workspace:^",
     "@x1a0f3n9/dsh-llm-replay": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^",
     "@x1a0f3n9/dsh-agent": "workspace:^",
@@ -16,6 +19,7 @@
     "@x1a0f3n9/dsh-client-store": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-chat": "workspace:^",
     "@x1a0f3n9/dsh-deque": "workspace:^",
+    "@x1a0f3n9/dsh-lazy-require": "workspace:^",
     "@x1a0f3n9/dsh-llm": "workspace:^",
     "@x1a0f3n9/dsh-sdk-client": "workspace:^",
     "@x1a0f3n9/dsh-session": "workspace:^",

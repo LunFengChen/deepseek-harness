@@ -518,11 +518,11 @@ export const IconUserOutline16 = ({ size = 16, className }: IconProps) => (
   </svg>
 )
 
-/** ic_ds_send_outline_16 */
-export const IconSendOutline16 = ({ size = 16, className }: IconProps) => (
-  <svg width={size} height={size} className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+/** ic_ds_paper_plane_outline_14 */
+export const IconPaperPlaneOutline14 = ({ size = 14, className }: IconProps) => (
+  <svg width={size} height={size} className={className} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
-      d="M8.3125 0.981587C8.66767 1.0545 8.97902 1.20558 9.2627 1.43374C9.48724 1.61438 9.73029 1.85933 9.97949 2.10854L14.707 6.83608L13.293 8.25014L9 3.95717V15.0431H7V3.95717L2.70703 8.25014L1.29297 6.83608L6.02051 2.10854C6.26971 1.85933 6.51277 1.61438 6.7373 1.43374C6.97662 1.24126 7.28445 1.04542 7.6875 0.981587C7.8973 0.94841 8.1031 0.956564 8.3125 0.981587Z"
+      d="M11.8249 1.11733C12.4401 0.929305 13.0795 1.42149 13.0238 2.08968L12.2321 11.5935C12.1751 12.2735 11.4312 12.6646 10.8386 12.3263L7.99539 10.7011L6.0967 12.7005L6.07413 12.7248L6.04808 12.7465C5.55601 13.1565 4.80867 12.8069 4.80833 12.1665V8.69211C4.80843 8.44469 4.90686 8.20727 5.08181 8.0323L9.79684 3.31641L2.46775 6.6988L4.10251 7.35253L3.67364 8.42559L1.57874 7.5878V7.5852C0.807611 7.2988 0.757207 6.21577 1.5145 5.86622L11.7025 1.16421L11.8249 1.11733ZM5.96474 11.1603L6.9614 10.1107L5.96474 9.54118V11.1603ZM6.32937 8.41864L11.1086 11.149L11.791 2.95698L6.32937 8.41864Z"
       fill="currentColor"
     />
   </svg>
@@ -903,6 +903,18 @@ export const IconQuestionOutline14 = ({ size = 14, className }: IconProps) => (
   </svg>
 )
 
+/** Info companion to the question outline: the same ring with an "i" glyph. */
+export const IconInfoOutline14 = ({ size = 14, className }: IconProps) => (
+  <svg width={size} height={size} className={className} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12.5757 7.00012C12.5757 3.92085 10.0794 1.42463 7.00012 1.42456C3.9208 1.42456 1.42456 3.9208 1.42456 7.00012C1.42463 10.0794 3.92085 12.5757 7.00012 12.5757C10.0793 12.5756 12.5756 10.0793 12.5757 7.00012ZM13.8002 7.00012C13.8001 10.7559 10.7559 13.8001 7.00012 13.8002C3.2443 13.8002 0.199291 10.7559 0.199219 7.00012C0.199219 3.24426 3.24426 0.199219 7.00012 0.199219C10.7559 0.199291 13.8002 3.2443 13.8002 7.00012Z"
+      fill="currentColor"
+    />
+    <path d="M7.6127 3.18921V4.55986H6.38735V3.18921H7.6127Z" fill="currentColor" />
+    <path d="M7.6127 5.68921V10.8109H6.38735V5.68921H7.6127Z" fill="currentColor" />
+  </svg>
+)
+
 /** Alarm clock outline for active scheduled-task indicators. */
 export const IconAlarmClockOutline16 = ({ size = 16, className }: IconProps) => (
   <svg
@@ -935,6 +947,14 @@ export const IconArchiveOutline20 = ({ size = 20, className }: IconProps) => (
       fill="currentColor"
     />
     <path d="M12.7962 12.5661V11.0832H7.20548V12.5661L12.7962 12.5661Z" fill="currentColor" />
+  </svg>
+)
+
+/** Line-wrapping toggle glyph. */
+export const IconWrapLinesOutline16 = ({ size = 16, className }: IconProps) => (
+  <svg width={size} height={size} className={className} viewBox="0 0 16 16" fill="none"
+    stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" aria-hidden="true">
+    <path d="M1.5 3.5h13M1.5 7.5h10.25a2.5 2.5 0 0 1 0 5H8m2-2-2 2 2 2M1.5 11.5h3" />
   </svg>
 )
 
@@ -988,5 +1008,15 @@ export const SHIELD_OUTLINE_STROKE = '1.31831'
 export const IconShieldOutline16 = ({ size = 16, className }: IconProps) => (
   <svg width={size} height={size} className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d={SHIELD_OUTLINE_PATH} stroke="currentColor" strokeWidth={SHIELD_OUTLINE_STROKE} strokeLinejoin="round" />
+  </svg>
+)
+
+/** Plugin pinwheel (design handoff for the plugin manager): four interleaved arcs on the 16 grid. */
+export const IconPluginPinwheelOutline16 = ({ size = 16, className }: IconProps) => (
+  <svg width={size} height={size} className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.84457 5.06199C11.6605 4.93876 14.7962 6.14848 14.8484 7.76397C14.8875 8.97461 13.1838 10.0696 10.7215 10.5942" stroke="currentColor" strokeWidth="1.2" />
+    <path d="M5.12742 8.07731C5.00419 4.26138 6.21391 1.12568 7.8294 1.07351C9.04004 1.03441 10.135 2.73808 10.6596 5.20037" stroke="currentColor" strokeWidth="1.2" />
+    <path d="M8.02457 10.6802C4.20865 10.8034 1.07294 9.5937 1.02077 7.97821C0.981678 6.76758 2.68535 5.67262 5.14763 5.14798" stroke="currentColor" strokeWidth="1.2" />
+    <path d="M10.7476 7.89535C10.8708 11.7113 9.66109 14.847 8.0456 14.8991C6.83496 14.9382 5.74 13.2346 5.21536 10.7723" stroke="currentColor" strokeWidth="1.2" />
   </svg>
 )

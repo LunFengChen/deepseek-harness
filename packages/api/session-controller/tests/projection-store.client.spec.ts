@@ -3,18 +3,23 @@
  * docs/subsystems/session-projection.md): the single
  * higher-seq-wins rule on both paths (a stale baseline cannot overwrite a
  * newer push frame; a replayed frame cannot regress), capability absence as
- * undefined, generation truncation, and the Session/manager wiring (tail-page
+ * undefined, generation invalidation, and the Session/manager wiring (tail-page
  * seeding, control-stream projection routing pre- and post-instantiation, the
  * list rows' title projection).
  */
-import { describe, expect, it } from 'vitest'
+import { describe, expect } from 'vitest'
 import type { SessionId } from '@x1a0f3n9/dsh-api-remotes/client'
 import { SessionSeq } from '@x1a0f3n9/dsh-session/types'
+import { ok, type RemoteMock } from '@x1a0f3n9/dsh-remote-mock'
+import {
+  createClientTest, type ClientTestFixtures, webApp,
+} from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/index.ts'
 import { ProjectionValueStore } from '../src/client/sessions/projection-store.ts'
-import { Session } from '../src/client/sessions/session.ts'
 import { SessionManager } from '../src/client/sessions/manager.ts'
-import { FakeApiClient, fakeRemote, ok } from './fake-api.client.ts'
+import type { SessionRemotes } from '../src/client/sessions/remotes.ts'
 import { entries, plainTurn } from './event-script.client.ts'
+import { sessionBench } from './remote/bench.client.ts'
+import { FOLLOW, followScript, sessionWorld } from './remote/session.client.ts'
 
 // Test-domain keys merged into the projection map (the Service Definition package's
 // pure-type outlet), the same way domain host plugins merge theirs.
@@ -25,6 +30,17 @@ declare module '@x1a0f3n9/dsh-session-projection/types' {
 }
 
 const SID = 'fk-s1' as SessionId
+/** A Session talks through the Gateway client; its dependency cone is the Typert registry and the Connection. */
+const API_ROSTER = webApp.closure(['@x1a0f3n9/dsh-api-gateway'])
+const it = createClientTest({ roster: API_ROSTER })
+/** The first client boot pays the cold module transform of the api cone. */
+const COLD_BOOT_TIMEOUT_MS = 60_000
+
+function makeManager(mock: RemoteMock, remote: ClientTestFixtures['remote']): SessionManager {
+  mock.load(sessionWorld)
+  // Manager-routing cases never open a Session, so they do not need the broader Client Remote's $stream member.
+  return new SessionManager(remote as unknown as SessionRemotes)
+}
 
 describe('Session projection value semantics', () => {
   it('reads undefined until a value lands (capability absence)', () => {
@@ -59,13 +75,30 @@ describe('Session projection value semantics', () => {
     expect(store.get('test/marks')).toBeUndefined()
   })
 
-  it('truncate drops rows past the durable baseline and keeps the rest', () => {
+  it('clears all generation watermarks without replacing subscribed faces', async () => {
     const store = new ProjectionValueStore()
-    store.apply('test/marks', { marks: ['durable'] }, SessionSeq(5))
-    store.apply('other', 'phantom', SessionSeq(50))
-    store.truncate(SessionSeq(10))
-    expect(store.get('test/marks')).toEqual({ marks: ['durable'] })
-    expect(store.get('other')).toBeUndefined()
+    const face = store.faceOf('test/marks')
+    const observed: unknown[] = []
+    const unsubscribe = face.subscribe(() => { observed.push(face.getSnapshot()) })
+    try {
+      store.apply('test/marks', { marks: ['lost-tail'] }, SessionSeq(20))
+      store.apply('empty-session', 'old generation', -1)
+      const previous = store.values()
+      await Promise.resolve()
+      store.clear()
+      await Promise.resolve()
+
+      expect(face.getSnapshot()).toBeUndefined()
+      expect(store.get('empty-session')).toBeUndefined()
+      expect(store.faceOf('test/marks')).toBe(face)
+      expect(store.values()).toEqual({})
+      expect(store.values()).not.toBe(previous)
+      store.seed({ asOfSeq: SessionSeq(1), values: { 'test/marks': { marks: ['durable'] } } })
+      await Promise.resolve()
+      expect(observed).toEqual([{ marks: ['lost-tail'] }, undefined, { marks: ['durable'] }])
+    } finally {
+      unsubscribe()
+    }
   })
 
   it('notifies the key face on change (batched) and not on dropped applications', async () => {
@@ -102,34 +135,31 @@ describe('Session projection value semantics', () => {
 })
 
 describe('Session tail-page seeding', () => {
-  it('seeds the store from a history response carrying a projections block', async () => {
-    const api = new FakeApiClient()
-    const session = new Session(SID, fakeRemote(api))
-    api.onHistory = () => Promise.resolve(ok({
+  it('seeds the store from a history response carrying a projections block', async ({ mock, start }) => {
+    const session = await sessionBench(mock, start, SID)
+    mock.stream(FOLLOW, followScript(ok({
       records: entries(plainTurn(SessionSeq(0), 0, '问', '答')) as never[], hasMore: false,
       projections: { asOfSeq: 5, values: { 'test/marks': { marks: ['from-baseline'] } } },
-    } as never))
+    } as never)))
     await session.open()
     expect(session.projections.get('test/marks')).toEqual({ marks: ['from-baseline'] })
-  })
+  }, COLD_BOOT_TIMEOUT_MS)
 
-  it('a resync serving a stale block keeps the newer pushed value (seq rule end to end)', async () => {
-    const api = new FakeApiClient()
-    const session = new Session(SID, fakeRemote(api))
-    api.onHistory = () => Promise.resolve(ok({
+  it('a resync serving a stale block keeps the newer pushed value (seq rule end to end)', async ({ mock, start }) => {
+    const session = await sessionBench(mock, start, SID)
+    mock.stream(FOLLOW, followScript(ok({
       records: entries(plainTurn(SessionSeq(0), 0, 'a', 'b')) as never[], hasMore: false,
       projections: { asOfSeq: 5, values: { 'test/marks': { marks: ['baseline'] } } },
-    } as never))
+    } as never)))
     await session.open()
     session.projections.apply('test/marks', { marks: ['pushed-9'] }, SessionSeq(9))
     await session.resync()
     expect(session.projections.get('test/marks')).toEqual({ marks: ['pushed-9'] })
   })
 
-  it('treats a blockless response as no reset: pushed values survive', async () => {
-    const api = new FakeApiClient()
-    const session = new Session(SID, fakeRemote(api))
-    api.onHistory = () => Promise.resolve(ok({ records: entries(plainTurn(SessionSeq(0), 0, 'a', 'b')) as never[], hasMore: false }))
+  it('treats a blockless response as no reset: pushed values survive', async ({ mock, start }) => {
+    const session = await sessionBench(mock, start, SID)
+    mock.stream(FOLLOW, followScript(ok({ records: entries(plainTurn(SessionSeq(0), 0, 'a', 'b')) as never[], hasMore: false })))
     await session.open()
     session.projections.apply('test/marks', { marks: ['pushed'] }, SessionSeq(9))
     await session.resync()
@@ -140,9 +170,8 @@ describe('Session tail-page seeding', () => {
 describe('manager frame routing', () => {
   const sid = (s: string): SessionId => s as SessionId
 
-  it('lands projection frames before instantiation and the Session adopts the same store', async () => {
-    const api = new FakeApiClient()
-    const manager = new SessionManager(fakeRemote(api))
+  it('lands projection frames before instantiation and the Session adopts the same store', ({ mock, remote }) => {
+    const manager = makeManager(mock, remote)
     manager.handleControlFrame({
       type: 'projection', sessionId: sid('s1'), key: 'test/marks', value: { marks: ['early'] }, seq: 7,
     })
@@ -155,35 +184,31 @@ describe('manager frame routing', () => {
     expect(session.projections.get('test/marks')).toEqual({ marks: ['later'] })
   })
 
-  it('projects the title key into list rows and truncates phantom rows on the control baseline', async () => {
-    const api = new FakeApiClient()
-    const manager = new SessionManager(fakeRemote(api))
-    api.onList = () => Promise.resolve(ok({
+  it('preserves a newer title when the control baseline omits it', async ({ mock, remote }) => {
+    const manager = makeManager(mock, remote)
+    remote.session.list.mockResolvedValue(ok({
       items: [{ sessionId: sid('s1'), updatedAt: 1, running: false, blank: false }],
-    }) as never)
+    }))
     await manager.refreshList()
     manager.handleControlFrame({
       type: 'projection', sessionId: sid('s1'), key: 'title', value: 'Projected title', seq: 4,
     })
     await Promise.resolve()
     expect(manager.getListSnapshot().items[0]?.title).toBe('Projected title')
-    // The durable baseline says the host only knows up to seq 2: the row rode
-    // lost state and must drop (the un-flushed title precedent).
     manager.handleControlFrame({
       type: 'baseline',
       value: {
-        queues: {}, jobs: {},
+        jobs: {},
         projections: { [sid('s1')]: { asOfSeq: 2, values: {} } },
       },
     })
     await Promise.resolve()
-    expect(manager.getListSnapshot().items[0]?.title).toBeUndefined()
+    expect(manager.getListSnapshot().items[0]?.title).toBe('Projected title')
   })
 
-  it('projects every retained value into list rows with stable snapshot identity', async () => {
-    const api = new FakeApiClient()
-    const manager = new SessionManager(fakeRemote(api))
-    api.onList = () => Promise.resolve(ok({
+  it('projects every retained value into list rows with stable snapshot identity', async ({ mock, remote }) => {
+    const manager = makeManager(mock, remote)
+    remote.session.list.mockResolvedValue(ok({
       items: [{
         sessionId: sid('s1'), updatedAt: 1, running: false, blank: false,
         projections: {
@@ -191,7 +216,7 @@ describe('manager frame routing', () => {
           values: { 'test/marks': { marks: ['baseline'] } },
         },
       }],
-    }) as never)
+    }))
     await manager.refreshList()
     const baseline = manager.getListSnapshot().items[0]?.projectionValues
     expect(baseline).toEqual({ 'test/marks': { marks: ['baseline'] } })
@@ -207,12 +232,11 @@ describe('manager frame routing', () => {
     expect(manager.getListSnapshot().items[0]?.projectionValues).not.toBe(baseline)
   })
 
-  it('drops the projection store with the removed session', async () => {
-    const api = new FakeApiClient()
-    const manager = new SessionManager(fakeRemote(api))
-    api.onList = () => Promise.resolve(ok({
+  it('drops the projection store with the removed session', async ({ mock, remote }) => {
+    const manager = makeManager(mock, remote)
+    remote.session.list.mockResolvedValue(ok({
       items: [{ sessionId: sid('s1'), updatedAt: 1, running: false, blank: false }],
-    }) as never)
+    }))
     await manager.refreshList()
     manager.handleControlFrame({
       type: 'projection', sessionId: sid('s1'), key: 'title', value: 'Doomed', seq: 4,

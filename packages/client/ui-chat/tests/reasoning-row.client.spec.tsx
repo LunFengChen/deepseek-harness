@@ -14,6 +14,29 @@ const t = makeTranslate(zh, commonZh)
 const renderMessageImages: AssistantMarkdownProps['renderMessageImages'] = () => null
 
 describe('ReasoningRow', () => {
+  it.each([
+    { kind: 'text' as const, text: 'Answer' },
+    { kind: 'tool-call' as const, callId: 'call-1', name: 'read', argsRaw: '{}' },
+  ])('starts collapsed and preserves manual expansion when $kind arrives', (nextBlock) => {
+    const reasoning = { kind: 'reasoning' as const, text: 'Inspect the session\nCheck persistence' }
+    const view = render(
+      <AssistantMarkdown t={t} blocks={[reasoning]} streaming renderMessageImages={renderMessageImages} />,
+    )
+    expect(view.getByRole('button').getAttribute('aria-expanded')).toBe('false')
+    fireEvent.click(view.getByText('思考'))
+    view.rerender(
+      <AssistantMarkdown t={t} blocks={[reasoning, nextBlock]} streaming renderMessageImages={renderMessageImages} />,
+    )
+    expect(view.getByRole('button').getAttribute('aria-expanded')).toBe('true')
+    view.rerender(
+      <AssistantMarkdown t={t} blocks={[reasoning, nextBlock]} streaming={false} renderMessageImages={renderMessageImages} />,
+    )
+    expect(view.getByRole('button').getAttribute('aria-expanded')).toBe('true')
+    expect(view.getByText(/Check persistence/)).toBeTruthy()
+    fireEvent.click(view.getByText('思考'))
+    expect(view.getByRole('button').getAttribute('aria-expanded')).toBe('false')
+  })
+
   it('follows the latest streaming line, then restores the settled first line', () => {
     const view = render(
       <AssistantMarkdown
@@ -24,6 +47,7 @@ describe('ReasoningRow', () => {
       />,
     )
     expect(view.getByText('运行中')).toBeTruthy()
+    expect(view.getByRole('button').getAttribute('aria-expanded')).toBe('false')
     expect(view.getByText('Newest reasoning tokens').parentElement?.getAttribute('data-follow-end'))
       .toBe('true')
 
@@ -47,6 +71,7 @@ describe('ReasoningRow', () => {
       />,
     )
     const settledSummary = view.getByText('Inspect the session')
+    expect(view.getByRole('button').getAttribute('aria-expanded')).toBe('false')
     expect(view.queryByText('运行中')).toBeNull()
     expect(settledSummary.parentElement?.hasAttribute('data-follow-end')).toBe(false)
   })
@@ -81,7 +106,7 @@ describe('ReasoningRow', () => {
       text: 'Inspect the session\n**Comparing checkout and merge bases**',
       streaming: true,
     },
-  ])('strips double-asterisk markers from the $label summary without changing the reasoning body', ({ text, streaming }) => {
+  ])('strips double-asterisk markers from the $label summary and renders body emphasis', ({ text, streaming }) => {
     const view = render(
       <AssistantMarkdown
         t={t}
@@ -95,10 +120,64 @@ describe('ReasoningRow', () => {
     expect(view.queryByText('**Comparing checkout and merge bases**')).toBeNull()
 
     fireEvent.click(view.getByText('思考'))
-    expect(view.container.querySelector('[class*="thinkBody"]')?.textContent).toBe(text)
+    expect(view.getByText('Comparing checkout and merge bases').tagName).toBe('STRONG')
+    expect(view.container.querySelector('[class*="thinkBody"]')?.textContent).not.toContain('**')
   })
 
-  it('expanded Think drops the inline summary and renders plain prose, no IN card', () => {
+  it('keeps heading syntax in the collapsed summary and renders compact headings when expanded', () => {
+    const text = Array.from({ length: 6 }, (_, index) => `${'#'.repeat(index + 1)} Section ${index + 1}`)
+      .join('\n\n') + '\n\nReasoning body.'
+    const view = render(
+      <AssistantMarkdown
+        t={t}
+        blocks={[{ kind: 'reasoning', text }]}
+        streaming={false}
+        renderMessageImages={renderMessageImages}
+      />,
+    )
+    const summary = view.getByText('# Section 1')
+    expect(summary.tagName).toBe('SPAN')
+    expect(view.queryByRole('heading')).toBeNull()
+
+    fireEvent.click(summary)
+    const compact = view.container.querySelector('[data-markdown-variant="compact"]')
+    expect(compact).not.toBeNull()
+    expect(compact?.querySelectorAll('h1, h2, h3, h4, h5, h6')).toHaveLength(6)
+    expect(compact?.querySelector('p')?.textContent).toBe('Reasoning body.')
+
+    fireEvent.click(view.getByText('思考'))
+    expect(view.getByText('# Section 1').tagName).toBe('SPAN')
+    expect(view.queryByRole('heading')).toBeNull()
+  })
+
+  it('keeps completed reasoning blocks mounted while the open streaming tail grows', () => {
+    const first = '## Investigation\n\n**Check persistence**\n\n'
+    const view = render(
+      <AssistantMarkdown
+        t={t}
+        blocks={[{ kind: 'reasoning', text: first }]}
+        streaming
+        renderMessageImages={renderMessageImages}
+      />,
+    )
+    fireEvent.click(view.getByText('思考'))
+    const heading = view.getByRole('heading', { name: 'Investigation' })
+    const emphasis = view.getByText('Check persistence')
+    const text = first + Array.from({ length: 8 }, (_, index) => `Paragraph ${index}.`).join('\n\n')
+    view.rerender(
+      <AssistantMarkdown
+        t={t}
+        blocks={[{ kind: 'reasoning', text }]}
+        streaming
+        renderMessageImages={renderMessageImages}
+      />,
+    )
+    expect(view.getByRole('heading', { name: 'Investigation' })).toBe(heading)
+    expect(view.getByText('Check persistence')).toBe(emphasis)
+    expect(view.container.querySelector('[class*="thinkBody"]')?.textContent).not.toContain('##')
+  })
+
+  it('expanded Think drops the inline summary and renders prose without an IN card', () => {
     const view = render(
       <AssistantMarkdown
         t={t}
@@ -112,5 +191,27 @@ describe('ReasoningRow', () => {
     expect(view.queryByText('IN')).toBeNull()
     expect(view.container.querySelector('[class*="ioCard"]')).toBeNull()
     expect(view.container.querySelector('[class*="thinkBody"]')).not.toBeNull()
+  })
+
+  it('anchors the sticky-header selector: only an open Think row nests the disclosure row under data-expanded and data-open', () => {
+    const view = render(
+      <AssistantMarkdown
+        t={t}
+        blocks={[
+          { kind: 'reasoning', text: 'Inspect the session\nCheck persistence' },
+          { kind: 'text', text: 'Answer' },
+        ]}
+        streaming={false}
+        renderMessageImages={renderMessageImages}
+      />,
+    )
+    // Collapsed: no `data-open`, so the sticky rule's gate never matches.
+    expect(view.container.querySelector('[data-variant="think"] [data-open]')).toBeNull()
+    fireEvent.click(view.getByText('思考'))
+    expect(
+      view.container.querySelector(
+        '[data-variant="think"][data-expanded] [data-open] [data-disclosure-row]',
+      ),
+    ).not.toBeNull()
   })
 })

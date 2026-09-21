@@ -6,11 +6,9 @@
   display: flex;
   justify-content: center;
   gap: 12px;
-  max-width: var(--dsh-chat-content-width);
-  width: 100%;
-  margin: 0 auto;
+  min-width: 0;
+  max-width: 100%;
   box-sizing: border-box;
-  padding: 4px calc(var(--dsh-composer-side-clearance) + 16px) 0px;
   font-size: var(--dsh-content-font-size-secondary, 13px);
   line-height: calc(20px + var(--dsh-content-font-delta-secondary, 0px));
 }

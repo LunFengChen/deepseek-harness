@@ -1,5 +1,5 @@
 // Recorded-session Sidebar geometry and per-Session view state through the shipped browser composition.
-import { mkdir, readFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
 import type { Browser, Locator, Page } from 'playwright'
@@ -15,6 +15,7 @@ import { connectFreshWorkspace, newEnglishPage, saveFailureShot } from './suppor
 const SNAPSHOT_DIR = fileURLToPath(new URL('../../../snapshots/web/details-session-lifecycle', import.meta.url))
 const HANDLES_EXPECTED = join(SNAPSHOT_DIR, 'handles.expected.md')
 const SIDEBAR_EXPECTED = join(SNAPSHOT_DIR, 'sidebar.expected.md')
+const BLANK_EXPECTED = join(SNAPSHOT_DIR, 'blank-session.expected.md')
 const SHOT_DIR = fileURLToPath(new URL('../../../.artifacts/screenshots/0907-sidebar-rules', import.meta.url))
 const FIXTURE = fileURLToPath(new URL('../../../snapshots/web/lifecycle-chrome/session.v3.jsonl', import.meta.url))
 const SEED_FIXTURE = fileURLToPath(new URL('../../../snapshots/web/seeded-history/session.v3.jsonl', import.meta.url))
@@ -127,17 +128,20 @@ describe.skipIf(MODE === 'record')('web e2e: details panel follows the current S
   let browser: Browser
   let page: Page
   let tripwire: ReturnType<typeof watchConsole>
+  const sessionEvents: string[] = []
 
   beforeAll(async () => {
     const fixture = await readFile(FIXTURE, 'utf8')
     expect(fixtureUserPrompts(fixture)).toEqual([PROMPT])
     scaffold = await launchWebScaffold({ replayFixture: FIXTURE, paceMs: 5, compareReplaySession: false })
     await seedSession(scaffold, await readFile(SEED_FIXTURE, 'utf8'), 'details-session-lifecycle-seed')
+    scaffold.ctx.on('session/event', (_session, event) => { sessionEvents.push(event.type) })
     browser = await chromium.launch()
     page = await newEnglishPage(browser)
     tripwire = watchConsole(page)
     await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
     await appFrame(page).waitFor({ timeout: 30_000 })
+    expect(await page.locator('[data-sidebar-right-expand]').count()).toBe(0)
     await connectFreshWorkspace(page, scaffold.workspaceCwd)
   }, 120_000)
 
@@ -154,12 +158,77 @@ describe.skipIf(MODE === 'record')('web e2e: details panel follows the current S
       await mkdir(SHOT_DIR, { recursive: true })
       await saveFailureShot(page, `screenshots/0907-sidebar-rules/details-session-lifecycle-${MODE}-${process.pid}`)
     })
+    const blankColumn = page.locator('[data-rightbar-col]')
+    const workspace = join(scaffold.workspaceCwd, 'workspace')
+    await writeFile(join(workspace, 'before-chat.md'), '# Before the first message\n\nWorkspace preview is available.\n')
+    await page.locator('[data-sidebar-right-expand]').waitFor({ state: 'visible' })
+    await page.screenshot({ path: join(SHOT_DIR, `blank-collapsed-${MODE}-${process.pid}.png`), fullPage: true })
+    await page.locator('[data-sidebar-right-expand]').click()
+    await blankColumn.locator('[data-sidebar-right-guide-entry="files"]').click()
+    await blankColumn.locator('[data-files-entry="file"]').getByRole('button', { name: 'before-chat.md', exact: true }).click()
+    await blankColumn.getByText('Workspace preview is available.', { exact: true }).waitFor()
+    await page.getByText('Into the Unknown', { exact: false }).waitFor()
+    const blankPanes = await paneSnapshot(page)
+    expect(blankPanes.map(pane => pane.tabs.map(tab => tab.title))).toEqual([['Files', 'before-chat.md']])
+    await page.screenshot({ path: join(SHOT_DIR, `blank-preview-${MODE}-${process.pid}.png`), fullPage: true })
+
+    const blankViewport = page.viewportSize()!
+    try {
+      await blankColumn.locator('[data-sidebar-right-toggle]').click()
+      await page.setViewportSize({ width: 767, height: blankViewport.height })
+      await page.locator('[data-sidebar-right-expand]').click()
+      await expect.poll(() => blankColumn.locator('[data-sidebar-right-panel]').boundingBox())
+        .toEqual({ x: 0, y: 0, width: 767, height: blankViewport.height })
+      await blankColumn.getByText('Workspace preview is available.', { exact: true }).waitFor()
+      await blankColumn.locator('[data-sidebar-right-toggle]').click()
+    } finally {
+      await page.setViewportSize(blankViewport)
+    }
+    await page.locator('[data-sidebar-right-expand]').click()
+    await blankColumn.locator('[data-dockkit-add-tab]').click()
+    await blankColumn.locator('[data-sidebar-right-guide-entry="terminal"]')
+      .getByRole('button', { name: /^New terminal/u }).click()
+    const agent = scaffold.ctx.agents.list().find(agent => agent.session.header.cwd === workspace)
+    if (agent === undefined) throw new Error('Blank Session has no workspace Agent')
+    await expect.poll(() => scaffold.ctx.terminalController.list(agent.id).map(terminal => terminal.state)).toEqual(['running'])
+    await page.locator('.xterm-helper-textarea:visible').click()
+    await page.keyboard.insertText('node -e "require(\'fs\').writeFileSync(\'before-chat-terminal.txt\',\'READY\')"')
+    await page.keyboard.press('Enter')
+    await expect.poll(() => readFile(join(workspace, 'before-chat-terminal.txt'), 'utf8')).toBe('READY')
+    expect(sessionEvents).not.toContain('turn/start')
+    expect(sessionEvents).not.toContain('user/message')
+    await blankColumn.locator('[data-dockkit-tab][aria-selected="true"]').hover()
+    // The tab disappears before the Host finishes process cleanup; close responds after quiescence.
+    const [closed] = await Promise.all([
+      page.waitForResponse('**/api/terminal/close'),
+      blankColumn.locator('[data-dockkit-tab][aria-selected="true"] [data-dockkit-tab-close]').click(),
+    ])
+    expect(await closed.json()).toMatchObject({ result: { ok: true } })
+    expect(scaffold.ctx.terminalController.list(agent.id)).toEqual([])
+    await blankColumn.locator('[data-dockkit-tab]').filter({ hasText: 'before-chat.md' }).click()
+    await compareOrRefreshGolden(BLANK_EXPECTED, [
+      '# Blank Session workspace sidebar', '',
+      '- No selected Session: expand control absent',
+      '- Selected workspace before first message: expand control visible',
+      '- Files: before-chat.md opens as a Markdown preview',
+      '- Narrow viewport: reopened preview fills the viewport',
+      '- Terminal: writes a file in the selected workspace before any user message or turn', '',
+      `\`\`\`json\n${JSON.stringify(await paneSnapshot(page), null, 2)}\n\`\`\``,
+    ].join('\n'), MODE)
+
     const settled = scaffold.whenTurnSettled()
     const input = page.locator('[data-composer-input]').first()
     await input.fill(PROMPT)
     await input.press('Enter')
     await settled
     await page.getByText('LIGHTHOUSE', { exact: true }).waitFor({ timeout: 15_000 })
+    expect(await paneSnapshot(page)).toEqual(blankPanes)
+    await blankColumn.getByText('Workspace preview is available.', { exact: true }).waitFor()
+    for (const title of ['before-chat.md', 'Files']) {
+      const tab = blankColumn.locator('[data-dockkit-tab]').filter({ hasText: title })
+      await tab.hover()
+      await tab.locator('[data-dockkit-tab-close]').click()
+    }
 
     await expect.poll(() => detailsTrack(page), { timeout: 5_000 }).toBe(0)
     expect(await page.getByText('Details', { exact: true }).isVisible()).toBe(false)
@@ -243,6 +312,7 @@ describe.skipIf(MODE === 'record')('web e2e: details panel follows the current S
 
     await select(original, 'LIGHTHOUSE')
     await open()
+    await column.locator('[data-sidebar-right-guide-entry="files"]').click()
     // The content-box panel adds its one rendered border pixel outside the
     // CSS width assigned by the grid solver.
     await expect.poll(() => sidebarSnapshot(page), { timeout: 5_000 })
@@ -256,6 +326,7 @@ describe.skipIf(MODE === 'record')('web e2e: details panel follows the current S
     await expect.poll(() => split.isDisabled()).toBe(false)
     await split.click()
     await expect.poll(() => panes.count()).toBe(2)
+    await panes.last().locator('[data-sidebar-right-guide-entry="files"]').click()
     await panes.first().locator('[data-dockkit-tab]').filter({ hasText: 'Files' }).click()
     await expect.poll(() => panes.first().locator('[data-files-state="tree"]').count()).toBe(1)
     const retainedA = await paneSnapshot(page)
@@ -278,6 +349,7 @@ describe.skipIf(MODE === 'record')('web e2e: details panel follows the current S
     await expect.poll(() => detailsTrack(page)).toBe(0)
     await open()
     expect(await panel.getAttribute('data-sidebar-right-panel')).toBe('push')
+    await column.locator('[data-sidebar-right-guide-entry="files"]').click()
     await column.locator('[data-files-state="tree"]').waitFor({ timeout: 15_000 })
     const workspaceDirectory = column.locator('[data-files-entry="directory"] > button').filter({ hasText: /^workspace$/ })
     await workspaceDirectory.waitFor({ timeout: 15_000 })
@@ -307,9 +379,9 @@ describe.skipIf(MODE === 'record')('web e2e: details panel follows the current S
     expect(await panel.getAttribute('data-sidebar-right-panel')).toBe('push')
     expect(await paneSnapshot(page)).toEqual(retainedB)
     await open()
-    await expect.poll(() => workspaceDirectory.getAttribute('aria-expanded')).toBe('true')
+    await expect.poll(() => workspaceDirectory.getAttribute('aria-expanded')).toBe('false')
     expect(await paneSnapshot(page)).toEqual(retainedB)
-    await checkpoint('B restored: normal mode and Files directory state')
+    await checkpoint('B restored: normal mode and collapsed Files directory')
     await close()
     await select(original, 'LIGHTHOUSE')
     await expect.poll(() => columns(page)).toEqual(normalColumns)
@@ -353,6 +425,6 @@ describe.skipIf(MODE === 'record')('web e2e: details panel follows the current S
     await compareOrRefreshGolden(SIDEBAR_EXPECTED, checkpoints.join('\n\n'), MODE)
     expect(tripwire.pageErrors).toEqual([])
     expect(tripwire.warnings).toEqual([])
-    await assertFixtureInventory(SNAPSHOT_DIR, ['handles.expected.md', 'sidebar.expected.md'])
+    await assertFixtureInventory(SNAPSHOT_DIR, ['handles.expected.md', 'sidebar.expected.md', 'blank-session.expected.md'])
   })
 })

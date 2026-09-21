@@ -13,7 +13,9 @@
  */
 
 // Type-only: pulls the Session Controller service merge (ctx.sessions).
-import type {} from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionBinding } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { WeakMapWithValues } from '@x1a0f3n9/dsh-util-values'
 // Type-only: pulls the locale plugin's Context merge (ctx.locale).
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
 // Type-only: pulls the ctx.remote merge and the forwarded-event key face
@@ -31,7 +33,7 @@ import { AgentPresetSeat } from './AgentPresetSeat.tsx'
 import type { AgentPresetSeatInjected } from './AgentPresetSeat.tsx'
 import { AgentPresetSection } from './AgentPresetSection.tsx'
 import type { AgentPresetSectionInjected } from './AgentPresetSection.tsx'
-import { AgentPresetSeatController } from './seat-store.ts'
+import { AgentPresetSeatController, type AgentPresetStage } from './seat-store.ts'
 import { AgentPresetSectionController } from './section-store.ts'
 import { en, zh, type AgentPresetSettingsKey } from './locales.ts'
 import { AGENT_PRESET_SETTINGS_NS, AgentPresetSettingsController } from './settings-store.ts'
@@ -55,7 +57,7 @@ export { AGENT_PRESET_SETTINGS_NS, writeDefaultPreset } from './settings-store.t
 
 /** Required services (cordis fiber inject). */
 export const inject = [
-  'slots', 'locale', 'remote', 'remote.agentPresets', 'remote.settings',
+  'slots', 'sessions', 'locale', 'remote', 'remote.agentPresets', 'remote.settings',
 ]
 
 /**
@@ -64,13 +66,40 @@ export const inject = [
  */
 export function apply(ctx: ClientContext): void {
   const controller = new AgentPresetSettingsController(ctx)
-  // One roster, three surfaces. The chip is registered in a later scope, so it
-  // subscribes here rather than being reached from this one.
-  const rosterReaders = new Set<() => void>()
+  const staged: AgentPresetStage = { id: undefined, introduce: false }
+  const seats = new WeakMapWithValues<SessionBinding, AgentPresetSeatController>()
+  const unboundSeat = new AgentPresetSeatController(ctx, () => undefined, staged)
+  const seatFor = (scope: ClientContext, binding: SessionBinding): AgentPresetSeatController => {
+    let seat = seats.get(binding)
+    if (seat !== undefined) return seat
+    seat = new AgentPresetSeatController(scope, () => {
+      if (scope.sessions.binding(binding.sessionId) !== binding) return undefined
+      const summary = scope.sessions.list.getSnapshot().byId[binding.sessionId]
+      return summary !== undefined
+        && (scope.sessions.retainInfo(binding.sessionId).getSnapshot().retainedBy.mainView ?? 0) > 0
+        ? summary
+        : undefined
+    }, staged)
+    seats.set(binding, seat)
+    binding.ctx.effect(() => () => {
+      seats.delete(binding)
+    }, 'ui-agent-preset: Provider binding')
+    return seat
+  }
   const section = new AgentPresetSectionController(ctx, () => {
     void controller.load()
-    for (const read of rosterReaders) read()
+    void unboundSeat.load()
+    for (const seat of seats.values) void seat.load()
   })
+  const mainBlankSeat = (scope: ClientContext): AgentPresetSeatController | undefined => {
+    const summary = Object.values(scope.sessions.list.getSnapshot().byId)
+      .find((session) => {
+        /* v8 ignore next -- retained source counts omit zero-valued entries. */
+        return session.blank && (session.retainedBy.mainView ?? 0) > 0
+      })
+    const binding = summary === undefined ? undefined : scope.sessions.binding(summary.id)
+    return binding === undefined ? undefined : seatFor(scope, binding)
+  }
 
   ctx.effect(() => ctx.locale.register('settings.agentPreset', { zh, en }), 'ui-agent-preset: settings row dictionaries')
 
@@ -82,6 +111,8 @@ export function apply(ctx: ClientContext): void {
       // The section reads the same roster and marks the same default, so a
       // change made from either surface converges both.
       if (section.store.getSnapshot().status !== 'idle') void section.load()
+      void unboundSeat.load()
+      for (const seat of seats.values) void seat.load()
     }
     const disposers = [
       ctx.remote.$on('settings/document-updated', (ns) => {
@@ -90,7 +121,6 @@ export function apply(ctx: ClientContext): void {
       }),
       ctx.on('connection/reset', () => {
         refresh()
-        for (const read of rosterReaders) read()
       }),
     ]
     return () => { for (const dispose of disposers) dispose() }
@@ -102,22 +132,17 @@ export function apply(ctx: ClientContext): void {
   // unbound with it, so the section's face reads the current binding per
   // render and simply hides the button while no flow exists.
   let creatorDraft: (() => void) | undefined
-  let activeSeat: AgentPresetSeatController | undefined
-
-  // The new-session chip and the header label: one controller, because the
-  // staged choice belongs to the flow rather than to any one session.
   ctx.inject(['slots', 'conversation', 'sessions', 'uiWorkspace'], (scope: ClientContext) => {
-    const seat = new AgentPresetSeatController(scope, () => {
-      const state = scope.sessions.list.getSnapshot()
-      return state.current === undefined ? undefined : state.byId[state.current]
-    })
-    activeSeat = seat
-    const seatInjected = (): AgentPresetSeatInjected => ({
-      hooks: { agentPresetSeat: seat.store },
-      load: () => seat.load(),
-      select: (id: string) => seat.select(id),
-      introduced: () => { seat.introduced() },
-    })
+    const seatInjected = (sessionId: SessionId | undefined): AgentPresetSeatInjected => {
+      const binding = sessionId === undefined ? undefined : scope.sessions.binding(sessionId)
+      const seat = binding === undefined ? unboundSeat : seatFor(scope, binding)
+      return {
+        hooks: { agentPresetSeat: seat.store },
+        load: () => seat.load(),
+        select: (id: string) => seat.select(id),
+        introduced: () => { seat.introduced() },
+      }
+    }
 
     const labelInjected = (): AgentPresetLabelInjected => ({
       hooks: { agentPresets: controller.store },
@@ -125,35 +150,12 @@ export function apply(ctx: ClientContext): void {
     })
 
     scope.effect(() => {
-      // Connecting a workspace either creates a blank session or reuses one,
-      // and either way the chip's pick predates it — so the stage is applied
-      // when the session arrives, not when it was made.
-      const stop = scope.sessions.list.subscribe(() => { void seat.apply() })
-      // The chip opens on the deployment default, so a default changed from
-      // the settings surface moves it too — otherwise the screen that starts
-      // the next session keeps offering the previous default until a reload,
-      // which is exactly the session the setting claims to govern. A staged
-      // pick survives: `load()` prefers it over the refreshed fallback.
-      const settingsMoved = scope.remote.$on('settings/document-updated', (ns) => {
-        if (ns !== AGENT_PRESET_SETTINGS_NS) return
-        void seat.load()
-      })
-      // Authoring writes a FILE, not a setting, so nothing on the wire
-      // announces it — without this the screen that starts the next session
-      // keeps offering the roster as it stood when the chip first loaded, and
-      // a preset authored to be used is missing from the one place it is used.
-      const readRoster = (): void => { void seat.load() }
-      rosterReaders.add(readRoster)
-      // Stage WITHOUT applying — the still-current running session would
-      // refuse the swap and drop the stage — then start the session it lands
-      // on: the chip's list-change applier composes the blank session the
-      // workspace connect produces or reuses.
       creatorDraft = () => {
         if (!section.store.getSnapshot().showPicker) return
-        // The introduce cue makes the chip announce the pick the user never
-        // made on this screen — the stage happened back in settings.
+        const seat = mainBlankSeat(scope) ?? unboundSeat
         seat.stage('cordis', true)
         scope.uiWorkspace.startSession()
+        void seat.apply()
       }
       const chip = scope.slots.register({
         name: 'conversation.hero.agentPreset',
@@ -169,11 +171,7 @@ export function apply(ctx: ClientContext): void {
         inject: labelInjected,
       }, AgentPresetLabel)
       return () => {
-        stop()
-        settingsMoved()
-        rosterReaders.delete(readRoster)
         creatorDraft = undefined
-        activeSeat = undefined
         chip()
         label()
       }
@@ -182,10 +180,14 @@ export function apply(ctx: ClientContext): void {
 
   /** Capture the exact blank Session one Settings action may update. */
   const captureBlankSessionSync = (): ((id: string) => Promise<string | undefined>) => {
-    const seat = activeSeat
+    const summary = Object.values(ctx.sessions.list.getSnapshot().byId)
+      .find(session => session.blank && (session.retainedBy.mainView ?? 0) > 0)
+    const binding = summary === undefined ? undefined : ctx.sessions.binding(summary.id)
+    const seat = binding === undefined ? undefined : seats.get(binding)
     const sessionId = seat?.blankSessionId()
     return async (id: string) => {
-      if (seat === undefined || sessionId === undefined || activeSeat !== seat) return undefined
+      if (seat === undefined || sessionId === undefined || binding === undefined
+        || seats.get(binding) !== seat) return undefined
       return await seat.syncBlankSession(sessionId, id)
     }
   }

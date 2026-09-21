@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-With `dsh-typert-protocol`, business packages can expose Host methods to Remote clients: mark a method with `@Remote` (or `@RemoteScope` for scoped receivers), bind the service to a wire namespace, and associate Host objects and scoped Contexts with wire identities through the merge-extensible protocol maps. Generated artifacts, the Host Gateway, and the Client API consume the same invocation descriptors, codecs, and provider contracts, so one declaration set stays in sync across every face. The package registers no Cordis service and runs no TypeScript analysis; it declares types and decorator markers only.
+With `dsh-typert-protocol`, business packages can expose Host methods to Remote clients: mark a method with `@Remote` (or `@RemoteScope` for scoped receivers), bind the service to a wire namespace, and associate Host objects and scoped Contexts with wire identities through the merge-extensible protocol maps. Generated artifacts, the Host Gateway, and the Client API consume the same invocation descriptors, codecs, and provider contracts. Invocation-owned values transfer cleanup to Gateway without adding a reference count. The package registers no Cordis service and runs no TypeScript analysis.
 
 ## Table of Contents
 
@@ -47,6 +47,8 @@ Generation turns the method into a wire endpoint under the service's namespace; 
 ### Associating Host objects and Contexts with wire identities
 
 Complex Host objects cannot cross the wire directly. A business package declares the association through the merge-extensible `TypertLookupMap` and `TypertContextMap`. A Host Context adapter owns the stable wire declaration and resolves wire identities to live Contexts. A Client Context adapter maps in both directions because scoped calls originate from a Client Context and forwarded Host events resolve their explicit wire identity there. Host composition may override its synchronous or asynchronous resolver. A resolver that refuses on policy grounds throws `RemoteError` with its own code, which reaches the caller unchanged.
+
+Client Context resolution is synchronous. `typertOwnedValue(value, release)` transfers a non-throwing, idempotent cleanup to the invocation owner; Gateway calls it after handler and reply settlement. A borrowed Context requires no cleanup wrapper. The shared `TYPERT_OWNED_VALUE` symbol and `isTypertOwnedValue` recognizer work across independently bundled providers and Gateway; the wrapper itself does not retain a resource.
 
 ### Reporting and reading a Remote failure
 
@@ -91,7 +93,7 @@ The merge-extensible protocol maps keep static associations in the type system, 
 
 ### Wire identity grammar
 
-Every namespace, method, lookup, and Context segment must satisfy `isTypertRemoteSegment()`, so generated names cross the shared RPC carrier unchanged. Strict codecs carry generated schemas; `src-json` codecs identify the weaker source-launch path.
+Every namespace, method, lookup, and Context segment must satisfy `isTypertRemoteSegment()`, so generated names cross the shared RPC carrier unchanged. Strict codecs carry generated schema factories; `src-json` codecs identify the weaker source-launch path.
 
 ### Source map
 

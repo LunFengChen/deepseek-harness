@@ -56,7 +56,7 @@ export function registerChatNodeRenderers(ctx: Context): void {
     key: 'turn-tail',
     locale: NS,
     children: {
-      'conversation.chat.turnTail': { kind: 'chain', scope: 'session' },
+      'conversation.chat.turnTail': { kind: 'list', scope: 'session' },
       'conversation.chat.assistant-actions': { kind: 'list', scope: 'session' },
     },
   }, TurnTailNodeView))

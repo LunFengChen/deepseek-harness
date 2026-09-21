@@ -5,6 +5,7 @@ import { act } from '@testing-library/react'
 import { SlotTestRuntime } from '@x1a0f3n9/dsh-client-test-runtime'
 import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import type { UseSidebarRightTabInfo } from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
+import { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { DocumentPreviewRegistry } from '../src/client/document/registry.ts'
 import { documentTabInfoFactory } from '../src/client/document/contract.ts'
 import { apply, MARKDOWN_BODY_ID, markdownDefinition } from '../src/client/markdown/index.ts'
@@ -42,7 +43,10 @@ describe('Markdown implementation registration', () => {
     runtime.ctx.provide('locale', locale)
     runtime.slots.installLocale(locale)
     locale.setLocale('en')
-    await runtime.sessions.add({ id: 'markdown-registration' })
+    const sessionId = SessionId('markdown-registration')
+    await runtime.sessions.add({ id: sessionId })
+    const reference = runtime.sessions.retainFor(runtime.ctx, sessionId)
+    await reference.ready
     const feature = await runtime.mount({ inject: ['slots', 'locale', 'documentPreviews'], apply })
     expect(previews.getSnapshot().map(definition => definition.id)).toEqual([MARKDOWN_BODY_ID])
     const useTabInfo = vi.fn<UseSidebarRightTabInfo>(() => { throw new Error('Markdown rendering does not need tab actions') })
@@ -50,12 +54,20 @@ describe('Markdown implementation registration', () => {
       'sidebar.right.tab.document': {
         kind: 'keyed', scope: 'session', inject: { hooks: { tabInfo: documentTabInfoFactory } },
       },
-    }, ({ renderSlot }) => renderSlot('sidebar.right.tab.document', {
-      resourceAddress: 'dsh-resource://file/session/markdown-registration/notes.md',
-      content: { kind: 'text', text: '# Notes\n\n```ts\nconst value = 1\n```', pages: [], eof: true },
-      wrap: false,
-      scrollportRef: vi.fn(),
-    }, { entryKey: MARKDOWN_BODY_ID, hookContext: useTabInfo, fallback: <span data-missing-markdown /> }))
+    }, ({ renderSlot, SessionProvider }) => (
+      <SessionProvider session={reference}>
+        {renderSlot('sidebar.right.tab.document', {
+          resourceAddress: 'dsh-resource://file/session/markdown-registration/notes.md',
+          content: { kind: 'text', text: '# Notes\n\n```ts\nconst value = 1\n```', pages: [], eof: true },
+          wrap: false,
+          scrollportRef: vi.fn(),
+        }, {
+          entryKey: MARKDOWN_BODY_ID,
+          hookContext: useTabInfo,
+          fallback: <span data-missing-markdown />,
+        })}
+      </SessionProvider>
+    ))
     const view = runtime.renderRoot()
     expect(view.getByRole('heading', { name: 'Notes' })).toBeDefined()
     expect(view.getByRole('button', { name: 'Copy' })).toBeDefined()

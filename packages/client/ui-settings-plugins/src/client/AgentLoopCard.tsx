@@ -1,30 +1,29 @@
-/** The agent loop's card: how many tool calls one step may run at once. */
+/** The agent loop's configuration page: how many tool calls one step may run at once. */
 
+import type {} from '@x1a0f3n9/dsh-client-ui-plugin-manager/client'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import { ValueField } from './fields.tsx'
-import { PluginCard } from './PluginCard.tsx'
+import { PluginConfigForm } from './PluginConfigForm.tsx'
 import type { AgentLoopCardFace } from './agent-loop-card-controller.ts'
-import type {} from './slot-contract.ts'
 
-/** Props the renderer binds for the agent-loop card. */
+/** Props the renderer binds for the agent-loop page. */
 export type AgentLoopCardProps =
-  PropsRuntime<'settings.plugin.item'>
+  PropsRuntime<'plugins.item'>
   & PropsLocale<'settings.plugins'>
   & InjectFace<AgentLoopCardFace>
 
 /**
- * Render the agent-loop card.
- * @param props - locale copy, the card snapshot, and its form actions.
- * @returns the card.
+ * Render the agent loop's one-liner or its configuration form, as the Plugins page asks.
+ * @param props - the view asked for, locale copy, the form snapshot, and its actions.
+ * @returns the one-liner, or the form.
  */
 export function AgentLoopCard(props: AgentLoopCardProps) {
   const { t } = props
   const state = props.useAgentLoopCard(snapshot => snapshot)
+  if (props.view === 'summary') return t('agentLoopDescription')
   return (
-    <PluginCard
+    <PluginConfigForm
       t={t}
-      titleKey="agentLoopTitle"
-      descriptionKey="agentLoopDescription"
       state={state}
       onSave={props.save}
       onDiscard={props.discard}
@@ -42,6 +41,6 @@ export function AgentLoopCard(props: AgentLoopCardProps) {
         onEdit={(text) => { props.edit('maxParallelToolCalls', text) }}
         onReset={() => { props.resetField('maxParallelToolCalls') }}
       />
-    </PluginCard>
+    </PluginConfigForm>
   )
 }

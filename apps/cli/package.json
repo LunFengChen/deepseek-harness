@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh",
-  "description": "dsh CLI: profile boot, plugin management, and the browser UI alias",
-  "version": "0.1.5-rc.5",
+  "description": "dsh CLI: profile launch, plugin management, and configuration inspection",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -15,7 +15,8 @@
     "xfdsh": "lib/bin.js"
   },
   "files": [
-    "lib/*.js"
+    "lib/*.js",
+    "lib/types/*.d.ts"
   ],
   "dsh": {
     "configTrees": [
@@ -29,7 +30,7 @@
   "license": "MIT",
   "dependencies": {
     "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/cordis-plugin-hmr": "workspace:^",
+    "@x1a0f3n9/dsh-hmr": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
     "@deepseek-ai/cordis-plugin-timer": "workspace:^",
@@ -46,6 +47,8 @@
     "@x1a0f3n9/dsh-compaction-basic": "workspace:^",
     "@x1a0f3n9/dsh-compaction-tool-result-pruner": "workspace:^",
     "@x1a0f3n9/dsh-cordis-client-runner": "workspace:^",
+    "@x1a0f3n9/dsh-experimental-agent-team-profile": "workspace:^",
+    "@x1a0f3n9/dsh-experimental-agent-team-web-profile": "workspace:^",
     "@x1a0f3n9/dsh-fs-local": "workspace:^",
     "@x1a0f3n9/dsh-goal": "workspace:^",
     "@x1a0f3n9/dsh-goal-round-driver": "workspace:^",
@@ -94,12 +97,15 @@
     "@x1a0f3n9/dsh-web-app": "workspace:^",
     "@x1a0f3n9/dsh-webhook": "workspace:^",
     "@x1a0f3n9/dsh-webhook-github": "workspace:^",
-    "@x1a0f3n9/dsh-workflow-worker-thread": "workspace:^",
+    "@x1a0f3n9/dsh-workflow-ptc": "workspace:^",
     "@deepseek-ai/schemastery": "workspace:^",
     "commander": "^15.0.0",
     "js-yaml": "^4.2.0",
-    "node-addon-require-builtin": "^0.1.4",
-    "@x1a0f3n9/dsh-http-proxy": "workspace:^"
+    "node-addon-require-builtin": "^0.1.6",
+    "@x1a0f3n9/dsh-http-proxy": "workspace:^",
+    "@x1a0f3n9/dsh-mcp-resources": "workspace:^",
+    "@x1a0f3n9/dsh-plugin-manager": "workspace:^",
+    "@x1a0f3n9/dsh-atomic-write": "workspace:^"
   },
   "devDependencies": {
     "@agentclientprotocol/sdk": "1.4.0",
@@ -110,8 +116,7 @@
     "@x1a0f3n9/dsh-credentials-local": "workspace:^",
     "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
     "@x1a0f3n9/dsh-experimental-agent-team": "workspace:^",
-    "@x1a0f3n9/dsh-experimental-agent-team-profile": "workspace:^",
-    "@x1a0f3n9/dsh-experimental-code-runtime-python": "workspace:^",
+    "@x1a0f3n9/dsh-experimental-ptc-runtime-python": "workspace:^",
     "@x1a0f3n9/dsh-experimental-tool-agent-team": "workspace:^",
     "@x1a0f3n9/dsh-fs-observation-policy": "workspace:^",
     "@x1a0f3n9/dsh-fs-sandbox": "workspace:^",
@@ -145,5 +150,13 @@
     "@types/ws": "8.18.1",
     "execa": "^10.0.0",
     "ws": "8.21.0"
+  },
+  "exports": {
+    "./profile-boot": {
+      "types": "./lib/types/profile-boot.d.ts",
+      "default": "./lib/profile-boot.js"
+    },
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json"
   }
 }

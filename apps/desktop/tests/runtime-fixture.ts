@@ -26,12 +26,20 @@ export function writePackage(modules: string, name: string, fields: Record<strin
  * Seal a minimal release containing Host entry files and a shared Cordis package.
  * @param root - New runtime directory.
  * @param version - Shell and dsh version.
- * @param nodeVersion - Bundled Node version used for native rebuild selection.
+ * @param nodeVersion - Bundled Node version recorded in resource metadata.
  * @returns Sealed runtime metadata.
  */
 export function runtimeFixture(root: string, version = '1.0.0', nodeVersion = '24.17.0'): DesktopRuntimeDescriptor {
   const names = ['@x1a0f3n9/dsh', '@x1a0f3n9/dsh-desktop-host', '@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@deepseek-ai/cordis']
-  for (const name of names) writePackage(join(root, 'node_modules'), name, { version })
+  for (const name of names) {
+    const bundle = name === '@x1a0f3n9/dsh-base' || name === '@x1a0f3n9/dsh-web-app'
+    const path = writePackage(join(root, 'node_modules'), name, {
+      version,
+      ...(name === '@x1a0f3n9/dsh' ? { dependencies: Object.fromEntries(names.slice(1).map(dependency => [dependency, version])) } : {}),
+      ...(bundle ? { dsh: { bundle: { patch: './bundle.yml' } } } : {}),
+    })
+    if (bundle) writeFileSync(join(path, 'bundle.yml'), '[]\n')
+  }
   for (const file of DESKTOP_HOST_RUNTIME_FILES) {
     const path = join(root, 'node_modules', '@x1a0f3n9/dsh-desktop-host', file)
     mkdirSync(join(path, '..'), { recursive: true })

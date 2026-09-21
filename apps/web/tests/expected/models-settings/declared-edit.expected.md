@@ -7,12 +7,15 @@
     - button "模型":
       - img
       - text: 模型
-    - button "插件":
+    - button "内置插件":
       - img
-      - text: 插件
+      - text: 内置插件
     - button "Agent 预设":
       - img
       - text: Agent 预设
+    - button "已归档会话":
+      - img
+      - text: 已归档会话
   - button "打开配置文件"
   - button "关闭":
     - img
@@ -55,9 +58,25 @@
             - text: acme-large
           - textbox "显示名称 1":
             - /placeholder: 显示名称
-          - button "容量 1"
-          - button "删除模型 1"
-          - button "添加模型"
+          - button "模型选项 1" [expanded]:
+            - img
+          - button "删除模型 1":
+            - img
+          - text: 上下文窗口
+          - textbox "上下文窗口 1":
+            - /placeholder: 256K
+          - text: 最大输出 token 数
+          - textbox "最大输出 token 数 1":
+            - /placeholder: 32K
+          - group "输入类型 1":
+            - text: 输入类型
+            - checkbox "文本" [checked]
+            - text: 文本
+            - checkbox "图片" [checked]
+            - text: 图片
+          - button "添加模型":
+            - img
+            - text: 添加模型
       - button "取消"
       - button "保存"
   - button "添加提供方":

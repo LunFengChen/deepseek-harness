@@ -51,7 +51,7 @@ Web 用户需要从同一个 `@` 补全菜单提及文件、文件夹或会话�
 
 ### 候选流程
 
-对于未加引号的 token，浏览器会同时启动 `fileReferences/list` 与 `sessionReferenceResolver/candidates` Remote 调用，再以确定性顺序把文件排在会话之前，并使用注册在 locale 字典中的文件夹、文件与会话标签。各行分别渲染在不可选择的文件与会话分组标题下，不显示重复的原始 `reference` source 标题。会话行用宿主会话列表的 `updatedAt` 经该列表相同的相对时间分档标注时间，因此同一个会话在两处读到的时长一致；列表中没有的会话回落到候选自带的创建时间。下钻后的查询会发布一条从工作区根目录到当前所列目录的面包屑；每一节携带的下钻载荷与文件夹行相同，因此「回到某一步」与「进入某一层」是同一个结果。
+对于未加引号的 token，浏览器会同时启动 `fileReferences/list` 与 `sessionReferenceResolver/candidates` Remote 调用，再按文件、当前 Session 的直接 subagent、其他 Session 的确定性顺序排列。各行使用 resolver 的显示标题；subagent 优先使用创建标签，普通 Session 保持投影标题，并渲染在 locale 管理的分组标题下，不显示重复的原始 `reference` source 标题。会话行用宿主会话列表的 `updatedAt` 经该列表相同的相对时间分档标注时间，因此同一个会话在两处读到的时长一致；列表中没有的会话回落到候选自带的创建时间。下钻后的查询会发布一条从工作区根目录到当前目录的面包屑；每一节携带的下钻载荷与文件夹行相同，因此「回到某一步」与「进入某一层」是同一个结果。
 
 ### 序列化
 

@@ -200,7 +200,7 @@ describe('WebhookRuntime', () => {
     ].map(path => readFileSync(new URL(path, import.meta.url), 'utf8')).join('\n')
     const forbidden: ReadonlyArray<readonly [string, RegExp]> = [
       ['execution records', /\bWebhook(?:Execution|Status)\b/],
-      ['delivery storage domains', /@deepseek-ai\/dsh-storage|\bstorageDomain\b|\bDomainSpec\b/],
+      ['delivery storage domains', /@x1a0f3n9\/dsh-storage|\bstorageDomain\b|\bDomainSpec\b/],
       ['retry timers', /\bset(?:Timeout|Interval)\s*\(/],
       ['delivery-id dedupe maps', /new Map<\s*WebhookDeliveryId/],
       ['Agent idle waits', /\.whenIdle\s*\(/],

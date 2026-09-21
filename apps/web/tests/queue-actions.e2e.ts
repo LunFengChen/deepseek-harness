@@ -27,6 +27,7 @@ const PRESERVED_EXPECTED = join(SNAPSHOT_DIR, 'preserved.expected.md')
 const PRESERVED_EXPANDED_EXPECTED = join(SNAPSHOT_DIR, 'preserved-expanded.expected.md')
 const UI_EXPECTED = join(SNAPSHOT_DIR, 'ui.expected.md')
 const SENDING_EXPECTED = join(SNAPSHOT_DIR, 'sending.expected.md')
+const WRITER_HELD_EXPECTED = join(SNAPSHOT_DIR, 'writer-held.expected.md')
 const FAILED_EXPECTED = join(SNAPSHOT_DIR, 'failed.expected.md')
 const MODE = webSnapshotMode()
 
@@ -232,6 +233,29 @@ describe('web e2e: queue row actions', () => {
     ].join('\n')
     await compareOrRefreshGolden(FAILED_EXPECTED, failed, MODE)
 
+    await page.route('**/api/session/prompt', async (route) => {
+      const envelope = route.request().postDataJSON() as { rpcId: string }
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        json: {
+          type: 'server-response', rpcId: envelope.rpcId,
+          result: {
+            ok: false,
+            error: { code: 'session/writer-held', message: 'writer held', details: { sessionId: 'held-session' } },
+          },
+        },
+      })
+    }, { times: 1 })
+    await input.press('Enter')
+    const writerHeld = page.getByRole('alert').filter({ hasText: 'This session is already in use' })
+    await writerHeld.waitFor()
+    await expect.poll(() => input.textContent()).toBe(FAILED)
+    await compareOrRefreshGolden(WRITER_HELD_EXPECTED, [
+      await writerHeld.ariaSnapshot(),
+      await captureStableAria(page, '[data-composer-card]', scaffold.workspaceCwd),
+    ].join('\n'), MODE)
+
     await input.fill(TAIL)
     await input.press('Enter')
     await expect.poll(
@@ -373,7 +397,7 @@ describe('web e2e: queue row actions', () => {
       [
         'collapsed.expected.md', 'editing.expected.md', 'layout.expected.md',
         'preserved.expected.md', 'preserved-expanded.expected.md', 'ui.expected.md',
-        'sending.expected.md', 'failed.expected.md',
+        'sending.expected.md', 'failed.expected.md', 'writer-held.expected.md',
       ],
     )
   })

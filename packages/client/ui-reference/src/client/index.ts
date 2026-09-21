@@ -63,15 +63,26 @@ export function apply(ctx: ClientContext): void {
       const now = Date.now()
       const home = ctx.remote.$host.home
       const listed = sessions.list.getSnapshot().byId
+      const sessionRows = sessionItems.map((candidate) => {
+        const summary = listed[candidate.sessionId]
+        const child = summary?.origin === 'subagent' && summary.parentId === session.sessionId
+        return {
+          child,
+          row: sessionCandidate(
+            candidate,
+            candidate.displayTitle ?? candidate.label,
+            summary?.updatedAt ?? candidate.createdAt,
+            now,
+            home,
+            t(child ? 'section.subagents' : 'section.sessions'),
+            t,
+          ),
+        }
+      })
       return [
         ...fileItems.flatMap(candidate => fileCandidate(candidate, quoted === true, withLocation, t)),
-        ...sessionItems.map(candidate => sessionCandidate(
-          candidate,
-          listed[candidate.sessionId]?.updatedAt ?? candidate.createdAt,
-          now,
-          home,
-          t,
-        )),
+        ...sessionRows.filter(item => item.child).map(item => item.row),
+        ...sessionRows.filter(item => !item.child).map(item => item.row),
       ]
     },
     header(_session: ClientSessionContext, req) {
@@ -214,9 +225,11 @@ function fileCandidate(
 
 function sessionCandidate(
   candidate: SessionReferenceMentionCandidate,
+  label: string,
   updatedAt: number,
   now: number,
   home: string | undefined,
+  section: string,
   t: Translate,
 ) {
   const { unit, n } = relativeTime(updatedAt, now)
@@ -228,14 +241,14 @@ function sessionCandidate(
     : candidate.cwd === undefined ? t('candidate.noCwd') : abbreviateHomePath(candidate.cwd, home)
   const value: ReferenceCandidateValue = {
     kind: 'session',
-    label: candidate.label,
+    label,
     mention: candidate.mention,
   }
   return {
-    name: candidate.label,
+    name: label,
     description: location === undefined ? age : `${location} · ${age}`,
     icon: 'session' as const,
-    section: t('section.sessions'),
+    section,
     value: JSON.stringify(value),
   }
 }

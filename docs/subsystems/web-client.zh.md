@@ -11,7 +11,7 @@ Web Client 是由独立加载插件组装而成的浏览器侧 Cordis 应用。�
 | Host 应用 | 业务 service 与 `packages/api/*-controller` Host entry | 拥有权威状态、持久化、mutation 顺序、访问策略与 stream 生产。 |
 | 传输与 API assembly | `client/connection`、`api/gateway`、`api/remotes` | 建立 Client generation，公开生成的 `ctx.remote` method 与 stream，转发选定的 Cordis event，并承载取消和结果。 |
 | Client model | `api/session-controller/client`、`api/workspace-controller/client` | 维护不依赖 React 的 Host 状态镜像，处理 stream/unary 竞态，拥有对象 identity 与订阅，并公开收窄的 command service。 |
-| UI adapter | `client/ui-session`、`client/ui-workspace` | 把 model observable 转换为 root 或 Session scope 的标准 Slot source，不接管业务状态所有权。 |
+| UI adapter | `client/ui-session`、`client/ui-workspace` | 把 model observable 转换为 root 或 Provider 绑定的 Session Slot source，并拥有视图级导航与状态策略。 |
 | Conversation 数据 | `client/ui-conversation`、`ui-chat` 与 `ui-trajectory` 等 target package | 把标准 event 与紧凑的 Assistant 历史批次组装成相互独立的 target snapshot，并拥有共享的 Conversation shell 与输入流程。 |
 | 组合与渲染 | `client/ui-slots`、`client/ui-renderer`、`client/ui-layout`、各 UI 功能包 | 声明扩展位置、推导组件 props、把 observable 绑定成 React hook，并挂载最终组件树。 |
 
@@ -37,9 +37,9 @@ Connection 拥有 request correlation、`/api` carrier、trust check、精确 Fe
 
 ### Sessions
 
-[`api/session-controller`](../../packages/api/session-controller/README.zh.md)公开 Session list、search、creation、selection data、prompt、queue、cancellation、pagination 及 follow/control stream 等 Host command。其 Client 侧按 `ClientSessions → SessionManager → Session` 组织：
+[`api/session-controller`](../../packages/api/session-controller/README.zh.md)公开 Session list、search、creation、prompt、queue、cancellation、pagination 及 follow/control stream 等 Host command。其 Client 侧按 `ClientSessions → SessionManager → Session` 组织：
 
-- `ClientSessions` 提供 `ctx.sessions`，拥有 Session scope 与稳定的 `SessionBinding` object，并投影选中的 list state。
+- `ClientSessions` 提供 `ctx.sessions`，拥有 reference、source count、Session scope 与稳定的 `SessionBinding` object，并投影不含全局 current Session 选择的 catalog state。
 - `SessionManager` 拥有 list baseline、实时 list/control update、惰性 Session instance、queue、projection store、subagent catalog，以及 pull 与后到 update 之间的冲突顺序。
 - 每个 `Session` 拥有一段由 `SessionEventLikeEntry` value 表示的连续逻辑 event window、pagination、follow、prompt/control state 与供 adapter 消费的 observable snapshot。
 
@@ -47,13 +47,13 @@ Connection 拥有 request correlation、`/api` carrier、trust check、精确 Fe
 
 ### Workspaces
 
-[`api/workspace-controller`](../../packages/api/workspace-controller/README.zh.md)把 Workspace mutation policy 与权威 follow feed 留在 Host。`ClientWorkspaceModel` 拥有浏览器侧 row、order、archived Session id、command echo，以及 stream/unary 竞态合并。每代 stream 先给出完整 baseline，再给出 `upsert`、`remove`、`order` 和 `archived` increment；重连时以新 baseline 替换 model。`WorkspaceController` 把该 model 作为 `ctx.workspaces` 公开，而 `ui-workspace` 向 UI 提供 `useWorkspaces` 与 navigation callback。
+[`api/workspace-controller`](../../packages/api/workspace-controller/README.zh.md)把 Workspace mutation policy 与权威 follow feed 留在 Host。`ClientWorkspaceModel` 拥有浏览器侧 row、order、archived Session id、command echo，以及 stream/unary 竞态合并。每代 stream 先给出完整 baseline，再给出 `upsert`、`remove`、`order` 和 `archived` increment；重连时以新 baseline 替换 model。`WorkspaceController` 把该 model 作为 `ctx.workspaces` 公开，而 `ui-workspace` 向 UI 提供 `useWorkspaces` 与 navigation callback。archived Session id 过滤每一个分组视图，并驱动「已归档会话」设置页；该页把该集合与已加载的 Session summary 合并，为每行提供一个取消归档操作。恢复会调用 `workspace.unarchiveSession` Remote，返回的完整集合则经 `archived` increment 到达每个 Client。
 
 这种配对不会产生第二份业务真相。Host controller 决定持久状态与 mutation outcome；Client model 维护最新可用的本地 projection，在有利于渲染时保持 object identity，并明确 delayed response 与 replacement baseline 的合并规则。
 
 ## Conversation 与 presentation
 
-`ui-session` 安装 `session` scope adapter，并提供 `useSessions`、`useSession`、`sessionId` 和 `useProjection`。领域 adapter 可以继续添加标准 source，但不会把 React hook 放进 model object。
+`ui-session` 安装 Session scope adapter，并提供 `useSessions`、`useSessionStatus`、`useSessionRetainInfo`、`useSession`、`sessionId` 和 `useProjection`。`SessionProvider` 可以继承外围 binding，也可以绑定显式 `SessionReference`，因此并存子树可以指向不同 Session。领域 adapter 可以继续添加标准 source，但不会把 React hook 放进 model object。
 
 `ui-conversation` 对每个 `SessionBinding.eventSource` 只绑定一次。它的 event registry 把持久 Session event 与 Client-only `assistant/live-chunk` update 关联成稳定的业务 Context，view registry 则 materialize target snapshot。Chat Assistant、Trajectory Assistant 与 Turn Tail 同时解释 live chunk 和持久 settlement 中嵌入的紧凑 stream，因此重连与分页历史无需持久 token 行即可复现相同 Assistant 状态。`ui-chat` 与 `ui-trajectory` 分别注册自己的 Definition 和 builder：它们可以解释同一 event family，但不会导入或共享彼此的最终 display model。Shell 选择一个已注册 view，再通过标准 hook 与 Slot 交付其 snapshot。[Conversation](conversation.zh.md)定义 Context identity、replay、Location data、target builder 与 keyed renderer。
 

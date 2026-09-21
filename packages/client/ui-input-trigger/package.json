@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-input-trigger",
   "description": "Input trigger pipeline: '/' and '@' detection, candidate menu, pick routing to registered sources",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -58,6 +58,7 @@
     "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
     "@x1a0f3n9/dsh-client-store": "workspace:^",
     "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-util-values": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
     "clsx": "^2.0.0"
   },

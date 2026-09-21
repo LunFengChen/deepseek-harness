@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-app-boot",
   "description": "Shared boot glue for the app bins: .env loading, fail-loud Loader guards, snapshot-aware config resolution, and the Loader boot sequence",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -18,11 +18,16 @@
       "types": "./lib/types/index.d.ts",
       "default": "./lib/index.js"
     },
+    "./worker/profile-resolution-bootstrap": {
+      "types": "./lib/types/profile-resolution/worker-bootstrap.d.ts",
+      "default": "./lib/worker/profile-resolution-bootstrap.js"
+    },
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
   "files": [
     "lib/index.js",
+    "lib/worker/profile-resolution-bootstrap.js",
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
@@ -30,11 +35,11 @@
     "@x1a0f3n9/dsh-atomic-write": "workspace:^",
     "@x1a0f3n9/dsh-package-manifest": "workspace:^",
     "js-yaml": "^4.2.0",
+    "node-addon-require-builtin": "^0.1.6",
     "resolve.exports": "^2.0.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis-plugin-group": "workspace:^",
-    "@deepseek-ai/cordis-plugin-hmr": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
     "@x1a0f3n9/dsh-launch-environment": "workspace:^",
@@ -42,14 +47,8 @@
     "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
-  "peerDependenciesMeta": {
-    "@deepseek-ai/cordis-plugin-hmr": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-group": "workspace:^",
-    "@deepseek-ai/cordis-plugin-hmr": "workspace:^",
     "@deepseek-ai/cordis-plugin-include": "workspace:^",
     "@deepseek-ai/cordis-plugin-loader": "workspace:^",
     "@deepseek-ai/cordis-plugin-timer": "workspace:^",
@@ -57,7 +56,6 @@
     "@x1a0f3n9/dsh-home-paths": "workspace:^",
     "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@types/js-yaml": "^4.0.9",
-    "@deepseek-ai/cordis": "workspace:^",
-    "chokidar": "4.0.3"
+    "@deepseek-ai/cordis": "workspace:^"
   }
 }

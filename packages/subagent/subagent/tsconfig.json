@@ -15,6 +15,9 @@
       "path": "../../../vendor/cordis"
     },
     {
+      "path": "../../../vendor/schemastery"
+    },
+    {
       "path": "../../attachment/attachment"
     },
     {
@@ -69,7 +72,13 @@
       "path": "../../runtime-diagnostics/invariants"
     },
     {
+      "path": "../../interaction/permission-presets"
+    },
+    {
       "path": "../../util/chunked-list"
+    },
+    {
+      "path": "../../settings/settings"
     }
   ]
 }

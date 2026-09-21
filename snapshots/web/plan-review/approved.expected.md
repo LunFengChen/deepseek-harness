@@ -5,8 +5,6 @@
   - text: Standard mode
   - button "More actions":
     - img
-  - button "Open right sidebar":
-    - img
   - tablist:
     - tab "Chat" [selected]
     - tab "Trajectory"
@@ -27,6 +25,7 @@
   - img
   - text: System prompt
 - paragraph: DONE
+- 'button "Open plan: Add `--greeting` flag to CLI"': "Add `--greeting` flag to CLI Plan · Markdown Open"
 - button "Copy":
   - img
 - button "Good response":
@@ -46,7 +45,6 @@
 - button "Select model, current DeepSeek-V4-Flash":
   - text: DeepSeek-V4-Flash
   - img
-- button "4% of context used"
 - button "Send message" [disabled]
 - button "1 turns 2 steps · {{throughput}} tok/s":
   - img
@@ -54,3 +52,4 @@
 - button "10.6K tok · Cache hit 51%":
   - img
   - text: 10.6K tokCache hit 51%
+- button "4% of context used": 4%

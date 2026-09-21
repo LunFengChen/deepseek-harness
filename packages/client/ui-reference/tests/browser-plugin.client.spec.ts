@@ -74,7 +74,12 @@ async function bench(
       mention: '@[Research](dsh-session:InNvdXJjZSI)',
     }],
   })),
-  listed: Record<string, { updatedAt: number }> = {},
+  listed: Record<string, {
+    updatedAt: number
+    origin?: 'subagent'
+    parentId?: SessionId
+    projectionValues?: { title?: string | null }
+  }> = {},
 ): Promise<{ ctx: Context; fiber: ReturnType<Context['plugin']>; source: InputTriggerSource }> {
   const ctx = new Context()
   ctx.provide('sidebarRight', { openResource: vi.fn() })
@@ -328,6 +333,63 @@ describe('candidates', () => {
     await expect(source.candidates(session, request('unlisted'))).resolves.toEqual([
       expect.objectContaining({ name: 'Unlisted run', description: '3d' }),
     ])
+  })
+
+  it('uses current Session titles and groups direct subagents above ordinary Sessions', async () => {
+    const files = vi.fn(() => Promise.resolve({ ok: true as const, value: [] }))
+    const sessions = vi.fn(() => Promise.resolve({
+      ok: true as const,
+      value: [
+        {
+          sessionId: sid('ordinary'),
+          label: 'Ordinary title',
+          displayTitle: 'Ordinary title',
+          cwd: `${HOME}/project`,
+          sameWorkspace: true,
+          createdAt: CREATED_AT,
+          mention: '@[Ordinary title](dsh-session:Im9yZGluYXJ5Ig)',
+        },
+        {
+          sessionId: sid('worker'),
+          label: 'Investigate startup',
+          displayTitle: 'researcher',
+          cwd: `${HOME}/project`,
+          sameWorkspace: true,
+          createdAt: CREATED_AT,
+          mention: '@[researcher](dsh-session:IndvcmtlciI)',
+        },
+      ],
+    }))
+    const { source } = await bench(files, sessions, {
+      worker: {
+        updatedAt: UPDATED_AT,
+        origin: 'subagent', parentId: session.sessionId,
+        projectionValues: { title: 'Investigate startup' },
+      },
+      ordinary: { updatedAt: UPDATED_AT, projectionValues: { title: 'Ordinary title' } },
+    })
+    const candidates = await source.candidates(session, request('worker'))
+    expect(candidates.map(candidate => ({ name: candidate.name, section: candidate.section }))).toEqual([
+      { name: 'researcher', section: 'Subagents' },
+      { name: 'Ordinary title', section: 'Sessions' },
+    ])
+    const [candidate] = candidates
+    expect(source.onPick({
+      candidate: candidate!,
+      session,
+      position: 'inline',
+      via: 'menu',
+      action: 'pick',
+      span: { start: 0, end: 7, draftRev: 1 },
+    })).toEqual({
+      insert: {
+        source: 'reference',
+        ref: '@[researcher](dsh-session:IndvcmtlciI)',
+        label: 'researcher',
+        appearance: 'session',
+        clipboardText: '@[researcher](dsh-session:IndvcmtlciI)',
+      },
+    })
   })
 
   it('reads a session opened moments ago as the present, not a zero distance', async () => {

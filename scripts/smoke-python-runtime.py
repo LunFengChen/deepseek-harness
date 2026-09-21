@@ -19,6 +19,7 @@ import sysconfig
 import tempfile
 import threading
 import time
+import zipfile
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
@@ -99,24 +100,6 @@ RESTART_SECOND_PROMPT = "Complete the second isolated Python SDK process turn."
 RESTART_SECOND_TEXT = "PROCESS_TWO_OK"
 RESTART_FIRST_SESSION_ID = "process-one"
 RESTART_SECOND_SESSION_ID = "process-two"
-SNAPSHOT_PLUGIN_CODE = """\
-return (ctx) => {
-  harness.registerTool(ctx, harness.defineTool({
-    name: 'snapshot_double',
-    description: 'Double a number for executable snapshot verification.',
-    parameters: { value: { type: 'number', required: true } },
-    output: {
-      schema: { type: 'number' },
-      render(_args, value) {
-        return [{ type: 'text', text: String(value) }]
-      }
-    },
-    async execute(args) {
-      return args.value * 2
-    }
-  }))
-}
-"""
 SNAPSHOT_WORKFLOW_SCRIPT = (
     "phase('Delegate')\n"
     f"const reply = await agent('{SNAPSHOT_WORKFLOW_CHILD_PROMPT}', {{ label: 'workflow-child' }})\n"
@@ -264,7 +247,7 @@ def write_advanced_profile_patch(root: Path, name: str, sessions: Path) -> Path:
             },
         },
         {"insert": [
-            {"id": "code-runtime", "name": "@x1a0f3n9/dsh-code-runtime-worker-thread"},
+            {"id": "ptc-runtime", "name": "@x1a0f3n9/dsh-ptc-runtime-node"},
             {"id": "cordis-host-runner", "name": "@x1a0f3n9/dsh-cordis-host-runner"},
             {"id": "cordis-tool", "name": "@x1a0f3n9/dsh-tool-cordis"},
         ]},
@@ -296,6 +279,9 @@ class MockModelHandler(BaseHTTPRequestHandler):
     requests: list[dict[str, object]] = []
 
     def do_POST(self) -> None:
+        if self.path != "/v1/messages":
+            self.send_error(404)
+            return
         content_length = int(self.headers.get("content-length", "0"))
         body = json.loads(self.rfile.read(content_length))
         self.requests.append(body)
@@ -304,8 +290,7 @@ class MockModelHandler(BaseHTTPRequestHandler):
         self.end_headers()
         chunks = completion_chunks(body)
         for chunk in chunks:
-            self.wfile.write(f"data: {json.dumps(chunk)}\n\n".encode())
-        self.wfile.write(b"data: [DONE]\n\n")
+            self.wfile.write(f"event: {chunk['type']}\ndata: {json.dumps(chunk)}\n\n".encode())
         self.wfile.flush()
 
     def log_message(self, _format: str, *_args: object) -> None:
@@ -322,9 +307,14 @@ def completion_chunks(body: dict[str, object]) -> list[dict[str, object]]:
     if not isinstance(latest, dict):
         raise AssertionError(f"model request has an invalid latest message: {body}")
 
-    if latest.get("role") == "tool":
-        call_id, tool_name = latest_tool_call(messages)
-        tool_text = message_text(latest.get("content"))
+    tool_results = [
+        block for block in latest.get("content", [])
+        if isinstance(block, dict) and block.get("type") == "tool_result"
+    ]
+    if tool_results:
+        result = tool_results[-1]
+        call_id, tool_name = latest_tool_call(messages, result.get("tool_use_id"))
+        tool_text = message_text(result.get("content"))
         mcp = mcp_tool_followup(call_id, tool_name, tool_text)
         if mcp is not None:
             return mcp
@@ -349,9 +339,11 @@ def completion_chunks(body: dict[str, object]) -> list[dict[str, object]]:
         raise AssertionError(f"unexpected tool follow-up: {tool_name}")
 
     user_prompts = [
-        message_text(message.get("content"))
+        block["text"]
         for message in reversed(messages)
         if isinstance(message, dict) and message.get("role") == "user"
+        for block in message.get("content", [])
+        if isinstance(block, dict) and block.get("type") == "text"
     ]
     minimal_prompt = next((prompt for prompt in user_prompts if prompt == MINIMAL_PROMPT), None)
     # The minimal composition's assembled system prompt, advertised tool schemas, and
@@ -384,16 +376,12 @@ def completion_chunks(body: dict[str, object]) -> list[dict[str, object]]:
     if prompt == SNAPSHOT_WORKFLOW_CHILD_PROMPT:
         return text_chunks("WORKFLOW_CHILD_OK")
     if prompt == SNAPSHOT_PROMPT:
-        assert_advertised_tool(body, "cordis_define")
+        assert_advertised_tool(body, "snapshot_double")
+        assert_advertised_tool(body, "run_code")
         return tool_call_chunks(
-            "advanced-define",
-            "cordis_define",
-            {
-                "plugin": {"kind": "new", "idPrefix": "snap"},
-                "name": "Snapshot Double",
-                "purpose": "Expose a deterministic doubling tool for executable snapshot verification.",
-                "code": {"host": SNAPSHOT_PLUGIN_CODE},
-            },
+            "advanced-code", "run_code",
+            {"code": "return await tools.snapshot_double({ value: 21 })",
+             "description": "Call the configured Plugin tool"},
         )
     if prompt == RESTART_FIRST_PROMPT:
         return text_chunks(RESTART_FIRST_TEXT)
@@ -448,7 +436,7 @@ def completion_chunks(body: dict[str, object]) -> list[dict[str, object]]:
             {"a": 19, "b": 23},
         )
     if prompt == PROFILE_PLUGIN_PROMPT:
-        system_text = "\n".join(
+        system_text = message_text(body.get("system")) + "\n" + "\n".join(
             message_text(message.get("content"))
             for message in messages
             if isinstance(message, dict) and message.get("role") == "system"
@@ -558,33 +546,24 @@ def advanced_tool_followup(
     """Advance the executable snapshot's deterministic parent tool chain."""
     if not call_id.startswith("advanced-"):
         return None
-    if call_id == "advanced-define" and tool_name == "cordis_define":
-        if "Defined snap-1/pkg-1 (Snapshot Double)" not in tool_text:
-            raise AssertionError(f"cordis_define returned no dynamic Package ids: {tool_text}")
-        if "snapshot_double" in advertised_tool_names(body):
-            raise AssertionError("snapshot_double was advertised before cordis_run")
-        assert_advertised_tool(body, "cordis_run")
-        return tool_call_chunks(
-            "advanced-run",
-            "cordis_run",
-            {"pluginId": "snap-1", "packageId": "pkg-1", "mode": "run"},
-        )
-    if call_id == "advanced-run" and tool_name == "cordis_run":
-        if "snap-1/pkg-1 is running (run-1)" not in tool_text:
-            raise AssertionError(f"cordis_run returned no running Package ids: {tool_text}")
-        assert_advertised_tool(body, "run_code")
-        assert_advertised_tool(body, "snapshot_double")
-        return tool_call_chunks(
-            "advanced-code",
-            "run_code",
-            {
-                "code": "return await tools.snapshot_double({ value: 21 })",
-                "description": "Run the temporary Plugin tool",
-            },
-        )
     if call_id == "advanced-code" and tool_name == "run_code":
         if "42" not in tool_text:
-            raise AssertionError(f"run_code returned no dynamic-tool value: {tool_text}")
+            raise AssertionError(f"run_code returned no configured-tool value: {tool_text}")
+        return tool_call_chunks("advanced-denied-native", "snapshot_double", {"value": -1})
+    if call_id == "advanced-denied-native" and tool_name == "snapshot_double":
+        if 'Auto review rejected tool "snapshot_double"; its body was not executed' not in tool_text:
+            raise AssertionError(f"native denial did not preserve the model result: {tool_text}")
+        if "transport raw" in tool_text:
+            raise AssertionError("native denial leaked its user-facing reason to the model")
+        return tool_call_chunks("advanced-denied-ptc", "run_code", {
+            "code": "try { await tools.snapshot_double({ value: -1 }) } catch (error) { return error.message }",
+            "description": "Catch a structured inner tool denial",
+        })
+    if call_id == "advanced-denied-ptc" and tool_name == "run_code":
+        if 'Auto review rejected tool "snapshot_double"; its body was not executed' not in tool_text:
+            raise AssertionError(f"PTC denial did not preserve the model result: {tool_text}")
+        if "transport raw" in tool_text:
+            raise AssertionError("PTC denial leaked its user-facing reason to the model")
         assert_advertised_tool(body, "subagent")
         return tool_call_chunks(
             "advanced-direct-child",
@@ -612,80 +591,72 @@ def advanced_tool_followup(
     if call_id == "advanced-workflow" and tool_name == "workflow":
         if "WORKFLOW_CHILD_OK" not in tool_text:
             raise AssertionError(f"workflow returned no expected child value: {tool_text}")
-        assert_advertised_tool(body, "cordis_undefine")
-        return tool_call_chunks(
-            "advanced-undefine",
-            "cordis_undefine",
-            {"pluginId": "snap-1"},
-        )
-    if call_id == "advanced-undefine" and tool_name == "cordis_undefine":
-        if "Removed dynamic Plugin snap-1 and all of its Packages." not in tool_text:
-            raise AssertionError(f"cordis_undefine returned no removal result: {tool_text}")
-        if "snapshot_double" in advertised_tool_names(body):
-            raise AssertionError("snapshot_double remained advertised after cordis_undefine")
         return text_chunks(SNAPSHOT_FINAL_TEXT)
     raise AssertionError(f"unexpected advanced tool follow-up: {call_id} {tool_name}: {tool_text}")
 
 
 def text_chunks(text: str) -> list[dict[str, object]]:
-    """Build a complete streaming text response."""
+    """Build a complete Messages text response."""
     return [
-        {"choices": [{"delta": {"role": "assistant", "content": None, "reasoning_content": ""}}]},
-        {"choices": [{"delta": {"content": text}}]},
-        {
-            "choices": [{"delta": {"content": ""}, "finish_reason": "stop"}],
-            "usage": {"prompt_tokens": 3, "completion_tokens": 3},
-        },
+        message_start(),
+        {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "text": ""}},
+        {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": text}},
+        {"type": "content_block_stop", "index": 0},
+        {"type": "message_delta", "delta": {"stop_reason": "end_turn"}, "usage": {"output_tokens": 3}},
+        {"type": "message_stop"},
     ]
 
 
 def tool_call_chunks(call_id: str, name: str, arguments: dict[str, object]) -> list[dict[str, object]]:
-    """Build a complete streaming function-call response."""
+    """Build a complete Messages tool-use response."""
     return [
-        {"choices": [{"delta": {"role": "assistant", "content": None, "reasoning_content": ""}}]},
+        message_start(),
         {
-            "choices": [{
-                "delta": {
-                    "tool_calls": [{
-                        "index": 0,
-                        "id": call_id,
-                        "type": "function",
-                        "function": {"name": name, "arguments": json.dumps(arguments)},
-                    }],
-                },
-            }],
+            "type": "content_block_start", "index": 0,
+            "content_block": {"type": "tool_use", "id": call_id, "name": name, "input": {}},
         },
         {
-            "choices": [{"delta": {"content": ""}, "finish_reason": "tool_calls"}],
-            "usage": {"prompt_tokens": 3, "completion_tokens": 3},
+            "type": "content_block_delta", "index": 0,
+            "delta": {"type": "input_json_delta", "partial_json": json.dumps(arguments)},
         },
+        {"type": "content_block_stop", "index": 0},
+        {"type": "message_delta", "delta": {"stop_reason": "tool_use"}, "usage": {"output_tokens": 3}},
+        {"type": "message_stop"},
     ]
 
 
-def latest_tool_call(messages: list[object]) -> tuple[str, str]:
+def message_start() -> dict[str, object]:
+    """Start a Messages response with deterministic token usage."""
+    return {
+        "type": "message_start",
+        "message": {"id": "msg_smoke", "model": "smoke-model", "usage": {"input_tokens": 3, "output_tokens": 0}},
+    }
+
+
+def latest_tool_call(messages: list[object], result_id: object) -> tuple[str, str]:
     """Find the assistant call id and name paired with the latest tool result."""
     for message in reversed(messages[:-1]):
         if not isinstance(message, dict):
             continue
-        calls = message.get("tool_calls")
+        calls = message.get("content")
         if not isinstance(calls, list):
             continue
         for call in reversed(calls):
             if not isinstance(call, dict):
                 continue
-            function = call.get("function")
             call_id = call.get("id")
             if (
                 isinstance(call_id, str)
-                and isinstance(function, dict)
-                and isinstance(function.get("name"), str)
+                and call_id == result_id
+                and call.get("type") == "tool_use"
+                and isinstance(call.get("name"), str)
             ):
-                return call_id, function["name"]
+                return call_id, call["name"]
     raise AssertionError(f"tool result has no preceding assistant tool call: {messages}")
 
 
 def message_text(content: object) -> str:
-    """Read OpenAI text content in either string or block-list form."""
+    """Read Messages text content in either string or block-list form."""
     if isinstance(content, str):
         return content
     if isinstance(content, list):
@@ -706,9 +677,8 @@ def advertised_tool_names(body: dict[str, object]) -> set[str]:
     for tool in tools:
         if not isinstance(tool, dict):
             continue
-        function = tool.get("function")
-        if isinstance(function, dict) and isinstance(function.get("name"), str):
-            names.add(function["name"])
+        if isinstance(tool.get("name"), str):
+            names.add(tool["name"])
     return names
 
 
@@ -739,7 +709,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--scenario",
-        choices=("all", "sdk-default", "sdk-custom", "sdk-minimal", "sdk-minimal-in-history", "sdk-fs-search", "sdk-spawn-node", "sdk-mcp", "sdk-snapshot", "sdk-restart", "sdk-profile-plugin", "sdk-live", "runner", "direct"),
+        choices=("all", "sdk-default", "sdk-custom", "sdk-minimal", "sdk-minimal-in-history", "sdk-fs-search", "sdk-spawn-node", "sdk-mcp", "sdk-snapshot", "sdk-restart", "sdk-profile-plugin", "sdk-office", "sdk-live", "runner", "direct"),
         default="all",
     )
     parser.add_argument("--exe", type=Path)
@@ -758,12 +728,19 @@ def main() -> None:
         parser.error("--scenario sdk-profile-plugin requires --installed-wheel")
     if args.installed_wheel:
         args.exe = assert_installed_wheel_environment()
-    if args.scenario in {"all", "sdk-custom", "sdk-minimal", "sdk-minimal-in-history", "sdk-fs-search", "sdk-spawn-node", "sdk-snapshot", "sdk-restart", "runner", "direct"} and args.exe is None:
-        parser.error("--exe is required for custom, minimal, fs-search, spawn-node, snapshot, restart, runner, and direct scenarios")
+    if args.scenario in {"all", "sdk-custom", "sdk-minimal", "sdk-minimal-in-history", "sdk-fs-search", "sdk-spawn-node", "sdk-snapshot", "sdk-restart", "sdk-office", "runner", "direct"} and args.exe is None:
+        parser.error("--exe is required for custom, minimal, fs-search, spawn-node, snapshot, restart, office, runner, and direct scenarios")
     if args.update_snapshots and args.scenario not in {"all", "sdk-minimal", "sdk-minimal-in-history", "sdk-snapshot", "sdk-restart"}:
         parser.error("--update-snapshots requires --scenario sdk-minimal, sdk-minimal-in-history, sdk-snapshot, sdk-restart, or all")
     if args.exe is not None and not args.exe.is_file():
         parser.error(f"runtime executable does not exist: {args.exe}")
+
+    if args.scenario in {"all", "sdk-office"}:
+        assert args.exe is not None
+        smoke_sdk_office(args.exe.resolve())
+    if args.scenario == "sdk-office":
+        print("smoke-python-runtime: sdk-office passed")
+        return
 
     if args.scenario in {"all", "runner"}:
         assert args.exe is not None
@@ -811,6 +788,73 @@ def main() -> None:
         if not MockModelHandler.requests:
             raise AssertionError("mock model endpoint received no requests")
     print(f"smoke-python-runtime: {args.scenario} passed")
+
+
+def smoke_sdk_office(executable: Path) -> None:
+    """Relocate the wheel payload and convert a real DOCX with the target platform engine."""
+    from deepseek_harness import DeepSeekHarness
+
+    with tempfile.TemporaryDirectory(prefix="dsh-sdk-office-") as temporary:
+        root = Path(temporary).resolve()
+        relocated = root / executable.name
+        stem = executable.name.removesuffix(".exe")
+        for source in executable.parent.glob(f"{stem}*"):
+            destination = root / source.name
+            if source.is_dir():
+                shutil.copytree(source, destination)
+            else:
+                shutil.copy2(source, destination)
+        office = root / f"{stem}-office"
+        adapter = office / "node_modules/@deepseek-ai/libreoffice-kit/package.json"
+        native = stem.removeprefix("deepseek-harness-sdk-runtime-").replace("win-", "win32-").replace("macos-", "darwin-")
+        declared = json.loads(adapter.read_text(encoding="utf-8")).get("optionalDependencies", {})
+        selected = native if f"@deepseek-ai/libreoffice-kit-{native}" in declared else "wasm"
+        expected_backend = "wasm" if selected == "wasm" else "native"
+        engines = [
+            json.loads(manifest.read_text())["engine"]["kind"]
+            for manifest in (office / "node_modules/@deepseek-ai").glob("libreoffice-kit-*/prebuilds.json")
+        ]
+        if engines != [expected_backend]:
+            raise AssertionError(f"Office sidecar must contain only {expected_backend}: {engines}")
+        plugin = root / "office.mjs"
+        shutil.copy2(Path(__file__).resolve().parent / "fixtures/python-sdk-office.mjs", plugin)
+        document = root / "document.docx"
+        with zipfile.ZipFile(document, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr("[Content_Types].xml", '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>')
+            archive.writestr("_rels/.rels", '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')
+            archive.writestr("word/document.xml", '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>Python Office wheel</w:t></w:r></w:p><w:sectPr><w:pgSz w:w="12240" w:h="15840"/></w:sectPr></w:body></w:document>')
+
+        mode = expected_backend
+        output = root / f"{mode}.pdf"
+        result_path = root / f"{mode}.json"
+        patch = root / f"{mode}.patch.yml"
+        patch.write_text(json.dumps([{"insert": [{
+            "id": "python-sdk-office-smoke",
+            "name": plugin.as_uri(),
+            "config": {"input": str(document), "output": str(output), "result": str(result_path)},
+        }]}]))
+        with DeepSeekHarness(
+            provider="deepseek-official",
+            model="smoke-model",
+            cwd=str(root),
+            dsh_bin=str(relocated),
+            dsh_home=str(root / f"home-{mode}"),
+            patches=(str(patch),),
+            api_key="sk-keyless-smoke",
+            base_url="http://127.0.0.1:9",
+            env={"DSH_PERMISSION_MODE": "danger-full-access", "DSH_TELEMETRY_DISABLED": "1"},
+            request_timeout_seconds=180,
+        ):
+            pass
+        result = json.loads(result_path.read_text())
+        if result["backend"] != expected_backend:
+            raise AssertionError(f"Office conversion did not use {expected_backend}: {result}")
+        if not result["moduleUrl"].startswith(office.as_uri() + "/"):
+            raise AssertionError(f"Office module was not loaded from the relocated wheel: {result}")
+        pdf = output.read_bytes()
+        if len(pdf) < 100 or not pdf.startswith(b"%PDF-"):
+            raise AssertionError(f"Office conversion produced an invalid PDF at {output}")
+        print(f"smoke-python-runtime: relocated Office {result['backend']} DOCX produced {len(pdf)} PDF bytes")
 
 
 def assert_installed_wheel_environment() -> Path:
@@ -934,7 +978,7 @@ def smoke_sdk_live() -> None:
 
 
 def assert_live_turn(label: str, result: RunResult) -> None:
-    """Require completed model tool use and the exact smoke answer for each live turn."""
+    """Require completed model tool use and the smoke sentinel on the final answer line."""
     if result.finish_reason != "completed":
         event_types = [event.get("type") for event in result.events]
         turn_end_data = next(
@@ -951,7 +995,8 @@ def assert_live_turn(label: str, result: RunResult) -> None:
             f"{label} turn made no model-requested tool call; "
             f"final={result.final_response!r}"
         )
-    if result.final_response.strip() != LIVE_API_SENTINEL:
+    answer_lines = result.final_response.strip().splitlines()
+    if not answer_lines or answer_lines[-1].strip() != LIVE_API_SENTINEL:
         raise AssertionError(f"{label} turn returned {result.final_response!r}")
 
 def safe_turn_end(value: object) -> object:
@@ -1192,6 +1237,7 @@ def smoke_sdk_mcp(base_url: str, executable: Path | None) -> None:
 
         assert result.final_response == MCP_TEXT, result.final_response
         assert discovery_log.read_text().splitlines() == [
+            "server/discover",
             "initialize",
             "notifications/initialized",
             "tools/list",
@@ -1292,6 +1338,12 @@ def smoke_sdk_snapshot(base_url: str, executable: Path, update_snapshots: bool) 
         sessions = dsh_home / "sessions"
         patch = write_advanced_profile_patch(root, "snapshot.patch.yml", sessions)
         feedback_patch = write_profile_patch(root, "feedback.patch.yml", sessions, [{"insert": [
+            {"id": "snapshot-tool", "name": (
+                Path(__file__).resolve().parent / "fixtures/python-snapshot-tool.mjs"
+            ).as_uri()},
+            {"id": "snapshot-image-offload", "name": (
+                Path(__file__).resolve().parent / "fixtures/python-snapshot-image-offload.mjs"
+            ).as_uri(), "config": {"parentSessionId": SNAPSHOT_SESSION_ID}},
             {"id": "snapshot-workflow-order", "name": (
                 Path(__file__).resolve().parent / "fixtures/python-snapshot-workflow-order.mjs"
             ).as_uri(), "config": {
@@ -1303,13 +1355,19 @@ def smoke_sdk_snapshot(base_url: str, executable: Path, update_snapshots: bool) 
                 Path(__file__).resolve().parent.parent / "snapshots/sdk/text-turn/feedback-producer.mjs"
             ).as_uri()},
         ]}])
+        creation_patch = write_profile_patch(root, "creation.patch.yml", sessions, [
+            {"insert": [{
+                "id": "serial-created-fixture",
+                "name": str(Path(__file__).resolve().parents[1] / "packages/core/agent-loop/tests/fixtures/serial-created.mjs"),
+            }]},
+        ])
         with DeepSeekHarness(
             provider="deepseek-official",
             model="smoke-model",
             cwd=str(root),
             dsh_bin=str(executable),
             dsh_home=str(dsh_home),
-            patches=(str(patch), str(feedback_patch)),
+            patches=(str(patch), str(feedback_patch), str(creation_patch)),
             env={
                 "DSH_PERMISSION_MODE": "danger-full-access",
                 "DSH_TELEMETRY_DISABLED": "1",
@@ -1321,6 +1379,12 @@ def smoke_sdk_snapshot(base_url: str, executable: Path, update_snapshots: bool) 
             result = harness.run(SNAPSHOT_PROMPT, session_id=SNAPSHOT_SESSION_ID)
 
         assert result.final_response == SNAPSHOT_FINAL_TEXT, result.final_response
+        offloads = [event for event in result.events if event.get("type") == "image/offload"]
+        if len(offloads) != 1 or "surfaceOp" in offloads[0]:
+            raise AssertionError(f"advanced snapshot expected one standalone image offload: {offloads}")
+        targets = offloads[0]["data"]["targets"]
+        if len(targets) != 1 or targets[0]["imageIndexes"] != [0]:
+            raise AssertionError(f"advanced snapshot selected unexpected image occurrences: {targets}")
         feedback_types = [event.get("type") for event in result.events
                           if str(event.get("type")).startswith("feedback/")]
         if feedback_types != ["feedback/record", "feedback/record", "feedback/message-put", "feedback/message-put", "feedback/message-delete"]:
@@ -1330,13 +1394,21 @@ def smoke_sdk_snapshot(base_url: str, executable: Path, update_snapshots: bool) 
             raise AssertionError(f"advanced snapshot emitted unexpected subagent lifecycle: {methods}")
         ptc_events = [event for event in result.events
                       if event.get("type") in ("tool/ptc-dispatch-start", "tool/ptc-dispatch")]
-        if [event["type"] for event in ptc_events] != ["tool/ptc-dispatch-start", "tool/ptc-dispatch"]:
+        if [event["type"] for event in ptc_events] != ["tool/ptc-dispatch-start", "tool/ptc-dispatch"] * 2:
             raise AssertionError(f"advanced snapshot emitted unexpected PTC dispatch events: {ptc_events}")
-        for event in ptc_events:
+        for index, event in enumerate(ptc_events):
             data = event["data"]
             identity = (data.get("rootCallId"), data.get("parentCallId"), data.get("subCallId"))
-            if identity != ("advanced-code", "advanced-code", "advanced-code:ptc:1"):
+            root_call = "advanced-code" if index < 2 else "advanced-denied-ptc"
+            if identity != (root_call, root_call, root_call + ":ptc:1"):
                 raise AssertionError(f"advanced snapshot emitted unexpected PTC dispatch identity: {identity}")
+            if {"description", "parameters", "schema"}.intersection(data):
+                raise AssertionError("PTC binding schema entered the packaged SDK wire")
+        errors = [event["data"]["error"] for event in result.events
+                  if event.get("type") in ("tool/result", "tool/ptc-dispatch") and "error" in event["data"]]
+        assert errors == [{
+            "name": "AutoReviewDeniedError", "code": "AUTO_REVIEW_DENIED", "reason": "  transport raw\r\nreason  ",
+        }] * 2, errors
 
         logs = read_session_logs(sessions)
         child_ids = snapshot_child_ids(result)
@@ -1843,13 +1915,18 @@ def build_in_history_snapshot_files(
     request_prompts = []
     for index, request in enumerate(requests):
         messages = request["messages"]
-        assert messages[0]["role"] == "system" and message_text(messages[0]["content"]) == prompts[0]
+        assert message_text(request.get("system")) == prompts[0]
         assert request["tools"] == requests[0]["tools"], "prompt update changed tool schemas"
         positions = [position for position, message in enumerate(messages) if message["role"] == "system"]
-        texts = [message_text(messages[position]["content"]) for position in positions]
+        texts = [message_text(request["system"]), *[
+            message_text(messages[position]["content"]) for position in positions
+        ]]
         assert texts == (prompts[:1] if index == 0 else prompts), texts
         if index > 0:
-            assert messages[positions[1] - 1]["role"] == "tool", messages
+            previous = messages[positions[0] - 1]
+            assert previous["role"] == "user" and any(
+                block.get("type") == "tool_result" for block in previous["content"]
+            ), messages
         request_prompts.append(texts)
     evidence = {
         "requestSystemPrompts": request_prompts,
@@ -1879,6 +1956,7 @@ def build_minimal_snapshot_files(
         if not isinstance(messages, list):
             raise AssertionError(f"minimal model request has no messages: {body}")
         snapshot.append({
+            "system": minimal_snapshot_text(body.get("system"), cwd),
             "tools": minimal_snapshot_text(body.get("tools"), cwd),
             "messages": [
                 minimal_snapshot_message(message, cwd)
@@ -1893,22 +1971,30 @@ def minimal_snapshot_message(message: object, cwd: Path) -> dict[str, object]:
     if not isinstance(message, dict):
         raise AssertionError(f"minimal model request has an invalid message: {message}")
     role = message.get("role")
-    if role in ("system", "user"):
+    if role == "system":
         return {"role": role, "text": minimal_snapshot_text(message_text(message.get("content")), cwd)}
+    if role == "user":
+        content = []
+        for block in message.get("content", []):
+            if block.get("type") == "tool_result":
+                content.append({"type": "tool_result", "tool_use_id": block.get("tool_use_id"), "content": "{{tool-result}}"})
+            elif block.get("type") == "text":
+                content.append(minimal_snapshot_text(block, cwd))
+            else:
+                raise AssertionError(f"minimal user message has unexpected content: {block}")
+        return {"role": role, "content": content}
     if role == "assistant":
-        calls = message.get("tool_calls")
+        calls = message.get("content")
         if not isinstance(calls, list):
             raise AssertionError(f"minimal assistant message has no tool calls: {message}")
         return {
             "role": role,
             "toolCalls": [
-                {"id": call.get("id"), "name": (call.get("function") or {}).get("name")}
+                {"id": call.get("id"), "name": call.get("name")}
                 for call in calls
-                if isinstance(call, dict)
+                if isinstance(call, dict) and call.get("type") == "tool_use"
             ],
         }
-    if role == "tool":
-        return {"role": role, "toolCallId": message.get("tool_call_id"), "text": "{{tool-result}}"}
     raise AssertionError(f"minimal model request has an unexpected message role: {message}")
 
 
@@ -2026,6 +2112,7 @@ def build_restart_snapshot_files(
     request_value = [
         {
             "model": request.get("model"),
+            "system": "{{system}}" if request.get("system") else None,
             "messages": restart_request_messages(request),
             "toolNames": sorted(advertised_tool_names(request)),
         }
@@ -2204,7 +2291,7 @@ def project_session_snapshot(records: list[dict[str, object]]) -> list[dict[str,
     return projected
 
 
-SESSION_FORMAT_PROVENANCE = "{{sessionFormatVersion}}"
+SESSION_FORMAT_TOKEN = "{{sessionFormatVersion}}"
 
 
 def expand_snapshot_stream_member(member: object) -> list[dict[str, object]]:
@@ -2293,7 +2380,7 @@ def normalize_session_format_comparison(
     value: object,
     source_session_version: int | None = None,
 ) -> object:
-    """Canonicalize only generation provenance that differs across immutable Session files."""
+    """Canonicalize only generation metadata that differs across immutable Session files."""
     if isinstance(value, list):
         return [
             normalize_session_format_comparison(expanded, source_session_version)
@@ -2308,7 +2395,7 @@ def normalize_session_format_comparison(
         for key, item in value.items()
     }
     if normalized.get("type") == "session" and "version" in normalized:
-        normalized["version"] = SESSION_FORMAT_PROVENANCE
+        normalized["version"] = SESSION_FORMAT_TOKEN
         normalized.setdefault("isSeeded", False)
         ordered_header = {
             key: normalized[key]
@@ -2328,7 +2415,7 @@ def normalize_session_format_comparison(
 
 
 def normalize_snapshot_comparison_text(name: str, content: str) -> str:
-    """Normalize Session generation provenance only while comparing committed expected outputs."""
+    """Normalize Session generation metadata only while comparing committed expected outputs."""
     if name.startswith("session") and name.endswith(".jsonl"):
         parsed = [json.loads(line) for line in content.splitlines() if line]
         header = parsed[0] if parsed else None

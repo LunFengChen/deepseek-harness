@@ -1,0 +1,78 @@
+{
+  "name": "@x1a0f3n9/dsh-experimental-auto-review",
+  "description": "Per-tool LLM authorization review for the DeepSeek Harness Auto permission preset",
+  "version": "0.1.6-alpha.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/experimental/auto-review"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "lib/index.js",
+    "cordis.patch.yml",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-instructions": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-permission-presets": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:^"
+  },
+  "dependencies": {
+    "@x1a0f3n9/dsh-util-values": "workspace:^"
+  },
+  "devDependencies": {
+    "@x1a0f3n9/dsh-agent": "workspace:^",
+    "@x1a0f3n9/dsh-agent-instructions": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:^",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:^",
+    "@x1a0f3n9/dsh-bash-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-compaction": "workspace:^",
+    "@x1a0f3n9/dsh-fs-local": "workspace:^",
+    "@x1a0f3n9/dsh-fs-observation-policy": "workspace:^",
+    "@x1a0f3n9/dsh-fs-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-llm": "workspace:^",
+    "@x1a0f3n9/dsh-llm-deepseek": "workspace:^",
+    "@x1a0f3n9/dsh-permission-presets": "workspace:^",
+    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox": "workspace:^",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
+    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-session-projection": "workspace:^",
+    "@x1a0f3n9/dsh-shell": "workspace:^",
+    "@x1a0f3n9/dsh-shell-env": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
+    "@x1a0f3n9/dsh-tool-bash": "workspace:^",
+    "@x1a0f3n9/dsh-tool-fs": "workspace:^",
+    "@x1a0f3n9/dsh-tool-subagent": "workspace:^",
+    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-user-approval": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:^"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -7,6 +7,7 @@
   },
   "include": [
     "src/client",
+    "src/changes.ts",
     "src/presented.ts",
     "src/css-modules.d.ts"
   ],
@@ -30,6 +31,9 @@
       "path": "../ui-conversation"
     },
     {
+      "path": "../ui-dockkit"
+    },
+    {
       "path": "../ui-chat"
     },
     {
@@ -37,6 +41,9 @@
     },
     {
       "path": "../ui-primitives"
+    },
+    {
+      "path": "../ui-sidebar-right"
     },
     {
       "path": "../ui-slots"
@@ -51,7 +58,10 @@
       "path": "../ui-tool"
     },
     {
-      "path": "../../fs/tool-present"
+      "path": "../../deliverables/tool-present"
+    },
+    {
+      "path": "../../deliverables/workspace-changes"
     },
     {
       "path": "../../util/workspace-path"

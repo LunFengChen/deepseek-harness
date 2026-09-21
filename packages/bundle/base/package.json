@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-base",
   "description": "The shared dsh core as a profile bundle: the first patch layer of base-backed profiles, inserting core rows over the empty profile root",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -34,7 +34,7 @@
     }
   },
   "dependencies": {
-    "@deepseek-ai/cordis-plugin-hmr": "workspace:^",
+    "@x1a0f3n9/dsh-hmr": "workspace:^",
     "@deepseek-ai/cordis-plugin-timer": "workspace:^",
     "@x1a0f3n9/dsh-agent": "workspace:^",
     "@x1a0f3n9/dsh-agent-default-model": "workspace:^",
@@ -47,6 +47,7 @@
     "@x1a0f3n9/dsh-command-goal": "workspace:^",
     "@x1a0f3n9/dsh-commands": "workspace:^",
     "@x1a0f3n9/dsh-compaction-basic": "workspace:^",
+    "@x1a0f3n9/dsh-compaction-image-offload": "workspace:^",
     "@x1a0f3n9/dsh-compaction-tool-result-pruner": "workspace:^",
     "@x1a0f3n9/dsh-credentials-local": "workspace:^",
     "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
@@ -61,6 +62,7 @@
     "@x1a0f3n9/dsh-llm-deepseek": "workspace:^",
     "@x1a0f3n9/dsh-llm-pi-ai": "workspace:^",
     "@x1a0f3n9/dsh-llm-retry": "workspace:^",
+    "@x1a0f3n9/dsh-mcp-resources": "workspace:^",
     "@x1a0f3n9/dsh-permission-presets": "workspace:^",
     "@x1a0f3n9/dsh-plan-mode": "workspace:^",
     "@x1a0f3n9/dsh-pwsh-sandbox": "workspace:^",
@@ -119,8 +121,10 @@
     "@x1a0f3n9/dsh-web-search-free": "workspace:^",
     "@x1a0f3n9/dsh-web-search-perplexity": "workspace:^",
     "@x1a0f3n9/dsh-web-search-deepseek": "workspace:^",
-    "@x1a0f3n9/dsh-workflow-worker-thread": "workspace:^",
-    "@x1a0f3n9/dsh-agent-instructions": "workspace:^"
+    "@x1a0f3n9/dsh-workflow-ptc": "workspace:^",
+    "@x1a0f3n9/dsh-agent-instructions": "workspace:^",
+    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:^",
+    "@x1a0f3n9/dsh-plugin-manager": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:^"

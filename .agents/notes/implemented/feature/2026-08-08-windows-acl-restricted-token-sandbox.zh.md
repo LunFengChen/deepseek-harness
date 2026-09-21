@@ -32,7 +32,7 @@ landstrip 评估在实现前已被否决（未经实战检验；自建 launcher 
 
 ## 后果
 
-所得：仅写隔离、不引入新的 OS 版本下限（`CreateRestrictedToken` 比 mxc 的版本早二十年）、读/网络/进程可见性完全不受影响（与模式词汇表一致），且 fail-closed 错误携带 API 名与精确 Win32 错误码。会话共享有意常驻的工作区能力，但不共享各自可回收的临时能力；重启残留既不能阻塞恢复的会话，也不能向其授权。所失：强制执行在结构上只能是部分的，因为此令牌形态无法把 Everyone 授予的写入与 NTFS 硬链接别名限制在路径边界内；无读侧或网络隔离；控制台隔离不可用（隐藏控制台子进程以 `STATUS_DLL_INIT_FAILED` 死亡；子进程共享宿主控制台）；工作区常驻 ACE 改动（复用缓存，以及工作区改名后的失效残留）与异常关闭后遗留的随机临时目录垃圾，直到 OS 卫生机制将其回收；工作区授权采用急切的全树传播（`SetNamedSecurityInfoW` 立即遍历每个后代——大型工作区上耗时数十秒），每台机器每个工作区只付一次；CIM 在两种受限模式下均不可用（Authenticated Users 不存在，从而关闭 C:\-root 建树逃逸）；FAT 类无 ACL 目标仍可写；NULL-DACL 目录在 grant/revoke 往返下不保持身份；`whoami` 与令牌检查 cmdlet 在受限令牌下失败；read-only pwsh 会进入 ConstrainedLanguage，而在没有主机策略时 workspace-write 保持 FullLanguage；named pipe 打开仍被拒绝，因此 libuv 管道 stdio 的孙进程以 EPERM 失败，而继承/忽略的 stdio 与匿名管道可用。包 README 负责记录这些运行限制。
+所得：仅写隔离、不引入新的 OS 版本下限（`CreateRestrictedToken` 比 mxc 的版本早二十年）、读/网络/进程可见性完全不受影响（与模式词汇表一致），且 fail-closed 错误携带 API 名与精确 Win32 错误码。会话共享有意常驻的工作区能力，但不共享各自可回收的临时能力；重启残留既不能阻塞恢复的会话，也不能向其授权。所失：强制执行在结构上只能是部分的，因为此令牌形态无法把 Everyone 授予的写入与 NTFS 硬链接别名限制在路径边界内；无读侧或网络隔离；控制台隔离不可用（通过 `CREATE_NO_WINDOW` 或 `CREATE_NEW_CONSOLE` 创建的子进程以 `STATUS_DLL_INIT_FAILED` 死亡；[启动可见性](../bug-fix/2026-09-16-windows-subprocess-console-visibility.zh.md)保留控制台继承）；工作区常驻 ACE 改动（复用缓存，以及工作区改名后的失效残留）与异常关闭后遗留的随机临时目录垃圾，直到 OS 卫生机制将其回收；工作区授权采用急切的全树传播（`SetNamedSecurityInfoW` 立即遍历每个后代——大型工作区上耗时数十秒），每台机器每个工作区只付一次；CIM 在两种受限模式下均不可用（Authenticated Users 不存在，从而关闭 C:\-root 建树逃逸）；FAT 类无 ACL 目标仍可写；NULL-DACL 目录在 grant/revoke 往返下不保持身份；`whoami` 与令牌检查 cmdlet 在受限令牌下失败；read-only pwsh 会进入 ConstrainedLanguage，而在没有主机策略时 workspace-write 保持 FullLanguage；named pipe 打开仍被拒绝，因此 libuv 管道 stdio 的孙进程以 EPERM 失败，而继承/忽略的 stdio 与匿名管道可用。包 README 负责记录这些运行限制。
 
 ## 测试
 

@@ -2,7 +2,7 @@
 .root { --deliverable-fill: var(--dsw-static-neutral-50); --deliverable-hover: var(--dsw-static-neutral-100); container-type: inline-size; display: flex; flex-direction: column; gap: 16px; min-width: 0; margin-top: 4px; }
 /* The turn-tail gap alone separates adjacent file sections. The default top
    margin remains when deliveries are the first file section after prose. */
-.root[data-after-produced-files='true'] { margin-top: 0; }
+.root[data-after-changes='true'] { margin-top: 0; }
 :global(body[data-ds-dark-theme]) .root { --deliverable-fill: var(--dsw-static-neutral-850); --deliverable-hover: var(--dsw-static-neutral-800); }
 .hostStatus { display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 18px; color: var(--dsw-alias-label-secondary); }
 .presented { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; min-width: 0; }

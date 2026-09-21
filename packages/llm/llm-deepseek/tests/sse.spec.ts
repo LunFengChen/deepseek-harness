@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { LlmError } from '@x1a0f3n9/dsh-llm'
-import { DONE, parseSse } from '../src/sse.ts'
+import { DONE, parseSse } from '../src/protocols/chat-completions/sse.ts'
 
 /**
  * DeepSeek protocol contract only: the [DONE] sentinel and STREAM_CLOSED on

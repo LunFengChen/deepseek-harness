@@ -161,9 +161,6 @@ describe('StatsPills', () => {
   it('renders the counts reading and usage pill and hides a brand-new empty session', () => {
     const { source } = makeSource({ nodes: [assistant(1, 1)] })
     const view = render(<StatsPills {...props(source)} />)
-    // InputBar's `.root:has([data-composer-stats])` bottom-clearance rule keys
-    // off this attribute: present exactly while the row renders.
-    expect(view.container.querySelector('[data-composer-stats]')).toBeTruthy()
     // No timing on the fixture: the speed segment drops out and the dialog
     // would have no rows, so the counts reading stays a static pill (no button).
     expect(view.getByText('1 turns 1 steps').closest('button')).toBeNull()
@@ -179,7 +176,6 @@ describe('StatsPills', () => {
       contextPressure: {},
     })} />)
     expect(emptyView.container.textContent).toBe('')
-    expect(emptyView.container.querySelector('[data-composer-stats]')).toBeNull()
   })
 
   it.each([

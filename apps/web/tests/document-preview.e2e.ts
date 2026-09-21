@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url'
 import type { Browser, Locator, Page } from 'playwright'
 import { chromium } from 'playwright'
 import { afterAll, beforeAll, describe, expect, it, onTestFailed, vi } from 'vitest'
-import { pdfFixture } from '../../../packages/client/ui-sidebar-documentpreview/tests/pdf-fixture.ts'
+import { realOfficeBytes } from './office-fixture.ts'
+import { pdfFixture, selectionPdfFixture } from '../../../packages/client/ui-sidebar-documentpreview/tests/pdf-fixture.ts'
 import { assertFixtureInventory, compareOrRefreshGolden, launchWebScaffold, watchConsole, webSnapshotMode, type WebScaffold } from './scaffold.ts'
 import { connectFreshWorkspace, newEnglishPage, saveFailureShot } from './support.ts'
 
@@ -29,6 +30,24 @@ async function successShot(page: Page, name: string): Promise<void> {
   await page.screenshot({ path: join(SHOT_DIR, `${name}-${MODE}-${process.pid}.png`), fullPage: true })
 }
 
+/** Exercise native browser selection and copy, including the text overlay's canvas alignment. */
+async function copyPdfText(page: Page, preview: Locator, expected: string): Promise<void> {
+  const text = preview.locator('[data-pdf-text] span:not(.markedContent)').filter({ hasText: expected }).first()
+  await text.waitFor({ state: 'visible' })
+  await expect.poll(() => text.evaluate(node => getComputedStyle(node).userSelect)).toBe('text')
+  await text.click({ clickCount: 3 })
+  await expect.poll(() => page.evaluate(() => window.getSelection()?.toString().trim())).toBe(expected)
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(page.url()).origin })
+  await page.keyboard.press('ControlOrMeta+C')
+  await expect.poll(() => page.evaluate(async () => (await navigator.clipboard.readText()).trim())).toBe(expected)
+  await expect.poll(() => preview.locator('[data-pdf-page]').first().evaluate((node) => {
+    const canvas = node.querySelector('canvas')!.getBoundingClientRect()
+    const layer = node.querySelector('.textLayer')!.getBoundingClientRect()
+    return Math.max(Math.abs(layer.width - canvas.width), Math.abs(layer.height - canvas.height),
+      Math.abs(layer.left - canvas.left), Math.abs(layer.top - canvas.top))
+  })).toBeLessThan(1)
+}
+
 /** Trigger the document owner's native scroll handler after a real first page overflows. */
 async function scrollForNextPage(body: Locator): Promise<void> {
   await body.evaluate((node) => {
@@ -49,6 +68,13 @@ async function canvasColor(canvas: Locator): Promise<string> {
     if (Number(pixel[2]) - Number(pixel[0]) > 150) return 'blue'
     return 'other'
   })
+}
+
+/** Select a workspace file through the Files tab and wait for its preview identity. */
+async function openPreviewFile(column: Locator, filesTab: Locator, preview: Locator, name: string): Promise<void> {
+  await filesTab.click()
+  await column.locator('[data-files-entry="file"]').getByRole('button', { name, exact: true }).click()
+  await expect.poll(async () => (await preview.getAttribute('data-textpreview-url'))?.endsWith(`/${name}`)).toBe(true)
 }
 
 describe.skipIf(MODE === 'record')('web e2e: document preview through Files', () => {
@@ -80,7 +106,7 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
     }
   })
 
-  it('opens text, isolated HTML, intrinsic images, and rendered PDF from the Session workspace', async () => {
+  it('opens text, isolated HTML, width-fitted images, and rendered PDF from the Session workspace', async () => {
     onTestFailed(async () => {
       await mkdir(SHOT_DIR, { recursive: true })
       await saveFailureShot(page, `screenshots/0908-document-preview/smoke-${process.pid}`)
@@ -130,10 +156,16 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
         '</svg>',
       ].join('')),
       writeFile(join(cwd, 'smoke.pdf'), pdfFixture()),
+      writeFile(join(cwd, 'user-unit.pdf'), pdfFixture(2)),
+      ...[90, 180, 270].map(rotation => writeFile(join(cwd, `rotated-${rotation}.pdf`), pdfFixture(4, rotation))),
+      writeFile(join(cwd, 'selection.pdf'), selectionPdfFixture()),
+      ...['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].map(extension => writeFile(join(cwd, `unavailable.${extension}`), Buffer.from('PK\u0003\u0004OFFICE_BINARY_PREVIEW'))),
+      writeFile(join(cwd, 'clip.mp4'), Buffer.from([0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70])),
     ])
 
     const column = page.locator('[data-rightbar-col]')
     await page.locator('[data-sidebar-right-expand]').click()
+    await column.locator('[data-sidebar-right-guide-entry="files"]').click()
     await column.locator('[data-files-state="tree"]').waitFor({ state: 'visible' })
     await column.locator('[data-files-reload]').click()
     const filesTab = column.locator('[data-dockkit-tab]').filter({ has: page.getByText('Files', { exact: true }) })
@@ -169,11 +201,7 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
     expect(restoredFilesClose).toBe(1)
     expect(restoredAdd).toBe(1)
     const preview = column.locator('[data-document-preview]')
-    const openFile = async (name: string): Promise<void> => {
-      await filesTab.click()
-      await column.locator('[data-files-entry="file"]').getByRole('button', { name, exact: true }).click()
-      await expect.poll(async () => (await preview.getAttribute('data-textpreview-url'))?.endsWith(`/${name}`)).toBe(true)
-    }
+    const openFile = openPreviewFile.bind(undefined, column, filesTab, preview)
     const viewer = preview.locator('[data-document-viewer-menu]')
     const body = preview.locator('[data-textpreview-body]')
     const sections = ['# Document preview']
@@ -275,9 +303,9 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
     ].join('\n'))
 
     await openFile('smoke.pdf')
-    await expect.poll(() => viewer.innerText()).toBe('PDF')
     const canvas = preview.getByRole('img', { name: 'PDF page 1', exact: true })
     await canvas.waitFor({ state: 'visible', timeout: 30_000 })
+    expect(await viewer.count()).toBe(0)
     expect(await preview.locator('[role="toolbar"]').count()).toBe(0)
     expect(await preview.locator('[data-pdf-page]').count()).toBe(2)
     await expect.poll(() => canvasColor(canvas), { timeout: 30_000 }).toBe('red')
@@ -304,21 +332,95 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
     const restoredColor = await canvasColor(secondPage)
     expect(restoredColor).toBe('blue')
     expect(await pdfTab.getAttribute('data-dockkit-tab')).toBe(pdfTabId)
+    await copyPdfText(page, preview, 'Selectable PDF text')
     await successShot(page, 'pdf')
     sections.push([
       '## PDF', '',
-      `- Viewer: ${await viewer.innerText()}`,
+      `- Viewer menu hidden: ${String(await viewer.count() === 0)}`,
       `- Worker: ${workerNames.find(name => name === 'dsh-pdf')}`,
       `- Continuous pages: ${await preview.locator('[data-pdf-page]').count()}`,
       `- Horizontal overflow: ${String(await body.evaluate(node => node.scrollWidth > node.clientWidth))}`,
       `- Canvas fills: ${[firstColor, secondColor, restoredColor].join(' -> ')}`,
       `- Same tab: ${String(await pdfTab.getAttribute('data-dockkit-tab') === pdfTabId)}`,
+      '- Selected and copied text: Selectable PDF text',
     ].join('\n'))
 
+    await openFile('user-unit.pdf')
+    await preview.getByRole('img', { name: 'PDF page 1', exact: true }).waitFor({ state: 'visible' })
+    await copyPdfText(page, preview, 'Selectable PDF text')
+    sections.push('## PDF page units\n\n- UserUnit 2: selected and copied text aligns with the canvas')
+
+    const viewportSize = page.viewportSize()!
+    try {
+      for (const rotation of [90, 180, 270]) {
+        await openFile(`rotated-${rotation}.pdf`)
+        for (const width of [viewportSize.width, 1280]) {
+          await page.setViewportSize({ ...viewportSize, width })
+          await copyPdfText(page, preview, 'Selectable PDF text')
+          // The fixture's only black pixels are text; canvas ink is independent of the overlay geometry.
+          await expect.poll(() => preview.locator('[data-pdf-page]').first().evaluate((node) => {
+            const canvas = node.querySelector('canvas')!
+            const canvasBox = canvas.getBoundingClientRect()
+            const textBox = node.querySelector('.textLayer span')!.getBoundingClientRect()
+            const pixels = canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height).data
+            let ink = 0
+            let aligned = 0
+            for (let i = 0; i < pixels.length; i += 4) {
+              if (pixels[i + 3]! < 128 || Math.max(pixels[i]!, pixels[i + 1]!, pixels[i + 2]!) > 80) continue
+              ink++
+              const x = canvasBox.left + ((i / 4) % canvas.width + 0.5) * canvasBox.width / canvas.width
+              const y = canvasBox.top + (Math.floor(i / 4 / canvas.width) + 0.5) * canvasBox.height / canvas.height
+              if (x >= textBox.left - 1 && x <= textBox.right + 1 && y >= textBox.top - 1 && y <= textBox.bottom + 1) aligned++
+            }
+            return ink === 0 ? 0 : aligned / ink
+          })).toBeGreaterThan(0.95)
+        }
+      }
+    } finally { await page.setViewportSize(viewportSize) }
+    sections.push('## PDF page rotation\n\n- 90, 180, 270 degrees: selection and copied text align with canvas ink before and after resizing')
+
+    await openFile('selection.pdf')
+    await preview.getByRole('img', { name: 'PDF page 1', exact: true }).waitFor({ state: 'visible' })
+    const selectionLayer = preview.locator('.textLayer')
+    const selectionText = selectionLayer.locator('span:not(.markedContent)')
+    const titleText = selectionText.filter({ hasText: 'JOURNAL' })
+    const priorityText = selectionText.filter({ hasText: 'HIGH / MEDIUM / LOW' }).first()
+    // The text resize observer aligns the overlay after the canvas becomes visible.
+    await titleText.waitFor({ state: 'visible' })
+    await priorityText.waitFor({ state: 'visible' })
+    const titleBox = await titleText.boundingBox()
+    const priorityBox = await priorityText.boundingBox()
+    if (titleBox === null || priorityBox === null) throw new Error('selection fixture text has no bounds')
+    const start = { x: titleBox.x + 1, y: titleBox.y + titleBox.height / 2 }
+    const end = { x: priorityBox.x + priorityBox.width / 2, y: priorityBox.y - 3 }
+    const drag = async (from: typeof start, to: typeof end, through?: typeof end): Promise<string> => {
+      await page.mouse.move(from.x, from.y)
+      await page.mouse.down()
+      try {
+        if (through !== undefined) await page.mouse.move(through.x, through.y, { steps: 15 })
+        await page.mouse.move(to.x, to.y, { steps: 15 })
+        return await page.evaluate(() => window.getSelection()?.toString() ?? '')
+      } finally { await page.mouse.up() }
+    }
+    const priority = { x: end.x, y: priorityBox.y + priorityBox.height / 2 }
+    const forward = await drag(start, end, priority)
+    expect(forward).toContain('JOURNAL')
+    expect(forward).toContain('THREE TASKS')
+    expect(forward).not.toContain('REFLECTION')
+    expect(forward).not.toContain('AFTER TABLE')
+    const backward = await drag(priority, start)
+    expect(backward).toContain('THREE TASKS')
+    expect(backward).not.toContain('REFLECTION')
+    expect(backward).not.toContain('AFTER TABLE')
+    expect(await selectionLayer.locator('br').first().evaluate(node => getComputedStyle(node, '::selection').backgroundColor))
+      .toBe('rgba(0, 0, 0, 0)')
+    await successShot(page, 'pdf-drag-selection')
+    sections.push('## PDF drag selection\n\n- Table selection: forward and backward drags exclude later sections\n- Line-break highlight: transparent')
+
     await openFile('tiny.png')
-    await expect.poll(() => viewer.innerText()).toBe('Image')
     const tinyImage = preview.getByRole('img', { name: 'Image preview: tiny.png', exact: true })
     await tinyImage.waitFor({ state: 'visible', timeout: 15_000 })
+    expect(await viewer.count()).toBe(0)
     expect(await tinyImage.evaluate(node => ({
       width: (node as HTMLImageElement).naturalWidth,
       height: (node as HTMLImageElement).naturalHeight,
@@ -338,25 +440,35 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
 
     await openFile('large.svg')
     await expect.poll(() => viewer.innerText()).toBe('Image')
+    await viewer.click()
+    await page.getByRole('menuitem', { name: 'Plain text', exact: true }).waitFor({ timeout: 15_000 })
+    await page.keyboard.press('Escape')
     const largeImage = preview.getByRole('img', { name: 'Image preview: large.svg', exact: true })
     await largeImage.waitFor({ state: 'visible', timeout: 15_000 })
-    expect(await largeImage.evaluate(node => ({
-      naturalWidth: (node as HTMLImageElement).naturalWidth,
-      naturalHeight: (node as HTMLImageElement).naturalHeight,
-      width: getComputedStyle(node).width,
-      height: getComputedStyle(node).height,
-    }))).toEqual({ naturalWidth: 1200, naturalHeight: 1600, width: '1200px', height: '1600px' })
-    expect(await body.evaluate(node => ({
-      horizontal: node.scrollWidth > node.clientWidth,
-      vertical: node.scrollHeight > node.clientHeight,
-    }))).toEqual({ horizontal: true, vertical: true })
+    const fitted = await largeImage.evaluate((node) => {
+      const image = node as HTMLImageElement
+      const scroller = image.closest('[data-textpreview-body]')
+      if (scroller === null) throw new Error('image document scroller is unavailable')
+      const rect = image.getBoundingClientRect()
+      return {
+        naturalWidth: image.naturalWidth,
+        naturalHeight: image.naturalHeight,
+        width: rect.width,
+        height: rect.height,
+        paneWidth: scroller.clientWidth,
+        paneHeight: scroller.clientHeight,
+      }
+    })
+    expect(fitted).toMatchObject({ naturalWidth: 1200, naturalHeight: 1600 })
+    expect(fitted.width).toBeLessThan(1200)
+    // Width fit: the image fills the frame's 12px-inset box while the aspect ratio holds.
+    expect(Math.abs((fitted.paneWidth - 24) - fitted.width)).toBeLessThanOrEqual(1)
+    expect(fitted.height / fitted.width).toBeCloseTo(1600 / 1200, 2)
     const scrolled = await body.evaluate((node) => {
       node.scrollLeft = node.scrollWidth
-      node.scrollTop = node.scrollHeight
-      return { left: node.scrollLeft, top: node.scrollTop }
+      return { left: node.scrollLeft, horizontalOverflow: node.scrollWidth > node.clientWidth }
     })
-    expect(scrolled.left).toBeGreaterThan(0)
-    expect(scrolled.top).toBeGreaterThan(0)
+    expect(scrolled).toEqual({ left: 0, horizontalOverflow: false })
     expect(await page.locator('html').getAttribute('data-image-preview-escape')).toBeNull()
 
     const releaseRead = Promise.withResolvers<undefined>()
@@ -448,16 +560,179 @@ describe.skipIf(MODE === 'record')('web e2e: document preview through Files', ()
       `- Tail: ${completed.at(-1)}`,
     ].join('\n'))
 
+    const officeMenus: number[] = []
+    const configurationGuide = 'Read failed: Office previews are unavailable. Enable the document preview service on the computer running DeepSeek Harness.'
+    for (const extension of ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']) {
+      await openFile(`unavailable.${extension}`)
+      expect(await preview.locator('[data-document-viewer-menu]').count()).toBe(0)
+      await preview.getByText(configurationGuide, { exact: true }).waitFor({ timeout: 15_000 })
+      expect(await preview.locator('[data-textpreview-line]').count()).toBe(0)
+      expect(await preview.getByText('OFFICE_BINARY_PREVIEW', { exact: false }).count()).toBe(0)
+      officeMenus.push(await viewer.count())
+    }
+    await successShot(page, 'office-unavailable')
+    sections.push([
+      '## Office unavailable', '',
+      `- DOC, DOCX, XLS, XLSX, PPT, PPTX viewer menus: ${officeMenus.join(' | ')}`,
+      `- Guidance: ${configurationGuide}`,
+      '- Binary text shown: false',
+      '- Plain-text option and viewer picker: hidden',
+    ].join('\n'))
+
     await openFile('notes.unknown')
-    await expect.poll(() => viewer.innerText()).toBe('Plain text')
     const plainLines = preview.locator('[data-textpreview-line]')
     await expect.poll(() => plainLines.count()).toBe(2)
+    // Plain text is the only candidate, so no viewer menu renders.
+    expect(await viewer.count()).toBe(0)
     const fallback = (await plainLines.allTextContents()).map(line => line.trim())
     expect(fallback).toEqual(['UNKNOWN_SUFFIX', 'Plain fallback.'])
-    sections.push(['## Unknown suffix', '', `- Viewer: ${await viewer.innerText()}`, `- Text: ${fallback.join(' | ')}`].join('\n'))
+    sections.push(['## Unknown suffix', '', `- Viewer menu hidden: ${String(await viewer.count() === 0)}`, `- Text: ${fallback.join(' | ')}`].join('\n'))
+
+    await filesTab.click()
+    await column.locator('[data-files-entry="file"]').getByRole('button', { name: 'clip.mp4', exact: true }).click()
+    const unsupported = column.locator('[data-textpreview-state="unsupported"]')
+    await unsupported.waitFor({ timeout: 15_000 })
+    const unsupportedLine = await unsupported.locator('[data-textpreview-unsupported]').innerText()
+    expect(unsupportedLine).toContain('Preview is not available for this file type yet.')
+    expect(await unsupported.locator('[data-textpreview-path]').innerText()).toContain('clip.mp4')
+    expect(await unsupported.locator('[data-document-viewer-menu]').count()).toBe(0)
+    expect(await unsupported.locator('[data-textpreview-tool="reload"]').count()).toBe(0)
+    await successShot(page, 'unsupported')
+    sections.push(['## Unviewable binary', '', '- State: unsupported', `- Line: ${unsupportedLine.trim()}`].join('\n'))
     expect(tripwire.pageErrors).toEqual([])
     expect(tripwire.warnings).toEqual([])
     await compareOrRefreshGolden(EXPECTED, sections.join('\n\n'), MODE)
     await assertFixtureInventory(SNAPSHOT_DIR, ['document.expected.md', 'paging.patch.yml'])
+  })
+})
+
+describe.skipIf(MODE === 'record')('web e2e: Host Office preview', () => {
+  let scaffold: WebScaffold
+  let browser: Browser
+  let page: Page
+
+  afterAll(async () => {
+    try { await browser?.close() } finally { await scaffold?.close() }
+  })
+
+  it('rejects renamed text and renders Chinese Office documents through the PDF worker', async () => {
+    scaffold = await launchWebScaffold({ replayFixture: FIXTURE, paceMs: 5, compareReplaySession: false,
+      extraOverlayPath: fileURLToPath(new URL('../../../packages/client/ui-sidebar-documentpreview/tests/fixtures/office-cache.patch.yml', import.meta.url)),
+    })
+    browser = await chromium.launch()
+    page = await newEnglishPage(browser)
+    const tripwire = watchConsole(page)
+    await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
+    await connectFreshWorkspace(page, scaffold.workspaceCwd)
+    onTestFailed(async () => {
+      await saveFailureShot(page, `screenshots/0908-document-preview/office-${process.pid}`)
+    })
+    const settled = scaffold.whenTurnSettled()
+    const input = page.locator('[data-composer-input]').first()
+    await input.fill(PROMPT)
+    await input.press('Enter')
+    const sessionId = await settled
+    const cwd = scaffold.ctx.agents.get(sessionId)?.session.header.cwd
+    if (cwd === undefined) throw new Error('settled Session has no workspace cwd')
+    await Promise.all([
+      writeFile(join(cwd, 'renamed.docx'), 'This is plain text renamed to docx.'),
+      writeFile(join(cwd, 'chinese.docx'), realOfficeBytes('docx', 'DSH Missing Preview Font')),
+      writeFile(join(cwd, 'chinese.xlsx'), realOfficeBytes('xlsx')),
+      writeFile(join(cwd, 'chinese.pptx'), realOfficeBytes('pptx')),
+      ...(['doc', 'xls', 'ppt'] as const).map(extension => writeFile(join(cwd, `chinese.${extension}`), realOfficeBytes(extension))),
+      ...['doc', 'xls', 'ppt'].map(extension => writeFile(join(cwd, `renamed.${extension}`), 'Plain text is not a binary Office document.')),
+    ])
+    const convert = vi.spyOn(scaffold.ctx.officeToPdf, 'convert')
+    try {
+      const column = page.locator('[data-rightbar-col]')
+      await page.locator('[data-sidebar-right-expand]').click()
+      await column.locator('[data-sidebar-right-guide-entry="files"]').click()
+      await column.locator('[data-files-state="tree"]').waitFor({ state: 'visible' })
+      await column.locator('[data-files-reload]').click()
+      const filesTab = column.locator('[data-dockkit-tab]').filter({ has: page.getByText('Files', { exact: true }) })
+      const preview = column.locator('[data-document-preview]')
+      await column.locator('[data-files-entry="file"]').getByRole('button', { name: 'chinese.docx', exact: true }).click()
+      expect(await preview.locator('[data-document-viewer-menu]').count()).toBe(0)
+      const canvas = preview.getByRole('img', { name: 'PDF page 1', exact: true })
+      await canvas.waitFor({ state: 'visible', timeout: 60_000 })
+      await expect.poll(() => canvas.evaluate((node) => {
+        const canvas = node as HTMLCanvasElement
+        const context = canvas.getContext('2d')
+        if (context === null) return false
+        const bytes = context.getImageData(0, 0, canvas.width, canvas.height).data
+        for (let index = 0; index < bytes.length; index += 4) {
+          if (bytes[index + 3] === 255 && bytes[index]! < 200 && bytes[index + 1]! < 200 && bytes[index + 2]! < 200) return true
+        }
+        return false
+      }), { timeout: 30_000 }).toBe(true)
+      const workerNames = await Promise.all(page.workers().map(worker => worker.evaluate(() => self.name)))
+      expect(workerNames).toContain('dsh-pdf')
+      expect(workerNames.some(name => /libreoffice|soffice/i.test(name))).toBe(false)
+      await copyPdfText(page, preview, 'Office preview')
+      await copyPdfText(page, preview, '中文文档')
+      expect((await preview.locator('[data-pdf-text]').allTextContents()).join('')).toContain('中文文档')
+      expect(convert).toHaveBeenCalledTimes(1)
+      await preview.getByRole('button', { name: 'Read the file again', exact: true }).click()
+      await canvas.waitFor({ state: 'visible' })
+      expect(convert).toHaveBeenCalledTimes(1)
+      const notice = preview.locator('[data-office-font-notice]')
+      const more = notice.getByRole('button', { name: 'Show more', exact: true })
+      await more.waitFor({ state: 'visible' })
+      const before = await canvas.evaluate(node => node.getBoundingClientRect().top)
+      await more.click()
+      const details = page.getByRole('dialog', { name: 'Missing fonts', exact: true })
+      await details.getByText('DSH Missing Preview Font', { exact: true }).waitFor({ state: 'visible' })
+      await successShot(page, 'office-font-details')
+      await page.keyboard.press('Escape')
+      await expect.poll(() => details.count()).toBe(0)
+      expect(await more.evaluate(node => node === document.activeElement)).toBe(true)
+      await more.click()
+      await page.getByRole('button', { name: 'Close font details', exact: true }).click()
+      expect(await more.isVisible()).toBe(true)
+      await notice.getByRole('button', { name: 'Dismiss font notice', exact: true }).click()
+      await expect.poll(() => notice.evaluate(node => node.getBoundingClientRect().height)).toBe(0)
+      const after = await canvas.evaluate(node => node.getBoundingClientRect().top)
+      expect(before - after).toBeGreaterThan(40)
+      const topInset = await preview.evaluate((node) => {
+        const body = node.querySelector('[data-textpreview-body]')!.getBoundingClientRect()
+        const canvas = node.querySelector('canvas')!.getBoundingClientRect()
+        return canvas.top - body.top
+      })
+      expect(topInset).toBe(0)
+      await successShot(page, 'office-font-dismissed')
+      await compareOrRefreshGolden(fileURLToPath(new URL('./expected/office-font-notice.md', import.meta.url)), [
+        '# Office font notice', '',
+        '- Requested absent family is listed: true',
+        '- Escape restores focus to Show more: true',
+        '- Closing details preserves the notice: true',
+        '- Dismissing the notice collapses its occupied height: 0',
+        `- Document top inset after dismissal: ${topInset}px`,
+      ].join('\n'), MODE)
+      await successShot(page, 'office-docx')
+      for (const extension of ['doc', 'xls', 'xlsx', 'ppt', 'pptx']) {
+        await openPreviewFile(column, filesTab, preview, `chinese.${extension}`)
+        await preview.getByRole('img', { name: 'PDF page 1', exact: true }).waitFor({ state: 'visible', timeout: 60_000 })
+        await expect.poll(async () => (await preview.locator('[data-pdf-text]').allTextContents()).join(''), { timeout: 30_000 }).toContain('中文文档')
+        await successShot(page, `office-${extension}`)
+      }
+      expect(convert).toHaveBeenCalledTimes(6)
+      await openPreviewFile(column, filesTab, preview, 'chinese.docx')
+      await preview.getByRole('img', { name: 'PDF page 1', exact: true }).waitFor({ state: 'visible' })
+      await preview.getByRole('button', { name: 'Read the file again', exact: true }).click()
+      await expect.poll(() => convert.mock.calls.length).toBe(7)
+      await preview.getByRole('img', { name: 'PDF page 1', exact: true }).waitFor({ state: 'visible' })
+      await openPreviewFile(column, filesTab, preview, 'renamed.docx')
+      await preview.getByText('Read failed: This Office file cannot be previewed. It may be damaged, password protected, or have the wrong extension.', { exact: true }).waitFor({ timeout: 30_000 })
+      expect(await preview.locator('[data-textpreview-line]').count()).toBe(0)
+      await successShot(page, 'office-invalid')
+      expect(convert).toHaveBeenCalledTimes(8)
+      for (const extension of ['doc', 'xls', 'ppt']) {
+        await openPreviewFile(column, filesTab, preview, `renamed.${extension}`)
+        await preview.getByText('Read failed: This Office file cannot be previewed. It may be damaged, password protected, or have the wrong extension.', { exact: true }).waitFor({ timeout: 30_000 })
+        expect(await preview.locator('[data-textpreview-line]').count()).toBe(0)
+      }
+      expect(convert).toHaveBeenCalledTimes(11)
+      expect(tripwire.pageErrors).toEqual([])
+    } finally { convert.mockRestore() }
   })
 })

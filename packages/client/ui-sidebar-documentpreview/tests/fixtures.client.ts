@@ -8,6 +8,7 @@
  * not the slot runtime.
  */
 import { onTestFinished, vi } from 'vitest'
+import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { Mock } from 'vitest'
 import { act } from '@testing-library/react'
 import { createElement, useSyncExternalStore } from 'react'
@@ -25,6 +26,11 @@ import type { DocumentPreviewProps } from '../src/client/document/contract.ts'
 import { TextBody } from '../src/client/text/TextBody.tsx'
 import { textBodyDefinition } from '../src/client/text/index.ts'
 import type { TabId } from '@x1a0f3n9/dsh-client-ui-dockkit'
+
+type BodySlot = PropsRenderSlots<'sidebar.right.tab.document'>['renderSlot']
+
+/** Preserve the body-slot callback used by component fixtures. */
+export function documentSlots(body: BodySlot): TextPreviewProps['renderSlot'] { return body }
 
 export const TAB_ID = 'tab-1' as TabId
 export const SESSION = 's-1' as SessionId
@@ -122,9 +128,9 @@ export function harness(script: Record<number, RemoteResult<WorkspaceFileText>> 
   onTestFinished(() => { controller.abort() })
   const tabActions = { openResource: vi.fn(), openTab: vi.fn(), close: vi.fn(), replace: vi.fn() }
   const definitions = [textBodyDefinition(() => t('viewer.text'))]
-  const renderSlot: TextPreviewProps['renderSlot'] = (_key, owner, opts) => createElement(TextBody, {
+  const renderSlot = documentSlots((_key, owner, opts) => createElement(TextBody, {
     ...owner, useTabInfo: opts.hookContext, sessionId: SESSION, useResource,
-  } as unknown as DocumentPreviewProps)
+  } as unknown as DocumentPreviewProps))
   const props = (navigation: { params?: unknown; revision: number } = { revision: 1 }) => ({
     useTabInfo: () => ({
       sidebar: { expanded: true, fullscreen: false },
@@ -142,7 +148,7 @@ export function harness(script: Record<number, RemoteResult<WorkspaceFileText>> 
     actions: instance.actions,
     loadPage: face.loadPage,
     reloadPages: face.reloadPages,
-    loadAll: face.loadAll,
+    prepareRenderer: face.prepareRenderer, loadAll: face.loadAll,
     reloadAll: face.reloadAll,
     useDocumentPreviews: () => definitions,
     renderSlot,

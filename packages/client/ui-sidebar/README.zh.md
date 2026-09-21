@@ -37,7 +37,15 @@ dsh Web 客户端的侧边栏让用户识别当前构建、启动新会话、将
 
 ### 折叠行为
 
+侧栏收起时，顶部展开按钮承载可选、不可交互的 `sidebar.toggle.badge` slot。占用方提供状态和提示内容，不增加操作，也不改变按钮的导航行为。
+
 实时收起时，展开内容在当前宽度淡出，上方控件共用同一段透明度渐变，并向左平移进入 56px 轨道，由布局的栏滑动结束整段动画。页面初始即为收起状态时会静态渲染轨道；减少动态效果模式会禁用两段过渡。固定在底部的 `sidebar.settings` 控件共用相同的透明度渐变时序，但不发生横向位移。
+
+在 Windows Electron 中，`html[data-windows-titlebar]` 将两种状态下的侧栏开关固定在顶栏左上角，仅在展开态与新建会话按钮左边缘对齐。展开态品牌位于顶栏下方、新建会话按钮上方，按钮上方额外留出 8px。收起后，品牌和侧栏内容隐藏，新建会话按钮排在侧栏开关与 Desktop 菜单之间。侧栏在收起态将根元素的 `--dsh-windows-menu-start` 设为 84px；Desktop preload 使用它将菜单放在新建会话之后，展开态默认为 48px。顶栏图标按钮采用 28px 圆形控件中的居中 16px 图标，并从窗口拖拽区域中排除。
+
+### macOS 桌面
+
+在 `html[data-platform='darwin']`（仅由桌面 preload 设置）下，展开的侧边栏列顶部有一条 52px 的顶部条：避开 hiddenInset 红绿灯、承载收起按钮，并作为窗口拖拽区；收起时整列隐藏而非保留轨道。本包向会话头部的 `conversation.session.header.leading` 座注册 `HeaderLeadingControls`——打开侧边栏与 New Session 两个控件，纯由 CSS 依据 AppFrame 发布的 `data-sidebar-collapsed` 属性仅在列隐藏时显示。设计依据与窗口集成约定见 [macOS 隐藏标题栏 Agent Note](../../../.agents/notes/implemented/feature/2026-09-13-macos-hidden-titlebar-vibrancy.zh.md)。
 
 ### 滚动条
 

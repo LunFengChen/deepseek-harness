@@ -76,15 +76,52 @@ describe.skipIf(MODE === 'record')('web e2e: declared reasoning efforts reach th
     const snapshot = await captureStableAria(page, '[role="menu"]', scaffold.workspaceCwd)
     await compareOrRefreshGolden(UI_EXPECTED, snapshot, MODE)
 
-    // Picking a level is the same gesture that saves the default selection, so
+    // Keyboard: the clicked cell unmounts with its pane, so the drilled pane's
+    // checked row takes the focus it left behind. ↑↓ walk the rows from there
+    // and Tab settles the focused one exactly as Enter would.
+    await expect.poll(
+      () => levels.nth(0).evaluate(element => element === document.activeElement),
+      { timeout: 10_000 },
+    ).toBe(true)
+    await page.keyboard.press('ArrowDown')
+    await expect.poll(
+      () => levels.nth(1).evaluate(element => element === document.activeElement),
+      { timeout: 10_000 },
+    ).toBe(true)
+    await page.keyboard.press('ArrowDown')
+    await expect.poll(
+      () => levels.nth(2).evaluate(element => element === document.activeElement),
+      { timeout: 10_000 },
+    ).toBe(true)
+
+    // Settling with Tab is the same gesture that saves the default selection, so
     // the effort lands in the Agent default Settings section beside provider/model.
-    await page.getByRole('menuitemradio', { name: 'High' }).click()
+    await page.keyboard.press('Tab')
+    await expect.poll(() => levels.count(), { timeout: 10_000 }).toBe(0)
     await expect.poll(
       async () => readFile(join(scaffold.harnessHome, 'settings.yaml'), 'utf8'),
       { timeout: 10_000 },
     ).toContain('reasoningEffort: high')
     await expect.poll(() => trigger.getAttribute('aria-label'), { timeout: 10_000 })
       .toBe('选择模型，当前 Acme Think，推理等级 High')
+
+    // Reopening the drilled pane parks the keyboard on the level in use, and
+    // Shift+Tab walks back out like Escape: to the drilled cell, then closed.
+    await trigger.click()
+    await page.getByRole('menuitem', { name: /推理等级/ }).click()
+    const high = page.getByRole('menuitemradio', { name: 'High' })
+    await expect.poll(
+      () => high.evaluate(element => element === document.activeElement),
+      { timeout: 10_000 },
+    ).toBe(true)
+    await page.keyboard.press('Shift+Tab')
+    await expect.poll(
+      () => page.getByRole('menuitem', { name: /推理等级/ })
+        .evaluate(element => element === document.activeElement),
+      { timeout: 10_000 },
+    ).toBe(true)
+    await page.keyboard.press('Shift+Tab')
+    await expect.poll(() => page.getByRole('menu').count(), { timeout: 10_000 }).toBe(0)
     expect(tripwire.pageErrors).toEqual([])
   }, 60_000)
 

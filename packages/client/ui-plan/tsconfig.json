@@ -9,6 +9,9 @@
   ],
   "references": [
     {
+      "path": "../store"
+    },
+    {
       "path": "../../api/remotes/tsconfig.client.json"
     },
     {
@@ -34,6 +37,33 @@
     },
     {
       "path": "../../plan/plan-mode"
+    },
+    {
+      "path": "../../api/session-controller/tsconfig.client.json"
+    },
+    {
+      "path": "../ui-chat"
+    },
+    {
+      "path": "../ui-sidebar-right"
+    },
+    {
+      "path": "../ui-user-questions"
+    },
+    {
+      "path": "../resources"
+    },
+    {
+      "path": "../../typert/protocol"
+    },
+    {
+      "path": "../../llm/llm"
+    },
+    {
+      "path": "../../core/tools"
+    },
+    {
+      "path": "../../util/crypto"
     }
   ]
 }

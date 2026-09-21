@@ -26,6 +26,19 @@ it('coalesces concurrent card and mention gestures, then allows another open', a
   await controller.dispose()
 })
 
+it('opens changed files through their own coordinates', async () => {
+  const fetcher = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>().mockResolvedValue(new Response(null, { status: 204 }))
+  vi.stubGlobal('fetch', fetcher)
+  const controller = new PresentedOpenController()
+  await controller.openChanged(id, 9, 1)
+  expect(fetcher.mock.calls.map(call => call[0])).toEqual(['/api/changes.open?sessionId=fork&seq=9&index=1'])
+  expect(controller.state.getSnapshot()['/api/changes.open?sessionId=fork&seq=9&index=1']).toBe('opened')
+  fetcher.mockResolvedValueOnce(new Response(null, { status: 422 }))
+  await controller.openChanged(id, 9, 1)
+  expect(controller.state.getSnapshot()['/api/changes.open?sessionId=fork&seq=9&index=1']).toBe('nativeUnavailable')
+  await controller.dispose()
+})
+
 it.each(['http', 'network'])('publishes retryable %s failures', async (failure) => {
   const fetcher = vi.fn()
   if (failure === 'http') fetcher.mockResolvedValueOnce(new Response(null, { status: 500 }))

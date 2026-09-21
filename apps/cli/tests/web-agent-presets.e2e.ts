@@ -4,7 +4,15 @@ import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
-import { boot, healProfilesModuleFallback, loadOverlayPatches, loadProfile } from '@x1a0f3n9/dsh-app-boot'
+import {
+  boot,
+  initProfile,
+  createProfileResolutionGeneration,
+  loadOverlayPatches,
+  loadProfile,
+  PluginPackages,
+  type Profile,
+} from '@x1a0f3n9/dsh-app-boot'
 import { provideCmdline } from '@x1a0f3n9/dsh-cmdline'
 import { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
@@ -72,6 +80,8 @@ async function bootWeb(
     // moved into the presets that a host row still waits for. The boot audit
     // is that assertion.
     { id: 'webserver', disabled: true },
+    // This composition has no application readiness or file-watching lifecycle.
+    { id: 'hmr', disabled: true },
     // The web bundle's runtime row injects `webServer`, so it cannot
     // activate without the bound port disabled above. It owns dist serving
     // and the URL prompt line — surface glue, not anything that decides an
@@ -112,14 +122,10 @@ async function bootWeb(
     { id: 'agent-presets', config: { default: 'standard', includeUserRoot: false } },
     ...extra,
   ]
-  // The surface is patch layers over an empty preset root, so the root sits
-  // outside this workspace and bare plugin names cannot resolve by Node's
-  // upward walk. The flat fallback the preset boot maintains is what makes
-  // them resolvable — the same mechanism, not a test-only shim.
   const home = dirname(settingsFile)
-  await healProfilesModuleFallback({ installAnchor: INSTALL_ANCHOR, home })
   const profileDir = join(home, 'profiles', 'spec')
   await mkdir(profileDir, { recursive: true })
+  if (profileBundles === undefined) initProfile(profileDir, ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app'])
   // Product Bundles are installed into the Profile, not the dsh app. Model
   // pnpm's package link for only the selected products; their own production
   // dependencies resolve from the linked workspace packages, while shared
@@ -129,6 +135,13 @@ async function bootWeb(
     const link = join(profileDir, 'node_modules', manifest.name)
     await mkdir(dirname(link), { recursive: true })
     await symlink(packageDir, link, 'junction')
+  }
+  let profile: Profile = {
+    name: 'spec',
+    dir: profileDir,
+    layers: [],
+    patchPath: join(profileDir, 'cordis.patch.yml'),
+    patches: [],
   }
   let bundlePatches: PatchOptions[] = [
     ...loadOverlayPatches('dsh-test', BASE_PATCH),
@@ -140,12 +153,18 @@ async function bootWeb(
       dependencies: Object.fromEntries(profileBundles.map(name => [name, 'workspace:*'])),
       dsh: { profile: { bundles: profileBundles } },
     }, null, 2) + '\n')
-    const profile = loadProfile('dsh-test', 'spec', INSTALL_ANCHOR, home, { userLayer: false })
+    profile = loadProfile('dsh-test', 'spec', INSTALL_ANCHOR, home, { userLayer: false })
     bundlePatches = profile.layers.flatMap(layer => layer.patches)
   }
+  const resolution = await createProfileResolutionGeneration({ installAnchor: INSTALL_ANCHOR, home, profile })
   const rootConfig = join(profileDir, 'cordis.yml')
   await writeFile(rootConfig, '[]\n')
-  return await boot('dsh-test', rootConfig, [...bundlePatches, ...overrides], (bootCtx) => {
+  return await boot('dsh-test', rootConfig, [...bundlePatches, ...overrides], async (bootCtx) => {
+    bootCtx.provide('profileContext', { name: 'spec', dir: profileDir, patchPath: profile.patchPath,
+      installAnchor: INSTALL_ANCHOR, home, cwd: home,
+      startedBundles: profileBundles ?? ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app'],
+      overlays: overrides, telemetryDisabledEnv: '1' })
+    await bootCtx.plugin(PluginPackages, { generation: resolution })
     bootCtx.provide('connection', {
       fetch: { register: () => () => {} },
       rpc: { intercept: () => () => {} },
@@ -242,7 +261,7 @@ describe('the shipped Web composition', () => {
       // depend on ripgrep being present on the machine.
       expect(toolNames(ctx, handle.agent).filter(name => name !== 'glob' && name !== 'grep')).toEqual([
         'ask_user_question', 'bash', 'create_goal', 'edit', 'exit_plan_mode',
-        'get_goal', 'interrupt_agent', 'job_kill', 'job_list', 'job_output', 'list_agents', 'present', 'ralph', 'read', 'read_image', 'send_message', 'skill',
+        'get_goal', 'interrupt_agent', 'job_kill', 'job_list', 'job_output', 'list_agents', 'present', 'read', 'read_image', 'send_message', 'skill',
         'subagent', 'subagent_fork', 'todo_write', 'update_goal', 'web_fetch', 'web_search',
         'workflow', 'write',
       ])
@@ -340,12 +359,12 @@ describe('the shipped Web composition', () => {
     })
     try {
       const tools = toolNames(ctx, handle.agent)
-      // The self-referential toolset is what distinguishes this preset.
       expect(tools).toEqual(expect.arrayContaining([
-        'cordis_inspect_list', 'cordis_inspect_query', 'cordis_inspect_self',
-        'cordis_define', 'cordis_run', 'cordis_stop', 'cordis_undefine',
+        'cordis_inspect_list', 'cordis_inspect_query', 'plugin_manager',
       ]))
-      // And it keeps the standard agent's own tools rather than replacing them.
+      for (const removed of ['cordis_define', 'cordis_run', 'cordis_stop', 'cordis_undefine', 'cordis_inspect_self']) {
+        expect(tools).not.toContain(removed)
+      }
       expect(tools).toEqual(expect.arrayContaining(['bash', 'read', 'edit', 'skill']))
       expect(tools).not.toContain('str_replace_editor')
       expect(ctx.commands.find(handle.agent, 'goal')).toBeDefined()

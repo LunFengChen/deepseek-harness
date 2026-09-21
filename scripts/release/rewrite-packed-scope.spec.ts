@@ -34,7 +34,7 @@ describe('publish scope mapping', () => {
 
   it('rejects a name outside the source scope', () => {
     expect(() => {
-      publishScopeMapping(['@deepseek-ai/dsh'], '@x1a0f3n9', '@xfcodeai')
+      publishScopeMapping(['@x1a0f3n9/dsh'], '@x1a0f3n9', '@xfcodeai')
     }).toThrow(/not in @x1a0f3n9/)
   })
 })

@@ -68,7 +68,6 @@
 - button "Add files or run commands":
   - img
 - 'button "Access mode, current: Custom"': Custom
-- button "6% of context used"
 - button "Send message" [disabled]
 - button "2 turns 2 steps · {{throughput}} tok/s":
   - img
@@ -76,3 +75,4 @@
 - button "15.7K tok · Cache hit 99%":
   - img
   - text: 15.7K tokCache hit 99%
+- button "6% of context used": 6%

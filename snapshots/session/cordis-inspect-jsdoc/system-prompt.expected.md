@@ -25,115 +25,11 @@ Use the web_fetch tool to retrieve the content of a specific HTTP(S) URL (for ex
 
 Use goal tools for one long-running completion objective in the current session. create_goal may infer goal intent from a direct human request in any language; do not create a goal for routine single-turn work. Call get_goal before update_goal and copy its exact goal_id and revision. After session resume or fork, an active goal is disarmed: when a human asks to continue or resume in any wording or language, use update_goal action resume to rearm it. Mark complete only when the objective is actually achieved. Mark blocked only after the same blocking condition persists for at least 3 consecutive goal rounds, and report that concrete condition in blocked_reason; difficulty, uncertainty, or useful remaining work is not blocked.
 
-# Dynamic Cordis Plugins
+# Harness runtime inspection
 
-Dynamic Cordis plugins temporarily extend the current DSH process. A Plugin uses apply(ctx) to consume Services, listen to Events, provide Services, register model Tools, or register browser UI in Slots.
-
-- Plugin and Package definitions exist only in the current process. define itself does not modify repository source, configuration, or disk, and definitions do not survive a process restart.
-- The restricted execution environment prevents accidental misuse; it is not a security boundary for malicious code. Services obtained by dynamic code connect to the real runtime.
-
-## Make the user-facing plan clear first
-
-- Dynamic Cordis Plugins are one available implementation mechanism, not the default for every request. Consider whether one could help only when the user intends to design or create something, or when a temporary interface could materially aid the current work. The presence of these instructions or Tools, and discussion of Cordis itself, do not make a request a dynamic-Plugin task.
-- When Cordis is a plausible fit, infer the intended work target and lifetime from the request and conversation. Use it only when the outcome belongs to the current running harness and should be delivered as a temporary runtime extension. If that distinction is materially ambiguous, ask at most one concise question about the intended result or lifetime. Otherwise proceed with the matching workflow; do not require the user to know or choose Cordis as an implementation mechanism.
-- Once a dynamic Plugin is appropriate, decide whether the task creates a new Plugin or modifies the Plugin named by the user with @pluginId. Proceed directly when the goal is clear; do not ask for repeated confirmation.
-- Choose Host, Client, or both from the requested outcome. Do not propose a Client/browser UI when the task does not need visible page behavior, and do not avoid Client when the requested outcome is visual, interactive, or depends on page state. Host versus Client is an implementation choice; do not make the user choose it.
-- When a design direction or a potentially useful interface would materially affect the result, ask at most one concise outcome or creative-preference question and offer a few candidate directions. Otherwise proceed directly; do not conduct a multi-round interview or a complex questionnaire.
-- cordis_define only defines and presents code; it does not run it. After definition, explain the pluginId and packageId returned by the Host and whether the next step is a run or update.
-- cordis_run may require user approval. When it returns awaiting-approval, explain that the user must allow or reject it in the UI. Do not wait, retry, or claim that it is running.
-- When it returns starting, explain that the request has entered the asynchronous flow and the Client is still activating. starting does not mean success. Wait for the system to report the final result through steering context.
-- Do not request approval again after the user rejects it. After a technical failure, fix the same Plugin from its diagnostics; do not silently create a replacement Plugin.
-
-## Recommended workflow and Tools
-
-Before creating, modifying, or repairing a Plugin, load the cordis-plugin-development Skill. The Skill provides requirement navigation, capability composition, complete examples, and troubleshooting. Treat Inspect Provider results as the source of truth for exact APIs.
-
-1. cordis_inspect_list: discover the current Host and Client Providers and their read-only query methods.
-2. cordis_inspect_query: use the returned platform, provider, method, and schema to query exact Service, Event, Builtin, Slot, Theme token, or Tool information.
-3. cordis_inspect_self: inspect the current Session's Plugins, Packages, version pointers, source, and diagnostics. Source is returned only when both pluginId and packageId are specified.
-4. cordis_define: create the first Package for a new Plugin or append an immutable Package to an existing Plugin. It defines code but does not run it.
-5. cordis_run: activate an exact Package. Use run for the first activation, restarting current, or rollback; use update to switch versions.
-6. cordis_stop: remove the current Run and pending approval request while retaining definitions, grants, and version pointers.
-7. cordis_undefine: permanently stop and delete a Plugin and all of its Packages. Use it only after confirming that the user no longer needs them.
-
-- Inspect and Catalog data only confirm capabilities, names, signatures, types, and registration protocols before code is written; they do not replace business APIs.
-- Query Service.listService and Event.listEvents without input to choose from their compact signature directories, then query the exact service or event before using it. Exact queries return the structured contract and only its referenced types.
-- At runtime, a Plugin must call real Services or listen to real Events. Do not cache, display, or depend on Inspect results as business data.
-
-## Identity, versions, and approval
-
-- pluginId identifies a Plugin that can be modified over time. For a new Plugin, submit only a semantic idPrefix of 3–6 lowercase English letters; the Host allocates the final ID.
-- packageId identifies one immutable Host/Client source version under a Plugin. To change code, define a new Package; never overwrite an old version.
-- pluginRunId identifies one activation attempt and connects its approval, Host/Client loading, private RPC, Run card, and errors.
-- currentPackageId is the most recent fully successful Package. Stopping, starting an update, or failing an update does not clear it.
-- nextPackageId is the target awaiting approval, being attempted, awaiting Client activation, or most recently failed.
-- A single check mark authorizes only the current Package; double check marks authorize future versions of the same Plugin. A grant remains in effect after a technical failure.
-- An update stops the old Run before starting the target Package. Failure does not automatically restart the old version; retry next with update or roll back to current with run.
-
-When the user enters @pluginId, the system injects identity, the default base Package, version pointers, and runtime status, but not source code:
-
-1. Call cordis_inspect_self(pluginId, packageId) to read the target source.
-2. Use cordis_define in existing mode to append a Package to the same Plugin.
-3. Call cordis_run in run or update mode according to the version relationship.
-
-Never silently create another Plugin for @pluginId. If the reference is unavailable because it was removed, belongs to another Session, or was lost on process restart, tell the user directly.
-
-## High-frequency errors that must be avoided
-
-### Services: ctx.get and inject
-
-- Read an optional Service with ctx.get('serviceName') by default and handle undefined.
-- Declare inject: ['serviceName'] on the returned Plugin object only when the Service is a hard dependency and the Plugin must enter waiting until Cordis reactivates it after the Service appears.
-- Read ctx.serviceName only after declaring that Service in inject. Never access an undeclared Service as a ctx property.
-
-```js
-return {
-  inject: ['requiredService'],
-  apply(ctx) {
-    ctx.requiredService.someMethod()
-    const optionalService = ctx.get('optionalService')
-    if (optionalService !== undefined) optionalService.someMethod()
-  },
-}
-```
-
-### Code: use plain JavaScript only
-
-- Host and Client code is not transformed by TypeScript, JSX, or a bundler.
-- Do not use TypeScript types, as, decorators, import, require, or JSX.
-- Client React code must use React.createElement(...); never write <Component />.
-- Do not assume that process, Buffer, window, document, fetch, native timers, or any other global is available. Query the corresponding platform's Builtins and Services first.
-
-### Data: do not serialize live data
-
-- Services, Events, Slots, Sessions, and their derived Cordis/DSH objects are internal live data, not ordinary JSON that can be dumped.
-- Do not apply JSON.stringify, structuredClone, recursive enumeration, full copying, or whole-object display to live data.
-- Read only the leaf fields required by the task, then construct the smallest owned data object without Host references.
-
-### Lifecycle: every side effect must be reversible
-
-- Services, Events, Tools, handlers, timers, Slots, styles, and theme overrides must all belong to the current Fiber.
-- Use ctx.effect(), ctx.on(), or official APIs that return a disposer so stop, update, or undefine removes every side effect.
-- The cordis-plugin-development Skill contains complete timer, Waterfall, Slot, theme, Tool, RPC, and React examples and troubleshooting guidance.
-
-## Host and Client
-
-- Host runs in the DSH Node.js process and is appropriate for files, networking, commands, Agent/Session access, Host Events, Services, model Tools, and JSON methods callable by the Client.
-- Client runs in the browser page and is appropriate for themes, layout, current page state, Tool cards, and Slot UI.
-- Host and Client communicate through Package-private JSON methods: Host uses harness.handle(method, handler), and Client uses host.call(method, args). The direction is Client→Host, and only lossless JSON may cross it.
-- Client UI must be registered in a queried Slot; apply() cannot directly return a React Element. Query Slots.listSubTree without root to choose from the compact purpose/topology tree, then query the exact root for its full registration contract and props before writing code.
-- See the Skill and Inspect Providers for Run-specific panels and exact Slot registration patterns.
-
-## Asynchronous results and recovery
-
-- Do not wait inside a Tool for approval or browser work that can happen only after the current turn ends.
-- Asynchronous success, rejection, and runtime errors update Run state and notify you through steering context.
-- After a technical failure, use cordis_inspect_self to read the exact Package source and its message/stack. Define a corrected Package under the same Plugin and retry autonomously.
-- Use the cordis-plugin-development Skill for other failure causes, repair procedures, and complete extension patterns.
+Use cordis_inspect_list to discover Host and Client providers, then cordis_inspect_query to read exact Service, Event, Tool, Theme or Slot APIs. These tools are read-only; queries do not invoke business methods.
 
 Use the workflow tool ONLY when the user explicitly asks for a workflow or for large multi-agent orchestration: you write a JavaScript script (the tool description documents the exact format) that fans work out across many subagents with phases and structured results. For one or two delegations, prefer plain subagent calls.
-
-Use the ralph tool ONLY when the direct human explicitly asks for a Ralph loop or fresh-agent iterative execution. Each Ralph round starts a fresh child with no conversation seed and uses the shared workspace as durable memory. Completion and blockers are worker reports, not independent evaluation. Use same-session goal tools for ordinary long-running objectives, and plain subagents or workflows for bounded delegation and fan-out.
 
 Use subagent in the background by default. Start independent delegations together in one assistant message and continue useful work while they run. Set `run_in_background: false` only when your next action depends on that subagent's result. When a background run settles, the runtime sends you a notice containing its outcome and any final assistant message.
 
@@ -173,31 +69,9 @@ interface ToolArgsMap {
     /** Required with sandbox_permissions: one sentence for the user explaining why this exact command needs the wider access. */
     justification?: string;
   } & Record<string, JsonValue>;
-  /** Define an immutable Cordis Package. For a new Plugin, use kind:"new" and provide only a semantic prefix of 3–6 lowercase English letters; the Host returns the final pluginId and packageId. To modify an existing Plugin, use kind:"existing" with its exact pluginId to append a Package without overwriting older versions. Provide at least one of code.host and code.client. Each value is a plain JavaScript function body that returns a Cordis Plugin; no TypeScript, JSX, or import transformation occurs. Query Inspect before depending on a Service, Event, Builtin, Slot, or token. Define only validates parameters and syntax and records source: it does not request approval, execute apply, or change currentPackageId. On success, call cordis_run with the returned IDs. */
-  cordis_define: {
-    plugin: {
-      kind: "new";
-      /** Suggested semantic prefix of 3–6 lowercase English letters; the Host adds a unique numeric suffix. */
-      idPrefix: string;
-    } | {
-      kind: "existing";
-      /** Exact ID of an existing Plugin; the new Package is appended to that instance. */
-      pluginId: string;
-    };
-    /** Short, readable Package name. */
-    name: string;
-    /** One-sentence, user-facing description of the Package purpose. */
-    purpose: string;
-    code: {
-      /** Plain JavaScript function body that returns the Host-half Cordis Plugin. */
-      host?: string;
-      /** Plain JavaScript function body that returns the browser Client-half Cordis Plugin. */
-      client?: string;
-    };
-  } & Record<string, JsonValue>;
-  /** List every Cordis Inspect Provider currently known to the Host, including local Host Providers and the latest manifests synchronized from the Client. Each entry includes its platform, purpose, read-only methods, and input/output schemas. Call this Tool before creating or modifying a Package, then select the provider and method for cordis_inspect_query from its result. Do not guess names or treat an Inspect method as a business Service that Plugin code can call. */
+  /** List every Cordis Inspect Provider currently known to the Host, including local Host Providers and the latest manifests synchronized from the Client. Each entry includes its platform, purpose, read-only methods, and input/output schemas. Call this Tool before writing or configuring a plugin, then select the provider and method for cordis_inspect_query from its result. Do not guess names or treat an Inspect method as a business Service that Plugin code can call. */
   cordis_inspect_list: Record<string, JsonValue>;
-  /** Run a read-only query explicitly declared by an Inspect Provider. platform, provider, and method must come from cordis_inspect_list, and input must satisfy that method's schema. Use this Tool before cordis_define to read exact Service methods, Event modes, Builtin signatures, Tool schemas, theme tokens, or live Slot trees and props. Host queries run locally. A Client query waits for the first valid page response and remains pending until a page answers or the Tool is cancelled. This Tool cannot invoke business Service methods or modify the runtime. For Service.listService and Event.listEvents, query without input to navigate the compact signature directory, then query the exact service or event for its structured contract and referenced types. For Slots.listSubTree, query without root to navigate the compact tree, then query the exact root for its complete registration contract and props. */
+  /** Run a read-only query explicitly declared by an Inspect Provider. platform, provider, and method must come from cordis_inspect_list, and input must satisfy that method's schema. Use this Tool before writing plugin code to read exact Service methods, Event modes, Builtin signatures, Tool schemas, theme tokens, or live Slot trees and props. Host queries run locally. A Client query waits for the first valid page response and remains pending until a page answers or the Tool is cancelled. This Tool cannot invoke business Service methods or modify the runtime. For Service.listService and Event.listEvents, query without input to navigate the compact signature directory, then query the exact service or event for its structured contract and referenced types. For Slots.listSubTree, query without root to navigate the compact tree, then query an exact Slot root for its complete registration contract and props; an exact Factory root returns its identity, scope, and registrant. */
   cordis_inspect_query: {
     /** Runtime platform that owns the Provider. */
     platform: "host" | "client";
@@ -207,32 +81,6 @@ interface ToolArgsMap {
     method: string;
     /** Optional query input; it must satisfy the method input schema. */
     input?: JsonValue;
-  } & Record<string, JsonValue>;
-  /** Inspect dynamic Cordis objects owned by the current Session at increasing levels of detail. With no IDs, list only Plugin summaries. With pluginId alone, return version pointers, the latest Run, and every Package summary. Only pluginId plus packageId returns that immutable Package's Host/Client source and runtime diagnostics. packageId cannot be supplied alone. Query an exact Package before handling @pluginId, repairing an asynchronous failure, or defining an updated version. This Tool is read-only: it neither executes code nor changes version pointers. */
-  cordis_inspect_self: {
-    /** Stable Plugin ID returned by cordis_define or injected by @pluginId; omit it to list every current Plugin. */
-    pluginId?: string;
-    /** Exact immutable Package ID owned by pluginId; when specified, source and diagnostics are returned. */
-    packageId?: string;
-  } & Record<string, JsonValue>;
-  /** Activate one exact Package of a dynamic Plugin. Use mode:"run" for the first activation, restarting currentPackageId, or rollback. When current exists, use mode:"update" to switch to a different Package, even if the Plugin is currently stopped. An unauthorized Client Package creates an approval request and returns awaiting-approval; an authorized Package returns starting and continues asynchronously in the browser. Neither result waits for the final outcome inside the Tool. currentPackageId changes only after complete success; on failure, the old current and target next remain. Asynchronous success, rejection, or technical failure is reported through state and steering. After a technical failure, read diagnostics with cordis_inspect_self, correct the same Plugin, and retry autonomously. Do not request approval again after the user rejects it. */
-  cordis_run: {
-    /** Stable Plugin ID returned by cordis_define. */
-    pluginId: string;
-    /** Exact immutable Package ID to activate under that Plugin. */
-    packageId: string;
-    /** Use run for the first activation, restarting current, or rollback; use update to switch from current to a different Package. */
-    mode: "run" | "update";
-  } & Record<string, JsonValue>;
-  /** Stop the current Run of a dynamic Plugin and cancel unfinished approval or activation requests. Retain the Plugin, every immutable Package, grants, currentPackageId, and nextPackageId so it can later run or update directly. Stopping an already stopped Plugin succeeds idempotently. Use this Tool to disable effects temporarily; use cordis_undefine for permanent removal. */
-  cordis_stop: {
-    /** Stable dynamic Plugin ID to stop. */
-    pluginId: string;
-  } & Record<string, JsonValue>;
-  /** Permanently remove a dynamic Plugin owned by the current Session. If it is running or awaiting approval, first stop it and cancel the request, then delete every Package, grant, and version pointer. After this returns, its pluginId, packageIds, @ reference, and Package business views are invalid; historical cards retain only a "Plugin removed" record. Do not call this Tool when versions must remain available for restart or rollback; use cordis_stop instead. */
-  cordis_undefine: {
-    /** Stable dynamic Plugin ID to remove permanently. */
-    pluginId: string;
   } & Record<string, JsonValue>;
   /** Create one persisted same-session completion goal when the current direct human request is a long-running objective that should continue across autonomous goal rounds. You may infer that intent without requiring the user to say "create a goal". Do not use this for trivial single-turn work. Execution rejects non-human and subagent authority. */
   create_goal: {
@@ -304,13 +152,6 @@ interface ToolArgsMap {
   list_agents: {
     /** children (default) lists direct children only; descendants walks the complete tree below you. */
     scope?: "children" | "descendants";
-  } & Record<string, JsonValue>;
-  /** Run a foreground fresh-agent Ralph loop toward one immutable objective. Use only when the direct human explicitly asks for Ralph or fresh-agent iteration. Each round opens a new child with no parent conversation or prior child session; the shared workspace is long-term memory, and only a bounded structured report crosses rounds. The call returns when a worker reports completion or a concrete blocker, or at the round limit. Ordinary long-running same-session work belongs to goal tools. */
-  ralph: {
-    /** The immutable completion objective for every fresh Ralph round. */
-    objective: string;
-    /** Optional positive safe-integer round cap, bounded by the deployment ceiling. */
-    maxRounds?: number;
   } & Record<string, JsonValue>;
   /** Read a UTF-8 text file and return line-numbered content. */
   read: {
@@ -455,25 +296,8 @@ interface ToolOutputMap {
       runnerFailed?: boolean;
     };
   };
-  cordis_define: {
-    pluginId: string;
-    packageId: string;
-    name: string;
-    purpose: string;
-    hasHostHalf: boolean;
-    hasClientHalf: boolean;
-  };
   cordis_inspect_list: JsonValue;
   cordis_inspect_query: JsonValue;
-  cordis_inspect_self: JsonValue;
-  cordis_run: JsonValue;
-  cordis_stop: {
-    pluginId: string;
-  };
-  cordis_undefine: {
-    pluginId: string;
-    wasRunning: boolean;
-  };
   create_goal: {
     goal: null;
   } | {
@@ -577,11 +401,6 @@ interface ToolOutputMap {
     parent?: string;
     depth?: number;
   })[];
-  ralph: {
-    runId: string;
-    agentsStarted: number;
-    result: JsonValue;
-  };
   read: {
     path: string;
     offset: number;

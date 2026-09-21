@@ -99,7 +99,7 @@ export class ReactLoopAgent implements Agent {
     public readonly options: AgentOptions,
     public readonly session: Session,
   ) {
-    this.requestSurfaceGeneration = session.surface.replaceGeneration
+    this.requestSurfaceGeneration = session.surface.contentGeneration
     this.dispatch = agentEvents(loopCtx, this)
     this.scope = createScope(loopCtx, this)
     this.ctx = this.scope.ctx
@@ -170,7 +170,8 @@ export class ReactLoopAgent implements Agent {
         return await job(maintenance.abort.signal)
       } finally {
         this.setPhase({ kind: 'idle', lastTurn: maintenance.lastTurn })
-        if (maintenance.wakeRequested && this.inbox.hasPending) this.wakeDriver()
+        const cause = maintenance.abort.signal.reason as AgentCancelCause | undefined
+        if (cause?.kind !== 'disposed' && maintenance.wakeRequested && this.inbox.hasPending) this.wakeDriver()
         done.resolve()
       }
     })()
@@ -367,7 +368,7 @@ export class ReactLoopAgent implements Agent {
       const commits = this.systemPrompt.project(renderedPrompt, {
         inHistory: preparedCall?.systemPromptUpdate === 'in-history',
         startsSeries: startsRequestSeries
-          || this.requestSurfaceGeneration !== this.session.surface.replaceGeneration
+          || this.requestSurfaceGeneration !== this.session.surface.contentGeneration
           || this.toolsChanged(assembly.tools),
       })
       for (const { message, intent } of commits) {
@@ -538,15 +539,25 @@ export class ReactLoopAgent implements Agent {
     if (!proposedConfig.provider || !proposedConfig.model) {
       throw new Error(`agent "${this.id}" has no provider/model: set AgentOptions.provider and AgentOptions.model or supply both via the agent/request waterfall`)
     }
+    let requestConfig = proposedConfig
+    if (
+      (proposedConfig.provider !== seedConfig.provider || proposedConfig.model !== seedConfig.model)
+      && proposedConfig.reasoningEffort === seedConfig.reasoningEffort
+      && proposedConfig.reasoningEffort !== undefined
+    ) {
+      // Route-only overlays still carrying the seed effort inherited it; the new model did not choose it.
+      requestConfig = { ...proposedConfig }
+      delete requestConfig.reasoningEffort
+    }
     let config: LlmCallConfig
     let preparedCall: PreparedLlmCall | undefined
     try {
-      preparedCall = await this.loopCtx.llm.prepareCall(proposedConfig, signal)
+      preparedCall = await this.loopCtx.llm.prepareCall(requestConfig, signal)
       config = preparedCall.config
     } catch (error: unknown) {
       // Middleware may serve an unregistered route; terminal dispatch still requires an adapter.
       if (!(error instanceof LlmError) || error.code !== 'NO_ADAPTER') throw error
-      config = proposedConfig
+      config = requestConfig
     }
     signal.throwIfAborted()
     return { config, ...preparedCall === undefined ? {} : { preparedCall } }
@@ -561,7 +572,7 @@ export class ReactLoopAgent implements Agent {
     signal: AbortSignal,
   ): GenerateOptions {
     const { session } = this
-    const surfaceGeneration = session.surface.replaceGeneration
+    const surfaceGeneration = session.surface.contentGeneration
     const header = canonicalHeader({
       config,
       ...preparedCall === undefined ? {} : { adapterDefaults: preparedCall.adapterDefaults },

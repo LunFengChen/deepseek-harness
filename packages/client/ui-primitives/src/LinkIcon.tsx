@@ -7,10 +7,15 @@
  * cannot compose a glyph outside a link. Design sources:
  * ic_globe_language_outline_20, ic_code_outline_20, ic_folder_outline_20,
  * ic_photo_outline_20, ic_paper_doc_outline_20, ic_paper_outline_20.
+ *
+ * A `url` glyph whose destination names a well-known site is that site's own
+ * mark instead of the globe (`SiteGlyph.tsx`); every mark keeps the same
+ * currentColor-only rule.
  */
 import type { ReactNode } from 'react'
 import { classifyFileType, fileExtension } from './FileTypeIcon.tsx'
 import { isCodeFileType, isLinkCodeExtension } from './code-file-types.ts'
+import { siteGlyph } from './SiteGlyph.tsx'
 import type { IconProps } from './icons/props.ts'
 
 /**
@@ -24,6 +29,12 @@ export type LinkIconKind = 'url' | 'folder' | 'code' | 'image' | 'document' | 'o
 /** Props for {@link LinkIcon}: the category plus the shared icon sizing seat. */
 export interface LinkIconProps extends IconProps {
   kind: LinkIconKind
+  /**
+   * Destination of a `url` link. A well-known site draws its own mark, so
+   * callers that know the destination should pass it; anything else keeps the
+   * globe. Other kinds ignore it — their destination is a path, not a site.
+   */
+  href?: string | undefined
 }
 
 /**
@@ -133,13 +144,14 @@ function assertNever(value: never): never {
 
 /**
  * Render the leading glyph for one clickable artifact link.
- * @param props - The link category, optional size (default 14px — the inline
- * link text size these glyphs sit beside), and optional CSS class.
+ * @param props - The link category, the optional destination that can select a
+ * site mark, optional size (default 14px — the inline link text size these
+ * glyphs sit beside), and optional CSS class.
  * @returns The category's SVG glyph, riding currentColor.
  */
-export function LinkIcon({ kind, size = 14, className }: LinkIconProps): ReactNode {
+export function LinkIcon({ kind, href, size = 14, className }: LinkIconProps): ReactNode {
   switch (kind) {
-    case 'url': return <GlobeGlyph size={size} className={className} />
+    case 'url': return siteGlyph({ href, size, className }) ?? <GlobeGlyph size={size} className={className} />
     case 'folder': return <FolderGlyph size={size} className={className} />
     case 'code': return <CodeGlyph size={size} className={className} />
     case 'image': return <PhotoGlyph size={size} className={className} />

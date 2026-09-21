@@ -14,11 +14,8 @@ packages:
   # closure is what the exe bundles and what the Python runtime distributes.
   - python/sdk-runtime
 
-# Vendored framework packages keep their upstream semver ranges, while local
-# builds must resolve those matching names to this workspace's pinned sources.
-linkWorkspacePackages: true
-
 overrides:
+  'extract-zip>yauzl': '3.4.0'
   '@deepseek-ai/cosmokit': 'link:vendor/cosmokit'
   '@deepseek-ai/schemastery': 'link:vendor/schemastery'
   '@deepseek-ai/dsh-settings': 'npm:@x1a0f3n9/dsh-settings@workspace:*'
@@ -50,6 +47,24 @@ overrides:
   '@deepseek-ai/dsh-fs': 'npm:@x1a0f3n9/dsh-fs@workspace:*'
   '@deepseek-ai/dsh-home-paths': 'npm:@x1a0f3n9/dsh-home-paths@workspace:*'
   '@deepseek-ai/dsh-sandbox': 'npm:@x1a0f3n9/dsh-sandbox@workspace:*'
+  '@deepseek-ai/dsh-api-terminal-controller': 'npm:@x1a0f3n9/dsh-api-terminal-controller@workspace:*'
+  '@deepseek-ai/dsh-browser-use': 'npm:@x1a0f3n9/dsh-browser-use@workspace:*'
+  '@deepseek-ai/dsh-client-ui-plugin-manager': 'npm:@x1a0f3n9/dsh-client-ui-plugin-manager@workspace:*'
+  '@deepseek-ai/dsh-client-ui-settings-unarchive-sessions': 'npm:@x1a0f3n9/dsh-client-ui-settings-unarchive-sessions@workspace:*'
+  '@deepseek-ai/dsh-client-ui-sidebar-browser': 'npm:@x1a0f3n9/dsh-client-ui-sidebar-browser@workspace:*'
+  '@deepseek-ai/dsh-client-ui-sidebar-terminal': 'npm:@x1a0f3n9/dsh-client-ui-sidebar-terminal@workspace:*'
+  '@deepseek-ai/dsh-compaction-image-offload': 'npm:@x1a0f3n9/dsh-compaction-image-offload@workspace:*'
+  '@deepseek-ai/dsh-computer-use': 'npm:@x1a0f3n9/dsh-computer-use@workspace:*'
+  '@deepseek-ai/dsh-fs-ssh': 'npm:@x1a0f3n9/dsh-fs-ssh@workspace:*'
+  '@deepseek-ai/dsh-hmr': 'npm:@x1a0f3n9/dsh-hmr@workspace:*'
+  '@deepseek-ai/dsh-mcp-resources': 'npm:@x1a0f3n9/dsh-mcp-resources@workspace:*'
+  '@deepseek-ai/dsh-office-to-pdf': 'npm:@x1a0f3n9/dsh-office-to-pdf@workspace:*'
+  '@deepseek-ai/dsh-plugin-manager': 'npm:@x1a0f3n9/dsh-plugin-manager@workspace:*'
+  '@deepseek-ai/dsh-ptc-runtime-node': 'npm:@x1a0f3n9/dsh-ptc-runtime-node@workspace:*'
+  '@deepseek-ai/dsh-sandbox-ssh': 'npm:@x1a0f3n9/dsh-sandbox-ssh@workspace:*'
+  '@deepseek-ai/dsh-skill-office': 'npm:@x1a0f3n9/dsh-skill-office@workspace:*'
+  '@deepseek-ai/dsh-ssh': 'npm:@x1a0f3n9/dsh-ssh@workspace:*'
+  '@deepseek-ai/dsh-workspace-changes': 'npm:@x1a0f3n9/dsh-workspace-changes@workspace:*'
 
 peerDependencyRules:
   allowedVersions:
@@ -97,19 +112,26 @@ allowBuilds:
   '@x1a0f3n9/dshmarket@https://codeload.github.com/LunFengChen/dsh-market/tar.gz/8c3679053d085287a6379338e2ea4db517d1a2b2': true
 
 minimumReleaseAgeExclude:
+  # Office engines and their API are qualified and released together by the kit repository.
+  - '@deepseek-ai/libreoffice-kit@0.0.1'
+  - '@deepseek-ai/libreoffice-kit-darwin-arm64@0.0.1'
+  - '@deepseek-ai/libreoffice-kit-darwin-x64@0.0.1'
+  - '@deepseek-ai/libreoffice-kit-win32-arm64@0.0.1'
+  - '@deepseek-ai/libreoffice-kit-win32-x64@0.0.1'
+  - '@deepseek-ai/libreoffice-kit-wasm@0.0.1'
   # Fresh pi-ai releases carry the model catalog updates that are the whole
   # point of bumping it; waiting out the release age would defeat that.
   - '@earendil-works/pi-ai@0.85.1'
   - '@earendil-works/pi-telemetry@0.85.1'
-  - node-addon-native-custom-loader@0.1.4
-  - node-addon-require-builtin-darwin-arm64@0.1.4
-  - node-addon-require-builtin-darwin-x64@0.1.4
-  - node-addon-require-builtin-linux-arm64-gnu@0.1.4
-  - node-addon-require-builtin-linux-x64-gnu@0.1.4
-  - node-addon-require-builtin-win32-arm64-msvc@0.1.4
-  - node-addon-require-builtin-win32-ia32-msvc@0.1.4
-  - node-addon-require-builtin-win32-x64-msvc@0.1.4
-  - node-addon-require-builtin@0.1.4
+  - node-addon-native-custom-loader@0.1.6
+  - node-addon-require-builtin-darwin-arm64@0.1.6
+  - node-addon-require-builtin-darwin-x64@0.1.6
+  - node-addon-require-builtin-linux-arm64-gnu@0.1.6
+  - node-addon-require-builtin-linux-x64-gnu@0.1.6
+  - node-addon-require-builtin-win32-arm64-msvc@0.1.6
+  - node-addon-require-builtin-win32-ia32-msvc@0.1.6
+  - node-addon-require-builtin-win32-x64-msvc@0.1.6
+  - node-addon-require-builtin@0.1.6
   # The active pnpm supply-chain policy blocks this reviewed runtime closure
   # until its release-age window expires unless every exact package is exempt.
   - '@anthropic-ai/claude-agent-sdk-darwin-arm64@0.3.263'
@@ -133,7 +155,14 @@ minimumReleaseAgeExclude:
   - '@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2'
   - '@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1'
   - '@x1a0f3n9/dshmarket@1.45.2'
-
+  # The native computer-use provider pins this reviewed upstream runtime closure.
+  - '@trycua/cua-driver-darwin-arm64@0.28.0'
+  - '@trycua/cua-driver-darwin-x64@0.28.0'
+  - '@trycua/cua-driver-linux-arm64-gnu@0.28.0'
+  - '@trycua/cua-driver-linux-x64-gnu@0.28.0'
+  - '@trycua/cua-driver-win32-arm64-msvc@0.28.0'
+  - '@trycua/cua-driver-win32-x64-msvc@0.28.0'
+  - '@trycua/cua-driver@0.28.0'
 patchedDependencies:
   '@electron/osx-sign@1.3.3': patches/@electron__osx-sign@1.3.3.patch
   '@yao-pkg/pkg@6.21.0': patches/@yao-pkg__pkg@6.21.0.patch

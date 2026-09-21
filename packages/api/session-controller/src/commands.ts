@@ -271,10 +271,7 @@ export class SessionCommandController {
         { sessionId: request.sessionId },
       )
     }
-    let cut = SessionLogOffset(boundary.seq + 1)
-    while (cut < source.events.length && source.events[cut]?.type !== 'turn/start') {
-      cut = SessionLogOffset(cut + 1)
-    }
+    const cut = SessionLogOffset(boundary.seq + 1)
     let workspace: Workspace | undefined
     try {
       workspace = await this.forkWorkspace(source.header)
@@ -448,11 +445,11 @@ export class SessionCommandController {
   }
 
   /**
-   * Mutate one still-pending queue occurrence without resuming a cold Agent.
+   * Mutate one pending Inbox occurrence, restoring an ordinary cold Agent when needed.
    * @param request - Session, queue item, and requested mutation.
    * @returns acknowledgement that the queue mutation was applied.
    */
-  updateQueue(request: SessionUpdateQueueRequest): SessionUpdateQueueValue {
+  async updateQueue(request: SessionUpdateQueueRequest): Promise<SessionUpdateQueueValue> {
     if (request.action.kind === 'edit') {
       if (request.action.content.some(block => block.type !== 'text')) {
         throw new RemoteError(
@@ -469,9 +466,14 @@ export class SessionCommandController {
         )
       }
     }
-    const agent = this.ctx.agents.get(request.sessionId)
+    let agent = this.ctx.agents.get(request.sessionId)
     if (agent === undefined) {
-      throw new RemoteError('session/queue-item-not-found', 'queued item is no longer pending', { itemId: request.itemId })
+      const found = await this.agents.resolveAgent(request.sessionId)
+      if ('error' in found) {
+        if (found.error.code !== 'session/not-found') throw found.error
+        throw new RemoteError('session/queue-item-not-found', 'queued item is no longer pending', { itemId: request.itemId })
+      }
+      agent = found.agent
     }
     if (hasApiSessionSubagentOwner(this.ctx, agent.session, agent)) {
       const identity = this.ctx.sessionProjections

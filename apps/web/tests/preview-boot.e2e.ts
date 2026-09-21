@@ -18,6 +18,7 @@
  */
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
+import { once } from 'node:events'
 import { createServer } from 'node:http'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { tmpdir } from 'node:os'
@@ -211,7 +212,8 @@ async function respond(
  */
 async function serveDist(overrides: ReadonlyMap<string, string>): Promise<Site> {
   const server = createServer((request, response) => { void respond(request, response, overrides) })
-  await new Promise<void>((listening) => { server.listen(0, '127.0.0.1', listening) })
+  server.listen(0, '127.0.0.1')
+  await once(server, 'listening')
   const address = server.address()
   if (address === null || typeof address === 'string') throw new Error('preview boot: the static server bound no port')
   return {

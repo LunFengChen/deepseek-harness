@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { act, render } from '@testing-library/react'
 import {
-  SlotTestRuntime, TestRemote, stubSettingsScope, usePinnedBrowserLanguages,
+  SlotTestRuntime, stubSettingsScope, usePinnedBrowserLanguages,
 } from '@x1a0f3n9/dsh-client-test-runtime'
 import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import { resolveSlotLabel } from '@x1a0f3n9/dsh-client-ui-slots'
@@ -43,15 +43,18 @@ async function bench() {
       : stubSettingsScope().scope,
   } as never)
   runtime.ctx.provide('layout', { openRightbar: vi.fn(), closeRightbar: vi.fn() } as never)
-  runtime.ctx.provide('sidebarRight', { openResource: vi.fn() } as never)
+  runtime.ctx.provide('sidebarRight', { openResource: vi.fn(), openTab: vi.fn() } as never)
+  runtime.ctx.provide('sidebarRightTabs', { register: vi.fn(() => () => {}) } as never)
+  runtime.ctx.provide('resources', { register: vi.fn(() => () => {}) } as never)
+  const openSession = vi.fn<(id: SessionId) => void>()
   runtime.ctx.provide('uiWorkspace', {
     openWorkspace: vi.fn(async (_workspaceId: WorkspaceId, beforeOpen: (id: SessionId) => void) => {
       beforeOpen(SID)
-      runtime.sessions.open(SID)
+      openSession(SID)
     }),
-    openSession: (id: SessionId) => { runtime.sessions.open(id) },
+    openSession,
   } as never)
-  new TestRemote(runtime.ctx, {
+  runtime.remote.provideNamespaces({
     session: { openWorkspacePath: vi.fn(async () => ({ ok: true, value: { opened: true } })) },
   })
   const locale = new LocaleRuntime(runtime.ctx)
@@ -133,16 +136,16 @@ describe('Chat apply wiring', () => {
 
   it('keeps the Chat standard source total while its target enters and leaves', async () => {
     const b = await bench()
-    await b.runtime.sessions.add({ id: SID }, { current: false })
-    const binding = b.runtime.sessions.binding(SID)
-    if (binding === undefined) throw new Error('Chat source test Session binding is unavailable')
+    await b.runtime.sessions.add({ id: SID })
+    using reference = b.runtime.sessions.retain(SID)
+    const binding = reference.binding
     const resolveSource = (owner: SessionBinding): ObservableSnapshot<ChatSnapshot> => {
       const contribution = b.sourceDescriptor.resolve(owner) as {
         hooks: { chat: ObservableSnapshot<ChatSnapshot> }
       }
       return contribution.hooks.chat
     }
-    const source = b.runtime.ctx.uiSession.adapter.resolve(SID)!.hooks.chat as
+    const source = b.runtime.ctx.uiSession.adapter.bindingSource(reference).getSnapshot().hooks.chat as
       ObservableSnapshot<ChatSnapshot>
     expect(resolveSource(binding)).toBe(source)
     expect(resolveSource(binding)).toBe(source)

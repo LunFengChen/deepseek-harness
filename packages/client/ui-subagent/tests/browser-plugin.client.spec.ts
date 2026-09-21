@@ -41,9 +41,6 @@ function sessionsWith(sessions: SessionSummary[]) {
       subscribe: () => () => {},
     },
     actionCalls,
-    openSubagent: (address: SubagentAddress) => {
-      actionCalls.push({ method: 'openSubagent', args: [address] })
-    },
     refreshSubagents: (parentSessionId: SessionId) => {
       actionCalls.push({ method: 'refreshSubagents', args: [parentSessionId] })
       return Promise.resolve()
@@ -70,6 +67,16 @@ async function fullBench(sessions: SessionSummary[]) {
   const ctx = new Context()
   const face = sessionsWith(sessions)
   ctx.provide('sessions', face)
+  ctx.provide('uiWorkspace', {
+    openSession: (address: SubagentAddress) => {
+      face.actionCalls.push({ method: 'openSession', args: [address] })
+    },
+  } as never)
+  ctx.provide('sidebarRight', {
+    openResource: (address: string, options: unknown) => {
+      face.actionCalls.push({ method: 'openResource', args: [address, options] })
+    },
+  } as never)
   ctx.provide('remote', { $on: () => () => {} } as never)
   ctx.provide('settingsScope', { bind: () => stubSettingsScope().scope } as never)
   await provideSlotFaces(ctx)
@@ -90,7 +97,7 @@ const FAMILY: SessionSummary[] = [
 
 describe('apply', () => {
   it('declares the services it binds', () => {
-    expect(inject).toEqual(['sessions', 'slots', 'locale'])
+    expect(inject).toEqual(['sessions', 'uiWorkspace', 'slots', 'locale', 'sidebarRight'])
   })
 
   it('registers catalog actions and selects read-only subagent composers from session facts', async () => {
@@ -104,10 +111,18 @@ describe('apply', () => {
       mode: 'continuable',
     }
     actions.openChild(address)
+    actions.openChildAside(address)
     actions.refresh(sid('parent'))
     actions.setCatalogOpen(sid('parent'), true)
     expect(face.actionCalls).toEqual([
-      { method: 'openSubagent', args: [address] },
+      { method: 'openSession', args: [address] },
+      {
+        method: 'openResource',
+        args: [
+          'dsh-resource://subagentchat/session/c1?parent=parent&mode=continuable',
+          { kind: 'subagentchat', preferNewPane: true },
+        ],
+      },
       { method: 'refreshSubagents', args: [sid('parent')] },
       { method: 'setSubagentCatalogOpen', args: [sid('parent'), true] },
     ])
