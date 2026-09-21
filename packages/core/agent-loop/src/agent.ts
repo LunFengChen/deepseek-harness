@@ -538,15 +538,25 @@ export class ReactLoopAgent implements Agent {
     if (!proposedConfig.provider || !proposedConfig.model) {
       throw new Error(`agent "${this.id}" has no provider/model: set AgentOptions.provider and AgentOptions.model or supply both via the agent/request waterfall`)
     }
+    let requestConfig = proposedConfig
+    if (
+      (proposedConfig.provider !== seedConfig.provider || proposedConfig.model !== seedConfig.model)
+      && proposedConfig.reasoningEffort === seedConfig.reasoningEffort
+      && proposedConfig.reasoningEffort !== undefined
+    ) {
+      // Route-only overlays still carrying the seed effort inherited it; the new model did not choose it.
+      requestConfig = { ...proposedConfig }
+      delete requestConfig.reasoningEffort
+    }
     let config: LlmCallConfig
     let preparedCall: PreparedLlmCall | undefined
     try {
-      preparedCall = await this.loopCtx.llm.prepareCall(proposedConfig, signal)
+      preparedCall = await this.loopCtx.llm.prepareCall(requestConfig, signal)
       config = preparedCall.config
     } catch (error: unknown) {
       // Middleware may serve an unregistered route; terminal dispatch still requires an adapter.
       if (!(error instanceof LlmError) || error.code !== 'NO_ADAPTER') throw error
-      config = proposedConfig
+      config = requestConfig
     }
     signal.throwIfAborted()
     return { config, ...preparedCall === undefined ? {} : { preparedCall } }

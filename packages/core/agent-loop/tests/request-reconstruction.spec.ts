@@ -307,6 +307,52 @@ describe('request stability across the loop', () => {
     ])
   })
 
+  it('drops an inherited reasoning effort when a waterfall only changes the route', async () => {
+    const grok = new MockAdapter([textResponse('grok')], {
+      efforts: [
+        { id: ReasoningEffortId('high'), name: 'High' },
+        { id: ReasoningEffortId('xhigh'), name: 'xhigh' },
+      ],
+      defaultEffort: ReasoningEffortId('high'),
+    })
+    const yige = new MockAdapter([textResponse('yige')], {
+      efforts: [{ id: ReasoningEffortId('low'), name: 'Low' }],
+      defaultEffort: ReasoningEffortId('low'),
+    })
+    const ctx = await harnessRoutes([
+      ['xfcode-fuli', grok],
+      ['yige', yige],
+    ])
+    const agent = await ctx.agentLoop.create(SessionId('inherited-effort-reroute'), {
+      provider: 'xfcode-fuli',
+      model: 'grok-4.6',
+      reasoningEffort: ReasoningEffortId('xhigh'),
+    })
+    ctx.on('agent/request', async ({ turn }, next) => {
+      const config = await next()
+      return turn === 2
+        ? { ...config, provider: 'yige', model: 'gpt-5.6-luna' }
+        : config
+    })
+
+    send(agent, 'first')
+    await waitForIdle(ctx, agent)
+    send(agent, 'second')
+    await waitForIdle(ctx, agent)
+
+    expect(grok.requests[0]?.reasoningEffort).toBe(ReasoningEffortId('xhigh'))
+    expect(yige.requests[0]?.reasoningEffort).toBe(ReasoningEffortId('low'))
+    const headers = agent.session.snapshotEvents().filter(event => event.type === 'request/header')
+    expect(headers.map(event => event.data.header.config.reasoningEffort)).toEqual([
+      ReasoningEffortId('xhigh'),
+      ReasoningEffortId('low'),
+    ])
+    expect(headers.map(event => event.data.header.adapterDefaults)).toEqual([
+      undefined,
+      { reasoningEffort: true },
+    ])
+  })
+
   it('preserves an explicit agent maxTokens cap across a provider switch', async () => {
     const deepseek = new MockAdapter([textResponse('deepseek')], undefined, 256_000)
     const other = new MockAdapter([textResponse('other')], undefined, 8_192)
