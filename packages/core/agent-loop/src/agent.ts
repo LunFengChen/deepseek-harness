@@ -511,6 +511,10 @@ export class ReactLoopAgent implements Agent {
     // A loop instance starts from its declared route, restoring only an explicit
     // effort owned by that exact model. Later steps re-resolve marked defaults.
     const persistedHeader = session.requestHeader()
+    // Truncation can drop the header this instance already logged.
+    if (this.requestHeaderLogged && persistedHeader === undefined) {
+      this.requestHeaderLogged = false
+    }
     const persistedConfig = persistedHeader?.config
     const route = { provider: this.options.provider ?? '', model: this.options.model ?? '' }
     const persistedReasoningEffort = persistedConfig?.provider === route.provider
@@ -521,9 +525,8 @@ export class ReactLoopAgent implements Agent {
     const reasoningEffort = this.options.reasoningEffort ?? persistedReasoningEffort
     const maxTokens = this.options.maxTokens
     const seedConfig = deepFreeze(structuredClone(
-      this.requestHeaderLogged
-        // oxlint-disable-next-line typescript/no-non-null-assertion -- the instance logged the header it now folds
-        ? requestProposal(persistedHeader!)
+      this.requestHeaderLogged && persistedHeader !== undefined
+        ? requestProposal(persistedHeader)
         : {
           ...route,
           ...reasoningEffort === undefined ? {} : { reasoningEffort },

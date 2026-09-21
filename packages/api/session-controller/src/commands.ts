@@ -599,6 +599,9 @@ export class SessionCommandController {
     await agent.runMaintenance(async () => {
       await persistence.truncate(agent.session.id, length)
       agent.session.truncate(length)
+      // Truncation starts at turn/start, after the wake splice. Replay would restore
+      // that user message; regenerate would then prompt a second copy.
+      agent.inbox.clear()
     })
     return { accepted: true }
   }
