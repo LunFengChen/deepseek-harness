@@ -208,6 +208,26 @@ describe('Agent', () => {
       expect.stringContaining('agent event "agent/status" listener threw'),
     )
   })
+
+  it('followup after truncating the logged header still admits a user message', async () => {
+    const adapter = new MockAdapter([textResponse('one'), textResponse('two')])
+    const ctx = await harness(adapter)
+    const agent = await ctx.agentLoop.create(SessionId('truncate-header'), {
+      provider: 'mock', model: 'mock',
+    })
+    send(agent, 'first')
+    await agent.whenIdle()
+    const userEvent = agent.session.snapshotEvents().find(event => event.type === 'user/message')
+    if (userEvent === undefined) throw new Error('expected a user/message')
+    agent.session.truncate(agent.session.deletionStart(userEvent.seq))
+    agent.inbox.clear()
+    send(agent, 'second')
+    await agent.whenIdle()
+    expect(agent.session.snapshotEvents().flatMap((event) => {
+      if (event.type !== 'user/message') return []
+      return event.data.content.flatMap(part => part.type === 'text' ? [part.text] : [])
+    })).toEqual(['second'])
+  })
 })
 
 describe('seeded create', () => {
