@@ -10,6 +10,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { z } from 'zod'
+import { createSystemMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   SESSION_LIVE_WINDOW_EVENTS,
@@ -168,6 +169,42 @@ function fillPastLiveWindow(session: Session): void {
     session.append('turn/start', { turn })
     session.append('turn/end', { turn, reason: { kind: 'completed' } })
   }
+}
+
+const SYSTEM_PLUGIN = '@x1a0f3n9/dsh-system-prompt'
+
+function restoreWindowedSession(id: string): Session {
+  const donor = Session.create(SessionId(`${id}-donor`))
+  const first = donor.append('system/message', {
+    turn: 1,
+    step: 1,
+    message: createSystemMessage('You are terse.', SYSTEM_PLUGIN),
+  }, { surfaceOp: 'append' }).seq
+  const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 3) + 10
+  for (let turn = 1; turn <= turns; turn++) {
+    donor.append('turn/start', { turn })
+    donor.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: `hello ${turn}` }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    donor.append('turn/end', { turn, reason: { kind: 'completed' } })
+  }
+  donor.append('system/message', {
+    turn: 1,
+    step: 1,
+    message: createSystemMessage('You are terse and answer in one line.', SYSTEM_PLUGIN),
+  }, { surfaceOp: { op: 'replace', startSeq: first, endSeq: first }, sourceEventSeqs: [first] })
+  const events = donor.snapshotEvents()
+  const header = {
+    version: SESSION_FORMAT_VERSION,
+    id: SessionId(id),
+    createdAt: 1,
+    isSeeded: false,
+  }
+  const restored = Session.beginPersistedRestore(header.id, header)
+  for (const event of events) restored.adoptRestoredEvent(event)
+  restored.finishPersistedRestore(SessionLogOffset(0))
+  return restored
 }
 
 describe('SessionProjectionRegistry drive', () => {
@@ -865,6 +902,54 @@ describe('SessionProjectionRegistry drive', () => {
     }
     restored.finishPersistedRestore(SessionLogOffset(inherited.length))
     expect(ctx.sessionProjections.stateOf(restored, 'test/cut')).toBe(inherited.length)
+  })
+
+  it('bootstraps windowed units from the current Session instead of folding the live tail', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    const heard: string[] = []
+    ctx.sessionProjections.register({
+      ...marksUnit(),
+      bootstrapWindowed: session => ({ marks: [`nodes:${String(session.surface.nodes.length)}`] }),
+    })
+    ctx.sessionProjections.register({
+      ...countUnit(),
+      bootstrapWindowed: session => session.surface.nodes.length,
+    })
+    const stop = ctx.sessionProjections.onChanged((_session, key, value) => {
+      heard.push(`${key}:${JSON.stringify(value)}`)
+    })
+
+    const snapshotted = restoreWindowedSession('window-bootstrap-snapshot')
+    expect(snapshotted.liveBaseSeq).toBeGreaterThan(0)
+    expect(ctx.sessionProjections.stateOf(snapshotted, 'test/count')).toBe(snapshotted.surface.nodes.length)
+    expect(ctx.sessionProjections.snapshot(snapshotted).values['test/marks'])
+      .toEqual({ marks: [`nodes:${String(snapshotted.surface.nodes.length)}`] })
+    expect(heard).toEqual([])
+
+    const driven = restoreWindowedSession('window-bootstrap-drive')
+    ctx.sessions.enter(driven)
+    ctx.sessions.announce(driven)
+    driven.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'after restore' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    expect(ctx.sessionProjections.stateOf(driven, 'test/count')).toBe(driven.surface.nodes.length)
+    expect(heard).toEqual([
+      `test/marks:${JSON.stringify({ marks: [`nodes:${String(driven.surface.nodes.length)}`] })}`,
+    ])
+
+    stop()
+    const quiet = restoreWindowedSession('window-bootstrap-quiet')
+    ctx.sessions.enter(quiet)
+    ctx.sessions.announce(quiet)
+    quiet.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'quiet' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    expect(ctx.sessionProjections.stateOf(quiet, 'test/count')).toBe(quiet.surface.nodes.length)
+    expect(heard).toHaveLength(1)
   })
 
 })

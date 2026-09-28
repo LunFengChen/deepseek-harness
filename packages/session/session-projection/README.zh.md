@@ -51,7 +51,7 @@ const definition = {
 }
 ```
 
-`init(header, inheritedEventCount)` 同时接收轻量元数据与精确的 fork 继承切点；它不得从 `firstLiveSeq` 或 `session/end-seed` 推断该切点。`apply` 必须同步，且对与单元无关的事件必须返回同一个状态引用——引用不变意味着零下游工作。注册表用 `Object.is` 比较相邻的 `wire.view` 原始结果；对象或数组 view 若要在仅内部 state 变化时抑制发布，就必须复用引用，结构相同的新对象仍算变化。携带状态的日志事件必须携带变更后的完整状态，绝不携带裸增量。
+`init(header, inheritedEventCount)` 同时接收轻量元数据与精确的 fork 继承切点；它不得从 `firstLiveSeq` 或 `session/end-seed` 推断该切点。`apply` 必须同步，且对与单元无关的事件必须返回同一个状态引用——引用不变意味着零下游工作。能快照当前 surface 的单元实现可选的 `bootstrapWindowed(session)`，这样窗口化 Session 就不会把存活尾巴当作 seq 0 来折叠。注册表用 `Object.is` 比较相邻的 `wire.view` 原始结果；对象或数组 view 若要在仅内部 state 变化时抑制发布，就必须复用引用，结构相同的新对象仍算变化。携带状态的日志事件必须携带变更后的完整状态，绝不携带裸增量。
 
 ### 注册与读取
 
@@ -133,7 +133,7 @@ const { asOfSeq, values } = ctx.sessionProjections.snapshot(session)
 - **注册表 cell 只活在内存里**——重启后首次触达时靠折叠日志重建；挂载了 `dsh-session-projection-cache` 的组合改由持久行播种该折叠。
 - **单元同步纪律只有部分可机械把关**——`wire.viewSchema.parse` 能拒绝返回 Promise 的 view，但阻塞的 `apply`、或读取撕裂的非会话状态的 `apply`，只能靠评审把关。
 
-- **窗口化恢复不能重建已丢掉的前缀** — `ingestRestoredEvent` 在窗口丢掉前缀之前折叠每条恢复事件。之后才注册的单元只能看见存活尾巴。
+- **窗口化恢复不能重建已丢掉的前缀** — `ingestRestoredEvent` 在窗口丢掉前缀之前折叠每条恢复事件。之后才注册的单元只能看见存活尾巴，除非它实现 `bootstrapWindowed` 来快照当前 surface。
 
 <a id="dev-note"></a>
 ### 开发备注

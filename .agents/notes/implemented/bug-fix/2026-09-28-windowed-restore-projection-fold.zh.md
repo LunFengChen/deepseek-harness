@@ -18,7 +18,7 @@ Status: implemented
 
 `AgentLoop.resumeWith` 在流式 `adoptEvent`、`handle.read(0)` 回退、以及中断回合 closer 共用的 `adopt` 辅助函数里调用这两个 ingest。未挂载 token meter 时跳过它的 ingest。
 
-token-meter `_sync` 优先使用恢复时的 ingest。若该回放状态缺失，它会从存活尾巴和 prefixHot 快照当前 surface，让 `measure()` 仍能定价。该快照不恢复 usage 锚点，也不恢复已被替换掉的 seq；恢复时 ingest 仍是保留这些信息的路径。投影 `cellFor` 仍会为恢复之后才注册的单元从尾巴迟到补建——那些单元从未见过已丢掉的前缀。
+token-meter `_sync` 优先使用恢复时的 ingest。若该回放状态缺失，它会从存活尾巴和 prefixHot 快照当前 surface，让 `measure()` 仍能定价。该快照不恢复 usage 锚点，也不恢复已被替换掉的 seq；恢复时 ingest 仍是保留这些信息的路径。投影 `cellFor` 和第一次存活 `drive` 在单元实现了 `bootstrapWindowed` 时调用它，快照当前 surface 状态，而不是把存活尾巴当作 seq 0 折叠。没有该钩子的单元仍从尾巴迟到补建——那些单元从未见过已丢掉的前缀。
 
 `Session.beginPersistedRestore` 接受可选的继承切点，以便已经知道该切点的调用方能在首次 ingest 之前给 `init` 播种。恢复仍在扫描结束后由 `finishPersistedRestore` 记录持久切点；当前格式的 `stat` 不暴露该切点。
 
@@ -38,7 +38,7 @@ token-meter `_sync` 优先使用恢复时的 ingest。若该回放状态缺失�
 
 打开一个大型已存储 Session，随后测量或 snapshot，不会只因为 replace 点名了存活尾巴之前的 seq 就抛出 `invalid current range`。新的存活追加从已 ingest 的水位继续，并通过尾巴上稠密的 `eventAt` 前进。
 
-在窗口化 Session 已经存在之后才注册的投影单元只会从存活尾巴迟到补建。必须看见已被替换掉的前缀节点的单元，要在恢复之前挂载，并在流上 ingest。
+在窗口化 Session 已经存在之后才注册的投影单元，若实现了 `bootstrapWindowed` 就用它；否则只从存活尾巴迟到补建。必须看见已被替换掉的前缀节点的单元，要在恢复之前挂载，并在流上 ingest。
 
 `init` 会读 `inheritedEventCount` 的单元在流式恢复期间看到的是 `0`，除非调用方把切点传进了 `beginPersistedRestore`。持久切点仍在 finish 时写入 Session 元数据。
 
@@ -49,3 +49,5 @@ token-meter `_sync` 优先使用恢复时的 ingest。若该回放状态缺失�
 [废弃对任意 Session 事件的同步读取](../architecture/2026-09-09-deprecate-synchronous-session-event-reads.zh.md) 仍然拥有不再把完整序列留在内存里的方向。
 
 [窗口化 Session 在上下文溢出时压缩](2026-09-28-windowed-overflow-compaction.zh.md) 拥有 measure() 的 surface 快照，以及存活尾巴上的压缩锁检查。
+
+[窗口化投影快照当前 surface](2026-09-28-windowed-surface-replace-bootstrap.zh.md) 拥有只需要当前 surface 的单元的 `bootstrapWindowed`。

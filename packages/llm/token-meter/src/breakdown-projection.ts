@@ -5,10 +5,11 @@
  */
 
 import { z } from 'zod'
-import { canonicalHeader, isSurfaceEvent, SessionSeq } from '@x1a0f3n9/dsh-session'
+import { canonicalHeader, deriveEventMessage, isSurfaceEvent, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { Session } from '@x1a0f3n9/dsh-session'
 import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import { estimateToolsTokens } from './estimate.ts'
-import { commitSurfaceTokens, planSurfaceTokens } from './surface-fold.ts'
+import { commitSurfaceTokens, planSurfaceTokens, priceCurrentSurfaceNode } from './surface-fold.ts'
 // Import for the `contextBreakdown` SessionProjectionStateMap key merge.
 import type {} from './projection.ts'
 
@@ -37,6 +38,43 @@ const contextBreakdownStateSchema = z.object({
   breakdown: breakdownSchema,
 }).strict()
 type ContextBreakdownState = z.infer<typeof contextBreakdownStateSchema>
+type ContextBreakdownNode = ContextBreakdownState['nodes'][number]
+
+/** Classify the last nonempty system node as system tokens; every other price is a message. */
+function breakdownFromNodes(
+  nodes: readonly ContextBreakdownNode[],
+  toolsTokens: number,
+): ContextBreakdownState['breakdown'] {
+  const systemTokens = nodes.findLast(node => node.system && node.heuristicTokens > 0)?.heuristicTokens ?? 0
+  const messageTokens = nodes.reduce((total, node) => total + node.heuristicTokens, 0) - systemTokens
+  return { systemTokens, toolsTokens, messageTokens }
+}
+
+/**
+ * Price the current surface without replaying dropped replace ranges.
+ * @param session - windowed Session whose current nodes remain in the live tail or prefixHot.
+ * @returns host state for the current surface and latest request header.
+ * @throws when a current surface node is missing from the live window or is not a surface event.
+ */
+function bootstrapWindowedBreakdown(session: Session): ContextBreakdownState {
+  const nodes: ContextBreakdownNode[] = []
+  for (const seq of session.surface.nodes) {
+    // oxlint-disable-next-line typescript/no-deprecated -- Current surface nodes stay in the live tail or prefixHot.
+    const event = session.eventAt(seq)
+    if (event === undefined || !isSurfaceEvent(event)) {
+      throw new Error(`contextBreakdown cannot price surface node ${String(seq)} missing from the live window`)
+    }
+    nodes.push({
+      seq,
+      heuristicTokens: priceCurrentSurfaceNode(seq, deriveEventMessage(event)).heuristicTokens,
+      system: event.type === 'system/message',
+    })
+  }
+  return {
+    nodes,
+    breakdown: breakdownFromNodes(nodes, estimateToolsTokens(session.requestHeader())),
+  }
+}
 
 /**
  * Context composition with the last nonempty surviving system in surface
@@ -53,6 +91,7 @@ export const contextBreakdownProjectionDefinition = {
     nodes: [],
     breakdown: { systemTokens: 0, toolsTokens: 0, messageTokens: 0 },
   }),
+  bootstrapWindowed: bootstrapWindowedBreakdown,
   apply: (state, event) => {
     if (event.type === 'request/header') {
       const toolsTokens = estimateToolsTokens(canonicalHeader(event.data.header))

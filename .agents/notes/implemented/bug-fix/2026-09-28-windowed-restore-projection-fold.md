@@ -18,7 +18,7 @@ A later surface replace whose `startSeq` sits before `liveBaseSeq` then fails wi
 
 `AgentLoop.resumeWith` calls both ingest methods from the same `adopt` helper used by streaming `adoptEvent`, the `handle.read(0)` fallback, and interrupted-turn closers. Token meter ingest is skipped when that service is not mounted.
 
-Token-meter `_sync` prefers resume ingest. If that replay state is missing, it snapshots the current surface from the live tail and prefixHot so `measure()` can still price pressure. That snapshot does not recover usage anchors or replaced-away seqs; ingest during resume remains the path that preserves them. Projection `cellFor` still late-builds from the tail for units registered after restore — those units never saw the dropped prefix.
+Token-meter `_sync` prefers resume ingest. If that replay state is missing, it snapshots the current surface from the live tail and prefixHot so `measure()` can still price pressure. That snapshot does not recover usage anchors or replaced-away seqs; ingest during resume remains the path that preserves them. Projection `cellFor` and first live `drive` call `bootstrapWindowed` when the unit implements it, snapshotting current surface state instead of folding the live tail as seq 0. Units without that hook still late-build from the tail — those units never saw the dropped prefix.
 
 `Session.beginPersistedRestore` accepts an optional inherited cut so a caller that already knows it can seed `init` before the first ingest. Resume still records the durable cut in `finishPersistedRestore` after the scan; current-format storage does not expose that cut on `stat`.
 
@@ -38,7 +38,7 @@ Token-meter `_sync` prefers resume ingest. If that replay state is missing, it s
 
 Opening a large stored Session and then measuring or snapshotting it no longer throws `invalid current range` solely because a replace names a seq before the live tail. New live appends continue from the ingested watermark through `eventAt` on the dense tail.
 
-A projection unit registered after a windowed Session already exists late-builds from the live tail only. Units that must see replaced-away prefix nodes have to be mounted before resume and ingested during the stream.
+A projection unit registered after a windowed Session already exists uses `bootstrapWindowed` when it implements that hook; otherwise it late-builds from the live tail only. Units that must see replaced-away prefix nodes have to be mounted before resume and ingested during the stream.
 
 Units whose `init` reads `inheritedEventCount` see `0` during streamed resume unless the caller passed the cut into `beginPersistedRestore`. The durable cut is still applied at finish for Session metadata.
 
@@ -49,3 +49,5 @@ Units whose `init` reads `inheritedEventCount` see `0` during streamed resume un
 [Deprecate synchronous reads of arbitrary Session events](../architecture/2026-09-09-deprecate-synchronous-session-event-reads.md) still owns the direction away from complete in-memory logs.
 
 [Windowed Sessions compact on context overflow](2026-09-28-windowed-overflow-compaction.md) owns measure() surface snapshot and compaction lock inspection on the live tail.
+
+[Windowed projections snapshot the current surface](2026-09-28-windowed-surface-replace-bootstrap.md) owns `bootstrapWindowed` for units that only need the current surface.
