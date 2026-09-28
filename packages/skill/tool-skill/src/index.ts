@@ -358,10 +358,12 @@ function readCatalogEntries(source: unknown): SkillCatalogSource['entries'] | un
   return readable
 }
 
+/** Newest live-window catalog only; seqs before liveBaseSeq are a released prefix, not a hole. */
 function catalogHistory(agent: Agent): { visibleDigest?: string; published: boolean } {
   const visible = new Set(agent.session.surface.nodes)
   let published = false
-  for (let index = agent.session.seq - 1; index >= 0; index -= 1) {
+  const liveBase = agent.session.liveBaseSeq
+  for (let index = agent.session.seq - 1; index >= liveBase; index -= 1) {
     // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
     const event = agent.session.eventAt(SessionSeq(index))
     if (event === undefined) {
