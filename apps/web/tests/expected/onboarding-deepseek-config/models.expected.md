@@ -7,12 +7,15 @@
     - button "模型":
       - img
       - text: 模型
-    - button "插件":
+    - button "内置插件":
       - img
-      - text: 插件
+      - text: 内置插件
     - button "Agent 预设":
       - img
       - text: Agent 预设
+    - button "已归档会话":
+      - img
+      - text: 已归档会话
   - button "打开配置文件"
   - button "关闭":
     - img
@@ -30,7 +33,8 @@
       - group:
         - text: 自定义设置 API 地址
         - textbox "API 地址":
-          - /placeholder: https://api.deepseek.com
+          - /placeholder: https://api.deepseek.com/anthropic
+        - text: 请填写与当前连接配置兼容的 API 地址。
         - region "模型目录":
           - text: 模型目录 已自定义模型目录
           - button "恢复默认模型"
@@ -40,7 +44,7 @@
           - textbox "显示名称 1":
             - /placeholder: 显示名称
             - text: Private Preview
-          - button "容量 1" [expanded]:
+          - button "模型选项 1" [expanded]:
             - img
           - button "删除模型 1":
             - img
@@ -52,6 +56,12 @@
           - textbox "最大输出 token 数 1":
             - /placeholder: 256K
             - text: 64K
+          - group "输入类型 1":
+            - text: 输入类型
+            - checkbox "文本" [checked]
+            - text: 文本
+            - checkbox "图片" [checked]
+            - text: 图片
           - button "添加模型":
             - img
             - text: 添加模型

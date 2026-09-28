@@ -82,8 +82,12 @@ export type AgentPresetSeatProps =
  * @param props - composed slot props.
  * @returns the chip, or null when the deployment composes no presets.
  */
-export function AgentPresetSeat({ load, select, introduced, useAgentPresetSeat, t }: AgentPresetSeatProps) {
+export function AgentPresetSeat({
+  sessionId, useSessionRetainInfo, load, select, introduced, useAgentPresetSeat, t,
+}: AgentPresetSeatProps) {
   const state = useAgentPresetSeat(snapshot => snapshot)
+  const main = useSessionRetainInfo(info => sessionId === undefined
+    || (info?.retainedBy.mainView ?? 0) > 0)
   const [open, setOpen] = useState(false)
   // The seq keys the banner, so picking the same broken preset twice replays
   // it rather than leaving the first one silently in place.
@@ -132,7 +136,7 @@ export function AgentPresetSeat({ load, select, introduced, useAgentPresetSeat, 
 
   // Nothing to choose between: the deployment composes no presets and every
   // session shares the host composition.
-  if (!state.showPicker || !ready) return null
+  if (!main || !state.showPicker || !ready) return null
 
   // One wrapper span: the chip is a flex row with a gap, so loose character
   // spans would each pick up the gap between them.

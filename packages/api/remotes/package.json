@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-api-remotes",
   "description": "Remote BFF assembly for application-selected Host capabilities",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -73,6 +73,7 @@
     "@x1a0f3n9/dsh-host-plugin-inventory": "workspace:^",
     "@x1a0f3n9/dsh-llm": "workspace:^",
     "@x1a0f3n9/dsh-message-feedback": "workspace:^",
+    "@x1a0f3n9/dsh-permission-presets": "workspace:^",
     "@x1a0f3n9/dsh-session-reference": "workspace:^",
     "@x1a0f3n9/dsh-settings": "workspace:^",
     "@x1a0f3n9/dsh-subagent": "workspace:^",
@@ -85,6 +86,9 @@
     "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
     "@x1a0f3n9/dsh-api-workspace-files": "workspace:^",
     "zod": "^4.4.3",
-    "@x1a0f3n9/dsh-command-feedback": "workspace:^"
+    "@x1a0f3n9/dsh-command-feedback": "workspace:^",
+    "@x1a0f3n9/dsh-api-terminal-controller": "workspace:^",
+    "@x1a0f3n9/dsh-plugin-manager": "workspace:^",
+    "@x1a0f3n9/dsh-office-to-pdf": "workspace:^"
   }
 }

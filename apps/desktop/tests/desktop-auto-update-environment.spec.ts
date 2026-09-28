@@ -17,8 +17,8 @@ describe('desktop auto-update environment', () => {
       environment: 'test',
       target: 'mac-arm64',
       origin: 'https://desktop-updates.example.com',
-      publicUrl: 'https://desktop-updates.example.com/_/harness/desktop/stable/mac-arm64/',
-      keyPrefix: '_/harness/desktop/stable/mac-arm64',
+      publicUrl: 'https://desktop-updates.example.com/dsh-desk/feeds/mac-arm64/',
+      keyPrefix: 'dsh-desk/feeds/mac-arm64',
     })
     expect(resolveDesktopUploadConfig({
       DOWNLOAD_TEST_ORIGIN: 'https://desktop-updates.example.com/',
@@ -36,7 +36,7 @@ describe('desktop auto-update environment', () => {
     }, 'win32', 'x64')).toMatchObject({
       environment: 'production',
       target: 'win-x64',
-      publicUrl: 'https://download.deepseek.com/_/harness/desktop/stable/win-x64/',
+      publicUrl: 'https://download.deepseek.com/dsh-desk/feeds/win-x64/',
     })
     expect(resolveDesktopUploadConfig({
       DSH_DESKTOP_AUTO_UPDATE_ENV: 'production',
@@ -79,10 +79,10 @@ describe('desktop auto-update environment', () => {
     expect(() => desktopBuildRecordFilename('linux-x64' as 'mac-arm64')).toThrow(/unsupported target/u)
   })
 
-  it('matches electron-builder channel metadata names to the Desktop version', () => {
-    expect(desktopUpdateMetadataFilename('1.2.3', 'darwin')).toBe('latest-mac.yml')
-    expect(desktopUpdateMetadataFilename('1.2.3-alpha.4', 'darwin')).toBe('alpha-mac.yml')
-    expect(desktopUpdateMetadataFilename('1.2.3-beta.2', 'win32')).toBe('beta.yml')
+  it('uses Nightly metadata for stable and prerelease Desktop versions', () => {
+    expect(desktopUpdateMetadataFilename('1.2.3', 'darwin')).toBe('nightly-mac.yml')
+    expect(desktopUpdateMetadataFilename('1.2.3-alpha.4', 'darwin')).toBe('nightly-mac.yml')
+    expect(desktopUpdateMetadataFilename('1.2.3-beta.2', 'win32')).toBe('nightly.yml')
     expect(() => desktopUpdateMetadataFilename('not-semver', 'darwin')).toThrow(/invalid Desktop version/u)
     expect(() => desktopUpdateMetadataFilename('1.2.3', 'linux')).toThrow(/unsupported metadata platform/u)
   })

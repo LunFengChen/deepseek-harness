@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-18-layout-skips-git-hosted-dsh-plugins.md
-2026-09-18-layout-skips-git-hosted-dsh-plugins.md: 82b1c8a7f5efa2b9dd861918a465816dd528c3a7
-2026-09-18-layout-skips-git-hosted-dsh-plugins.zh.md: adb11d528b35ecfe8769b7b7585141661c45ba22
+2026-09-18-layout-skips-git-hosted-dsh-plugins.md: ee546688796335c29f994c1a625e933425f6234d
+2026-09-18-layout-skips-git-hosted-dsh-plugins.zh.md: 629d9b4724851022ff2aa094fefe0306d13a6925

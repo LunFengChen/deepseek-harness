@@ -53,10 +53,9 @@ describe('Session lineage flattening', () => {
     }
   })
 
-  it('projects the completion-reminder set into rows (absent = false)', () => {
-    const out = flattenLineage([s('a', 10), s('b', 20)], new Set(['b' as SessionId]))
-    expect(out.find(e => e.sessionId === 'a')?.completed).toBe(false)
-    expect(out.find(e => e.sessionId === 'b')?.completed).toBe(true)
-    expect(flattenLineage([s('a', 10)])[0]?.completed).toBe(false)
+  it('keeps lineage rows free of completion presentation state', () => {
+    const out = flattenLineage([s('a', 10), s('b', 20)])
+    expect(out).toHaveLength(2)
+    for (const row of out) expect(row).not.toHaveProperty('completed')
   })
 })

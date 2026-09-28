@@ -1,4 +1,6 @@
 import { useEffect, useId, useMemo, useState, type ReactNode } from 'react'
+import type { ClientEntryState } from '@x1a0f3n9/dsh-client-modules/client'
+import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type {
   PluginInventoryCatalogEntry,
   PluginInventorySetEnabledRequest,
@@ -26,6 +28,10 @@ export type PluginInventorySurface = 'inventory' | 'catalog'
 
 /** Registration-side Remote face used by the section. */
 export interface PluginInventorySettingsTabInjected {
+  /** Page-local module synchronization, independent from the Host inventory. */
+  hooks: { clientSync: ObservableSnapshot<ClientEntryState> }
+  /** Retry the latest client graph without changing the Host composition. */
+  retryClient: () => void
   /** Read a current Host inventory snapshot. */
   list: () => Promise<PluginInventorySnapshot>
   /** Persist enablement for one prebundled catalog entry. */
@@ -247,8 +253,9 @@ function StateTag({ kind, label }: { readonly kind: EnablementKind; readonly lab
 
 /** Render the plugin inventory or the xfdsh preset-plugin catalog, depending on `surface`. */
 export function PluginInventorySettingsTab({
-  list, setEnabled, presetName, t, surface = 'inventory',
+  list, setEnabled, presetName, t, surface = 'inventory', useClientSync, retryClient,
 }: PluginInventorySettingsTabProps): ReactNode {
+  const clientSync = useClientSync(snapshot => snapshot)
   const sectionId = useId()
   const [request, setRequest] = useState(0)
   const [query, setQuery] = useState('')
@@ -464,6 +471,14 @@ export function PluginInventorySettingsTab({
 
   return (
     <div className={css.section} aria-busy={state.status === 'loading'}>
+      {clientSync.syncing ? <p className={css.status} role="status">{t('clientSyncing')}</p> : null}
+      {clientSync.failures.length === 0 ? null : (
+        <div className={css.failure} data-client-sync-failure>
+          <p role="alert">{t('clientSyncFailed')}</p>
+          <ul>{clientSync.failures.map(failure => <li key={failure.id}>{failure.id}: {failure.message}</li>)}</ul>
+          <button type="button" disabled={clientSync.syncing} onClick={retryClient}>{t('clientSyncRetry')}</button>
+        </div>
+      )}
       {state.status === 'loading' ? <p className={css.status}>{t('loading')}</p> : null}
       {state.status === 'error' ? (
         <div className={css.failure}>

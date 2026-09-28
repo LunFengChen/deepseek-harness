@@ -1,0 +1,58 @@
+# Replay patch shared by the ordinary headless snapshot composition. The model
+# script comes from the scenario's committed session JSONL.
+
+- id: llm-deepseek
+  name: '@x1a0f3n9/dsh-llm-deepseek'
+  disabled: true
+
+- id: plugin-package-inventory-deepseek
+  disabled: true
+
+- id: session-title-llm
+  disabled: true
+
+- id: session-persistence-jsonl
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
+  config:
+    root: !!js dshHomePath('sessions')
+    compression: none
+
+- id: sandbox
+  name: '@x1a0f3n9/dsh-sandbox-local'
+  config:
+    runnerCommand:
+      - bash
+      - -c
+      - while [ "$1" != "--" ]; do shift; done; shift; exec "$@"
+      - passthrough-runner
+    runnerFailureSignatures:
+      - 'passthrough-runner: profile rejected'
+
+- insert:
+    - id: llm-replay
+      name: '@x1a0f3n9/dsh-llm-replay'
+      config:
+        providers:
+          - id: deepseek-official
+            name: DeepSeek
+            models:
+              - id: deepseek-v4-flash
+              - id: deepseek-v4-pro
+          - id: deepseek-messages
+            name: DeepSeek Messages
+            models:
+              - id: deepseek-v4-flash
+              - id: deepseek-v4-pro
+
+- insert:
+    - id: workspace-dependencies
+      name: ../../../apps/desktop-host/src/workspace-dependencies.ts
+      config:
+        source: !!js process.cwd() + "/runtime-source"
+        root: !!js process.cwd() + "/runtime-installed"
+
+- id: tool-bash
+  disabled: true
+
+- id: tool-pwsh
+  disabled: true

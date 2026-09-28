@@ -20,7 +20,7 @@ import { CodeBody } from '../src/client/code/CodeBody.tsx'
 import type { DocumentPreviewDefinition } from '../src/client/document/registry.ts'
 import { TextBody } from '../src/client/text/TextBody.tsx'
 import { PLAIN_BODY_ID } from '../src/client/text/index.ts'
-import { ABSOLUTE_PATH, ADDRESS, PATH, SESSION, TAB_ID, failure, harness, page, settle } from './fixtures.client.ts'
+import { documentSlots, ABSOLUTE_PATH, ADDRESS, PATH, SESSION, TAB_ID, failure, harness, page, settle } from './fixtures.client.ts'
 
 const LINE_HEIGHT = 20
 
@@ -88,7 +88,7 @@ function codeProps(h: ReturnType<typeof harness>, navigation: { params?: unknown
   return {
     ...props,
     useDocumentPreviews: selector => selector([definition]),
-    renderSlot: (_key, owner) => <CodeBody {...props} {...owner as unknown as OwnerOf<'sidebar.right.tab.document'>} t={key => key} />,
+    renderSlot: documentSlots((_key, owner) => <CodeBody {...props} {...owner as unknown as OwnerOf<'sidebar.right.tab.document'>} t={key => key} />),
   }
 }
 
@@ -245,7 +245,7 @@ describe('TextPreview — pages', () => {
     const next = Promise.withResolvers<Awaited<ReturnType<typeof h.read>>>()
     h.read.mockReturnValueOnce(next.promise)
     click(view.container, '[data-textpreview-more]')
-    expect(view.getByRole('status').textContent).toBe('loading')
+    expect(view.getByRole('status').getAttribute('aria-label')).toBe('loading')
     expect(lines(view.container)).toEqual(['held\n'])
     await act(async () => { next.resolve(page(2, ['tail'], true)); await next.promise })
     expect(view.queryByRole('status')).toBeNull()
@@ -429,7 +429,7 @@ describe('TextPreview — navigation and view', () => {
   it('rebinds scrolling when the selected Slot body is replaced without changing the renderer id', async () => {
     const h = harness({ 1: page(1, ['a', 'b', 'c'], true) })
     const code = codeProps(h, { revision: 1 })
-    const fallback: TextPreviewProps = { ...code, renderSlot: () => <div data-late-renderer /> }
+    const fallback: TextPreviewProps = { ...code, renderSlot: documentSlots(() => <div data-late-renderer />) }
     const view = render(<TextPreview {...fallback} />)
     await settle()
     const outer = body(view.container)
@@ -465,12 +465,12 @@ describe('TextPreview — navigation and view', () => {
     const props: TextPreviewProps = {
       ...base,
       useDocumentPreviews: selector => selector(definitions),
-      renderSlot: (_key, owner, opts) => {
+      renderSlot: documentSlots((_key, owner, opts) => {
         const documentOwner = owner as unknown as OwnerOf<'sidebar.right.tab.document'>
         if (opts.entryKey === 'code') return <CodeBody {...base} {...documentOwner} t={key => key} />
         if (opts.entryKey === PLAIN_BODY_ID) return <TextBody {...base} {...documentOwner} />
         return <div data-test-no-lines />
-      },
+      }),
     }
     const view = render(<TextPreview {...props} />)
     await settle()

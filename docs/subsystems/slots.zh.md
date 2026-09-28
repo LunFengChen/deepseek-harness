@@ -52,8 +52,8 @@ Slot 声明固定两个相互独立的维度。
 | cardinality | `keyed` | owner 传入 `entryKey`；匹配 cell 以该 key 对应的 props 渲染。 |
 | cardinality | `chain` | 每个 entry 提供纯 `select(owner)` 函数；按 priority 顺序遇到的第一个非 null 结果获选，并以 `matched` 传给组件；全部拒绝时渲染 owner fallback。 |
 | scope | `root` | 一个 root 作用域组件和 store 实例。 |
-| scope | `session-maybe` | 跟随当前选择，但没有 Session 时仍可渲染；Session 值是可选的。 |
-| scope | `session` | 要求可解析的 Session binding，并收到确定存在的 Session 值。 |
+| scope | `session-maybe` | 继承外围 Provider binding，但没有 binding 时仍可渲染；Session 值是可选的。 |
+| scope | `session` | 要求可解析的外围 Provider binding，并收到确定存在的 Session 值。 |
 
 对于 `single`、`list` 和 `keyed` cell，`priority` 是遮蔽优先级；对于 `chain`，它是选举顺序。数值越小越先运行或渲染。普通增量贡献应选用新的 list `id` 或 keyed `key`；复用已有 cell 表示有意替换其展示。
 
@@ -70,7 +70,7 @@ Slot 声明固定两个相互独立的维度。
 | 本地化 `t` 函数 | 注册项的 `locale` namespace | `PropsLocale<N>` |
 | chain 选中的值 | 注册项的 `select` 结果 | 通过 `ComposedProps` 提供的 `matched` |
 
-当 entry 声明 strict Session child 时，`PropsRenderSlots` 还会提供 `SessionProvider`。它把子树绑定到当前 Session identity，并在 identity 改变时重新挂载 body。
+当 entry 声明 `session` 或 `session-maybe` child 时，`PropsRenderSlots` 还会提供 `SessionProvider`。不传 `session` prop 时，它继承外围 binding；显式传入 `SessionReference` 或 `undefined` 时，只覆盖该子树。Provider 不为整个 body 设置 key。严格 `session` entry 在 binding generation 改变时重新挂载。空白 `session-maybe` entry 接受首个 binding 时不重新挂载，后续 generation 变化或回到缺失状态时才重新挂载。
 
 组件绝不会收到 `ctx`。父组件在某次渲染时已经知道的值通过 `renderSlot` 的 owner 参数进入；共享视图状态使用声明的 store；service 与 model object 留在 `apply` closure 中，只向组件投影 callback 或 observable source。
 
@@ -80,7 +80,7 @@ Slot 声明固定两个相互独立的维度。
 
 | 可用范围 | Props | Owner |
 |---|---|---|
-| 所有 scope | `useSessions`、`useSessionPendingInteraction` | `ui-session` |
+| 所有 scope | `useSessions`、`useSessionStatus`、`useSessionRetainInfo` | `ui-session` |
 | 所有 scope | `useWorkspaces` | `ui-workspace` |
 | 所有作用域 | `usePanelInfo` | `ui-layout` |
 | `session` | `sessionId`、`useSession`、`useProjection` | `ui-session` |
@@ -128,8 +128,10 @@ root
 │        ├─ settings.models.provider-card
 │        ├─ settings.models.footer
 │        └─ settings.plugins.tab
-│           └─ settings.plugin.item
 ├─ main
+│  ├─ plugins.item
+│  ├─ plugins.bundle.config
+│  ├─ plugins.row.config
 │  └─ main.conversation
 │     ├─ conversation.session
 │     │  └─ conversation.view
@@ -144,13 +146,16 @@ root
 │     │     └─ conversation.trajectory.images
 │     ├─ conversation.session.header
 │     │  ├─ conversation.session.header.lineage
+│     │  ├─ conversation.session.header.leading
 │     │  ├─ conversation.session.header.actions
 │     │  ├─ conversation.session.header.utilities
 │     │  └─ conversation.session.header.corner
 │     ├─ conversation.composer
-│     │  └─ conversation.approval.detail
+│     │  ├─ conversation.approval.detail
+│     │  └─ conversation.plan-review.actions
 │     ├─ conversation.composer.bar
 │     │  ├─ conversation.input.attachments
+│     │  ├─ conversation.input.permission
 │     │  ├─ conversation.input.plan
 │     │  └─ conversation.input.model
 │     ├─ conversation.input.overlay
@@ -165,7 +170,8 @@ root
 ├─ rightbar
 │  └─ rightbar.session
 │     ├─ sidebar.right.pane.tab
-│     │  └─ sidebar.right.tab.guide
+│     │  ├─ sidebar.right.tab.guide
+│     │  └─ sidebar.right.tab.guide.entry
 │     ├─ sidebar.right.pane.tab.title
 │     └─ sidebar.right.tab.menu.item
 └─ shell.overlay

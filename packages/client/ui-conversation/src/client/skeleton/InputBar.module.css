@@ -7,14 +7,20 @@
      the sides narrow with the shared width axis); the bottom gradient mask
      is owned by the chat scroller. No top pad: the composer stack's gap owns
      the space above; the status strip still carries its own margin. */
-  padding: 0 var(--dsh-composer-side-clearance) 8px;
+  padding: 0 var(--dsh-composer-side-clearance) 4px;
 }
 
-/* A mounted stats row in the composer dock (data-composer-stats, ui-chat
-   StatsPills) brings its own 4px top pad, so the root's bottom clearance
-   tightens to keep the drawn B8 rhythm. */
-.root:has([data-composer-stats]) {
-  padding-bottom: 4px;
+.dock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 100%;
+  padding-top: 4px;
+}
+
+.hero .dock:empty {
+  display: none;
 }
 
 .hero {

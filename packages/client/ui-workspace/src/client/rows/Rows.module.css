@@ -5,6 +5,7 @@
   gap: 6px;
   border-radius: 8px;
   padding: 0 8px;
+  padding-inline-start: calc(8px + var(--dsh-workspace-indent, 0px));
   cursor: pointer;
   user-select: none;
   color: var(--dsw-alias-label-primary);
@@ -188,8 +189,23 @@
   outline: none;
 }
 
+/* Hovering a session row reveals a title wider than its cell: Rows.tsx scrolls
+   it to its end while the pointer rests on the row — smoothly, through the
+   scroll-behavior here — and returns it to the start in one step when the
+   pointer leaves. The unclipped state drops the ellipsis, which would otherwise
+   cover the characters the reveal reached. */
 .sessionRow .title {
   flex: 1;
+  scroll-behavior: smooth;
+}
+
+/* Guarded because a touch tap latches `:hover` on the row after the title has
+   already returned: an unguarded rule would strand that row without its
+   ellipsis. */
+@media (hover: hover) {
+  .sessionRow:hover .title {
+    text-overflow: clip;
+  }
 }
 
 .meta {
@@ -364,5 +380,10 @@
   .arrow {
     animation: none;
     transition: none;
+  }
+
+  /* The title reveal jumps to the far edge instead of gliding there. */
+  .sessionRow .title {
+    scroll-behavior: auto;
   }
 }

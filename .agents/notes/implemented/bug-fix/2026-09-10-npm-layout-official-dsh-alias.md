@@ -6,11 +6,11 @@ English | [中文](2026-09-10-npm-layout-official-dsh-alias.zh.md)
 
 ## Problem
 
-`verify-npm-install-layout` serves only `@x1a0f3n9/dsh*` in its local registry. Preinstalled community plugins still declare `@deepseek-ai/dsh*` dependencies, so npm 404s and the Release publish job never starts.
+`verify-npm-install-layout` serves only `@x1a0f3n9/dsh*` in its local registry. Preinstalled community plugins still declare `@x1a0f3n9/dsh*` dependencies, so npm 404s and the Release publish job never starts.
 
 ## Decision
 
-`buildDualDshRegistry` copies each fork dsh package under the matching `@deepseek-ai/dsh*` name at the same synthetic versions, rewrites official dsh ranges on those packages, and drops preinstalled community plugins from the synthetic dsh tree. Layout assertions still count only the fork names.
+`buildDualDshRegistry` copies each fork dsh package under the matching `@x1a0f3n9/dsh*` name at the same synthetic versions, rewrites official dsh ranges on those packages, and drops preinstalled community plugins from the synthetic dsh tree. Layout assertions still count only the fork names.
 
 ## Alternatives considered
 

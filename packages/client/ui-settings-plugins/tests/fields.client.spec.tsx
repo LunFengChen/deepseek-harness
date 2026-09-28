@@ -2,7 +2,7 @@
 
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { SecretField, ValueField } from '../src/client/fields.tsx'
+import { SecretField, SelectField, ValueField } from '../src/client/fields.tsx'
 
 afterEach(cleanup)
 
@@ -79,6 +79,55 @@ describe('ValueField', () => {
 
     expect(screen.getByLabelText('Command timeout')).toHaveProperty('disabled', true)
     expect(screen.getByRole('button', { name: 'Reset to default' })).toHaveProperty('disabled', true)
+  })
+})
+
+
+describe('SelectField', () => {
+  const options = [
+    { value: '', label: 'Default (search pool)' },
+    { value: 'exa', label: 'Exa' },
+  ]
+
+  it('stages the chosen option without writing', () => {
+    const onEdit = vi.fn()
+    render(
+      <SelectField
+        {...frame}
+        id="provider"
+        label="Provider"
+        hint="Pin a vendor only when you want that one backend."
+        text=""
+        options={options}
+        onEdit={onEdit}
+        onReset={vi.fn()}
+      />,
+    )
+
+    fireEvent.change(screen.getByLabelText('Provider'), { target: { value: 'exa' } })
+
+    expect(onEdit).toHaveBeenCalledWith('exa')
+  })
+
+  it('offers the reset only while an override would stand', () => {
+    const onReset = vi.fn()
+    render(
+      <SelectField
+        {...frame}
+        id="provider"
+        label="Provider"
+        hint="Pin a vendor only when you want that one backend."
+        overridden
+        text="exa"
+        options={options}
+        onEdit={vi.fn()}
+        onReset={onReset}
+      />,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Reset to default' }))
+
+    expect(screen.getByText('Overridden')).toBeTruthy()
+    expect(onReset).toHaveBeenCalledOnce()
   })
 })
 

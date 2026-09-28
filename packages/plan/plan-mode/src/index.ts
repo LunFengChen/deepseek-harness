@@ -312,7 +312,7 @@ export class PlanModeController extends Service {
             // Presentation only: a capable UI renders the plan as a review
             // decision instead of a generic question, and answers with one of
             // the labels above either way.
-            intent: { kind: 'plan-review', approve: APPROVE_LABEL },
+            intent: { kind: 'plan-review', approve: APPROVE_LABEL, callId: exec.callId },
           }],
           agent,
           signal: exec.signal,

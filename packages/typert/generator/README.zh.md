@@ -9,7 +9,7 @@ kind: "package-library"
 
 ## 概述
 
-`dsh-typert-generator` 让维护者把公开的 TypeScript 类型转换为构建产物和与编译器无关的模型。包通过 `./typert` 和可选的 `./client/typert` 导出选择加入；如果声明、发布清单、Remote 导出或 Zod 投影无法被正确表示，生成过程就会失败。仓库构建可以生成可执行 schema 与配套声明，工具也可以调用 `WorkspaceAnalyzer` 完成检查或目录生成而不发布产物。生成过程只在构建时运行，绝不会进入实时 agent（智能体）会话。
+`dsh-typert-generator` 让维护者把公开的 TypeScript 类型转换为构建产物和与编译器无关的模型。包通过 `./typert` 和可选的 `./client/typert` 导出选择加入；如果声明、发布清单、Remote 导出或 Zod 投影无法被正确表示，生成过程就会失败。仓库构建会生成可执行 schema factory 与配套声明，工具也可以调用 `WorkspaceAnalyzer` 完成检查或目录生成而不发布产物。生成过程只在构建时运行，绝不会进入实时 agent（智能体）会话。
 
 ## 目录
 
@@ -83,9 +83,11 @@ Host 与 Client 是两个独立的 TypeScript 程序。直接项目引用确定�
 
 ### 生成与发布约定
 
-`FaceModelEmitter` 输出包含受支持 Zod schema 与 `TYPERT` 贡献的可执行 JavaScript，以及把 schema 通过包的公开导出标注为 `z.ZodType<SourceType>` 的声明文件；不支持的 Zod 投影会失败。含 Remote 方法的 Host face 还会额外为 Client 生成 Host Remote 约定的 `typert.remote-client.*` 投影。`WorkspaceTypertGenerator` 校验每个贡献方的 `package.json`：`./typert` 与 `./client/typert`（存在 Remote 方法时还有 `./remote`）必须指向精确的生成文件，且 `files` 清单必须包含它们。
+`FaceModelEmitter` 输出包含只缓存成功结果的 Zod schema factory 与 `TYPERT` 贡献的可执行 JavaScript，以及把 factory 通过包的公开导出标注为返回 `z.ZodType<SourceType>` 的声明文件；不支持的 Zod 投影会失败。含 Remote 方法的 Host face 还会额外为 Client 生成 Host Remote 约定的 `typert.remote-client.*` 投影。`WorkspaceTypertGenerator` 校验每个贡献方的 `package.json`：`./typert` 与 `./client/typert`（存在 Remote 方法时还有 `./remote`）必须指向精确的生成文件，且 `files` 清单必须包含它们。
 
 ### 目录投影
+
+运行时类型闭包索引导出的 workspace 声明和被引用的框架 enum。Vendor 声明不参与业务 API 发现；公共结果引用其中 enum 时，目录仍提供其定义。
 
 根导出包含本仓库 Cordis 目录使用的模型驱动提取逻辑、完整性检查与确定性文本渲染器。它们接受 `CordisCatalogPolicy`；由仓库持有的类型链接、基础类型／豁免分类与继承的 Cordis 条目仍位于 `scripts/gen-cordis-catalog.ts`，由调用方显式传入，因此本包只包含投影机制，不会隐式复制仓库的文档分类体系。
 

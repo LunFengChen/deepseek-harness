@@ -3,8 +3,8 @@
  * lifecycle-safe verbs plus optional `ctx.get()` lookup and declared-service
  * property access, with
  * framework internals withheld and Context-valued returns denied. Two seats
- * carry extra machinery: `slots`, where the register proxy assigns the
- * shadowing priority and ledgers the registration — invoking the service with
+ * carry extra machinery: `slots`, where the registration proxy assigns any
+ * shadowing priority and ledgers ordinary entries or Factory definitions — invoking the service with
  * the traced receiver so the effect lands on the CALLING plugin's fiber
  * (SlotRegistry.register must stay a prototype method for exactly that
  * reason) — and `theme`, whose override source is pinned to the package id.
@@ -24,9 +24,9 @@ const CTX_VERBS = new Set([
 ])
 const TIMER_VERBS = new Set(['timeout', 'interval', 'setTimeout', 'setInterval', 'throttle', 'debounce'])
 
-/** One package's slot-registration ledger row (contribution projection source). */
+/** One package's Slot or Factory registration ledger row (contribution projection source). */
 export interface DynamicCordisSlotLedgerRow {
-  /** Target slot name. */
+  /** Target Slot name, or `factory:<name>` for a Factory definition. */
   slot: string
   /** The assigned shadowing priority (globally unique — how winners are matched back to packages). */
   priority: number | undefined
@@ -36,7 +36,7 @@ export interface DynamicCordisSlotLedgerRow {
 export interface DynamicCordisGuardEnv {
   /** The dispatched Package row. */
   pkg: DynamicCordisPackage
-  /** Ledger sink: every slot registration this package makes. */
+  /** Ledger sink: every Slot or Factory registration this package makes. */
   ledger: DynamicCordisSlotLedgerRow[]
   /**
    * Ownership index sink: the component object seated in a slot, so a later
@@ -91,13 +91,13 @@ interface ErasedSlotOptions {
 
 /**
  * The slots seat: automatic shadowing priority and ledger recording around the
- * traced service's own register.
+ * traced service's own Slot and Factory registration methods.
  */
 function guardedSlots(slots: SlotRegistry, env: DynamicCordisGuardEnv): unknown {
   return new Proxy(slots, {
     get(target, prop) {
       const value = Reflect.get(target, prop, target) as unknown
-      if (prop !== 'register') {
+      if (prop !== 'register' && prop !== 'registerFactory') {
         if (typeof value !== 'function') return denyContext(value, 'slots', env)
         return (...args: unknown[]): unknown => denyContext(Reflect.apply(value, target, args), 'slots', env)
       }
@@ -108,7 +108,13 @@ function guardedSlots(slots: SlotRegistry, env: DynamicCordisGuardEnv): unknown 
         const options = { ...rawOptions as ErasedSlotOptions }
         const slot = options.name
         if (typeof slot !== 'string' || slot.length === 0) {
-          return rejectGuard(env, 'slots.register options need a string `name` (the target slot key)')
+          return rejectGuard(env, `slots.${prop} options need a string \`name\``)
+        }
+        if (prop === 'registerFactory') {
+          const dispose = Reflect.apply(value as (...args: unknown[]) => unknown, target, [options, component])
+          env.ledger.push({ slot: `factory:${slot}`, priority: undefined })
+          env.claim(component)
+          return dispose
         }
         if (slot === 'tool.view.cordis') {
           if (options.key !== 'self') {

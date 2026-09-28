@@ -107,9 +107,12 @@ async function bench(opts: BenchOptions = {}) {
   })
   // Real scope tags behind a fake sessions face.
   const scopes = new Map<SessionId, { ctx: Context; fiber: { dispose(): Promise<void> } }>()
-  ctx.provide('sessions', {
+  const bindings = new Map<SessionId, { sessionId: SessionId; session: { sessionId: SessionId }; ctx: Context }>()
+  const removeSessions = ctx.provide('sessions', {
     scope: (id: SessionId) => scopes.get(id)?.ctx,
     scopeOf: (c: Context) => scopeOf(c),
+    sessionOf: (scopeCtx: Context) => [...bindings.values()].find(binding => binding.ctx === scopeCtx)?.session,
+    binding: (id: SessionId) => bindings.get(id),
     subagentAddress: (id: SessionId) => id === opts.addressed
       ? { parentSessionId: sid('parent'), childSessionId: id, mode: 'continuable' as const }
       : undefined,
@@ -122,12 +125,15 @@ async function bench(opts: BenchOptions = {}) {
   })
   /** Notices the fake conversation face collected (runDetached routing). */
   const notices: Array<{ scope: SessionId | undefined; level: 'info' | 'error'; text: string }> = []
-  ctx.provide('conversation', {
+  /** Composer focuses the fake conversation face collected (popup dismissal). */
+  const focuses: Array<SessionId | undefined> = []
+  const removeConversation = ctx.provide('conversation', {
     input: {
       for: (actx: Context) => ({
         notify: (level: 'info' | 'error', text: string) => {
           notices.push({ scope: scopeOf(actx), level, text })
         },
+        focus: () => { focuses.push(scopeOf(actx)) },
       }),
     },
   })
@@ -137,15 +143,24 @@ async function bench(opts: BenchOptions = {}) {
   const source = registered.get('/ command')
   if (source === undefined) throw new Error('command source not registered')
   const mint = (key: string) => {
-    const handle = createScope(ctx, sid(key))
-    scopes.set(sid(key), handle)
+    const id = sid(key)
+    const handle = createScope(ctx, id)
+    const binding = { sessionId: id, session: { sessionId: id }, ctx: handle.ctx }
+    scopes.set(id, handle)
+    bindings.set(id, binding)
+    handle.ctx.effect(() => () => {
+      if (bindings.get(id) === binding) bindings.delete(id)
+    })
     return handle
   }
   /** Warm one session's catalog through the source's own candidate pull. */
   const warm = async (session: ClientSessionContext) => {
     await source.candidates(session, { query: '', position: 'leading', drilled: false, signal: new AbortController().signal })
   }
-  return { ctx, fiber, command, source, mint, warm, listCalls, executeCalls, executions, registered, notices, remote }
+  return {
+    ctx, fiber, command, source, mint, warm, listCalls, executeCalls, executions, registered, notices, focuses, remote,
+    removeSessions, removeConversation,
+  }
 }
 
 function menuPick(source: InputTriggerSource, name: string, session: ClientSessionContext, end?: number) {
@@ -179,6 +194,14 @@ const req = (query: string, position: 'leading' | 'inline' = 'leading') =>
   ({ query, position, drilled: false, signal: new AbortController().signal })
 
 describe('registration', () => {
+  it('reports missing initialization dependencies', () => {
+    const missingLocale = new Context()
+    expect(() => new CommandUiRuntime(missingLocale)).toThrow('locale service unavailable')
+    const missingTriggers = new Context()
+    missingTriggers.provide('locale', { bind: () => (key: string) => key })
+    expect(() => new CommandUiRuntime(missingTriggers)).toThrow('slash service unavailable')
+  })
+
   it('registers the "/" source with matchSpace/matchEnter/warm hooks and removes it on fiber disposal', async () => {
     const { registered, source, fiber } = await bench()
     expect(typeof source.matchSpace).toBe('function')
@@ -471,6 +494,9 @@ describe('decorations (bare-invocation UI on host commands)', () => {
     const argued = await source.matchEnter!(proj('s1'), '/goal ship it', new AbortController().signal, { attachments: 0 })
     if (argued === undefined || argued === 'handled' || !('claim' in argued)) throw new Error('expected the host claim')
     expect(argued.claim.token).toBe('/goal ')
+    command.dismiss('goal')
+    expect(menuPick(source, 'goal', proj('s1'))).toBe('handled')
+    expect(command.popupFor(scope.ctx).state.getSnapshot()).toMatchObject({ open: true, command: 'goal' })
   })
 
   it('space never consults the decoration (host claim)', async () => {
@@ -498,12 +524,16 @@ describe('decorations (bare-invocation UI on host commands)', () => {
     await warm(proj('s1'))
     expect(await source.matchEnter!(proj('s1'), '/plan', new AbortController().signal, { attachments: 0 })).toBe('handled')
     expect(executeCalls).toEqual([{ sessionId: sid('s1'), line: '/plan', images: [] }])
+    expect(menuPick(source, 'plan', proj('s1'))).toBe('handled')
+    expect(executeCalls).toHaveLength(2)
   })
 
   it('duplicate decoration names fail loud', async () => {
     const { command } = await bench()
-    command.decorate(goalDecoration())
+    const dispose = command.decorate(goalDecoration())
     expect(() => { command.decorate(goalDecoration()) }).toThrow('duplicate decoration for /goal')
+    dispose()
+    expect(() => { command.decorate(goalDecoration())() }).not.toThrow()
   })
 })
 
@@ -884,6 +914,21 @@ describe('detached admission notices', () => {
     await flush()
     expect(notices).toEqual([])
   })
+
+  it('contains a carrier rejection and drops notices when the conversation consumer unloads', async () => {
+    const b = await bench()
+    b.mint('s1')
+    await b.warm(proj('s1'))
+    vi.spyOn(b.ctx.remote.commands, 'execute').mockRejectedValue('carrier stopped')
+    menuPick(b.source, 'plan', proj('s1'))
+    await flush()
+    expect(b.notices).toEqual([{ scope: sid('s1'), level: 'error', text: 'carrier stopped' }])
+    b.notices.length = 0
+    b.removeConversation()
+    menuPick(b.source, 'plan', proj('s1'))
+    await flush()
+    expect(b.notices).toEqual([])
+  })
 })
 
 describe('register (contribution face)', () => {
@@ -897,17 +942,79 @@ describe('register (contribution face)', () => {
 })
 
 describe('popupFor', () => {
+  it('does not open a popup for an absent scope or reuse a removed sessions service', async () => {
+    const b = await bench()
+    b.command.register(themeContribution())
+    expect(menuPick(b.source, 'theme', proj('closed'))).toBe('handled')
+    b.removeSessions()
+    expect(() => b.command.popupFor(b.ctx)).toThrow('sessions service unavailable')
+  })
+
+  it('dismisses matching popups and confirmations while preserving other commands and drafts', async () => {
+    const { command, source, mint, focuses } = await bench()
+    const pending = Promise.withResolvers<readonly SelectOption[]>()
+    let pendingSignal: AbortSignal | undefined
+    const onSelect = vi.fn()
+    command.register(themeContribution({ ui: themeUi({
+      options: (session, signal) => {
+        if (session.sessionId === sid('s2')) {
+          pendingSignal = signal
+          return pending.promise
+        }
+        return Promise.resolve([{
+          id: 'dark',
+          label: 'Dark',
+          confirmation: {
+            title: 'Confirm theme', description: 'Change theme', acknowledgeLabel: 'Acknowledge',
+            cancelLabel: 'Cancel', confirmLabel: 'Confirm',
+          },
+        }])
+      },
+      onSelect,
+    }) }))
+    command.register(themeContribution({ name: 'other' }))
+    const scope = mint('s1')
+    const first = command.popupFor(scope.ctx)
+    const second = command.popupFor(mint('s2').ctx)
+    const other = command.popupFor(mint('other').ctx)
+    const consume = vi.fn(() => true as const)
+    scope.ctx.on('slash/input-consume-token', consume)
+    menuPick(source, 'theme', proj('s1'))
+    menuPick(source, 'theme', proj('s2'))
+    menuPick(source, 'other', proj('other'))
+    await Promise.resolve()
+    await first.select(0)
+    first.acknowledge(true)
+    expect(first.state.getSnapshot().confirming?.id).toBe('dark')
+    expect(second.state.getSnapshot().status).toBe('pending')
+
+    command.dismiss('theme')
+
+    expect(first.state.getSnapshot()).toMatchObject({ open: false, options: [], confirming: null })
+    expect(second.state.getSnapshot()).toMatchObject({ open: false, options: [] })
+    expect(pendingSignal?.aborted).toBe(true)
+    expect(other.state.getSnapshot().open).toBe(true)
+    pending.resolve([{ id: 'late', label: 'Late' }])
+    await Promise.resolve()
+    await first.confirm()
+    expect(second.state.getSnapshot()).toMatchObject({ open: false, options: [] })
+    expect(onSelect).not.toHaveBeenCalled()
+    expect(consume).not.toHaveBeenCalled()
+    // The stale catalog takes the rows away; the composer keeps the keyboard.
+    expect(focuses).toEqual([sid('s1'), sid('s2')])
+  })
+
   it('resolves lazily per session; a foreign session gets its own controller; unscoped ctx throws', async () => {
     const { ctx, command, mint } = await bench()
     const a = mint('s1')
     const first = command.popupFor(a.ctx)
     expect(command.popupFor(a.ctx)).toBe(first)
     expect(command.popupFor(mint('s2').ctx)).not.toBe(first)
-    expect(() => command.popupFor(ctx)).toThrow('requires a session scope')
+    expect(() => command.popupFor(ctx)).toThrow('requires a retained Session scope')
   })
 
-  it('a successful select dispatches the scoped consume-token and fires the bound composer focus', async () => {
-    const { command, source, mint } = await bench()
+  it('a successful select dispatches the scoped consume-token and focuses the composer', async () => {
+    const { command, source, mint, focuses } = await bench()
     const onSelect = vi.fn()
     command.register(themeContribution({ ui: themeUi({ onSelect }) }))
     const scope = mint('s1')
@@ -916,16 +1023,13 @@ describe('popupFor', () => {
       consumes.push(r)
       return true
     })
-    const focus = vi.fn()
-    command.bindComposerFocus(sid('s1'), focus)
-
     expect(menuPick(source, 'theme', proj('s1'), 6)).toBe('handled')
     const popup = command.popupFor(scope.ctx)
     await Promise.resolve() // options land
     await popup.select(0)
     expect(onSelect).toHaveBeenCalledExactlyOnceWith({ id: 'dark', label: 'Dark' } satisfies SelectOption, proj('s1'))
     expect(consumes).toEqual([{ guard: { kind: 'span', span: { start: 0, end: 6, draftRev: 3 } } }])
-    expect(focus).toHaveBeenCalledTimes(1)
+    expect(focuses).toEqual([sid('s1')])
   })
 
   it('the enter path opens with the bare-token guard', async () => {

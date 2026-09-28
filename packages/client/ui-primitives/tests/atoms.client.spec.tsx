@@ -177,6 +177,85 @@ describe('Menu', () => {
     expect(screen.getByRole('separator')).toBeDefined()
   })
 
+  it('Tab settles the focused row; Shift+Tab closes back to the anchor', () => {
+    const onSelect = vi.fn()
+    const onClose = vi.fn()
+    render(
+      <Menu open autoFocus anchor={<button type="button">trigger</button>} items={items} onSelect={onSelect} onClose={onClose} />)
+    // autoFocus parks the keyboard on the first row; Tab settles it like Enter.
+    const alpha = screen.getByRole('menuitem', { name: 'Alpha' })
+    expect(document.activeElement).toBe(alpha)
+    expect(fireEvent.keyDown(alpha, { key: 'Tab' })).toBe(false)
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('a')
+
+    // Shift+Tab leaves like Escape: closed, with the trigger taking the keyboard.
+    fireEvent.keyDown(alpha, { key: 'Tab', shiftKey: true })
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'trigger' }))
+  })
+
+  it('Tab from the trigger enters the open list, and elsewhere on the page stays native', () => {
+    render(
+      <Menu open anchor={<button type="button">trigger</button>} items={items} onSelect={() => {}} onClose={() => {}} />)
+    const trigger = screen.getByRole('button', { name: 'trigger' })
+    trigger.focus()
+    expect(fireEvent.keyDown(trigger, { key: 'Tab' })).toBe(false)
+    expect(document.activeElement).toBe(screen.getByRole('menuitem', { name: 'Alpha' }))
+
+    // A keyboard outside both the anchor and the list keeps the traversal.
+    const outside = document.createElement('button')
+    document.body.append(outside)
+    outside.focus()
+    expect(fireEvent.keyDown(outside, { key: 'Tab' })).toBe(true)
+    outside.remove()
+  })
+
+  it('walks the list with the arrows without autoFocus, wrapping at both ends', () => {
+    const onClose = vi.fn()
+    const rows = [
+      { id: 'a', label: 'Alpha' },
+      { id: 'b', label: 'Beta' },
+      { id: 'c', label: 'Gamma' },
+    ]
+    render(
+      <Menu open anchor={<button type="button">trigger</button>} items={rows} onSelect={() => {}} onClose={onClose} />)
+    const trigger = screen.getByRole('button', { name: 'trigger' })
+    const alpha = screen.getByRole('menuitem', { name: 'Alpha' })
+    const beta = screen.getByRole('menuitem', { name: 'Beta' })
+    const gamma = screen.getByRole('menuitem', { name: 'Gamma' })
+    trigger.focus()
+    // autoFocus is off: the menu opens with the keyboard on the anchor, and the
+    // first step enters at the near end.
+    expect(document.activeElement).toBe(trigger)
+    expect(fireEvent.keyDown(trigger, { key: 'ArrowDown' })).toBe(false)
+    expect(document.activeElement).toBe(alpha)
+    fireEvent.keyDown(alpha, { key: 'ArrowDown' })
+    fireEvent.keyDown(beta, { key: 'ArrowDown' })
+    expect(document.activeElement).toBe(gamma)
+    fireEvent.keyDown(gamma, { key: 'ArrowDown' }) // wraps forwards
+    expect(document.activeElement).toBe(alpha)
+    fireEvent.keyDown(alpha, { key: 'ArrowUp' }) // wraps backwards
+    expect(document.activeElement).toBe(gamma)
+    fireEvent.keyDown(gamma, { key: 'Home' })
+    expect(document.activeElement).toBe(alpha)
+    fireEvent.keyDown(alpha, { key: 'End' })
+    expect(document.activeElement).toBe(gamma)
+    // Escape closes and hands the keyboard back to the anchor.
+    fireEvent.keyDown(gamma, { key: 'Escape' })
+    expect(onClose).toHaveBeenCalledTimes(1)
+    expect(document.activeElement).toBe(trigger)
+  })
+
+  it('enters at the last enabled row on ↑ and steps over a disabled one', () => {
+    render(
+      <Menu open anchor={<button type="button">trigger</button>} items={items} onSelect={() => {}} onClose={() => {}} />)
+    const trigger = screen.getByRole('button', { name: 'trigger' })
+    trigger.focus()
+    // Beta is disabled: it is not a step target, so Alpha is the only row.
+    expect(fireEvent.keyDown(trigger, { key: 'ArrowUp' })).toBe(false)
+    expect(document.activeElement).toBe(screen.getByRole('menuitem', { name: 'Alpha' }))
+  })
+
   it('renders a non-interactive heading label and a danger row', () => {
     const onSelect = vi.fn()
     render(
@@ -462,8 +541,7 @@ describe('ConnectionIndicator', () => {
   it('renders outage, attempt progress, and recovered states without a native tooltip', () => {
     const reconnect = vi.fn()
     const labels = {
-      disconnectedLabel: 'Disconnected',
-      reconnectLabel: 'Reconnect',
+      disconnectedLabel: 'Disconnected, retry',
       connectingLabel: 'Connecting',
       recoveredLabel: 'Connected',
       reconnectActionLabel: 'Disconnected, reconnect now',
@@ -476,8 +554,7 @@ describe('ConnectionIndicator', () => {
     expect(container.firstChild).toBeNull()
     rerender(<ConnectionIndicator state="disconnected" {...labels} />)
     const indicator = screen.getByRole('button', { name: 'Disconnected, reconnect now' })
-    expect(indicator.textContent).toContain('Disconnected')
-    expect(indicator.textContent).toContain('Reconnect')
+    expect(indicator.textContent).toContain('Disconnected, retry')
     expect(indicator.hasAttribute('title')).toBe(false)
     expect(indicator.querySelector('svg')).toBeTruthy()
     fireEvent.click(indicator)
@@ -490,5 +567,28 @@ describe('ConnectionIndicator', () => {
     rerender(<ConnectionIndicator state="recovered" {...labels} />)
     expect(screen.queryByRole('button')).toBeNull()
     expect(screen.getByRole('status', { name: 'Connected' })).toBeTruthy()
+  })
+
+  it('fades out for the exit duration before unmounting', () => {
+    vi.useFakeTimers()
+    try {
+      const labels = {
+        disconnectedLabel: 'Disconnected, retry',
+        connectingLabel: 'Connecting',
+        recoveredLabel: 'Connected',
+        reconnectActionLabel: 'Disconnected, reconnect now',
+        restartActionLabel: 'Connecting, restart now',
+        onReconnect: vi.fn(),
+      }
+      const { container, rerender } = render(
+        <ConnectionIndicator state="disconnected" {...labels} />,
+      )
+      rerender(<ConnectionIndicator state={undefined} {...labels} />)
+      expect(screen.getByRole('button', { name: 'Disconnected, reconnect now' })).toBeTruthy()
+      act(() => { vi.advanceTimersByTime(150) })
+      expect(container.firstChild).toBeNull()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

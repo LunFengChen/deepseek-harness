@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-sdk-minimal",
   "description": "The standalone minimal SDK profile bundle: JSON-RPC, one DeepSeek adapter, persistent shell, and JSONL sessions",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -43,6 +43,7 @@
     "@x1a0f3n9/dsh-llm": "workspace:^",
     "@x1a0f3n9/dsh-llm-deepseek": "workspace:^",
     "@x1a0f3n9/dsh-llm-retry": "workspace:^",
+    "@x1a0f3n9/dsh-mcp-resources": "workspace:^",
     "@x1a0f3n9/dsh-plugin-package-inventory-deepseek": "workspace:^",
     "@x1a0f3n9/dsh-sandbox-local": "workspace:^",
     "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",

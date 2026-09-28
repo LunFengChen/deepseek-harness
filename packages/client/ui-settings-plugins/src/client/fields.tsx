@@ -6,7 +6,8 @@
  * card's save is the single point where a draft becomes a document mutation.
  */
 
-import { Tag } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { useState, type ReactNode } from 'react'
+import { IconInfoOutline14, Tag } from '@x1a0f3n9/dsh-client-ui-primitives'
 import css from './fields.module.css'
 
 /** What every field control needs regardless of its value type. */
@@ -44,11 +45,82 @@ export interface FieldProps {
  * @param props - the field's copy, its staged text, and the edit actions.
  * @returns the labelled control.
  */
-export function ValueField(props: FieldProps & {
+export function ValueField(props: Omit<FieldProps, 'hint'> & {
+  /** Optional explanation shown below the input. */
+  hint?: string
+  /** Rules disclosed by the information button beside the label. */
+  help?: { label: string; content: ReactNode }
   /** Hints a numeric keypad without narrowing what the control accepts. */
   numeric?: boolean
   /** Placeholder shown while the draft is empty. */
   placeholder?: string
+}) {
+  const [helpOpen, setHelpOpen] = useState(false)
+  const helpId = `${props.id}-help`
+  const messageId = `${props.id}-message`
+  const hasMessage = props.invalid || Boolean(props.hint)
+  const description = [hasMessage ? messageId : '', helpOpen ? helpId : ''].filter(Boolean).join(' ')
+  return (
+    <div className={css.field}>
+      <div className={css.head}>
+        <div className={css.labelGroup}>
+          <label className={css.label} htmlFor={props.id}>{props.label}</label>
+          {props.help !== undefined
+            ? (
+              <button type="button" className={css.helpButton}
+                aria-label={props.help.label} aria-expanded={helpOpen} aria-controls={helpId}
+                onClick={() => { setHelpOpen(!helpOpen) }}>
+                <IconInfoOutline14 size={12} />
+              </button>
+            )
+            : null}
+        </div>
+        {props.overridden
+          ? (
+            <span className={css.badges}>
+              <Tag tone="neutral">{props.overriddenLabel}</Tag>
+              <button
+                type="button"
+                className={css.reset}
+                disabled={props.disabled}
+                onClick={props.onReset}
+              >
+                {props.resetLabel}
+              </button>
+            </span>
+          )
+          : null}
+      </div>
+      <input
+        id={props.id}
+        className={css.input}
+        type="text"
+        {...props.numeric === true ? { inputMode: 'numeric' as const } : {}}
+        {...props.invalid ? { 'aria-invalid': true } : {}}
+        aria-describedby={description || undefined}
+        value={props.text}
+        placeholder={props.placeholder ?? ''}
+        disabled={props.disabled}
+        onChange={(event) => { props.onEdit(event.target.value) }}
+      />
+      {hasMessage
+        ? <p id={messageId} className={props.invalid ? css.invalid : css.hint}>{props.invalid ? props.invalidLabel : props.hint}</p>
+        : null}
+      {props.help !== undefined && helpOpen
+        ? <div id={helpId} className={css.help} role="region" aria-label={props.help.label}>{props.help.content}</div>
+        : null}
+    </div>
+  )
+}
+
+/**
+ * Render one staged choice field.
+ * @param props - the field's copy, staged value, choices, and edit actions.
+ * @returns the labelled select control.
+ */
+export function SelectField(props: FieldProps & {
+  /** Choices rendered in the same order as the provider policy. */
+  options: readonly { value: string; label: string }[]
 }) {
   return (
     <div className={css.field}>
@@ -70,56 +142,9 @@ export function ValueField(props: FieldProps & {
           )
           : null}
       </div>
-      <input
-        id={props.id}
-        className={props.invalid ? css.inputInvalid : css.input}
-        type="text"
-        {...props.numeric === true ? { inputMode: 'numeric' as const } : {}}
-        {...props.invalid ? { 'aria-invalid': true } : {}}
-        value={props.text}
-        placeholder={props.placeholder ?? ''}
-        disabled={props.disabled}
-        onChange={(event) => { props.onEdit(event.target.value) }}
-      />
-      <p className={props.invalid ? css.invalid : css.hint}>
-        {props.invalid ? props.invalidLabel : props.hint}
-      </p>
-    </div>
-  )
-}
-
-/**
- * Render one staged choice field.
- * @param props - the field's copy, staged value, choices, and edit actions.
- * @returns the labelled select control.
- */
-export function SelectField(props: FieldProps & {
-  /** Choices rendered in the same order as the provider policy. */
-  options: readonly { value: string; label: string }[]
-}) {
-  return (
-    <div className={css.field}>
-      <div className={css.head}>
-        <label className={css.label} htmlFor={props.id}>{props.label}</label>
-        {props.overridden
-          ? (
-            <span className={css.badges}>
-              <span className={css.badge}>{props.overriddenLabel}</span>
-              <button
-                type="button"
-                className={css.reset}
-                disabled={props.disabled}
-                onClick={props.onReset}
-              >
-                {props.resetLabel}
-              </button>
-            </span>
-          )
-          : null}
-      </div>
       <select
         id={props.id}
-        className={props.invalid ? css.inputInvalid : css.input}
+        className={css.input}
         value={props.text}
         disabled={props.disabled}
         {...props.invalid ? { 'aria-invalid': true } : {}}

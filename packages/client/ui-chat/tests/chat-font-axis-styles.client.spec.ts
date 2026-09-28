@@ -21,12 +21,15 @@ function declarationsFrom(source: string, selector: string): string[] {
 describe('chat flow font-size axis', () => {
   it('think text reads the secondary tier (one step under the body size)', () => {
     const css = read('ReasoningRow.module.css')
-    for (const selector of ['.summary', '.thinkBody']) {
-      expect(declarationsFrom(css, selector)).toEqual(expect.arrayContaining([
-        'font-size: var(--dsh-content-font-size-secondary, 13px)',
-        'line-height: calc(20px + var(--dsh-content-font-delta-secondary, 0px))',
-      ]))
-    }
+    expect(declarationsFrom(css, '.summary')).toEqual(expect.arrayContaining([
+      'font-size: var(--dsh-content-font-size-secondary, 13px)',
+      'line-height: calc(20px + var(--dsh-content-font-delta-secondary, 0px))',
+      'white-space: nowrap',
+    ]))
+    expect(declarationsFrom(css, '.summaryText')).toEqual(expect.arrayContaining([
+      'overflow: hidden',
+      'text-overflow: ellipsis',
+    ]))
   })
 
   it('command and context summaries read the secondary tier on the shared row line', () => {

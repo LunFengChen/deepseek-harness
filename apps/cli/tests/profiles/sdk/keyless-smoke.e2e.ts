@@ -1,16 +1,31 @@
 import { createServer } from 'node:http'
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { zstdDecompress } from 'node:zlib'
+import { resolveExampleLaunch } from '@x1a0f3n9/dsh-loader-smoke'
 import { execa } from 'execa'
 import { describe, expect, it } from 'vitest'
 
-const binScript = fileURLToPath(new URL('../../../src/bin.ts', import.meta.url))
 const repoRoot = fileURLToPath(new URL('../../../../../', import.meta.url))
+const launch = resolveExampleLaunch({
+  srcBin: fileURLToPath(new URL('../../../src/bin.ts', import.meta.url)),
+  mode: 'lib',
+})
 const decompress = promisify(zstdDecompress)
+
+/** Frame one text or tool response from the local Messages endpoint. */
+function messagesResponse(content: Record<string, unknown>, stopReason: 'end_turn' | 'max_tokens' | 'tool_use'): string {
+  return [
+    { type: 'message_start', message: { id: 'sdk-smoke-response', model: 'deepseek-v4-pro', usage: { input_tokens: 3, output_tokens: 0 } } },
+    { type: 'content_block_start', index: 0, content_block: content },
+    { type: 'content_block_stop', index: 0 },
+    { type: 'message_delta', delta: { stop_reason: stopReason }, usage: { output_tokens: 1 } },
+    { type: 'message_stop' },
+  ].map(event => `event: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`).join('')
+}
 
 function waitForLine(
   lines: string[],
@@ -67,10 +82,7 @@ describe('Python SDK dsh profile keyless smoke', () => {
       request.on('end', () => {
         modelRequests.push(JSON.parse(body) as Record<string, unknown>)
         response.writeHead(200, { 'content-type': 'text/event-stream' })
-        response.write('data: {"choices":[{"delta":{"role":"assistant","content":null}}]}\n\n')
-        response.write('data: {"choices":[{"delta":{"content":"done"}}]}\n\n')
-        response.write('data: {"choices":[{"delta":{},"finish_reason":"length"}],"usage":{"prompt_tokens":3,"completion_tokens":1}}\n\n')
-        response.end('data: [DONE]\n\n')
+        response.end(messagesResponse({ type: 'text', text: 'done' }, 'max_tokens'))
       })
     })
     await new Promise<void>(resolve => modelServer.listen(0, '127.0.0.1', resolve))
@@ -78,16 +90,15 @@ describe('Python SDK dsh profile keyless smoke', () => {
     if (address === null || typeof address === 'string') throw new Error('model server did not bind a TCP port')
     // The line-predicate protocol driving below is the genuinely custom part;
     // execa owns spawn, the deadline, and exit settlement around it.
-    const child = execa(process.execPath, [
-      '--import',
-      'tsx/esm',
-      binScript,
+    const child = execa(launch.command, [
+      ...launch.args,
       '--profile',
       'sdk',
       ...(editorEnabled ? ['--patch', editorPatch] : []),
     ], {
       cwd: repoRoot,
       env: {
+        ...launch.env,
         DSH_HOME: join(root, '.dsh'),
         DSH_PERMISSION_MODE: 'danger-full-access',
         DSH_TELEMETRY_DISABLED: '1',
@@ -160,9 +171,9 @@ describe('Python SDK dsh profile keyless smoke', () => {
         },
       })
       expect(modelRequests[0]?.tools).toEqual(expect.any(Array))
-      const tools = modelRequests[0]?.tools as { function?: { name?: string } }[]
-      const toolNames = tools.map(tool => tool.function?.name)
-      expect(modelRequests[0]?.reasoning_effort).toBe('max')
+      const tools = modelRequests[0]?.tools as { name?: string }[]
+      const toolNames = tools.map(tool => tool.name)
+      expect(modelRequests[0]?.output_config).toEqual({ effort: 'max' })
       expect(modelRequests[0]?.max_tokens).toBe(1234)
       expect(toolNames).toEqual(expect.arrayContaining(['read', 'write', 'edit', 'web_fetch', 'web_search']))
       expect(toolNames.includes('str_replace_editor')).toBe(editorEnabled)
@@ -216,38 +227,27 @@ describe('Python SDK dsh profile keyless smoke', () => {
       request.on('end', () => {
         modelRequests.push(JSON.parse(body) as Record<string, unknown>)
         response.writeHead(200, { 'content-type': 'text/event-stream' })
-        response.write('data: {"choices":[{"delta":{"role":"assistant","content":null}}]}\n\n')
         const toolCall = editorCalls[modelRequests.length - 1]
-        if (toolCall) {
-          response.write(`data: ${JSON.stringify({ choices: [{ delta: { tool_calls: [{
-            index: 0,
-            id: `editor-${toolCall.command}`,
-            type: 'function',
-            function: { name: 'str_replace_editor', arguments: JSON.stringify(toolCall) },
-          }] } }] })}\n\n`)
-        } else {
-          response.write('data: {"choices":[{"delta":{"content":"done"}}]}\n\n')
-        }
-        response.write(`data: ${JSON.stringify({
-          choices: [{ delta: {}, finish_reason: toolCall ? 'tool_calls' : 'stop' }],
-          usage: { prompt_tokens: 3, completion_tokens: 1 },
-        })}\n\n`)
-        response.end('data: [DONE]\n\n')
+        response.end(messagesResponse(toolCall ? {
+          type: 'tool_use',
+          id: `editor-${toolCall.command}`,
+          name: 'str_replace_editor',
+          input: toolCall,
+        } : { type: 'text', text: 'done' }, toolCall ? 'tool_use' : 'end_turn'))
       })
     })
     await new Promise<void>(resolve => modelServer.listen(0, '127.0.0.1', resolve))
     const address = modelServer.address()
     if (address === null || typeof address === 'string') throw new Error('model server did not bind a TCP port')
-    const child = execa(process.execPath, [
-      '--import',
-      'tsx/esm',
-      binScript,
+    const child = execa(launch.command, [
+      ...launch.args,
       '--profile',
       'sdk-minimal',
       ...(editorEnabled ? ['--patch', editorPatch] : []),
     ], {
       cwd: repoRoot,
       env: {
+        ...launch.env,
         DSH_HOME: join(root, '.dsh'),
         DSH_SYSTEM_PROMPT: 'Minimal allowlist prompt.',
         DEEPSEEK_API_KEY: 'keyless-smoke-no-call',
@@ -287,20 +287,19 @@ describe('Python SDK dsh profile keyless smoke', () => {
         const event = params?.event as Record<string, unknown> | undefined
         return params?.sessionId === 'minimal' && event?.type === 'turn/end'
       }, () => stderr)
-      expect(turnEnd).toMatchObject({
+      expect(turnEnd, `${JSON.stringify(turnEnd)}\n${stderr}`).toMatchObject({
         params: { event: { data: { reason: { kind: 'completed' } } } },
       })
 
       const profile = JSON.parse(
         await readFile(join(root, '.dsh', 'profiles', 'sdk-minimal', 'package.json'), 'utf8'),
-      ) as { dsh?: { profile?: { bundles?: string[]; patchReload?: string } } }
+      ) as { dsh?: { profile?: { bundles?: string[] } } }
       expect(profile.dsh?.profile).toEqual({
         bundles: ['@x1a0f3n9/dsh-sdk-minimal'],
-        patchReload: 'startup',
       })
       expect(modelRequests[0]?.tools).toEqual(expect.any(Array))
-      const tools = modelRequests[0]?.tools as { function?: { name?: string } }[]
-      expect(tools.map(tool => tool.function?.name)).toEqual([
+      const tools = modelRequests[0]?.tools as { name?: string }[]
+      expect(tools.map(tool => tool.name)).toEqual([
         process.platform === 'win32' ? 'pwsh' : 'bash',
         ...(editorEnabled ? ['str_replace_editor'] : []),
       ])
@@ -309,9 +308,16 @@ describe('Python SDK dsh profile keyless smoke', () => {
         expect(await readFile(editorFile, 'utf8')).toBe(editorContent)
         expect(modelRequests[2]?.messages).toEqual(expect.arrayContaining([
           expect.objectContaining({
-            role: 'tool',
-            tool_call_id: 'editor-view',
-            content: expect.stringContaining(editorContent.trim()) as unknown,
+            role: 'user',
+            content: expect.arrayContaining([
+              expect.objectContaining({
+                type: 'tool_result',
+                tool_use_id: 'editor-view',
+                content: expect.arrayContaining([
+                  { type: 'text', text: expect.stringContaining(editorContent.trim()) as unknown },
+                ]) as unknown,
+              }),
+            ]) as unknown,
           }),
         ]))
       }
@@ -330,18 +336,58 @@ describe('Python SDK dsh profile keyless smoke', () => {
     }
   }, 40_000)
 
+  it.each([false, true])('exits after startup failure with stdin open (logs blocked: %s)', async (blocked) => {
+    const root = await mkdtemp(join(tmpdir(), 'dsh-sdk-startup-exit-'))
+    const home = join(root, '.dsh')
+    const patch = join(root, 'failure.yml')
+    await mkdir(home)
+    if (blocked) await writeFile(join(home, 'logs'), 'blocked')
+    await writeFile(patch, '- id: agent-loop\n  config:\n    maxParallelToolCalls: 0\n')
+    const child = execa(launch.command, [
+      ...launch.args, '--profile', 'sdk', '--patch', patch,
+    ], {
+      cwd: repoRoot,
+      env: { ...launch.env, DSH_HOME: home, DSH_TELEMETRY_DISABLED: '1', DEEPSEEK_API_KEY: 'keyless-no-call' },
+      stdin: 'pipe',
+      stripFinalNewline: false,
+      timeout: 25_000,
+      killSignal: 'SIGKILL',
+      reject: false,
+    })
+    try {
+      const result = await child
+      expect(result.timedOut, result.stderr).toBe(false)
+      expect(result.signal, result.stderr).toBeUndefined()
+      expect(result.exitCode, result.stderr).toBe(1)
+      expect(result.stderr).toContain('startup failed:')
+      expect(result.stderr).toContain('maxParallelToolCalls')
+      if (blocked) {
+        expect(result.stderr).toContain('Full diagnostics:\nWARNING: Raw diagnostics')
+        expect(result.stderr.trimEnd()).toMatch(/\}$/u)
+      } else {
+        const files = await readdir(join(home, 'logs'))
+        expect(files).toHaveLength(1)
+        expect(result.stderr).toContain(`Full diagnostics: ${join(home, 'logs', files[0]!)}\n`)
+      }
+    } finally {
+      child.stdin.end()
+      child.kill('SIGKILL')
+      await child
+      await rm(root, { recursive: true, force: true })
+    }
+  }, 30_000)
+
   it('rejects an invalid max-token success env value', async () => {
     const root = await mkdtemp(join(tmpdir(), 'dsh-python-sdk-runtime-invalid-'))
     try {
-      const { exitCode, stdout, stderr } = await execa(process.execPath, [
-        '--import',
-        'tsx/esm',
-        binScript,
+      const { exitCode, stdout, stderr } = await execa(launch.command, [
+        ...launch.args,
         '--profile',
         'sdk',
       ], {
         cwd: repoRoot,
         env: {
+          ...launch.env,
           DSH_HOME: join(root, '.dsh'),
           DEEPSEEK_API_KEY: 'keyless-smoke-no-call',
           DSH_MAX_TOKENS_AS_SUCCESS: 'sometimes',
@@ -354,8 +400,8 @@ describe('Python SDK dsh profile keyless smoke', () => {
 
       expect(exitCode, stderr).toBe(1)
       expect(stdout).toBe('')
-      expect(stderr).toContain('plugin tree failed to load')
-      expect(stderr).toContain('failed to apply loader entry sdk-jsonrpc-server (@x1a0f3n9/dsh-sdk-jsonrpc-server)')
+      expect(stderr).toContain('startup failed:')
+      expect(stderr).toContain('sdk-jsonrpc-server (required)\n    Package: @x1a0f3n9/dsh-sdk-jsonrpc-server\n    SyntaxError')
       expect(stderr).toContain('sometimes')
     } finally {
       await rm(root, { recursive: true, force: true })

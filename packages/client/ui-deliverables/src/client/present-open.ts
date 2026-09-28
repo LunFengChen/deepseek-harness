@@ -1,6 +1,7 @@
-/** Shared native-open status for delivery cards and closing-message file mentions. */
+/** Shared native-open status for delivery cards, the changed-files card, and closing-message file mentions. */
 import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
+import { changedFileUrl } from '../changes.ts'
 import { presentedFileUrl, PRESENT_HOST_PATH, isPresentedHost, type PresentedAction, type PresentedHost } from '../presented.ts'
 
 /** State of the latest explicit open gesture for one saved file. */
@@ -26,8 +27,22 @@ export class PresentedOpenController {
    * @param action - default application open or file-manager reveal.
    * @returns after the Host acknowledges opening or the error state is published.
    */
-  async open(sessionId: SessionId, seq: number, index: number, action: PresentedAction = 'open'): Promise<void> {
-    const url = presentedFileUrl(sessionId, seq, index)
+  open(sessionId: SessionId, seq: number, index: number, action: PresentedAction = 'open'): Promise<void> {
+    return this.openUrl(presentedFileUrl(sessionId, seq, index), action)
+  }
+
+  /**
+   * Open one recorded changed file in the Host's default application.
+   * @param sessionId - viewed Session.
+   * @param seq - durable workspace/changes event sequence.
+   * @param index - original file index within that event.
+   * @returns after the Host acknowledges opening or the error state is published.
+   */
+  openChanged(sessionId: SessionId, seq: number, index: number): Promise<void> {
+    return this.openUrl(changedFileUrl(sessionId, seq, index), 'open')
+  }
+
+  private async openUrl(url: string, action: PresentedAction): Promise<void> {
     const phase = this.state.getSnapshot()[url]
     if (this.lifetime.signal.aborted || phase === 'opening' || phase === 'revealing') return
     this.state.update((state) => { state[url] = action === 'open' ? 'opening' : 'revealing' })

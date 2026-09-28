@@ -2,7 +2,8 @@
 // in one settled keyless turn — the regression anchor for unifying link
 // styles. One fixture turn produces:
 // - prose: Markdown link, reference-style link, mailto link, inline-code URL,
-//   produced-file mention, plus inert contrasts (ambiguous basename, unwritten
+//   produced-file mention, a known-site link carrying that site's own leading
+//   mark, plus inert contrasts (ambiguous basename, unwritten
 //   file, command code, URL-with-flags code, javascript: destination,
 //   footnote superscript, remote image, fenced code block with its copy chrome)
 // - artifacts: seven produced files (chips overflow into the "+N" remainder
@@ -40,19 +41,25 @@ const SNAPSHOT_DIR = fileURLToPath(new URL('./expected/clickable-links-gallery',
 const UI_EXPECTED = fileURLToPath(new URL('./expected/clickable-links-gallery/ui.expected.md', import.meta.url))
 // The golden holds the show-in-folder affordance; pin the native-opener
 // capability so headless Linux CI and desktop developer hosts expose the same
-// UI branch (same pin as produced-files.e2e.ts, whose overlay this shares).
-const OVERLAY = fileURLToPath(new URL('./produced-files.overlay.yml', import.meta.url))
+// UI branch.
+const OVERLAY = fileURLToPath(new URL('./clickable-links-gallery.overlay.yml', import.meta.url))
 const MODE = webSnapshotMode()
 const SEED_ID = 'clickable-links-gallery-web-e2e'
 const DONE = 'LINK_GALLERY_DONE'
+// Seeded events and browser time share a day independently of host timezones.
+const GALLERY_TIME = Date.UTC(2026, 0, 15, 12)
 
 const GUIDE_URL = 'https://docs.example.test/guide'
+const HTTP_URL = 'http://docs.example.test/plain'
 const API_URL = 'https://docs.example.test/api'
 const RELEASES_URL = 'https://docs.example.test/releases'
 const MAILTO_URL = 'mailto:owner@example.test'
 const SOURCE_URL = 'https://docs.example.test/links'
 const INERT_SOURCE_URL = 'ftp://mirror.example.test/spec'
 const FETCH_URL = 'https://docs.example.test/tokens'
+// A mapped host, so the prose pins that the leading glyph is the site's mark
+// rather than the globe the unmapped docs host keeps.
+const REPO_URL = 'https://github.com/example/link-gallery'
 
 /** One-part text content for a built message. */
 function text(value: string): { type: 'text'; text: string }[] {
@@ -192,7 +199,6 @@ const CALLS: GalleryCall[] = [
  */
 function galleryFixture(imageUrl: string): string {
   const session = Session.create(SessionId('clickable-links-gallery-source'))
-  const eventTimeOrigin = new Date().setHours(12, 0, 0, 0)
   session.append('turn/start', { turn: 1 })
   const user = session.append('user/message', createUserMessage({
     content: text('Assemble the link gallery: write the report and styles, inspect the sources, and summarize.'),
@@ -255,6 +261,10 @@ function galleryFixture(imageUrl: string): string {
         `Docs: [style guide](${GUIDE_URL}) and \`${API_URL}\`; see [the release notes][rel], `
         + `contact [the maintainer](${MAILTO_URL}), and check the fine print[^1].`,
         '',
+        `Preview: [plain HTTP](${HTTP_URL}).`,
+        '',
+        `Upstream: [the repository](${REPO_URL}).`,
+        '',
         `Inert contrasts: \`curl ${API_URL}\`, \`javascript:alert(1)\`, and \`pnpm run build\`.`,
         '',
         'Wrote `report.html` plus two `style.css` copies; `notes.md` untouched.',
@@ -289,7 +299,7 @@ function galleryFixture(imageUrl: string): string {
     }),
     ...session.snapshotEvents().map(event => JSON.stringify({
       ...event,
-      time: eventTimeOrigin + event.seq * 1_000,
+      time: GALLERY_TIME + event.seq * 1_000,
     })),
     '',
   ].join('\n')
@@ -305,9 +315,14 @@ describe('web e2e: clickable links gallery', () => {
   beforeAll(async () => {
     scaffold = await launchWebScaffold({ extraOverlayPath: OVERLAY })
     imageUrl = new URL('/favicon.svg', scaffold.baseUrl).toString()
-    await seedSession(scaffold, galleryFixture(imageUrl), SEED_ID)
+    await seedSession(scaffold, galleryFixture(imageUrl), SEED_ID, undefined, { createdAt: GALLERY_TIME })
     browser = await chromium.launch()
     page = await newEnglishPage(browser)
+    await page.route(/https?:\/\/docs\.example\.test\/.*/u, async route => route.fulfill({
+      contentType: 'text/html',
+      body: `<h1>${new URL(route.request().url()).pathname}</h1>`,
+    }))
+    await page.clock.setFixedTime(GALLERY_TIME + 60_000)
     tripwire = watchConsole(page)
     await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
     await page.waitForSelector('[class*="frame"]', { timeout: 30_000 })
@@ -334,6 +349,7 @@ describe('web e2e: clickable links gallery', () => {
     const markdown = page.locator('[class*="markdown"]')
     await expect.poll(() => markdown.locator(`a[href="${GUIDE_URL}"]`).count(), { timeout: 10_000 }).toBe(1)
     expect(await markdown.locator(`a[href="${RELEASES_URL}"]`).count()).toBe(1)
+    expect(await markdown.locator(`a[href="${HTTP_URL}"]`).count()).toBe(1)
     expect(await markdown.locator(`a[href="${MAILTO_URL}"]`).count()).toBe(1)
     const inlineCodeLink = markdown.locator(`code a[href="${API_URL}"]`)
     expect(await inlineCodeLink.count()).toBe(1)
@@ -343,13 +359,12 @@ describe('web e2e: clickable links gallery', () => {
     expect(await markdown.locator(`img[src="${imageUrl}"]`).count()).toBe(1)
 
     // Produced files: one unique-basename mention links; the shared basename
-    // and the unwritten file stay inert code. Seven produced paths overflow
-    // the chip row; the failed write joins neither surface.
+    // and the unwritten file stay inert code. The seeded session carries no
+    // recorded change summary, so no changed-files card follows the prose.
     const mentions = markdown.locator('code button')
     expect(await mentions.count()).toBe(1)
     expect(await mentions.first().getAttribute('title')).toBe('site/report.html')
-    expect(await page.getByText('Files changed', { exact: true }).count()).toBe(1)
-    expect(await page.locator('[class*="centerCol"] button[aria-label^="Open "]').count()).toBeGreaterThanOrEqual(5)
+    expect(await page.locator('[data-changed-files]').count()).toBe(0)
     expect(await page.locator('button[aria-label="Open c/broken.css"]').count()).toBe(0)
 
     // Tool rows: five writes, the edit, and the read carry the dotted file
@@ -406,27 +421,38 @@ describe('web e2e: clickable links gallery', () => {
     const styleOf = async (target: ReturnType<Page['locator']>, property: string): Promise<string> =>
       target.evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), property)
     const guideLink = markdown.locator(`a[href="${GUIDE_URL}"]`).first()
-    const chip = page.locator('button[aria-label="Open site/report.html"]').first()
     for (const [name, link] of [
       ['markdown anchor', guideLink],
       ['file mention', mentions.first()],
       ['search source', sourceLink.first()],
       ['fetch url', page.locator(`a[href="${FETCH_URL}"]`).first()],
-      ['produced chip', chip],
     ] as const) {
       expect.soft(await styleOf(link, 'color'), `${name} color`).toBe(LINK_BLUE)
       expect.soft(await styleOf(link, 'font-weight'), `${name} weight`).toBe('500')
       expect.soft(await styleOf(link, 'text-decoration-line'), `${name} at rest`).toBe('none')
       expect.soft(await link.locator('svg').count(), `${name} glyph`).toBe(1)
     }
+    // A mapped host leads with its own mark; the unmapped docs host keeps the
+    // globe in the same seat.
+    const repoLink = markdown.locator(`a[href="${REPO_URL}"]`)
+    expect(await repoLink.count()).toBe(1)
+    const repoMark = await repoLink.locator('svg path').getAttribute('d')
+    const globeMark = await guideLink.locator('svg path').getAttribute('d')
+    expect(repoMark).not.toBe(globeMark)
     await guideLink.hover()
     expect(await styleOf(guideLink, 'text-decoration-line')).toBe('underline')
     expect(await styleOf(guideLink, 'text-decoration-style')).toBe('dotted')
     expect(await styleOf(guideLink, 'text-underline-offset')).toBe('3px')
-    await chip.hover()
-    expect(await styleOf(chip, 'text-decoration-style')).toBe('dotted')
-    expect(await styleOf(chip, 'background-color')).toBe('rgba(0, 0, 0, 0)')
+    await mentions.first().hover()
+    expect(await styleOf(mentions.first(), 'text-decoration-style')).toBe('dotted')
     // The excluded grey affordance: tool-row file links keep their own color.
     expect(await styleOf(page.locator('button[class*="fileLink"]').first(), 'color')).not.toBe(LINK_BLUE)
+
+    // Ordinary message HTTP(S) links delegate to the right Sidebar Browser.
+    await guideLink.click()
+    const browserAddress = page.locator('[data-rightbar-col]').getByRole('textbox', { name: 'Enter an HTTP(S) address' })
+    await expect.poll(() => browserAddress.inputValue()).toBe(GUIDE_URL)
+    await markdown.locator(`a[href="${HTTP_URL}"]`).click()
+    await expect.poll(() => browserAddress.inputValue()).toBe(HTTP_URL)
   }, 90_000)
 })

@@ -13,6 +13,7 @@
 // never shadow the derived reference. The deletion dialog distinguishes a
 // reference-free profile from a page-managed key before the credential and
 // settings unsets reach the wire.
+import { assertModelInputLayout } from './model-input-layout.ts'
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { join } from 'node:path'
@@ -54,6 +55,18 @@ describe('web e2e: Models settings page configures a dormant provider', () => {
   afterAll(async () => {
     await browser?.close()
     await scaffold?.close()
+  })
+
+  it('rejects layout checks without an explicit viewport before resizing the page', async () => {
+    const context = await browser.newContext({ viewport: null })
+    try {
+      const unsized = await context.newPage()
+      await expect(assertModelInputLayout(unsized, unsized.locator('body')))
+        .rejects.toThrow('Model input layout checks require an explicit viewport')
+      expect(unsized.viewportSize()).toBeNull()
+    } finally {
+      await context.close()
+    }
   })
 
   it('opens the add card over the dormant directory vocabulary', async () => {
@@ -238,12 +251,18 @@ describe('web e2e: Models settings page configures a dormant provider', () => {
     expect(await dialog.getByLabel('推理强度').count()).toBe(0)
     await dialog.getByRole('button', { name: '添加模型' }).click()
     await dialog.getByLabel('模型 ID 1').fill('acme-large')
+    await dialog.getByRole('button', { name: '模型选项 1' }).click()
+    expect(await dialog.getByRole('group', { name: '输入类型 1' }).getByRole('checkbox', { name: '图片' }).isChecked()).toBe(false)
+    await dialog.getByRole('group', { name: '输入类型 1' }).getByRole('checkbox', { name: '图片' }).check()
     await dialog.getByRole('button', { name: '创建提供方', exact: true }).click()
 
     const row = dialog.getByText('Acme Gateway', { exact: true }).first()
     await row.waitFor({ timeout: 10_000 })
     const document = await readFile(join(scaffold.harnessHome, 'settings.yaml'), 'utf8')
     expect(document).toContain('acme-gateway:')
+    await expect(scaffold.ctx.llm.resolveModelInfo('acme-gateway', 'acme-large')).resolves.toMatchObject({
+      inputModalities: ['text', 'image'],
+    })
 
     // The tag follows the adapter's installed catalog: this route is in no
     // catalog, while minimax-cn is — even though both now have profiles.
@@ -269,11 +288,15 @@ describe('web e2e: Models settings page configures a dormant provider', () => {
     expect(await protocol.inputValue()).toBe('openai-completions')
     const name = dialog.getByLabel('显示名称', { exact: true })
     expect(await name.inputValue()).toBe('Acme Gateway')
+    await dialog.getByRole('button', { name: '模型选项 1' }).click()
+    expect(await dialog.getByRole('group', { name: '输入类型 1' }).getByRole('checkbox', { name: '图片' }).isChecked()).toBe(true)
+    await assertModelInputLayout(page, dialog)
     const snapshot = await captureStableAria(page, '[role="dialog"]', scaffold.workspaceCwd)
     await compareOrRefreshGolden(DECLARED_EDIT_EXPECTED, snapshot, MODE)
 
     await protocol.selectOption('anthropic-messages')
     await name.fill('Acme 网关')
+    await dialog.getByRole('group', { name: '输入类型 1' }).getByRole('checkbox', { name: '图片' }).uncheck()
     await dialog.getByRole('button', { name: '保存', exact: true }).click()
     await expect.poll(async () => dialog.getByLabel('API 协议').count(), { timeout: 10_000 }).toBe(0)
     // The adapter re-resolved the route under the new protocol and re-registered
@@ -287,11 +310,99 @@ describe('web e2e: Models settings page configures a dormant provider', () => {
     const document = await readFile(join(scaffold.harnessHome, 'settings.yaml'), 'utf8')
     expect(document).toContain('api: anthropic-messages')
     expect(document).toContain('displayName: Acme 网关')
+    await expect(scaffold.ctx.llm.resolveModelInfo('acme-gateway', 'acme-large')).resolves.toMatchObject({
+      inputModalities: ['text'],
+    })
+    expect(tripwire.pageErrors).toEqual([])
+  }, 60_000)
+
+  it('saves image-only input and reopens the same selection', async () => {
+    onTestFailed(() => saveFailureShot(page, 'web-e2e-models-input-types'))
+    const dialog = page.getByRole('dialog', { name: '设置' })
+    await dialog.getByRole('button', { name: '编辑 Acme 网关 (acme-gateway)' }).click()
+    await dialog.getByText('自定义设置').click()
+    await dialog.getByRole('button', { name: '模型选项 1' }).click()
+    expect(await dialog.getByRole('group', { name: '输入类型 1' }).getByRole('checkbox', { name: '图片' }).isChecked()).toBe(false)
+    const inputs = dialog.getByRole('group', { name: '输入类型 1' })
+    expect(await inputs.getByRole('checkbox', { name: '文本' }).isChecked()).toBe(true)
+    expect(await inputs.getByRole('checkbox', { name: '文本' }).isDisabled()).toBe(true)
+    await inputs.getByRole('checkbox', { name: '图片' }).check()
+    await inputs.getByRole('checkbox', { name: '文本' }).uncheck()
+    await dialog.getByRole('button', { name: '保存', exact: true }).click()
+    await dialog.getByLabel('模型 ID 1').waitFor({ state: 'detached', timeout: 10_000 })
+    await expect(scaffold.ctx.llm.resolveModelInfo('acme-gateway', 'acme-large')).resolves.toMatchObject({
+      inputModalities: ['image'],
+    })
+    await dialog.getByRole('button', { name: '编辑 Acme 网关 (acme-gateway)' }).click()
+    await dialog.getByText('自定义设置').click()
+    await dialog.getByRole('button', { name: '模型选项 1' }).click()
+    expect(await dialog.getByRole('group', { name: '输入类型 1' }).getByRole('checkbox', { name: '图片' }).isChecked()).toBe(true)
+    expect(await inputs.getByRole('checkbox', { name: '文本' }).isChecked()).toBe(false)
+    expect(await inputs.getByRole('checkbox', { name: '图片' }).isDisabled()).toBe(true)
+    await dialog.getByRole('button', { name: '取消', exact: true }).click()
+    expect(tripwire.pageErrors).toEqual([])
+  }, 60_000)
+
+  it('inherits installed vision input and retains it when adopting a discovered model', async () => {
+    onTestFailed(() => saveFailureShot(page, 'web-e2e-models-catalog-inputs'))
+    await scaffold.ctx.settings.mutate('llm-pi-ai', [{
+      op: 'set', path: ['providers', 'openai'],
+      value: { models: [{ id: 'gpt-6-astra', name: 'GPT-6 Astra', contextWindow: 272000, maxTokens: 128000 }] },
+    }])
+    const dialog = page.getByRole('dialog', { name: '设置' })
+    const edit = dialog.getByRole('button', { name: '编辑 openai', exact: true })
+    try {
+      await edit.click()
+      await dialog.getByText('自定义设置').click()
+      await dialog.getByRole('button', { name: '模型选项 1' }).click()
+      const types = dialog.getByRole('group', { name: '输入类型 1' })
+      const image = types.getByRole('checkbox', { name: '图片', exact: true })
+      await expect.poll(() => image.isChecked()).toBe(true)
+      expect(await types.getByRole('checkbox', { name: '文本', exact: true }).isChecked()).toBe(true)
+      const before = await readFile(join(scaffold.harnessHome, 'settings.yaml'), 'utf8')
+      await compareOrRefreshGolden(join(SNAPSHOT_DIR, 'catalog-inputs.expected.md'),
+        await captureStableAria(page, '[role="dialog"]', scaffold.workspaceCwd), MODE)
+      await dialog.getByRole('button', { name: '保存', exact: true }).click()
+      await types.waitFor({ state: 'detached' })
+      expect(await readFile(join(scaffold.harnessHome, 'settings.yaml'), 'utf8')).toBe(before)
+
+      await edit.click()
+      await dialog.getByText('自定义设置').click()
+      await dialog.getByRole('button', { name: '模型选项 1' }).click()
+      await expect.poll(() => image.isEnabled()).toBe(true)
+      await image.uncheck()
+      await dialog.getByRole('button', { name: '保存', exact: true }).click()
+      await types.waitFor({ state: 'detached' })
+      await expect(scaffold.ctx.llm.resolveModelInfo('openai', 'gpt-6-astra')).resolves.toMatchObject({ inputModalities: ['text'] })
+      await edit.click()
+      await dialog.getByText('自定义设置').click()
+      await dialog.getByRole('button', { name: '模型选项 1' }).click()
+      await expect.poll(() => image.isEnabled()).toBe(true)
+      expect(await image.isChecked()).toBe(false)
+
+      await dialog.getByRole('button', { name: '删除模型 1' }).click()
+      await dialog.getByRole('button', { name: '获取可用模型' }).click()
+      const picker = page.getByRole('dialog', { name: '选择要添加的模型' })
+      await picker.getByRole('button', { name: '取消全选' }).click()
+      await picker.getByRole('searchbox', { name: '搜索模型' }).fill('gpt-6-astra')
+      await picker.getByRole('checkbox', { name: 'gpt-6-astra', exact: true }).check()
+      await picker.getByRole('button', { name: '添加所选' }).click()
+      await dialog.getByRole('button', { name: '模型选项 1' }).click()
+      expect(await image.isChecked()).toBe(true)
+      await dialog.getByRole('button', { name: '保存', exact: true }).click()
+      await types.waitFor({ state: 'detached' })
+      await expect(scaffold.ctx.llm.resolveModelInfo('openai', 'gpt-6-astra')).resolves.toMatchObject({ inputModalities: ['text', 'image'] })
+    } finally {
+      await scaffold.ctx.settings.mutate('llm-pi-ai', [{ op: 'unset', path: ['providers', 'openai'] }])
+      await edit.waitFor({ state: 'detached' })
+      await page.getByRole('dialog', { name: '选择要添加的模型' }).waitFor({ state: 'detached' })
+    }
     expect(tripwire.pageErrors).toEqual([])
   }, 60_000)
 
   it('confirms an identified provider deletion before removing its profile and key', async () => {
     onTestFailed(() => saveFailureShot(page, 'web-e2e-models-delete'))
+    expect(await readFile(join(scaffold.harnessHome, 'settings.yaml'), 'utf8')).not.toContain('openai:')
     const settingsDialog = page.getByRole('dialog', { name: '设置' })
     await settingsDialog.getByRole('button', { name: '删除 minimax-cn', exact: true }).click()
     const deleteDialog = page.getByRole('dialog', { name: '删除 minimax-cn？' })
@@ -326,7 +437,7 @@ describe('web e2e: Models settings page configures a dormant provider', () => {
     await assertFixtureInventory(SNAPSHOT_DIR, [
       'configured.expected.md', 'declared-edit.expected.md', 'declared.expected.md',
       'delete.expected.md', 'empty.expected.md', 'model-picker.expected.md',
-      'native-delete.expected.md',
+      'native-delete.expected.md', 'catalog-inputs.expected.md',
     ])
   })
 })

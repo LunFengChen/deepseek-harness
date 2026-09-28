@@ -42,6 +42,18 @@ Mount the service with a provider and the delegation tool. The provider register
 
 An agent that calls the tool gets the child's final answer as the tool result. Mounting the service alone changes nothing: nothing can delegate until a provider and a tool are composed.
 
+### Delegation settings
+
+The limits section on the **Plugins → Subagent** page edits the Host’s `subagent` settings section. User values override this plugin's composition; reset removes the user override. `maxDepth` defaults to `1` and supplies the delegation tools' depth when their own configuration omits it. An explicit tool depth, including `provider-managed`, takes precedence. Depth `0` disables delegation through tools inheriting this setting; depth `1` permits direct children only. Changes apply on the next delegation attempt. Direct service callers continue to supply their own optional request depth.
+
+### Continuable capacity
+
+Set `maxActiveSubagents` on the host `dsh-subagent` plugin to limit live children sharing uninterrupted continuable parent links. It defaults to `8` and accepts positive safe integers. A non-continuable parent starts a separate pool and does not consume a slot; continuable descendants inherit that pool. Fresh creation and cold resume reserve before reconstructing the Agent, and cleanup returns the slot after handle disposal. A waiting parent, pending inbox work, and an Activation being stopped still occupy slots. Messages to a resident child reuse its slot. One-shot and external-provider runs are outside this limit. Pool inheritance does not cross a one-shot parent; its continuable children share a separate pool. Depth remains the delegation tool's separate policy.
+
+The current `maxActiveSubagents` value is sampled before every new or cold-resumed Activation. Raising it admits more children in existing trees; lowering it leaves resident children running and refuses further admissions until usage is below the limit.
+
+At capacity, creation or cold resume rejects with `ACTIVATION_LIMIT_REACHED` (browser prompts receive `subagent/delivery-unavailable`): wait for a child to finish or continue using the existing agents. Admission does not queue, because a parent waiting for descendants must not wait for its own occupied slot. Slots are process-local and do not constrain cumulative Session history or token usage.
+
 ### One-shot and continuable children
 
 One-shot children run once and settle with a single result, plus an optional structured output and a safe diagnostic on failure. A start request may override the child Agent's provider, model, reasoning effort, and output-token limit through `agentOptions`; every requested option requires the provider's matching capability. Continuable children keep a durable session and accept later messages in order: the caller receives a stable child id, sends adjacent-Agent messages, and can interrupt the current turn without destroying the child. The tool row's `backgroundMode` picks the shape (`one-shot` by default, or `continuable` on providers that support it).
@@ -90,7 +102,7 @@ This section explains how the service is built and where the observable behavior
 
 ### One-shot flow
 
-A request is validated against the provider's advertised capabilities, a durable descriptor is snapshotted, and the provider builds the child. Both in-process providers advertise `agentOptions`: child creation merges requested fields over the provider, model, and reasoning effort in the parent's latest logged request, falls back to creation options before the first request, and retains the configured token limit. A route change without an explicit effort clears the inherited route-owned effort so the selected model resolves its default. DSH SDK also advertises this capability and publishes immutable `agentRouteDefaults`, which supply its instance provider/model defaults before exact-route preflight; `start()` still owns direct callers and the output cap. ACP, Codex, and Claude Code reject agent-route overrides rather than silently ignoring them. On success the run is published and ownership transfers to the caller; on failure the provider rolls back every unpublished resource. The result carries the child's final output, an optional structured value, a stop reason, and an optional safe diagnostic.
+A request is validated against the provider's advertised capabilities, a durable descriptor is snapshotted, and the provider builds the child. Both in-process providers advertise `agentOptions`: child creation merges requested fields over the provider, model, and reasoning effort in the parent's latest logged request, falls back to creation options before the first request, and retains the configured token limit. They also snapshot delegated permission state before the first await: an Auto or Full access parent gives the child the same `permission/preset` identity, while the existing sandbox override and approval-policy pin continue to apply. Recording both identities prevents an older same-bundle fork value from winning. Auto then reviews every supported child call independently: ordinary project-local work is low risk and allowed, medium-risk work requires explicit action, exact-target and scope authorization from the existing creation prompt or an authenticated human/direct-parent message, without conflicting human limits, while high-risk work is always denied. The reviewer derives that context from `parentSession` and existing messages; delegation adds no parent call metadata, delegation records, review receipt, or Session format. A route change without an explicit effort clears the inherited route-owned effort so the selected model resolves its default. DSH SDK also advertises `agentOptions` but runs a separate child runtime, so it does not inherit Auto; ACP, Codex, and Claude Code likewise retain their own permission systems after the parent delegation call passes review. On success the run is published and ownership transfers to the caller; on failure the provider rolls back every unpublished resource. The result carries the child's final output, an optional structured value, a stop reason, and an optional safe diagnostic.
 
 ### Continuable flow
 
@@ -118,6 +130,7 @@ Read these pages when the package-level contract is not enough. They move from t
 - [Subagent capability seam](../../../.agents/notes/implemented/feature/2026-06-21-subagent-capability-seam.md) — the design record for the delegation capability family.
 - [Continuable subagents](../../../.agents/notes/implemented/feature/2026-07-28-continuable-subagent-conversations.md) — durable children that accept follow-up turns.
 - [In-process spawn backend](../subagent-spawn-in-process/README.md) — the simplest provider to compose.
+- [Auto review](../../experimental/auto-review/README.md) — the current-session authorization mode inherited only by in-process DSH children.
 - [Out-of-process ACP backend](../subagent-acp/README.md) — children with their own runtime over the Agent Client Protocol.
 - [tool-subagent-control README](../tool-subagent-control/README.md) — the follow-up, interrupt, and listing surface.
 
@@ -130,11 +143,11 @@ Read these pages when the package-level contract is not enough. They move from t
 
 #### What the model sees
 
-One user-role parent message opening with the outcome — `Background subagent <child-id> finished and will do no further work unless you send it more.`, or the matching line for a child that was stopped, ran out of room, declined, or failed — followed by `Its closing message:` and the child's final assistant content, or `It left no closing message.` when it produced none. This runtime-owned notice is distinct from model-authored parent/child messages, which use `sendMessage()` and `AgentMessageSource`; delegation schemas and model controls belong to the Consumer packages.
+One user-role parent message opening with the outcome — `Background subagent <child-id> finished and will do no further work unless you send it more.`, or the matching line for a child that was stopped, ran out of room, declined, or failed — followed by `Its closing message:` and the nonempty text blocks from the child's final assistant output, preserving their content and order. Reasoning and other nontext blocks are excluded; when no nonempty text remains, the notice says `It left no closing message.` This runtime-owned notice is distinct from model-authored parent/child messages, which use `sendMessage()` and `AgentMessageSource`; delegation schemas and model controls belong to the Consumer packages.
 
 #### Token effect
 
-One notice per settled Activation in the parent's request, sized by the child's final message. A child that sends its own message and then settles costs the parent both.
+One notice per settled Activation in the parent's request, sized by the child's final text. A child that sends its own message and then settles costs the parent both.
 
 #### KV Cache effect
 
@@ -173,6 +186,7 @@ These limits define when the seam is a poor fit or needs special operational car
 - **Wake gap during cancellation convergence** — a follow-up accepted after an interrupt signal but before the driver becomes idle stays queued until another waking send.
 - **Pending injected context retains an Activation** — settlement conservatively treats every Inbox occurrence as unfinished. Context parked after the Agent becomes idle keeps the child and its live ancestors resident until a waking delivery claims it, a queue mutation removes it, or manager teardown discards it.
 - **Process-local residency** — the Activation inbox and ownership graph do not coordinate two harness processes; concurrent access to one persistence store needs a durable mailbox and cross-process lease protocol.
+- **Saved settlement notices are not rewritten** — a saved user-role notice containing reasoning still fails DeepSeek Messages serialization while it remains in the parent's request history.
 - **No replay of accepted-but-unlogged messages** — a crash can lose an accepted prompt that never reached the child's session log; the lost message is not replayed automatically.
 - **No durable parent mailbox** — child-to-parent messages require a resident continuable child and live direct parent, and provide acceptance identity rather than exactly-once delivery.
 - **Lifecycle events are observe-only** — a run-affecting `subagent/end` continuation or decision API waits for a concrete consumer.

@@ -4,7 +4,7 @@
 // typed draft, same-basename directory adoption, the rename round
 // trip over the real wire (workspace.rename RPC + durable registry), the
 // duplicate-name pre-check, the
-// flat "In one list" view with its persisted group-by preference, the session
+// flat "In one list" and opt-in Workspace tree views with persisted grouping, the session
 // hover card and row action menu, and the session archive round trip (row
 // menu → workspace.archiveSession RPC → durable global set → row hidden
 // across reload). Zero model calls: workspace.create/rename/archiveSession
@@ -37,7 +37,7 @@ const SEED_ID = 'workspace-management-web-e2e'
 const POINTER_TRANSIT_MS = 300
 const POINTER_HOLD_MS = 600
 
-describe('web e2e: workspace management (create / rename / flat view / hover affordances)', () => {
+describe('web e2e: workspace management (create / rename / grouping / hover affordances)', () => {
   let scaffold: WebScaffold
   let browser: Browser
   let page: Page
@@ -430,7 +430,7 @@ describe('web e2e: workspace management (create / rename / flat view / hover aff
     acknowledgeReloadConnectionLoss(tripwire, warningStart)
     await expect.poll(() => page.getByText('Ungrouped', { exact: true }).count(), { timeout: 15_000 }).toBe(0)
     await page.getByRole('button', { name: 'View options' }).click()
-    await page.getByRole('menuitem', { name: 'WorkSpace' }).click()
+    await page.getByRole('menuitem', { name: 'WorkSpace', exact: true }).click()
     await expect.poll(() => page.getByText('Ungrouped', { exact: true }).count(), { timeout: 10_000 }).toBeGreaterThanOrEqual(1)
     expect(tripwire.pageErrors).toEqual([])
   }, 90_000)
@@ -661,6 +661,96 @@ describe('web e2e: workspace management (create / rename / flat view / hover aff
     ).toBe(2)
     expect(tripwire.pageErrors).toEqual([])
   }, 90_000)
+
+  it('opts into Workspace tree grouping and preserves the parent Workspace session', async () => {
+    onTestFailed(() => saveFailureShot(page, 'web-e2e-parent-folders'))
+    const parentPath = join(scaffold.workspaceCwd, 'folder-group')
+    await mkdir(parentPath)
+    await addNewFolderWorkspace(parentPath, 'project-one')
+    const childWorkspace = (await scaffold.ctx.workspaceRegistry.resolveByPath(join(parentPath, 'project-one')))!
+    const childSessionIds = [...childWorkspace.sessionIds]
+    const workspaceCount = scaffold.ctx.workspaceRegistry.list().length
+    const agentCount = scaffold.ctx.agents.list().length
+    await adoptDirectory(parentPath, { waitForAgent: true })
+    expect(await page.getByRole('dialog', { name: 'Add workspace', exact: true }).count()).toBe(0)
+    expect(scaffold.ctx.workspaceRegistry.list()).toHaveLength(workspaceCount + 1)
+    expect(scaffold.ctx.agents.list()).toHaveLength(agentCount + 1)
+    expect([...childWorkspace.sessionIds]).toEqual(childSessionIds)
+    const parentWorkspace = (await scaffold.ctx.workspaceRegistry.resolveByPath(parentPath))!
+    expect(parentWorkspace.sessionIds).toHaveLength(1)
+    const parent = page.getByRole('treeitem').filter({ has: page.getByText('folder-group', { exact: true }) })
+    const section = parent.locator('xpath=ancestor::*[contains(@class, "groupSection")][1]')
+    await page.getByRole('tree', { name: 'Sessions', exact: true }).getByText('project-one', { exact: true }).waitFor()
+    expect(await section.getByText('project-one', { exact: true }).count()).toBe(0)
+    await page.getByRole('button', { name: 'View options', exact: true }).click()
+    const optionsExpected = fileURLToPath(new URL('./expected/workspace-management/grouping-options.expected.md', import.meta.url))
+    await compareOrRefreshGolden(optionsExpected, await captureStableAria(page, '[role="menu"]', scaffold.workspaceCwd), MODE)
+    await page.getByRole('menuitem', { name: 'Workspace Tree', exact: true }).click()
+    await section.getByText('project-one', { exact: true }).waitFor()
+    await addNewFolderWorkspace(parentPath, 'project-two')
+    const project = section.getByRole('treeitem', { name: 'project-two', exact: true })
+    const session = section.locator('[aria-selected="true"]')
+    await session.waitFor()
+    const parentBounds = (await parent.boundingBox())!
+    for (const row of [project, session]) {
+      const bounds = (await row.boundingBox())!
+      expect(bounds.x).toBeCloseTo(parentBounds.x, 0)
+      expect(bounds.width).toBeCloseTo(parentBounds.width, 0)
+    }
+    const parentLabel = (await parent.getByText('folder-group', { exact: true }).boundingBox())!
+    const projectLabel = (await project.getByText('project-two', { exact: true }).boundingBox())!
+    expect(projectLabel.x - parentLabel.x).toBeCloseTo(12, 0)
+    const expected = fileURLToPath(new URL('./expected/workspace-management/parent-folders.expected.md', import.meta.url))
+    await compareOrRefreshGolden(expected, await captureStableAria(
+      page, '[aria-label="Workspace actions for folder-group"] >> xpath=ancestor::*[contains(@class, "groupSection")][1]',
+      scaffold.workspaceCwd,
+    ), MODE)
+    const sourceWorkspace = scaffold.ctx.workspaceRegistry.list().find(workspace => workspace.title === 'xx')!
+    await sourceWorkspace.setTitle('drag-source')
+    const dragSource = page.getByRole('treeitem').filter({ has: page.getByText('drag-source', { exact: true }) })
+    await dragSource.waitFor()
+    await dragSource.dragTo(parent, { targetPosition: { x: 10, y: 3 } })
+    await expect.poll(() => {
+      const ordered = scaffold.ctx.workspaceRegistry.list()
+      return ordered.findIndex(workspace => workspace.id === sourceWorkspace.id)
+        < ordered.findIndex(workspace => workspace.id === parentWorkspace.id)
+    }, { timeout: 10_000 }).toBe(true)
+    const lastChild = section.getByRole('treeitem', { name: 'project-one', exact: true })
+    const targetBounds = (await lastChild.boundingBox())!
+    const sectionBounds = (await section.boundingBox())!
+    expect(targetBounds.y + targetBounds.height / 2).toBeGreaterThan(sectionBounds.y + sectionBounds.height / 2)
+    await dragSource.dragTo(lastChild)
+    await expect.poll(() => {
+      const ordered = scaffold.ctx.workspaceRegistry.list()
+      return ordered.findIndex(workspace => workspace.id === sourceWorkspace.id)
+        > ordered.findIndex(workspace => workspace.id === parentWorkspace.id)
+    }, { timeout: 10_000 }).toBe(true)
+    await section.getByText('project-two', { exact: true }).waitFor()
+    await parent.click()
+    expect(await parent.locator('[class*="folderActive"]').count()).toBe(1)
+    expect(await section.getByText('project-two', { exact: true }).count()).toBe(0)
+    const warningStart = tripwire.warnings.length
+    await page.reload({ waitUntil: 'load' })
+    await parent.waitFor()
+    acknowledgeReloadConnectionLoss(tripwire, warningStart)
+    expect(await parent.getAttribute('aria-expanded')).toBe('false')
+    await parent.click()
+    await section.getByText('project-two', { exact: true }).waitFor()
+    await page.getByRole('button', { name: 'View options', exact: true }).click()
+    await page.getByRole('menuitem', { name: 'WorkSpace', exact: true }).click()
+    await page.getByRole('tree', { name: 'Sessions', exact: true }).getByText('project-two', { exact: true }).waitFor()
+    expect(await section.getByText('project-two', { exact: true }).count()).toBe(0)
+    await page.getByRole('button', { name: 'View options', exact: true }).click()
+    await page.getByRole('menuitem', { name: 'Workspace Tree', exact: true }).click()
+    await section.getByText('project-two', { exact: true }).waitFor()
+    await clickHoverAction(parent, 'New session in folder-group')
+    await expect.poll(() => section.locator('[aria-selected="true"]').evaluate(row =>
+      row.closest('[class*="groupSection"]')?.querySelector('[role="treeitem"]')?.textContent,
+    ), { timeout: 10_000 }).toBe('folder-group')
+    expect(parentWorkspace.sessionIds).toHaveLength(1)
+    expect([...childWorkspace.sessionIds]).toEqual(childSessionIds)
+    expect(tripwire.pageErrors).toEqual([])
+  })
 
   it.skipIf(MODE === 'record')('issued zero model calls and stayed clean', async () => {
     expect(tripwire.warnings).toEqual([])

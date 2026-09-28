@@ -106,9 +106,8 @@ describe('web e2e: requested SVG is explicitly delivered', () => {
     await card.waitFor({ state: 'visible' })
     expect(await card.count()).toBe(1)
     expect(await page.getByText('产物', { exact: true }).count()).toBe(0)
-    if (await page.locator('[data-produced-files-row]').count() > 0) {
-      expect(await page.getByText('本轮文件改动', { exact: true }).count()).toBe(1)
-    }
+    // The scaffold workspace is not a git repository, so the changed-files card lists the written SVG from the write call alone.
+    expect(await page.locator('[data-changed-files]').count()).toBe(1)
     expect(tripwire.pageErrors).toEqual([])
     expect(tripwire.warnings).toEqual([])
   })

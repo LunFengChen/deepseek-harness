@@ -235,7 +235,7 @@ describe('model discovery registry', () => {
       .resolves.toEqual([])
   })
 
-  it('normalizes what an interrogation returns without inventing capacities', async () => {
+  it('preserves discovered input types without inventing missing metadata', async () => {
     const ctx = await setup()
     ctx.llm.registerModelDiscovery('llm-example', () => Promise.resolve([
       { id: 'keep', name: 'Keep', contextWindow: 1024, maxTokens: 256, inputModalities: ['text', 'image'] },

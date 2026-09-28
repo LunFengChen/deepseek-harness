@@ -10,7 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, screen } from '@testing-library/react'
 import type { WorkspaceId } from '@x1a0f3n9/dsh-api-workspace-controller/client'
 import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
-import { SlotTestRuntime, TestRemote, usePinnedBrowserLanguages } from '@x1a0f3n9/dsh-client-test-runtime'
+import { SlotTestRuntime, usePinnedBrowserLanguages } from '@x1a0f3n9/dsh-client-test-runtime'
 import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import { apply, inject } from '@x1a0f3n9/dsh-client-ui-workspace/client'
 
@@ -31,9 +31,8 @@ async function bench() {
   runtime.ctx.provide('layout', { selectPanel: vi.fn() })
   runtime.releaseWorkspaceSource()
   const directoryPicker = {}
-  const remote = new TestRemote(runtime.ctx)
-  Object.assign(remote, { directoryPicker })
-  runtime.ctx.provide('remote.directoryPicker', directoryPicker as never)
+  const { remote } = runtime
+  remote.provideNamespaces({ directoryPicker })
   const locale = new LocaleRuntime(runtime.ctx)
   runtime.ctx.provide('locale', locale)
   runtime.slots.installLocale(locale)

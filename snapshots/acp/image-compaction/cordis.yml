@@ -40,3 +40,6 @@
   name: '@x1a0f3n9/dsh-compaction-basic'
   config:
     retainTokens: 100
+
+- insert:
+    - name: './summary-image-budget.mjs'

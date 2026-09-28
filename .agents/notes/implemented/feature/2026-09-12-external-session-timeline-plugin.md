@@ -14,7 +14,7 @@ Session timeline lived inside the harness workspace. That mixed plugin maintenan
 
 ## Alternatives considered
 
-**Rename the package to `@deepseek-ai/dsh-session-timeline`.** Rejected: this plugin belongs to the fork. Official naming would hide the owner and break the current client module id.
+**Rename the package to `@x1a0f3n9/dsh-session-timeline`.** Rejected: this plugin belongs to the fork. Official naming would hide the owner and break the current client module id.
 
 **Keep the plugin in the monorepo.** Rejected: the owner wants a separate repository so the plugin can be maintained without a harness checkout.
 

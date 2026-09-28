@@ -48,6 +48,9 @@
       "path": "../ui-session"
     },
     {
+      "path": "../../core/agent"
+    },
+    {
       "path": "../../core/session"
     },
     {
@@ -81,13 +84,13 @@
       "path": "../../settings/settings"
     },
     {
-      "path": "../../interaction/permission-presets"
-    },
-    {
       "path": "../ui-settings"
     },
     {
       "path": "../../util/crypto"
+    },
+    {
+      "path": "../../util/values"
     },
     {
       "path": "../../util/workspace-path"

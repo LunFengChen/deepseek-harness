@@ -46,6 +46,9 @@
     },
     {
       "path": "../ui-session"
+    },
+    {
+      "path": "../../llm/llm"
     }
   ]
 }

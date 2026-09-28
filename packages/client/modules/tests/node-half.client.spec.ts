@@ -1,13 +1,13 @@
 /** Node-half composition diagnostics for package metadata and built client bundles. */
 
-import { mkdirSync, mkdtempSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, realpathSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { SourceMap } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { runInNewContext } from 'node:vm'
-import { Context, type Fiber } from '@deepseek-ai/cordis'
+import { Context, FiberState, type Fiber } from '@deepseek-ai/cordis'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderIndexInjections, type WebServer, type WebRoute } from '@x1a0f3n9/dsh-host-webserver'
 import * as modulesClient from '../src/client/index.ts'
@@ -20,14 +20,53 @@ const UI_RENDERER_ID = '@x1a0f3n9/dsh-client-ui-renderer'
 const comboUrl = (ids: readonly string[], rev: string): string =>
   `/plugins/??${ids.map(id => `${id}/client.js`).join(',')}&rev=${rev}`
 const mapUrl = (url: string): string => url.replace(/\/client\.js(?=,|&rev=)/g, '/client.js.map')
+const chunkUrl = (id: string, fileName: string, rev: string): string => `/plugins/${id}/${fileName}?rev=${rev}`
 const BOOTSTRAP_URL = comboUrl([MODULES_ID], 'boot')
 const APPLICATION_URL = comboUrl([UI_RENDERER_ID], 'app')
 
 let root: string | undefined
+const contexts: { ctx: Context; ready?: Promise<WebRoute> }[] = []
 
-afterEach(() => {
+afterEach(async () => {
+  await Promise.all(contexts.splice(0).map(async ({ ctx, ready }) => {
+    await ready
+    await ctx.fiber.dispose()
+  }))
   if (root !== undefined) rmSync(root, { recursive: true, force: true })
   root = undefined
+})
+
+it.each([false, true])('tracks the Web carrier lifetime when server-first is %s', async (serverFirst) => {
+  const ctx = new Context()
+  contexts.push({ ctx })
+  ctx.provide('loader', { entries: () => [] })
+  const routes = new Set<WebRoute>()
+  const mountServer = () => ctx.plugin((serverCtx) => {
+    serverCtx.provide('webServer', {
+      register: (route: WebRoute) => {
+        routes.add(route)
+        return () => { routes.delete(route) }
+      },
+    } as WebServer)
+  })
+  let server = serverFirst ? await mountServer() : undefined
+  const modules = await ctx.plugin(ClientModuleRegistry)
+  const service = ctx.get('clientModules')!
+  expect(service.graph().entries).toEqual([])
+  expect((await service.fetchBundle(new Request('http://localhost/plugins/missing'))).status).toBe(404)
+  if (!serverFirst) {
+    expect(routes.size).toBe(0)
+    server = await mountServer()
+  }
+  await expect.poll(() => routes.size).toBe(1)
+  await server!.dispose()
+  await expect.poll(() => routes.size).toBe(0)
+  expect(modules.state).toBe(FiberState.ACTIVE)
+  expect((await service.fetchBundle(new Request('http://localhost/plugins/missing'))).status).toBe(404)
+  await mountServer()
+  await expect.poll(() => routes.size).toBe(1)
+  await modules.dispose()
+  expect(routes.size).toBe(0)
 })
 
 /** Create a resolvable package whose client export points at the returned path. */
@@ -65,8 +104,10 @@ function constructWithRoute(
     entryBaseUrl?: string
     internal?: NonNullable<Context['loader']['internal']>
   } = {},
-): { context: Context; service: ClientModuleRegistry; route: WebRoute } {
+): { context: Context; service: ClientModuleRegistry; route: Promise<WebRoute> } {
   const ctx = new Context()
+  const owned: typeof contexts[number] = { ctx }
+  contexts.push(owned)
   ctx.baseUrl = options.contextBaseUrl ?? pathToFileURL(root!).href + '/'
   ctx.provide('loader', {
     internal: options.internal,
@@ -81,19 +122,19 @@ function constructWithRoute(
       }
     },
   })
-  let route: WebRoute | undefined
+  const route = Promise.withResolvers<WebRoute>()
   const webServer: Pick<WebServer, 'port' | 'register' | 'tapIndex'> = {
     port: 0,
     register: (candidate) => {
-      if (candidate.path === '/plugins') route = candidate
+      if (candidate.path === '/plugins') route.resolve(candidate)
       return () => {}
     },
     tapIndex: () => () => {},
   }
   ctx.provide('webServer', webServer as WebServer)
   const service = new ClientModuleRegistry(ctx)
-  if (route === undefined) throw new Error('client bundle route was not registered')
-  return { context: ctx, service, route }
+  owned.ready = route.promise
+  return { context: ctx, service, route: route.promise }
 }
 
 /** Construct the node-half service over the enabled fixture entries. */
@@ -102,7 +143,7 @@ function construct(packageNames: string[]): ClientModuleRegistry {
 }
 
 /** Invoke the registered plugin route and capture status, headers, and bytes. */
-async function routeRequest(route: WebRoute, url: string, method = 'GET'): Promise<{
+async function routeRequest(route: Promise<WebRoute>, url: string, method = 'GET'): Promise<{
   status: number
   headers: Record<string, string> | undefined
   body: Buffer
@@ -121,7 +162,7 @@ async function routeRequest(route: WebRoute, url: string, method = 'GET'): Promi
       return response
     },
   } as unknown as ServerResponse
-  await route.handler({ method, url } as IncomingMessage, response)
+  await (await route).handler({ method, url } as IncomingMessage, response)
   return { status, headers, body }
 }
 
@@ -467,6 +508,92 @@ describe('client bundle activation', () => {
 
     writeFileSync(`${clientPath}.map`, '{"version":3,"sources":[null]}\n')
     expect(() => construct([packageName])).not.toThrow()
+
+    writeFileSync(`${clientPath}.map`, JSON.stringify({
+      version: 3,
+      names: [],
+      mappings: 'AAAA',
+      sourceRoot: 'http://[',
+      sources: ['src/index.ts'],
+    }))
+    const invalidUrl = constructWithRoute([packageName])
+    const invalidMapUrl = mapUrl(invalidUrl.service.graph().batches[0]!.url)
+    expect(JSON.parse((await routeRequest(invalidUrl.route, invalidMapUrl)).body.toString('utf8'))).toMatchObject({
+      sections: [{ map: { sources: [`/plugins/${packageName}/client.js`] } }],
+    })
+  })
+
+  it('reads a source map only on its first map GET', async () => {
+    const packageName = '@fixture/lazy-source-map'
+    const clientPath = writePackage(packageName)
+    mkdirSync(dirname(clientPath), { recursive: true })
+    writeFileSync(clientPath, 'module.exports = {}\n//# sourceMappingURL=client.js.map')
+    writeFileSync(`${clientPath}.map`, '{')
+    const { service, route } = constructWithRoute([packageName])
+    const batch = service.graph().batches[0]!
+    const sourceMapUrl = mapUrl(batch.url)
+
+    const script = await routeRequest(route, batch.url)
+    expect(script.status).toBe(200)
+    expect((await routeRequest(route, sourceMapUrl, 'HEAD')).body).toHaveLength(0)
+    writeFileSync(`${clientPath}.map`, JSON.stringify({
+      version: 3,
+      names: [],
+      mappings: 'AAAA',
+      sources: ['src/first.ts'],
+    }))
+    const first = await routeRequest(route, sourceMapUrl)
+    expect(JSON.parse(first.body.toString('utf8'))).toMatchObject({
+      sections: [{ map: { sources: [`/plugins/${packageName}/src/first.ts`] } }],
+    })
+
+    writeFileSync(`${clientPath}.map`, JSON.stringify({
+      version: 3,
+      names: [],
+      mappings: 'AAAA',
+      sources: ['src/second.ts'],
+    }))
+    expect((await routeRequest(route, sourceMapUrl)).body).toEqual(first.body)
+    expect((await routeRequest(route, batch.url)).body).toEqual(script.body)
+  })
+
+  it('retains a materialized resource when an unrelated row recomposes the graph', async () => {
+    const stablePackage = '@fixture/stable-source-map'
+    const rebuiltPackage = '@fixture/rebuilt-neighbor'
+    const stablePath = writePackage(stablePackage)
+    const rebuiltPath = writePackage(rebuiltPackage)
+    for (const clientPath of [stablePath, rebuiltPath]) {
+      mkdirSync(dirname(clientPath), { recursive: true })
+      writeFileSync(clientPath, 'module.exports = {}\n//# sourceMappingURL=client.js.map')
+      writeFileSync(`${clientPath}.map`, JSON.stringify({
+        version: 3,
+        names: [],
+        mappings: 'AAAA',
+        sources: ['src/first.ts'],
+      }))
+    }
+    const { service, route } = constructWithRoute([stablePackage, rebuiltPackage])
+    const stableUrl = service.graph().entries.find(entry => entry.id === stablePackage)!.url
+    const stableMapUrl = mapUrl(stableUrl)
+    const first = await routeRequest(route, stableMapUrl)
+    const stableChunkPath = join(dirname(stablePath), 'client.stable.js')
+    writeFileSync(stableChunkPath, 'module.exports = { generation: 1 }\n')
+    const stableRow = service.graph().entries.find(entry => entry.id === stablePackage)!
+    const stableChunkUrl = chunkUrl(stablePackage, 'client.stable.js', stableRow.rev)
+    const firstChunk = await routeRequest(route, stableChunkUrl)
+
+    writeFileSync(`${stablePath}.map`, JSON.stringify({
+      version: 3,
+      names: [],
+      mappings: 'AAAA',
+      sources: ['src/second.ts'],
+    }))
+    writeFileSync(stableChunkPath, 'module.exports = { generation: 2 }\n')
+    writeFileSync(rebuiltPath, 'module.exports = { rebuilt: true }\n')
+    service.rebuilt(rebuiltPackage)
+
+    expect((await routeRequest(route, stableMapUrl)).body).toEqual(first.body)
+    expect((await routeRequest(route, stableChunkUrl)).body).toEqual(firstChunk.body)
   })
 
   it('maps packed combo sections back to each generated client bundle', async () => {
@@ -628,7 +755,7 @@ describe('client bundle activation', () => {
     expect(batchScript.status).toBe(200)
     expect(batchScript.headers?.['cache-control']).toBe('public, max-age=31536000, immutable')
     expect(batchScript.body.toString('utf8')).toContain(`//# sourceMappingURL=${mapUrl(batch.url)}`)
-    const shellResponse = service.fetchBundle(new Request(`dsh-app://app${batch.url}`))
+    const shellResponse = await service.fetchBundle(new Request(`dsh-app://app${batch.url}`))
     expect(shellResponse.status).toBe(200)
     expect(shellResponse.headers.get('cache-control')).toBe('public, max-age=31536000, immutable')
     expect(await shellResponse.text()).toBe(batchScript.body.toString('utf8'))
@@ -659,6 +786,56 @@ describe('client bundle activation', () => {
     expect(JSON.parse(nextMap.body.toString('utf8'))).toMatchObject({
       sections: [{ map: { sources: ['/plugins/@fixture/source-map/src/changed.tsx'] } }],
     })
+  })
+
+  it('serves a package-local chunk only after its versioned URL is requested', async () => {
+    const packageName = '@fixture/chunked'
+    const clientPath = writePackage(packageName)
+    const chunkPath = join(dirname(clientPath), 'client.terminal.js')
+    mkdirSync(dirname(clientPath), { recursive: true })
+    writeFileSync(clientPath, 'module.exports = { load: () => require.async("./client.terminal.js") }\n')
+    const { service, route } = constructWithRoute([packageName])
+    const row = service.graph().entries[0]!
+
+    const startup = await routeRequest(route, row.url)
+    expect(startup.status).toBe(200)
+    expect(startup.body.toString('utf8')).not.toContain('terminal loaded')
+    expect((await routeRequest(route, chunkUrl(packageName, 'client.terminal.js', row.rev))).status).toBe(404)
+
+    writeFileSync(chunkPath, 'module.exports = { marker: "terminal loaded" }\n')
+    const url = chunkUrl(packageName, 'client.terminal.js', row.rev)
+    const head = await routeRequest(route, url, 'HEAD')
+    expect(head.status).toBe(200)
+    expect(head.body).toHaveLength(0)
+    const chunk = await routeRequest(route, url)
+    expect(chunk.status).toBe(200)
+    expect(chunk.body.toString('utf8')).toContain('terminal loaded')
+    expect(chunk.body.toString('utf8')).toContain(`sourceMappingURL=${url.replace('.js?', '.js.map?')}`)
+    expect((await routeRequest(route, url.replace('.js?', '.js.map?'))).status).toBe(200)
+    expect((await routeRequest(route, url.replace(`rev=${row.rev}`, 'rev=stale'))).status).toBe(404)
+  })
+
+  it('publishes a new chunk revision when a completed build rewrites only the entry timestamp', async () => {
+    const packageName = '@fixture/chunk-only-rebuild'
+    const clientPath = writePackage(packageName)
+    const chunkPath = join(dirname(clientPath), 'client.terminal.js')
+    mkdirSync(dirname(clientPath), { recursive: true })
+    writeFileSync(clientPath, 'module.exports = { load: () => require.async("./client.terminal.js") }\n')
+    writeFileSync(chunkPath, 'module.exports = { generation: 1 }\n')
+    const { service, route } = constructWithRoute([packageName])
+    const firstRow = service.graph().entries[0]!
+    const firstUrl = chunkUrl(packageName, 'client.terminal.js', firstRow.rev)
+    expect((await routeRequest(route, firstUrl)).body.toString('utf8')).toContain('generation: 1')
+
+    writeFileSync(chunkPath, 'module.exports = { generation: 2 }\n')
+    const entryStat = statSync(clientPath)
+    const completed = new Date(entryStat.mtimeMs + 1_000)
+    utimesSync(clientPath, entryStat.atime, completed)
+    const nextRev = service.rebuilt(packageName)!
+    expect(nextRev).not.toBe(firstRow.rev)
+    expect((await routeRequest(route, firstUrl)).status).toBe(404)
+    const nextUrl = chunkUrl(packageName, 'client.terminal.js', nextRev)
+    expect((await routeRequest(route, nextUrl)).body.toString('utf8')).toContain('generation: 2')
   })
 
   it('applies sourceRoot before relocating absolute-looking section sources', async () => {

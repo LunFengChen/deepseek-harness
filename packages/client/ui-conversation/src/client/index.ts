@@ -21,15 +21,15 @@ export type {
   ConversationPhase, ConversationSnapshot,
 } from './contract/snapshot.ts'
 export type {
-  AssistantBlock, AssistantMessageNode, AssistantProvenanceView, AssistantRequestConfig,
+  AssistantBlock, AssistantMessageNode, AssistantProviderMetadataView, AssistantRequestConfig,
   AssistantTiming, CommandNode, CompactionSummaryNode, ContextMessageNode, ConversationNode,
   ModelRetryNode, PartialAssistant, RunningToolCall, SteeringMessageNode, TodoItem,
   ToolCallBlock, ToolResultNode, TurnErrorNode, TurnMaxTokensNode, UnknownSurfaceNode,
   UserMessageNode,
 } from './contract/records.ts'
 export type {
-  ContextProvenanceView, ContextRole, KnownContextForm,
-} from './contract/context-provenance.ts'
+  ContextProducerView, ContextRole, KnownContextForm,
+} from './contract/context-producer.ts'
 export type {
   ConversationPromptSnapshot, RequestInspectionSnapshot, RequestPromptChange, RequestPromptInspection, RequestPromptInspector, RequestView,
   SystemPromptNode,
@@ -54,19 +54,21 @@ export type {
   ComposerFileAttachment, ComposerImageAttachment, DraftFileUpload, DraftFileUploads,
   ComposerBarInjected, ComposerBarOwnerProps, ComposerBarProps, ComposerChainProps,
   ConversationHeaderActionOwnerProps, ConversationHeaderCornerOwnerProps, ConversationHeaderLineageOwnerProps,
+  ConversationContentInputProps, ConversationContentProps,
   ConversationInjected, ConversationSessionHeaderInjected, ConversationSessionHeaderSlotProps,
-  ConversationSessionInjected, ConversationSessionSlotProps, ConversationSlotProps,
+  ConversationSessionInjected, ConversationSessionSlotProps, ConversationSlotProps, ConversationViewsProps,
+  ConversationWidthControlsInputProps, ConversationWidthControlsProps,
   ConversationStore, ConvViewOwnerProps, ConvViewProps, EmptyWorkspaceOwnerProps,
   HeroAgentPresetOwnerProps, HeroBrandMarkOwnerProps, InputControlOwnerProps, InputZone,
   MessageImageLoader, MessageImageSource, MessageImagesOwnerProps, RenderMessageImages, UseConversation,
   UseConversationViews,
 } from './contract/slots.ts'
 export type {
-  ArbitrateKey, ArbitrateOutcome, BeginCommandRequest, CommandClaim, ConsumeTokenRequest,
-  DraftAttachmentId, InputActions, InputState, InsertReferenceRequest, InsertTextRequest,
-  PickOutcome, ReferenceInsert, SessionInput, SessionInputResolver, SubmitAttachment,
-  SubmitOutcome, TokenSpan,
+  BeginCommandRequest, CommandClaim, ConsumeTokenRequest, DraftAttachmentId, InputActions,
+  InputState, InsertReferenceRequest, InsertTextRequest, PickOutcome, SessionInput,
+  SessionInputResolver, SubmitAttachment, SubmitOutcome,
 } from './contract/input.ts'
+export type { ArbitrateKey, ArbitrateOutcome, ReferenceInsert, TokenSpan } from './contract/draft-editor.ts'
 export type { ComposerBlock, ComposerBlocks } from './contract/composer-blocks.ts'
 
 declare module '@deepseek-ai/cordis' {

@@ -13,16 +13,23 @@
 # driven); the grouping is for readers.
 
 - insert:
+    - id: tool-plugin-manager
+      name: '@x1a0f3n9/dsh-plugin-manager/tools'
+      disabled: true
+
+    - id: plugin-manager
+      name: '@x1a0f3n9/dsh-plugin-manager'
+      disabled: !!js "!ctx.get('profileContext')"
+
     - id: timer
       name: '@deepseek-ai/cordis-plugin-timer'
 
-    # Module reload is opt-in per profile. `patchReload: live` config watching
-    # uses the launcher's watch-only fallback and does not require this row.
+    # Profile configuration reloads by default; module roots are opt-in.
     - id: hmr
-      name: '@deepseek-ai/cordis-plugin-hmr'
-      disabled: true
+      name: '@x1a0f3n9/dsh-hmr'
+      disabled: !!js "!ctx.get('profileContext')"
       config:
-        root: ['.']
+        root: []
 
     - id: llm
       name: '@x1a0f3n9/dsh-llm'
@@ -376,8 +383,11 @@
         toolName: subagent_fork
         backgroundMode: one-shot
 
-    - id: workflow-worker-thread
-      name: '@x1a0f3n9/dsh-workflow-worker-thread'
+    - id: ptc-runtime
+      name: '@x1a0f3n9/dsh-ptc-runtime-node'
+
+    - id: workflow-ptc
+      name: '@x1a0f3n9/dsh-workflow-ptc'
       config:
         provider: spawn
 
@@ -408,6 +418,11 @@
         headChars: 4096
         tailChars: 1024
 
+    # When an image-capable route rejects a request as over its image budget,
+    # replace the oldest images with placeholders on the surface and retry.
+    - id: image-offload
+      name: '@x1a0f3n9/dsh-compaction-image-offload'
+
     - id: tool-todo
       name: '@x1a0f3n9/dsh-tool-todo'
       config:
@@ -418,9 +433,16 @@
     - id: tool-goal
       name: '@x1a0f3n9/dsh-tool-goal'
 
-    # Fresh-agent Ralph iteration over a build-time-fixed script.
+    # Fresh-agent Ralph iteration over a build-time-fixed script. Off by
+    # default: the tool description restricts `ralph` to runs the human
+    # explicitly asked for, and completion is a worker self-report, not an
+    # independent evaluation. An overlay row restores it for a base-backed
+    # profile (`$DSH_HOME/cordis.patch.yml`, or a `--patch <file>`):
+    #   - id: tool-ralph
+    #     disabled: false
     - id: tool-ralph
       name: '@x1a0f3n9/dsh-tool-ralph'
+      disabled: true
       config:
         subagentProvider: spawn
         maxRounds: 64
@@ -473,6 +495,9 @@
       config:
         fetch: true
         searchTimeoutMs: 60000
+
+    - id: mcp-resources
+      name: '@x1a0f3n9/dsh-mcp-resources'
 
     # ── rows every mode mounts, whose values each overlay may state ──────────────
 

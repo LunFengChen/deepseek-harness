@@ -116,6 +116,14 @@
   background: var(--dsw-alias-interactive-bg-hover);
 }
 
+/* Arrow navigation moves real focus, so the row the keyboard is on carries the
+   same fill the pointer gets: the fill is the row's focus indication, and the
+   browser's default ring would double it. */
+.item:focus-visible:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  outline: none;
+}
+
 .denseList .item {
   min-height: 34px;
   padding-block: 5px;
@@ -206,6 +214,11 @@
 
 .danger:hover:not(:disabled) {
   background: var(--dsw-alias-interactive-bg-hover-danger);
+}
+
+.danger:focus-visible:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover-danger);
+  outline: none;
 }
 
 /* Heading row: non-interactive small grey text, padding aligned with items. */

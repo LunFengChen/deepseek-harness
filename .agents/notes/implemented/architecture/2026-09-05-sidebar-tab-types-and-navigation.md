@@ -116,6 +116,5 @@ The conversation's `openFile(path, { line? })` — tool-row path links, produced
 ## Deferred
 
 - A navigation protocol beyond `sidebar://<kind>`: sub-routes within a page, naming an implementation, and the ecosystem-facing rules for other navigation schemes.
-- Parameters for the shipped page types, which today declare none.
 - Opening into a session other than the one on screen from the public face, which acts on the mounted session only; a tab's own actions already act on their tab's session.
 - A localized message when an open fails from the conversation; the failure is currently the thrown error's text.

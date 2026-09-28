@@ -143,6 +143,16 @@
   - superscript: "1"
   - text: .
 - paragraph:
+  - text: "Preview:"
+  - link "plain HTTP":
+    - /url: http://docs.example.test/plain
+  - text: .
+- paragraph:
+  - text: "Upstream:"
+  - link "the repository":
+    - /url: https://github.com/example/link-gallery
+  - text: .
+- paragraph:
   - text: "Inert contrasts:"
   - code: curl https://docs.example.test/api
   - text: ","
@@ -169,14 +179,6 @@
 - list:
   - listitem:
     - paragraph: Footnote references stay inert superscripts. ↩
-- text: Files changed
-- button "Open site/report.html": report.html
-- button "Open a/style.css": style.css
-- button "Open b/style.css": style.css
-- button "Open site/index.html": index.html
-- button "Open site/app.js": app.js
-- button "Open src/tokens.css": tokens.css
-- text: + 1 file
 - button "Copy":
   - img
 - button "Good response":

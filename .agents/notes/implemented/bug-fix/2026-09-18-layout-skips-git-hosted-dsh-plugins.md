@@ -10,7 +10,7 @@ English | [中文](2026-09-18-layout-skips-git-hosted-dsh-plugins.zh.md)
 
 ## Decision
 
-Rewrite a dsh-named dependency onto the synthetic versions only when that name exists at the workspace source version. Other `@x1a0f3n9/dsh-*` and `@deepseek-ai/dsh-*` names are dropped from the synthetic graph, matching the existing unscoped plugin skip list. The plugin's real version stays in the index.
+Rewrite a dsh-named dependency onto the synthetic versions only when that name exists at the workspace source version. Other `@x1a0f3n9/dsh-*` and `@x1a0f3n9/dsh-*` names are dropped from the synthetic graph, matching the existing unscoped plugin skip list. The plugin's real version stays in the index.
 
 ## Alternatives considered
 

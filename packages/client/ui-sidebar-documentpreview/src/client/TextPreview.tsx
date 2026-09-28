@@ -24,8 +24,9 @@ import { LoadingIndicator } from './LoadingIndicator.tsx'
 import { hostFileOf } from './rpc.ts'
 import type { TextStore } from './store.ts'
 import type { DocumentContent } from './document/contract.ts'
-import { matchingDocumentPreviews } from './document/registry.ts'
+import { binaryDocumentPath, matchingDocumentPreviews } from './document/registry.ts'
 import type { DocumentPreviewDefinition } from './document/registry.ts'
+import { unviewableBinaryPath } from './document/unviewable.ts'
 import { PLAIN_BODY_ID } from './text/index.ts'
 import { loadedPages, lastLineLoaded, scrollToLine } from './text/lines.ts'
 import css from './TextPreview.module.css'
@@ -56,6 +57,23 @@ function usePathClipped(
   }, [box, text, path, shown])
 }
 
+/** The header's path: directories greyed, the final segment in full ink, faded when clipped. */
+function HeaderPath({ pathRef, pathTextRef, path }: {
+  pathRef: RefObject<HTMLDivElement>
+  pathTextRef: RefObject<HTMLSpanElement>
+  path: string
+}): ReactNode {
+  const { directory, name } = pathPartsOf(path)
+  return (
+    <div ref={pathRef} className={css.path} title={path} data-textpreview-path>
+      <span ref={pathTextRef} className={css.pathText}>
+        {directory !== '' && <span className={css.pathDirectory}>{directory}</span>}
+        <span className={css.pathName}>{name}</span>
+      </span>
+    </div>
+  )
+}
+
 /** Private registration inputs; the framework binds the registry source to useDocumentPreviews. */
 export interface TextPreviewInjected extends TextInjected {
   readonly hooks: { readonly documentPreviews: ObservableSnapshot<readonly DocumentPreviewDefinition[]> }
@@ -76,7 +94,7 @@ export type TextPreviewProps =
  */
 export function TextPreview({
   useTabInfo, useResource, useStore, actions, loadPage, reloadPages,
-  loadAll, reloadAll, useDocumentPreviews, renderSlot, t,
+  loadAll, reloadAll, prepareRenderer, useDocumentPreviews, renderSlot, t,
 }: TextPreviewProps): ReactNode {
   const { tab } = useTabInfo()
   const { navigation, signal } = tab
@@ -85,14 +103,18 @@ export function TextPreview({
   const file = useMemo(() => hostFileOf(tab.contentId), [tab.contentId])
   const state = useStore(s => s.byTab[tab.id])
   const definitions = useDocumentPreviews(value => value)
+  const unviewable = useMemo(() => unviewableBinaryPath(file.path), [file.path])
   const candidates = useMemo(() => {
     const matched = matchingDocumentPreviews(definitions, file.path)
+    if (matched.length > 0 && binaryDocumentPath(definitions, file.path)) return matched
+    if (matched.length === 0 && unviewable) return matched
     const fallback = definitions.find(definition => definition.id === PLAIN_BODY_ID)
     return fallback === undefined ? matched : [...matched, fallback]
-  }, [definitions, file.path])
+  }, [definitions, file.path, unviewable])
   const selected = candidates.find(candidate => candidate.id === state?.rendererId) ?? candidates[0]
   const mode = selected?.loading
-  const current = (state?.mode ?? 'text-pages') === mode ? state : undefined
+  const contentRendererId = mode === 'renderer' ? selected?.id : undefined
+  const current = (state?.mode ?? 'text-pages') === mode && state?.contentRendererId === contentRendererId ? state : undefined
   const bodyRef = useRef<HTMLDivElement | null>(null)
   const scrollportRef = useRef<HTMLElement | null>(null)
   const storedScrollTopRef = useRef(0)
@@ -107,7 +129,7 @@ export function TextPreview({
   const pages = current?.pages
   const loaded = useMemo(() => loadedPages(pages ?? {}), [pages])
   const loadedThrough = lastLineLoaded(loaded)
-  const hasContent = loaded.length > 0 || current?.complete !== undefined
+  const hasContent = mode === 'renderer' ? current?.version !== undefined : loaded.length > 0 || current?.complete !== undefined
   storedScrollTopRef.current = state?.scrollTop ?? 0
   const bindBody = useCallback((body: HTMLDivElement | null): void => {
     const previous = bodyRef.current
@@ -124,10 +146,11 @@ export function TextPreview({
   // reads nothing, because the store outlives the body.
   const started = current !== undefined
   useEffect(() => {
-    if (started || !canRead || mode === undefined) return
+    if (started || !canRead || mode === undefined || selected === undefined) return
     if (mode === 'text-pages') loadPage(tab.id, file, 1, signal, meta.value?.version)
-    else loadAll(tab.id, file, signal, meta.value?.version)
-  }, [started, tab.id, file, signal, loadPage, loadAll, canRead, mode, meta.value?.version])
+    else if (mode === 'bytes-complete') loadAll(tab.id, file, signal, meta.value?.version)
+    else prepareRenderer(tab.id, signal, selected.id, meta.value?.version)
+  }, [started, tab.id, file, signal, loadPage, loadAll, prepareRenderer, canRead, mode, selected, meta.value?.version])
 
   // Come back where the reader was once there is content to scroll: on a remount,
   // after a reload rebuilt the content, or after the selected renderer changed.
@@ -165,14 +188,43 @@ export function TextPreview({
     selected?.id, mode, file, canRead, meta.value?.version,
   ])
 
+  const rendererReload = useCallback((): void => {
+    if (canRead && selected !== undefined) prepareRenderer(tab.id, signal, selected.id, meta.value?.version, true)
+  }, [canRead, prepareRenderer, tab.id, signal, selected?.id, meta.value?.version])
   const content = useMemo((): DocumentContent | undefined => {
+    if (mode === 'renderer') {
+      if (current === undefined) return undefined
+      const revision = current.loadRevision
+      return { kind: 'renderer', revision, reload: rendererReload,
+        loaded: (version) => { actions.rendered(tab.id, revision, version) } }
+    }
     if (mode === 'bytes-complete') {
-      return current?.complete === undefined ? undefined : { kind: 'bytes', data: current.complete.data }
+      return current?.complete === undefined ? undefined : {
+        kind: 'bytes', data: current.complete.data,
+      }
     }
     if (current === undefined || loaded.length === 0) return undefined
     return { kind: 'text', pages: loaded, text: loaded.filter(page => page.lines > 0).map(page => page.text).join('\n'), eof: current.eof }
-  }, [mode, loaded, current?.complete, current?.eof])
+  }, [mode, loaded, current?.complete, current?.eof, current?.loadRevision, rendererReload, actions, tab.id])
 
+  // A known binary suffix with no matching renderer never reads: no plain-text
+  // fallback, no viewer control, only the path and the unsupported line.
+  if (selected === undefined && unviewable) {
+    const { name: unsupportedName } = pathPartsOf(displayPath)
+    return (
+      <div className={css.preview} data-textpreview-state="unsupported" data-textpreview-url={tab.contentId}>
+        <div className={css.header}>
+          <HeaderPath pathRef={pathRef} pathTextRef={pathTextRef} path={displayPath} />
+        </div>
+        <div className={css.body} data-textpreview-body>
+          <div className={css.empty} data-textpreview-unsupported>
+            <FileTypeIcon kind={classifyFileType(unsupportedName)} size={36} className={css.emptyIcon} />
+            <p className={css.emptyLine}>{t('unsupportedFile')}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
   if (state === undefined || selected === undefined) {
     return (
       <div className={css.status} data-textpreview-state="loading">
@@ -183,7 +235,7 @@ export function TextPreview({
     )
   }
   const next = loadedThrough + 1
-  const { directory, name } = pathPartsOf(displayPath)
+  const { name } = pathPartsOf(displayPath)
   const observedVersion = meta.value?.version
   const changed = current?.version !== undefined && observedVersion !== undefined
     && observedVersion !== current.version && observedVersion !== current.observedVersion
@@ -194,7 +246,8 @@ export function TextPreview({
   const reload = (): void => {
     if (!canRead) return
     if (mode === 'text-pages') reloadPages(tab.id, file, signal, meta.value?.version)
-    else reloadAll(tab.id, file, signal, meta.value?.version)
+    else if (mode === 'bytes-complete') reloadAll(tab.id, file, signal, meta.value?.version)
+    else rendererReload()
   }
   return (
     <div className={css.preview} data-textpreview-state="text" data-textpreview-url={tab.contentId} data-document-preview={selected.id}>
@@ -230,27 +283,25 @@ export function TextPreview({
           </p>
         )}
       <div className={css.header}>
-        <div ref={pathRef} className={css.path} title={displayPath} data-textpreview-path>
-          <span ref={pathTextRef} className={css.pathText}>
-            {directory !== '' && <span className={css.pathDirectory}>{directory}</span>}
-            <span className={css.pathName}>{name}</span>
-          </span>
-        </div>
-        <Menu
-          open={menuOpen}
-          anchor={(
-            <button type="button" className={clsx(css.tool, css.viewerTool)} aria-label={t('openWith')} title={selected.title()} data-document-viewer-menu onClick={() => { setMenuOpen(value => !value) }}>
-              {selected.title()}
-            </button>
+        <HeaderPath pathRef={pathRef} pathTextRef={pathTextRef} path={displayPath} />
+        {candidates.length > 1
+          && (
+            <Menu
+              open={menuOpen}
+              anchor={(
+                <button type="button" className={clsx(css.tool, css.viewerTool)} aria-label={t('openWith')} title={selected.title()} data-document-viewer-menu onClick={() => { setMenuOpen(value => !value) }}>
+                  {selected.title()}
+                </button>
+              )}
+              items={candidates.map(candidate => ({ id: candidate.id, label: candidate.title() }))}
+              selectedId={selected.id}
+              onSelect={(id) => { actions.selected(tab.id, id); setMenuOpen(false) }}
+              onClose={() => { setMenuOpen(false) }}
+              align="end"
+              portal
+              dense
+            />
           )}
-          items={candidates.map(candidate => ({ id: candidate.id, label: candidate.title() }))}
-          selectedId={selected.id}
-          onSelect={(id) => { actions.selected(tab.id, id); setMenuOpen(false) }}
-          onClose={() => { setMenuOpen(false) }}
-          align="end"
-          portal
-          dense
-        />
         {selected.wrap === true && (
           // The tooltip names the action while the stable aria name and
           // `aria-pressed` expose the control and its current state.
@@ -294,8 +345,8 @@ export function TextPreview({
             && body.scrollTop + body.clientHeight >= body.scrollHeight - 1) loadNext()
         }}
       >
-        {!hasContent && current?.failure === undefined && (
-          <LoadingIndicator className={css.statusLine} label={t('loading')} />
+        {mode !== 'renderer' && !hasContent && current?.failure === undefined && (
+          <LoadingIndicator className={clsx(css.statusLine, css.bodyLoading)} label={t('loading')} />
         )}
         {content !== undefined && renderSlot('sidebar.right.tab.document', {
           resourceAddress: tab.contentId, content, wrap: state.wrap, scrollportRef: bindScrollport,

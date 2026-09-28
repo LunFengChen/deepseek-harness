@@ -25,101 +25,38 @@ Two planes, and the choice is not about how "agent-related" something feels — 
 
 A preset is a directory holding one `agent.cordis.yml`, optionally beside a `preset.yml` carrying display metadata — `name` and `description` (and, for shipped presets, a roster `order`). Write the metadata too: a preset without it shows up in every picker as its bare directory name.
 
-Locally authored presets live one directory per preset under `${DSH_HOME:-$HOME/.dsh}/.agent-presets/`, and the shipped set sits beside the deployment's own config. Use those when the user asks where to look. A deployment can configure other roots, so the path you read or edit comes from `list()` or `resolve()` — which is also where `copy()` reports what it just created.
-
-## The roster service
-
-`ctx.agentPresets` owns discovery, authoring, and mounting. You reach it by mounting a temporary plugin that injects it and registers a tool for yourself — `cordis_mount` returns only the mount acknowledgement, so a registered tool is how a service answer gets back to you, and it becomes callable on your next step.
-
-Read `cordis_inspect what:"api" name:"agentPresets"` for the current signatures before writing the code. What this skill relies on:
-
-- `list()` — every preset with its `id`, `trust` (`system` for the shipped set, `user` for authored ones), and the absolute `path` of its composition file. This is how you locate any composition without knowing the install layout; the directory is that path's parent.
-- `read(id)` — one preset's composition text, without a file tool or a path.
-- `copy(from, id, name?)` — the only authoring write (see below).
-- `standingKeyFor(id)` — mount-validate one preset (see below).
-
-```js
-return {
-  name: 'preset-tools',
-  inject: ['agentPresets', 'tools'],
-  apply(ctx) {
-    harness.registerTool(ctx, harness.defineTool({
-      name: 'preset_check',
-      description: 'Mount-validate one preset by id.',
-      parameters: { id: { type: 'string', required: true } },
-      output: { schema: { type: 'string' }, render(_a, v) { return [{ type: 'text', text: v }] } },
-      async execute(args) {
-        try {
-          await ctx.agentPresets.standingKeyFor(args.id)
-          return 'mounted OK'
-        } catch (error) {
-          return error.message
-        }
-      },
-    }))
-  },
-}
-```
-
-Unmount the plugin with `cordis_unmount` when you are done; it is a probe, not a capability to leave behind.
+Locally authored presets live one directory per preset under `${DSH_HOME:-$HOME/.dsh}/.agent-presets/`, and the shipped set sits beside the deployment's own config. Use those when the user asks where to look. For deployment overrides, read `${DSH_HOME:-$HOME/.dsh}/profiles/<profile>/cordis.patch.yml`, `${DSH_HOME:-$HOME/.dsh}/cordis.patch.yml`, and any launch `--patch` files for the `agent-presets` row's `roots` and `includeUserRoot`. Obtain the active profile and extra patch paths from the user when they are not in the task context; do not guess a different profile.
 
 ## Authoring a preset
 
-1. **Start from a copy.** `copy(from, id, name)` copies a whole preset directory into the user root — composition, metadata, skill directories, assets. It validates the id against `[a-z0-9][a-z0-9-]*` (it becomes the directory name, so no leading hyphen), refuses an id any root already supplies, rolls a failed copy back, and rewrites the copy's `preset.yml` to keep the source's description while dropping its name and roster `order`. Prefer it over a shell copy: it needs no sandbox escalation, it lands the copy in whichever root this deployment made writable, and the copy is exactly as loadable as its source. `resolve(id)` then names the file it created — that path, not a guessed one, is what the following edits target. `standard` is the full coding agent and the usual source.
-2. **Expect the file sandbox on every edit after the copy.** The user preset root lies outside the session workspace, so under the default `workspace-write` policy the first write there is denied. Only writes are: reading any composition by absolute path needs no escalation. Retry that exact command once with `sandbox_permissions` escalation and a short justification — the user sees and approves it. Batch your writes (one heredoc per file) rather than escalating many small commands. `copy()` itself runs host-side and needs none of this; the edits do.
-3. **Write the copy's `description`** in `preset.yml`, and its `name` if you passed none to `copy()`.
-4. **Edit `agent.cordis.yml`** row by row, keeping the plane rule and the realm rule.
-5. **Mount-validate the result**, then hand off to the user for a real session — both under *Verifying a change*.
+Use shell and file tools to locate the installed `@x1a0f3n9/dsh-agent-presets` package under the active profile's `node_modules` or the deployment installation. Its `presets/<id>/` directory contains each shipped preset. If those files are unavailable, ask the user to copy the preset through the Web preset picker and provide the copied directory; runtime API inspection does not execute Remote methods.
 
-A composition written from scratch usually forgets a group realm or a consumer row; a copy starts loadable.
+Copy the complete source directory, including skills and assets, into a new `${DSH_HOME:-$HOME/.dsh}/.agent-presets/<new-id>/` directory (or the explicitly configured writable root). Refuse an existing destination. Set `name` and `description` in `preset.yml` and remove the copied roster `order`. Never overwrite the installed source.
 
-## The rule that catches people
+Edit the copy's `agent.cordis.yml` with the normal file tools. Writes outside the workspace follow the active filesystem approval policy. For profile-wide capabilities, author a workspace bundle and install it with `plugin_manager`; load `cordis-plugin-development` for packaging guidance.
 
-**A row that publishes a service may not sit loose in a preset.** Registering a service without an isolate realm puts it in the process-global realm, so the second session mounting that preset collides with the first. The mount rejects it rather than letting the collision surface later.
+## Service isolation
 
-Whether a row publishes a service is not visible from its name, and package READMEs are absent from an installed deployment. Read it off the live runtime instead: `cordis_inspect what:"services"` lists every service with the fiber that owns it, so a service attributed to a fiber other than the row you are adding is one that row consumes rather than provides. For a row not in your current composition, mount-validate and read the rejection — it names the offending service.
-
-When a preset genuinely owns a service, wrap the provider **and every consumer that reaches it** in one group carrying an `isolate` realm. The shipped `standard` composition does this for `workflows`, which nothing outside an agent reads — its `delegation` group, with the delegation tools omitted here:
+A preset row that publishes a service needs an `isolate` realm containing both the provider and all its consumers. A tool that only consumes a host service remains outside that realm. Copy the shipped preset's existing groups rather than introducing service instances into the process-global realm.
 
 ```yaml
 - id: delegation
   name: cordis:group
   group: true
   isolate:
-    workflows: true
+    workflowEngine: true
   config:
-    - id: workflow-worker-thread
-      name: '@x1a0f3n9/dsh-workflow-worker-thread'
+    - id: workflow-ptc
+      name: '@x1a0f3n9/dsh-workflow-ptc'
       config:
         provider: spawn
     - id: tool-workflow
       name: '@x1a0f3n9/dsh-tool-workflow'
 ```
 
-`true` means a realm private to each mounting session. A string label instead joins subtrees into one shared realm; `provide()` still throws on the second registration under that symbol, so a label does not pool instances and is not what a preset needs.
+## Verify a preset
 
-A consumer left outside the group resolves the host's registry, which the preset did not populate, and then contributes nothing. Mount-validation catches that as a row that never activated.
-
-Realms are for services a preset owns, not for every group. A host capability the preset only consumes must stay outside a realm, or the row cannot resolve it: `tool-bash`, `tool-jobs`, and `tool-goal` publish nothing and sit loose in `standard`, which explains in comments which host instance each one resolves and why a realm would break it. Wrapping a consumer row in a realm of its own is the same error as leaving one outside its provider's realm.
-
-## Verifying a change
-
-**`standingKeyFor(id)` is the check.** It composes the preset's plugin subtree for real — the same mount a session start performs, minus the agent — and rejects the four ways a composition fails:
-
-- a row whose package does not resolve (`Cannot find package …`);
-- a row whose config is invalid (`invalid config: $.<field> missing required value`);
-- a row that never activated (`N row(s) did not activate: <id>: waiting for <service>`);
-- a service published into the root realm, which arrives as one of two messages. A name the host does not supply lands in the root realm and the mount audit rejects it: `row(s) published process-global service(s) [<name>]; a preset service must sit behind an isolate realm or move to the host composition` — this is the shape a preset's own forgotten realm takes. A name the host already supplies collides before the audit: `service "<name>" has been registered at <Owner>`. Both name the offending service.
-
-It returns normally when the composition mounts. Run it as the final check on a finished edit rather than after every line: a successful mount installs a standing generation that lives until the process exits, while a failed one disposes its subtree and leaves nothing behind.
-
-**Do not treat the roster's `broken` field as validation.** `list()` reports `broken` from a shape check — the file parses in the loader's YAML dialect and holds named rows — which every failure above passes. It catches a damaged file, not an unusable composition.
-
-`cordis_inspect` reports THIS session's composition, so it confirms what a row does in the runtime you are already in, never what your new preset will do.
-
-After a clean mount-validation, ask the user to start a session on the new preset and confirm the tool list; the preset decides tool schemas and prompt sections, and only a real session shows the agent that composition produces.
-
-`cordis_mount` evaluates JavaScript against the live runtime and disappears on restart. It is for probing, not for shipping a capability: a capability belongs in a composition file.
+Check the edited YAML and referenced local files with file tools. Ask the user to select the new preset in the Web picker and start a session; this authoring agent cannot invoke the preset Remote API or start a Web session through inspection. Once the user provides a running session or browser control, inspect the visible tools and any activation diagnostic. File validation alone does not verify imports, service dependencies, or isolation. Report which checks ran and leave activation unverified until that session check succeeds.
 
 ## Native product subagents
 

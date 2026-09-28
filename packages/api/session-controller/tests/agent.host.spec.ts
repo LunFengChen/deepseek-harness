@@ -7,6 +7,7 @@ import type { Agent } from '@x1a0f3n9/dsh-agent'
 import { agentPresetProjectionDefinition } from '@x1a0f3n9/dsh-agent-presets'
 import SessionStore, { SESSION_FORMAT_VERSION, SessionLogOffset, SessionId } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionHeader } from '@x1a0f3n9/dsh-session'
+import { SessionAlreadyOwnedError } from '@x1a0f3n9/dsh-session-persistence'
 import type { SessionObservation } from '@x1a0f3n9/dsh-session-query'
 import TypertRegistry from '@x1a0f3n9/dsh-typert-registry'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -173,7 +174,7 @@ describe('ApiSession Agent lookup and recovery', () => {
   it('projects live Agent contexts and maps missing cold identities through Typert lookup failures', async () => {
     const { ctx } = await harness()
     const live = agent(ctx, header('live'))
-    ctx.agents.register(live)
+    await ctx.agents.register(live)
     providePersistence(ctx, {
       list: () => Promise.resolve([]),
       inspect: vi.fn(),
@@ -194,7 +195,7 @@ describe('ApiSession Agent lookup and recovery', () => {
     })
     const winner = agent(ordinary.ctx, ordinaryMeta)
     vi.spyOn(ordinary.ctx.agents, 'resume').mockImplementation(async () => {
-      ordinary.ctx.agents.register(winner)
+      await ordinary.ctx.agents.register(winner)
       throw new Error('raced publication')
     })
     await expect(ordinary.agents.resolveAgent(ordinaryMeta.id)).resolves.toEqual({ agent: winner })
@@ -234,6 +235,37 @@ describe('ApiSession Agent lookup and recovery', () => {
     })
     vi.spyOn(failed.ctx.agents, 'resume').mockRejectedValue(new Error('factory unavailable'))
     await expect(failed.agents.resolveAgent(meta.id)).resolves.toMatchObject({
+      error: { code: 'gateway/internal', message: expect.stringContaining('factory unavailable') as string },
+    })
+  })
+
+  it('identifies a held Session writer without classifying other resume failures as contention', async () => {
+    const { ctx, agents } = await harness()
+    const meta = header('owned-session')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([meta]),
+      inspect: () => Promise.resolve({ meta, events: [] }),
+    })
+    const resume = vi.spyOn(ctx.agents, 'resume').mockRejectedValue(new SessionAlreadyOwnedError(meta.id))
+    await expect(agents.resolveAgent(meta.id)).resolves.toMatchObject({
+      error: { code: 'session/writer-held', details: { sessionId: meta.id } },
+    })
+    resume.mockRejectedValue(Object.assign(new Error('another module copy'), { name: 'SessionAlreadyOwnedError' }))
+    await expect(agents.resolveAgent(meta.id)).resolves.toMatchObject({
+      error: { code: 'session/writer-held', details: { sessionId: meta.id } },
+    })
+    resume.mockRejectedValue(new Error('unrelated failure'))
+    await expect(agents.resolveAgent(meta.id)).resolves.toMatchObject({
+      error: { code: 'gateway/internal' },
+    })
+  })
+
+  it('retains resume diagnostics without a persistence service', async () => {
+    const { ctx, agents } = await harness()
+    const meta = header('memory-only-resume')
+    ctx.sessions.create(meta.id, { meta })
+    vi.spyOn(ctx.agents, 'resume').mockRejectedValue(new Error('factory unavailable'))
+    await expect(agents.resolveAgent(meta.id)).resolves.toMatchObject({
       error: { code: 'gateway/internal', message: expect.stringContaining('factory unavailable') as string },
     })
   })
@@ -327,7 +359,7 @@ describe('ApiSession create or adoption', () => {
     const ordinaryMeta = header('create-race', cwd)
     const winner = agent(ordinary.ctx, ordinaryMeta)
     vi.spyOn(ordinary.ctx.agents, 'create').mockImplementation(async () => {
-      ordinary.ctx.agents.register(winner)
+      await ordinary.ctx.agents.register(winner)
       throw new Error('raced creation')
     })
     await expect(ordinary.agents.ensureSession(ordinaryMeta.id, cwd, false))

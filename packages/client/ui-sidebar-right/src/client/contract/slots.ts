@@ -16,7 +16,7 @@
  *   actions that are gestures on the layout itself; this seat is for actions that
  *   mean something about the tab's content.
  *
- * TYPE HOME RATIONALE: this package declares all four at runtime, and anything
+ * TYPE HOME RATIONALE: this package declares these slots at runtime, and anything
  * registering into one already depends on it for the declaration. The types
  * therefore live with their declarer.
  */
@@ -78,6 +78,14 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
       hookContext: UseSidebarRightTabInfo
       inject: { hooks: { tabInfo: SlotHookFactory<'sidebar.right.tab.guide', UseSidebarRightTabInfo> } }
     }
+    /** One provider's guide card, with the standard card as the owner's fallback. */
+    'sidebar.right.tab.guide.entry': {
+      kind: 'keyed'
+      scope: 'session'
+      owner: SidebarRightGuideEntryOwnerProps
+      hookContext: UseSidebarRightTabInfo
+      inject: { hooks: { tabInfo: SlotHookFactory<'sidebar.right.tab.guide.entry', UseSidebarRightTabInfo> } }
+    }
     /**
      * Extra items at the end of one tab's actions menu, in registration order.
      * Entries decide their own visibility from the tab they are given. Without a
@@ -105,6 +113,8 @@ export interface SidebarRightTabNavigation {
 export interface SidebarRightTabPlacement {
   /** Land a new tab in this pane instead. */
   readonly paneId?: PaneId
+  /** Prefer a new pane for new content; use the target pane when splitting is unavailable. */
+  readonly preferNewPane?: boolean
   /** Resource tabs reveal existing content by default; `false` permits duplicates. Pages always deduplicate within the target pane. */
   readonly revealIfOpened?: boolean
   /** `true` opens in this tab's place — its pane and strip slot — and closes this tab in the same step. */
@@ -170,4 +180,12 @@ export interface SidebarRightTabMenuOwnerProps {
    * over content the action may have just replaced.
    */
   dismiss: () => void
+}
+
+/** Resolved guide copy and entry identity supplied to a provider's card renderer. */
+export interface SidebarRightGuideEntryOwnerProps {
+  readonly entryId: string
+  readonly kind: string
+  readonly title: string
+  readonly description?: string
 }

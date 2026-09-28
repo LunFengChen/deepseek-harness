@@ -354,4 +354,55 @@ describe('Tooltip', () => {
     )
     expect(screen.queryByRole('tooltip')).toBeNull()
   })
+
+  it('withdraws the enclosing bubble while a nested tooltip shows its own', () => {
+    render(
+      <Tooltip label="Open sidebar">
+        <button type="button">
+          anchor
+          <Tooltip label="Update — V1.2.3">
+            <span data-testid="badge" />
+          </Tooltip>
+        </button>
+      </Tooltip>,
+    )
+    const anchor = screen.getByText('anchor')
+    const badge = screen.getByTestId('badge')
+    fireEvent.mouseEnter(anchor)
+    expect(screen.getByRole('tooltip').textContent).toBe('Open sidebar')
+
+    // Entering the nested anchor withdraws the enclosing bubble instead of
+    // stacking both; the enclosing anchor stays hovered, so nothing is lost.
+    fireEvent.mouseEnter(badge)
+    expect(screen.getAllByRole('tooltip').map(bubble => bubble.textContent)).toEqual(['Update — V1.2.3'])
+
+    // Leaving the nested anchor for the enclosing one restores its bubble;
+    // the pointer never left the enclosing anchor, so only the badge is left.
+    fireEvent.mouseLeave(badge, { relatedTarget: anchor })
+    expect(screen.getByRole('tooltip').textContent).toBe('Open sidebar')
+
+    fireEvent.mouseLeave(anchor)
+    expect(screen.queryByRole('tooltip')).toBeNull()
+  })
+
+  it('releases the enclosing bubble when a shown nested tooltip unmounts', () => {
+    const view = render(
+      <Tooltip label="Open sidebar">
+        <button type="button">
+          anchor
+          <Tooltip label="Update"><span data-testid="badge" /></Tooltip>
+        </button>
+      </Tooltip>,
+    )
+    fireEvent.mouseEnter(screen.getByText('anchor'))
+    fireEvent.mouseEnter(screen.getByTestId('badge'))
+    expect(screen.getAllByRole('tooltip').map(bubble => bubble.textContent)).toEqual(['Update'])
+
+    view.rerender(
+      <Tooltip label="Open sidebar">
+        <button type="button">anchor</button>
+      </Tooltip>,
+    )
+    expect(screen.getByRole('tooltip').textContent).toBe('Open sidebar')
+  })
 })

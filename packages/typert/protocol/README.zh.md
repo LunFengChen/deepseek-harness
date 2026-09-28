@@ -9,7 +9,7 @@ kind: "package-library"
 
 ## 概述
 
-借助 `dsh-typert-protocol`，业务包可以向 Remote 客户端暴露 Host 方法：用 `@Remote`（作用域接收者用 `@RemoteScope`）标记方法，把服务绑定到 wire 命名空间，并通过可合并扩展的协议映射把 Host 对象与作用域 Context 关联到 wire identity。生成产物、Host Gateway 与 Client API 消费同一套调用描述符、编解码器与提供方约定，因此一套声明在每个 face 上保持一致。本包不注册任何 Cordis 服务，也不运行 TypeScript 分析；它只声明类型与装饰器标记。
+借助 `dsh-typert-protocol`，业务包可以向 Remote 客户端暴露 Host 方法：用 `@Remote`（作用域接收者用 `@RemoteScope`）标记方法，把服务绑定到 wire 命名空间，并通过可合并扩展的协议映射把 Host 对象与作用域 Context 关联到 wire identity。生成产物、Host Gateway 与 Client API 消费同一套调用描述符、编解码器与提供方约定。调用持有的值把清理责任交给 Gateway，不另增引用计数。本包不注册任何 Cordis 服务，也不运行 TypeScript 分析。
 
 ## 目录
 
@@ -47,6 +47,8 @@ export class GoalService extends TypertRemoteService {
 ### 把 Host 对象与 Context 关联到 wire identity
 
 复杂的 Host 对象不能直接跨 wire 传输。业务包通过可合并扩展的 `TypertLookupMap` 与 `TypertContextMap` 声明关联。Host Context 适配器拥有稳定 wire 声明，并把 wire identity 解析为活跃 Context。Client Context 适配器需要双向映射，因为作用域调用从 Client Context 发起，而转发的 Host 事件要在 Client 侧解析其显式 wire identity。Host 组合可以覆盖其同步或异步解析器。因策略原因拒绝解析的解析器会抛出带有自身错误码的 `RemoteError`，该码原样到达调用方。
+
+Client Context 解析保持同步。`typertOwnedValue(value, release)` 把不抛异常、幂等的清理交给调用 owner；Gateway 在处理器和回复均结束后调用它。借用的 Context 不需要清理包装层。共享的 `TYPERT_OWNED_VALUE` symbol 与 `isTypertOwnedValue` 识别函数可跨独立打包的提供方与 Gateway 使用；包装层自身不会 retain 资源。
 
 ### 报告与读取 Remote 失败
 
@@ -91,7 +93,7 @@ Host 装配以转发给消费方的 Cordis 事件扩展 `TypertRemoteEventSelect
 
 ### Wire 标识文法
 
-每个命名空间、方法、查找与 Context 段都必须满足 `isTypertRemoteSegment()`，生成的名字才能原样跨共享 RPC 载体传输。严格编解码器携带生成的 schema；`src-json` 编解码器标识约束更弱的源码启动路径。
+每个命名空间、方法、查找与 Context 段都必须满足 `isTypertRemoteSegment()`，生成的名字才能原样跨共享 RPC 载体传输。严格编解码器携带生成的 schema factory；`src-json` 编解码器标识约束更弱的源码启动路径。
 
 ### 源码地图
 

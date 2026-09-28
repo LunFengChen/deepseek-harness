@@ -49,6 +49,12 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
   }
 }
 
+declare module '@x1a0f3n9/dsh-api-session-controller/client' {
+  interface SessionReferenceSourceMap {
+    workspaceOperation: unknown
+  }
+}
+
 /** Dictionary namespace owned by this plugin. */
 const NS = 'workspace'
 
@@ -107,11 +113,11 @@ export function apply(ctx: Context): void {
     searchSessions,
     searchResultLimit: sessions.searchResultLimit,
     renameSession: async (sessionId, title) => {
-      // Row → session-face hop: rename is a per-session verb (ISession), not
-      // a list-service verb; the binding resolves any listed session.
-      const session = sessions.binding(sessionId)?.session
-      if (session === undefined) throw new Error(`unknown session "${sessionId}"`)
-      const result = await session.rename(title)
+      const result = await sessions.using(
+        sessionId,
+        { source: 'workspaceOperation' },
+        reference => reference.binding.session.rename(title),
+      )
       if (!result.ok) throw new Error(result.error.message)
     },
     forkSession: (sessionId) => {
@@ -126,9 +132,6 @@ export function apply(ctx: Context): void {
       await workspaces.insertBefore(workspaceId, beforeWorkspaceId)
     },
     archiveSession: async (sessionId) => { await uiWorkspace.archiveSession(sessionId) },
-    insertSessionBefore: async (workspaceId, sessionId, beforeSessionId) => {
-      await workspaces.insertSessionBefore(workspaceId, sessionId, beforeSessionId)
-    },
     createWorkspace: input => workspaces.create(input),
     hooks: { directoryFlow: browserFlowSource, hostInfo },
   })

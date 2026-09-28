@@ -7,12 +7,15 @@
     - button "Models":
       - img
       - text: Models
-    - button "Plugins":
+    - button "Built-in plugins":
       - img
-      - text: Plugins
+      - text: Built-in plugins
     - button "Agent presets":
       - img
       - text: Agent presets
+    - button "Archived sessions":
+      - img
+      - text: Archived sessions
   - button "Open configuration file"
   - button "Close":
     - img

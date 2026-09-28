@@ -1,9 +1,10 @@
 /**
  * Workspace browser tree row components (figma Cell set 14:3080): pure presentational —
  * all data and callbacks arrive via props. Hover swaps (folder->chevron,
- * time->ellipsis, action buttons) are CSS-only. Row ... menus are visual-only
- * except workspace Rename/Delete and session Rename/Fork/Archive; the session
- * and workspace hover cards are suppressed while a menu is open.
+ * time->ellipsis, action buttons) are CSS-only, and a session row's clipped
+ * title is scrolled programmatically while the row is hovered. Row ... menus are
+ * visual-only except workspace Rename/Delete and session Rename/Fork/Archive; the
+ * session and workspace hover cards are suppressed while a menu is open.
  */
 import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
@@ -25,6 +26,30 @@ type RowTranslate = WorkspaceBrowserProps['t']
 /** Row display title: blank rows show the localized New Session label. */
 function displayTitle(node: SessionNode, t: RowTranslate): string {
   return node.blank ? t('session.new') : node.title
+}
+
+/**
+ * Reveal a title wider than its one-line cell while its row is hovered: the
+ * title clips its own text, so the far edge (a fork's incremented title, for
+ * example) is reachable by scrolling the element to its end. Leaving returns it
+ * to the start in one step, because the resting ellipsis and the narrowed cell
+ * would otherwise meet the text while it travelled back. A title that fits has
+ * no scroll range to move, and the stylesheet decides whether either move
+ * glides or jumps.
+ * @param title - the row's clipping title element.
+ * @param revealed - whether the pointer is on the row.
+ */
+function revealClippedTitle(title: HTMLSpanElement | null, revealed: boolean): void {
+  /* v8 ignore next -- defensive: the title span renders unconditionally. */
+  if (title === null) return
+  if (revealed) {
+    title.scrollLeft = title.scrollWidth - title.clientWidth
+    return
+  }
+  // jsdom implements no scrollTo; the lane's direct assignment is instant there
+  // anyway, so both paths land on the same resting position.
+  if (typeof title.scrollTo === 'function') title.scrollTo({ left: 0, behavior: 'instant' })
+  else title.scrollLeft = 0
 }
 
 /** Localized compact relative time ("刚刚"/"5分钟" in zh, "now"/"5min" in en). */
@@ -102,6 +127,7 @@ function rowHalf(e: { clientY: number; currentTarget: HTMLElement }): 'before' |
  * Workspace shows its hover card (the ungrouped bucket has none).
  * `containsCurrent` arrives on the node (derivation fact, no renderer scan).
  * @param props.group - derived group node.
+ * @param props.containsCurrentDescendant - highlight an ancestor even when its subtree is collapsed.
  * @param props.onToggle - expand/collapse the group.
  * @param props.onCreate - start a frontend Session inside this Workspace.
  * @param props.drag - optional workspace-row drag wiring.
@@ -109,8 +135,9 @@ function rowHalf(e: { clientY: number; currentTarget: HTMLElement }): 'before' |
  * @param props.t - the browser root's locale seat.
  * @returns the row element.
  */
-export function ProjectRowItem({ group, onToggle, onCreate, actions, drag, home, t }: {
+export function ProjectRowItem({ group, containsCurrentDescendant = false, onToggle, onCreate, actions, drag, home, t }: {
   group: GroupNode
+  containsCurrentDescendant?: boolean
   onToggle: () => void
   onCreate: () => void
   /** Real-Workspace actions; absent for the ungrouped bucket (no menu shown). */
@@ -124,7 +151,7 @@ export function ProjectRowItem({ group, onToggle, onCreate, actions, drag, home,
   const row = group
   // The ungrouped bucket has no workspace title: its label is dictionary copy.
   const label = row.workspaceId === undefined ? t('group.ungrouped') : row.label
-  const active = group.expanded && group.containsCurrent
+  const active = containsCurrentDescendant || (group.expanded && group.containsCurrent)
   const [menuOpen, setMenuOpen] = useState(false)
   const workspaceMenuItems = [
     { id: 'rename', label: t('rename'), icon: <IconEditOutline16 /> },
@@ -371,7 +398,7 @@ export function SearchResultItem({ result, currentId, onOpen, t }: {
  * @param props.onFork - fork a session at its last completed turn.
  * @param props.onArchive - archive a session by id.
  * @param props.onReveal - scroll this row into view after search navigation, then acknowledge it.
- * @param props.drag - optional draggable-row wiring.
+ * @param props.drag - optional row-drag target wiring; blank rows cannot start a drag.
  * @param props.flat - omit the empty status slot in the hierarchy-free flat list.
  * @param props.t - the browser root's locale seat.
  * @returns the session row.
@@ -391,7 +418,7 @@ export function SessionNodeItem({
   onArchive: (id: SessionNode['id']) => void
   /** Scroll this row into view after search navigation, then acknowledge it. */
   onReveal?: (() => void) | undefined
-  /** Present only on draggable rows (workspace-group sessions outside search). */
+  /** Present on reorderable-list rows so every row can remain a drop target. */
   drag?: RowDragProps | undefined
   /** The row is rendered without a parent Workspace header. */
   flat?: boolean | undefined
@@ -403,8 +430,10 @@ export function SessionNodeItem({
   const statuses = sessionStatuses(node, t)
   const primaryStatus = statuses[0]
   const showStatus = primaryStatus.state !== 'done' || row.completed
+  const draggable = drag !== undefined && !row.blank
   const [menuOpen, setMenuOpen] = useState(false)
   const rowRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLSpanElement>(null)
   useEffect(() => {
     if (onReveal === undefined) return
     rowRef.current?.scrollIntoView({ block: 'nearest' })
@@ -449,15 +478,17 @@ export function SessionNodeItem({
       role="treeitem"
       aria-selected={selected}
       onClick={() => { onOpen(node.id) }}
-      draggable={drag !== undefined}
-      onDragStart={drag === undefined
+      onPointerEnter={() => { revealClippedTitle(titleRef.current, true) }}
+      onPointerLeave={() => { revealClippedTitle(titleRef.current, false) }}
+      draggable={draggable}
+      onDragStart={drag === undefined || row.blank
         ? undefined
         : (e) => {
           e.dataTransfer.effectAllowed = 'move'
           e.dataTransfer.setData('text/plain', node.id)
           drag.start()
         }}
-      onDragEnd={drag?.end}
+      onDragEnd={drag === undefined || row.blank ? undefined : drag.end}
       onDragOver={drag === undefined
         ? undefined
         : (e) => {
@@ -482,7 +513,7 @@ export function SessionNodeItem({
           {showStatus && <SessionStatusDots statuses={statuses} />}
         </span>
       )}
-      <span className={css.title}>{title}</span>
+      <span ref={titleRef} className={css.title}>{title}</span>
       {row.hasActiveSchedule && <ActiveScheduleIndicator t={t} />}
       {/* A blank New Session row is a provisional placeholder: nothing has
           happened in it yet, so a "now" timestamp and the row verbs

@@ -5,6 +5,7 @@
  */
 
 import type { Context, Events } from '@deepseek-ai/cordis'
+import type { TypertOwnedValue } from './owned-value.ts'
 
 declare const LOOKUP_HOST: unique symbol
 declare const LOOKUP_WIRE: unique symbol
@@ -223,7 +224,8 @@ export type TypertCodec =
   | {
     readonly mode: 'strict'
     readonly typeSymbol: string
-    readonly schema: TypertSchema
+    /** Materialize and return the process-realm schema on first boundary use. */
+    readonly create: () => TypertSchema
   }
   | {
     readonly mode: 'src-json'
@@ -392,11 +394,11 @@ export interface TypertClientContextAdapter<Wire = unknown> {
    */
   identity(ctx: Context): Wire | undefined
   /**
-   * Resolve a wire identity from the Client's currently materialized Contexts.
+   * Resolve a validated identity synchronously for one Client invocation.
    * @param id - validated wire identity.
-   * @returns the Client Context, or `undefined` when unavailable.
+   * @returns a borrowed or invocation-owned Client Context, or undefined when unavailable.
    */
-  resolve(id: Wire): Context | undefined
+  resolve(id: Wire): Context | TypertOwnedValue<Context> | undefined
 }
 
 /** Notification emitted after a Typert runtime registry changes. */

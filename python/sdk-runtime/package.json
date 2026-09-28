@@ -24,13 +24,14 @@
     "@x1a0f3n9/dsh-authorization": "workspace:^",
     "@x1a0f3n9/dsh-bash-local": "workspace:^",
     "@x1a0f3n9/dsh-brand": "workspace:^",
-    "@x1a0f3n9/dsh-code-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-code-runtime-worker-thread": "workspace:^",
+    "@x1a0f3n9/dsh-ptc-runtime": "workspace:^",
+    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:^",
     "@x1a0f3n9/dsh-command-compact": "workspace:^",
     "@x1a0f3n9/dsh-command-goal": "workspace:^",
     "@x1a0f3n9/dsh-commands": "workspace:^",
     "@x1a0f3n9/dsh-compaction": "workspace:^",
     "@x1a0f3n9/dsh-compaction-basic": "workspace:^",
+    "@x1a0f3n9/dsh-compaction-image-offload": "workspace:^",
     "@x1a0f3n9/dsh-compaction-tool-result-pruner": "workspace:^",
     "@x1a0f3n9/dsh-cordis-host-runner": "workspace:^",
     "@x1a0f3n9/dsh-credentials": "workspace:^",
@@ -79,6 +80,7 @@
     "@x1a0f3n9/dsh-session-reference": "workspace:^",
     "@x1a0f3n9/dsh-session-telemetry": "workspace:^",
     "@x1a0f3n9/dsh-session-title": "workspace:^",
+    "@x1a0f3n9/dsh-session-title-llm": "workspace:^",
     "@x1a0f3n9/dsh-settings": "workspace:^",
     "@x1a0f3n9/dsh-shell": "workspace:^",
     "@x1a0f3n9/dsh-shell-env": "workspace:^",
@@ -130,7 +132,9 @@
     "@x1a0f3n9/dsh-web-search-free": "workspace:^",
     "@x1a0f3n9/dsh-web-search-perplexity": "workspace:^",
     "@x1a0f3n9/dsh-workflow": "workspace:^",
-    "@x1a0f3n9/dsh-workflow-worker-thread": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^"
+    "@x1a0f3n9/dsh-workflow-ptc": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:^",
+    "@x1a0f3n9/dsh-plugin-manager": "workspace:^",
+    "@x1a0f3n9/dsh-host-plugin-inventory": "workspace:^"
   }
 }

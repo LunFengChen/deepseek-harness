@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview",
-  "description": "Extensible document previews for Sidebar files: Markdown, highlighted code, images, PDF, HTML, and plain text",
-  "version": "0.1.5-rc.5",
+  "description": "Extensible document previews for Sidebar files: Office, Markdown, highlighted code, images, PDF, HTML, and plain text",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +32,8 @@
         "@x1a0f3n9/dsh-api-workspace-files",
         "@x1a0f3n9/dsh-client-ui-sidebar-right",
         "@x1a0f3n9/dsh-client-ui-session",
-        "@x1a0f3n9/dsh-api-remotes"
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-locale"
       ],
       "platform": "web"
     }
@@ -50,6 +51,7 @@
     "@x1a0f3n9/dsh-api-gateway": "workspace:^",
     "@x1a0f3n9/dsh-api-remotes": "workspace:^",
     "@x1a0f3n9/dsh-api-workspace-files": "workspace:^",
+    "@x1a0f3n9/dsh-client-connection": "workspace:^",
     "@x1a0f3n9/dsh-client-locale": "workspace:^",
     "@x1a0f3n9/dsh-client-resources": "workspace:^",
     "@x1a0f3n9/dsh-client-store": "workspace:^",
@@ -60,6 +62,7 @@
     "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
     "@x1a0f3n9/dsh-session": "workspace:^",
     "@x1a0f3n9/dsh-util-workspace-path": "workspace:^",
     "@testing-library/react": "^16.1.0",
@@ -68,11 +71,16 @@
     "clsx": "^2.0.0",
     "pdfjs-dist": "6.3.289",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@x1a0f3n9/dsh-office-to-pdf": "workspace:^"
   },
   "files": [
     "lib/index.js",
     "lib/client.js",
+    "lib/client.*.js",
     "lib/types/**/*.d.ts"
-  ]
+  ],
+  "dependencies": {
+    "@deepseek-ai/schemastery": "workspace:^"
+  }
 }

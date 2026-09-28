@@ -22,7 +22,7 @@ dsh = "deepseek_harness_runtime:main"
 
 # Include the injected dsh executable and sidecars; exclude the dev-only node closure.
 [tool.hatch.build]
-artifacts = ["src/deepseek_harness_runtime/runtime/deepseek-harness-sdk-runtime-*"]
+artifacts = ["src/deepseek_harness_runtime/runtime/deepseek-harness-sdk-runtime-*", "src/deepseek_harness_runtime/runtime/deepseek-harness-sdk-runtime-*/**"]
 exclude = ["src/deepseek_harness_runtime/runtime/node"]
 
 [tool.hatch.build.targets.wheel]

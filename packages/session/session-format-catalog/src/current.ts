@@ -8,6 +8,7 @@ import {
 } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionHeader } from '@x1a0f3n9/dsh-session'
 import type { SessionFormatArtifact, SessionFormatHeader } from '@x1a0f3n9/dsh-session-format'
+import { currentSessionMessageProjections } from './message-projections.ts'
 
 /**
  * Validate current logical metadata through the installed Session package.
@@ -46,5 +47,6 @@ export function validateInstalledCurrentSessionArtifact(artifact: SessionFormatA
     artifact.header as unknown as SessionHeader,
     SessionLogOffset(artifact.inheritedEventCount),
     'detached',
+    currentSessionMessageProjections,
   )
 }

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-subagent",
   "description": "Abstract subagent seam (ctx.subagents): named-provider registry for delegating to child agents",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -56,6 +56,7 @@
     "@x1a0f3n9/dsh-brand": "workspace:^",
     "@x1a0f3n9/dsh-chunked-list": "workspace:^",
     "@x1a0f3n9/dsh-util-values": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:^",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
@@ -78,10 +79,15 @@
     "@x1a0f3n9/dsh-tools": "workspace:^",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@x1a0f3n9/dsh-user-approval": "workspace:^",
-    "@x1a0f3n9/dsh-util-time": "workspace:^"
+    "@x1a0f3n9/dsh-util-time": "workspace:^",
+    "@x1a0f3n9/dsh-permission-presets": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   },
   "peerDependenciesMeta": {
     "@x1a0f3n9/dsh-agent-presets": {
+      "optional": true
+    },
+    "@x1a0f3n9/dsh-permission-presets": {
       "optional": true
     },
     "@x1a0f3n9/dsh-sandbox": {
@@ -106,6 +112,9 @@
       "optional": true
     },
     "@x1a0f3n9/dsh-user-approval": {
+      "optional": true
+    },
+    "@x1a0f3n9/dsh-settings": {
       "optional": true
     }
   },
@@ -133,6 +142,8 @@
     "@x1a0f3n9/dsh-tools": "workspace:^",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@x1a0f3n9/dsh-user-approval": "workspace:^",
-    "@x1a0f3n9/dsh-util-time": "workspace:^"
+    "@x1a0f3n9/dsh-util-time": "workspace:^",
+    "@x1a0f3n9/dsh-permission-presets": "workspace:^",
+    "@x1a0f3n9/dsh-settings": "workspace:^"
   }
 }

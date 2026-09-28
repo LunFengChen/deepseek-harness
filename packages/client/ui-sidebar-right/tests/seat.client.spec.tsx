@@ -72,6 +72,7 @@ async function mountSeat(viewportWidth = 1440, canShow = true, entryCount = 0) {
     'conversation.session.header.corner': { kind: 'single', scope: 'session' },
   })
   await runtime.sessions.add({ id: SESSION })
+  let reference = runtime.sessions.retainFor(runtime.ctx, SESSION, { source: 'mainView' })
   const feature = await runtime.mount({ inject: [...inject], apply })
   const bodies = new Map<string, SidebarRightTabInfo>()
   const titles = new Map<string, SidebarRightTabInfo>()
@@ -94,20 +95,28 @@ async function mountSeat(viewportWidth = 1440, canShow = true, entryCount = 0) {
     runtime.ctx.sidebarRightTabs.register({
       id: 'test/text', kind: 'text', priority: 'builtin', patterns: ['dsh-resource://file/**'],
       title: address => address.slice(address.lastIndexOf('/') + 1),
-      guide: Array.from({ length: entryCount }, (_, order) => ({ order, title: () => 'Test', description: () => 'Test page' })),
+      guide: Array.from({ length: entryCount }, (_, order) => ({ id: String(order), order, title: () => 'Test', description: () => 'Test page' })),
     })
     runtime.slots.register({ name: 'sidebar.right.pane.tab', key: 'test/text' }, Body)
     runtime.slots.register({ name: 'sidebar.right.pane.tab.title', key: 'test/text' }, Title)
   })
   const view = runtime.renderSlot('rightbar', { width: 420, viewportWidth, canShow })
-  const instance = runtime.storeOf('rightbar.session', SESSION) as ReturnType<ReturnType<typeof createSidebarRightStore>['create']>
+  const instance = runtime.storeOf('rightbar.session', reference) as ReturnType<ReturnType<typeof createSidebarRightStore>['create']>
   const controller = runtime.ctx.sidebarRight
   const layout = () => instance.getSnapshot().bySession[SESSION]!.layout
   const open = (name = 'a.txt', options?: Parameters<typeof controller.openResource>[1]) => {
     act(() => { controller.openResource(`dsh-resource://file/session/s-test/${name}`, options) })
     return controller.active()!
   }
-  return { runtime, feature, controller, instance, actions: instance.actions, layout, open, frame, pin, bodies, titles, hooks, view }
+  const selectSession = (id: SessionId): void => {
+    const next = runtime.sessions.retainFor(runtime.ctx, id, { source: 'mainView' })
+    reference.release()
+    reference = next
+  }
+  return {
+    runtime, feature, controller, instance, actions: instance.actions, layout,
+    open, selectSession, frame, pin, bodies, titles, hooks, view,
+  }
 }
 
 function element(container: HTMLElement, selector: string): HTMLElement {
@@ -347,6 +356,7 @@ describe('RightbarSeat fullscreen entry', () => {
     else if (change === 'push') fireEvent.click(element(h.view.container, '[data-sidebar-right-mode]'))
     else if (change === 'session') {
       await h.runtime.sessions.add({ id: OTHER })
+      act(() => { h.selectSession(OTHER) })
       act(() => { h.controller.openResource('dsh-resource://file/session/s-other/b.txt') })
     } else await h.runtime.dispose()
     const openCalls = [...h.frame.openRightbar.mock.calls]
@@ -430,6 +440,7 @@ describe('slot-owned useTabInfo', () => {
     await h.runtime.sessions.add({ id: OTHER })
     expect(h.instance.getSnapshot()).toBe(stored)
     expect(info.tab.signal.aborted).toBe(false)
+    act(() => { h.selectSession(OTHER) })
     act(() => { h.controller.openResource('dsh-resource://file/session/s-other/other.txt', { params: { line: 9 } }) })
     const otherTab = h.controller.active()!
     expect(otherTab.id).toBe(own.id)
@@ -442,7 +453,6 @@ describe('slot-owned useTabInfo', () => {
     act(() => { info.tab.actions.close() })
     expect(info.tab.signal.aborted).toBe(true)
     expect(otherInfo.tab.signal.aborted).toBe(false)
-    await h.runtime.sessions.setCurrent(SESSION)
     const remaining = h.bodies.get(h.controller.active()!.id)!
     expect(remaining.tab.navigation.revision).toBe(1)
     await h.feature.dispose()
@@ -459,7 +469,7 @@ describe('slot-owned useTabInfo', () => {
     await act(async () => {
       h.runtime.ctx.sidebarRightTabs.register({
         id: 'test/files', kind: 'files', title: () => 'Files',
-        guide: [{ order: 1, title: () => 'Files' }],
+        guide: [{ id: 'default', order: 1, title: () => 'Files' }],
       })
     })
     expect(h.view.container.querySelector('[data-sidebar-right-guide-entry="files"]')).not.toBeNull()
@@ -584,4 +594,23 @@ describe('intentsFor — the kit\'s gestures as one session\'s store actions', (
     intents.addTab(PANE_1)
     expect(openTab).toHaveBeenCalledWith('guide', { paneId: PANE_1, revealIfOpened: false })
   })
+})
+
+it('keeps a resource tab and reports a synchronous cleanup failure from its close button', async () => {
+  const h = await mountSeat()
+  const tab = h.open('terminal')
+  const failure = new Error('process still running')
+  const release = h.controller.registerCloseHandler('text', () => { throw failure })
+  const logged = vi.spyOn(console, 'error').mockImplementation(() => {})
+  try {
+    fireEvent.click(element(h.view.container, `[data-dockkit-tab-close="${tab.id}"]`))
+    await expect.poll(() => logged.mock.calls).toEqual([['Sidebar tab close failed:', failure]])
+    expect(h.layout().tabs[tab.id]).toBeDefined()
+    release()
+    fireEvent.click(element(h.view.container, `[data-dockkit-tab-close="${tab.id}"]`))
+    expect(h.layout().tabs[tab.id]).toBeUndefined()
+  } finally {
+    logged.mockRestore()
+    release()
+  }
 })

@@ -1,35 +1,34 @@
 /**
- * The web-search provider's card: its endpoint, its per-request search budget,
- * and the key — which is written through the credentials domain, never into
- * the settings section, so the literal never rides a response.
+ * The web-search provider's configuration page: its endpoint, its per-request
+ * search budget, and the key — which is written through the credentials
+ * domain, never into the settings section, so the literal never rides a response.
  */
 
+import type {} from '@x1a0f3n9/dsh-client-ui-plugin-manager/client'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import { SecretField, ValueField } from './fields.tsx'
-import { PluginCard } from './PluginCard.tsx'
+import { PluginConfigForm } from './PluginConfigForm.tsx'
 import type { WebSearchCardFace } from './web-search-card-controller.ts'
-import type {} from './slot-contract.ts'
 
-/** Props the renderer binds for the web-search card. */
+/** Props the renderer binds for the web-search page. */
 export type WebSearchCardProps =
-  PropsRuntime<'settings.plugin.item'>
+  PropsRuntime<'plugins.item'>
   & PropsLocale<'settings.plugins'>
   & InjectFace<WebSearchCardFace>
 
 /**
- * Render the web-search card.
- * @param props - locale copy, the card snapshot, and its form actions.
- * @returns the card.
+ * Render the web-search provider's one-liner or its configuration form, as the Plugins page asks.
+ * @param props - the view asked for, locale copy, the form snapshot, and its actions.
+ * @returns the one-liner, or the form.
  */
 export function WebSearchCard(props: WebSearchCardProps) {
   const { t } = props
   const state = props.useWebSearchCard(snapshot => snapshot)
+  if (props.view === 'summary') return t('webSearchDescription')
   const disabled = !state.writable
   return (
-    <PluginCard
+    <PluginConfigForm
       t={t}
-      titleKey="webSearchTitle"
-      descriptionKey="webSearchDescription"
       state={state}
       onSave={props.save}
       onDiscard={props.discard}
@@ -73,6 +72,6 @@ export function WebSearchCard(props: WebSearchCardProps) {
         onEdit={(text) => { props.edit('maxUses', text) }}
         onReset={() => { props.resetField('maxUses') }}
       />
-    </PluginCard>
+    </PluginConfigForm>
   )
 }

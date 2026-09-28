@@ -169,6 +169,56 @@ describe('workspace browser rows', () => {
     expect(onOpen).toHaveBeenCalledWith(node.id)
   })
 
+  it('reveals a clipped session title by scrolling it while the row is hovered', () => {
+    const node: SessionNode = {
+      id: sid('clipped'), title: 'A Session Title Long Enough To Be Clipped (1)', blank: false,
+      running: false, runningSubagentCount: 0, completed: false, hasActiveSchedule: false, updatedAt: 0,
+    }
+    render(
+      <SessionNodeItem node={node} currentId={undefined} now={0} onOpen={vi.fn()}
+        onRename={vi.fn()} onFork={vi.fn()} onArchive={vi.fn()} t={t} />,
+    )
+    const row = screen.getByRole('treeitem')
+    const title = screen.getByText(node.title)
+    // jsdom lays out nothing: the title's clipped geometry is stated outright.
+    const geometry = (scrollWidth: number, clientWidth: number): void => {
+      Object.defineProperty(title, 'scrollWidth', { value: scrollWidth, configurable: true })
+      Object.defineProperty(title, 'clientWidth', { value: clientWidth, configurable: true })
+    }
+
+    geometry(320, 180)
+    fireEvent.pointerEnter(row)
+    expect(title.scrollLeft).toBe(140)
+    fireEvent.pointerLeave(row)
+    expect(title.scrollLeft).toBe(0)
+
+    // A title that fits has no scroll range: hovering leaves it at its start.
+    geometry(180, 180)
+    fireEvent.pointerEnter(row)
+    expect(title.scrollLeft).toBe(0)
+  })
+
+  it('returns a revealed title to its start in one step', () => {
+    const node: SessionNode = {
+      id: sid('instant-return'), title: 'A Session Title Long Enough To Be Clipped (1)', blank: false,
+      running: false, runningSubagentCount: 0, completed: false, hasActiveSchedule: false, updatedAt: 0,
+    }
+    render(
+      <SessionNodeItem node={node} currentId={undefined} now={0} onOpen={vi.fn()}
+        onRename={vi.fn()} onFork={vi.fn()} onArchive={vi.fn()} t={t} />,
+    )
+    const row = screen.getByRole('treeitem')
+    const title = screen.getByText(node.title)
+    const scrollTo = vi.fn()
+    Object.defineProperty(title, 'scrollTo', { value: scrollTo, configurable: true })
+
+    fireEvent.pointerEnter(row)
+    fireEvent.pointerLeave(row)
+    // Browsers receive the explicit instant behavior that the stylesheet's
+    // smooth scroll-behavior would otherwise override.
+    expect(scrollTo).toHaveBeenCalledWith({ left: 0, behavior: 'instant' })
+  })
+
   it('keeps the active-Schedule marker between the title and time in grouped and flat rows', () => {
     const onOpen = vi.fn()
     const node: SessionNode = {

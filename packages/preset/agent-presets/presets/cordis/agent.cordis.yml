@@ -1,16 +1,14 @@
-# The `cordis` agent preset: the standard coding agent, plus the ability to
-# read and write the runtime it is running in.
+# TRUST: Plugin Manager installs persistent, profile-wide code that runs in the Host
+# process outside the workspace sandbox. Every call needs Full access or single-call
+# approval; granting a call does not change the session permission mode.
+# The `cordis` agent preset adds runtime inspection and persistent plugin management.
 #
 # It exists so a person can ask an agent to author another agent. Everything in
-# `standard` is here unchanged; what is added is the self-referential Cordis
-# toolset, a skill that teaches composition authoring, and a persona that says
-# which of the two planes an edit belongs to.
+# `standard` is here unchanged; Creator adds persistent plugin management,
+# runtime inspection, composition-authoring skills, and a persona that explains
+# where profile and preset changes belong.
 #
-# TRUST: `cordis_mount` evaluates model-written JavaScript against the live
-# runtime, and a composition this agent writes becomes a preset other sessions
-# mount. Treat a session on this preset as shell access — the toolset's own
-# documentation makes the same statement.
-
+# Profile management persists configuration shared by every session in that profile.
 
 # The preset's own persona, shadowing the deployment default for this agent.
 # `{{model}}` and `{{cwd}}` resolve from the agent's own route and workspace.
@@ -25,9 +23,19 @@
 
       Two planes decide where an edit belongs. The HOST composition holds the registries and anything shared across sessions — persistence, the sandbox and approval stack, the model route, the subagent registry and its backends. An AGENT PRESET holds what one session contributes to those registries: its tools, its persona, its prompt sections. A row that publishes a service belongs in the host composition, or inside an `isolate` realm if the preset genuinely owns that service and nothing outside one agent reads it.
 
-      Presets you author live one directory per preset under `${DSH_HOME:-$HOME/.dsh}/.agent-presets/<id>/`; the roster reports each preset's real path, so take the one you edit from there. NEVER edit or delete the shipped preset install (the `agent-presets` directory beside the deployment's own config): it belongs to the deployment, an upgrade overwrites it, and corrupting the `cordis` preset would disable this very mode. To change what a shipped preset does, copy its composition into a new preset directory and edit the copy.
+      Presets you author live one directory per preset under `${DSH_HOME:-$HOME/.dsh}/.agent-presets/<id>/`. Load `editing-cordis-compositions` for file discovery and copying instructions. NEVER edit or delete the shipped preset install (the `agent-presets` directory beside the deployment's own config): it belongs to the deployment, an upgrade overwrites it, and corrupting the `cordis` preset would disable this very mode. To change what a shipped preset does, copy its composition into a new preset directory and edit the copy.
 
       Load the `editing-cordis-compositions` skill before writing or changing a composition.
+
+      Use plugin_manager for persistent bundle installation, removal and enablement in the current profile. Author plugin code and configuration as ordinary workspace bundle files. Changes affect every session in that profile. Read saved-state and activation outcomes separately; restart-required means the new capability is not available yet.
+
+      In Creator mode, requests to make a visual object, decoration, or widget mean creating an installed UI plugin that displays it in this Harness Web UI, unless the user specifies another destination. Choose reasonable visual details and proceed. Load cordis-plugin-development, inspect the Client slots, build the plugin in the workspace, and install it with plugin_manager. Install a minimal working version before visual refinement; use the connected page as its preview. Verify that the open page renders it; a standalone image or HTML file does not complete an in-app creation request.
+
+      Load the cordis-plugin-development skill before authoring an installed plugin. Use cordis_inspect_list to discover Host and Client providers, then cordis_inspect_query to read exact Service, Event, Tool, Theme or Slot APIs. These tools are read-only; queries do not invoke business methods.
+
+      To connect an MCP server, create a configuration-only bundle whose patch inserts @x1a0f3n9/dsh-mcp-client, then install it with plugin_manager. Load cordis-plugin-development for the package and YAML examples. After successful activation, call one of the newly available mcp__<serverName>__<tool> tools to verify the connection.
+
+      Use installed bundles for new plugin code. Package installation may require explicit user approval for build scripts. Preserve returned failures and pending states; only report success after observing the requested capability.
 
 - id: agent-instructions
   name: '@x1a0f3n9/dsh-agent-instructions'
@@ -207,16 +215,23 @@
         backgroundMode: one-shot
         maxDepth: provider-managed
 
-    - id: workflow-worker-thread
-      name: '@x1a0f3n9/dsh-workflow-worker-thread'
+    - id: workflow-ptc
+      name: '@x1a0f3n9/dsh-workflow-ptc'
       config:
         provider: spawn
 
     - id: tool-workflow
       name: '@x1a0f3n9/dsh-tool-workflow'
 
+    # Off by default with the base row it mirrors: the tool description
+    # restricts `ralph` to runs the human explicitly asked for, and completion
+    # is a worker self-report, not an independent evaluation. Preset files take
+    # no patches, so a session that wants it duplicates this preset under a new
+    # id and drops `disabled`; the shipped root shadows a copy that reuses this
+    # id.
     - id: tool-ralph
       name: '@x1a0f3n9/dsh-tool-ralph'
+      disabled: true
       config:
         subagentProvider: spawn
         maxRounds: 64
@@ -241,8 +256,7 @@
 
 # ── self-modification ───────────────────────────────────────────────────────
 
-# Read the live runtime, mount a temporary plugin, unmount it. The toolset is a
-# trust boundary, not a sandbox — see this file's header.
+# Discover the Host and Client APIs used by installed plugins.
 - id: tool-cordis
   name: '@x1a0f3n9/dsh-tool-cordis'
 
@@ -264,3 +278,6 @@
 
 - id: present
   name: '@x1a0f3n9/dsh-tool-present'
+
+- id: tool-plugin-manager
+  name: '@x1a0f3n9/dsh-plugin-manager/tools'

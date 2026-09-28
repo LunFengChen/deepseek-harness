@@ -6,7 +6,8 @@ import type {
   ConversationTimelineSnapshot, RenderMessageImages,
 } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { SessionSeq } from '@x1a0f3n9/dsh-session/types'
-import { Button, IconChevronDownOutline14, Modal } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { InboxState } from '@x1a0f3n9/dsh-agent/types'
+import { Button, IconChevronDownOutline14, MarkdownDelegateProvider, Modal } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { ChatViewSlotProps, OpenFileOptions } from '../contract/slots.ts'
 import type {
   AssistantChatData, ChatConversationViewNode, RetryChatData, ToolChatData,
@@ -143,7 +144,7 @@ function openFailureMessage(error: unknown, fallback: string): string {
 function observedRpcIds(
   order: readonly string[],
   nodes: ChatSnapshot['nodes'],
-  queue: readonly { readonly rpcId?: string }[],
+  inbox: InboxState | undefined,
 ): ReadonlySet<string> {
   const observed = new Set<string>()
   for (const key of order) {
@@ -154,8 +155,8 @@ function observedRpcIds(
       | undefined
     if (source?.kind === 'user' && typeof source.rpcId === 'string') observed.add(source.rpcId)
   }
-  for (const item of queue) {
-    if (item.rpcId !== undefined) observed.add(item.rpcId)
+  for (const { source } of [...inbox?.['next-turn'] ?? [], ...inbox?.['next-step'] ?? []]) {
+    if (source.kind === 'user' && 'rpcId' in source) observed.add(source.rpcId)
   }
   return observed
 }
@@ -261,7 +262,7 @@ const ChatNodeList = memo(function ChatNodeList({ order, ...seatProps }: ChatNod
  */
 export function ChatView({
   useSession, useChat, useChatNode, useChatNodeProcess, useSessions, useStore, actions, renderSlot,
-  sessionId, openFile, openSkill, loadOlder, loadThrough, loadImage, openView, chatScroll, forkAt, fileMentions,
+  sessionId, openFile, openSkill, openExternalLink, loadOlder, loadThrough, loadImage, openView, chatScroll, forkAt, fileMentions,
   useTranscriptView, useProjection, t,
 }: ChatViewSlotProps) {
   const order = useChat(s => s.order)
@@ -278,7 +279,7 @@ export function ChatView({
     [turnNavigationItems, turnOutline],
   )
   const timeline = useChat(s => s.timeline)
-  const inbox = useSession(s => s.queue)
+  const inbox = useProjection('inbox') as unknown as InboxState | undefined
   // Workspace root off the session list row: path summaries display relative to it.
   const cwd = useSessions(s => s.byId[sessionId]?.cwd)
   const running = useSession(s => s.running)
@@ -326,7 +327,7 @@ export function ChatView({
   }, [])
 
   const pendingSteering = useMemo(
-    () => inbox.filter(item => item.placement === 'steering'),
+    () => inbox?.['next-step'].filter(message => message.source.kind === 'user') ?? [],
     [inbox],
   )
   const pendingSubmissions = useSession(s => s.pendingSubmissions)
@@ -835,25 +836,27 @@ export function ChatView({
               </button>
             </div>
           )}
-          <ChatNodeList
-            order={order}
-            useChatNode={useChatNode}
-            useChatNodeProcess={useChatNodeProcess}
-            historyIncomplete={hasMore}
-            compactTranscript={compactTranscript}
-            useStore={useStore}
-            actions={actions}
-            cwd={cwd}
-            openFile={requestOpenFile}
-            openSkill={openSkill}
-            inspectCall={inspectCall}
-            forkAt={forkAt}
-            loadImage={loadImage}
-            renderMessageImages={renderMessageImages}
-            fileMentions={fileMentions}
-            renderSlot={renderSlot}
-            t={t}
-          />
+          <MarkdownDelegateProvider openExternalLink={openExternalLink} openFile={requestOpenFile}>
+            <ChatNodeList
+              order={order}
+              useChatNode={useChatNode}
+              useChatNodeProcess={useChatNodeProcess}
+              historyIncomplete={hasMore}
+              compactTranscript={compactTranscript}
+              useStore={useStore}
+              actions={actions}
+              cwd={cwd}
+              openFile={requestOpenFile}
+              openSkill={openSkill}
+              inspectCall={inspectCall}
+              forkAt={forkAt}
+              loadImage={loadImage}
+              renderMessageImages={renderMessageImages}
+              fileMentions={fileMentions}
+              renderSlot={renderSlot}
+              t={t}
+            />
+          </MarkdownDelegateProvider>
           {/* No pending placeholders: questions (ui-user-questions) and approvals
               (ApprovalPanel) both take over the composer, so a flow card would
               double-render the same wait. */}

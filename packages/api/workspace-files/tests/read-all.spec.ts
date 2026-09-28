@@ -24,13 +24,11 @@ describe('workspaceFiles.readAll', () => {
     expect(await harness.endpoint().readAll(harness.scope, 'empty', signal())).toMatchObject({ data: '', offset: 0, eof: true, bytes: 0 })
   })
 
-  it.each(['workspace', 'outside'] as const)('rejects a known oversized %s file before reading bytes', async (location) => {
+  it.each(['workspace', 'outside'] as const)('maps the filesystem size refusal for a %s file', async (location) => {
     const path = join(harness[location], 'large')
     await writeFile(path, 'abcde')
-    const read = vi.spyOn(harness.ctx.fs, 'readByteRange')
     expect(await failureOf(harness.endpoint({ maxFileBytes: 4 }).readAll(harness.scope, path, signal())))
       .toEqual({ code: 'workspace-file/too-large', details: { path, limit: 4 } })
-    expect(read).not.toHaveBeenCalled()
   })
 
   it.each([undefined, 1])('checks the actual bytes when stat reports %s', async (size) => {
@@ -48,6 +46,22 @@ describe('workspaceFiles.readAll', () => {
     expect((await failureOf(files.readAll(harness.scope, 'directory', signal()))).code).toBe('workspace-file/not-regular-file')
     const outside = await files.readAll(harness.scope, join(harness.outside, 'outside'), signal())
     expect(Buffer.from(outside.data, 'base64').toString()).toBe('outside')
+  })
+
+  it.each([new Error('Read denied'), new DOMException('Cancelled', 'AbortError'), null, 'backend failure', { code: 'FS_NOT_FOUND' }])(
+    'preserves non-size filesystem failures: %s', async (failure) => {
+      await writeFile(join(harness.workspace, 'file'), '1234')
+      vi.spyOn(harness.ctx.fs, 'readBytes').mockRejectedValueOnce(failure)
+      await expect(harness.endpoint().readAll(harness.scope, 'file', signal())).rejects.toBe(failure)
+    },
+  )
+
+  it('maps a size refusal by code without requiring a shared error class', async () => {
+    await writeFile(join(harness.workspace, 'file'), '1234')
+    const failure = { code: 'FS_TOO_LARGE' }
+    vi.spyOn(harness.ctx.fs, 'readBytes').mockRejectedValueOnce(failure)
+    await expect(harness.endpoint({ maxFileBytes: 4 }).readAll(harness.scope, 'file', signal()))
+      .rejects.toMatchObject({ code: 'workspace-file/too-large', details: { path: 'file', limit: 4 }, cause: failure })
   })
 })
 

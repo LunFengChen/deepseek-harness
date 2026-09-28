@@ -55,9 +55,6 @@
     - id: subagent-model-selection-settings
       name: '@x1a0f3n9/dsh-tool-subagent/model-selection-settings'
 
-    - id: code-runtime
-      name: '@x1a0f3n9/dsh-code-runtime-worker-thread'
-
     - id: message-feedback
       name: '@x1a0f3n9/dsh-message-feedback'
       config:
@@ -115,6 +112,8 @@
 
     # Workspace file service: bounded read, directory listing, and the
     # agent-write change feed inside the session workspace root.
+    - id: terminal-controller
+      name: '@x1a0f3n9/dsh-api-terminal-controller'
     - id: workspace-files
       name: '@x1a0f3n9/dsh-api-workspace-files'
 
@@ -154,8 +153,9 @@
     # assembly fact of dsh-web-app, never user config), mounts the
     # frontend-static fallback owner, registers the web-surface prompt
     # section and the bash runtime variable, prints the URL line, and opens the
-    # canonical local URL after the full tree settles. The webStartup provider
-    # supplies invocation-only values; after the server binds, this row samples
+    # canonical local URL after the full Loader tree settles and the required-
+    # entry audit passes. The
+    # webStartup provider supplies invocation-only values; after the server binds, this row samples
     # LAN trust once and provides `webRuntime`. A complete agent-preset persona
     # suppresses the prompt section for that agent while retaining the host-owned
     # shell variable.
@@ -233,11 +233,20 @@
       name: '@x1a0f3n9/dsh-client-ui-sidebar-right'
 
 
+    - id: office-to-pdf
+      name: '@x1a0f3n9/dsh-office-to-pdf'
+
     # The right Sidebar's document tab: bounded file reads with selectable
-    # Markdown, code, HTML, PDF, and plain-text renderers.
+    # Markdown, code, HTML, PDF, Office, and plain-text renderers.
     - id: ui-sidebar-documentpreview
       name: '@x1a0f3n9/dsh-client-ui-sidebar-documentpreview'
 
+    # Sandboxed HTTP(S) Browser tabs, including loopback targets.
+    - id: ui-sidebar-browser
+      name: '@x1a0f3n9/dsh-client-ui-sidebar-browser'
+
+    - id: ui-sidebar-terminal
+      name: '@x1a0f3n9/dsh-client-ui-sidebar-terminal'
     # The right Sidebar's workspace file tree tab type.
     - id: ui-sidebar-files
       name: '@x1a0f3n9/dsh-client-ui-sidebar-files'
@@ -251,8 +260,19 @@
     - id: ui-settings-models
       name: '@x1a0f3n9/dsh-client-ui-settings-models'
 
+    # Plugin management: the sidebar Plugins page installs, enables, disables,
+    # and removes the profile's bundles through the `pluginManager` Remote.
+    # Without a profile-backed Host it reports itself unavailable.
+    - id: ui-plugin-manager
+      name: '@x1a0f3n9/dsh-client-ui-plugin-manager'
+
+    # Read-only Plugin list tab in the Settings Plugins section; the built-in
+    # bundles the sidebar page leaves out are inspected here.
     - id: ui-settings-plugin-inventory
       name: '@x1a0f3n9/dsh-client-ui-settings-plugin-inventory'
+
+    - id: ui-settings-unarchive-sessions
+      name: '@x1a0f3n9/dsh-client-ui-settings-unarchive-sessions'
 
     - id: ui-conversation
       name: '@x1a0f3n9/dsh-client-ui-conversation'
@@ -277,19 +297,25 @@
     - id: ui-cordis
       name: '@x1a0f3n9/dsh-client-ui-cordis'
 
-    # Durable workflow lifecycle as an independent Chat node after the
-    # existing generic workflow tool row.
-    - id: ui-workflow-run
-      name: '@x1a0f3n9/dsh-client-ui-workflow-run'
-
-    # Turn tail: the produced-files row under each closing assistant message.
-    # Remove this entry to turn the surface off; the tail hole renders empty.
+    # Turn tail: the changed-files card and delivery cards under each closing
+    # assistant message. Remove this entry to turn the surface off; the tail
+    # hole renders empty.
     - id: ui-deliverables
       name: '@x1a0f3n9/dsh-client-ui-deliverables'
+
+    # Records each top-level turn's changed files from git working-tree
+    # snapshots; the changed-files card above renders its events.
+    - id: workspace-changes
+      name: '@x1a0f3n9/dsh-workspace-changes'
 
 
     - id: ui-workspace
       name: '@x1a0f3n9/dsh-client-ui-workspace'
+
+    # Durable workflow lifecycle as an independent Chat node after the
+    # existing generic workflow tool row.
+    - id: ui-workflow-run
+      name: '@x1a0f3n9/dsh-client-ui-workflow-run'
 
     # Input triggers: the '/' | '@' pipeline (ui-input-trigger), the command surface over
     # it (ui-commands), and the reference sources (ui-skill / ui-reference).
@@ -414,6 +440,9 @@
 # exists, so there is no agent to key by. Behind a preset realm those variables
 # would never reach the model's shell at all.
 
+- id: tool-plugin-manager
+  disabled: true
+
 - id: tool-bash
   disabled: true
 
@@ -501,12 +530,15 @@
 - id: tool-subagent-fork
   disabled: true
 
-- id: workflow-worker-thread
+- id: workflow-ptc
   disabled: true
 
 - id: tool-workflow
   disabled: true
 
+# `base` ships this row disabled; the preset-plane gate reads declared row ids
+# without regard to `disabled`, so this row must stay to keep `tool-ralph` off
+# the host plane and out of collision with every preset's row.
 - id: tool-ralph
   disabled: true
 

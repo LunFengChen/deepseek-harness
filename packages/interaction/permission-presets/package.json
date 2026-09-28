@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-permission-presets",
   "description": "User-facing permission presets (ctx.permissionPresets) for the DeepSeek Harness: one product-level Permissions select bundling the sandbox-mode and approval-policy knobs, written through to their own session events",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -30,6 +30,14 @@
       "types": "./lib/types/client.d.ts",
       "default": "./lib/types/client.js"
     },
+    "./typert": {
+      "types": "./lib/typert.host.d.ts",
+      "default": "./lib/typert.host.js"
+    },
+    "./remote": {
+      "types": "./lib/typert.remote-client.d.ts",
+      "default": "./lib/typert.remote-client.js"
+    },
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
@@ -37,7 +45,11 @@
     "lib/index.js",
     "lib/invariant.js",
     "lib/types/**/*.js",
-    "lib/types/**/*.d.ts"
+    "lib/types/**/*.d.ts",
+    "lib/typert.host.js",
+    "lib/typert.host.d.ts",
+    "lib/typert.remote-client.js",
+    "lib/typert.remote-client.d.ts"
   ],
   "license": "MIT",
   "peerDependencies": {
@@ -49,6 +61,7 @@
     "@x1a0f3n9/dsh-session": "workspace:^",
     "@x1a0f3n9/dsh-session-projection": "workspace:^",
     "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@x1a0f3n9/dsh-user-approval": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   },
@@ -65,6 +78,7 @@
     "@x1a0f3n9/dsh-session": "workspace:^",
     "@x1a0f3n9/dsh-session-projection": "workspace:^",
     "@x1a0f3n9/dsh-settings": "workspace:^",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@x1a0f3n9/dsh-user-approval": "workspace:^",
     "@deepseek-ai/cordis": "workspace:^"
   }

@@ -30,6 +30,8 @@ export const remoteDefaultResponses: RemoteTable = {
     'dynamicCordisRunner/inventory': ok([]),
     // ui-settings-plugins web-search card `readCredential()` when the settings mirror first publishes.
     'credentials/describe': ok({}),
+    // ui-permission-presets `PermissionCatalogDirectory` on its first read for a connection generation.
+    'permissionPresets/catalog': ok({ options: [] }),
   },
   // Stream endpoints the roster opens later than boot; declared so a spec that forgets the script gets a stream miss.
   streams: [
@@ -38,7 +40,7 @@ export const remoteDefaultResponses: RemoteTable = {
   ],
   stream: {
     // api-session-controller client `apply`: the control stream's opening baseline, then open.
-    'session/control': openStream([{ type: 'baseline', value: { queues: {}, jobs: {}, projections: {} } }]),
+    'session/control': openStream([{ type: 'baseline', value: { jobs: {}, projections: {} } }]),
     // api-workspace-controller client `apply`: the follow stream's opening baseline, then open.
     'workspace/follow': openStream([{ type: 'baseline', value: { items: [], archivedSessionIds: [] } }]),
   },

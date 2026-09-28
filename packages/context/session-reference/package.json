@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-session-reference",
   "description": "Cross-session snapshot references and durable untrusted model context (ctx.sessionReferenceResolver)",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -61,6 +61,7 @@
     "@x1a0f3n9/dsh-session-query": "workspace:^",
     "@x1a0f3n9/dsh-session-title": "workspace:^",
     "@x1a0f3n9/dsh-spill": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
     "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
   },
@@ -88,6 +89,7 @@
     "@x1a0f3n9/dsh-session-query-sqlite": "workspace:^",
     "@x1a0f3n9/dsh-session-title": "workspace:^",
     "@x1a0f3n9/dsh-spill": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
     "@x1a0f3n9/dsh-spill-local": "workspace:^",
     "@x1a0f3n9/dsh-system-prompt": "workspace:^",
     "@x1a0f3n9/dsh-tool-fs": "workspace:^",

@@ -2,10 +2,10 @@
 /** Chat inject factories exercised over independently mounted Conversation and Chat plugins. */
 import { describe, expect, it, vi } from 'vitest'
 import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
-import type { ISession } from '@x1a0f3n9/dsh-api-session-controller/client'
+import type { ISession, SessionReference } from '@x1a0f3n9/dsh-api-session-controller/client'
 import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import {
-  SlotTestRuntime, TestRemote, stubSettingsScope, usePinnedBrowserLanguages,
+  SlotTestRuntime, stubSettingsScope, usePinnedBrowserLanguages,
 } from '@x1a0f3n9/dsh-client-test-runtime'
 import type { SessionBehaviorOverrides } from '@x1a0f3n9/dsh-client-test-runtime'
 import type { ClientRemote } from '@x1a0f3n9/dsh-api-remotes/client'
@@ -51,25 +51,37 @@ async function bench() {
   runtime.ctx.provide('settingsScope', { bind: () => stubSettingsScope().scope } as never)
   const layout = { closeRightbar: vi.fn(), openRightbar: vi.fn() }
   runtime.ctx.provide('layout', layout as never)
-  const sidebarRight = { openResource: vi.fn<(address: string) => void>() }
+  const sidebarRight = {
+    openResource: vi.fn<(address: string) => void>(),
+    openTab: vi.fn<(kind: string, options?: unknown) => void>(),
+  }
   runtime.ctx.provide('sidebarRight', sidebarRight as never)
+  const sidebarRightTabs = {
+    get: vi.fn<(kind: string) => object | undefined>(() => ({})),
+    register: vi.fn(() => () => {}),
+  }
+  runtime.ctx.provide('sidebarRightTabs', sidebarRightTabs as never)
+  runtime.ctx.provide('resources', { register: vi.fn(() => () => {}) } as never)
   const openWorkspacePath = vi.fn<ClientRemote['session']['openWorkspacePath']>(
     () => Promise.resolve({ ok: true, value: { opened: true } }),
   )
-  new TestRemote(runtime.ctx, { session: { openWorkspacePath } })
+  runtime.remote.provideNamespaces({ session: { openWorkspacePath } })
+  const openSession = vi.fn<(id: SessionId) => void>()
   runtime.ctx.provide('uiWorkspace', {
     openWorkspace: vi.fn(async (_workspaceId: WorkspaceId, beforeOpen: (id: SessionId) => void) => {
       beforeOpen(ROOT)
-      runtime.sessions.open(ROOT)
+      openSession(ROOT)
     }),
-    openSession: (id: SessionId) => { runtime.sessions.open(id) },
+    openSession,
   } as never)
   const session = sessionFakeFor()
   await runtime.sessions.add({
     id: ROOT,
     summary: { title: 'R', displayTitle: 'R', cwd: '/proj' },
     session,
-  }, { current: false })
+  })
+  const rootReference = runtime.sessions.retain(ROOT)
+  await rootReference.ready
   const locale = new LocaleRuntime(runtime.ctx)
   runtime.ctx.provide('locale', locale)
   runtime.slots.installLocale(locale)
@@ -80,22 +92,25 @@ async function bench() {
   await runtime.mount({ inject: [...injectChat], apply: applyChat })
   runtime.renderRoot()
 
-  const chatViewApi = (id: SessionId) => {
+  const chatViewApi = (reference: SessionReference) => {
+    const id = reference.sessionId
     const entry = runtime.slots.entries('conversation.view')[0]!
-    const instance = runtime.storeOf('conversation.view', id) as ChatInstance
+    const instance = runtime.storeOf('conversation.view', reference) as ChatInstance
     const injected = (entry.inject as unknown as (
       sessionId: SessionId,
       actions: ChatActions,
     ) => ChatViewInjected)(id, instance.actions)
     return { instance, injected }
   }
-  return { runtime, layout, openWorkspacePath, sidebarRight, session, chatViewApi }
+  return {
+    runtime, layout, openWorkspacePath, sidebarRight, sidebarRightTabs, session, chatViewApi, rootReference, openSession,
+  }
 }
 
 describe('Chat inject API', () => {
   it('loads older history and forks through the Session Controller', async () => {
     const b = await bench()
-    const { injected } = b.chatViewApi(ROOT)
+    const { injected } = b.chatViewApi(b.rootReference)
     injected.loadOlder()
     expect(b.session.loadOlder).toHaveBeenCalledOnce()
 
@@ -104,7 +119,7 @@ describe('Chat inject API', () => {
 
     injected.forkAt(17)
     await vi.waitFor(() => {
-      expect(b.runtime.sessions.calls).toContainEqual({ method: 'open', args: [ROOT] })
+      expect(b.openSession).toHaveBeenCalledWith(ROOT)
     })
     expect(b.runtime.sessions.calls).toContainEqual({
       method: 'fork', args: [{ sessionId: ROOT, atSeq: 17, increaseTitle: true }],
@@ -120,7 +135,7 @@ describe('Chat inject API', () => {
 
   it('addresses file paths under the Session\'s scope and opens them in the right Sidebar', async () => {
     const b = await bench()
-    const { injected } = b.chatViewApi(ROOT)
+    const { injected } = b.chatViewApi(b.rootReference)
     await injected.openFile('src/a.ts')
     // Files stay in the product: a relative path is handed to the Sidebar as an
     // address under this session's scope, not to a desktop opener.
@@ -145,9 +160,36 @@ describe('Chat inject API', () => {
     await b.runtime.dispose()
   })
 
+  it('opens message HTTP(S) links in Sidebar Browser tabs', async () => {
+    const b = await bench()
+    const { injected } = b.chatViewApi(b.rootReference)
+    injected.openExternalLink('http://example.test/path')
+    injected.openExternalLink('https://example.test/path')
+    expect(b.sidebarRight.openTab.mock.calls).toEqual([
+      ['browser', { params: { url: 'http://example.test/path' } }],
+      ['browser', { params: { url: 'https://example.test/path' } }],
+    ])
+    await b.runtime.dispose()
+  })
+
+  it('opens message HTTP(S) links in the system browser when no Sidebar Browser is registered', async () => {
+    const b = await bench()
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null)
+    try {
+      b.sidebarRightTabs.get.mockReturnValue(undefined)
+      const { injected } = b.chatViewApi(b.rootReference)
+      injected.openExternalLink('https://example.test/path')
+      expect(b.sidebarRight.openTab).not.toHaveBeenCalled()
+      expect(open).toHaveBeenCalledWith('https://example.test/path', '_blank', 'noopener,noreferrer')
+    } finally {
+      open.mockRestore()
+      await b.runtime.dispose()
+    }
+  })
+
   it('routes sent skill previews through the viewed Session source and tolerates an absent provider', async () => {
     const b = await bench()
-    const { injected } = b.chatViewApi(ROOT)
+    const { injected } = b.chatViewApi(b.rootReference)
     injected.openSkill('review')
     const openReference = vi.fn(() => true)
     const sessionOf = vi.fn(() => ({ openReference }))
@@ -168,8 +210,9 @@ describe('Chat inject API', () => {
       id: NO_CWD,
       summary: { title: 'N', displayTitle: 'N' },
       session: sessionFakeFor(),
-    }, { current: false })
-    const { injected } = b.chatViewApi(NO_CWD)
+    })
+    using reference = b.runtime.sessions.retain(NO_CWD)
+    const { injected } = b.chatViewApi(reference)
     // The Host resolves the relative path against the root it holds for the
     // Session; the Client need not know it.
     await injected.openFile('src/a.ts')
@@ -194,8 +237,11 @@ describe('Chat inject API', () => {
 
   it('owns image loading, scroll memory, and optional closing-file mentions', async () => {
     const b = await bench()
-    const { injected } = b.chatViewApi(ROOT)
+    const { injected } = b.chatViewApi(b.rootReference)
     const owner = {} as never
+
+    expect(injected.keyedHooks.chatNode('missing')).toBeDefined()
+    expect(injected.keyedHooks.chatNodeProcess('missing')).toBeDefined()
 
     expect(injected.fileMentions(owner)).toBeUndefined()
     const mentions = { resolve: vi.fn() } as never

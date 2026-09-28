@@ -33,8 +33,10 @@ async function bench() {
   const list = vi.fn<() => Promise<ListResult>>()
     .mockResolvedValue({ ok: true, value: EMPTY })
   const setEnabled = vi.fn().mockResolvedValue({ ok: true, value: { enabled: true } })
+  const retryClient = vi.fn().mockResolvedValue(undefined)
   ctx.provide('remote.pluginInventory', { list, setEnabled })
-  return { ctx, slots: ctx.get('slots') as SlotRegistry, locale, list, setEnabled }
+  ctx.provide('modules', { entries: { state: { getSnapshot: () => ({ syncing: false, failures: [] }), subscribe: () => () => {} }, retry: retryClient } })
+  return { ctx, retryClient, slots: ctx.get('slots') as SlotRegistry, locale, list, setEnabled }
 }
 
 function declare(slots: SlotRegistry): () => void {

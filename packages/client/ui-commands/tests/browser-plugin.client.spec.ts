@@ -29,9 +29,16 @@ async function bench() {
     },
   })
   const scopes = new Map<SessionId, Context>()
+  const bindings = new Map<SessionId, {
+    readonly sessionId: SessionId
+    readonly session: { readonly sessionId: SessionId }
+    readonly ctx: Context
+  }>()
   ctx.provide('sessions', {
     scope: (id: SessionId) => scopes.get(id),
     scopeOf: (c: Context) => scopeOf(c),
+    sessionOf: (c: Context) => bindings.get(scopeOf(c)!)?.session,
+    binding: (id: SessionId) => bindings.get(id),
     subagentAddress: (id: SessionId) => id === sid('child')
       ? { parentSessionId: sid('parent'), childSessionId: id, mode: 'continuable' as const }
       : undefined,
@@ -49,8 +56,10 @@ async function bench() {
   const fiber = ctx.plugin({ inject: [...inject], apply })
   await fiber.await()
   const mint = (key: string) => {
-    const handle = createScope(ctx, sid(key))
-    scopes.set(sid(key), handle.ctx)
+    const id = sid(key)
+    const handle = createScope(ctx, id)
+    scopes.set(id, handle.ctx)
+    bindings.set(id, { sessionId: id, session: { sessionId: id }, ctx: handle.ctx })
     return handle
   }
   return { ctx, fiber, sources, slots: ctx.slots, mint }

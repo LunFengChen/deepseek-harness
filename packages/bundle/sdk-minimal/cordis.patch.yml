@@ -91,6 +91,9 @@
     - id: tools
       name: '@x1a0f3n9/dsh-tools'
 
+    - id: mcp-resources
+      name: '@x1a0f3n9/dsh-mcp-resources'
+
     - id: agent
       name: '@x1a0f3n9/dsh-agent'
 

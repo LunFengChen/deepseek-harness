@@ -21,6 +21,12 @@
       "path": "../locale"
     },
     {
+      "path": "../resources"
+    },
+    {
+      "path": "../ui-chat"
+    },
+    {
       "path": "../ui-conversation"
     },
     {
@@ -33,7 +39,13 @@
       "path": "../ui-renderer"
     },
     {
+      "path": "../ui-sidebar-right"
+    },
+    {
       "path": "../ui-session"
+    },
+    {
+      "path": "../ui-workspace"
     },
     {
       "path": "../ui-slots"

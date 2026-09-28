@@ -1034,11 +1034,11 @@ export class DynamicCordisRunnerService extends TypertRemoteService {
         + 'Do not request the same activation again unless the user asks.'
     } else {
       const returnedStatus = pending.requiresApproval ? 'awaiting-approval' : 'starting'
-      text = `Cordis ${pending.mode} ${identity} failed after cordis_run returned ${returnedStatus}: `
+      text = `Cordis ${pending.mode} ${identity} failed after the runner returned ${returnedStatus}: `
         + `${settled.reason}\n${formatErrorDetails(settled)}\n`
         + `currentPackageId: ${plugin?.currentPackageId ?? 'none'}\n`
         + `nextPackageId: ${plugin?.nextPackageId ?? pending.packageId}\n`
-        + 'Inspect the failed Package, correct it on the same Plugin when needed, and retry the activation autonomously.'
+        + 'Report the failure to the user; the definition can be managed through the Cordis panel.'
     }
     agent.steer(createUserMessage({
       content: [{ type: 'text', text }],
@@ -1060,8 +1060,7 @@ export class DynamicCordisRunnerService extends TypertRemoteService {
           + `Slot "${failure.slot}" after activation.\n`
           + `${formatErrorDetails(failure)}\n`
           + `entryAbdicated: ${failure.abdicated}\n`
-          + 'Inspect the failed Package, fix the Client code by defining a new Package on the same Plugin, and '
-          + 'activate that Package autonomously with cordis_run mode:"update".',
+          + 'Report the Client render failure to the user; the definition can be stopped through the Cordis panel.',
       }],
       source: { kind: 'plugin', plugin: 'cordis-host-runner' },
     }))
@@ -1084,8 +1083,7 @@ export class DynamicCordisRunnerService extends TypertRemoteService {
         text: `Cordis Host handler ${plugin.pluginId}/${run.packageId} (${run.pluginRunId}) failed when the Client called `
           + `host.call(${JSON.stringify(method)}).\n`
           + `${formatErrorDetails(failure)}\n`
-          + 'The Plugin remains running. Inspect this Package, correct the Host code on the same Plugin, and activate '
-          + 'the new Package autonomously with cordis_run mode:"update". If the handler needs a Service, either declare '
+          + 'The Plugin remains running. Report the Host handler failure to the user. If the handler needs a Service, either declare '
           + 'that Service in the returned Plugin inject list or read it with ctx.get(name) and handle undefined.',
       }],
       source: { kind: 'plugin', plugin: 'cordis-host-runner' },
@@ -1109,8 +1107,7 @@ export class DynamicCordisRunnerService extends TypertRemoteService {
         type: 'text',
         text: `Cordis ${platform} guard rejected runtime code in ${plugin.pluginId}/${run.packageId} `
           + `(${run.pluginRunId}) after activation.\n${formatErrorDetails(failure)}\n`
-          + 'The Plugin remains running. Inspect this Package, define a corrected Package on the same Plugin, and '
-          + 'activate it autonomously with cordis_run mode:"update".',
+          + 'The Plugin remains running. Report the guard rejection to the user; it can be stopped through the Cordis panel.',
       }],
       source: { kind: 'plugin', plugin: 'cordis-host-runner' },
     }))

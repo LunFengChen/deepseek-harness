@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /** Model-list editing, endpoint interrogation, and hand-declared provider creation. */
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { within, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import Schema from '@deepseek-ai/schemastery'
 import { bindSnapshotSelector, RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
@@ -15,7 +15,7 @@ import { ModelsSettingsStore, deriveKeyRef, protocolChoices } from '../src/clien
 import { createModelsOperations } from '../src/client/operations.ts'
 import type { ModelsOperations } from '../src/client/operations.ts'
 import { en } from '../src/client/locales.ts'
-import { RetryPolicyConfig, settingsSchema } from './settings-schema.client.ts'
+import { settingsSchema } from './settings-schema.client.ts'
 
 afterEach(cleanup)
 
@@ -36,10 +36,8 @@ const PiAiConfig = Schema.object({
       name: Schema.string(),
       contextWindow: Schema.number(),
       maxTokens: Schema.number(),
-      input: Schema.array(Schema.string()),
     })),
     reasoning: Schema.union(['off', 'high']),
-    retryPolicy: RetryPolicyConfig,
   })),
 })
 
@@ -181,9 +179,9 @@ interface MutateCall {
   ops: { op: string; path: string[]; value?: unknown }[]
 }
 
-/** The first interrogation payload; fails the case when nothing was asked. */
-function firstProbe(discover: ReturnType<typeof vi.fn>): unknown {
-  const call = (discover.mock.calls as unknown as [string, Record<string, unknown>][])[0]
+/** The latest interrogation payload; fails the case when nothing was asked. */
+function lastProbe(discover: ReturnType<typeof vi.fn>): unknown {
+  const call = (discover.mock.calls as unknown as [string, Record<string, unknown>][]).at(-1)
   if (call === undefined) throw new Error('no interrogation was recorded')
   return { settingsNs: call[0], ...call[1] }
 }
@@ -258,6 +256,22 @@ describe('protocolChoices', () => {
 })
 
 describe('model list editing', () => {
+  it('changes image input without rewriting a neighboring model declaration', async () => {
+    const neighbor = { id: 'vision', input: ['image'], name: 'Kept vision model' }
+    const { mutate } = await mountSection({
+      providers: { openai: { models: [{ id: 'preview' }, neighbor] } },
+    })
+    openEditor('openai')
+    expandModel(1)
+    fireEvent.click(within(screen.getByRole('group', { name: `${en.modelInputTypes} 1` })).getByRole('checkbox', { name: en.modelInputImage }))
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
+    expect(firstMutate(mutate).ops).toEqual([{
+      op: 'set', path: ['providers', 'openai', 'models'],
+      value: [{ id: 'preview', input: ['text', 'image'] }, neighbor],
+    }])
+  })
+
   it('adds, edits, and removes rows without storing emptied optional fields', async () => {
     const { mutate } = await mountSection()
     openEditor('openai')
@@ -265,7 +279,8 @@ describe('model list editing', () => {
     fireEvent.click(screen.getByRole('button', { name: en.addModel }))
     fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
     expandModel(1)
-    fireEvent.change(screen.getByLabelText(`${en.modelContextWindow} 1`), { target: { value: '65536' } })
+    fireEvent.change(screen.getByLabelText(`${en.contextWindow} 1`), { target: { value: '65536' } })
+    fireEvent.click(within(screen.getByRole('group', { name: `${en.modelInputTypes} 1` })).getByRole('checkbox', { name: en.modelInputImage }))
     fireEvent.change(screen.getByLabelText(`${en.modelName} 1`), { target: { value: 'Acme' } })
     // Clearing an optional field must drop it rather than store an empty value.
     fireEvent.change(screen.getByLabelText(`${en.modelName} 1`), { target: { value: '' } })
@@ -275,7 +290,7 @@ describe('model list editing', () => {
     expect(firstMutate(mutate)).toMatchObject({
       ns: 'llm-pi-ai',
       expectedRevision: 3,
-      ops: [{ op: 'set', path: ['providers', 'openai', 'models'], value: [{ id: 'acme-large', contextWindow: 65_536 }] }],
+      ops: [{ op: 'set', path: ['providers', 'openai', 'models'], value: [{ id: 'acme-large', contextWindow: 65_536, input: ['text', 'image'] }] }],
     })
   })
 
@@ -302,14 +317,14 @@ describe('model list editing', () => {
     fireEvent.click(screen.getByRole('button', { name: en.addModel }))
     fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'm' } })
     expandModel(1)
-    fireEvent.change(screen.getByLabelText(`${en.modelContextWindow} 1`), { target: { value: '1M' } })
-    fireEvent.change(screen.getByLabelText(`${en.modelMaxTokens} 1`), { target: { value: '32K' } })
+    fireEvent.change(screen.getByLabelText(`${en.contextWindow} 1`), { target: { value: '1M' } })
+    fireEvent.change(screen.getByLabelText(`${en.maxTokens} 1`), { target: { value: '32K' } })
 
     // The field keeps the spelling rather than snapping to the expansion, and
     // a plain count is not rewritten into a suffix mid-word either.
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelContextWindow} 1`).value).toBe('1M')
-    fireEvent.change(screen.getByLabelText(`${en.modelMaxTokens} 1`), { target: { value: '1000' } })
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelMaxTokens} 1`).value).toBe('1000')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.contextWindow} 1`).value).toBe('1M')
+    fireEvent.change(screen.getByLabelText(`${en.maxTokens} 1`), { target: { value: '1000' } })
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.maxTokens} 1`).value).toBe('1000')
 
     fireEvent.click(screen.getByText(en.apply))
     await waitFor(() => { expect(mutate).toHaveBeenCalled() })
@@ -325,11 +340,11 @@ describe('model list editing', () => {
     fireEvent.click(screen.getByRole('button', { name: en.addModel }))
     fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'm' } })
     expandModel(1)
-    fireEvent.change(screen.getByLabelText(`${en.modelMaxTokens} 1`), { target: { value: 'abc' } })
+    fireEvent.change(screen.getByLabelText(`${en.maxTokens} 1`), { target: { value: 'abc' } })
 
     // Silently dropping it would store a route sized differently from what the
     // field shows, so the text stays put and the write is refused instead.
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelMaxTokens} 1`).value).toBe('abc')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.maxTokens} 1`).value).toBe('abc')
     expect(screen.getByText(`${en.model} 1: ${en.modelMaxTokensInvalid}`)).toBeTruthy()
     expect(buttonNamed(en.apply).disabled).toBe(true)
     expect(mutate).not.toHaveBeenCalled()
@@ -350,8 +365,8 @@ describe('model list editing', () => {
     // Opening a row reads the stored counts, which are plain integers; showing
     // them as such would make an already-configured route look unlike one the
     // user just typed, and re-applying would rewrite the field it read.
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelContextWindow} 1`).value).toBe('1M')
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelMaxTokens} 1`).value).toBe('256K')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.contextWindow} 1`).value).toBe('1M')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.maxTokens} 1`).value).toBe('256K')
   })
 
   it('edits one row of several and lets a cleared capacity leave the profile', async () => {
@@ -361,11 +376,11 @@ describe('model list editing', () => {
     openEditor('openai')
 
     expandModel(2)
-    fireEvent.change(screen.getByLabelText(`${en.modelMaxTokens} 2`), { target: { value: '2048' } })
+    fireEvent.change(screen.getByLabelText(`${en.maxTokens} 2`), { target: { value: '2048' } })
     fireEvent.change(screen.getByLabelText(`${en.modelName} 2`), { target: { value: 'Second' } })
-    fireEvent.change(screen.getByLabelText(`${en.modelContextWindow} 2`), { target: { value: '4096' } })
+    fireEvent.change(screen.getByLabelText(`${en.contextWindow} 2`), { target: { value: '4096' } })
     // Clearing it back to empty must drop the field, not store a zero.
-    fireEvent.change(screen.getByLabelText(`${en.modelContextWindow} 2`), { target: { value: '' } })
+    fireEvent.change(screen.getByLabelText(`${en.contextWindow} 2`), { target: { value: '' } })
     fireEvent.click(screen.getByText(en.apply))
 
     await waitFor(() => { expect(mutate).toHaveBeenCalled() })
@@ -405,8 +420,8 @@ describe('model list editing', () => {
     // 'second' now sits at position 1 and keeps its capacities open; 'third'
     // moved to position 2 and stays folded.
     expect(screen.getByLabelText<HTMLInputElement>(`${en.modelId} 1`).value).toBe('second')
-    expect(screen.queryByLabelText(`${en.modelContextWindow} 1`)).not.toBeNull()
-    expect(screen.queryByLabelText(`${en.modelContextWindow} 2`)).toBeNull()
+    expect(screen.queryByLabelText(`${en.contextWindow} 1`)).not.toBeNull()
+    expect(screen.queryByLabelText(`${en.contextWindow} 2`)).toBeNull()
   })
 
   it('leaves an earlier row expanded and forgets the removed row\u2019s own state', async () => {
@@ -424,13 +439,13 @@ describe('model list editing', () => {
     expandModel(1)
     fireEvent.click(screen.getByLabelText(`${en.removeModel} 2`))
     expect(screen.getByLabelText<HTMLInputElement>(`${en.modelId} 1`).value).toBe('first')
-    expect(screen.queryByLabelText(`${en.modelContextWindow} 1`)).not.toBeNull()
+    expect(screen.queryByLabelText(`${en.contextWindow} 1`)).not.toBeNull()
 
     // Removing the expanded row itself drops that state rather than handing it
     // to whichever row slides into the position.
     fireEvent.click(screen.getByLabelText(`${en.removeModel} 1`))
     expect(screen.getByLabelText<HTMLInputElement>(`${en.modelId} 1`).value).toBe('third')
-    expect(screen.queryByLabelText(`${en.modelContextWindow} 1`)).toBeNull()
+    expect(screen.queryByLabelText(`${en.contextWindow} 1`)).toBeNull()
   })
 
   it('separates emptying the list from restoring the adapter defaults', async () => {
@@ -447,200 +462,6 @@ describe('model list editing', () => {
     await waitFor(() => { expect(mutate).toHaveBeenCalled() })
     expect(firstMutate(mutate).ops)
       .toContainEqual({ op: 'unset', path: ['providers', 'openai', 'models'] })
-  })
-
-  it('writes custom reasoning efforts on a model row', async () => {
-    const { mutate } = await mountSection({
-      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'grok-4.6' }] } },
-    })
-    openEditor('openai')
-    expandModel(1)
-
-    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortCustom }))
-    expect(within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` })).getAllByRole('radio')).toHaveLength(2)
-    expect(screen.queryByText(`${en.model} 1: ${en.modelReasoningEmpty}`)).toBeNull()
-    expect(buttonNamed(en.apply).disabled).toBe(false)
-
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} off 1`))
-    expect(screen.getByText(en.modelReasoningEmpty)).toBeTruthy()
-    expect(buttonNamed(en.apply).disabled).toBe(true)
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} off 1`))
-
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} high 1`))
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} xhigh 1`))
-    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} xhigh 1`), { target: { value: 'xhigh' } })
-    expect(screen.queryByText(en.modelReasoningEmpty)).toBeNull()
-    expect(buttonNamed(en.apply).disabled).toBe(false)
-    fireEvent.click(screen.getByText(en.apply))
-
-    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
-      id: 'grok-4.6',
-      reasoningEfforts: { high: 'high', xhigh: 'xhigh' },
-    }])
-  })
-
-  it('refuses a blank wire value and keeps off empty', async () => {
-    const { mutate } = await mountSection({
-      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'grok-4.6' }] } },
-    })
-    openEditor('openai')
-    expandModel(1)
-
-    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortCustom }))
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} high 1`))
-    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} high 1`), { target: { value: '   ' } })
-    expect(screen.getByText(`${en.model} 1: ${en.modelReasoningWireRequired}`)).toBeTruthy()
-    expect(buttonNamed(en.apply).disabled).toBe(true)
-
-    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} high 1`), { target: { value: 'high' } })
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} off 1`))
-    fireEvent.change(screen.getByLabelText(`${en.reasoningEffortWire} off 1`), { target: { value: '   ' } })
-    fireEvent.click(screen.getByText(en.apply))
-
-    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
-      id: 'grok-4.6',
-      reasoningEfforts: { high: 'high', off: null },
-    }])
-  })
-
-  it('unchecks a level and reindexes customizing after a removal', async () => {
-    const { mutate } = await mountSection({
-      providers: {
-        openai: {
-          baseURL: 'https://proxy.example/v1',
-          models: [{ id: 'first' }, { id: 'second', reasoningEfforts: { high: 'high', low: 'low' } }],
-        },
-      },
-    })
-    openEditor('openai')
-    fireEvent.click(screen.getByLabelText(`${en.removeModel} 1`))
-    expandModel(1)
-
-    expect(screen.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} low 1`))
-    fireEvent.click(screen.getByText(en.apply))
-
-    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
-      id: 'second',
-      reasoningEfforts: { high: 'high' },
-    }])
-  })
-
-
-  it('drops customizing when the custom row itself is removed', async () => {
-    await mountSection({
-      providers: {
-        openai: {
-          baseURL: 'https://proxy.example/v1',
-          models: [
-            { id: 'custom', reasoningEfforts: { high: 'high' } },
-            { id: 'kept' },
-          ],
-        },
-      },
-    })
-    openEditor('openai')
-    fireEvent.click(screen.getByLabelText(`${en.removeModel} 1`))
-    expandModel(1)
-    const group = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` }))
-    expect(group.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortNone }).checked).toBe(true)
-    expect(screen.queryByLabelText(`${en.reasoningEffort} high 1`)).toBeNull()
-  })
-
-  it('keeps an earlier custom row and writes beside an untouched neighbour', async () => {
-    const { mutate } = await mountSection({
-      providers: {
-        openai: {
-          baseURL: 'https://proxy.example/v1',
-          models: [
-            { id: 'first', reasoningEfforts: { high: 'high' } },
-            { id: 'second' },
-          ],
-        },
-      },
-    })
-    openEditor('openai')
-    expandModel(1)
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} xhigh 1`))
-    fireEvent.click(screen.getByLabelText(`${en.removeModel} 2`))
-    const group = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` }))
-    expect(group.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
-    fireEvent.click(screen.getByText(en.apply))
-
-    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
-      id: 'first',
-      reasoningEfforts: { high: 'high', xhigh: 'xhigh' },
-    }])
-  })
-
-  it('fills a missing custom map when a wire value is typed', async () => {
-    const { mutate } = await mountSection({
-      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'grok-4.6' }] } },
-    })
-    openEditor('openai')
-    expandModel(1)
-    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortCustom }))
-    fireEvent.click(screen.getByLabelText(`${en.reasoningEffort} high 1`))
-    expect(buttonNamed(en.apply).disabled).toBe(false)
-    fireEvent.click(screen.getByText(en.apply))
-
-    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([{
-      id: 'grok-4.6',
-      reasoningEfforts: { high: 'high' },
-    }])
-  })
-
-  it('treats a stored empty map as custom and false as default none', async () => {
-    const { mutate } = await mountSection({
-      providers: {
-        openai: {
-          baseURL: 'https://proxy.example/v1',
-          models: [
-            { id: 'empty-custom', reasoningEfforts: {} },
-            { id: 'explicit-none', reasoningEfforts: false },
-          ],
-        },
-      },
-    })
-    openEditor('openai')
-    expandModel(1)
-    const first = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 1` }))
-    expect(first.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
-    expect(screen.getByText(`${en.model} 1: ${en.modelReasoningEmpty}`)).toBeTruthy()
-    expect(buttonNamed(en.apply).disabled).toBe(true)
-
-    fireEvent.click(screen.getByLabelText(`${en.modelAdvanced} 1`))
-    expandModel(2)
-    const second = within(screen.getByRole('radiogroup', { name: `${en.reasoningEffort} 2` }))
-    expect(second.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortNone }).checked).toBe(true)
-    expect(screen.queryByLabelText(`${en.reasoningEffort} high 2`)).toBeNull()
-    expect(mutate).not.toHaveBeenCalled()
-  })
-
-  it('drops reasoning efforts when the row returns to default none', async () => {
-    const { mutate } = await mountSection({
-      providers: {
-        openai: {
-          baseURL: 'https://proxy.example/v1',
-          models: [{ id: 'grok-4.6', reasoningEfforts: { high: 'high' } }],
-        },
-      },
-    })
-    openEditor('openai')
-    expandModel(1)
-
-    expect(screen.getByRole<HTMLInputElement>('radio', { name: en.reasoningEffortCustom }).checked).toBe(true)
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.reasoningEffort} high 1`).checked).toBe(true)
-    fireEvent.click(screen.getByRole('radio', { name: en.reasoningEffortNone }))
-    fireEvent.click(screen.getByText(en.apply))
-
-    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([{ id: 'grok-4.6' }])
   })
 
 })
@@ -684,6 +505,52 @@ describe('capacity spellings', () => {
 })
 
 describe('endpoint interrogation', () => {
+  it.each([[undefined], [[]], [['text']]])('renders catalog input inheritance for a stored declaration of %j', async (input) => {
+    const discover = vi.fn(() => Promise.resolve(ok([
+      { id: 'vision', inputModalities: ['text', 'image'] },
+    ])))
+    const model = { id: 'vision', ...input === undefined ? {} : { input } }
+    const { mutate } = await mountSection({ discover, providers: { openai: { models: [model] } } })
+    openEditor('openai')
+    expandModel(1)
+    const types = within(screen.getByRole('group', { name: `${en.modelInputTypes} 1` }))
+    await waitFor(() => { expect(types.getByRole<HTMLInputElement>('checkbox', { name: en.modelInputImage }).disabled).toBe(false) })
+    expect(types.getByRole<HTMLInputElement>('checkbox', { name: en.modelInputImage }).checked).toBe(input?.length !== 1)
+    expect(discover).toHaveBeenCalledExactlyOnceWith('llm-pi-ai', { provider: 'openai' })
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(screen.queryByRole('button', { name: en.apply })).toBeNull() })
+    expect(mutate).not.toHaveBeenCalled()
+  })
+
+  it('inherits a custom provider default input and persists an explicit model override', async () => {
+    const { discover, mutate } = await mountSection({
+      providers: {
+        'acme-gateway': {
+          api: 'openai-completions', baseURL: 'https://gateway.acme.example/v1',
+          defaultInput: ['text', 'image'], models: [{ id: 'custom' }],
+        },
+      },
+      declaredRoutes: ['acme-gateway'],
+    })
+    openEditor('acme-gateway')
+    expandModel(1)
+    const types = within(screen.getByRole('group', { name: `${en.modelInputTypes} 1` }))
+    expect(types.getByRole<HTMLInputElement>('checkbox', { name: en.modelInputText }).checked).toBe(true)
+    const image = types.getByRole<HTMLInputElement>('checkbox', { name: en.modelInputImage })
+    expect(image.checked).toBe(true)
+    expect(image.disabled).toBe(false)
+    expect(discover).not.toHaveBeenCalled()
+    expect(mutate).not.toHaveBeenCalled()
+
+    fireEvent.click(image)
+    fireEvent.click(screen.getByText(en.apply))
+    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
+    expect(firstMutate(mutate).ops).toEqual([{
+      op: 'set', path: ['providers', 'acme-gateway', 'models'],
+      value: [{ id: 'custom', input: ['text'] }],
+    }])
+  })
+
   it('asks the endpoint the form shows, with a key that is not yet stored', async () => {
     const discover = vi.fn(() => Promise.resolve(ok([{ id: 'acme-large', contextWindow: 65_536 }])))
     await mountSection({ discover })
@@ -694,7 +561,7 @@ describe('endpoint interrogation', () => {
     fireEvent.click(screen.getByText(en.fetchModels))
 
     await waitFor(() => { expect(discover).toHaveBeenCalled() })
-    expect(firstProbe(discover)).toEqual({
+    expect(lastProbe(discover)).toEqual({
       settingsNs: 'llm-pi-ai',
       // The route is named, so an adapter that already describes it answers
       // from its own registry rather than the endpoint.
@@ -715,7 +582,7 @@ describe('endpoint interrogation', () => {
     fireEvent.click(screen.getByText(en.fetchModels))
 
     await waitFor(() => { expect(discover).toHaveBeenCalled() })
-    expect(firstProbe(discover)).toEqual({
+    expect(lastProbe(discover)).toEqual({
       settingsNs: 'llm-pi-ai',
       provider: 'openai',
       baseURL: 'https://proxy.example/v1',
@@ -725,8 +592,8 @@ describe('endpoint interrogation', () => {
 
   it('adopts only the picked candidates, keeping a row the user already tuned', async () => {
     const discover = vi.fn(() => Promise.resolve(ok([
-      { id: 'kept', contextWindow: 999 },
-      { id: 'fresh', contextWindow: 4096, maxTokens: 2048, name: 'Fresh' },
+      { id: 'kept', contextWindow: 999, inputModalities: ['text', 'image'] },
+      { id: 'fresh', contextWindow: 4096, maxTokens: 2048, name: 'Fresh', inputModalities: ['text', 'image'] },
     ])))
     const { mutate } = await mountSection({
       discover,
@@ -744,73 +611,15 @@ describe('endpoint interrogation', () => {
     expect(screen.getByLabelText<HTMLInputElement>(`${en.modelId} 2`).value).toBe('fresh')
     expect(screen.getByLabelText<HTMLInputElement>(`${en.modelName} 2`).value).toBe('Fresh')
     expandModel(2)
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelContextWindow} 2`).value).toBe('4096')
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelMaxTokens} 2`).value).toBe('2048')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.contextWindow} 2`).value).toBe('4096')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.maxTokens} 2`).value).toBe('2048')
 
+    expect(within(screen.getByRole('group', { name: `${en.modelInputTypes} 2` })).getByRole<HTMLInputElement>('checkbox', { name: en.modelInputImage }).checked).toBe(true)
     fireEvent.click(screen.getByText(en.apply))
     await waitFor(() => { expect(mutate).toHaveBeenCalled() })
     expect(firstMutate(mutate).ops[0]?.value).toEqual([
       { id: 'kept', contextWindow: 111 },
-      { id: 'fresh', contextWindow: 4096, maxTokens: 2048, name: 'Fresh' },
-    ])
-  })
-
-  it('writes input [text, image] from the Supports images switch', async () => {
-    const { mutate } = await mountSection({
-      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [{ id: 'kept' }] } },
-    })
-    openEditor('openai')
-    expandModel(1)
-    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
-    expect(imageSwitch.getAttribute('aria-checked')).toBe('false')
-    fireEvent.click(imageSwitch)
-    fireEvent.click(screen.getByText(en.apply))
-    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([
-      { id: 'kept', input: ['text', 'image'] },
-    ])
-  })
-
-  it('drops input when the Supports images switch is turned off', async () => {
-    const { mutate } = await mountSection({
-      providers: {
-        openai: {
-          baseURL: 'https://proxy.example/v1',
-          models: [{ id: 'kept', input: ['text', 'image'] }],
-        },
-      },
-    })
-    openEditor('openai')
-    expandModel(1)
-    const imageSwitch = screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` })
-    expect(imageSwitch.getAttribute('aria-checked')).toBe('true')
-    fireEvent.click(imageSwitch)
-    fireEvent.click(screen.getByText(en.apply))
-    await waitFor(() => { expect(mutate).toHaveBeenCalledTimes(1) })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([
-      { id: 'kept' },
-    ])
-  })
-
-  it('adopts a candidate\'s disclosed image input onto the new row', async () => {
-    const discover = vi.fn(() => Promise.resolve(ok([
-      { id: 'vision-preview', name: 'Vision', inputModalities: ['text', 'image'] as const },
-    ])))
-    const { mutate } = await mountSection({
-      discover,
-      providers: { openai: { baseURL: 'https://proxy.example/v1', models: [] } },
-    })
-    openEditor('openai')
-    fireEvent.click(screen.getByText(en.fetchModels))
-    await screen.findByText(en.fetchTitle)
-    fireEvent.click(screen.getByText(en.fetchAdopt))
-    expandModel(1)
-    expect(screen.getByRole('switch', { name: `${en.modelSupportsImages} 1` }).getAttribute('aria-checked'))
-      .toBe('true')
-    fireEvent.click(screen.getByText(en.apply))
-    await waitFor(() => { expect(mutate).toHaveBeenCalled() })
-    expect(firstMutate(mutate).ops[0]?.value).toEqual([
-      { id: 'vision-preview', name: 'Vision', input: ['text', 'image'] },
+      { id: 'fresh', contextWindow: 4096, maxTokens: 2048, name: 'Fresh', input: ['text', 'image'] },
     ])
   })
 
@@ -846,7 +655,7 @@ describe('endpoint interrogation', () => {
     fireEvent.click(screen.getByText(en.fetchModels))
 
     await waitFor(() => { expect(discover).toHaveBeenCalled() })
-    expect(firstProbe(discover)).toEqual({ settingsNs: 'llm-pi-ai', provider: 'openai' })
+    expect(lastProbe(discover)).toEqual({ settingsNs: 'llm-pi-ai', provider: 'openai' })
   })
 
   it('keeps the create card asking only once it has an endpoint', () => {
@@ -867,7 +676,7 @@ describe('endpoint interrogation', () => {
     fireEvent.click(screen.getByText(en.fetchModels))
 
     // A provider being declared names no route, so only the endpoint travels.
-    expect(firstProbe(scripted.discover)).toEqual({
+    expect(lastProbe(scripted.discover)).toEqual({
       settingsNs: 'llm-pi-ai',
       baseURL: 'https://acme.test/v1',
       api: 'openai-completions',
@@ -881,11 +690,11 @@ describe('endpoint interrogation', () => {
     openEditor('openai')
 
     // The row shows what identifies a model; capacities are the exception.
-    expect(screen.queryByLabelText(`${en.modelContextWindow} 1`)).toBeNull()
+    expect(screen.queryByLabelText(`${en.contextWindow} 1`)).toBeNull()
     expandModel(1)
-    expect(screen.getByLabelText(`${en.modelContextWindow} 1`)).toBeTruthy()
+    expect(screen.getByLabelText(`${en.contextWindow} 1`)).toBeTruthy()
     expandModel(1)
-    expect(screen.queryByLabelText(`${en.modelContextWindow} 1`)).toBeNull()
+    expect(screen.queryByLabelText(`${en.contextWindow} 1`)).toBeNull()
   })
 
   it('closes the picker without adopting anything on cancel', async () => {
@@ -1046,7 +855,7 @@ describe('hand-declared providers', () => {
     fireEvent.click(screen.getByRole('button', { name: en.addModel }))
     fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
     expandModel(1)
-    fireEvent.change(screen.getByLabelText(`${en.modelContextWindow} 1`), { target: { value: '65536' } })
+    fireEvent.change(screen.getByLabelText(`${en.contextWindow} 1`), { target: { value: '65536' } })
     fireEvent.click(screen.getByText(en.create))
 
     await waitFor(() => { expect(onClose).toHaveBeenCalledWith(true) })
@@ -1068,40 +877,6 @@ describe('hand-declared providers', () => {
       expectedRevision: 7,
     })
     expect(set).toHaveBeenCalledWith('ACME_GATEWAY_API_KEY', 'gw-key')
-  })
-
-  it('includes a custom retry policy only when Custom is selected', async () => {
-    const { mutate, onClose } = mountCard()
-
-    fireEvent.change(screen.getByLabelText(en.customRoute), { target: { value: 'acme-gateway' } })
-    fireEvent.change(screen.getByLabelText(en.baseUrl), { target: { value: 'https://gateway.acme.example/v1' } })
-    fireEvent.click(screen.getByRole('button', { name: en.addModel }))
-    fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
-    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
-    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '2' } })
-    fireEvent.change(screen.getByLabelText(en.retryInitialDelay), { target: { value: '800' } })
-    fireEvent.click(screen.getByText(en.create))
-
-    await waitFor(() => { expect(onClose).toHaveBeenCalledWith(true) })
-    expect(firstMutate(mutate).ops[0]?.value).toMatchObject({
-      retryPolicy: {
-        mode: 'normal',
-        maxRetries: 2,
-        backoff: { initialDelayMs: 800, maxDelayMs: 10_000 },
-      },
-    })
-  })
-
-  it('disables create when a custom retry count is blank', () => {
-    mountCard()
-    fireEvent.change(screen.getByLabelText(en.customRoute), { target: { value: 'acme-gateway' } })
-    fireEvent.change(screen.getByLabelText(en.baseUrl), { target: { value: 'https://gateway.acme.example/v1' } })
-    fireEvent.click(screen.getByRole('button', { name: en.addModel }))
-    fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
-    fireEvent.click(screen.getByRole('radio', { name: en.retryPolicyCustom }))
-    fireEvent.change(screen.getByLabelText(en.retryMaxRetries), { target: { value: '' } })
-    expect((screen.getByRole('button', { name: en.create }) as HTMLButtonElement).disabled).toBe(true)
-    expect(screen.getByText(en.retryCountInvalid)).toBeTruthy()
   })
 
   it('scopes each card to fields a provider can actually own', async () => {
@@ -1402,7 +1177,7 @@ describe('hand-declared providers', () => {
     expect(buttonNamed(en.fetchModels).disabled).toBe(false)
     expect(buttonNamed(en.create).disabled).toBe(false)
     fireEvent.click(screen.getByText(en.fetchModels))
-    expect(firstProbe(discover)).toMatchObject({ baseURL })
+    expect(lastProbe(discover)).toMatchObject({ baseURL })
   })
 
   it('normalizes surrounding whitespace before interrogating and storing a base URL', async () => {
@@ -1416,7 +1191,7 @@ describe('hand-declared providers', () => {
     expect(screen.queryByText(en.customBaseUrlInvalid)).toBeNull()
     fireEvent.click(screen.getByText(en.fetchModels))
     await waitFor(() => { expect(discover).toHaveBeenCalledTimes(1) })
-    expect(firstProbe(discover)).toMatchObject({ baseURL: 'https://gateway.acme.example/v1' })
+    expect(lastProbe(discover)).toMatchObject({ baseURL: 'https://gateway.acme.example/v1' })
 
     fireEvent.click(await screen.findByText(en.fetchAdopt))
     await waitFor(() => { expect(buttonNamed(en.create).disabled).toBe(false) })
@@ -1468,7 +1243,7 @@ describe('hand-declared providers', () => {
     fireEvent.click(screen.getByRole('button', { name: en.addModel }))
     fireEvent.change(screen.getByLabelText(`${en.modelId} 1`), { target: { value: 'acme-large' } })
     expandModel(1)
-    fireEvent.change(screen.getByLabelText(`${en.modelContextWindow} 1`), { target: { value: '64 KiB' } })
+    fireEvent.change(screen.getByLabelText(`${en.contextWindow} 1`), { target: { value: '64 KiB' } })
 
     expect(screen.getByText(`${en.model} 1: ${en.modelContextInvalid}`)).toBeTruthy()
     expect(buttonNamed(en.create).disabled).toBe(true)
@@ -1483,7 +1258,7 @@ describe('hand-declared providers', () => {
       fireEvent.change(screen.getByLabelText(`${en.modelId} ${String(at)}`), { target: { value: id } })
       expandModel(at)
       // Deliberately mid-word: the buffer exists so text like this survives.
-      fireEvent.change(screen.getByLabelText(`${en.modelContextWindow} ${String(at)}`),
+      fireEvent.change(screen.getByLabelText(`${en.contextWindow} ${String(at)}`),
         { target: { value: `${String(at)}.` } })
     }
 
@@ -1491,9 +1266,9 @@ describe('hand-declared providers', () => {
     // one after moves down carrying its own, and the removed row's text goes.
     fireEvent.click(screen.getByLabelText(`${en.removeModel} 2`))
     expect(screen.getByLabelText<HTMLInputElement>(`${en.modelId} 1`).value).toBe('first')
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelContextWindow} 1`).value).toBe('1.')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.contextWindow} 1`).value).toBe('1.')
     expect(screen.getByLabelText<HTMLInputElement>(`${en.modelId} 2`).value).toBe('third')
-    expect(screen.getByLabelText<HTMLInputElement>(`${en.modelContextWindow} 2`).value).toBe('3.')
+    expect(screen.getByLabelText<HTMLInputElement>(`${en.contextWindow} 2`).value).toBe('3.')
   })
 
   it('refuses two models sharing one id', () => {
@@ -1807,7 +1582,7 @@ describe('API key field', () => {
     // a round trip to be told what the field already says.
     expect(buttonNamed(en.fetchModels).disabled).toBe(true)
     expect(buttonNamed(en.fetchModels).title).toBe(en.keyIllegalCharacters)
-    expect(discover).not.toHaveBeenCalled()
+    expect(discover).toHaveBeenCalledExactlyOnceWith('llm-pi-ai', { provider: 'openai' })
   })
 
   it('carries the trimmed key into an interrogation, not the padded draft', async () => {
@@ -1818,7 +1593,7 @@ describe('API key field', () => {
     fireEvent.click(screen.getByRole('button', { name: en.fetchModels }))
 
     await waitFor(() => { expect(discover).toHaveBeenCalled() })
-    expect(firstProbe(discover)).toMatchObject({ apiKey: 'sk-abc' })
+    expect(lastProbe(discover)).toMatchObject({ apiKey: 'sk-abc' })
   })
 
   it('reloads the section after creating a hand-declared provider', async () => {

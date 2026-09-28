@@ -49,7 +49,7 @@ A `Message` is one identified, immutable role/source/content value. Model-produc
 
 ```ts type-equiv
 /** Provider/model identity and adapter-private replay data for an assistant message. */
-interface AssistantProvenance {
+interface AssistantProviderMetadata {
   /** Provider route that produced the message. */
   provider: string
   /** Provider model id that produced the message. */
@@ -97,7 +97,7 @@ Producer identity and presentation form are independent. `kind` answers *who pro
 ```ts type-equiv
 /**
  * The kind of information in producer-supplied context, declared by the
- * producer beside its provenance.
+ * producer in the same `MessageSource`.
  *
  * `MessageSource.kind` answers *who produced this*; `form` answers *what kind
  * of thing it is*, and the two axes are deliberately independent — several
@@ -244,12 +244,19 @@ interface LlmFailure {
   readonly providerRetryAfterMs?: number
   /** Opaque provider-issued request identifier for diagnostics. */
   readonly requestId?: ProviderRequestId
+  /**
+   * With code `IMAGE_OFFLOAD_REQUIRED`: how many more of the oldest retained
+   * image occurrences the route needs offloaded before the same request fits
+   * its exact byte accounting. `dsh-compaction-image-offload` records the
+   * selected occurrences in an `image/offload` event and retries the step.
+   */
+  readonly offloadImages?: number
 }
 ```
 
 ## Request-image pricing
 
-An adapter whose provider charges visual tokens for request images declares per-route pricing by overriding `LlmAdapter.imageRequestPricing`, and `ctx.llm.imageRequestPricing(provider, model)` resolves it synchronously for consumers. The token meter resolves the routed model's pricing on every measurement so compaction pressure, retention, and range selection price image history as the routed request actually sends it; the DeepSeek adapter reproduces its own request projection (per-model pixel budget, oldest-first offload) and prices retained images with the published vision accounting, while provider usage remains the authoritative anchor for completed requests.
+An adapter whose provider charges visual tokens for request images declares per-route pricing by overriding `LlmAdapter.imageRequestPricing`, and `ctx.llm.imageRequestPricing(provider, model)` resolves it synchronously for consumers. The token meter resolves the routed model's pricing on every measurement so compaction pressure, retention, and range selection price image history as the routed request actually sends it; the DeepSeek adapter prices each retained occurrence at its per-model request target with the published vision accounting and each occurrence selected by a logged image-offload decision as its placeholder text, while provider usage remains the authoritative anchor for completed requests.
 
 ```ts type-equiv
 /**
@@ -278,10 +285,11 @@ interface LlmImageRequestPrice {
 interface LlmImageRequestPricing {
   /**
    * Price every image occurrence of one request projection.
-   * @param images - durable image references in request order, one entry per occurrence.
+   * @param images - surface image blocks in request order, one entry per occurrence; an `offloaded` block
+   *   is priced as its placeholder text.
    * @returns one price per occurrence, aligned by index with `images`.
    */
-  priceImages(images: readonly ImageAttachmentRef[]): readonly LlmImageRequestPrice[]
+  priceImages(images: readonly ImageBlock[]): readonly LlmImageRequestPrice[]
 }
 ```
 
@@ -301,7 +309,7 @@ Every adapter MUST obey these, and every consumer may rely on them:
 
 ## `ResolvedRetryPolicy`
 
-Retry configuration resolves before route registration into an immutable discriminated union. Normal mode carries `mode: 'normal'`, finite `maxRetries`, `retryableCodes`, and required `initialDelayMs`, `maxDelayMs`, and `jitterRatio`; always mode carries `mode: 'always'` and the same required backoff fields without a finite maximum. Omitting a provider policy uses the normal default of twenty retries from 500 ms to 10 s. Layered settings may retain normal-only `maxRetries` or `retryableCodes` after switching to always mode; the resolver ignores those inactive fields and captures the pure always policy. `LlmRuntime.providerRetryPolicy(provider)` returns the registered value, and `llmRetryPolicyOf(stream)` returns the value captured from the serving registration after the call selects it, so later route disposal or replacement cannot change an in-flight failure's recovery policy. The [generated config catalog](../config-catalog.md) lists the optional input fields.
+Retry configuration resolves before route registration into an immutable discriminated union. Normal mode carries `mode: 'normal'`, finite `maxRetries`, `retryableCodes`, and required `initialDelayMs`, `maxDelayMs`, and `jitterRatio`; always mode carries `mode: 'always'` and the same required backoff fields without a finite maximum. Omitting a provider policy uses the normal default of five retries. Layered settings may retain normal-only `maxRetries` or `retryableCodes` after switching to always mode; the resolver ignores those inactive fields and captures the pure always policy. `LlmRuntime.providerRetryPolicy(provider)` returns the registered value, and `llmRetryPolicyOf(stream)` returns the value captured from the serving registration after the call selects it, so later route disposal or replacement cannot change an in-flight failure's recovery policy. The [generated config catalog](../config-catalog.md) lists the optional input fields.
 
 ## `AppIdentity` — app attribution
 
@@ -696,10 +704,7 @@ interface LlmDiscoveredModel {
   contextWindow?: number
   /** Maximum output tokens, when disclosed. */
   maxTokens?: number
-  /**
-   * Accepted request modalities when the listing or an installed catalog
-   * discloses them. Absent means unknown, not text-only.
-   */
+  /** Accepted input types when disclosed by the catalog or endpoint; absent means unknown. */
   inputModalities?: readonly ModelModality[]
 }
 ```

@@ -10,7 +10,7 @@ import type { Agent } from '@x1a0f3n9/dsh-agent'
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
 import LocalJobRegistry from '@x1a0f3n9/dsh-jobs-local'
-import * as ToolTasks from '@x1a0f3n9/dsh-tool-jobs'
+import * as ToolJobs from '@x1a0f3n9/dsh-tool-jobs'
 import { LocalBashExecutor } from '@x1a0f3n9/dsh-bash-local'
 import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
 import * as ToolBash from '@x1a0f3n9/dsh-tool-bash'
@@ -31,7 +31,7 @@ async function harness(adapter: MockAdapter, sessionRoot?: string, dshHome?: str
   }
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(LocalJobRegistry)
-  await ctx.plugin(ToolTasks)
+  await ctx.plugin(ToolJobs)
   await ctx.plugin(LocalSubprocessRuntime)
   await ctx.plugin(BashEnvPlugin, dshHome === undefined ? {} : { dshHome })
   await ctx.plugin(LocalBashExecutor, { timeoutMs: 10_000 })

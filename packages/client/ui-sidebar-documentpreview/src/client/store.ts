@@ -35,6 +35,10 @@ export interface TextTabState {
   rendererId?: string
   /** Current display-loading mode; absent before the first read. */
   mode?: DocumentLoadMode
+  /** Implementation owning source loading; absent for ordinary file reads. */
+  contentRendererId?: string
+  /** Current content revision, incremented whenever loaded content is discarded. */
+  loadRevision: number
   /** Full byte result used by complete-file renderers. */
   complete?: DocumentFileBytes
   /** The file version the loaded pages belong to; absent before the first page. */
@@ -68,6 +72,7 @@ export interface TextState {
  */
 export function fresh(): TextTabState {
   return {
+    loadRevision: 0,
     version: undefined,
     observedVersion: undefined,
     pages: {},
@@ -88,7 +93,8 @@ function bucket(state: TextState, tabId: TabId): TextTabState {
 /** The preview store's write set; every action names the tab it writes. */
 type TextActions = {
   selected: (draft: TextState, tabId: TabId, rendererId: string | undefined) => void
-  loading: (draft: TextState, tabId: TabId, mode?: DocumentLoadMode, observedVersion?: string) => void
+  loading: (draft: TextState, tabId: TabId, mode?: DocumentLoadMode, observedVersion?: string, contentRendererId?: string) => void
+  rendered: (draft: TextState, tabId: TabId, revision: number, version: string) => void
   complete: (draft: TextState, tabId: TabId, file: DocumentFileBytes) => void
   page: (draft: TextState, tabId: TabId, page: WorkspaceFileText) => void
   failed: (draft: TextState, tabId: TabId, failure: RemoteFailure) => void
@@ -121,13 +127,26 @@ export function createTextStore(): EngineStoreHandle<TextState, TextActions> {
        * @param tabId - the tab being drawn.
        * @param mode - selected renderer's loading mode.
        * @param observedVersion - metadata version at read start; later pages retain the initial observation.
+       * @param contentRendererId - implementation owning source loading.
        */
-      loading: (d, tabId: TabId, mode?: DocumentLoadMode, observedVersion?: string) => {
+      loading: (d, tabId: TabId, mode?: DocumentLoadMode, observedVersion?: string, contentRendererId?: string) => {
         const state = bucket(d, tabId)
         if (state.version === undefined && !state.loading) state.observedVersion = observedVersion
+        if (contentRendererId === undefined) delete state.contentRendererId
+        else state.contentRendererId = contentRendererId
         state.loading = true
         state.failure = undefined
         if (mode !== undefined) state.mode = mode
+      },
+      /**
+       * @param d - draft. @param tabId - owning tab.
+       * @param revision - active content revision. @param version - displayed source version.
+       */
+      rendered: (d, tabId: TabId, revision: number, version: string) => {
+        const state = d.byTab[tabId]
+        if (state?.mode !== 'renderer' || state.loadRevision !== revision) return
+        state.version = version
+        state.loading = false
       },
       /** @param d - draft. @param tabId - owning tab. @param file - complete byte result for this view. */
       complete: (d, tabId: TabId, file: DocumentFileBytes) => {
@@ -172,6 +191,7 @@ export function createTextStore(): EngineStoreHandle<TextState, TextActions> {
        */
       reset: (d, tabId: TabId) => {
         const state = bucket(d, tabId)
+        state.loadRevision++
         state.pages = {}
         delete state.complete
         state.eof = false

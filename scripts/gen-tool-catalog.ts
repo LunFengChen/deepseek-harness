@@ -58,14 +58,21 @@ import Lsp from '@x1a0f3n9/dsh-lsp'
 import * as ToolLsp from '@x1a0f3n9/dsh-tool-lsp'
 import * as ToolSkill from '@x1a0f3n9/dsh-tool-skill'
 import * as ToolSessionQuery from '@x1a0f3n9/dsh-tool-session-query'
-import * as ToolTasks from '@x1a0f3n9/dsh-tool-jobs'
+import * as ToolJobs from '@x1a0f3n9/dsh-tool-jobs'
+import BrowserUseRegistry from '@x1a0f3n9/dsh-browser-use'
+import * as StagehandBrowserTools from '@x1a0f3n9/dsh-experimental-browser-use-stagehand-native'
 import type TeamService from '@x1a0f3n9/dsh-experimental-agent-team'
 import * as ToolTeam from '@x1a0f3n9/dsh-experimental-tool-agent-team'
 import * as ToolTodo from '@x1a0f3n9/dsh-tool-todo'
+import type PluginManager from '@x1a0f3n9/dsh-plugin-manager'
+import * as PluginManagerTools from '@x1a0f3n9/dsh-plugin-manager/tools'
+import SandboxPolicy from '@x1a0f3n9/dsh-sandbox-policy'
+import McpResources from '@x1a0f3n9/dsh-mcp-resources'
 import * as ToolSubagent from '@x1a0f3n9/dsh-tool-subagent'
 import { registerListSubagentModels } from '../packages/subagent/tool-subagent/src/list-models.ts'
 import * as ToolWeb from '@x1a0f3n9/dsh-tool-web'
-import VmWorkflowEngine from '@x1a0f3n9/dsh-workflow-worker-thread'
+import WorkflowEngine from '@x1a0f3n9/dsh-workflow'
+import type { WorkflowRun, WorkflowStartRequest } from '@x1a0f3n9/dsh-workflow'
 import * as ToolRalph from '@x1a0f3n9/dsh-tool-ralph'
 import * as ToolWorkflow from '@x1a0f3n9/dsh-tool-workflow'
 import { githubSlug } from './verify-md-links.ts'
@@ -96,6 +103,13 @@ class CatalogAttachmentStore extends AttachmentStore {
 
 const root = resolve(import.meta.dirname, '..')
 const OUT = 'docs/tool-catalog.md'
+
+/** Workflow tools expose their schemas without executing a program. */
+class CatalogWorkflowEngine extends WorkflowEngine {
+  start(_request: WorkflowStartRequest): WorkflowRun {
+    throw new Error('gen-tool-catalog: workflow execution is unavailable during schema harvest')
+  }
+}
 
 /**
  * Register the descriptor needed to mount schema-producing consumers. Declares
@@ -189,6 +203,46 @@ export interface ToolPackage {
  */
 const TOOL_PACKAGES: ToolPackage[] = [
   {
+    pkg: '@x1a0f3n9/dsh-plugin-manager',
+    dir: 'plugin-manager',
+    source: 'packages/boot/plugin-manager/src/tools.ts',
+    requires: ['ctx.tools', 'ctx.pluginManager', 'ctx.sandboxPolicy'],
+    writes: ['tool/call', 'tool/result', 'user/message'],
+    async mount(ctx) {
+      // Schema harvest never executes a management method or opens a profile.
+      ctx.provide('pluginManager', {} as PluginManager)
+      await ctx.plugin(SandboxPolicy)
+      await ctx.plugin(PluginManagerTools)
+    },
+  },
+  {
+    pkg: '@x1a0f3n9/dsh-mcp-resources',
+    dir: 'mcp-resources',
+    source: 'packages/mcp/mcp-resources/src/tools.ts',
+    requires: ['ctx.tools', 'ctx.mcpResources'],
+    writes: ['tool/call', 'tool/result'],
+    async mount(ctx) {
+      await ctx.plugin(McpResources)
+      ctx.mcpResources.register('catalog', {
+        request: () => Promise.reject(new Error('gen-tool-catalog: MCP requests are unreachable during schema harvest')),
+      })
+    },
+  },
+  {
+    pkg: '@x1a0f3n9/dsh-experimental-browser-use-stagehand-native',
+    dir: 'browser-use-stagehand-native',
+    source: 'packages/experimental/browser-use-stagehand-native/src/index.ts',
+    requires: ['ctx.browserUse', 'ctx.agents', 'ctx.tools', 'ctx.systemPrompt'],
+    writes: ['tool/call', 'tool/result'],
+    async mount(ctx) {
+      await ctx.plugin(BrowserUseRegistry)
+      await ctx.plugin(AgentRegistry)
+      await ctx.plugin(StagehandBrowserTools, {
+        mode: 'launch', model: { modelName: 'openai/gpt-5.4-mini', apiKey: 'catalog-placeholder' },
+      })
+    },
+  },
+  {
     pkg: '@x1a0f3n9/dsh-tool-ask-user',
     dir: 'tool-ask-user',
     source: 'packages/interaction/tool-ask-user/src/index.ts',
@@ -205,10 +259,10 @@ const TOOL_PACKAGES: ToolPackage[] = [
     pkg: '@x1a0f3n9/dsh-tools',
     dir: 'tools',
     source: 'packages/core/tools/src/ptc.ts',
-    requires: ['ctx.tools', 'ctx.codeRuntime (execution time)', 'ctx.systemPrompt'],
+    requires: ['ctx.tools', 'ctx.ptcRuntime (execution time)', 'ctx.systemPrompt'],
     writes: ['tool/call', 'one tool/ptc-dispatch-start + tool/ptc-dispatch pair per bridged sub-call', 'tool/result'],
     // The registry's OWN tool: run_code exists only under a non-native mode
-    // (the registry registers it in its constructor; the code runtime is read
+    // (the registry registers it in its constructor; the PTC runtime is read
     // at assembly/execution time, so the schema harvest needs none mounted).
     toolsConfig: { mode: 'ptc' },
     async mount() {},
@@ -245,7 +299,7 @@ const TOOL_PACKAGES: ToolPackage[] = [
   {
     pkg: '@x1a0f3n9/dsh-tool-present',
     dir: 'tool-present',
-    source: 'packages/fs/tool-present/src/index.ts',
+    source: 'packages/deliverables/tool-present/src/index.ts',
     requires: ['ctx.tools', 'ctx.fs', 'ctx.sessionProjections'],
     writes: ['tool/call', 'deliverables/presented after a successful final result', 'tool/result'],
     async mount(ctx) {
@@ -276,14 +330,14 @@ const TOOL_PACKAGES: ToolPackage[] = [
     pkg: '@x1a0f3n9/dsh-tool-cordis',
     dir: 'tool-cordis',
     source: 'packages/extensions/tool-cordis/src/index.ts',
-    requires: ['ctx.tools', 'ctx.dynamicCordisRunner'],
-    writes: ['tool/call', 'tool/result', 'process-local dynamic package lifecycle'],
+    requires: ['ctx.tools', 'ctx.cordisInspect'],
+    writes: ['tool/call', 'tool/result'],
     async mount(ctx) {
       await ctx.plugin(CordisHostRunner)
       await ctx.plugin(ToolCordis)
     },
     note:
-      'Not in any shipped tree (a deliberate opt-in — dynamic package code reaches the real runtime, see .agents/notes/implemented/feature/2026-07-08-self-referential-cordis-toolset.md). The toolset injects `ctx.dynamicCordisRunner` from `@x1a0f3n9/dsh-cordis-host-runner`, which owns the definition registry and the vm sandbox; a composition missing it never activates the tools. A running package may register ADDITIONAL model-visible tools until it is stopped, undefined, or DSH restarts; a full changed request header logs those tool-set changes.',
+      'Creator mode provides two read-only runtime inspection tools. The Cordis host runner supplies the inspection registry; Client queries require a connected page. Author persistent changes as bundles and install them with plugin_manager.',
   },
   {
     pkg: '@x1a0f3n9/dsh-tool-bash-persistent',
@@ -430,7 +484,7 @@ const TOOL_PACKAGES: ToolPackage[] = [
     async mount(ctx) {
       await ctx.plugin(SubagentRuntime)
       registerCatalogSubagentProvider(ctx, 'mock')
-      await ctx.plugin(VmWorkflowEngine, { provider: 'mock' })
+      await ctx.plugin(CatalogWorkflowEngine)
       await ctx.plugin(ToolRalph, { subagentProvider: 'mock' })
     },
     note:
@@ -515,7 +569,7 @@ const TOOL_PACKAGES: ToolPackage[] = [
     writes: ['tool/call', 'tool/result', 'user/message via agent.inject() for background completion notices'],
     async mount(ctx) {
       await ctx.plugin(LocalJobRegistry)
-      await ctx.plugin(ToolTasks)
+      await ctx.plugin(ToolJobs)
     },
     note:
       'The kind-agnostic background-job controller: background bash commands, PTY sends, and subagents are read, listed, and killed through the same three tools. Loading the plugin attaches the controller that arms producers\' `ctx.jobs.start()`.',
@@ -541,7 +595,7 @@ const TOOL_PACKAGES: ToolPackage[] = [
         tryMembership: (candidate: Agent) => candidate === agent ? membership : undefined,
         membership: () => membership,
       } as unknown as TeamService)
-      await ctx.plugin(Object.assign((inner: Context) => {
+      await ctx.plugin(Object.assign(async (inner: Context) => {
         agent = {
           id: session.id,
           session,
@@ -549,7 +603,7 @@ const TOOL_PACKAGES: ToolPackage[] = [
           status: 'idle',
         } as unknown as Agent
         Object.assign(agent, { ctx: createScope(inner, agent).ctx })
-        inner.agents.register(agent)
+        await inner.agents.register(agent)
       }, { inject: ['tools', 'systemPrompt', 'agents', 'agentTeams'] }))
       await ctx.plugin(ToolTeam)
       catalogChildScopes.set(ctx, agent)
@@ -577,12 +631,9 @@ const TOOL_PACKAGES: ToolPackage[] = [
     requires: ['ctx.tools', 'ctx.workflowEngine', 'ctx.systemPrompt', 'a calling Agent (exec.agent parents the script children)'],
     writes: ['tool/call', 'tool/result'],
     async mount(ctx) {
-      // The tool injects `workflows`; boot the vm engine over a scripted
-      // subagent provider to satisfy it. The schema does not depend on which
-      // provider backs the engine.
       await ctx.plugin(SubagentRuntime)
       registerCatalogSubagentProvider(ctx, 'mock')
-      await ctx.plugin(VmWorkflowEngine, { provider: 'mock' })
+      await ctx.plugin(CatalogWorkflowEngine)
       await ctx.plugin(ToolWorkflow)
     },
   },

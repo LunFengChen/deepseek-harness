@@ -8,7 +8,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-React and Slot adapter for Session Controller state. It contributes Session list and pending-interaction hooks at root scope, materializes per-Session hooks and props, and owns the standard `SessionProvider` rendering behavior without taking ownership of Session transport or lifecycle state. Use it when a browser feature needs Session state through standard React props and hooks.
+Use this package to expose Session catalog, retain information, and unified UI status through standard Slot hooks. It materializes per-`SessionBinding` hooks and props, while `SessionProvider` can inherit an outer binding or bind an explicit `SessionReference`. It owns process-local pending-interaction and completion-reminder policy without owning Controller transport, history, or references.
 
 ## Table of Contents
 

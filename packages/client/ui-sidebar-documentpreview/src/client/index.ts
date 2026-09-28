@@ -25,7 +25,7 @@ import type { TextPreviewInjected } from './TextPreview.tsx'
 import { TextTitle } from './TextTitle.tsx'
 import { TEXTPREVIEW_ID, textDefinition } from './definition.ts'
 import { textFace } from './face.ts'
-import { createReadPage } from './rpc.ts'
+import { createReadPage, documentFileBytes } from './rpc.ts'
 import { createTextStore } from './store.ts'
 import { en, zh } from './locales.ts'
 import { DocumentPreviewRegistry } from './document/registry.ts'
@@ -36,6 +36,8 @@ import { apply as registerHtml } from './html/index.ts'
 import { apply as registerImage } from './image/index.ts'
 import { apply as registerPdf } from './pdf/index.ts'
 import { apply as registerCode } from './code/index.ts'
+import { apply as registerOffice } from './office/index.ts'
+import { Config } from '../config.ts'
 
 // Values stay package-private unless another package needs them; the plugin
 // surface is `apply`, `inject`, and the store factory another registration may
@@ -43,7 +45,7 @@ import { apply as registerCode } from './code/index.ts'
 export type { SidebarDocumentPreviewKey } from './locales.ts'
 export type { TextPreviewProps } from './TextPreview.tsx'
 export type { TextInjected } from './face.ts'
-export type { ReadWorkspaceFilePage, SessionFile, WorkspaceFilesReadRemote } from './rpc.ts'
+export type { ReadDocumentBytes, DocumentFileBytes, ReadWorkspaceFilePage, SessionFile, WorkspaceFilesReadRemote } from './rpc.ts'
 export type { TextPage, TextState, TextStore, TextTabState } from './store.ts'
 export type { DocumentContent, DocumentPreviewProps, DocumentTextPage } from './document/contract.ts'
 export type { DocumentLoadMode, DocumentPreviewDefinition } from './document/registry.ts'
@@ -83,6 +85,7 @@ export const inject = ['slots', 'locale', 'sidebarRightTabs', 'remote', 'remote.
  * @param ctx - client root context carrying the registry, the slots, copy, and the Remote face.
  */
 export function apply(ctx: ClientContext): void {
+  const config = Config((globalThis as { __DSH_DOCUMENT_PREVIEW_CONFIG__?: unknown }).__DSH_DOCUMENT_PREVIEW_CONFIG__ ?? {})
   const previews = new DocumentPreviewRegistry()
   const disposePreviews = ctx.reflect.provide('documentPreviews', previews)
   ctx.effect(() => disposePreviews)
@@ -92,7 +95,10 @@ export function apply(ctx: ClientContext): void {
   const store = createTextStore()
   const face = textFace(
     createReadPage(ctx.remote),
-    (file, signal) => ctx.remote.workspaceFiles.readAll(file.sessionId, file.path, signal),
+    async (file, signal) => {
+      const result = await ctx.remote.workspaceFiles.readAll(file.sessionId, file.path, signal)
+      return result.ok ? { ok: true, value: documentFileBytes(result.value) } : result
+    },
   )
   const source = { getSnapshot: previews.getSnapshot, subscribe: previews.subscribe }
   ctx.effect(() => ctx.slots.inject('sidebar.right.pane.tab', () => ctx.slots.register(
@@ -101,7 +107,9 @@ export function apply(ctx: ClientContext): void {
       children: {
         'sidebar.right.tab.document': { kind: 'keyed', scope: 'session', inject: { hooks: { tabInfo: documentTabInfoFactory } } },
       },
-      inject: (sessionId, actions): TextPreviewInjected => ({ ...face(sessionId, actions), hooks: { documentPreviews: source } }),
+      inject: (sessionId, actions): TextPreviewInjected => ({
+        ...face(sessionId, actions), hooks: { documentPreviews: source },
+      }),
     },
     TextPreview,
   )), 'ui-sidebar-documentpreview: text body')
@@ -115,4 +123,5 @@ export function apply(ctx: ClientContext): void {
   registerImage(ctx)
   registerPdf(ctx)
   registerCode(ctx)
+  registerOffice(ctx, config.office)
 }

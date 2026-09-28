@@ -330,10 +330,8 @@ export const StatsPills = memo(function StatsPills({ useChat, useProjection, t }
   const hasTokens = usage !== undefined
     && (billedInputTokens(usage) > 0 || usage.outputTokens > 0)
   if (stats.steps === 0 && !hasTokens) return null
-  // data-composer-stats: InputBar's `.root:has([data-composer-stats])` rule
-  // tightens the composer's bottom clearance only while this row renders.
   return (
-    <div className={css.root} data-composer-stats>
+    <div className={css.root}>
       {stats.steps > 0 && (
         <TimePill
           stats={stats}

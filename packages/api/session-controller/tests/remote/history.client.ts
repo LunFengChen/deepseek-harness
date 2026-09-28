@@ -1,4 +1,4 @@
-/** Pure history responses shared by the local Remote fake and assembled Session tests. */
+/** Pure history response builders for assembled Session tests. */
 import { SESSION_FORMAT_VERSION } from '@x1a0f3n9/dsh-session/types'
 import type {
   SessionAssistantStreamBaseline, SessionFollowFrame, SessionFollowRequest, SessionPage, SessionProjectionBaseline,

@@ -430,7 +430,7 @@ export class WorkspaceAnalyzer {
   indexSourceDeclarations(): SourceDeclarationModel[] {
     const selected = this.options.packages === undefined ? undefined : new Set(this.options.packages)
     const declarations: SourceDeclarationModel[] = []
-    for (const registration of this.loadRegistrations()) {
+    for (const registration of this.loadRegistrations(true)) {
       if (!this.options.faces.includes(registration.face)
         || (selected !== undefined && !selected.has(registration.name))) continue
       for (const file of registration.config.parsed.fileNames) {
@@ -473,8 +473,8 @@ export class WorkspaceAnalyzer {
         || left.location.line - right.location.line)
   }
 
-  private loadRegistrations(): PackageRegistration[] {
-    const inventoryKey = `${this.options.root}\0${this.options.hostConfig}\0${this.options.clientConfig}`
+  private loadRegistrations(includeVendor = false): PackageRegistration[] {
+    const inventoryKey = `${this.options.root}\0${this.options.hostConfig}\0${this.options.clientConfig}\0${String(includeVendor)}`
     const cached = this.caches.registrations.get(inventoryKey)
     if (cached !== undefined) return cached
     const registrations: PackageRegistration[] = []
@@ -485,7 +485,8 @@ export class WorkspaceAnalyzer {
       for (const reference of aggregate.parsed.projectReferences ?? []) {
         const configPath = projectConfigPath(reference.path)
         const packageRoot = dirname(configPath)
-        if (!isWithin(realPath(packageRoot), join(this.options.root, 'packages'))) continue
+        if (!isWithin(realPath(packageRoot), join(this.options.root, 'packages'))
+          && !(includeVendor && isWithin(realPath(packageRoot), join(this.options.root, 'vendor')))) continue
         const manifestPath = join(packageRoot, 'package.json')
         if (!existsSync(manifestPath)) continue
         const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Record<string, unknown>

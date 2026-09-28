@@ -4,7 +4,8 @@ import { createHash } from 'node:crypto'
 import { createReadStream } from 'node:fs'
 import { readFile, stat } from 'node:fs/promises'
 import { basename, join, resolve } from 'node:path'
-import { load } from 'js-yaml'
+import { dump, load } from 'js-yaml'
+import { prerelease } from 'semver'
 import type { DesktopPackageTargetName } from './package-target.ts'
 import {
   desktopBuildRecordFilename,
@@ -31,8 +32,9 @@ export interface DesktopUploadArtifact {
   readonly filename: string
   readonly key: string
   readonly contentType: string
-  readonly cacheControl: string
   readonly channelMetadata: boolean
+  /** Published YAML with normalized artifact URLs; binary bytes remain file-backed. */
+  readonly contents?: string
 }
 
 /** A fully validated upload operation with channel metadata ordered last. */
@@ -156,9 +158,6 @@ function uploadArtifact(
     filename,
     key: `${keyPrefix}/${filename}`,
     contentType,
-    cacheControl: channelMetadata
-      ? 'no-cache'
-      : 'public, max-age=31536000, immutable',
     channelMetadata,
   }
 }
@@ -223,27 +222,42 @@ export async function createDesktopUploadPlan(
   const updaterInfo = updateFileInfo(metadata.files[0], `${metadataFilename}.files[0]`, `${base}.${updaterExtension}`)
   const updaterPath = await verifyChecksummedArtifact(artifactsRoot, updaterInfo)
   const artifacts: DesktopUploadArtifact[] = []
+  const binaryPrefix = `dsh-desk/bin/${targetName}`
 
   if (target.platform === 'darwin') {
     const dmgPath = await requireArtifact(artifactsRoot, `${base}.dmg`)
     const blockmapPath = await requireArtifact(artifactsRoot, `${base}.zip.blockmap`)
     artifacts.push(
-      uploadArtifact(dmgPath, update.keyPrefix, 'application/x-apple-diskimage'),
-      uploadArtifact(updaterPath, update.keyPrefix, 'application/zip'),
-      uploadArtifact(blockmapPath, update.keyPrefix, 'application/octet-stream'),
+      uploadArtifact(dmgPath, binaryPrefix, 'application/x-apple-diskimage'),
+      uploadArtifact(updaterPath, binaryPrefix, 'application/zip'),
+      uploadArtifact(blockmapPath, binaryPrefix, 'application/octet-stream'),
     )
   }
   else {
-    const blockMapSize = object(metadata.files[0], `${metadataFilename}.files[0]`).blockMapSize
-    numberField(blockMapSize, `${metadataFilename}.files[0].blockMapSize`)
+    const blockmapPath = await requireArtifact(artifactsRoot, `${base}.exe.blockmap`)
     artifacts.push(uploadArtifact(
       updaterPath,
-      update.keyPrefix,
+      binaryPrefix,
       'application/vnd.microsoft.portable-executable',
     ))
+    artifacts.push(uploadArtifact(blockmapPath, binaryPrefix, 'application/octet-stream'))
   }
 
-  artifacts.push(uploadArtifact(metadataPath, update.keyPrefix, 'application/yaml', true))
+  const payloadUrl = `${update.origin}/${binaryPrefix}/${updaterInfo.filename}`
+  const published = {
+    ...metadata,
+    files: [{ ...object(metadata.files[0], `${metadataFilename}.files[0]`), url: payloadUrl }],
+    ...(metadata.path === undefined ? {} : { path: payloadUrl }),
+  }
+  const channelArtifact = {
+    ...uploadArtifact(metadataPath, update.keyPrefix, 'application/yaml', true),
+    contents: dump(published),
+  }
+  artifacts.push(channelArtifact)
+  if (prerelease(dshVersion) === null) {
+    const stableFilename = metadataFilename.replace('nightly', 'latest')
+    artifacts.push({ ...channelArtifact, filename: stableFilename, key: `${update.keyPrefix}/${stableFilename}` })
+  }
   return {
     environment: update.environment,
     target: targetName,

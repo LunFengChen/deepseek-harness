@@ -5,7 +5,7 @@ import type {
 import { isAppendSurfaceEvent, isReplacementSurfaceEvent } from '@x1a0f3n9/dsh-session/surface'
 import type { InboxState } from './inbox.ts'
 import { chatNode } from './common.ts'
-import { contextForm, contextProvenance } from './event-projection.ts'
+import { contextForm, contextProducer } from './event-projection.ts'
 
 interface ReferencedUserMessageNode extends UserMessageNode {
   /** Labels cited by the immediately following session-reference context. */
@@ -59,7 +59,7 @@ export const messageDefinition: ConversationNodeDefinition<MessageNode> = {
         time: event.time,
         content: event.data.content,
         source: event.data.source,
-        provenance: contextProvenance(event.data.source),
+        producer: contextProducer(event.data.source),
         form: contextForm(event.data.source),
       }
     }

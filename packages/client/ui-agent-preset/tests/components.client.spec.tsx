@@ -10,6 +10,8 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-libra
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { bindSnapshotSelector } from '@x1a0f3n9/dsh-client-test-runtime'
 import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
+import type { SessionRetainInfo } from '@x1a0f3n9/dsh-api-session-controller/client'
+import { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { AgentPresetLabel } from '../src/client/AgentPresetLabel.tsx'
 import type { AgentPresetLabelProps } from '../src/client/AgentPresetLabel.tsx'
 import { AgentPresetSeat } from '../src/client/AgentPresetSeat.tsx'
@@ -38,6 +40,8 @@ const SEAT_READY: AgentPresetSeatState = {
   introduce: false,
 }
 
+const useSessionRetainInfo = <Selected,>(selector: (value: undefined) => Selected): Selected => selector(undefined)
+
 /** The runtime's own `{name}` substitution, so a test reads the shown text. */
 function translate(key: keyof typeof en, params?: Record<string, unknown>): string {
   const template = en[key]
@@ -49,12 +53,17 @@ function translate(key: keyof typeof en, params?: Record<string, unknown>): stri
 function renderSeat(
   state: Partial<AgentPresetSeatState> = {},
   select: () => Promise<string | undefined> = () => Promise.resolve(undefined),
+  session?: { id: string; retainInfo: SessionRetainInfo | undefined },
 ) {
   const store = createSnapshotStore<AgentPresetSeatState>({ ...SEAT_READY, ...state })
   const actions = { load: vi.fn(() => Promise.resolve()), select: vi.fn(select), introduced: vi.fn() }
   render(<AgentPresetSeat {...({
     ...actions,
+    sessionId: session === undefined ? undefined : SessionId(session.id),
     useAgentPresetSeat: bindSnapshotSelector(store),
+    useSessionRetainInfo: session === undefined
+      ? useSessionRetainInfo
+      : <Selected,>(selector: (value: SessionRetainInfo | undefined) => Selected) => selector(session.retainInfo),
     t: translate,
   } as unknown as AgentPresetSeatProps)} />)
   return actions
@@ -84,6 +93,17 @@ describe('the new-session chip', () => {
   it('renders nothing while the picker is disabled', () => {
     renderSeat({ showPicker: false })
 
+    expect(screen.queryByRole('button')).toBeNull()
+  })
+
+  it('renders only for a Session retained by the main view', () => {
+    renderSeat({}, undefined, {
+      id: 's1', retainInfo: { referenceCount: 1, retainedBy: { mainView: 1 } },
+    })
+    expect(screen.getByRole('button')).toBeTruthy()
+    cleanup()
+
+    renderSeat({}, undefined, { id: 's1', retainInfo: undefined })
     expect(screen.queryByRole('button')).toBeNull()
   })
 

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-workspace",
   "description": "Workspace picker plugin: one WorkspacePicker registered into the sidebar and empty-state workspace slots",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.6-alpha.2",
   "publishConfig": {
     "access": "public"
   },
@@ -68,6 +68,7 @@
     "@x1a0f3n9/dsh-schedule": "workspace:^",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
     "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-subagent": "workspace:^",
     "@x1a0f3n9/dsh-util-workspace-path": "workspace:^",
     "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:^",

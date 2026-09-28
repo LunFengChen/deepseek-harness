@@ -6,7 +6,7 @@ Status: implemented
 
 ## Problem
 
-xfdsh web 没有预装 Skills manager。想用本机 Agent 技能界面的人得自己 `xfdsh plugin --profile web add`，而上游包仍发布为 `@michengai/dsh-skills-manager`，peer 还是 `@deepseek-ai/dsh-*`。
+xfdsh web 没有预装 Skills manager。想用本机 Agent 技能界面的人得自己 `xfdsh plugin --profile web add`，而上游包仍发布为 `@michengai/dsh-skills-manager`，peer 还是 `@x1a0f3n9/dsh-*`。
 
 ## Decision
 
@@ -25,4 +25,4 @@ xfdsh web 没有预装 Skills manager。想用本机 Agent 技能界面的人得
 - Settings → xfdsh预置插件 出现技能管理；关掉卡片就会卸掉插件。
 - 卡片打开时出现 Settings → 技能。
 - `pnpm install` 解析这个 pin 之前，GitHub tag 必须已经存在。
-- 插件的 `@deepseek-ai/dsh-skill` 和 `@deepseek-ai/dsh-web-app` peer 加入 `pnpm-workspace.yaml` 的 workspace override，锁文件就不会去拉官方副本。
+- 插件的 `@x1a0f3n9/dsh-skill` 和 `@x1a0f3n9/dsh-web-app` peer 加入 `pnpm-workspace.yaml` 的 workspace override，锁文件就不会去拉官方副本。

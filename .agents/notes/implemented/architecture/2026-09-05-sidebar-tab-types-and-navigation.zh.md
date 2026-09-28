@@ -116,6 +116,5 @@ interface SidebarRightTabParamsMap {}        // key: kind — a page type declar
 ## Deferred
 
 - `sidebar://<kind>` 之外的导航协议：页内子路由、点名实现、以及面向生态的其它导航 scheme 规则。
-- 随包页类型的参数，今天未声明任何。
 - 从公开面往屏上会话之外的会话里打开；公开面只作用于已挂载的会话，而 tab 自己的动作已作用于其所在会话。
 - 从会话区打开失败时的本地化提示；目前是抛错文本本身。

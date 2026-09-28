@@ -85,8 +85,8 @@ The `api-remotes` assembly and the `ctx.remote` contract are React-independent; 
 | Build | `@x1a0f3n9/dsh-typert-generator` | Strictly analyzes Remote signatures, the type graph, lookups, Contexts, and source locations from the Host `ts.Program`, then generates Host and Host-for-Client artifacts |
 | Host | `@x1a0f3n9/dsh-typert-registry` and Loader | Places generated Host descriptors, schemas, and business-package registrations in `ctx.typert`, and holds lookup and Context providers |
 | Host | `@x1a0f3n9/dsh-api-session-controller` | Owns the application Agent/Session identity policy and configures the corresponding Typert lookups |
-| Host | `@x1a0f3n9/dsh-api-gateway` | Provides `ctx.typertGateway`, claims Remote endpoints, resolves objects or Contexts, invokes live Cordis services, and validates request and return values |
-| Client | `@x1a0f3n9/dsh-api-gateway/client` | Provides `ctx.remote` and `remote.<namespace>` child Services, mounts generated descriptors as concrete methods, and initiates, validates, and cancels calls through the Connection |
+| Host | `@x1a0f3n9/dsh-api-gateway` | Provides `ctx.typertGateway`, claims Remote endpoints, validates request values, resolves objects or Contexts, and invokes live Cordis services |
+| Client | `@x1a0f3n9/dsh-api-gateway/client` | Provides `ctx.remote` and `remote.<namespace>` child Services, mounts generated descriptors as concrete methods, and initiates and cancels calls through the Connection |
 | Client | `@x1a0f3n9/dsh-api-remotes/client` | Explicitly selects and mounts the `/remote` contributions allowed by the application and brings the corresponding declaration merges into business code |
 | Both | `@x1a0f3n9/dsh-client-connection` | Provides the RPC carrier, request correlation, trust boundary, cancellation, response envelope, and the `/api` HTTP bridge |
 

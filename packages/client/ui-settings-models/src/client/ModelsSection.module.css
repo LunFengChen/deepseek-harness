@@ -397,11 +397,6 @@
   padding-top: 12px;
 }
 
-/* Model catalog: a table, not a stack of cards. The column captions are
-   written once above the rows, so a row is one line of fields plus its
-   delete control; each field still carries the indexed `aria-label` that
-   names it, and the caption strip is hidden from assistive tech to keep
-   that name from being announced twice. */
 .modelCatalog {
   display: flex;
   flex-direction: column;
@@ -431,12 +426,6 @@
   line-height: 18px;
 }
 
-/* Model list, shared with the pi-ai provider form: one bordered
-   entry per model, id and display name on the row, capacities behind the
-   row's own disclosure. The rules use this stylesheet's token vocabulary —
-   `--dsw-alias-border-subtle`, `--dsw-alias-text-tertiary`, and
-   `--dsw-alias-text-primary` are undefined here and would resolve to their
-   light-mode literals. */
 .modelList {
   display: flex;
   flex-direction: column;
@@ -497,7 +486,7 @@
 
 .modelAdvanced {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   padding: 8px 4px 2px;
 }
@@ -514,7 +503,29 @@
 .modelField {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: 4px;
+}
+
+.modelInputTypes {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.modelInputTypes legend {
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.modelInputChoices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  min-height: 32px;
+  align-items: center;
 }
 
 .modelFieldLabel {

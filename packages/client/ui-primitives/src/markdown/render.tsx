@@ -4,8 +4,8 @@
  * cache frozen blocks as React elements; the rendered DOM is pinned
  * byte-for-byte by `tests/fixtures/markdown-dom` and must not drift.
  *
- * Untrusted-output policy (unchanged from the replaced pipeline): link and
- * image destinations pass a protocol allowlist, images additionally require
+ * External link and image destinations pass a protocol allowlist; settled
+ * local file links use an explicit owner callback. Images additionally require
  * absolute HTTP(S), raw HTML renders as literal text (no HTML enters the
  * DOM), and KaTeX runs without trusted commands. Fragment-anchor URLs fail
  * the allowlist, so footnote references and back-references render as plain
@@ -23,8 +23,10 @@ import type * as Md from 'mdast'
 import type {} from 'mdast-util-math'
 import { normalizeUri } from 'micromark-util-sanitize-uri'
 import { CodeBlock } from './CodeBlock.tsx'
+import { parseFileLink } from './file-link.ts'
 import { renderTexToReact } from './katex.tsx'
 import { LinkIcon, classifyLinkPath } from '../LinkIcon.tsx'
+import { useMarkdownDelegate } from './MarkdownDelegate.tsx'
 import type { PositionedBlock } from './incremental.ts'
 import css from './MarkdownText.module.css'
 
@@ -338,7 +340,10 @@ function renderNode(node: Md.RootContent, key: Key, context: MarkdownRenderConte
     case 'table':
       return renderTable(node, key, context)
     case 'link':
-      return renderAnchor(node.url, renderChildren(node.children, { ...context, inLink: true }), key, !anchorWrapsOnlyImages(node.children))
+      return renderAnchor(
+        node.url, renderChildren(node.children, { ...context, inLink: true }), key,
+        !anchorWrapsOnlyImages(node.children), context.streaming,
+      )
     case 'linkReference':
       return renderLinkReference(node, key, context)
     case 'image':
@@ -525,26 +530,64 @@ function anchorWrapsOnlyImages(children: Md.PhrasingContent[]): boolean {
   return children.length > 0 && children.every(child => child.type === 'image' || child.type === 'imageReference')
 }
 
-/** Anchor over an already-authored href: allowlisted or unwrapped, external links get the safe attributes. */
+/** Anchor over an already-authored href: allowlisted or unwrapped, with optional owner navigation for HTTP(S). */
 function renderSafeLink(href: string, children: ReactNode[], key: Key, glyph = true): ReactNode {
   const safeHref = sanitizeUrl(href)
   if (safeHref === '') return <Fragment key={key}>{children}</Fragment>
-  const external = ['http:', 'https:'].includes(new URL(safeHref).protocol)
+  return <MarkdownAnchor key={key} href={safeHref} glyph={glyph}>{children}</MarkdownAnchor>
+}
+
+function MarkdownAnchor({ href, glyph, children }: {
+  readonly href: string
+  readonly glyph: boolean
+  readonly children: ReactNode[]
+}): ReactNode {
+  const { openExternalLink } = useMarkdownDelegate()
+  const external = ['http:', 'https:'].includes(new URL(href).protocol)
+  const open = external ? openExternalLink : undefined
   return (
     <a
-      key={key}
-      href={safeHref}
+      href={href}
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      onClick={open === undefined ? undefined : (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+        event.preventDefault()
+        open(href)
+      }}
     >
-      {glyph && <LinkIcon kind="url" className={css.linkIcon} />}
+      {glyph && <LinkIcon kind="url" href={href} className={css.linkIcon} />}
       {children}
     </a>
   )
 }
 
-/** Anchor over a parsed markdown destination, which hast normalized before the allowlist saw it. */
-function renderAnchor(url: string, children: ReactNode[], key: Key, glyph = true): ReactNode {
+/** Local destinations use the scoped file delegate after settlement. */
+function renderAnchor(url: string, children: ReactNode[], key: Key, glyph = true, streaming = false): ReactNode {
+  const file = streaming ? undefined : parseFileLink(url)
+  if (file !== undefined) {
+    return <MarkdownFileLink key={key} file={file} glyph={glyph}>{children}</MarkdownFileLink>
+  }
   return renderSafeLink(normalizeUri(url), children, key, glyph)
+}
+
+function MarkdownFileLink({ file, glyph, children }: {
+  readonly file: { path: string; line?: number }
+  readonly glyph: boolean
+  readonly children: ReactNode[]
+}): ReactNode {
+  const { openFile } = useMarkdownDelegate()
+  if (openFile === undefined) return <>{children}</>
+  return (
+    <button
+      type="button"
+      className={clsx(css.fileMention, css.fileLink)}
+      title={file.path}
+      onClick={() => { openFile(file.path, file.line === undefined ? undefined : { line: file.line }) }}
+    >
+      {glyph && <LinkIcon kind={classifyLinkPath(file.path)} className={css.linkIcon} />}
+      {children}
+    </button>
+  )
 }
 
 /**
@@ -608,7 +651,7 @@ function renderLinkReference(
     return <Fragment key={key}>{'['}{renderChildren(node.children, context)}{referenceSuffix(node)}</Fragment>
   }
   const rendered = renderChildren(node.children, { ...context, inLink: true })
-  return renderAnchor(definition.url, rendered, key, !anchorWrapsOnlyImages(node.children))
+  return renderAnchor(definition.url, rendered, key, !anchorWrapsOnlyImages(node.children), context.streaming)
 }
 
 function renderImageReference(

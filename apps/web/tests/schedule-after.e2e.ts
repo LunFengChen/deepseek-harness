@@ -699,7 +699,7 @@ describe.skipIf(MODE === 'record')('web e2e: active Schedule catalog', () => {
     expect(await flatRow.getByRole('img', { name: ACTIVE_SCHEDULE_LABEL }).count()).toBe(1)
 
     await page.getByRole('button', { name: 'View options' }).click()
-    await page.getByRole('menuitem', { name: 'WorkSpace' }).click()
+    await page.getByRole('menuitem', { name: 'WorkSpace', exact: true }).click()
     await catalogRow.waitFor({ timeout: 15_000 })
     expect(await catalogRow.getByRole('img', { name: ACTIVE_SCHEDULE_LABEL }).count()).toBe(1)
 

@@ -11,7 +11,7 @@ import { foldScheduleEvents, ScheduleLogError } from './domain.ts'
 const PACKAGE_NAME = '@x1a0f3n9/dsh-schedule'
 
 /** Cordis invariant-companion plugin name. */
-export const name = 'tool-schedule-invariant'
+export const name = 'schedule-invariant'
 /** Service required before reserving this package's invariant ownership. */
 export const inject = ['invariants']
 

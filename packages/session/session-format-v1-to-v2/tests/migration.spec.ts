@@ -863,7 +863,7 @@ describe('sessionFormatV1ToV2', () => {
   })
 
   it.each([undefined, []] as const)(
-    'retains a legacy message with provenance %s as an empty embedded stream',
+    'retains a legacy message with sourceEventSeqs %s as an empty embedded stream',
     (sourceEventSeqs) => {
       const source: SessionFormatArtifact = {
         header: {
@@ -890,41 +890,10 @@ describe('sessionFormatV1ToV2', () => {
     },
   )
 
-  it('refuses leftover message provenance when no chunk attempt is open', () => {
-    const source: SessionFormatArtifact = {
-      header: {
-        version: 1, id: 'v1-leftover-message-provenance', createdAt: 1,
-        isSeeded: false, delegationDepth: 0,
-      },
-      inheritedEventCount: 0,
-      events: [
-        event('turn/start', 0, 1, { turn: 1 }),
-        event('step/start', 1, 2, { turn: 1, step: 1 }),
-        { ...event('user/message', 2, 3, userMessage), surfaceOp: 'append' },
-        event('assistant/chunk', 3, 4, {
-          turn: 1, step: 1, chunk: { type: 'text-delta', index: 0, text: 'hello' },
-        }),
-        event('assistant/chunk', 4, 5, {
-          turn: 1, step: 1, chunk: { type: 'finish', reason: { kind: 'stop' } },
-        }),
-        event('step/end', 5, 6, { turn: 1, step: 1 }),
-        event('step/start', 6, 7, { turn: 1, step: 2 }),
-        {
-          ...event('assistant/message', 7, 8, { turn: 1, step: 2, message }),
-          sourceEventSeqs: [2],
-          surfaceOp: 'append',
-        },
-        event('step/end', 8, 9, { turn: 1, step: 2 }),
-        event('turn/end', 9, 10, { turn: 1, reason: { kind: 'completed' } }),
-      ],
-    }
-    expect(() => migrateV1ToV2(source)).toThrow(/complete ordered attempt/)
-  })
-
-  it('refuses missing, partial, or reordered provenance for a present v1 attempt', () => {
+  it('refuses missing, partial, or reordered source-event references for a present v1 attempt', () => {
     const build = (sourceEventSeqs: readonly number[] | undefined): SessionFormatArtifact => ({
       header: {
-        version: 1, id: `v1-provenance-${String(sourceEventSeqs)}`, createdAt: 1,
+        version: 1, id: `v1-source-event-references-${String(sourceEventSeqs)}`, createdAt: 1,
         isSeeded: false, delegationDepth: 0,
       },
       inheritedEventCount: 0,
@@ -1051,7 +1020,7 @@ describe('sessionFormatV1ToV2', () => {
     expect(() => migrateV1ToV2(source)).toThrow(/cut 4 splits one Assistant attempt/)
   })
 
-  it('keeps referenced-session generation provenance frozen', () => {
+  it('keeps referenced-session generation metadata frozen', () => {
     const reference = {
       ...userMessage,
       id: 'reference',

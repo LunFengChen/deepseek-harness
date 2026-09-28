@@ -7,9 +7,13 @@ import { SubagentHeaderLineage, type SubagentCatalogInjected } from './SubagentH
 import {
   SubagentReadOnlyComposer, type SubagentReadOnlyMatch,
 } from './SubagentReadOnlyComposer.tsx'
+import { registerSidebarChat, subagentChatAddress } from './sidebar-chat/index.tsx'
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-chat/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
+import type {} from '@x1a0f3n9/dsh-client-ui-workspace/client'
 import { en, NS, zh, type SubagentKey } from './locales.ts'
 
 declare module '@x1a0f3n9/dsh-client-ui-slots' {
@@ -26,8 +30,8 @@ export type {
   SubagentReadOnlyComposerProps, SubagentReadOnlyMatch,
 } from './SubagentReadOnlyComposer.tsx'
 
-/** Required services for conversation slots and session navigation. */
-export const inject = ['sessions', 'slots', 'locale']
+/** Required services for subagent presentation and navigation. */
+export const inject = ['sessions', 'uiWorkspace', 'slots', 'locale', 'sidebarRight']
 
 /** Claim the composer for one-shot history or an unavailable continuation owner. */
 function selectReadOnlySubagent(owner: ComposerChainProps): SubagentReadOnlyMatch | null {
@@ -50,10 +54,19 @@ function selectReadOnlySubagent(owner: ComposerChainProps): SubagentReadOnlyMatc
  */
 export function apply(ctx: ClientContext): void {
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'ui-subagent: dictionaries')
+  ctx.inject(['resources', 'sidebarRightTabs'], (scope) => {
+    registerSidebarChat(scope, ctx.locale.bind(NS))
+  })
   const sessions = ctx.sessions
   const catalogActions = (_parentSessionId: SessionId): SubagentCatalogInjected => ({
     openChild(address: SubagentAddress) {
-      sessions.openSubagent(address)
+      ctx.uiWorkspace.openSession(address)
+    },
+    openChildAside(address: SubagentAddress) {
+      ctx.sidebarRight.openResource(subagentChatAddress(address), {
+        kind: 'subagentchat',
+        preferNewPane: true,
+      })
     },
     refresh(parentSessionId: SessionId) {
       void sessions.refreshSubagents(parentSessionId)
