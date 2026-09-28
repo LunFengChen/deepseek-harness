@@ -4,7 +4,7 @@ import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
 import BasicCompactionEngine from '@x1a0f3n9/dsh-compaction-basic'
 import type { BasicCompactionConfig } from '@x1a0f3n9/dsh-compaction-basic'
 import { selectCompactableRange } from '@x1a0f3n9/dsh-compaction-basic/src/region.ts'
-import { frameSummary } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
+import { CONTEXT_OVERFLOW_FALLBACK_SUMMARY, frameSummary } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
 import type { SummarizationInput, SummaryResult } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
 import { CompactionId, toolPairingBalancedAfter, toolPairingBalancedBefore } from '@x1a0f3n9/dsh-compaction'
 import {
@@ -23,7 +23,7 @@ import type {
   StreamChunk,
   TokenUsage,
 } from '@x1a0f3n9/dsh-llm'
-import SessionStore, { Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionStore, { SESSION_LIVE_WINDOW_EVENTS, Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import TokenMeter from '@x1a0f3n9/dsh-token-meter'
 import { agentEvents, type Agent, type RequestErrorAction } from '@x1a0f3n9/dsh-agent'
@@ -1950,6 +1950,59 @@ describe('automatic listener and loader composition', () => {
     )).rejects.toBe(downstream)
     expect(calls).toBe(1)
     expect(warnings).toContainEqual(expect.stringContaining('no compactable range'))
+  })
+
+  it('lands a fallback checkpoint when overflow summarization hits CONTEXT_WINDOW_EXCEEDED', async () => {
+    const ctx = createContext()
+    const compact = new TestCompactionEngine(ctx)
+    compact.error = Object.assign(new Error('summarizer overflow'), { code: CONTEXT_WINDOW_EXCEEDED_CODE })
+    const session = conversation(3)
+
+    expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(true)
+    expect(session.snapshotEvents().some(event => event.type === 'compaction/summary')).toBe(true)
+    const checkpoint = session.deriveMessages().find(message =>
+      message.content.some(block => block.type === 'text' && block.text.includes(CONTEXT_OVERFLOW_FALLBACK_SUMMARY)))
+    expect(checkpoint).toBeDefined()
+    expect(compact.calls).toHaveLength(1)
+  })
+
+  it('recovers overflow on a windowed Session without token-meter ingest', async () => {
+    const ctx = createContext()
+    void new TestCompactionEngine(ctx)
+    const session = Session.create(SessionId('windowed-overflow'))
+    const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 6) + 8
+    for (let turn = 1; turn <= turns; turn += 1) {
+      session.append('turn/start', { turn })
+      session.append('user/message', createUserMessage({
+        content: [{ type: 'text', text: `hello ${turn}` }],
+        source: { kind: 'user' },
+      }), { surfaceOp: 'append' })
+      session.append('step/start', { turn, step: 1 })
+      if (turn === 1) {
+        session.append('request/header', {
+          header: { config: { provider: MODEL, model: MODEL } },
+          reason: 'initial',
+        })
+      }
+      session.append('assistant/message', {
+        stream: [],
+        turn,
+        step: 1,
+        message: createMessage({
+          role: 'assistant',
+          content: [{ type: 'text', text: `ok ${turn}` }],
+          source: { kind: 'model', provider: MODEL, model: MODEL },
+        }),
+      }, { surfaceOp: 'append' })
+      session.append('step/end', { turn, step: 1 })
+      session.append('turn/end', { turn, reason: { kind: 'completed' } })
+    }
+    session.append('turn/start', { turn: turns + 1 })
+    session.releaseLiveWindow()
+    expect(session.liveBaseSeq).toBeGreaterThan(0)
+
+    expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(true)
+    expect(session.snapshotEvents().some(event => event.type === 'compaction/summary')).toBe(true)
   })
 
   it('preserves the original provider error when recovery throws', async () => {

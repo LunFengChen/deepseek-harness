@@ -18,7 +18,7 @@ Status: implemented
 
 `AgentLoop.resumeWith` 在流式 `adoptEvent`、`handle.read(0)` 回退、以及中断回合 closer 共用的 `adopt` 辅助函数里调用这两个 ingest。未挂载 token meter 时跳过它的 ingest。
 
-token-meter `_sync` 在没有已 ingest 的回放状态时拒绝从存活尾巴重建。投影 `cellFor` 仍会为恢复之后才注册的单元从尾巴迟到补建——那些单元从未见过已丢掉的前缀。
+token-meter `_sync` 优先使用恢复时的 ingest。若该回放状态缺失，它会从存活尾巴和 prefixHot 快照当前 surface，让 `measure()` 仍能定价。该快照不恢复 usage 锚点，也不恢复已被替换掉的 seq；恢复时 ingest 仍是保留这些信息的路径。投影 `cellFor` 仍会为恢复之后才注册的单元从尾巴迟到补建——那些单元从未见过已丢掉的前缀。
 
 `Session.beginPersistedRestore` 接受可选的继承切点，以便已经知道该切点的调用方能在首次 ingest 之前给 `init` 播种。恢复仍在扫描结束后由 `finishPersistedRestore` 记录持久切点；当前格式的 `stat` 不暴露该切点。
 
@@ -47,3 +47,5 @@ token-meter `_sync` 在没有已 ingest 的回放状态时拒绝从存活尾巴�
 [Session 宿主内存上限](../architecture/2026-09-23-session-host-memory-bounds.zh.md) 仍然拥有存活尾巴、`prefixHot` 和流式 `adoptRestoredEvent`。
 
 [废弃对任意 Session 事件的同步读取](../architecture/2026-09-09-deprecate-synchronous-session-event-reads.zh.md) 仍然拥有不再把完整序列留在内存里的方向。
+
+[窗口化 Session 在上下文溢出时压缩](2026-09-28-windowed-overflow-compaction.zh.md) 拥有 measure() 的 surface 快照，以及存活尾巴上的压缩锁检查。

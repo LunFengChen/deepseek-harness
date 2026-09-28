@@ -22,6 +22,13 @@ const SUMMARY_OPEN_TAG = '<compacted-summary>'
 const SUMMARY_CLOSE_TAG = '</compacted-summary>'
 
 /**
+ * Checkpoint text used when the summarizer itself hits `CONTEXT_WINDOW_EXCEEDED`.
+ * Shorter than any compactable span so the shrink check still passes.
+ */
+export const CONTEXT_OVERFLOW_FALLBACK_SUMMARY =
+  'Earlier history was compacted because the model context window was exceeded. Continue from the remaining messages.'
+
+/**
  * The summarization directive, delivered as the FINAL user message after the
  * replayed conversation rather than as a distinct summarizer system prompt.
  * Keeping the conversation's own system prompt, tools, and message prefix in
