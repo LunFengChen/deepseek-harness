@@ -20,11 +20,11 @@ export interface CompactionPolicyConfig {
   summarizationProvider?: string
   /** Summary model; set together with `summarizationProvider`, or inherit the conversation target. */
   summarizationModel?: string
-  /** Optional summarization output cap; unset uses the adapter default. */
+  /** Provider generation cap for summarization. Defaults to the resolved `headroomTokens`; an explicit cap must be positive. */
   maxTokens?: number
   /** Extra attempts after the first compaction when pressure remains above threshold. Defaults to `1`. */
   compactionRetries?: number
-  /** Maximum retries after canonical context overflow; `0` disables recovery. Defaults to `3`. */
+  /** Maximum retries after canonical context overflow; `0` disables recovery. Defaults to `1`. */
   maxOverflowRetries?: number
 }
 
@@ -55,7 +55,7 @@ interface ResolvedPolicyFields {
   readonly headroomTokens: number
   readonly summarizationProvider: string
   readonly summarizationModel: string
-  readonly maxTokens?: number
+  readonly maxTokens: number
   readonly compactionRetries: number
   readonly maxOverflowRetries: number
 }

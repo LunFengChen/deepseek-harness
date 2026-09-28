@@ -15,12 +15,19 @@ import type { Agent } from '@x1a0f3n9/dsh-agent'
 interface SummaryConfig {
   readonly summarizationProvider: string
   readonly summarizationModel: string
-  readonly maxTokens?: number
+  readonly maxTokens: number
 }
 
 /** Tags wrapping the structured summary inside the landed checkpoint node. */
 const SUMMARY_OPEN_TAG = '<compacted-summary>'
 const SUMMARY_CLOSE_TAG = '</compacted-summary>'
+
+/**
+ * Checkpoint text used when the summarizer itself hits `CONTEXT_WINDOW_EXCEEDED`.
+ * Shorter than any compactable span so the shrink check still passes.
+ */
+export const CONTEXT_OVERFLOW_FALLBACK_SUMMARY =
+  'Earlier history was compacted because the model context window was exceeded. Continue from the remaining messages.'
 
 /**
  * The summarization directive, delivered as the FINAL user message after the
@@ -155,7 +162,7 @@ export async function summarizeWithLlm(
     messages,
     toolHistory: agent.session.toolHistory(),
     ...input.tools === undefined ? {} : { tools: [...input.tools] },
-    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
+    maxTokens: config.maxTokens,
     sessionId: agent.session.id,
     purpose: 'compaction',
     ...signal === undefined ? {} : { signal },
@@ -175,7 +182,7 @@ export async function summarizeWithLlm(
     llmStreamCall: true,
     provider: options.provider,
     model: options.model,
-    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
+    maxTokens: config.maxTokens,
     ...(assembler.usage === undefined ? {} : { usage: assembler.usage }),
   }
 }
@@ -199,6 +206,11 @@ function finishError(finish: FinishReason): Error | undefined {
     case 'error':
     case 'aborted': {
       return new LlmError(finish.failure.message, finish.failure.code, finish.failure)
+    }
+    case 'max-tokens': {
+      const error = new Error('summarization truncated at the token cap (incomplete checkpoint)') as Error & { code?: string }
+      error.code = 'MAX_TOKENS'
+      return error
     }
     default:
       return undefined

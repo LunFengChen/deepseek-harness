@@ -143,7 +143,7 @@ These limits define where the measurement stops and future work begins. They are
 - **A system-prompt rewrite carries no shadow price** — the loop replaces a system node without an adjacent metering event, so `contextPressure.projectedTokens` folds that replacement at zero delta until the next usage sample; `contextBreakdown.systemTokens` and `measure()` reprice the new prompt immediately.
 - **Composition checkpoints retain the current surface** — exact system/message classification needs positional entries; checkpoint size and surface-event folding are O(current retained surface).
 
-- **Windowed restore cannot rebuild from the live tail** — `ingestRestoredEvent` folds each restored event during resume; `measure()` of a windowed Session without that fold fails loud.
+- **Windowed restore cannot recover replaced-away seqs from the live tail** — `ingestRestoredEvent` preserves usage anchors and replaced-away seqs. Without that ingest, `measure()` and `contextBreakdown` snapshot the current surface from the live tail and prefixHot; they do not replay dropped replace ranges.
 
 <a id="dev-note"></a>
 ### Dev Note

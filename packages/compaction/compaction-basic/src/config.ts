@@ -101,9 +101,9 @@ export function resolveConfig(config: BasicCompactionConfig = {}): ResolvedConfi
     ...retention,
     summarizationProvider: config.summarizationProvider ?? '',
     summarizationModel: config.summarizationModel ?? '',
-    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
+    maxTokens,
     compactionRetries: config.compactionRetries ?? 1,
-    maxOverflowRetries: config.maxOverflowRetries ?? 3,
+    maxOverflowRetries: config.maxOverflowRetries ?? 1,
     modelPolicies,
     auto: config.auto ?? true,
   })
@@ -125,7 +125,6 @@ export function resolveTargetPolicy(
   const inheritedRetention: ResolvedRetention = config.retainTokens === undefined
     ? { retainRatio: config.retainRatio }
     : { retainTokens: config.retainTokens }
-  const maxTokens = override?.maxTokens ?? config.maxTokens
   return deepFreeze({
     target: { provider: target.provider, model: target.model },
     thresholdRatio: override?.thresholdRatio ?? config.thresholdRatio,
@@ -133,7 +132,7 @@ export function resolveTargetPolicy(
     ...resolveRetention(override ?? {}, inheritedRetention),
     summarizationProvider: override?.summarizationProvider ?? config.summarizationProvider,
     summarizationModel: override?.summarizationModel ?? config.summarizationModel,
-    ...maxTokens === undefined ? {} : { maxTokens },
+    maxTokens: override?.maxTokens ?? config.maxTokens,
     compactionRetries: override?.compactionRetries ?? config.compactionRetries,
     maxOverflowRetries: override?.maxOverflowRetries ?? config.maxOverflowRetries,
   })
@@ -211,7 +210,7 @@ export function resolveCompactSpec(
     retainTokens,
     summarizationProvider: policy.summarizationProvider,
     summarizationModel: policy.summarizationModel,
-    ...policy.maxTokens === undefined ? {} : { maxTokens: policy.maxTokens },
+    maxTokens: policy.maxTokens,
     compactionRetries: policy.compactionRetries,
     maxOverflowRetries: policy.maxOverflowRetries,
   })

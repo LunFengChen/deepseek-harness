@@ -96,6 +96,18 @@ function analyzeNode(seq: SessionSeq, message: Message | null): MeterSurfaceNode
 }
 
 /**
+ * Price one already-current surface node as an append-only snapshot.
+ * Windowed Sessions keep those nodes in the live tail or prefixHot; this
+ * rebuilds the priced surface without replaying dropped replace ranges.
+ * @param seq - durable sequence number of the current surface node.
+ * @param message - derived message for that node, or `null` when it projects none.
+ * @returns the priced node `measure()` would retain for this position.
+ */
+export function priceCurrentSurfaceNode(seq: SessionSeq, message: Message | null): MeterSurfaceNode {
+  return analyzeNode(seq, message)
+}
+
+/**
  * Validate and price one surface event without mutating the surface.
  * @param nodes - the priced surface preceding this event, in model-visible order.
  * @param event - the surface event to place.

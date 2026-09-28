@@ -51,7 +51,7 @@ const definition = {
 }
 ```
 
-`init(header, inheritedEventCount)` receives both lightweight metadata and the exact fork-inherited cut; it must not infer that cut from `firstLiveSeq` or `session/end-seed`. `apply` must be synchronous and must return the same state reference for events that do not concern the unit — an unchanged reference means zero downstream work. The registry compares consecutive raw `wire.view` results with `Object.is`; an object or array view must reuse its reference to suppress publication across internal-only state changes, while a structurally equal new object is still a change. A state-carrying log event must carry the complete post-change state, never a bare delta.
+`init(header, inheritedEventCount)` receives both lightweight metadata and the exact fork-inherited cut; it must not infer that cut from `firstLiveSeq` or `session/end-seed`. `apply` must be synchronous and must return the same state reference for events that do not concern the unit — an unchanged reference means zero downstream work. Units that can snapshot the current surface implement optional `bootstrapWindowed(session)` so a windowed Session does not fold the live tail as seq 0. The registry compares consecutive raw `wire.view` results with `Object.is`; an object or array view must reuse its reference to suppress publication across internal-only state changes, while a structurally equal new object is still a change. A state-carrying log event must carry the complete post-change state, never a bare delta.
 
 ### Register and read
 
@@ -133,7 +133,7 @@ These limits define where the projection registry needs care at scale. They are 
 - **Registry cells live in memory only** — a restart rebuilds by folding the log on first touch; compositions that mount `dsh-session-projection-cache` seed that fold from persisted rows instead.
 - **Synchronous unit discipline is only partially mechanical** — `wire.viewSchema.parse` rejects a Promise-returning view, but an `apply` that blocks or reads torn non-session state is a review concern.
 
-- **Windowed restore cannot reconstruct a dropped prefix** — `ingestRestoredEvent` folds each restored event before the window drops the prefix. A unit registered afterwards sees only the live tail.
+- **Windowed restore cannot reconstruct a dropped prefix** — `ingestRestoredEvent` folds each restored event before the window drops the prefix. A unit registered afterwards sees only the live tail unless it implements `bootstrapWindowed` to snapshot the current surface.
 
 <a id="dev-note"></a>
 ### Dev Note

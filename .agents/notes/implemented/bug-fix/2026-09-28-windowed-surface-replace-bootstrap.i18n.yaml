@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-28-windowed-surface-replace-bootstrap.md
+2026-09-28-windowed-surface-replace-bootstrap.md: 0859d2c2ffabcc43b9db41c566552299566065c5
+2026-09-28-windowed-surface-replace-bootstrap.zh.md: dd00eaea8a7331a08a97ce59515020c520f43702

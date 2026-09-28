@@ -6,8 +6,16 @@ import { Context } from '@deepseek-ai/cordis'
 import { createMessage, createSystemMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
 import type { ContentBlock, ToolSchema } from '@x1a0f3n9/dsh-llm'
 import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
-import type { Session, SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
+import SessionStore, {
+  SESSION_FORMAT_VERSION,
+  SESSION_LIVE_WINDOW_EVENTS,
+  Session,
+  SessionId,
+  SessionLogOffset,
+  SessionSeq,
+} from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
+
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import TokenMeter from '@x1a0f3n9/dsh-token-meter'
 import type { ContextBreakdownProjection } from '@x1a0f3n9/dsh-token-meter/client'
@@ -494,7 +502,85 @@ describe('contextBreakdown session projection', () => {
       messageTokens: 9,
     })
   })
+
+  it('snapshots a windowed Session from the current surface when resume ingest did not run', async () => {
+    const ctx = new Context()
+    contexts.push(ctx)
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(TokenMeter)
+    const donor = Session.create(SessionId('window-breakdown-donor'))
+    const first = appendSystem(donor, 'You are terse.')
+    donor.append('request/header', { header: { config: CONFIG, tools: TOOLS }, reason: 'initial' })
+    const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 3) + 10
+    for (let turn = 1; turn <= turns; turn++) {
+      donor.append('turn/start', { turn })
+      appendUser(donor, `hello ${turn}`)
+      donor.append('turn/end', { turn, reason: { kind: 'completed' } })
+    }
+    replaceSystem(donor, first, 'You are terse and answer in one line.')
+    const events = donor.snapshotEvents()
+    const header = {
+      version: SESSION_FORMAT_VERSION,
+      id: SessionId('window-breakdown'),
+      createdAt: 1,
+      isSeeded: false,
+    }
+    const cold = Session.beginPersistedRestore(header.id, header)
+    for (const event of events) cold.adoptRestoredEvent(event)
+    cold.finishPersistedRestore(SessionLogOffset(0))
+    expect(cold.liveBaseSeq).toBeGreaterThan(0)
+    const value = projected(ctx, cold)
+    expect(value.systemTokens).toBeGreaterThan(0)
+    expect(value.toolsTokens).toBe(estimateToolsTokens({ config: CONFIG, tools: TOOLS }))
+    expect(value.messageTokens).toBeGreaterThan(0)
+    const state = ctx.sessionProjections.stateOf(cold, 'contextBreakdown')
+    expect(state?.nodes.map(node => node.seq)).toEqual([...cold.surface.nodes])
+
+    ctx.sessions.enter(cold)
+    ctx.sessions.announce(cold)
+    const currentSystem = cold.surface.nodes[0]
+    if (currentSystem === undefined) throw new Error('windowed surface has no system node')
+    replaceSystem(cold, currentSystem, 'You are still terse.')
+    const after = projected(ctx, cold)
+    expect(after.systemTokens).toBeGreaterThan(0)
+    expect(ctx.sessionProjections.stateOf(cold, 'contextBreakdown')?.nodes.map(node => node.seq))
+      .toEqual([...cold.surface.nodes])
+  })
+
+  it('refuses to bootstrap a surface node missing from the live window', () => {
+    const bootstrap = contextBreakdownProjectionDefinition.bootstrapWindowed
+    if (bootstrap === undefined) throw new Error('contextBreakdown must snapshot windowed Sessions')
+    const missing = {
+      surface: { nodes: [SessionSeq(0)] },
+      eventAt: () => undefined,
+      requestHeader: () => undefined,
+    } as unknown as Session
+    expect(() => bootstrap(missing)).toThrow(/missing from the live window/)
+
+    const notSurface = {
+      surface: { nodes: [SessionSeq(0)] },
+      eventAt: () => ({ type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } }),
+      requestHeader: () => undefined,
+    } as unknown as Session
+    expect(() => bootstrap(notSurface)).toThrow(/missing from the live window/)
+  })
+
+  it('snapshots an empty current surface without folding the live tail', () => {
+    const bootstrap = contextBreakdownProjectionDefinition.bootstrapWindowed
+    if (bootstrap === undefined) throw new Error('contextBreakdown must snapshot windowed Sessions')
+    const session = {
+      surface: { nodes: [] },
+      eventAt: () => undefined,
+      requestHeader: () => undefined,
+    } as unknown as Session
+    expect(bootstrap(session)).toEqual({
+      nodes: [],
+      breakdown: { systemTokens: 0, toolsTokens: 0, messageTokens: 0 },
+    })
+  })
 })
+
 
 describe('shared estimator', () => {
   it('prices every content-block shape under the fixed heuristic', () => {
