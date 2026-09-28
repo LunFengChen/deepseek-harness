@@ -46,6 +46,97 @@
         "./presets/ptc.patch.yml",
         "./presets/minimal.patch.yml",
         "./presets/cordis.patch.yml"
+      ],
+      "plugins": [
+        {
+          "id": "session-timeline",
+          "entryId": "dsh-session-timeline",
+          "packageName": "@x1a0f3n9/dsh-session-timeline",
+          "title": "Session timeline",
+          "description": "Rewind, delete, and regenerate conversation turns.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-session-timeline"
+        },
+        {
+          "id": "plugin-market",
+          "entryId": "dsh-market",
+          "packageName": "@x1a0f3n9/dshmarket",
+          "title": "Plugin market",
+          "description": "Browse and install community dsh plugins.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-market"
+        },
+        {
+          "id": "reasoning-effort",
+          "entryId": "reasoning-effort",
+          "packageName": "@x1a0f3n9/dsh-reasoning-effort",
+          "title": "Reasoning effort",
+          "description": "Pick thinking strength in the composer.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-reasoning-effort"
+        },
+        {
+          "id": "dsh-context",
+          "entryId": "dsh-context",
+          "packageName": "@x1a0f3n9/dsh-context",
+          "title": "Context dashboard",
+          "description": "Inspect context composition, compaction, and token use.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-context"
+        },
+        {
+          "id": "better-sidebar",
+          "entryId": "better-sidebar",
+          "packageName": "@x1a0f3n9/dsh-better-sidebar",
+          "title": "Better sidebar",
+          "description": "File, terminal, Git, and subagent workbench in the sidebar.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/DSH-better-sidebar"
+        },
+        {
+          "id": "hindsight",
+          "entryId": "hindsight",
+          "packageName": "@x1a0f3n9/hindsight-coding-agents",
+          "title": "Hindsight memory",
+          "description": "Long-term project memory. Defaults to a local Hindsight daemon; cloud is optional.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/hindsight-coding-agents"
+        },
+        {
+          "id": "failover-queue",
+          "entryId": "dsh-failover-queue",
+          "packageName": "@x1a0f3n9/dsh-failover-queue",
+          "title": "Failover queue",
+          "description": "P1/P2/P3 provider+model failover with a composer toggle and Settings page.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-failover-queue"
+        },
+        {
+          "id": "skills-manager",
+          "entryId": "skills-manager",
+          "packageName": "@x1a0f3n9/dsh-skills-manager",
+          "title": "Skills manager",
+          "description": "Load, toggle, create, and import local Agent skills.",
+          "defaultEnabled": true,
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/dsh-skills-manager"
+        },
+        {
+          "id": "search-pool",
+          "entryId": "web-search-pool",
+          "packageName": "@x1a0f3n9/dsh-web-search-pool",
+          "title": "Web search pool",
+          "description": "Multi-key failover search across Tavily, Perplexity, Exa, then keyless Bing/DuckDuckGo.",
+          "defaultEnabled": true,
+          "homepage": "https://github.com/LunFengChen/deepseek-harness/tree/dev-x1a0f3n9/packages/web/web-search-pool"
+        }
       ]
     }
   },
@@ -176,7 +267,16 @@
     "@x1a0f3n9/dsh-api-account-controller": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-settings-account": "workspace:*",
     "@x1a0f3n9/dsh-client-shortcuts": "workspace:*",
-    "@x1a0f3n9/dsh-client-ui-shortcuts": "workspace:*"
+    "@x1a0f3n9/dsh-client-ui-shortcuts": "workspace:*",
+    "@x1a0f3n9/dsh-session-timeline": "0.1.5-xfdsh.2",
+    "@x1a0f3n9/dshmarket": "1.45.2",
+    "@x1a0f3n9/dsh-reasoning-effort": "0.7.3",
+    "@x1a0f3n9/dsh-context": "0.49.7",
+    "@x1a0f3n9/dsh-better-sidebar": "0.19.3",
+    "@x1a0f3n9/hindsight-coding-agents": "0.5.2-xfdsh.4",
+    "@x1a0f3n9/dsh-failover-queue": "0.1.12",
+    "@x1a0f3n9/dsh-skills-manager": "0.1.53-xfdsh.1",
+    "@x1a0f3n9/dsh-web-search-pool": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
