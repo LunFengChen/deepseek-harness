@@ -37,6 +37,14 @@
     # once the web UI owns the choice per session.
     mode: !!js process.env.DSH_TOOLS_MODE
 
+# xfdsh 预置 search-pool as the default search provider. Restate fetchProvider
+# because a patch replaces the whole `web` config. Disabling the catalog plugin
+# skips the unusable `search-pool` id and falls through to the leaf backends.
+- id: web
+  config:
+    searchProviderOrder: [search-pool, perplexity, exa, free]
+    fetchProvider: http
+
 # ── web-only host rows, the transport layer, and the browser roster ─────────
 
 # `dsh.client` rows are the browser roster the modules node half scans into
@@ -165,7 +173,7 @@
       inject: [webStartup]
       config:
         host: !!js ctx.webStartup.host ?? '127.0.0.1'
-        port: !!js ctx.webStartup.port ?? 3080
+        port: !!js ctx.webStartup.port ?? Number(process.env.DSH_WEB_DEFAULT_PORT ?? '7777')
         compression: gzip
         compressionLevel: 1
         compressionThresholdBytes: 1024
