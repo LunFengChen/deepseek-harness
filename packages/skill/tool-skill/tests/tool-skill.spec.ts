@@ -6,7 +6,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { createUserMessage, ToolCallId, type Message } from '@x1a0f3n9/dsh-llm'
 import { createScope, type Scope } from '@x1a0f3n9/dsh-scope'
 import {
-  SESSION_FORMAT_VERSION, Session, SessionId, type SessionEvent, type UserMessage,
+  SESSION_FORMAT_VERSION, Session, SessionId, SessionSeq, type SessionEvent, type UserMessage,
 } from '@x1a0f3n9/dsh-session'
 import SystemPrompt, { renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
@@ -609,6 +609,33 @@ describe('dsh-tool-skill', () => {
 
     await expect(fireStep(ctx, agent, 1, 1))
       .rejects.toThrow('skill catalog cannot read seq 1 below the current Session length')
+  })
+
+  it('treats a released live prefix as unread catalog history instead of failing the step', async () => {
+    const home = await tempDir('tool-catalog-windowed-prefix')
+    const ctx = await setup(home)
+    ctx.skills.register({
+      name: 'live-skill',
+      description: 'Live skill',
+      source: 'runtime',
+      content: 'Live body.',
+    })
+    const session = Session.create(SessionId('catalog-windowed-prefix'))
+    const agent = sessionAgent(session)
+    openMessageTurn(session)
+    const liveBase = session.seq
+    const eventAt = session.eventAt.bind(session)
+    Object.defineProperty(session, 'liveBaseSeq', { configurable: true, get: () => liveBase })
+    Object.defineProperty(session, 'eventAt', {
+      configurable: true,
+      value: (seq: SessionSeq) => seq >= liveBase ? eventAt(seq) : undefined,
+    })
+
+    await expect(fireStep(ctx, agent, 1, 1)).resolves.toBeUndefined()
+
+    const published = catalogMessages(session)
+    expect(published).toHaveLength(1)
+    expect(JSON.stringify(published[0]?.data.content)).toContain('live-skill')
   })
 
   it('re-establishes the current catalog after compaction hides its durable message', async () => {
