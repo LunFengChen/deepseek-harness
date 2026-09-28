@@ -1,10 +1,9 @@
 /** Incrementally highlighted source; the document owner supplies the accumulated text and wrap preference. */
 import type { ReactNode } from 'react'
 import type { PropsLocale } from '@x1a0f3n9/dsh-client-ui-slots'
-import { CodeBlock } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { CodeBlock, languageForPath } from '@x1a0f3n9/dsh-client-ui-primitives'
 import { parseFileAddress } from '@x1a0f3n9/dsh-util-workspace-path'
 import type { DocumentPreviewProps } from '../document/contract.ts'
-import { languageForPath } from './languages.ts'
 import type {} from './locales.ts'
 import css from './CodeBody.module.css'
 
@@ -25,9 +24,11 @@ export function CodeBody({ resourceAddress, content, wrap, scrollportRef, t }: C
         code={content.text}
         lang={language}
         streaming={!content.eof}
+        wrap={wrap}
         lineNumbers
         copyLabel={t('copy')}
         copiedLabel={t('copied')}
+        toolbarLabels={{ codeLabel: t('codeBlock.title'), wrapLabel: t('codeBlock.wrap'), unwrapLabel: t('codeBlock.unwrap') }}
       />
     </div>
   )

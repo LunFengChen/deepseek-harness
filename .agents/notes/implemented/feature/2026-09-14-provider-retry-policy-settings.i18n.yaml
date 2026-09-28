@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-14-provider-retry-policy-settings.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-14-provider-retry-policy-settings.md
-2026-09-14-provider-retry-policy-settings.md: 2bbcc65175931161992e9f0528ba908ee028d027
-2026-09-14-provider-retry-policy-settings.zh.md: 2642d0844dcb5a45689f2d65451dcb7819b7b008
+/agent-note-provider-retry-count-and-delay-on-models-cards:
+  en: 9dd71d6559621a9f
+  zh: abf50fa99ac84d9e
+/agent-note-provider-retry-count-and-delay-on-models-cards/problem:
+  en: e8b1c5f6fdd4bb4f
+  zh: 8523ac0383286b9a
+/agent-note-provider-retry-count-and-delay-on-models-cards/decision:
+  en: 26d3b85cdbe9634e
+  zh: 031226ab4baa3c8e
+/agent-note-provider-retry-count-and-delay-on-models-cards/verification:
+  en: db307c0bca9d9ae4
+  zh: 12f93b8426feb62f
+/agent-note-provider-retry-count-and-delay-on-models-cards/alternatives-considered:
+  en: 8d2cb43269189df4
+  zh: e2c50b6842f717c3
+/agent-note-provider-retry-count-and-delay-on-models-cards/consequences:
+  en: 62c3d749cadabe6d
+  zh: bc5a0d7ef4392081

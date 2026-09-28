@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-subagent",
   "description": "Abstract subagent seam (ctx.subagents): named-provider registry for delegating to child agents",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -53,35 +53,40 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@x1a0f3n9/dsh-brand": "workspace:^",
-    "@x1a0f3n9/dsh-chunked-list": "workspace:^",
-    "@x1a0f3n9/dsh-util-values": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:*",
+    "@x1a0f3n9/dsh-chunked-list": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:~",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
-    "@x1a0f3n9/dsh-attachment": "workspace:^",
-    "@x1a0f3n9/dsh-invariants": "workspace:^",
-    "@x1a0f3n9/dsh-jobs": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
-    "@x1a0f3n9/dsh-scope": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
-    "@x1a0f3n9/dsh-session-query": "workspace:^",
-    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
-    "@x1a0f3n9/dsh-tools": "workspace:^",
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
-    "@x1a0f3n9/dsh-user-approval": "workspace:^",
-    "@x1a0f3n9/dsh-util-time": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-invariants": "workspace:*",
+    "@x1a0f3n9/dsh-jobs": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-scope": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-session-query": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@x1a0f3n9/dsh-user-approval": "workspace:*",
+    "@x1a0f3n9/dsh-util-time": "workspace:*",
+    "@x1a0f3n9/dsh-permission-presets": "workspace:*",
+    "@x1a0f3n9/dsh-workspace": "workspace:*"
   },
   "peerDependenciesMeta": {
-    "@x1a0f3n9/dsh-agent-presets": {
+    "@x1a0f3n9/dsh-agent-preset-registry": {
+      "optional": true
+    },
+    "@x1a0f3n9/dsh-permission-presets": {
       "optional": true
     },
     "@x1a0f3n9/dsh-sandbox": {
@@ -96,10 +101,10 @@
     "@x1a0f3n9/dsh-session-projection": {
       "optional": true
     },
-    "@x1a0f3n9/dsh-session-projection-cache": {
+    "@x1a0f3n9/dsh-session-query": {
       "optional": true
     },
-    "@x1a0f3n9/dsh-session-query": {
+    "@x1a0f3n9/dsh-workspace": {
       "optional": true
     },
     "@x1a0f3n9/dsh-jobs": {
@@ -107,32 +112,36 @@
     },
     "@x1a0f3n9/dsh-user-approval": {
       "optional": true
+    },
+    "@x1a0f3n9/dsh-settings": {
+      "optional": true
     }
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
-    "@x1a0f3n9/dsh-attachment": "workspace:^",
-    "@x1a0f3n9/dsh-invariants": "workspace:^",
-    "@x1a0f3n9/dsh-jobs": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
-    "@x1a0f3n9/dsh-schedule": "workspace:^",
-    "@x1a0f3n9/dsh-scope": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection-cache": "workspace:^",
-    "@x1a0f3n9/dsh-session-query": "workspace:^",
-    "@x1a0f3n9/dsh-storage": "workspace:^",
-    "@x1a0f3n9/dsh-storage-domain": "workspace:^",
-    "@x1a0f3n9/dsh-storage-json": "workspace:^",
-    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
-    "@x1a0f3n9/dsh-tools": "workspace:^",
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
-    "@x1a0f3n9/dsh-user-approval": "workspace:^",
-    "@x1a0f3n9/dsh-util-time": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-invariants": "workspace:*",
+    "@x1a0f3n9/dsh-jobs": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-schedule": "workspace:*",
+    "@x1a0f3n9/dsh-scope": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-session-query": "workspace:*",
+    "@x1a0f3n9/dsh-storage": "workspace:*",
+    "@x1a0f3n9/dsh-storage-domain": "workspace:*",
+    "@x1a0f3n9/dsh-storage-json": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@x1a0f3n9/dsh-user-approval": "workspace:*",
+    "@x1a0f3n9/dsh-util-time": "workspace:*",
+    "@x1a0f3n9/dsh-permission-presets": "workspace:*",
+    "@x1a0f3n9/dsh-workspace": "workspace:*"
   }
 }

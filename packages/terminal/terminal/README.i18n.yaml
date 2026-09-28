@@ -1,6 +1,79 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/terminal/terminal/README.md
-README.md: 99b2a687cf7e1a581c48ebbc877bf226180077a1
-README.zh.md: ea4f926c204442832277dd3cacc30c2b0d59c8c3
+/:
+  en: 3d90ab1819787962
+  zh: d5279e899341168a
+/x1a0f3n9-dsh-terminal:
+  en: 54efbbe6f220f465
+  zh: fdcbe6bcf8157c03
+/x1a0f3n9-dsh-terminal/summary:
+  en: b275cca5aa0ccbd6
+  zh: 0452420c4b45c7db
+/x1a0f3n9-dsh-terminal/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-terminal/use-this-package:
+  en: 9281b5e48aab4967
+  zh: faed2751b3933b5c
+/x1a0f3n9-dsh-terminal/use-this-package/when-to-choose-it:
+  en: c4244a1757ca3584
+  zh: b6fb10e30146b347
+/x1a0f3n9-dsh-terminal/use-this-package/composition:
+  en: c6562461d8c66517
+  zh: 8bab392367901144
+/x1a0f3n9-dsh-terminal/use-this-package/what-sessions-give-you:
+  en: 6527302f4ad84cbb
+  zh: 8edc988f1d0a3cee
+/x1a0f3n9-dsh-terminal/use-this-package/ownership-and-isolation:
+  en: 47820d85ea37cb36
+  zh: 857686d08af67fcb
+/x1a0f3n9-dsh-terminal/use-this-package/observable-outcomes-and-failures:
+  en: 4fcedb18b5e8d5f2
+  zh: d72bb1a45e45cfff
+/x1a0f3n9-dsh-terminal/understand-the-implementation:
+  en: 0d0669b98b14a3dd
+  zh: 57416c205270e4e1
+/x1a0f3n9-dsh-terminal/understand-the-implementation/design-concept:
+  en: 6bae42fb7275816f
+  zh: 5f75e1b26074108c
+/x1a0f3n9-dsh-terminal/understand-the-implementation/source-map:
+  en: a958f52bab5cf58d
+  zh: 5ae1e96dc2a5a09c
+/x1a0f3n9-dsh-terminal/understand-the-implementation/data-model-and-lifecycle:
+  en: a2adfa2708882e19
+  zh: 002f257fd8c4addb
+/x1a0f3n9-dsh-terminal/understand-the-implementation/ownership-and-cleanup-rules:
+  en: 7af36e58919e41d5
+  zh: 4fe7b4db1099bcbf
+/x1a0f3n9-dsh-terminal/understand-the-implementation/send-reservation:
+  en: 5815723cd0c6089c
+  zh: 0c612ffa4b8c466c
+/x1a0f3n9-dsh-terminal/further-exploration:
+  en: 0e744f900665e8ad
+  zh: bd7b20a82fad207e
+/x1a0f3n9-dsh-terminal/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-terminal/model-experience/indirect-consumer:
+  en: a601a3c4f5b848cd
+  zh: ec617f79f706aaa1
+/x1a0f3n9-dsh-terminal/model-experience/indirect-consumer/what-the-model-sees:
+  en: 226c182bdf48a833
+  zh: c237ad63ba025700
+/x1a0f3n9-dsh-terminal/model-experience/indirect-consumer/token-effect:
+  en: 477da21b0a5be3a6
+  zh: 3ae1d37fe671ef96
+/x1a0f3n9-dsh-terminal/model-experience/indirect-consumer/kv-cache-effect:
+  en: 9cd8b5160489ed28
+  zh: 2f0c14dd485923c9
+/x1a0f3n9-dsh-terminal/known-limitations-and-deferred-work:
+  en: a133ebc47a4df34f
+  zh: 9bb949487ee566d5
+/x1a0f3n9-dsh-terminal/known-limitations-and-deferred-work/dev-note:
+  en: 112f870e68bd1ff3
+  zh: 693f37bbd32497a0
+/x1a0f3n9-dsh-terminal/known-limitations-and-deferred-work/dev-note/undecided-directions:
+  en: 3c5203a9c40a38ef
+  zh: a7660ca08bd0d279

@@ -1,11 +1,11 @@
 import type { ContentBlock, ToolSchema } from '@x1a0f3n9/dsh-llm/types'
 import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 import type {
-  AssistantProvenanceView, AssistantRequestConfig,
+  AssistantProviderMetadataView, AssistantRequestConfig,
 } from './records.ts'
 
 export type {
-  AssistantProvenanceView, AssistantRequestConfig,
+  AssistantProviderMetadataView, AssistantRequestConfig,
 } from './records.ts'
 
 /**
@@ -133,7 +133,7 @@ interface RequestViewBase {
   error?: string
   /** Stable provider code for localized presentation of known failures. */
   errorCode?: string
-  provenance?: AssistantProvenanceView
+  providerMetadata?: AssistantProviderMetadataView
   requestConfig?: AssistantRequestConfig
   usage?: unknown
   /** Assistant message or compaction summary sequence produced by this request. */

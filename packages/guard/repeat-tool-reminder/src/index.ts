@@ -10,6 +10,13 @@ import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import type { Agent, PreStepDecision } from '@x1a0f3n9/dsh-agent'
 import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'repeat-tool-reminder': { kind: 'repeat-tool-reminder' } & ContextFormed
+  }
+}
+
 import type { MessageSource } from '@x1a0f3n9/dsh-llm'
 import type { UserMessage } from '@x1a0f3n9/dsh-session'
 import type { PostToolDecision, ToolExecution } from '@x1a0f3n9/dsh-tools'
@@ -50,11 +57,11 @@ export const Config: z<Config> = z.object({
 })
 
 /**
- * The `{kind:'plugin'}` source stamped on every reminder this guard injects —
- * the label is load-bearing (an unlabeled context would render as a user
- * prompt in derived history).
+ * The `{kind:'repeat-tool-reminder'}` producer source stamped on every reminder
+ * this guard injects — the label is load-bearing (an unlabeled context would
+ * render as a user prompt in derived history).
  */
-const PLUGIN_SOURCE: MessageSource = { kind: 'plugin', plugin: 'repeat-tool-reminder' }
+const REMINDER_SOURCE: MessageSource = { kind: 'repeat-tool-reminder' }
 
 /**
  * The gentle first-threshold reminder. Keyed to `thresholds[0]`, not a literal
@@ -202,7 +209,7 @@ export function apply(ctx: Context, config: Config): void {
       : detailedReminder(exec.name, count, previewArguments(canonical, argumentsPreviewChars))
     return createUserMessage({
       content: [{ type: 'text', text }],
-      source: { ...PLUGIN_SOURCE, form: 'notice', summary: `${exec.name} × ${count}` },
+      source: { ...REMINDER_SOURCE, form: 'notice', summary: `${exec.name} × ${count}` },
     })
   }
 

@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-15-client-modules-official-alias.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-15-client-modules-official-alias.md
-2026-09-15-client-modules-official-alias.md: a55304baf452f9977e344741143656460e84f1d6
-2026-09-15-client-modules-official-alias.zh.md: 54d31cfec61a8dec33a2ddc903593df34bef7c99
+/agent-note-restore-official-dsh-aliases-in-the-browser-module-table:
+  en: 461ecd0f64b999d3
+  zh: b9465f1036178fad
+/agent-note-restore-official-dsh-aliases-in-the-browser-module-table/problem:
+  en: 1970f08c1d5aa1c6
+  zh: 2483ce53d79c234c
+/agent-note-restore-official-dsh-aliases-in-the-browser-module-table/decision:
+  en: a054fe4d97fd949b
+  zh: 47e156e7fca62f03
+/agent-note-restore-official-dsh-aliases-in-the-browser-module-table/alternatives-considered:
+  en: 3af412da424a8fb0
+  zh: 9de755f9b91ec59a
+/agent-note-restore-official-dsh-aliases-in-the-browser-module-table/consequences:
+  en: a2442815609af3ca
+  zh: 8256cb0b057c930e

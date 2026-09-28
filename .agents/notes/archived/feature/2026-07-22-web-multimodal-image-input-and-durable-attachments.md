@@ -45,7 +45,7 @@ The persistence boundary is message acceptance, not paste:
 Each session's `InputMachine` state keeps the ordered runtime-only attachment identifiers alongside the live draft. The framework-owned chat store receives only the draft's plain-text persistence mirror, while `ConversationController` owns the corresponding browser-only `File` and object-URL registry:
 
 ```ts
-import type { Branded } from '@deepseek-ai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 type DraftAttachmentId = Branded<'DraftAttachmentId'>
 
@@ -79,7 +79,7 @@ The store performs no automatic deletion in version one. Sent user images and mo
 The attachment seam exposes immutable image write and verified read operations. The canonical metadata is deliberately narrower than a generic file record:
 
 ```ts
-import type { Branded } from '@deepseek-ai/dsh-brand'
+import type { Branded } from '@x1a0f3n9/dsh-brand'
 
 type AttachmentId = Branded<'AttachmentId'>
 

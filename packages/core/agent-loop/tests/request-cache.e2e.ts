@@ -9,7 +9,7 @@ import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
-import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek-api-key'
 
 /**
  * With-key proof that log-derived requests translate into real provider cache hits: a

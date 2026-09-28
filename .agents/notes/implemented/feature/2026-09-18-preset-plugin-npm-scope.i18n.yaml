@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-18-preset-plugin-npm-scope.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-18-preset-plugin-npm-scope.md
-2026-09-18-preset-plugin-npm-scope.md: f44528238787e8d46392d832e379e6fdce329e32
-2026-09-18-preset-plugin-npm-scope.zh.md: 01c066bda27a5928cfd5168baf2c023a2b16b9a2
+/agent-note-preset-plugin-npm-scope:
+  en: 7b2438976db589de
+  zh: 37344ffb4a3979a4
+/agent-note-preset-plugin-npm-scope/problem:
+  en: 9329e3ab57e7d117
+  zh: 9dcd56d005b637c4
+/agent-note-preset-plugin-npm-scope/decision:
+  en: fe69633375a81ada
+  zh: ed2a3f5190e98fed
+/agent-note-preset-plugin-npm-scope/alternatives-considered:
+  en: d24e8a391be5747d
+  zh: aded701c2d0f5015
+/agent-note-preset-plugin-npm-scope/consequences:
+  en: 429c7874f516c3c1
+  zh: d837dc2416a8bd3e

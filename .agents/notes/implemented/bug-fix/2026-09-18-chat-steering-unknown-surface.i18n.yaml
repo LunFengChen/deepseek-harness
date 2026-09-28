@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-18-chat-steering-unknown-surface.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-18-chat-steering-unknown-surface.md
-2026-09-18-chat-steering-unknown-surface.md: 486a69c0196f98ac7b5107def366700ef3e40b06
-2026-09-18-chat-steering-unknown-surface.zh.md: ae0525d285e9179ca750b5a987edf0df5bed4ccf
+/agent-note-render-missing-keyed-steering-chat-nodes-as-user-bubbles:
+  en: 7a44733c1f06a4e0
+  zh: 6ecd5944245b9f51
+/agent-note-render-missing-keyed-steering-chat-nodes-as-user-bubbles/problem:
+  en: dce56009046da3b9
+  zh: d6cd1796e3c245ce
+/agent-note-render-missing-keyed-steering-chat-nodes-as-user-bubbles/decision:
+  en: c5f92ac93262eb4d
+  zh: 6299fe7dcaa67afa
+/agent-note-render-missing-keyed-steering-chat-nodes-as-user-bubbles/testing:
+  en: c2619b8d79bc940c
+  zh: 16a14daa542439da
+/agent-note-render-missing-keyed-steering-chat-nodes-as-user-bubbles/alternatives-considered:
+  en: 5b66200253842d16
+  zh: c1603bd9a86a5448
+/agent-note-render-missing-keyed-steering-chat-nodes-as-user-bubbles/consequences:
+  en: e21c991bd339aef5
+  zh: 48883005870e9919
+/agent-note-render-missing-keyed-steering-chat-nodes-as-user-bubbles/related:
+  en: 0e8e6ba38ff051af
+  zh: 135b7ef131ca0a6b

@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-19-failover-queue-selector-hook.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-19-failover-queue-selector-hook.md
-2026-09-19-failover-queue-selector-hook.md: b0651d495429e16ba5b76eba5c19c9eb56de7e54
-2026-09-19-failover-queue-selector-hook.zh.md: 8cc12f2e1eab27d57177223cc3a760f0485c5bd6
+/agent-note-failover-queue-slot-renderer-must-receive-a-selector-hook:
+  en: c466c3cbac005040
+  zh: bedc712a661c918a
+/agent-note-failover-queue-slot-renderer-must-receive-a-selector-hook/problem:
+  en: 786a80803aeb465b
+  zh: b6af98caa054dc48
+/agent-note-failover-queue-slot-renderer-must-receive-a-selector-hook/decision:
+  en: b3a55015bb154635
+  zh: 90d1249a98f96958
+/agent-note-failover-queue-slot-renderer-must-receive-a-selector-hook/verification:
+  en: 28cc575dc2d44333
+  zh: cb2cf4dcfce5bdb7
+/agent-note-failover-queue-slot-renderer-must-receive-a-selector-hook/alternatives-considered:
+  en: 307dade347de6032
+  zh: 2d103e635cb2bf8c
+/agent-note-failover-queue-slot-renderer-must-receive-a-selector-hook/consequences:
+  en: 49238f3d46232719
+  zh: 7862941fc73f2042

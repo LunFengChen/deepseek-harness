@@ -1,0 +1,3 @@
+- insert:
+    - id: auto-review
+      name: '@x1a0f3n9/dsh-experimental-auto-review'

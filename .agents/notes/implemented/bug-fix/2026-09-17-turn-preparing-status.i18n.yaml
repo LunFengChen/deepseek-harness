@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-17-turn-preparing-status.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-17-turn-preparing-status.md
-2026-09-17-turn-preparing-status.md: 7dece9dd103f15ac1ecc257afb750ef0ee43b2f3
-2026-09-17-turn-preparing-status.zh.md: 64f95d5b4550bc84ca6c31647600bcacd4300cfc
+/agent-note-flush-running-status-before-prompt-assembly-and-label-turn-phases:
+  en: 6af0bc2979f87bad
+  zh: 9b669df8cc2a9f6f
+/agent-note-flush-running-status-before-prompt-assembly-and-label-turn-phases/problem:
+  en: e391c653656c3b01
+  zh: 286653a28d9abd96
+/agent-note-flush-running-status-before-prompt-assembly-and-label-turn-phases/decision:
+  en: 9e791425e3c1b8ea
+  zh: 3fa16ced674c68a9
+/agent-note-flush-running-status-before-prompt-assembly-and-label-turn-phases/testing:
+  en: 89c4a356bfeb304d
+  zh: bf8e5c946dbb0384
+/agent-note-flush-running-status-before-prompt-assembly-and-label-turn-phases/alternatives-considered:
+  en: aafe9d18b0c77165
+  zh: 99632e7f6c3cdf5b
+/agent-note-flush-running-status-before-prompt-assembly-and-label-turn-phases/consequences:
+  en: 3f16a6a0e004cf7b
+  zh: 4d2bbf74d6c92198

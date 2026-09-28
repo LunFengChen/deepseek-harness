@@ -133,12 +133,12 @@ function checkManifest(
     owner.packageName,
     manifest.dsh,
   )
-  const expectedRange = 'workspace:^'
+  const expectedRange = 'workspace:*'
   const peerRange = manifest.peerDependencies?.['@x1a0f3n9/dsh-invariants']
   if (developmentOnlyInvariant ? peerRange !== undefined : peerRange !== expectedRange) {
     addViolation(violations, owner.manifestPath, developmentOnlyInvariant
       ? '@x1a0f3n9/dsh-invariants must not be a peerDependency under this package dependency policy'
-      : '@x1a0f3n9/dsh-invariants must be a workspace:^ peerDependency')
+      : '@x1a0f3n9/dsh-invariants must be a workspace:* peerDependency')
   }
   if (manifest.devDependencies?.['@x1a0f3n9/dsh-invariants'] !== expectedRange) {
     addViolation(

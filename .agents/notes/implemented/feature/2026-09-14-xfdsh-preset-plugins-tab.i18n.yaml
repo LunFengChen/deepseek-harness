@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-14-xfdsh-preset-plugins-tab.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-14-xfdsh-preset-plugins-tab.md
-2026-09-14-xfdsh-preset-plugins-tab.md: ee35eae132471748700d2c1f93265cc2047b278e
-2026-09-14-xfdsh-preset-plugins-tab.zh.md: 3fa1a6948bb594920a77213733ba023a87d0dac7
+/agent-note-split-xfdsh-preset-plugins-out-of-plugin-list:
+  en: def93b41634b249f
+  zh: 96b88fe69822ca4f
+/agent-note-split-xfdsh-preset-plugins-out-of-plugin-list/problem:
+  en: 772687f52fe94b55
+  zh: bbfb4f0f21f7dba7
+/agent-note-split-xfdsh-preset-plugins-out-of-plugin-list/decision:
+  en: e4d0dbd5a80480d8
+  zh: 9a55eecc8bb99d3f
+/agent-note-split-xfdsh-preset-plugins-out-of-plugin-list/alternatives-considered:
+  en: 7956ce2fa2bc4f99
+  zh: 5eb6f4f89395aef1
+/agent-note-split-xfdsh-preset-plugins-out-of-plugin-list/consequences:
+  en: 20a66df6e5322dbf
+  zh: c4a6a8472e571c0c

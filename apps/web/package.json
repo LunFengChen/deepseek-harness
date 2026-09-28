@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-web-frontend",
   "description": "Web application entry: vite build over the @x1a0f3n9/dsh-client-web shell library; dist/ served by apps/cli's dsh web",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -30,17 +30,21 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@deepseek-ai/cordis-plugin-group": "workspace:^",
-    "@x1a0f3n9/dsh-client-modules": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-dockkit": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-client-web": "workspace:^",
-    "@x1a0f3n9/dsh-cmdline": "workspace:^",
-    "@x1a0f3n9/dsh-pwsh-local": "workspace:^",
-    "@x1a0f3n9/dsh-experimental-webworker-packer": "workspace:^",
-    "@x1a0f3n9/dsh-experimental-webworker-runtime": "workspace:^",
+    "@deepseek-ai/cordis-plugin-group": "workspace:~",
+    "@x1a0f3n9/dsh-client-modules": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-deliverables": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-dockkit": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-client-web": "workspace:*",
+    "@x1a0f3n9/dsh-cmdline": "workspace:*",
+    "@x1a0f3n9/dsh-pwsh-local": "workspace:*",
+    "@x1a0f3n9/dsh-experimental-agent-team": "workspace:*",
+    "@x1a0f3n9/dsh-experimental-webworker-packer": "workspace:*",
+    "@x1a0f3n9/dsh-experimental-webworker-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-remote-mock": "workspace:*",
     "@types/node": "^22.0.0",
     "@types/react": "~18.3.1",
     "@types/react-dom": "~18.3.0",
@@ -55,6 +59,12 @@
     "vite": "^6.0.0",
     "vitest": "^4.1.8",
     "ws": "8.21.0",
-    "@x1a0f3n9/dsh-launch-environment": "workspace:^"
+    "@x1a0f3n9/dsh-client-ui-theme": "workspace:*",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:*",
+    "@x1a0f3n9/dsh-workspace-changes": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-experimental-auto-review": "workspace:*",
+    "@x1a0f3n9/dsh-experimental-speech-to-text": "workspace:*",
+    "@x1a0f3n9/dsh-experimental-voice-input-bundle": "workspace:*"
   }
 }

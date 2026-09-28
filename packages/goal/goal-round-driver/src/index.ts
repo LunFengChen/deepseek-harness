@@ -58,7 +58,7 @@ function sameRound(source: GoalMessageSource, round: RoundIdentity): boolean {
 }
 
 /** Compare the complete queued record to the driver's reservation. */
-function sameQueued(content: ContentBlock[], source: MessageSource, attempt: RoundAttempt): boolean {
+function sameQueued(content: readonly ContentBlock[], source: MessageSource, attempt: RoundAttempt): boolean {
   return isGoalRoundSource(source) && sameRound(source, attempt) && isDeepStrictEqual(content, attempt.content)
 }
 
@@ -244,8 +244,12 @@ export function apply(ctx: Context): void {
   // plugin's own scheduling tasks settle.
   ctx.effect(function* () {
     ctx.on('agent/created', ({ agent }) => { stateFor(agent) })
+    ctx.on('agent/error', ({ agent }) => {
+      const state = stateFor(agent)
+      disarm(state)
+    })
     ctx.on('agent/disposed', ({ agent }) => { states.delete(agent) })
-    ctx.on('agent/session-start', ({ agent }) => {
+    ctx.on('agent/created', ({ agent }) => {
       const state = stateFor(agent)
       state.attempt = undefined
       state.competingQueued = false
@@ -336,7 +340,7 @@ export function apply(ctx: Context): void {
     /** Fail closed unless the queued prompt still owns the exact live revision. */
     function validReservation(
       state: DriverState,
-      content: ContentBlock[],
+      content: readonly ContentBlock[],
       source: GoalMessageSource,
     ): boolean {
       const attempt = state.attempt

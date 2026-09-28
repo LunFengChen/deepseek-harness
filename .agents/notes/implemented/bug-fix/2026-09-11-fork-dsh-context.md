@@ -10,7 +10,7 @@ English | [中文](2026-09-11-fork-dsh-context.zh.md)
 
 ## Decision
 
-xfdsh remaps only `@deepseek-ai/dsh-*` libraries. The official CLI name `@deepseek-ai/dsh` is left alone. Version detection is fixed in a fork of `bowenliang123/dsh-context` at `LunFengChen/dsh-context`, published as `@x1a0f3n9/dsh-context@0.49.7`, which reads `@x1a0f3n9/dsh` / `@xfcodeai/dsh` and fork library names before a leftover official CLI. The web-app bundle preinstalls that GitHub package. The later scope rename is [preset plugin npm scope](../feature/2026-09-18-preset-plugin-npm-scope.md).
+xfdsh remaps only `@x1a0f3n9/dsh-*` libraries. The official CLI name `@x1a0f3n9/dsh` is left alone. Version detection is fixed in a fork of `bowenliang123/dsh-context` at `LunFengChen/dsh-context`, published as `@x1a0f3n9/dsh-context@0.49.7`, which reads `@x1a0f3n9/dsh` / `@xfcodeai/dsh` and fork library names before a leftover official CLI. The web-app bundle preinstalls that GitHub package. The later scope rename is [preset plugin npm scope](../feature/2026-09-18-preset-plugin-npm-scope.md).
 
 ## Alternatives considered
 
@@ -22,6 +22,6 @@ xfdsh remaps only `@deepseek-ai/dsh-*` libraries. The official CLI name `@deepse
 
 ## Consequences
 
-- Official plugins that import `@deepseek-ai/dsh-session` still remap onto this fork.
+- Official plugins that import `@x1a0f3n9/dsh-session` still remap onto this fork.
 - `dsh-context` no longer treats a leftover official CLI as the running version.
 - Preinstall tracks `github:LunFengChen/dsh-context#v0.49.7` as `@x1a0f3n9/dsh-context` instead of npm `dsh-context@0.48.0`.

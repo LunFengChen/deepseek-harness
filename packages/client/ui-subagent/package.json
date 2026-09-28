@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-subagent",
   "description": "Subagent conversation catalog, continuation routing UI, and '@' reference source",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -30,9 +30,13 @@
       "inject": [
         "@x1a0f3n9/dsh-api-session-controller",
         "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-resources",
+        "@x1a0f3n9/dsh-client-ui-chat",
         "@x1a0f3n9/dsh-client-ui-conversation",
         "@x1a0f3n9/dsh-client-ui-primitives",
-        "@x1a0f3n9/dsh-client-ui-input-trigger"
+        "@x1a0f3n9/dsh-client-ui-sidebar-right",
+        "@x1a0f3n9/dsh-client-ui-input-trigger",
+        "@x1a0f3n9/dsh-client-ui-workspace"
       ],
       "platform": "web"
     }
@@ -43,27 +47,31 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-input-trigger": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-subagent": "workspace:^",
-    "@x1a0f3n9/dsh-token-meter": "workspace:^",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-resources": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-chat": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-input-trigger": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-subagent": "workspace:*",
+    "@x1a0f3n9/dsh-token-meter": "workspace:*",
     "@types/react": "~18.3.1",
     "@types/react-dom": "~18.3.0",
-    "@deepseek-ai/cordis": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:~",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
-    "@x1a0f3n9/dsh-client-connection": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^"
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:*",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:*"
   },
   "files": [
     "lib/index.js",

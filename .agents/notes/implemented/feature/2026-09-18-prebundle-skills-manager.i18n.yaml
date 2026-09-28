@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-18-prebundle-skills-manager.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-18-prebundle-skills-manager.md
-2026-09-18-prebundle-skills-manager.md: 3412d962626fd428dca8b2a9ccf2314e2aea37ed
-2026-09-18-prebundle-skills-manager.zh.md: 6c1355717b064e5112bc1f0a9afd0047a5138a32
+/agent-note-prebundle-dsh-skills-manager:
+  en: 58a43403f6cf5406
+  zh: 71b5a4c8a2813657
+/agent-note-prebundle-dsh-skills-manager/problem:
+  en: 8117acc57673bf1c
+  zh: 6f2f588b517e9640
+/agent-note-prebundle-dsh-skills-manager/decision:
+  en: cde299d837ceb31b
+  zh: 4512c3f067604ba1
+/agent-note-prebundle-dsh-skills-manager/alternatives-considered:
+  en: 62ad0446cda24b3f
+  zh: 53f69216438593f9
+/agent-note-prebundle-dsh-skills-manager/consequences:
+  en: 44c68fa65ca3b775
+  zh: 812aea379864cf99

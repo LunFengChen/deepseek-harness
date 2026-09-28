@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-17-fork-drops-source-inbox.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-17-fork-drops-source-inbox.md
-2026-09-17-fork-drops-source-inbox.md: e34e1a65894a9b21a1321453eb7cc7cf043ba132
-2026-09-17-fork-drops-source-inbox.zh.md: 93f93e623721002946a5712acf56e88840673e27
+/agent-note-fork-drops-the-source-agent-s-live-inbox:
+  en: 8a4c4f43a772b8d1
+  zh: d34edd3a1f9d25a5
+/agent-note-fork-drops-the-source-agent-s-live-inbox/problem:
+  en: 4cfad38691a76066
+  zh: 60e830bcecf66dea
+/agent-note-fork-drops-the-source-agent-s-live-inbox/decision:
+  en: baf18cf1711c99d4
+  zh: 9d9d9afee1cc2c56
+/agent-note-fork-drops-the-source-agent-s-live-inbox/verification:
+  en: 3681d91b9cb8f53e
+  zh: 3681d91b9cb8f53e
+/agent-note-fork-drops-the-source-agent-s-live-inbox/alternatives-considered:
+  en: f159d3a1b62cb285
+  zh: db824d15791e1d76
+/agent-note-fork-drops-the-source-agent-s-live-inbox/consequences:
+  en: 7288a12f8e8a49cb
+  zh: 2defabdcfa474666

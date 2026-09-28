@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-sidebar-files",
   "description": "Workspace file tree tab type for the right Sidebar: lazy directory listing over the workspaceFiles Remote namespace, opening files into the Sidebar",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -31,7 +31,8 @@
         "@x1a0f3n9/dsh-api-workspace-files",
         "@x1a0f3n9/dsh-client-ui-sidebar-right",
         "@x1a0f3n9/dsh-client-ui-session",
-        "@x1a0f3n9/dsh-api-remotes"
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-shortcuts"
       ],
       "platform": "web"
     }
@@ -42,29 +43,31 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
-    "@x1a0f3n9/dsh-api-workspace-files": "workspace:^",
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-dockkit": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-util-workspace-path": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-api-workspace-files": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-dockkit": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@x1a0f3n9/dsh-util-workspace-path": "workspace:*",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "@types/react-dom": "~18.3.0",
     "react": "^18.2.0",
     "clsx": "^2.0.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@x1a0f3n9/dsh-client-shortcuts": "workspace:*"
   },
   "files": [
     "lib/index.js",

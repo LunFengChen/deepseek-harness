@@ -1,6 +1,61 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/web/web-search-free/README.md
-README.md: 1fca7551cafce49a8174d3807e4da201fde839e6
-README.zh.md: a1647240d66f50e04974adf2d149c67f13d39322
+/:
+  en: f82ec9e6a6d8e17b
+  zh: a0ae51176e45aae3
+/x1a0f3n9-dsh-web-search-free:
+  en: 1a478ca7caac5df1
+  zh: d45e66562d6f85bd
+/x1a0f3n9-dsh-web-search-free/summary:
+  en: 8c493740c77f11c4
+  zh: b63d7b6e46a5adef
+/x1a0f3n9-dsh-web-search-free/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-web-search-free/use-this-package:
+  en: a93e95578cadb5bd
+  zh: 260d119d2710fb0d
+/x1a0f3n9-dsh-web-search-free/use-this-package/when-to-choose-it:
+  en: 842cacce2cb400c6
+  zh: 27a6b1006595989d
+/x1a0f3n9-dsh-web-search-free/use-this-package/minimal-configuration:
+  en: 4f4c13d32acdeae4
+  zh: fccbb4e1198caefa
+/x1a0f3n9-dsh-web-search-free/use-this-package/what-a-search-returns:
+  en: 6f43121671e789dd
+  zh: 4ef209b35129c9fa
+/x1a0f3n9-dsh-web-search-free/use-this-package/failures-and-recovery:
+  en: 42ce3e9d70e952f4
+  zh: 1a42d65226d320aa
+/x1a0f3n9-dsh-web-search-free/understand-the-implementation:
+  en: 9842c69ad3636bb3
+  zh: 3cdc3f816cbdd0cb
+/x1a0f3n9-dsh-web-search-free/understand-the-implementation/design-philosophy:
+  en: 961e3a9fbaa29718
+  zh: 1cd4c7512f978a68
+/x1a0f3n9-dsh-web-search-free/understand-the-implementation/source-map:
+  en: ba361d0f5abe8396
+  zh: 11934e66aaad3a11
+/x1a0f3n9-dsh-web-search-free/understand-the-implementation/request-and-mapping-flow:
+  en: 87ac9f0b0d4f14a5
+  zh: f855d66d378c8534
+/x1a0f3n9-dsh-web-search-free/further-exploration:
+  en: 3329f4f8c7d92599
+  zh: f4a51e19ab6b94d2
+/x1a0f3n9-dsh-web-search-free/model-experience:
+  en: 70157ce051207a65
+  zh: 319c6c6ae3749d3b
+/x1a0f3n9-dsh-web-search-free/model-experience/kv-cache-effect:
+  en: 40294c1c31b74824
+  zh: d75d48f485447a74
+/x1a0f3n9-dsh-web-search-free/known-limitations-and-deferred-work:
+  en: 027ed3fc603089f5
+  zh: 21ba35b4cd5db3fc
+/x1a0f3n9-dsh-web-search-free/known-limitations-and-deferred-work/dev-note:
+  en: 7f775cc79dbce94b
+  zh: 12b8f68f9e7c48ca
+/x1a0f3n9-dsh-web-search-free/known-limitations-and-deferred-work/dev-note/future-additional-keyless-engines:
+  en: 450e87ae3fe70422
+  zh: 157d8e0d7b691002

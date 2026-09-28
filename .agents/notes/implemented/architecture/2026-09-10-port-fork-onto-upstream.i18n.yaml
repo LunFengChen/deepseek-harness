@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-port-fork-onto-upstream.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-10-port-fork-onto-upstream.md
-2026-09-10-port-fork-onto-upstream.md: ec4f406bcb079de0157d6028c9d81a0e2da5242d
-2026-09-10-port-fork-onto-upstream.zh.md: 21cf69e66c93009b91b40d4d6e309a7c4d1b830f
+/agent-note-port-xfdsh-onto-upstream-master:
+  en: cc13df6631223db0
+  zh: f2eeb13554123d3c
+/agent-note-port-xfdsh-onto-upstream-master/problem:
+  en: f5c455c126a6d4cb
+  zh: 46219296d60835d6
+/agent-note-port-xfdsh-onto-upstream-master/decision:
+  en: c94ae5ffc1dab953
+  zh: a9130e6b73e37e7e
+/agent-note-port-xfdsh-onto-upstream-master/verification:
+  en: 6fbdd6db878051bf
+  zh: 72d487583eaf4049
+/agent-note-port-xfdsh-onto-upstream-master/alternatives-considered:
+  en: a3e2080fc38c011d
+  zh: 05401fcc056bb528
+/agent-note-port-xfdsh-onto-upstream-master/consequences:
+  en: 5c9b06baf7c1f9ad
+  zh: 732c31b5e250d4e1

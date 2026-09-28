@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-strip-local-rewind-dirt.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/simplification/2026-09-10-strip-local-rewind-dirt.md
-2026-09-10-strip-local-rewind-dirt.md: 7885ecc89a464e4640e0164025361f498043db80
-2026-09-10-strip-local-rewind-dirt.zh.md: f15c5c4694388b625c6b5e27e04294fc91737457
+/agent-note-strip-rewind-dirt-from-local-sessions:
+  en: c0f319b50a0ca6a2
+  zh: 71d236365e301a9c
+/agent-note-strip-rewind-dirt-from-local-sessions/problem:
+  en: 528ba53c263bfee3
+  zh: 8ffe92a3e2b7ff78
+/agent-note-strip-rewind-dirt-from-local-sessions/decision:
+  en: 93e5b21fb152f43d
+  zh: 04f3215272743a86
+/agent-note-strip-rewind-dirt-from-local-sessions/alternatives-considered:
+  en: d488b240f90707b1
+  zh: 64befa033c0f28e4
+/agent-note-strip-rewind-dirt-from-local-sessions/consequences:
+  en: ad5d472fee792fa3
+  zh: 48026f39f453b17e

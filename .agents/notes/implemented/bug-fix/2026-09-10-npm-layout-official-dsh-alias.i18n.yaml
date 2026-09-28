@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-npm-layout-official-dsh-alias.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-npm-layout-official-dsh-alias.md
-2026-09-10-npm-layout-official-dsh-alias.md: 636c81daf9730a58ffdf49c1dae8281f234aee61
-2026-09-10-npm-layout-official-dsh-alias.zh.md: f07af3bed81927d2082e5061f4205ac216a98328
+/agent-note-alias-official-dsh-names-in-the-npm-layout-registry:
+  en: 89d2dc7085961845
+  zh: eb9d63dd3c06a92a
+/agent-note-alias-official-dsh-names-in-the-npm-layout-registry/problem:
+  en: c54629c588b1bed4
+  zh: be732136be1437bf
+/agent-note-alias-official-dsh-names-in-the-npm-layout-registry/decision:
+  en: 8e7d891580d869f7
+  zh: 7cd2ebf421b22738
+/agent-note-alias-official-dsh-names-in-the-npm-layout-registry/alternatives-considered:
+  en: 180aec4d25a8ce77
+  zh: ad0cf05824f13d27
+/agent-note-alias-official-dsh-names-in-the-npm-layout-registry/consequences:
+  en: 4f5db1307c0fb63a
+  zh: 008f642d74a1b695

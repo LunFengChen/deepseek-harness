@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-13-keyless-web-search-free.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-13-keyless-web-search-free.md
-2026-09-13-keyless-web-search-free.md: a15a51c3cc401bf3fdc5314d97524d7d2492d8cb
-2026-09-13-keyless-web-search-free.zh.md: 82bfbf37128aef6c03896a84bc4f32c007225aeb
+/agent-note-keyless-bing-duckduckgo-web-search:
+  en: b05a7b1c033bf551
+  zh: 0ebfe4bfcc01ad6b
+/agent-note-keyless-bing-duckduckgo-web-search/problem:
+  en: 65ab3d24993196dc
+  zh: 91af519aab4e7f2b
+/agent-note-keyless-bing-duckduckgo-web-search/decision:
+  en: 8fa6b03f33810390
+  zh: c36820ecef3bca93
+/agent-note-keyless-bing-duckduckgo-web-search/alternatives-considered:
+  en: 591fb9af80ff8a5e
+  zh: d544a0ae66ba6ed3
+/agent-note-keyless-bing-duckduckgo-web-search/consequences:
+  en: 8ec2199cd1264b14
+  zh: 42910419210e03c5

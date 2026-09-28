@@ -13,7 +13,7 @@
 import type { Context } from '@deepseek-ai/cordis'
 import type { ToolExecution } from '@x1a0f3n9/dsh-tools'
 import type { SandboxExecutionPolicy, SandboxMode } from '@x1a0f3n9/dsh-sandbox'
-import { ESCALATION_TARGETS, approveEscalation, escalationHintMarker, sandboxDenialMarker, validateEscalationArgs } from '@x1a0f3n9/dsh-sandbox'
+import { ESCALATION_TARGETS, approveEscalation, escalationHintMarker, sandboxDenialMarker, sandboxPermissionsDescription, validateEscalationArgs } from '@x1a0f3n9/dsh-sandbox'
 import type { SandboxPolicyService } from '@x1a0f3n9/dsh-sandbox-policy'
 import { FsError } from '@x1a0f3n9/dsh-fs'
 
@@ -61,13 +61,12 @@ export class FsSandboxController {
       sandbox_permissions: {
         type: 'string',
         enum: [...this.escalationModes],
-        description: 'The wider sandbox mode this file operation needs. Only valid as a one-shot retry '
-          + 'of an operation the sandbox just denied; requires justification and user approval.',
+        description: sandboxPermissionsDescription('operation'),
       },
       justification: {
         type: 'string',
         description: 'Required with sandbox_permissions: one sentence for the user explaining '
-          + 'why this exact file operation needs the wider access.',
+          + 'why this exact file operation needs the wider access. Use the language of the user’s current request.',
       },
     }
   }
@@ -75,7 +74,8 @@ export class FsSandboxController {
   /**
    * The policy to stamp onto this mutation: an approved escalation grant (a
    * strictly wider retry resolved through `ctx.approval` before anything
-   * executes), else the session's standing mode. The calling session's cwd is
+   * executes), else the session's standing mode. Repeating the standing mode
+   * requires no approval. The calling session's cwd is
    * always carried as the workspace root. Validates the escalation argument
    * pairing first.
    * @param toolName - the mutating tool's name, for the approval audit trail.

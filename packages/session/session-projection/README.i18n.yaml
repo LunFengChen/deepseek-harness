@@ -1,6 +1,58 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/session/session-projection/README.md
-README.md: 4b387bc4d12b53db03d076f88c73824e613adc85
-README.zh.md: 6fa9c53d9ed9db9fa29e3140f6762dfe3659fcc6
+/:
+  en: 85229e402add27cf
+  zh: 66473d34393c44db
+/x1a0f3n9-dsh-session-projection:
+  en: 22cc99057e1d3721
+  zh: b9754c684a2859c4
+/x1a0f3n9-dsh-session-projection/summary:
+  en: 2a3b558f6432184f
+  zh: 205f43c59c6db2f5
+/x1a0f3n9-dsh-session-projection/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-session-projection/use-this-package:
+  en: 3a15581f0b043e79
+  zh: 302fc8afe8fb45fa
+/x1a0f3n9-dsh-session-projection/use-this-package/when-to-choose-it:
+  en: 90b7c26cb45be52a
+  zh: 386e294ec09607c1
+/x1a0f3n9-dsh-session-projection/use-this-package/define-a-projection-unit:
+  en: 69b638e196c9f6e4
+  zh: cb5ece1b76a95b5e
+/x1a0f3n9-dsh-session-projection/use-this-package/register-and-read:
+  en: 5e754e67dff07b02
+  zh: 2ba1bda464abaa45
+/x1a0f3n9-dsh-session-projection/use-this-package/persisted-checkpoints:
+  en: 45f1c05fb7e08180
+  zh: f8d62c749899651a
+/x1a0f3n9-dsh-session-projection/understand-the-implementation:
+  en: 3397f58d6f49bfda
+  zh: efb85d382e25574d
+/x1a0f3n9-dsh-session-projection/understand-the-implementation/design-concept:
+  en: 274b4b5f7cf63a9f
+  zh: ba054a536f0bb93a
+/x1a0f3n9-dsh-session-projection/understand-the-implementation/source-map:
+  en: 8b6672b48e7607d6
+  zh: 33611e7ea13219f1
+/x1a0f3n9-dsh-session-projection/understand-the-implementation/drive-and-checkpoint-flow:
+  en: 00136880bb586403
+  zh: bd35f645111c068c
+/x1a0f3n9-dsh-session-projection/further-exploration:
+  en: 304a03d08ea5c9f9
+  zh: 200a0505e8d11e0d
+/x1a0f3n9-dsh-session-projection/model-experience:
+  en: a24045627fb43695
+  zh: a8465196c3948796
+/x1a0f3n9-dsh-session-projection/model-experience/kv-cache-effect:
+  en: 8a592dae9bc946ab
+  zh: eca939995bb5f8e0
+/x1a0f3n9-dsh-session-projection/known-limitations-and-deferred-work:
+  en: 31e978a0b85c7b9f
+  zh: b6ee2ef0a7d94f9a
+/x1a0f3n9-dsh-session-projection/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98

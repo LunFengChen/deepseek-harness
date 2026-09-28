@@ -5,6 +5,8 @@
  */
 
 import type { UserMessage } from '@x1a0f3n9/dsh-llm/types'
+// Type-only: the Workspace registry's archive-admission family map this registry merges `turn` into.
+import type {} from '@x1a0f3n9/dsh-workspace/types'
 import type { OptionalSessionSeq, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session/types'
 import type { TypertContext, TypertLookup } from '@x1a0f3n9/dsh-typert-protocol'
 import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
@@ -13,6 +15,13 @@ import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
 export interface Agent {
   /** Session-backed Agent identity. */
   readonly id: SessionId
+}
+
+declare module '@x1a0f3n9/dsh-workspace/types' {
+  interface SessionActivityKindMap {
+    /** The session's own Agent is inside a turn, including one waiting for an approval or an answer. */
+    turn: true
+  }
 }
 
 declare module '@x1a0f3n9/dsh-typert-protocol' {

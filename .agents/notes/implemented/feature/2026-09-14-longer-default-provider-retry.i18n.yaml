@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-14-longer-default-provider-retry.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-14-longer-default-provider-retry.md
-2026-09-14-longer-default-provider-retry.md: 400cdaa4fe8e7dd7931bff5de1b6ec3bafb15e74
-2026-09-14-longer-default-provider-retry.zh.md: 86dd02d97537accd5c4d0f38bc9f618d7798c430
+/agent-note-longer-default-provider-retry-budget:
+  en: ac30bc206b3dd806
+  zh: 43f4f39c93ff2ba9
+/agent-note-longer-default-provider-retry-budget/problem:
+  en: bbf3984031460a60
+  zh: 7e87c7ba43faad93
+/agent-note-longer-default-provider-retry-budget/decision:
+  en: 380e6a30440b1bc0
+  zh: f05499a3547af1f3
+/agent-note-longer-default-provider-retry-budget/alternatives-considered:
+  en: 5dba35ec2b12fd55
+  zh: 52b913b3556b625b
+/agent-note-longer-default-provider-retry-budget/consequences:
+  en: ec23754c5f14b46a
+  zh: fbf5fcc8ab821a9c

@@ -34,7 +34,7 @@ Choose it when a composition runs the agent loop and wants durable request recov
 ### Minimal configuration
 
 ```yaml
-- name: '@x1a0f3n9/dsh-llm-deepseek'
+- name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
   config:
     apiKeyEnv: DEEPSEEK_API_KEY
     retryPolicy:

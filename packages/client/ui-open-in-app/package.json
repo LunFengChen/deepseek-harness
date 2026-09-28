@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-open-in-app",
-  "description": "Web Session-header \"Open In...\" split button opening the session workspace directory in a locally installed application",
-  "version": "0.1.5-rc.5",
+  "description": "Web \"Open In...\" controls: the Session-header split button opening the workspace directory in an installed application, and the document preview's default-application controls for one file",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -38,31 +38,44 @@
   "dsh": {
     "client": {
       "inject": [
+        "@x1a0f3n9/dsh-api-gateway",
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-api-session-controller",
         "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-shortcuts",
         "@x1a0f3n9/dsh-client-ui-conversation",
+        "@x1a0f3n9/dsh-client-ui-layout",
         "@x1a0f3n9/dsh-client-ui-renderer",
-        "@x1a0f3n9/dsh-client-ui-session"
+        "@x1a0f3n9/dsh-client-ui-session",
+        "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview"
       ],
       "platform": "web"
     }
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-host-open-in-app": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-api-gateway": "workspace:*",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-layout": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-host-open-in-app": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
     "@types/react": "~18.3.1",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@x1a0f3n9/dsh-client-ui-deliverables": "workspace:*",
+    "@x1a0f3n9/dsh-native-command": "workspace:*",
+    "@x1a0f3n9/dsh-client-shortcuts": "workspace:*"
   }
 }

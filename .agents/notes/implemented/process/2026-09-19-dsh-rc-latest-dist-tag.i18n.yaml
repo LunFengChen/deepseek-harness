@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-19-dsh-rc-latest-dist-tag.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-09-19-dsh-rc-latest-dist-tag.md
-2026-09-19-dsh-rc-latest-dist-tag.md: 4b750b3a474197ff49c25b6f07fb469d26c75f24
-2026-09-19-dsh-rc-latest-dist-tag.zh.md: 6516e3ecb3c4ba4aeb5eba8ba8f3ed053a28e556
+/agent-note-dsh-rc-versions-take-latest:
+  en: 39f2ed7989964613
+  zh: 45914e636886efc9
+/agent-note-dsh-rc-versions-take-latest/problem:
+  en: d7ab5ec731a4996d
+  zh: 31818a06f23cc0b1
+/agent-note-dsh-rc-versions-take-latest/decision:
+  en: 4a44d14b8fdca31d
+  zh: 3f734d4cbd35c405
+/agent-note-dsh-rc-versions-take-latest/verification:
+  en: 686f127b33baed5f
+  zh: 7d83aef4cdf075e3
+/agent-note-dsh-rc-versions-take-latest/alternatives-considered:
+  en: 589cd6f1279d15f0
+  zh: b00f00016794524e
+/agent-note-dsh-rc-versions-take-latest/consequences:
+  en: 67f25ef4b4550064
+  zh: 5ded1ed896612628
+/agent-note-dsh-rc-versions-take-latest/related:
+  en: 86ee9e4c1c3ca661
+  zh: aaeac06647837bba

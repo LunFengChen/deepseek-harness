@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-preinstall-reasoning-effort.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-10-preinstall-reasoning-effort.md
-2026-09-10-preinstall-reasoning-effort.md: 217699a037ff9601cf91032b7dc722479119456a
-2026-09-10-preinstall-reasoning-effort.zh.md: cd88bd80f7ec70439514a449d19b603fc89cd000
+/agent-note-preinstall-community-web-plugins:
+  en: d7497da4733b35a1
+  zh: 13d71beb90333bcd
+/agent-note-preinstall-community-web-plugins/problem:
+  en: 269d7ef5ef9b191f
+  zh: 7a4dbc6c14141aec
+/agent-note-preinstall-community-web-plugins/decision:
+  en: eba8df379924938b
+  zh: 9566d35579a66d74
+/agent-note-preinstall-community-web-plugins/verification:
+  en: 517811990875c972
+  zh: 1713105696dc873b
+/agent-note-preinstall-community-web-plugins/alternatives-considered:
+  en: ee885ece1228eabd
+  zh: fe8c6db5c7ffab89
+/agent-note-preinstall-community-web-plugins/consequences:
+  en: 5cedca43b0898de1
+  zh: 73edb9d350c3c44e

@@ -1,3 +1,3 @@
 - insert:
-    - id: code-runtime
-      name: '@x1a0f3n9/dsh-code-runtime-worker-thread'
+    - id: ptc-runtime
+      name: '@x1a0f3n9/dsh-ptc-runtime-node'

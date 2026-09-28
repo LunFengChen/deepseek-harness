@@ -1,0 +1,37 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write packages/client/ui-settings-agent-loop/README.md
+/:
+  en: 12adb999b01b035a
+  zh: 15ac17dd70c78e07
+/x1a0f3n9-dsh-client-ui-settings-agent-loop:
+  en: 6916a43fac9c7a69
+  zh: 694ee063beb04668
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/summary:
+  en: 42fc4bae4890b0f7
+  zh: b11cbdc801aefb56
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/use-this-package:
+  en: 189a3f8d22570043
+  zh: 6bda29a5eff7d4bd
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/understand-the-implementation:
+  en: 6412d65e7c17da6a
+  zh: 530d8b53c355efba
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/further-exploration:
+  en: 14267229f22a17b0
+  zh: e59359820f0c2c2f
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/model-experience:
+  en: 6b7c6f82ab6c8435
+  zh: 4517689c899abcbe
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/model-experience/kv-cache-effect:
+  en: ca75c51c89c2c9b0
+  zh: 6e1c9a8fdde89577
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/known-limitations-and-deferred-work:
+  en: 2696c3c3a1328b84
+  zh: 10274e668ec7ea02
+/x1a0f3n9-dsh-client-ui-settings-agent-loop/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: e88aeb617ffb74ea

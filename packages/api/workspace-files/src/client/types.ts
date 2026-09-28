@@ -46,10 +46,10 @@ declare module '@x1a0f3n9/dsh-typert-protocol' {
   }
 }
 
-/** One Host-reported write inside the session's workspace. */
+/** One Host-reported target change in the Session's filesystem. */
 export type WorkspaceFileEdit =
   | { readonly kind: 'changed'; readonly version: string }
   | { readonly kind: 'absent' }
 
-/** What one follower of a path receives: a Host write. */
-export type WorkspaceFileNotice = WorkspaceFileEdit
+/** A target change or a request to restat after reconnection. */
+export type WorkspaceFileNotice = WorkspaceFileEdit | { readonly kind: 'refresh' }

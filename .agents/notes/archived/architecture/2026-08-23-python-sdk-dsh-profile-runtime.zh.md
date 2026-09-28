@@ -15,7 +15,7 @@ Python SDK 分发一个私有 Node 应用，直接启动完整外部 `cordis.yml
 
 ### 一个应用启动器
 
-运行时可执行程序打包 `@deepseek-ai/dsh` 并运行其普通命令语法。Python 客户端默认选择 `--profile sdk`，转发有序绝对 `--patch` 路径，也可以选择另一个 `dsh` 可执行程序或 profile。可运行极简示例选择随附 `sdk-minimal` profile。私有 `@deepseek-ai/dsh-sdk-python-runtime` 应用包和检入的运行时 `cordis.yml` 均不存在。JSON-RPC 服务仍由 `@deepseek-ai/dsh-sdk-app` bundle 与 `@deepseek-ai/dsh-sdk-jsonrpc-server` 插件提供，而不是 Python 自有启动路径。
+运行时可执行程序打包 `@x1a0f3n9/dsh` 并运行其普通命令语法。Python 客户端默认选择 `--profile sdk`，转发有序绝对 `--patch` 路径，也可以选择另一个 `dsh` 可执行程序或 profile。可运行极简示例选择随附 `sdk-minimal` profile。私有 `@x1a0f3n9/dsh-sdk-python-runtime` 应用包和检入的运行时 `cordis.yml` 均不存在。JSON-RPC 服务仍由 `@x1a0f3n9/dsh-sdk-app` bundle 与 `@x1a0f3n9/dsh-sdk-jsonrpc-server` 插件提供，而不是 Python 自有启动路径。
 
 公开 Python 配置包括 `dsh_bin`、`profile`、有序 `patches`、`dsh_home`、进程 cwd／环境、provider／model／token 选择、有界初始化 timeout，以及可选的轮次／关闭 timeout。它不暴露完整 Cordis 树或任意启动 argv。`RunResult` 报告协议所有的运行值，不重复 profile 的持久化路径。
 

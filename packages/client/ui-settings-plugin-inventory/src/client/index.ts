@@ -1,6 +1,7 @@
 /** Host plugin inventory and xfdsh preset-plugin settings in Web Settings. */
 
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
+import type {} from '@x1a0f3n9/dsh-client-modules/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
 import type {} from '@x1a0f3n9/dsh-client-ui-settings/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
@@ -58,6 +59,8 @@ export function apply(ctx: ClientContext): void {
     presetDisplayText(preset, agentPresetCopy).name
   const injected = (surface: PluginInventorySettingsTabInjected['surface']): PluginInventorySettingsTabInjected => ({
     list, setEnabled, presetName, surface,
+    hooks: { clientSync: ctx.modules.entries.state },
+    retryClient: () => { void ctx.modules.entries.retry().catch((error: unknown) => { ctx.logger.error(error) }) },
   })
   ctx.slots.inject('settings.plugins.tab', () => ctx.slots.register({
     name: 'settings.plugins.tab',

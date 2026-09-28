@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-publish-absent-names-first.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-publish-absent-names-first.md
-2026-09-11-publish-absent-names-first.md: ee14cbe0e52fe58ba27b18c89dd15efc6d3572a6
-2026-09-11-publish-absent-names-first.zh.md: c1e3e7edee284125fe64c1060e436ab6ce11b206
+/agent-note-publish-absent-package-names-before-present-versions:
+  en: 7297d99533e1e0fa
+  zh: 5d2689ed89687f83
+/agent-note-publish-absent-package-names-before-present-versions/problem:
+  en: 48c1906833677f42
+  zh: 09eb08103e686af1
+/agent-note-publish-absent-package-names-before-present-versions/decision:
+  en: 9a345074b5612db7
+  zh: 42d44d27799ebe80
+/agent-note-publish-absent-package-names-before-present-versions/verification:
+  en: 9c5c5ec2fbc4f0b5
+  zh: 0b424d260ce69e6e
+/agent-note-publish-absent-package-names-before-present-versions/alternatives-considered:
+  en: 47fe1dcc56c4f154
+  zh: 3a51da5d99da57d0
+/agent-note-publish-absent-package-names-before-present-versions/consequences:
+  en: b918ac4692633a4b
+  zh: 653e1b73ee458d2c
+/agent-note-publish-absent-package-names-before-present-versions/related:
+  en: 5c8a348f63c4e98e
+  zh: 8372a8bee0ca133d

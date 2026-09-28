@@ -2,7 +2,7 @@ import type { TranslateNS } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { AttachmentRailLabels } from '../AttachmentRail.tsx'
 import type { DropOverlayLabels } from '../DropOverlay.tsx'
 import type { FileCardLabels } from '../FileCard.tsx'
-import type { ImageLightboxLabels } from '../ImageLightbox.tsx'
+import type { ImageLightboxLabels } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { MessageImageLabels } from '../MessageImage.tsx'
 
 /**

@@ -1,0 +1,55 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write packages/boot/plugin-manager/README.md
+/:
+  en: 65283627208ef4c9
+  zh: aa3f833ec24bb65a
+/x1a0f3n9-dsh-plugin-manager:
+  en: 3a7a3feb0e9394c7
+  zh: f2c1d5846de048c0
+/x1a0f3n9-dsh-plugin-manager/summary:
+  en: d6afcaa1594efcdb
+  zh: 459cb6ac0dcb2d46
+/x1a0f3n9-dsh-plugin-manager/table-of-contents:
+  en: 87679c51aa3693f5
+  zh: 11684a48a5806afb
+/x1a0f3n9-dsh-plugin-manager/use-this-package:
+  en: 3a08a29bd99f1fb1
+  zh: 364c073c0ff1d553
+/x1a0f3n9-dsh-plugin-manager/use-this-package/version-compatibility-and-exemptions:
+  en: 920c0acb3b9feaf3
+  zh: ba6e832a256880a7
+/x1a0f3n9-dsh-plugin-manager/use-this-package/configuration:
+  en: d5643a06f300c30a
+  zh: 9348b6a7676a2849
+/x1a0f3n9-dsh-plugin-manager/understand-the-implementation:
+  en: 1c737c375aeac163
+  zh: 009d7f139a749c79
+/x1a0f3n9-dsh-plugin-manager/further-exploration:
+  en: c6538243d8702a0d
+  zh: 04a82d923353c75f
+/x1a0f3n9-dsh-plugin-manager/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-plugin-manager/model-experience/management-tool:
+  en: 1815ec6ce56c80d4
+  zh: 2d7ac75d3b25eb6b
+/x1a0f3n9-dsh-plugin-manager/model-experience/management-tool/what-the-model-sees:
+  en: 72d6c70869b12f22
+  zh: 45218d6f1e765fb1
+/x1a0f3n9-dsh-plugin-manager/model-experience/management-tool/token-effect:
+  en: bc70208bd361dbcd
+  zh: bb651d6066066c6c
+/x1a0f3n9-dsh-plugin-manager/model-experience/management-tool/kv-cache-effect:
+  en: c29f60be7f3edc1a
+  zh: d9b9388b96ef95cc
+/x1a0f3n9-dsh-plugin-manager/known-limitations-and-deferred-work:
+  en: fde2d9491fe5dd4f
+  zh: ef6e6db15c4f19d2
+/x1a0f3n9-dsh-plugin-manager/known-limitations-and-deferred-work/failure-behavior:
+  en: 61450cf6e03c2819
+  zh: 4d52f5306825787b
+/x1a0f3n9-dsh-plugin-manager/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98

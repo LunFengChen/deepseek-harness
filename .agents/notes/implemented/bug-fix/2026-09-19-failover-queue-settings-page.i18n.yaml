@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-19-failover-queue-settings-page.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-19-failover-queue-settings-page.md
-2026-09-19-failover-queue-settings-page.md: 5ad83eb15814778293e7bc63fe8072be90ca7da1
-2026-09-19-failover-queue-settings-page.zh.md: a31103f27b2740449d1194e6ccbb2ae7eb49bd86
+/agent-note-failover-queue-settings-page-must-not-use-a-fixed-popover:
+  en: 17337fb0a6acf382
+  zh: f0043f3eee641a40
+/agent-note-failover-queue-settings-page-must-not-use-a-fixed-popover/problem:
+  en: c8b3f1b015718654
+  zh: 75e667a7120880c2
+/agent-note-failover-queue-settings-page-must-not-use-a-fixed-popover/decision:
+  en: 1b6c1ede1ed9db88
+  zh: b5ccbf5d464c925a
+/agent-note-failover-queue-settings-page-must-not-use-a-fixed-popover/verification:
+  en: 3f056af0c5257ff5
+  zh: 4508745e72354dcb
+/agent-note-failover-queue-settings-page-must-not-use-a-fixed-popover/alternatives-considered:
+  en: fbfc787dcc5ec5dc
+  zh: c34dc94ff39e01d0
+/agent-note-failover-queue-settings-page-must-not-use-a-fixed-popover/consequences:
+  en: ee1568e9f53853c7
+  zh: b5e71d4c4db44ce7

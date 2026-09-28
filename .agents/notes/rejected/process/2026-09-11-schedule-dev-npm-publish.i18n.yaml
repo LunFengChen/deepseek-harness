@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-schedule-dev-npm-publish.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/rejected/process/2026-09-11-schedule-dev-npm-publish.md
-2026-09-11-schedule-dev-npm-publish.md: 073195f03e36a3467d31cb7bfff6e2cdd1859e9e
-2026-09-11-schedule-dev-npm-publish.zh.md: 78f7721b2de5e2666789800d1779191770f891c0
+/agent-note-schedule-development-npm-publish-after-new-name-429:
+  en: 8450d511f7cf7244
+  zh: 9d5d8d046826f663
+/agent-note-schedule-development-npm-publish-after-new-name-429/problem:
+  en: a2b26be08465621e
+  zh: 4a10e654dd5db1a1
+/agent-note-schedule-development-npm-publish-after-new-name-429/proposal:
+  en: 9b7bf9841570e3f8
+  zh: c936e4461057f877
+/agent-note-schedule-development-npm-publish-after-new-name-429/alternatives-considered:
+  en: 64338a62b1efe5d5
+  zh: 9f3c21652e814708
+/agent-note-schedule-development-npm-publish-after-new-name-429/acceptance-criteria:
+  en: ead7e9a5534f5608
+  zh: 255da1dd4a4ac61f

@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-18-model-image-input-toggle.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-18-model-image-input-toggle.md
-2026-09-18-model-image-input-toggle.md: 5be1f509b8d01adf028a41ce335b2d49039d90c4
-2026-09-18-model-image-input-toggle.zh.md: 526a31de0765afbd3a553ea46b9d24ff756dba3f
+/agent-note-per-model-supports-images-switch:
+  en: 9161838b51cfc077
+  zh: 722c89c72990d769
+/agent-note-per-model-supports-images-switch/problem:
+  en: 8b59d84a0706d217
+  zh: e075cca218177080
+/agent-note-per-model-supports-images-switch/decision:
+  en: aed10d60330461e3
+  zh: 46955f07d8935eff
+/agent-note-per-model-supports-images-switch/alternatives-considered:
+  en: edb511e42d32efcc
+  zh: f4766e63f612a885
+/agent-note-per-model-supports-images-switch/consequences:
+  en: e1a22145d6aa6a1f
+  zh: 5a7228fd4962a3c0
+/agent-note-per-model-supports-images-switch/testing:
+  en: 81b3199452df9fdf
+  zh: a5638fd903a9638f

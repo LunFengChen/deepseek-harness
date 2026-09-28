@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-model-goal-round-cap.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-model-goal-round-cap.md
-2026-09-11-model-goal-round-cap.md: a5c0396344342604272b836d8d769beb32a93a8e
-2026-09-11-model-goal-round-cap.zh.md: 4a852f3b3ee3a8e24bc838223d9a3f1709f84739
+/agent-note-model-tools-do-not-apply-a-guessed-goal-round-cap:
+  en: 448b5ae71e67c494
+  zh: 8c9c0953a0731a08
+/agent-note-model-tools-do-not-apply-a-guessed-goal-round-cap/problem:
+  en: 02b3fbd6a7997210
+  zh: c707380527c16cbf
+/agent-note-model-tools-do-not-apply-a-guessed-goal-round-cap/decision:
+  en: 1b1adcc370528fab
+  zh: 9290fc4965d95d5b
+/agent-note-model-tools-do-not-apply-a-guessed-goal-round-cap/verification:
+  en: f331806425685fb5
+  zh: b43acffe7cc483a8
+/agent-note-model-tools-do-not-apply-a-guessed-goal-round-cap/alternatives-considered:
+  en: 4896d12d68ff2a06
+  zh: b41a03b37701076f
+/agent-note-model-tools-do-not-apply-a-guessed-goal-round-cap/consequences:
+  en: 217c289cbc3c3ac9
+  zh: 4ec958b76b164d1b
+/agent-note-model-tools-do-not-apply-a-guessed-goal-round-cap/related:
+  en: dcd2abfbf95a4d4f
+  zh: 0c7104e2a66f2585

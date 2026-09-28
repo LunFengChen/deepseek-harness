@@ -1,0 +1,52 @@
+- id: llm-deepseek
+  name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
+  disabled: true
+
+- id: agent-default-model
+  name: '@x1a0f3n9/dsh-agent-default-model'
+  config:
+    provider: deepseek-official
+    model: deepseek-v4-flash-vision-exp
+
+- id: session-persistence-jsonl
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
+  config:
+    root: !!js dshHomePath('sessions')
+    compression: none
+
+- id: agent-instructions
+  name: '@x1a0f3n9/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+
+- id: system-prompt
+  name: '@x1a0f3n9/dsh-system-prompt'
+  config:
+    personaPrefix: |
+      You are a coding assistant powered by the {{model}} model. Your working directory is {{cwd}}. Your bash tool runs under a file sandbox — a `[sandbox: file access denied …]` result is policy, not a command bug.
+
+      Verify your work by running the code or tests. Keep answers brief and factual.
+
+- insert:
+    - id: llm-replay
+      name: '@x1a0f3n9/dsh-llm-replay'
+      config:
+        providers:
+          - id: deepseek-official
+            name: DeepSeek
+            models:
+              - id: deepseek-v4-flash
+                inputModalities: [text]
+              - id: deepseek-v4-pro
+                inputModalities: [text]
+              - id: deepseek-v4-flash-vision-exp
+                inputModalities: [text, image]
+
+- id: attachment-local
+  name: '@x1a0f3n9/dsh-attachment-local'
+
+- insert:
+    - id: browser-use
+      name: '@x1a0f3n9/dsh-browser-use'
+    - id: browser-provider-fixture
+      name: './provider-fixture.mjs'

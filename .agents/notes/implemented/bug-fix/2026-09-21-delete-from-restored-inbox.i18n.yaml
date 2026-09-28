@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-21-delete-from-restored-inbox.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-21-delete-from-restored-inbox.md
-2026-09-21-delete-from-restored-inbox.md: d566712a5ae0fbebd5fecdbfd22451bcfebb6304
-2026-09-21-delete-from-restored-inbox.zh.md: 05fff1bb48e65fa411100c937c561e63f6045cc2
+/agent-note-drain-restored-inbox-splices-after-conversation-truncation:
+  en: 13b4cec7dad1026d
+  zh: f7018379a0efddb8
+/agent-note-drain-restored-inbox-splices-after-conversation-truncation/problem:
+  en: 10befba5cd371bba
+  zh: fdff122979eadba3
+/agent-note-drain-restored-inbox-splices-after-conversation-truncation/decision:
+  en: 45ae262a25a57370
+  zh: 0272f69e790f466c
+/agent-note-drain-restored-inbox-splices-after-conversation-truncation/verification:
+  en: 1820b9aaefd534d3
+  zh: 01b078453ff6dc86
+/agent-note-drain-restored-inbox-splices-after-conversation-truncation/alternatives-considered:
+  en: 5b2c51e2ca0ba9f2
+  zh: 58eddd2e7b6df776
+/agent-note-drain-restored-inbox-splices-after-conversation-truncation/consequences:
+  en: 2b3f3523d8076809
+  zh: 7f4ec461fc42c6cd

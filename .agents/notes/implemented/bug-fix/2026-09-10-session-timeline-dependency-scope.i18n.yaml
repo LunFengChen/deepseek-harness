@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-session-timeline-dependency-scope.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-session-timeline-dependency-scope.md
-2026-09-10-session-timeline-dependency-scope.md: 389722fcd1632cf3406d78b621844291d34082ee
-2026-09-10-session-timeline-dependency-scope.zh.md: 72ada785cff0c86b9c6734717123266ba54e3f5a
+/agent-note-keep-session-timeline-off-the-flattened-client-host-relay:
+  en: fc3a6457612c7696
+  zh: dc5467f2e4f42e7b
+/agent-note-keep-session-timeline-off-the-flattened-client-host-relay/problem:
+  en: 1dc65e9cf66336fc
+  zh: c0c90506c244ceec
+/agent-note-keep-session-timeline-off-the-flattened-client-host-relay/decision:
+  en: 7555793e7962ed7f
+  zh: 9884c3bff8aca102
+/agent-note-keep-session-timeline-off-the-flattened-client-host-relay/verification:
+  en: 1fc3da0c7312f8d9
+  zh: 08eb497ef324b2d4
+/agent-note-keep-session-timeline-off-the-flattened-client-host-relay/alternatives-considered:
+  en: 5bf8727faabef836
+  zh: 30a3d5c70fb2d404
+/agent-note-keep-session-timeline-off-the-flattened-client-host-relay/consequences:
+  en: b1d7a58fd92bdc89
+  zh: 875893cf6bc0a884

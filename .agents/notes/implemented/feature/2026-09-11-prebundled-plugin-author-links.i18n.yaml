@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-prebundled-plugin-author-links.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-11-prebundled-plugin-author-links.md
-2026-09-11-prebundled-plugin-author-links.md: c8d81c547adf5f61c8580f7ced64d9e6c560f702
-2026-09-11-prebundled-plugin-author-links.zh.md: e2b1be36f04988dd53e615ebc3ac242197f9957a
+/agent-note-prebundled-plugin-author-github-links:
+  en: 9b348d1a43b17bdd
+  zh: d624cd35fffa854a
+/agent-note-prebundled-plugin-author-github-links/problem:
+  en: 0a9e0bae031d8eba
+  zh: d86efc196f7d5b35
+/agent-note-prebundled-plugin-author-github-links/decision:
+  en: 36c10c0de0bc0f28
+  zh: 52ae0c8333366594
+/agent-note-prebundled-plugin-author-github-links/verification:
+  en: f23721d728fb47ae
+  zh: 4193ffc714e30033
+/agent-note-prebundled-plugin-author-github-links/alternatives-considered:
+  en: d3e8a3778a9168f8
+  zh: 39bf63e547f34d43
+/agent-note-prebundled-plugin-author-github-links/consequences:
+  en: a973555f925c2d3d
+  zh: 9951bfd8fae9b970

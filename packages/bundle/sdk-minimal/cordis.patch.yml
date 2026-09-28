@@ -24,7 +24,7 @@
       name: '@x1a0f3n9/dsh-plugin-package-inventory-deepseek'
 
     - id: llm-deepseek
-      name: '@x1a0f3n9/dsh-llm-deepseek'
+      name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
       config:
         apiKeyEnv: DEEPSEEK_API_KEY
         defaultContextWindow: !!js Number(process.env.DSH_CONTEXT_WINDOW ?? 1000000)
@@ -90,6 +90,9 @@
 
     - id: tools
       name: '@x1a0f3n9/dsh-tools'
+
+    - id: mcp-resources
+      name: '@x1a0f3n9/dsh-mcp-resources'
 
     - id: agent
       name: '@x1a0f3n9/dsh-agent'

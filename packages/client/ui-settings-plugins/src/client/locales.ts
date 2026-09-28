@@ -1,10 +1,10 @@
-/** Locale bundles for the plugin configuration section and its plugin cards. */
+/** Locale bundles for the built-in plugins settings section and the plugin configuration pages. */
 
 /** Locale keys these surfaces render. */
 export type PluginsSettingsLocaleKey =
-  | 'nav' | 'title' | 'intro' | 'tabs' | 'configurableTab' | 'empty'
-  | 'overridden' | 'reset' | 'readOnly' | 'expand' | 'collapse'
-  | 'save' | 'saving' | 'discard' | 'unsaved' | 'saveFailed' | 'invalidNumber'
+  | 'nav' | 'title' | 'intro' | 'tabs' | 'empty'
+  | 'overridden' | 'reset' | 'readOnly' | 'unavailable'
+  | 'save' | 'saving' | 'saveFailed' | 'invalidNumber'
   | 'bashTitle' | 'bashDescription' | 'bashTimeoutMs' | 'bashTimeoutMsHint'
   | 'bashMaxOutputBytes' | 'bashMaxOutputBytesHint'
   | 'agentLoopTitle' | 'agentLoopDescription' | 'agentLoopMaxParallel' | 'agentLoopMaxParallelHint'
@@ -14,7 +14,15 @@ export type PluginsSettingsLocaleKey =
   | 'webProviderTitle' | 'webProviderDescription' | 'webProviderLabel' | 'webProviderHint'
   | 'webProviderDefault' | 'webProviderPool' | 'webProviderPerplexity' | 'webProviderExa'
   | 'webProviderFree' | 'webProviderDeepSeek'
-  | 'subagentModelSelectionTitle' | 'subagentModelSelectionDescription'
+  | 'subagentTitle' | 'subagentDescription' | 'subagentLimitsTitle'
+  | 'subagentMaxDepth'
+  | 'subagentDepthHelpLabel' | 'subagentDepthHelp'
+  | 'subagentDepthZero' | 'subagentDepthOne' | 'subagentDepthOverride'
+  | 'subagentMaxActive'
+  | 'subagentCapacityHelpLabel' | 'subagentCapacityHelp'
+  | 'subagentDepthInvalid'
+  | 'subagentCapacityInvalid'
+  | 'subagentModelSelectionTitle'
   | 'subagentModelSelectionToggle' | 'subagentModelSelectionChoose' | 'subagentModelSelectionAllowed'
   | 'subagentModelSelectionLoading' | 'subagentModelSelectionLoadFailed' | 'subagentModelSelectionRetry'
   | 'subagentModelSelectionPartial' | 'subagentModelSelectionUnavailable'
@@ -23,21 +31,17 @@ export type PluginsSettingsLocaleKey =
 
 /** English copy. */
 export const en: Record<PluginsSettingsLocaleKey, string> = {
-  nav: 'Plugins',
-  title: 'Plugins',
-  intro: 'Configure and inspect the plugins installed in this deployment.',
+  nav: 'Built-in plugins',
+  title: 'Built-in plugins',
+  intro: 'Inspect the plugins this deployment ships.',
   tabs: 'Plugin views',
-  configurableTab: 'Plugin configuration',
-  empty: 'This deployment exposes no plugin settings.',
+  empty: 'This deployment exposes no plugin views.',
   overridden: 'Overridden',
   reset: 'Reset to default',
   readOnly: 'This deployment stores settings read-only.',
-  expand: 'Show settings',
-  collapse: 'Hide settings',
+  unavailable: 'This plugin is not loaded, so it cannot be configured right now.',
   save: 'Save',
   saving: 'Saving…',
-  discard: 'Discard',
-  unsaved: 'Unsaved',
   saveFailed: 'The deployment did not accept these values; they were left for you to correct.',
   invalidNumber: 'Enter a number, or leave blank to use the default.',
   bashTitle: 'Shell',
@@ -61,19 +65,32 @@ export const en: Record<PluginsSettingsLocaleKey, string> = {
   webSearchMaxUses: 'Max searches per request',
   webSearchMaxUsesHint: 'How many times one request may search before it must answer.',
   webProviderTitle: 'Search provider',
-  webProviderDescription: 'Choose the backend used for web search in this deployment.',
+  webProviderDescription: 'Choose which backend this deployment uses for web search.',
   webProviderLabel: 'Provider',
-  webProviderHint: 'Default uses the multi-key search pool (Tavily, Perplexity, Exa, then keyless Bing/DuckDuckGo). Pin a single backend only when you want that vendor alone.',
+  webProviderHint: 'The default is the multi-key search pool (Tavily, Perplexity, Exa, then keyless Bing/DuckDuckGo). Pin a vendor only when you want that one backend.',
   webProviderDefault: 'Default (search pool)',
   webProviderPool: 'Search pool',
   webProviderPerplexity: 'Perplexity',
   webProviderExa: 'Exa',
   webProviderFree: 'Keyless Bing/DuckDuckGo',
   webProviderDeepSeek: 'DeepSeek official',
-  subagentModelSelectionTitle: 'Subagent',
-  subagentModelSelectionDescription: 'Control which models agents may choose for subagents.',
-  subagentModelSelectionToggle: 'Allow agents to choose models for subagents',
-  subagentModelSelectionChoose: 'When enabled, agents can choose a provider, model, and reasoning effort for each subagent from the authorized models below. Applies only to new sessions.',
+  subagentTitle: 'Subagent',
+  subagentDescription: 'Set Subagent recursion depth, count, and models.',
+  subagentLimitsTitle: 'Limits',
+  subagentMaxDepth: 'Maximum recursion depth',
+  subagentDepthHelpLabel: 'About maximum recursion depth',
+  subagentDepthHelp: 'Limits how many levels of Subagents an Agent can create.',
+  subagentDepthZero: 'Disable Subagents',
+  subagentDepthOne: 'Only the main Agent can create Subagents',
+  subagentDepthOverride: 'If a tool defines its own maximum recursion depth, that setting takes precedence.',
+  subagentMaxActive: 'Subagent parallelism limit',
+  subagentCapacityHelpLabel: 'About the Subagent parallelism limit',
+  subagentCapacityHelp: 'Total live Subagents under the same main Agent, across all recursion levels. The main Agent is excluded. New start requests are rejected when the limit is reached.',
+  subagentDepthInvalid: 'Enter a whole number of 0 or more.',
+  subagentCapacityInvalid: 'Enter a whole number of 1 or more.',
+  subagentModelSelectionTitle: 'Model selection',
+  subagentModelSelectionToggle: 'Allow agents to choose models for Subagents',
+  subagentModelSelectionChoose: 'When enabled, agents can choose a provider, model, and reasoning effort for each Subagent from the authorized models below. Applies only to new sessions.',
   subagentModelSelectionAllowed: 'Models agents may choose',
   subagentModelSelectionLoading: 'Loading models…',
   subagentModelSelectionLoadFailed: 'Models could not be loaded.',
@@ -89,21 +106,17 @@ export const en: Record<PluginsSettingsLocaleKey, string> = {
 
 /** Simplified Chinese copy. */
 export const zh: Record<PluginsSettingsLocaleKey, string> = {
-  nav: '插件',
-  title: '插件',
-  intro: '配置和查看本部署已安装的插件。',
+  nav: '内置插件',
+  title: '内置插件',
+  intro: '查看内置部署的插件列表',
   tabs: '插件视图',
-  configurableTab: '插件配置',
-  empty: '本部署没有开放任何插件设置。',
+  empty: '本部署没有开放任何插件视图。',
   overridden: '已覆盖',
   reset: '恢复默认',
   readOnly: '本部署的设置为只读。',
-  expand: '展开设置',
-  collapse: '收起设置',
+  unavailable: '该插件当前未加载，暂时无法配置。',
   save: '保存',
   saving: '保存中…',
-  discard: '放弃修改',
-  unsaved: '未保存',
   saveFailed: '本部署没有接受这些值，已保留供你修改。',
   invalidNumber: '请填数字；留空表示使用默认值。',
   bashTitle: '终端',
@@ -136,8 +149,21 @@ export const zh: Record<PluginsSettingsLocaleKey, string> = {
   webProviderExa: 'Exa',
   webProviderFree: '无需密钥的 Bing/DuckDuckGo',
   webProviderDeepSeek: 'DeepSeek 官方',
-  subagentModelSelectionTitle: 'Subagent',
-  subagentModelSelectionDescription: '控制 Agent 为 Subagent 选择模型的权限。',
+  subagentTitle: 'Subagent',
+  subagentDescription: '设置 Subagent 的递归层级、数量和模型。',
+  subagentLimitsTitle: '运行限制',
+  subagentMaxDepth: '最大递归深度',
+  subagentDepthHelpLabel: '最大递归深度说明',
+  subagentDepthHelp: '限制 Agent 创建 Subagent 的递归层级。',
+  subagentDepthZero: '禁用 Subagent',
+  subagentDepthOne: '仅允许主 Agent 创建 Subagent',
+  subagentDepthOverride: '如果某个工具单独设置了最大递归深度，以该工具的设置为准。',
+  subagentMaxActive: 'Subagent 并行数量上限',
+  subagentCapacityHelpLabel: 'Subagent 并行数量上限说明',
+  subagentCapacityHelp: '同一主 Agent 下，所有递归层级同时存活的 Subagent 总数，主 Agent 不计入。达到上限时，新的启动请求会被拒绝。',
+  subagentDepthInvalid: '请输入不小于 0 的整数。',
+  subagentCapacityInvalid: '请输入不小于 1 的整数。',
+  subagentModelSelectionTitle: '模型选择',
   subagentModelSelectionToggle: '允许 Agent 为 Subagent 选择模型',
   subagentModelSelectionChoose: '开启后，Agent 可以从下方授权模型中，为每个 Subagent 选择提供方、模型和推理强度。仅影响新会话。',
   subagentModelSelectionAllowed: 'Agent 可选择的模型',

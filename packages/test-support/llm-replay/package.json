@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-llm-replay",
   "description": "Replay LLM plugin: short-circuits llm/stream with model chunks reconstructed from a recorded session JSONL (keyless snapshot tests)",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -27,11 +27,11 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-compaction": "workspace:^",
-    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-compaction": "workspace:*",
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*"
   },
   "peerDependenciesMeta": {
     "@x1a0f3n9/dsh-deepseek-llm-api-extensions": {
@@ -39,14 +39,14 @@
     }
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-compaction": "workspace:^",
-    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-compaction": "workspace:*",
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*"
   },
   "dependencies": {
-    "@x1a0f3n9/dsh-session-format-catalog": "workspace:^",
-    "@x1a0f3n9/dsh-util-values": "workspace:^"
+    "@x1a0f3n9/dsh-session-format-catalog": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*"
   }
 }

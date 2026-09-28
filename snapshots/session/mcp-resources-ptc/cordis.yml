@@ -1,0 +1,16 @@
+- insert:
+    - id: mcp-resource-catalog
+      name: '@x1a0f3n9/dsh-mcp-client'
+      config:
+        transport: stdio
+        serverName: catalog
+        command: !!js process.execPath
+        args: !!js '[process.env.DSH_MCP_RESOURCES_FIXTURE]'
+        failOnStartupError: true
+        reconnect:
+          enabled: false
+
+- id: tools
+  name: '@x1a0f3n9/dsh-tools'
+  config:
+    mode: ptc

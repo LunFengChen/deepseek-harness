@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-15-named-directory-listing-and-folder-open.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-15-named-directory-listing-and-folder-open.md
-2026-09-15-named-directory-listing-and-folder-open.md: 169104ae31be965e6b5a818924ad647627ba2244
-2026-09-15-named-directory-listing-and-folder-open.zh.md: 44a9437307f25c5adf329c18838ee9407fed60c6
+/agent-note-named-directory-listing-and-folder-open-follow-file-read-authority:
+  en: b8ed03b0159639ad
+  zh: ddc236e8a62e7f85
+/agent-note-named-directory-listing-and-folder-open-follow-file-read-authority/problem:
+  en: 86c3ffd1132d195c
+  zh: dec60ff2386efa48
+/agent-note-named-directory-listing-and-folder-open-follow-file-read-authority/decision:
+  en: 4a758b8d6ee4dcbe
+  zh: 623313571e14b05f
+/agent-note-named-directory-listing-and-folder-open-follow-file-read-authority/alternatives-considered:
+  en: 6f34b209d565c0dc
+  zh: a1fddf0a347f48c8
+/agent-note-named-directory-listing-and-folder-open-follow-file-read-authority/consequences:
+  en: 0ea4ca8cea2c69a0
+  zh: cc9904108fd0c6db

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-mcp-client",
   "description": "MCP client bridge: connects to MCP servers and registers their tools on ctx.tools",
-  "version": "0.1.5-rc.5",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -27,30 +27,45 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@x1a0f3n9/dsh-attachment": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-scope": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@x1a0f3n9/dsh-timeout": "workspace:^",
-    "@x1a0f3n9/dsh-tools": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-scope": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-timeout": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-mcp-resources": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.0",
-    "@deepseek-ai/schemastery": "workspace:^",
-    "zod": "^4.4.3"
+    "@deepseek-ai/schemastery": "workspace:~",
+    "@modelcontextprotocol/client": "2.0.0",
+    "@x1a0f3n9/dsh-util-values": "workspace:*"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-attachment": "workspace:^",
-    "@x1a0f3n9/dsh-attachment-local": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-scope": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@x1a0f3n9/dsh-timeout": "workspace:^",
-    "@x1a0f3n9/dsh-tools": "workspace:^",
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-attachment-local": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-scope": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-timeout": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
     "@modelcontextprotocol/server-everything": "^2026.7.4",
     "@modelcontextprotocol/server-filesystem": "^2026.7.4",
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-http-proxy": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-http-proxy": "workspace:*",
+    "@modelcontextprotocol/server": "2.0.0",
+    "@modelcontextprotocol/node": "2.0.0",
+    "zod": "^4.4.3",
+    "@x1a0f3n9/dsh-mcp-resources": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@x1a0f3n9/dsh-mcp-resources": {
+      "optional": true
+    },
+    "@x1a0f3n9/dsh-system-prompt": {
+      "optional": true
+    }
   }
 }

@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-branch-publish-quota-pause.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-09-11-branch-publish-quota-pause.md
-2026-09-11-branch-publish-quota-pause.md: 8d82d4392b4cc06d6dde488cace972f3789830f7
-2026-09-11-branch-publish-quota-pause.zh.md: cc719ddfc843b1e4e5743d01c8b3867b43f1d58c
+/agent-note-branch-publish-pauses-on-npm-new-name-quota:
+  en: 35419f60beae0566
+  zh: 2193d236e6f6260e
+/agent-note-branch-publish-pauses-on-npm-new-name-quota/problem:
+  en: 0ff66707578cce58
+  zh: 38540849720252f5
+/agent-note-branch-publish-pauses-on-npm-new-name-quota/decision:
+  en: 7d9df7268430fe80
+  zh: afb151a1f07cfa67
+/agent-note-branch-publish-pauses-on-npm-new-name-quota/verification:
+  en: 5af94315fca0ae54
+  zh: 226b2a950b088cfc
+/agent-note-branch-publish-pauses-on-npm-new-name-quota/alternatives-considered:
+  en: 900db2ef20a47597
+  zh: bfd2562871ef4fa3
+/agent-note-branch-publish-pauses-on-npm-new-name-quota/consequences:
+  en: 849b22090dc629cc
+  zh: 1e82dd7dfcf71fb7
+/agent-note-branch-publish-pauses-on-npm-new-name-quota/related:
+  en: e6f51d8589bdcc3a
+  zh: cd8c7b58c7173d62

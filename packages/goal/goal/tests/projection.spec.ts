@@ -4,9 +4,8 @@
  * asOfSeq; before the first create the value is null; a clear tombstone
  * returns it to null; a composition without the goal service has no `goal`
  * key; unmounting drops it (HMR safety). The host state retains strict replay
- * failures without throwing from the registry drive. After such a failure,
- * get and clear still use the last valid current goal; other mutations stay
- * rejected until that clear recovers the stream.
+ * failures without throwing from the registry drive, and GoalService rejects
+ * access after such a failure.
  */
 
 import { describe, expect, it, vi } from 'vitest'
@@ -14,12 +13,19 @@ import { Context } from '@deepseek-ai/cordis'
 import AgentRegistry, { agentEvents } from '@x1a0f3n9/dsh-agent'
 import type { Agent, AgentStatus } from '@x1a0f3n9/dsh-agent'
 import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
 import SessionStore from '@x1a0f3n9/dsh-session'
 import type { Session } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import GoalService, { GoalId, applyGoalProjection, foldGoal, goalProjectionDefinition } from '@x1a0f3n9/dsh-goal'
 import type { GoalProjection, GoalProjectionState, GoalRef } from '@x1a0f3n9/dsh-goal'
 import { unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
+
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'test': { kind: 'test' } & ContextFormed
+  }
+}
 
 interface Bench {
   ctx: Context
@@ -30,7 +36,7 @@ interface Bench {
 }
 
 /** Register a minimal registry-compatible live agent over a store session. */
-function liveAgent(ctx: Context, session: Session): Agent {
+async function liveAgent(ctx: Context, session: Session): Promise<Agent> {
   const status: AgentStatus = 'idle'
   const agent: Agent = {
     id: session.id,
@@ -47,7 +53,7 @@ function liveAgent(ctx: Context, session: Session): Agent {
     runMaintenance: task => task(new AbortController().signal),
     whenIdle() { return Promise.resolve() },
   }
-  ctx.agents.register(agent)
+  await ctx.agents.register(agent)
   return agent
 }
 
@@ -58,7 +64,7 @@ async function harness(withGoal: boolean): Promise<Bench> {
   await ctx.plugin(SessionProjectionRegistry)
   if (withGoal) await ctx.plugin(GoalService)
   const session = ctx.sessions.create()
-  const agent = liveAgent(ctx, session)
+  const agent = await liveAgent(ctx, session)
   return {
     ctx,
     session,
@@ -133,9 +139,10 @@ describe('goal projection unit', () => {
       start: 0,
       inserted: [createUserMessage({
         content: [{ type: 'text', text: 'unrelated pending context' }],
-        source: { kind: 'plugin', plugin: 'test' },
+        source: { kind: 'test' },
       })],
     })
+
 
     expect(bench.tailValues().goal).toBeNull()
     expect(foldGoal(bench.session.snapshotEvents()).goal).toBeUndefined()
@@ -215,48 +222,6 @@ describe('goal projection unit', () => {
 
     const failed = { ...state, failure: 'stop replay' }
     expect(applyGoalProjection(failed, foreignKind)).toBe(failed)
-    expect(applyGoalProjection(failed, turnStart)).toBe(failed)
-
-    const failedEmpty: GoalProjectionState = { current: null, seenGoalIds: [], failure: 'stop replay' }
-    const emptyClear = {
-      type: 'goal/change', seq: 8, time: 9,
-      data: {
-        kind: 'goal/change',
-        version: 1,
-        operation: 'clear',
-        cleared: { id: current.goal.id, revision: 1 },
-        clearedAt: 1,
-      },
-    } as never
-    expect(applyGoalProjection(failedEmpty, emptyClear)).toBe(failedEmpty)
-
-    const recoveryClear = {
-      type: 'goal/change', seq: 5, time: 6,
-      data: {
-        kind: 'goal/change',
-        version: 1,
-        operation: 'clear',
-        cleared: { id: current.goal.id, revision: current.goal.revision + 1 },
-        clearedAt: current.updatedAt,
-      },
-    } as never
-    expect(applyGoalProjection(failed, recoveryClear)).toEqual({
-      current: null,
-      seenGoalIds: [current.goal.id],
-      failure: null,
-    })
-
-    const staleClear = {
-      type: 'goal/change', seq: 6, time: 7,
-      data: {
-        kind: 'goal/change',
-        version: 1,
-        operation: 'clear',
-        cleared: { id: current.goal.id, revision: current.goal.revision + 2 },
-        clearedAt: current.updatedAt,
-      },
-    } as never
-    expect(applyGoalProjection(failed, staleClear)).toBe(failed)
 
     const missingTimestamps = {
       ...state,
@@ -266,49 +231,18 @@ describe('goal projection unit', () => {
       .toMatch(/current goal fold lacks timestamps/)
   })
 
-  it('keeps last-valid get and rejects non-clear mutations after a retained replay failure', async () => {
+  it('fails host goal access when the projection retained a replay failure', async () => {
     const bench = await harness(true)
-    const created = bench.ctx.goals.create(bench.agent, { objective: 'poisoned replay' })
+    bench.ctx.goals.create(bench.agent, { objective: 'poisoned replay' })
     const failure = 'goal replay failed at session event 0: invalid restored goal stream'
     const state = bench.ctx.sessionProjections.stateOf(bench.session, 'goal')
     expect(state).toBeDefined()
     Object.assign(state!, { failure })
 
-    expect(() => {
-      agentEvents(bench.ctx, bench.agent).emit('agent/session-start', { source: 'resume' })
-    }).not.toThrow()
-    expect(bench.ctx.goals.get(bench.agent)).toMatchObject({
-      id: created.id,
-      revision: created.revision,
-      objective: 'poisoned replay',
-    })
-    expect(() => bench.ctx.goals.pause(bench.agent, created)).toThrow(failure)
-    expect(() => bench.ctx.goals.create(bench.agent, { objective: 'replacement' })).toThrow(failure)
+    await expect(agentEvents(bench.ctx, bench.agent).serial('agent/created', { source: 'resume' }))
+      .resolves.toBeUndefined()
+    expect(() => bench.ctx.goals.get(bench.agent)).toThrow(failure)
     expect(bench.tailValues().goal).toMatchObject({ goal: { objective: 'poisoned replay' } })
-  })
-
-  it('clears a stuck goal after a retained replay failure so a later create can proceed', async () => {
-    const bench = await harness(true)
-    const created = bench.ctx.goals.create(bench.agent, { objective: 'poisoned replay' })
-    const failure = 'goal replay failed at session event 0: invalid restored goal stream'
-    const state = bench.ctx.sessionProjections.stateOf(bench.session, 'goal')
-    expect(state).toBeDefined()
-    Object.assign(state!, { failure })
-
-    expect(bench.ctx.goals.clear(bench.agent, created)).toEqual({
-      id: created.id,
-      revision: created.revision + 1,
-    })
-    const recovered = bench.ctx.sessionProjections.stateOf(bench.session, 'goal')
-    expect(recovered?.failure).toBeNull()
-    expect(recovered?.current).toBeNull()
-    expect(bench.ctx.goals.get(bench.agent)).toBeUndefined()
-    expect(bench.tailValues().goal).toBeNull()
-    expect(bench.ctx.goals.create(bench.agent, { objective: 'next objective' })).toMatchObject({
-      objective: 'next objective',
-      phase: 'active',
-      revision: 1,
-    })
   })
 
   it('has no goal key when the goal service is not composed', async () => {

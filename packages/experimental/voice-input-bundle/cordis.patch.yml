@@ -1,0 +1,13 @@
+- insert:
+    - id: speech-to-text
+      name: '@x1a0f3n9/dsh-experimental-speech-to-text'
+      config:
+        defaultProvider: sensevoice-local
+    - id: speech-to-text-sensevoice
+      name: '@x1a0f3n9/dsh-experimental-speech-to-text-sensevoice'
+      config:
+        dataRoot: !!js dshHomePath('speech-to-text', 'sensevoice')
+    - id: api-speech-to-text
+      name: '@x1a0f3n9/dsh-experimental-api-speech-to-text'
+    - id: ui-voice-input
+      name: '@x1a0f3n9/dsh-experimental-client-ui-voice-input'

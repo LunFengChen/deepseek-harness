@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-12-hindsight-enabled-by-default.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-12-hindsight-enabled-by-default.md
-2026-09-12-hindsight-enabled-by-default.md: c872eaae449704a76c573242d6956a01776efeb6
-2026-09-12-hindsight-enabled-by-default.zh.md: a14b1d855ed676bd474957b532e7ac673ba5089b
+/agent-note-xfdsh-enables-hindsight-by-default:
+  en: fed6171f018ec7e4
+  zh: 32f777e6b6c093ae
+/agent-note-xfdsh-enables-hindsight-by-default/problem:
+  en: 018b9c7bd9d7cee5
+  zh: aa430264ef226045
+/agent-note-xfdsh-enables-hindsight-by-default/decision:
+  en: 7da53a7769931944
+  zh: a02d7c24f9c23d2c
+/agent-note-xfdsh-enables-hindsight-by-default/alternatives-considered:
+  en: e78d35bd0b281207
+  zh: 146180a51b520200
+/agent-note-xfdsh-enables-hindsight-by-default/consequences:
+  en: bdb60ec8ea6d4798
+  zh: 50f7cf3732492772

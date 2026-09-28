@@ -42,19 +42,33 @@ afterEach(() => {
 })
 
 describe('release families', () => {
-  it('publishes Agent Teams while excluding private experimental packages', () => {
+  it('publishes all current experimental packages', () => {
     const members = releaseFamily('dsh').members(resolve(import.meta.dirname, '../..'))
 
     expect(members
       .filter(member => member.directory.startsWith('packages/experimental/'))
       .map(member => member.name)).toEqual([
       '@x1a0f3n9/dsh-experimental-agent-team-profile',
-      '@x1a0f3n9/dsh-experimental-agent-team-web-profile',
       '@x1a0f3n9/dsh-experimental-agent-team',
+      '@x1a0f3n9/dsh-experimental-api-speech-to-text',
+      '@x1a0f3n9/dsh-experimental-auto-review',
+      '@x1a0f3n9/dsh-experimental-browser-use-chrome-devtools-mcp',
+      '@x1a0f3n9/dsh-experimental-browser-use-playwright-mcp',
+      '@x1a0f3n9/dsh-experimental-browser-use-runtime',
+      '@x1a0f3n9/dsh-experimental-browser-use-stagehand-native',
       '@x1a0f3n9/dsh-experimental-client-ui-agent-team',
+      '@x1a0f3n9/dsh-experimental-client-ui-voice-input',
+      '@x1a0f3n9/dsh-experimental-computer-use-cua-driver-mcp',
+      '@x1a0f3n9/dsh-experimental-computer-use-cua-driver-native',
+      '@x1a0f3n9/dsh-experimental-inspector',
+      '@x1a0f3n9/dsh-experimental-ptc-runtime-python',
+      '@x1a0f3n9/dsh-experimental-speech-to-text-sensevoice',
+      '@x1a0f3n9/dsh-experimental-speech-to-text',
       '@x1a0f3n9/dsh-experimental-tool-agent-team',
+      '@x1a0f3n9/dsh-experimental-voice-input-bundle',
+      '@x1a0f3n9/dsh-experimental-webworker-packer',
+      '@x1a0f3n9/dsh-experimental-webworker-runtime',
     ])
-    expect(members.map(member => member.name)).not.toContain('@x1a0f3n9/dsh-experimental-inspector')
   })
 
   it('excludes private applications from the publish set', () => {
@@ -66,10 +80,29 @@ describe('release families', () => {
     expect(releaseFamily('dsh').members(root).map(entry => entry.name)).toEqual(['@x1a0f3n9/dsh-public'])
   })
 
+  it('publishes unlisted experimental packages while retaining private exclusions', () => {
+    const root = mkdtempSync(join(tmpdir(), 'dsh-release-experimental-'))
+    roots.push(root)
+    write(join(root, 'packages/experimental/prototype/package.json'), JSON.stringify({
+      name: '@x1a0f3n9/dsh-experimental-prototype',
+      version: '0.0.1',
+      publishConfig: { access: 'public' },
+    }))
+    write(join(root, 'packages/experimental/inspector/package.json'), JSON.stringify({
+      name: '@x1a0f3n9/dsh-experimental-inspector',
+      version: '0.0.1',
+      private: true,
+    }))
+
+    expect(releaseFamily('dsh').members(root).map(entry => entry.name)).toEqual([
+      '@x1a0f3n9/dsh-experimental-prototype',
+    ])
+  })
+
   it('requires dsh members to use the @x1a0f3n9 scope', () => {
     const root = mkdtempSync(join(tmpdir(), 'dsh-release-scope-'))
     roots.push(root)
-    write(join(root, 'apps/public/package.json'), '{"name":"@deepseek-ai/dsh-public","version":"0.0.1"}\n')
+    write(join(root, 'apps/public/package.json'), '{"name":"@x1a0f3n9/dsh-public","version":"0.0.1"}\n')
 
     expect(() => { releaseFamily('dsh').members(root) }).toThrow(/must name a @x1a0f3n9 package/)
   })

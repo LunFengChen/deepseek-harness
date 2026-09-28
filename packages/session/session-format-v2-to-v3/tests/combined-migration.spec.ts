@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { sessionFormatCatalog } from '@x1a0f3n9/dsh-session-format-catalog'
+import { v3Catalog as sessionFormatCatalog } from './catalog.ts'
 import { SessionFormatEventCollector, SessionFormatUnsupportedMigrationError } from '@x1a0f3n9/dsh-session-format'
 import type { SessionFormatEvent, SessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
 import { releasedV3SessionFormatCodec, restoreReleasedV3Artifact } from '../src/index.ts'

@@ -4,6 +4,7 @@
  * @module @x1a0f3n9/dsh-session-query
  */
 
+import { currentSessionMessageProjections } from '@x1a0f3n9/dsh-session-format-catalog/message-projections'
 import { Context, Service } from '@deepseek-ai/cordis'
 import {
   Session,
@@ -187,6 +188,7 @@ export abstract class SessionQueryEngine extends Service {
       loaded.events,
       loaded.header,
       loaded.inheritedEventCount,
+      currentSessionMessageProjections,
     )
     return {
       session: structuredClone(loaded.header),

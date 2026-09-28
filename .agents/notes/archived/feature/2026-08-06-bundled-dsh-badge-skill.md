@@ -11,7 +11,7 @@ The [Cordis tutorial](../../../../docs/cordis-tutorial/index.md) uses an officia
 
 ## Decision
 
-`@deepseek-ai/dsh-skill-badge` is a native Cordis plugin that registers one immutable bundled provider on `ctx.skills`. The provider owns the `dsh-badge` summary, instruction body, and PNG resource base; `dsh-tool-skill` remains the sole owner of model-facing catalog and loader rendering.
+`@x1a0f3n9/dsh-skill-badge` is a native Cordis plugin that registers one immutable bundled provider on `ctx.skills`. The provider owns the `dsh-badge` summary, instruction body, and PNG resource base; `dsh-tool-skill` remains the sole owner of model-facing catalog and loader rendering.
 
 The shipped CLI composition declares `skill-badge` as disabled. Enabling that existing row is the explicit opt-in; disabled installations advertise no badge skill and gain no model-visible content.
 

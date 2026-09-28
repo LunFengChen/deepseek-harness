@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-28-skill-catalog-windowed-prefix.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-28-skill-catalog-windowed-prefix.md
-2026-09-28-skill-catalog-windowed-prefix.md: 16a86fd41c1ea79e28bedee88bf28b6ce669b3e5
-2026-09-28-skill-catalog-windowed-prefix.zh.md: 0e375c5e90d23f51583353153f1be5691cab182c
+/agent-note-skill-catalog-history-stops-at-the-live-ram-window:
+  en: d808252e65e8223b
+  zh: ea7846f9d9c64b77
+/agent-note-skill-catalog-history-stops-at-the-live-ram-window/problem:
+  en: a1a69ec4f7e14f62
+  zh: 0953d70f4aef7236
+/agent-note-skill-catalog-history-stops-at-the-live-ram-window/decision:
+  en: 4002b04838c3ce9c
+  zh: 08a6285724470045
+/agent-note-skill-catalog-history-stops-at-the-live-ram-window/alternatives-considered:
+  en: 011445d69e6b686d
+  zh: cc266ae689e4ae24
+/agent-note-skill-catalog-history-stops-at-the-live-ram-window/consequences:
+  en: 163e145269af52e9
+  zh: 93787372f1ae2e9e
+/agent-note-skill-catalog-history-stops-at-the-live-ram-window/related:
+  en: 4d9af2ba97a323b2
+  zh: 4a1dfeb4331c6057

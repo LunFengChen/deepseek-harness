@@ -1,7 +1,7 @@
 # Keyless TypeScript SDK replay patch over the live profile patch.
 
 - id: llm-deepseek
-  name: '@x1a0f3n9/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
   disabled: true
 
 - insert:
@@ -13,8 +13,3 @@
             name: DeepSeek
             models:
               - id: deepseek-v4-flash
-
-- id: session-log-deepseek
-  name: '@x1a0f3n9/dsh-session-log-deepseek'
-  config:
-    enabled: true

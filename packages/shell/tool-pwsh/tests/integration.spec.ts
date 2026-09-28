@@ -19,7 +19,7 @@ import { ToolCallId } from '@x1a0f3n9/dsh-llm'
 import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime, { TOOL_ABORTED } from '@x1a0f3n9/dsh-tools'
 import LocalJobRegistry from '@x1a0f3n9/dsh-jobs-local'
-import * as ToolTasks from '@x1a0f3n9/dsh-tool-jobs'
+import * as ToolJobs from '@x1a0f3n9/dsh-tool-jobs'
 import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
 import { PwshLocalExecutor, resolvePwshPath } from '@x1a0f3n9/dsh-pwsh-local'
 import * as ToolPwsh from '@x1a0f3n9/dsh-tool-pwsh'
@@ -61,11 +61,13 @@ describe.skipIf(!hasPwsh)('pwsh tool over the real pwsh executor', () => {
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(LocalJobRegistry)
-    await ctx.plugin(ToolTasks)
+    await ctx.plugin(ToolJobs)
     await ctx.plugin(LocalSubprocessRuntime)
     await ctx.plugin(BashEnvPlugin)
     await ctx.plugin(PwshLocalExecutor, { timeoutMs: 20_000, graceMs: 200 })
-    await ctx.plugin(ToolPwsh)
+    // This suite pins the executor's own deadline behaviour; the job-backed
+    // foreground path is pinned by background.spec.
+    await ctx.plugin(ToolPwsh, { promoteOnTimeout: false })
   })
 
   afterEach(async () => {

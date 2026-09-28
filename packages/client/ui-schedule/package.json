@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-schedule",
-  "description": "Read-only active Schedule catalog in the Web Session header",
-  "version": "0.1.5-rc.5",
+  "description": "Host task management page and Session reminder catalog",
+  "version": "0.1.7-rc.2",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -20,8 +20,17 @@
   "dsh": {
     "client": {
       "inject": [
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-api-session-controller",
+        "@x1a0f3n9/dsh-api-workspace-controller",
+        "@x1a0f3n9/dsh-client-connection",
         "@x1a0f3n9/dsh-client-locale",
         "@x1a0f3n9/dsh-client-ui-conversation",
+        "@x1a0f3n9/dsh-client-ui-layout",
+        "@x1a0f3n9/dsh-client-ui-sidebar",
+        "@x1a0f3n9/dsh-client-ui-sidebar-right",
+        "@x1a0f3n9/dsh-client-ui-tool",
+        "@x1a0f3n9/dsh-client-ui-workspace",
         "@x1a0f3n9/dsh-client-ui-primitives"
       ],
       "platform": "web"
@@ -41,23 +50,33 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-schedule": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:*",
+    "@x1a0f3n9/dsh-api-workspace-controller": "workspace:*",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-layout": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-sidebar": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-tool": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:*",
+    "@x1a0f3n9/dsh-schedule": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "@types/react-dom": "~18.3.0",
-    "@deepseek-ai/cordis": "workspace:^",
+    "clsx": "^2.1.1",
+    "@deepseek-ai/cordis": "workspace:~",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

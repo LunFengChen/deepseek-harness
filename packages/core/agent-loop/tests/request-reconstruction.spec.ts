@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import LlmRuntime, { createUserMessage, LlmError, ReasoningEffortId  } from '@x1a0f3n9/dsh-llm'
 import type { GenerateOptions, LlmModelReasoningInfo, LlmResolvedModelInfo, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
 import SessionStore, { Session, SessionId, foldRequestHeader } from '@x1a0f3n9/dsh-session'
 import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
@@ -17,6 +18,14 @@ import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { MockAdapter, textResponse, toolCallResponse } from './mock-adapter.ts'
+
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'outer-wrapper': { kind: 'outer-wrapper' } & ContextFormed
+    'test': { kind: 'test' } & ContextFormed
+    'test-compact': { kind: 'test-compact' } & ContextFormed
+  }
+}
 
 async function harness(adapter: MockAdapter, persona = 'stable base') {
   return harnessRoutes([['mock', adapter]], persona)
@@ -177,7 +186,7 @@ describe('request stability across the loop', () => {
       if (decision.kind === 'reject') return decision
       const appended = createUserMessage({
         content: [{ type: 'text', text: 'appended reference context' }],
-        source: { kind: 'plugin', plugin: 'outer-wrapper' },
+        source: { kind: 'outer-wrapper' },
       })
       return { ...decision, messages: [...decision.messages, appended] }
     }, { prepend: true })
@@ -554,7 +563,7 @@ describe('request stability across the loop', () => {
     const nodes = agent.session.surface.nodes
     agent.session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: '[summary of turn 1]' }],
-      source: { kind: 'plugin', plugin: 'test-compact' },
+      source: { kind: 'test-compact' },
     }), {
       surfaceOp: { op: 'replace', startSeq: nodes[1]!, endSeq: nodes[2]! },
       sourceEventSeqs: [nodes[1]!, nodes[2]!],
@@ -590,7 +599,7 @@ describe('request stability across the loop', () => {
       if (first === undefined) throw new Error('request has no surface message to compact')
       subject.session.append('user/message', createUserMessage({
         content: [{ type: 'text', text: '[summary for retry]' }],
-        source: { kind: 'plugin', plugin: 'test-compact' },
+        source: { kind: 'test-compact' },
       }), {
         surfaceOp: { op: 'replace', startSeq: first, endSeq: first },
         sourceEventSeqs: [first],
@@ -740,7 +749,7 @@ describe('request stability across the loop', () => {
     const nodes = agent.session.surface.nodes
     agent.session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: '[summary of turn 1]' }],
-      source: { kind: 'plugin', plugin: 'test-compact' },
+      source: { kind: 'test-compact' },
     }), {
       surfaceOp: { op: 'replace', startSeq: nodes[1]!, endSeq: nodes[2]! },
       sourceEventSeqs: [nodes[1]!, nodes[2]!],
@@ -788,7 +797,7 @@ describe('request stability across the loop', () => {
     ctx.on('agent/request', async (_payload, next) => {
       if (!injected) {
         injected = true
-        agent.inject(createUserMessage({ content: [{ type: 'text', text: '[late context]' }], source: { kind: 'plugin', plugin: 'test' } }))
+        agent.inject(createUserMessage({ content: [{ type: 'text', text: '[late context]' }], source: { kind: 'test' } }))
       }
       return next()
     })
@@ -798,7 +807,7 @@ describe('request stability across the loop', () => {
     const first = adapter.requests[0]!
     // The inject landed in the log after the boundary: not in THIS request…
     expect(first.messages.some(m => m.content.some(b => b.type === 'text' && b.text.includes('[late context]')))).toBe(false)
-    expect(agent.session.snapshotEvents().some(e => e.type === 'user/message' && e.data.source.kind === 'plugin')).toBe(true)
+    expect(agent.session.snapshotEvents().some(e => e.type === 'user/message' && e.data.source.kind !== 'user')).toBe(true)
 
     send(agent, 'second')
     await waitForIdle(ctx, agent)
@@ -817,7 +826,7 @@ describe('request stability across the loop', () => {
       // request content in place. The freeze turns it into a loud error.
       options.messages.push(createUserMessage({
         content: [{ type: 'text', text: 'sneaky' }],
-        source: { kind: 'plugin', plugin: 'test' },
+        source: { kind: 'test' },
       }))
       return next()
     })

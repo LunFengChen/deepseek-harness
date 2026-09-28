@@ -1,37 +1,52 @@
 /** Platform-neutral assembly of generated Host Remote contributions. */
 
 import type { Context } from '@deepseek-ai/cordis'
-import agentPresetsRemote from '@x1a0f3n9/dsh-agent-presets/remote'
+import agentPresetsRemote from '@x1a0f3n9/dsh-agent-preset-registry/remote'
 import commandsRemote from '@x1a0f3n9/dsh-commands/remote'
+import accountRemote from '@x1a0f3n9/dsh-api-account-controller/remote'
 import settingsControllerRemote from '@x1a0f3n9/dsh-api-settings-controller/remote'
+import officeToPdfRemote from '@x1a0f3n9/dsh-office-to-pdf/remote'
 import goalsRemote from '@x1a0f3n9/dsh-goal/remote'
+import scheduleRemote from '@x1a0f3n9/dsh-schedule/remote'
 import llmRemote from '@x1a0f3n9/dsh-llm/remote'
 import dynamicRemote from '@x1a0f3n9/dsh-cordis-host-runner/remote'
+import pluginManagerRemote from '@x1a0f3n9/dsh-plugin-manager/remote'
+import pluginRegistryProbeRemote from '@x1a0f3n9/dsh-client-ui-plugin-manager/remote'
 import pluginInventoryRemote from '@x1a0f3n9/dsh-host-plugin-inventory/remote'
 import messageFeedbackRemote from '@x1a0f3n9/dsh-message-feedback/remote'
+import permissionPresetsRemote from '@x1a0f3n9/dsh-permission-presets/remote'
 import sessionFeedbackRemote from '@x1a0f3n9/dsh-command-feedback/remote'
 import fileUploadsRemote from '@x1a0f3n9/dsh-client-file-upload/remote'
 import sessionReferencesRemote from '@x1a0f3n9/dsh-session-reference/remote'
 import subagentsRemote from '@x1a0f3n9/dsh-subagent/remote'
 import sessionRemote from '@x1a0f3n9/dsh-api-session-controller/remote'
+import jobRemote from '@x1a0f3n9/dsh-api-job-controller/remote'
 import workspaceRemote from '@x1a0f3n9/dsh-api-workspace-controller/remote'
+import terminalRemote from '@x1a0f3n9/dsh-api-terminal-controller/remote'
 import workspaceFilesRemote from '@x1a0f3n9/dsh-api-workspace-files/remote'
 import type { ClientRemote } from '@x1a0f3n9/dsh-api-gateway/client'
 
 export type { ClientRemote } from '@x1a0f3n9/dsh-api-gateway/client'
 export type {
-  PluginInventoryCatalogEntry,
-  PluginInventorySetEnabledRequest,
-  PluginInventorySetEnabledValue,
-  PluginInventorySnapshot,
-} from '@x1a0f3n9/dsh-host-plugin-inventory/types'
-export type {} from '@x1a0f3n9/dsh-agent-presets/remote'
+  BundleInfo, BundleRowInfo, ChangeResult, IncompatiblePlugin, InspectOptions, InstallBundleOptions, InstallSpecKind, ManagementError,
+  PackageResult,
+  PluginChange, PluginEntryId, PluginInfo, PluginInspectProblem, PluginInstallCancellation, PluginInstallFailureKind,
+  PluginInstallLogChunk, PluginInstallProgress, PluginInstallRequestId, PluginRegistries, PluginSpecInspection, ReadOnlyReason, Registry,
+} from '@x1a0f3n9/dsh-plugin-manager/types'
+export type {} from '@x1a0f3n9/dsh-plugin-manager/remote'
+export type {} from '@x1a0f3n9/dsh-client-ui-plugin-manager/remote'
+export type { PluginInventorySnapshot } from '@x1a0f3n9/dsh-host-plugin-inventory/types'
+export type {} from '@x1a0f3n9/dsh-agent-preset-registry/remote'
 export type {} from '@x1a0f3n9/dsh-commands/remote'
 export type {} from '@x1a0f3n9/dsh-api-settings-controller/remote'
+export type {} from '@x1a0f3n9/dsh-api-account-controller/remote'
 export type {} from '@x1a0f3n9/dsh-goal/remote'
+export type {} from '@x1a0f3n9/dsh-schedule/remote'
+export type {} from '@x1a0f3n9/dsh-office-to-pdf/remote'
 export type {} from '@x1a0f3n9/dsh-llm/remote'
 export type {} from '@x1a0f3n9/dsh-host-plugin-inventory/remote'
 export type {} from '@x1a0f3n9/dsh-message-feedback/remote'
+export type {} from '@x1a0f3n9/dsh-permission-presets/remote'
 export type {} from '@x1a0f3n9/dsh-command-feedback/remote'
 export type {} from '@x1a0f3n9/dsh-client-file-upload/remote'
 export type {} from '@x1a0f3n9/dsh-session-reference/remote'
@@ -39,11 +54,14 @@ export type {} from '@x1a0f3n9/dsh-subagent/remote'
 export type * from '@x1a0f3n9/dsh-subagent/client'
 export type {} from '@x1a0f3n9/dsh-api-session-controller/remote'
 export type * from '@x1a0f3n9/dsh-api-session-controller/types'
+export type {} from '@x1a0f3n9/dsh-api-job-controller/remote'
+export type * from '@x1a0f3n9/dsh-api-job-controller/types'
 export type {} from '@x1a0f3n9/dsh-api-workspace-controller/remote'
 export type * from '@x1a0f3n9/dsh-api-workspace-controller/types'
 export type {} from '@x1a0f3n9/dsh-api-workspace-files/remote'
 export type * from '@x1a0f3n9/dsh-api-workspace-files/types'
-export type { SessionJob as JobView } from '@x1a0f3n9/dsh-api-session-controller/types'
+export type {} from '@x1a0f3n9/dsh-api-terminal-controller/remote'
+export type * from '@x1a0f3n9/dsh-api-terminal-controller/types'
 // The forwarded-event allowlist's selection seat: without it in the consumer's
 // compilation face `TypertRemoteEvent` is `never` and every `$on` call fails.
 export type { ApiRemoteForwardedEvent } from '../types.ts'
@@ -54,7 +72,8 @@ export type {} from '@x1a0f3n9/dsh-commands/types'
 export type {} from '@x1a0f3n9/dsh-cordis-host-runner/types'
 export type {} from '@x1a0f3n9/dsh-credentials/types'
 export type {} from '@x1a0f3n9/dsh-llm/types'
-export type {} from '@x1a0f3n9/dsh-agent-presets/types'
+export type {} from '@x1a0f3n9/dsh-agent-preset-registry/types'
+export type {} from '@x1a0f3n9/dsh-permission-presets/types'
 export type {} from '@x1a0f3n9/dsh-settings/types'
 export type {} from '@x1a0f3n9/dsh-user-approval/types'
 export type {} from '@x1a0f3n9/dsh-user-questions/types'
@@ -156,9 +175,11 @@ export async function apply(ctx: Context): Promise<() => Promise<void>> {
   const disposers: Array<() => Promise<void>> = []
   try {
     for (const contribution of [
-      agentPresetsRemote, commandsRemote, settingsControllerRemote, goalsRemote, llmRemote, dynamicRemote,
-      pluginInventoryRemote, messageFeedbackRemote, sessionFeedbackRemote, fileUploadsRemote, sessionReferencesRemote,
-      subagentsRemote, sessionRemote, workspaceRemote, workspaceFilesRemote,
+      agentPresetsRemote, commandsRemote, settingsControllerRemote, accountRemote, goalsRemote, llmRemote, dynamicRemote, scheduleRemote,
+      pluginInventoryRemote, pluginManagerRemote, pluginRegistryProbeRemote, messageFeedbackRemote, sessionFeedbackRemote,
+      fileUploadsRemote, sessionReferencesRemote,
+      permissionPresetsRemote, subagentsRemote, sessionRemote, jobRemote, workspaceRemote, workspaceFilesRemote, terminalRemote,
+      officeToPdfRemote,
     ]) {
       disposers.push(await ctx.remote.$mount(contribution))
     }

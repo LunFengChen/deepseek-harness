@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-goal-continue-after-turn-error.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-goal-continue-after-turn-error.md
-2026-09-11-goal-continue-after-turn-error.md: 8663d8c0ae868bc095d6d86365ca98ef7c536568
-2026-09-11-goal-continue-after-turn-error.zh.md: 4c51c6223f3594dcdec83ebad5d35053e4280fbc
+/agent-note-goal-rounds-continue-after-a-turn-level-model-error:
+  en: fcbf7805d9e0e2e3
+  zh: 5f6642f29f318041
+/agent-note-goal-rounds-continue-after-a-turn-level-model-error/problem:
+  en: 683a7af399ab156c
+  zh: 44291d4b43331da2
+/agent-note-goal-rounds-continue-after-a-turn-level-model-error/decision:
+  en: 82e02dece308a780
+  zh: cf82d8ba50d3a9c4
+/agent-note-goal-rounds-continue-after-a-turn-level-model-error/verification:
+  en: d35c3db9beb4f23c
+  zh: 50a92e124cbf4967
+/agent-note-goal-rounds-continue-after-a-turn-level-model-error/alternatives-considered:
+  en: 04262191fe8505ab
+  zh: 7778eaa1459cc582
+/agent-note-goal-rounds-continue-after-a-turn-level-model-error/consequences:
+  en: b2ef20712876ac75
+  zh: f3be1dbd7a39121a
+/agent-note-goal-rounds-continue-after-a-turn-level-model-error/related:
+  en: db32673e1ca2551d
+  zh: 4a81f6605305e6da

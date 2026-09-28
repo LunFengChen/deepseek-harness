@@ -24,3 +24,7 @@
 - insert:
     - id: llm-replay
       name: '@x1a0f3n9/dsh-llm-replay'
+
+- id: session-log-deepseek
+  config:
+    enabled: false

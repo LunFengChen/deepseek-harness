@@ -5,16 +5,17 @@
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { contentHasImage, createUserMessage, BlockAssembler, LlmError } from '@x1a0f3n9/dsh-llm'
+import { contentHasImage, BlockAssembler, LlmError } from '@x1a0f3n9/dsh-llm'
+import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
 import type {
-  ContentBlock, FinishReason, GenerateOptions, Message, TokenUsage, ToolSchema,
+  ContentBlock, FinishReason, GenerateOptions, Message, RequestMessage, TokenUsage, ToolSchema,
 } from '@x1a0f3n9/dsh-llm'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
 
 interface SummaryConfig {
   readonly summarizationProvider: string
   readonly summarizationModel: string
-  readonly maxTokens?: number
+  readonly maxTokens: number
 }
 
 /** Tags wrapping the structured summary inside the landed checkpoint node. */
@@ -148,19 +149,20 @@ export async function summarizeWithLlm(
   }
 
   const assembler = new BlockAssembler()
-  const messages: Message[] = [
+  const messages: RequestMessage[] = [
     ...input.messages,
-    createUserMessage({
+    deepFreeze({
+      role: 'user',
       content: [{ type: 'text', text: COMPACTION_INSTRUCTION }],
-      source: { kind: 'plugin', plugin: 'dsh-compaction-basic' },
     }),
   ]
   const options: GenerateOptions = {
     provider: target.provider,
     model: target.model,
     messages,
+    toolHistory: agent.session.toolHistory(),
     ...input.tools === undefined ? {} : { tools: [...input.tools] },
-    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
+    maxTokens: config.maxTokens,
     sessionId: agent.session.id,
     purpose: 'compaction',
     ...signal === undefined ? {} : { signal },
@@ -180,7 +182,7 @@ export async function summarizeWithLlm(
     llmStreamCall: true,
     provider: options.provider,
     model: options.model,
-    ...config.maxTokens === undefined ? {} : { maxTokens: config.maxTokens },
+    maxTokens: config.maxTokens,
     ...(assembler.usage === undefined ? {} : { usage: assembler.usage }),
   }
 }
@@ -203,8 +205,11 @@ function finishError(finish: FinishReason): Error | undefined {
   switch (finish.kind) {
     case 'error':
     case 'aborted': {
-      const error = new Error(finish.failure.message) as Error & { code?: string }
-      error.code = finish.failure.code
+      return new LlmError(finish.failure.message, finish.failure.code, finish.failure)
+    }
+    case 'max-tokens': {
+      const error = new Error('summarization truncated at the token cap (incomplete checkpoint)') as Error & { code?: string }
+      error.code = 'MAX_TOKENS'
       return error
     }
     default:

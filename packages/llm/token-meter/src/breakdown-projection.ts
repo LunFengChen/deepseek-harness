@@ -85,7 +85,7 @@ function bootstrapWindowedBreakdown(session: Session): ContextBreakdownState {
  */
 export const contextBreakdownProjectionDefinition = {
   key: 'contextBreakdown',
-  stateVersion: 4,
+  stateVersion: 5,
   stateSchema: contextBreakdownStateSchema,
   init: (): ContextBreakdownState => ({
     nodes: [],

@@ -1,6 +1,70 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/client/modules/README.md
-README.md: 527973c4aadeb1a5a48edff246840d5f8375acf2
-README.zh.md: f645a80d37646c1ceb4ac2f047d20dddd5c8e0d5
+/:
+  en: 97d39db1617684ea
+  zh: de11ba354583a044
+/x1a0f3n9-dsh-client-modules:
+  en: a1244a8c86fdf007
+  zh: 36640e75df3523ca
+/x1a0f3n9-dsh-client-modules/summary:
+  en: ab7ece5891dd6289
+  zh: b9b5baab328be517
+/x1a0f3n9-dsh-client-modules/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-client-modules/use-this-package:
+  en: 25f536f156ec0bcc
+  zh: a522355b3e0edeae
+/x1a0f3n9-dsh-client-modules/use-this-package/declaring-a-client-plugin:
+  en: d4a7f865f4593724
+  zh: 4313eb8fe9cd5c98
+/x1a0f3n9-dsh-client-modules/use-this-package/what-the-browser-loads:
+  en: 1383d68472b3c057
+  zh: 94dd7d9abbdbccf3
+/x1a0f3n9-dsh-client-modules/use-this-package/live-plugin-composition:
+  en: 45740a56e931d094
+  zh: b3362af77c804459
+/x1a0f3n9-dsh-client-modules/use-this-package/sharing-modules:
+  en: 0aaf0693db8bb203
+  zh: 9f4738cdc6b55c26
+/x1a0f3n9-dsh-client-modules/use-this-package/build-requirements:
+  en: b6a4d3b901c89efe
+  zh: 615b5f3eec41f281
+/x1a0f3n9-dsh-client-modules/understand-the-implementation:
+  en: 7ab11d2c2bdc6eaa
+  zh: 54c3c9091cf59711
+/x1a0f3n9-dsh-client-modules/understand-the-implementation/design-concept:
+  en: 49dcadc166c2d06e
+  zh: bbf67c6dc47f4ead
+/x1a0f3n9-dsh-client-modules/understand-the-implementation/lazy-cjs-model:
+  en: 6d16b74acb333e3b
+  zh: fcb3a20cc8c39e4a
+/x1a0f3n9-dsh-client-modules/understand-the-implementation/incremental-composition:
+  en: 1b54c654b3f7344d
+  zh: c20d3499b51f0b4d
+/x1a0f3n9-dsh-client-modules/understand-the-implementation/boot-manifest-injection:
+  en: 253d9f265cd83ed0
+  zh: 9d0f8df84d9d3ac9
+/x1a0f3n9-dsh-client-modules/understand-the-implementation/entry-ownership:
+  en: ae59769034d692fa
+  zh: f71914d6f39b033a
+/x1a0f3n9-dsh-client-modules/understand-the-implementation/source-map:
+  en: fabe9db8c44e2d90
+  zh: 89ca94a8161f57ed
+/x1a0f3n9-dsh-client-modules/further-exploration:
+  en: 7e5b283efe4f1d16
+  zh: 79472b64a0d759fe
+/x1a0f3n9-dsh-client-modules/model-experience:
+  en: abb2fc0416e1482c
+  zh: 0e8a913d424a0c28
+/x1a0f3n9-dsh-client-modules/model-experience/kv-cache-effect:
+  en: ca75c51c89c2c9b0
+  zh: de54f3467ef3b9be
+/x1a0f3n9-dsh-client-modules/known-limitations-and-deferred-work:
+  en: d0908712f037c479
+  zh: 14034e5df3c34e7f
+/x1a0f3n9-dsh-client-modules/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98

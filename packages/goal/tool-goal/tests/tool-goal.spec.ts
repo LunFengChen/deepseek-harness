@@ -8,6 +8,7 @@ import GoalService, { GoalId } from '@x1a0f3n9/dsh-goal'
 import type { GoalRef } from '@x1a0f3n9/dsh-goal'
 import { createUserMessage, ToolCallId } from '@x1a0f3n9/dsh-llm'
 import type { MessageSource } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
   Session,
@@ -20,6 +21,12 @@ import ToolRuntime from '@x1a0f3n9/dsh-tools'
 import type { ToolExecutionResult } from '@x1a0f3n9/dsh-tools'
 import * as toolGoal from '@x1a0f3n9/dsh-tool-goal'
 import { createInboxStub } from '@x1a0f3n9/dsh-agent-loop-testkit'
+
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'test': { kind: 'test' } & ContextFormed
+  }
+}
 
 const testToolSignal = new AbortController().signal
 
@@ -101,7 +108,7 @@ async function harness(config: toolGoal.Config = {}) {
   await ctx.plugin(GoalService)
   const fiber = await ctx.plugin(toolGoal, config)
   const root = stubAgent(`goal-tool-root-${Math.random()}`, undefined, ctx)
-  ctx.agents.register(root.agent)
+  await ctx.agents.register(root.agent)
   return { ctx, fiber, root }
 }
 
@@ -252,14 +259,14 @@ describe('goal tool execution authority', () => {
     expect(driverless.error?.info?.code).toBe('GOAL_TOOL_DRIVER_REQUIRED')
     closeTurn(root, 1)
 
-    openTurn(root, { kind: 'plugin', plugin: 'test' })
+    openTurn(root, { kind: 'test' })
     const nonHuman = await execute(ctx, 'create_goal', { objective: 'forged' }, root.agent)
     expect(nonHuman.error?.info?.code).toBe('GOAL_TOOL_AUTHORITY_REQUIRED')
     closeTurn(root, 2)
 
     const child = stubAgent('goal-tool-child')
     ctx.agents.enter(child.agent, root.agent)
-    ctx.agents.announce(child.agent)
+    await ctx.agents.announce(child.agent, 'startup')
     openTurn(child, { kind: 'user' })
     const childResult = await execute(ctx, 'create_goal', { objective: 'child goal' }, child.agent)
     expect(childResult.error?.info?.code).toBe('GOAL_TOOL_AUTHORITY_REQUIRED')
@@ -293,7 +300,7 @@ describe('goal tool execution authority', () => {
       isSeeded: true,
     }, SessionLogOffset(root.session.seq))
     const fork = stubAgent(forkId, forkSession)
-    ctx.agents.register(fork.agent)
+    await ctx.agents.register(fork.agent)
     expect(ctx.goals.get(fork.agent)).toMatchObject({ id: created.id, activation: 'disarmed' })
 
     openTurn(fork, { kind: 'user' }, '继续这个目标')
@@ -316,7 +323,7 @@ describe('goal tool execution authority', () => {
 
   it('rejects terminal reporting without human input or a current goal round', async () => {
     const { ctx, root } = await harness()
-    openTurn(root, { kind: 'plugin', plugin: 'test' })
+    openTurn(root, { kind: 'test' })
     const result = await execute(ctx, 'update_goal', {
       goal_id: 'goal-missing', revision: 1, action: 'complete',
     }, root.agent)
@@ -348,7 +355,7 @@ describe('goal tool execution authority', () => {
   it('rejects an initiator different from exec.agent', async () => {
     const { ctx, root } = await harness()
     const other = stubAgent('goal-tool-other')
-    ctx.agents.register(other.agent)
+    await ctx.agents.register(other.agent)
     openTurn(other, { kind: 'user' })
     const result = await execute(ctx, 'get_goal', {}, other.agent, root.agent)
     expect(result.error?.info?.code).toBe('GOAL_TOOL_DRIVER_REQUIRED')
@@ -459,8 +466,7 @@ describe('goal tool state transitions', () => {
     const contexts = complete.additionalContexts ?? []
     expect(contexts).toHaveLength(1)
     expect(contexts[0]?.source).toEqual({
-      kind: 'plugin',
-      plugin: 'tool-goal',
+      kind: 'tool-goal',
       form: 'notice',
       summary: 'complete: pause cleanly',
     })
@@ -488,7 +494,7 @@ describe('goal tool state transitions', () => {
     let turn = openTurn(root, { kind: 'user' })
     const created = ctx.goals.create(root.agent, { objective: 'continue later' })
     closeTurn(root, turn)
-    agentEvents(ctx, root.agent).emit('agent/session-start', { source: 'resume' })
+    await agentEvents(ctx, root.agent).serial('agent/created', { source: 'resume' })
     expect(ctx.goals.get(root.agent)?.activation).toBe('disarmed')
     turn = openTurn(root, { kind: 'user' }, '继续')
     const resumed = await execute(ctx, 'update_goal', {

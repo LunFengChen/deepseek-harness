@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-12-fork-hindsight-coding-agents.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-12-fork-hindsight-coding-agents.md
-2026-09-12-fork-hindsight-coding-agents.md: d21b2ae8b19eabb6f1bf8893744310a6520ab5e3
-2026-09-12-fork-hindsight-coding-agents.zh.md: 7dcfd13d41aaadb2504aa8ab33be353b33a39825
+/agent-note-fork-hindsight-coding-agents:
+  en: 5a9345250c11fd96
+  zh: e7f0e8f0cd0f2fae
+/agent-note-fork-hindsight-coding-agents/problem:
+  en: 444deb8d4e1ce398
+  zh: 09631fa689a46a3d
+/agent-note-fork-hindsight-coding-agents/decision:
+  en: aa356c3e03d1dd38
+  zh: 3cb662eaa44912b6
+/agent-note-fork-hindsight-coding-agents/alternatives-considered:
+  en: c65aae727e27c0d1
+  zh: 9c08859cbc7f5646
+/agent-note-fork-hindsight-coding-agents/consequences:
+  en: d7da7a6e52671a59
+  zh: 070564b5ec23789b

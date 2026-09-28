@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-20-master-xfcodeai-publish.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/process/2026-09-20-master-xfcodeai-publish.md
-2026-09-20-master-xfcodeai-publish.md: 108db3b2c7ad0021d907d3e7a423e7ccaf066445
-2026-09-20-master-xfcodeai-publish.zh.md: 8e4d22df6651848b314eb21cbd661a14d91f3b96
+/agent-note-publish-xfcodeai-dsh-from-master:
+  en: 37a7fe8296db2bb4
+  zh: 08f0c89a55e93d45
+/agent-note-publish-xfcodeai-dsh-from-master/problem:
+  en: d1ab016a53612000
+  zh: c3b469ca83ad4806
+/agent-note-publish-xfcodeai-dsh-from-master/decision:
+  en: 6ff2d11dbfd76efe
+  zh: ef10f69c2a175418
+/agent-note-publish-xfcodeai-dsh-from-master/verification:
+  en: 4ab723cf99becb5b
+  zh: a2cf3bf0e68816b1
+/agent-note-publish-xfcodeai-dsh-from-master/alternatives-considered:
+  en: 1940560cf6e470f4
+  zh: f340e08ea433b3c4
+/agent-note-publish-xfcodeai-dsh-from-master/consequences:
+  en: 4915f2426ad03ad6
+  zh: be39702f6e2f19bc

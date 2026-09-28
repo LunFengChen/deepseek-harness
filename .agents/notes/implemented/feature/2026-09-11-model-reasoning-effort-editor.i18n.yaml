@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-model-reasoning-effort-editor.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-11-model-reasoning-effort-editor.md
-2026-09-11-model-reasoning-effort-editor.md: dcfdd7088416e183e1ddc5141a8602b56431237f
-2026-09-11-model-reasoning-effort-editor.zh.md: 398635fc902796f28ee9c873f07f3012f2ceaa6e
+/agent-note-custom-model-reasoning-effort-editor:
+  en: 8e6473e84561ef3b
+  zh: 272e9137ba4535ca
+/agent-note-custom-model-reasoning-effort-editor/problem:
+  en: d00b1616535491bd
+  zh: 77a2eed46fedbfc5
+/agent-note-custom-model-reasoning-effort-editor/decision:
+  en: c4784b54bf171dff
+  zh: 1488f674e2901726
+/agent-note-custom-model-reasoning-effort-editor/verification:
+  en: 76ebb625a6d6d77b
+  zh: 2f493e4f02db71da
+/agent-note-custom-model-reasoning-effort-editor/alternatives-considered:
+  en: 9094be1b75b8724d
+  zh: 2dbb37e99fb1589e
+/agent-note-custom-model-reasoning-effort-editor/consequences:
+  en: b332d79933ead879
+  zh: 0cbfd6073d909fa5

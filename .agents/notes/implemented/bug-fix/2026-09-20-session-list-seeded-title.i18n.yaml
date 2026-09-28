@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-20-session-list-seeded-title.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-20-session-list-seeded-title.md
-2026-09-20-session-list-seeded-title.md: 51271dd05b467b44805e8cac299dfe6a60166faa
-2026-09-20-session-list-seeded-title.zh.md: c4fb0ff2de53cb51af7039ea085b3fcb1449a324
+/agent-note-serve-cold-list-titles-for-seeded-sessions-from-the-projection-cache:
+  en: d6ec8eafa2b0d340
+  zh: 07b4f0ecdb743769
+/agent-note-serve-cold-list-titles-for-seeded-sessions-from-the-projection-cache/problem:
+  en: 2ba2393880756af1
+  zh: 10161f2449b696bb
+/agent-note-serve-cold-list-titles-for-seeded-sessions-from-the-projection-cache/decision:
+  en: f71f72a06f0eaa52
+  zh: c81b996654c09c33
+/agent-note-serve-cold-list-titles-for-seeded-sessions-from-the-projection-cache/testing:
+  en: 72872b3235e68177
+  zh: c092821deacdabca
+/agent-note-serve-cold-list-titles-for-seeded-sessions-from-the-projection-cache/alternatives-considered:
+  en: 8eb27a50417fca1e
+  zh: 2630188f5d925303
+/agent-note-serve-cold-list-titles-for-seeded-sessions-from-the-projection-cache/consequences:
+  en: a22a30f3670bac4a
+  zh: edf677abc968fc28
