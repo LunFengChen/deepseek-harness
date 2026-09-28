@@ -583,7 +583,11 @@ export class SessionCommandController {
     }
     let length: SessionLogOffset
     try {
-      length = agent.session.deletionStart(sequence)
+      length = retainedLengthWithoutWakeSplices(
+        agent.session.deletionStart(sequence),
+        agent.session.inheritedEventCount,
+        seq => agent.session.eventAt(SessionSeq(seq))?.type,
+      )
     } catch (error: unknown) {
       throw new RemoteError(
         'gateway/bad-request',
@@ -604,11 +608,21 @@ export class SessionCommandController {
       if (agent.session.liveBaseSeq === 0) {
         agent.session.truncate(length)
       } else {
-        const prefix = await this.readPersistedPrefix(persistence, agent.session.id, length)
+        let prefix = await this.readPersistedPrefix(persistence, agent.session.id, length)
+        const stripped = retainedLengthWithoutWakeSplices(
+          SessionLogOffset(prefix.length),
+          agent.session.inheritedEventCount,
+          seq => prefix[seq]?.type,
+        )
+        if (stripped < prefix.length) {
+          length = stripped
+          await persistence.truncate(agent.session.id, length)
+          prefix = prefix.slice(0, Number(stripped))
+        }
         agent.session.replacePersistedPrefix(prefix)
       }
-      // Truncation starts at turn/start, after the wake splice. Replay would restore
-      // that user message; regenerate would then prompt a second copy.
+      // The wake splice is already outside the retained prefix. Clear still
+      // drops any live inbox that truncation observers rebuilt.
       agent.inbox.clear()
     })
     return { accepted: true }
@@ -700,7 +714,6 @@ export class SessionCommandController {
   private async readSessionState(sessionId: SessionId): Promise<SessionReadState> {
     const attached = this.ctx.sessions.get(sessionId)
     if (attached !== undefined) {
-      // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
       return { id: attached.id, header: attached.header, events: attached.snapshotEvents() }
     }
     const inspected = await inspectApiSession(this.ctx, sessionId)
@@ -747,7 +760,6 @@ function hasPromptRequest(agent: Agent, requestId: SessionRequestId): boolean {
     return source.kind === 'user' && 'rpcId' in source && source.rpcId === requestId
   }
   if (agent.inbox.nextTurn.some(matches) || agent.inbox.nextStep.some(matches)) return true
-  // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
   return agent.session.snapshotEvents().some((event) => {
     if (event.type !== 'user/message') return false
     const source = event.data.source
@@ -809,6 +821,27 @@ function referencedImage(
     if (found !== undefined) return found
   }
   return undefined
+}
+
+/**
+ * Move a turn-granular deletion offset back past contiguous pre-turn inbox splices.
+ * @param length - retained prefix length from {@link Session.deletionStart}.
+ * @param inheritedEventCount - fork-inherited prefix that deletion must keep.
+ * @param eventTypeAt - event type at one seq, or undefined when that seq is not loaded.
+ * @returns `length`, or the first seq after the last retained non-splice event.
+ */
+function retainedLengthWithoutWakeSplices(
+  length: SessionLogOffset,
+  inheritedEventCount: SessionLogOffset,
+  eventTypeAt: (seq: number) => SessionEvent['type'] | undefined,
+): SessionLogOffset {
+  let next = Number(length)
+  const inherited = Number(inheritedEventCount)
+  while (next > inherited) {
+    if (eventTypeAt(next - 1) !== 'agent/inbox/spliced') break
+    next -= 1
+  }
+  return SessionLogOffset(next)
 }
 
 function routeServed(ctx: Context, provider: string): boolean {
