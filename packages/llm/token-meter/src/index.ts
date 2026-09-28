@@ -125,6 +125,39 @@ export class TokenMeter extends Service {
   }
 
   /**
+   * Fold one restored event into this session's replay state without waiting
+   * for `session/event`. Persisted restore does not publish that feed, and
+   * the live tail cannot rebuild a prefix fold after the window drops.
+   * @param session - the Session currently accepting restored events.
+   * @param event - the event just adopted; its seq must continue from the
+   *   replay cursor.
+   */
+  ingestRestoredEvent(session: Session, event: SessionEvent): void {
+    let state = this.states.get(session)
+    if (state !== undefined && state.consumedEvents > session.seq) {
+      this.states.delete(session)
+      state = undefined
+    }
+    if (state === undefined) {
+      state = {
+        consumedEvents: SessionLogOffset(0),
+        header: undefined,
+        surface: [],
+        stepStart: undefined,
+        anchor: undefined,
+      }
+      this.states.set(session, state)
+    }
+    if (state.consumedEvents !== event.seq) {
+      throw new Error(
+        `token meter cannot ingest seq ${String(event.seq)} after consumed seq ${String(state.consumedEvents)}`,
+      )
+    }
+    this._foldEvent(state, event)
+    state.consumedEvents = SessionLogOffset(state.consumedEvents + 1)
+  }
+
+  /**
    * Measure current request pressure and surface through the durable tail.
    *
    * The effective envelope's routed provider/model selects the request-image
@@ -225,6 +258,11 @@ export class TokenMeter extends Service {
       state = undefined
     }
     if (state === undefined) {
+      if (session.liveBaseSeq > 0) {
+        throw new Error(
+          'token meter cannot rebuild a windowed Session from its live tail; restored events must be ingested during resume',
+        )
+      }
       state = {
         consumedEvents: SessionLogOffset(0),
         header: undefined,
@@ -233,6 +271,11 @@ export class TokenMeter extends Service {
         anchor: undefined,
       }
       this.states.set(session, state)
+    }
+    if (state.consumedEvents < session.liveBaseSeq) {
+      throw new Error(
+        'token meter cannot rebuild a windowed Session from its live tail; restored events must be ingested during resume',
+      )
     }
 
     while (state.consumedEvents < session.seq) {

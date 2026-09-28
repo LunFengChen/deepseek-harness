@@ -178,6 +178,7 @@ function cursorBefore(offset: SessionLogOffset): SessionSeqCursor {
   return offset === 0 ? -1 : SessionSeq(offset - 1)
 }
 
+
 /**
  * `ctx.sessionProjections`: the projection unit table and its drive. The
  * service subscribes to `session/event` and `session/truncated`; every
@@ -187,7 +188,9 @@ function cursorBefore(offset: SessionLogOffset): SessionSeqCursor {
  * raw result changes by `Object.is`.
  * Cells build lazily — a unit registered after events flowed, or a session
  * older than the registry, folds `init` over the in-memory log on first
- * touch (event or read). Registration is an effect (disposer rides the
+ * touch (event or read) while that log still starts at seq 0. A windowed
+ * restore must call {@link ingestRestoredEvent} for each adopted event
+ * because the live tail is not a complete prefix. Registration is an effect (disposer rides the
  * calling fiber): an unloaded domain plugin's key disappears from snapshots
  * and clients read it as capability absence. A host reader either declares
  * `sessionProjections` in its plugin `inject` or fails explicitly when the
@@ -381,6 +384,42 @@ export class SessionProjectionRegistry extends Service {
       }
     }
     return asOfSeq === undefined ? undefined : { asOfSeq, values }
+  }
+
+  /**
+   * Fold one restored event into every registered unit without publishing
+   * `session/event`. Persisted restore adopts events before the Session
+   * enters the store, so the ordinary drive never sees them, and the live
+   * tail cannot rebuild a prefix fold after the window drops.
+   * @param session - the Session currently accepting restored events.
+   * @param event - the event just adopted; its seq must continue from each
+   *   unit's watermark.
+   */
+  ingestRestoredEvent(session: Session, event: SessionEvent): void {
+    for (const registration of this.registrations.values()) {
+      let cell = registration.cells.get(session)
+      if (cell === undefined) {
+        cell = {
+          state: registration.def.init(session.header, session.inheritedEventCount),
+          observedSeq: -1,
+          views: [undefined, undefined],
+        }
+        registration.cells.set(session, cell)
+      }
+      if (cell.observedSeq >= event.seq) continue
+      if (cell.observedSeq !== event.seq - 1) {
+        throw new Error(
+          `session projection ${JSON.stringify(registration.def.key)} cannot ingest seq ${String(event.seq)} after observed seq ${String(cell.observedSeq)}`,
+        )
+      }
+      const next = registration.def.apply(cell.state, event)
+      if (!Object.is(next, cell.state)) {
+        cell.views[0] = cell.views[1]
+        cell.views[1] = undefined
+      }
+      cell.state = next
+      cell.observedSeq = event.seq
+    }
   }
 
   /**
@@ -683,6 +722,8 @@ export class SessionProjectionRegistry extends Service {
       if (cell === undefined) {
         // Late build mid-stream: fold history before this event (seq = log
         // index, so the prefix slice is exact), then take the normal gate.
+        // After a live window, this is only the tail; units that need the
+        // dropped prefix must ingest during restore.
         cell = this.buildCell(
           registration.def,
           session.header,

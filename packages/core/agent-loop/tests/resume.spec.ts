@@ -5,7 +5,14 @@ import { appendFile, mkdtemp, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import LlmRuntime from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SessionLogOffset, SessionSeq, Session, SessionId, TOOL_OUTCOME_UNKNOWN } from '@x1a0f3n9/dsh-session'
+import SessionStore, {
+  SESSION_LIVE_WINDOW_EVENTS,
+  SessionLogOffset,
+  SessionSeq,
+  Session,
+  SessionId,
+  TOOL_OUTCOME_UNKNOWN,
+} from '@x1a0f3n9/dsh-session'
 import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime from '@x1a0f3n9/dsh-tools'
@@ -1013,6 +1020,31 @@ describe('the session-persistence Agent Note: AgentLoop factory create/resume', 
     await ctx2.fiber.dispose()
   })
 
+  it('resume ingests windowed history so projections do not rebuild from the live tail', async () => {
+    const sessionId = SessionId('windowed-resume-fold')
+    const { ctx: ctx1, root } = await persistentHarness(new MockAdapter([]))
+    const events: SessionEvent[] = []
+    const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 2) + 10
+    for (let turn = 1; turn <= turns; turn++) {
+      events.push({ type: 'turn/start', seq: SessionSeq(events.length), time: events.length + 1, data: { turn } })
+      events.push({
+        type: 'turn/end',
+        seq: SessionSeq(events.length),
+        time: events.length + 1,
+        data: { turn, reason: { kind: 'completed' } },
+      })
+    }
+    await seedStoredSession(ctx1, sessionId, events)
+    await ctx1.fiber.dispose()
+
+    const ctx2 = await mountPersistentHarness(root, new MockAdapter([]))
+    const handle = await ctx2.agents.resume({ resumeSessionId: sessionId })
+    expect(handle.agent.session.liveBaseSeq).toBeGreaterThan(0)
+    expect(() => ctx2.sessionProjections.snapshot(handle.agent.session)).not.toThrow()
+    expect(ctx2.sessionProjections.stateOf(handle.agent.session, 'turnBoundary').lastTurn).toBe(turns)
+    await ctx2.fiber.dispose()
+  })
+
   it('resume rejects when session persistence is not configured', async () => {
     // A harness WITHOUT the persistence plugin.
     const adapter = new MockAdapter([textResponse('x')])
@@ -1338,4 +1370,5 @@ describe('configured-start failure edges', () => {
     expect(failures).toEqual([])
     await configured.fiber.dispose()
   })
+
 })

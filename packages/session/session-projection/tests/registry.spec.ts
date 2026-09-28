@@ -12,6 +12,7 @@ import { Context } from '@deepseek-ai/cordis'
 import { z } from 'zod'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
+  SESSION_LIVE_WINDOW_EVENTS,
   Session,
   SessionId,
   SessionLogOffset,
@@ -158,6 +159,15 @@ function sameIdentities(left: readonly unknown[], right: readonly unknown[]): bo
 
 function sequenceName(sequence: readonly number[], prefix: string): string {
   return sequence.map(value => `${prefix}${String(value + 1)}`).join(',')
+}
+
+
+function fillPastLiveWindow(session: Session): void {
+  const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 2) + 10
+  for (let turn = 1; turn <= turns; turn++) {
+    session.append('turn/start', { turn })
+    session.append('turn/end', { turn, reason: { kind: 'completed' } })
+  }
 }
 
 describe('SessionProjectionRegistry drive', () => {
@@ -798,4 +808,63 @@ describe('SessionProjectionRegistry drive', () => {
     })
     expect(() => ctx.sessionProjections.snapshot(session)).toThrow()
   })
+  it('ingests restored events so a windowed Session can snapshot without rebuilding the tail', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    ctx.sessionProjections.register(countUnit())
+    const donor = Session.create(SessionId('window-restore-donor'))
+    fillPastLiveWindow(donor)
+    // oxlint-disable-next-line typescript/no-deprecated -- Donor is unwindowed; this is the restore input.
+    const events = donor.snapshotEvents()
+
+    const id = SessionId('window-restore')
+    const header = {
+      version: SESSION_FORMAT_VERSION,
+      id,
+      createdAt: 1,
+      isSeeded: false,
+    }
+    const cold = Session.beginPersistedRestore(id, header)
+    for (const event of events) cold.adoptRestoredEvent(event)
+    cold.finishPersistedRestore(SessionLogOffset(0))
+    expect(cold.liveBaseSeq).toBeGreaterThan(0)
+    // oxlint-disable-next-line typescript/no-deprecated -- Tail length is the late-build input.
+    expect(ctx.sessionProjections.stateOf(cold, 'test/count')).toBe(cold.snapshotEvents().length)
+
+    const restored = Session.beginPersistedRestore(id, header)
+    for (const event of events) {
+      restored.adoptRestoredEvent(event)
+      ctx.sessionProjections.ingestRestoredEvent(restored, event)
+    }
+    restored.finishPersistedRestore(SessionLogOffset(0))
+    expect(restored.liveBaseSeq).toBeGreaterThan(0)
+    expect(ctx.sessionProjections.stateOf(restored, 'test/count')).toBe(restored.seq)
+  })
+
+  it('seeds inheritedEventCount before ingest when the restore caller already knows the cut', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    ctx.sessionProjections.register(cutUnit())
+    const inherited: SessionEvent[] = [
+      { type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } },
+      { type: 'turn/end', seq: SessionSeq(1), time: 2, data: { turn: 1, reason: { kind: 'completed' } } },
+    ]
+    const id = SessionId('window-restore-cut')
+    const restored = Session.beginPersistedRestore(id, {
+      version: SESSION_FORMAT_VERSION,
+      id,
+      createdAt: 1,
+      isSeeded: true,
+      parentSession: SessionId('window-restore-parent'),
+    }, SessionLogOffset(inherited.length))
+    for (const event of inherited) {
+      restored.adoptRestoredEvent(event)
+      ctx.sessionProjections.ingestRestoredEvent(restored, event)
+    }
+    restored.finishPersistedRestore(SessionLogOffset(inherited.length))
+    expect(ctx.sessionProjections.stateOf(restored, 'test/cut')).toBe(inherited.length)
+  })
+
 })

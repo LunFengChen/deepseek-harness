@@ -18,7 +18,7 @@ API Session 保留它创建或恢复的每一个 `AgentHandle`。在观察或恢
 
 `SessionPersistence.readHistorySuffix` 打开代际文件，用滑动窗口扫描 Zstandard 帧边界。它只解压 header 帧，以及覆盖一页的最新事件帧。未压缩日志从末尾回走完整 JSONL 行。Buffer 解码器留给单元测试。
 
-持久化存下构造 seed 之后，`Session.releaseLiveWindow()` 把 `this.log` 收成最多 `SESSION_LIVE_WINDOW_EVENTS` 条的连续尾巴，并在 `turn/start` 处切开。离开尾巴但仍被当前 surface、`request/header`、`request/context` 和 `turn/start` 需要的事件留在 `prefixHot`。`snapshotEvents` 只返回这条尾巴。写打开恢复通过 `adoptEvent` 把当前代事件流进 `Session.adoptRestoredEvent`，边流边收窗口，而不是用 `sessions.prepare` 复制一份完整 seed。当这段尾巴不是完整的 `0..boundary` 前缀时，`ctx.sessions.fork` 抛出 `INVALID_BOUNDARY`。Remote API 的 fork 和窗口化的 `deleteFrom` 会重读已持久化前缀。历史 UI 从文件后缀分页；Trajectory 对尾部做虚拟化。它们不会在存活数组里打洞。
+持久化存下构造 seed 之后，`Session.releaseLiveWindow()` 把 `this.log` 收成最多 `SESSION_LIVE_WINDOW_EVENTS` 条的连续尾巴，并在 `turn/start` 处切开。离开尾巴但仍被当前 surface、`request/header`、`request/context` 和 `turn/start` 需要的事件留在 `prefixHot`。`snapshotEvents` 只返回这条尾巴。写打开恢复通过 `adoptEvent` 把当前代事件流进 `Session.adoptRestoredEvent`，边流边收窗口，而不是用 `sessions.prepare` 复制一份完整 seed。投影单元和 token meter 在这条流上逐条 ingest 恢复事件，因此不会从存活尾巴重建。当这段尾巴不是完整的 `0..boundary` 前缀时，`ctx.sessions.fork` 抛出 `INVALID_BOUNDARY`。Remote API 的 fork 和窗口化的 `deleteFrom` 会重读已持久化前缀。历史 UI 从文件后缀分页；Trajectory 对尾部做虚拟化。它们不会在存活数组里打洞。
 
 ## Alternatives considered
 
@@ -50,3 +50,5 @@ API Session 保留它创建或恢复的每一个 `AgentHandle`。在观察或恢
 [会话的 agent 由一份 preset cordis.yml 组装而成](2026-08-03-per-session-agent-presets.zh.md) 仍然负责 preset 组装；空闲根驱逐现在落在 API Session。
 
 [弃用对会话任意位置事件的同步读取](2026-09-09-deprecate-synchronous-session-event-reads.zh.md) 仍然负责“停止在内存中保留完整序列”的存储方向。
+
+[窗口化恢复在 ingest 期间折叠投影](../bug-fix/2026-09-28-windowed-restore-projection-fold.zh.md) 负责恢复期 ingest，使投影和 token-meter 折叠在尾巴窗口丢掉前缀之后仍然正确。

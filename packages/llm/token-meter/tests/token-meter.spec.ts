@@ -2,7 +2,15 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { AssistantStreamAccumulator, createUserMessage, createSystemMessage, ToolCallId, createMessage } from '@x1a0f3n9/dsh-llm'
 import type { ContentBlock, Message, TokenUsage } from '@x1a0f3n9/dsh-llm'
-import SessionStore, { Session, SessionId, SessionLogOffset, SessionSeq, canonicalHeader } from '@x1a0f3n9/dsh-session'
+import SessionStore, {
+  SESSION_FORMAT_VERSION,
+  SESSION_LIVE_WINDOW_EVENTS,
+  Session,
+  SessionId,
+  SessionLogOffset,
+  SessionSeq,
+  canonicalHeader,
+} from '@x1a0f3n9/dsh-session'
 import type { EpochHeader, SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import TokenMeter from '@x1a0f3n9/dsh-token-meter'
@@ -685,4 +693,45 @@ describe('malformed replay and listener lifecycle', () => {
     expect(activeMeter.measure(session).logRevision).toBe(3)
     await secondFiber.dispose()
   })
+  it('ingests restored events so a windowed replace does not rebuild from the live tail', () => {
+    const donor = Session.create(SessionId('window-meter-donor'))
+    const first = appendSystem(donor, 'You are terse.')
+    const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 3) + 10
+    for (let turn = 1; turn <= turns; turn++) {
+      donor.append('turn/start', { turn })
+      donor.append('user/message', createUserMessage({
+        content: [{ type: 'text', text: `hello ${turn}` }],
+        source: { kind: 'user' },
+      }), { surfaceOp: 'append' })
+      donor.append('turn/end', { turn, reason: { kind: 'completed' } })
+    }
+    replaceSystem(donor, first, 'You are terse and answer in one line.')
+    // oxlint-disable-next-line typescript/no-deprecated -- Donor is unwindowed; this is the restore input.
+    const events = donor.snapshotEvents()
+
+    const header = {
+      version: SESSION_FORMAT_VERSION,
+      id: SessionId('window-meter'),
+      createdAt: 1,
+      isSeeded: false,
+    }
+    const cold = Session.beginPersistedRestore(header.id, header)
+    for (const event of events) cold.adoptRestoredEvent(event)
+    cold.finishPersistedRestore(SessionLogOffset(0))
+    expect(cold.liveBaseSeq).toBeGreaterThan(0)
+    expect(() => meter().measure(cold)).toThrow(/live tail/)
+
+    const service = meter()
+    const restored = Session.beginPersistedRestore(header.id, header)
+    for (const event of events) {
+      restored.adoptRestoredEvent(event)
+      service.ingestRestoredEvent(restored, event)
+    }
+    restored.finishPersistedRestore(SessionLogOffset(0))
+    expect(restored.liveBaseSeq).toBeGreaterThan(0)
+    const measured = service.measure(restored)
+    expect(measured.nodes.length).toBeGreaterThan(0)
+    expect(measured.logRevision).toBe(restored.seq)
+  })
+
 })

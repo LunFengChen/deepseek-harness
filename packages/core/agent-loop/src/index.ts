@@ -25,7 +25,7 @@ import type {
 import { errorChain, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 import type {} from '@x1a0f3n9/dsh-settings'
 import { interruptedTurnClosers, Session, SessionLogOffset, SessionPreparation, SessionSeq } from '@x1a0f3n9/dsh-session'
-import type { SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
 import type {} from '@x1a0f3n9/dsh-system-prompt'
 import type {} from '@x1a0f3n9/dsh-tools'
 import type {} from '@x1a0f3n9/dsh-session-projection'
@@ -889,10 +889,19 @@ export class AgentLoop extends Service implements AgentFactory {
           )
           if (snapshot === undefined) throw new SessionPersistenceNotFoundError(id)
           const session = Session.beginPersistedRestore(id, structuredClone(snapshot.header))
+          const projections = this.runtime.ctx.sessionProjections
+          const tokenMeter = this.runtime.ctx.get('tokenMeter' as never) as {
+            ingestRestoredEvent(session: Session, event: SessionEvent): void
+          } | undefined
+          const adopt = (event: SessionEvent): void => {
+            session.adoptRestoredEvent(event)
+            projections.ingestRestoredEvent(session, event)
+            tokenMeter?.ingestRestoredEvent(session, event)
+          }
           handle = await raceAbortCall(
             () => persistence.open(id, 'write', {
               signal: fused,
-              adoptEvent: (event) => { session.adoptRestoredEvent(event) },
+              adoptEvent: adopt,
             }),
             fused,
             id,
@@ -903,7 +912,7 @@ export class AgentLoop extends Service implements AgentFactory {
           if (session.seq === 0) {
             const coldRead = await handle.read(0, undefined, { signal: fused })
             fused.throwIfAborted()
-            for (const event of coldRead.events) session.adoptRestoredEvent(event)
+            for (const event of coldRead.events) adopt(event)
           }
           // Semantic crash repair is the agent layer's job: persistence hands
           // back the physically valid log; an interrupted final turn receives
@@ -913,7 +922,7 @@ export class AgentLoop extends Service implements AgentFactory {
           const closers = interruptedTurnClosers(session.snapshotEvents())
           if (closers.length > 0) {
             await handle.append(closers)
-            for (const closer of closers) session.adoptRestoredEvent(closer)
+            for (const closer of closers) adopt(closer)
           }
           const persistedCount = session.seq
           session.finishPersistedRestore(handle.inheritedEventCount)
