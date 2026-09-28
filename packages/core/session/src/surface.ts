@@ -361,19 +361,33 @@ function isDeepEqualJson(a: unknown, b: unknown): boolean {
   return aKeys.every(key => Object.hasOwn(b, key) && isDeepEqualJson((a as Record<string, unknown>)[key], bRecord[key]))
 }
 
+/** Resolve one absolute seq from a windowed log, optionally through a live Session. */
+type SessionEventLookup = (seq: SessionSeq) => SessionEvent | undefined
+
+function lookupEvent(
+  events: readonly SessionEvent[],
+  baseSeq: SessionLogOffset,
+  seq: number,
+  lookup?: SessionEventLookup,
+): SessionEvent | undefined {
+  if (lookup !== undefined) return lookup(SessionSeq(seq))
+  return events[seq - baseSeq]
+}
+
 /** Restrict a tool-result replacement to one current result's content. */
 function assertToolResultRewrite(
   event: SessionEvent,
   shadowedSeqs: readonly SessionSeq[],
   events: readonly SessionEvent[],
   baseSeq: SessionLogOffset,
+  lookup?: SessionEventLookup,
 ): void {
   if (event.type !== 'tool/result') return
   if (shadowedSeqs.length !== 1) {
     throw new Error('tool/result surface replacement must rewrite exactly one current node')
   }
   for (const originalSeq of shadowedSeqs) {
-    const original = events[originalSeq - baseSeq]
+    const original = lookupEvent(events, baseSeq, originalSeq, lookup)
     if (original?.type !== 'tool/result') {
       throw new Error('tool/result surface replacement must target a current tool/result')
     }
@@ -408,9 +422,12 @@ function assertSystemHeadRewrite(
   shadowedSeqs: readonly SessionSeq[],
   events: readonly SessionEvent[],
   baseSeq: SessionLogOffset,
+  lookup?: SessionEventLookup,
 ): void {
   if (startIdx !== 0) return
-  const head = events[state.nodes[0] as number - baseSeq]
+  const headSeq = state.nodes[0]
+  if (headSeq === undefined) return
+  const head = lookupEvent(events, baseSeq, headSeq, lookup)
   if (head?.type !== 'system/message') return
   if (event.type !== 'system/message' || shadowedSeqs.length !== 1) {
     throw new Error('surface replace: node 0 holds the system prompt and may be rewritten only by a system/message over exactly that node')
@@ -424,6 +441,7 @@ function planSurfaceEvent(
   expectedSeq: SessionSeq,
   events: readonly SessionEvent[],
   baseSeq: SessionLogOffset,
+  lookup?: SessionEventLookup,
 ): SurfacePlan | undefined {
   if (event.seq !== expectedSeq) {
     throw new Error(`session event seq ${event.seq} is not contiguous; expected ${expectedSeq}`)
@@ -435,8 +453,8 @@ function planSurfaceEvent(
   }
   const range = replacementRange(state, surfaceOp)
   assertProvenance(event, range.shadowedSeqs)
-  assertToolResultRewrite(event, range.shadowedSeqs, events, baseSeq)
-  assertSystemHeadRewrite(event, state, range.startIdx, range.shadowedSeqs, events, baseSeq)
+  assertToolResultRewrite(event, range.shadowedSeqs, events, baseSeq, lookup)
+  assertSystemHeadRewrite(event, state, range.startIdx, range.shadowedSeqs, events, baseSeq, lookup)
   return {
     kind: 'replace',
     seq: event.seq,
@@ -453,8 +471,9 @@ function applySurfaceEvent(
   expectedSeq: SessionSeq,
   events: readonly SessionEvent[],
   baseSeq: SessionLogOffset,
+  lookup?: SessionEventLookup,
 ): SurfaceFoldReplacement | undefined {
-  const plan = planSurfaceEvent(state, event, expectedSeq, events, baseSeq)
+  const plan = planSurfaceEvent(state, event, expectedSeq, events, baseSeq, lookup)
   return applySurfacePlan(state, plan)
 }
 
@@ -512,12 +531,23 @@ export class SurfaceManager implements SessionSurface {
   /**
    * @param log - Contiguous complete log or loaded event window.
    * @param baseSeq - Absolute sequence of the window's first event.
+   * @param resolveEvent - Optional absolute-seq lookup for events outside the window.
    */
   constructor(
     private log: readonly SessionEvent[],
-    private readonly baseSeq: SessionLogOffset = SessionLogOffset(0),
+    private baseSeq: SessionLogOffset = SessionLogOffset(0),
+    private readonly resolveEvent?: SessionEventLookup,
   ) {
     this._lastProcessedSeq = baseSeq === 0 ? -1 : SessionSeq(baseSeq - 1)
+  }
+
+  /**
+   * Move the window origin after the owning log drops a persisted prefix.
+   * Incremental fold state is kept; only index mapping changes.
+   * @param baseSeq - Absolute sequence of the window's first remaining event.
+   */
+  rebase(baseSeq: SessionLogOffset): void {
+    this.baseSeq = baseSeq
   }
 
   /**
@@ -530,7 +560,7 @@ export class SurfaceManager implements SessionSurface {
     this._pendingPlan = {
       event,
       expectedSeq,
-      plan: planSurfaceEvent(this._state, event, expectedSeq, this.log, this.baseSeq),
+      plan: planSurfaceEvent(this._state, event, expectedSeq, this.log, this.baseSeq, this.resolveEvent),
     }
   }
 
@@ -564,7 +594,7 @@ export class SurfaceManager implements SessionSurface {
       if (pending?.event === event && pending.expectedSeq === seq) {
         applySurfacePlan(this._state, pending.plan)
       } else {
-        applySurfaceEvent(this._state, event, SessionSeq(seq), this.log, this.baseSeq)
+        applySurfaceEvent(this._state, event, SessionSeq(seq), this.log, this.baseSeq, this.resolveEvent)
       }
       if (pending !== undefined && pending.expectedSeq <= seq) this._pendingPlan = undefined
       this._lastProcessedSeq = SessionSeq(seq)

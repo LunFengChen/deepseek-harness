@@ -349,7 +349,10 @@ function refuseForeignFormatVersion(parsed: object): void {
  * @param record - the complete first JSONL record, including its newline.
  * @returns logical metadata and a restore stream positioned after the header.
  */
-export function parseHeaderRecord(record: Buffer): { readonly meta: SessionHeader; readonly restore: SessionFormatRestore } {
+export function parseHeaderRecord(
+  record: Buffer,
+  adoptEvent?: (event: SessionFormatEvent) => void,
+): { readonly meta: SessionHeader; readonly restore: SessionFormatRestore } {
   if (record.length === 0 || record.at(-1) !== 0x0A || record.indexOf(0x0A) !== record.length - 1) {
     throw new Error('empty or header-less session log')
   }
@@ -372,6 +375,7 @@ export function parseHeaderRecord(record: Buffer): { readonly meta: SessionHeade
     restore = sessionFormatCatalog.createRestore(parsed, {
       recovery: 'strict',
       validation: 'transformed',
+      ...adoptEvent === undefined ? {} : { adoptEvent },
     })
   } catch {
     /* v8 ignore next -- isHeaderLine matches the current codec; this preserves classification if it tightens. */
@@ -387,7 +391,7 @@ export function parseHeaderRecord(record: Buffer): { readonly meta: SessionHeade
  * copied because a decoder may reuse its output buffer after `write()` returns.
  */
 export class SessionLogScanner {
-  private readonly meta: SessionHeader
+  readonly meta: SessionHeader
   private readonly restore: SessionFormatRestore
   private eventCount = 0
   private fragments: Buffer[] = []
@@ -405,8 +409,9 @@ export class SessionLogScanner {
   constructor(
     headerRecord: Buffer,
     private readonly recovery: SessionFormatRecovery = 'recoverable',
+    adoptEvent?: (event: SessionFormatEvent) => void,
   ) {
-    const parsed = parseHeaderRecord(headerRecord)
+    const parsed = parseHeaderRecord(headerRecord, adoptEvent)
     this.meta = parsed.meta
     this.restore = parsed.restore
     this.inputBytes = headerRecord.length

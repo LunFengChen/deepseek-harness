@@ -154,3 +154,58 @@ export function createZstdFrameDecoder(): ZstdFrameDecoder {
 export async function decompressZstdPrefix(input: Buffer): Promise<Buffer> {
   return zstdDecompressAsync(input, INCOMPLETE_FRAME_OPTIONS)
 }
+
+/** Sliding-window size used when scanning concatenated frames from a reader. */
+const ZSTD_FRAME_SCAN_CHUNK_BYTES = 256 * 1024
+
+/**
+ * Locate complete Zstandard frames by reading bounded windows instead of one
+ * whole-file Buffer. Offsets are file-absolute.
+ * @param fileSize - exclusive end of the readable range.
+ * @param readRange - exclusive-end byte reader over that range.
+ * @param signal - optional cancellation between window reads.
+ * @returns complete frame ranges and an optional incomplete-final-frame start.
+ */
+export async function scanZstdFramesFromReader(
+  fileSize: number,
+  readRange: (start: number, end: number) => Promise<Buffer>,
+  signal?: AbortSignal,
+): Promise<ZstdFrameScan> {
+  let windowStart = 0
+  let window = Buffer.alloc(0)
+  const frames: ZstdFrameRange[] = []
+
+  while (true) {
+    signal?.throwIfAborted()
+    const filled = windowStart + window.length
+    if (filled < fileSize) {
+      const end = Math.min(fileSize, filled + ZSTD_FRAME_SCAN_CHUNK_BYTES)
+      const chunk = await readRange(filled, end)
+      if (chunk.length === 0) break
+      window = Buffer.concat([window, chunk])
+    }
+
+    const atEof = windowStart + window.length >= fileSize
+    const scan = scanZstdFrames(window)
+    if (atEof) {
+      for (const frame of scan.frames) {
+        frames.push({ start: windowStart + frame.start, end: windowStart + frame.end })
+      }
+      return scan.tornStart === undefined
+        ? { frames }
+        : { frames, tornStart: windowStart + scan.tornStart }
+    }
+    if (scan.frames.length === 0) continue
+
+    const consumed = scan.frames[scan.frames.length - 1]
+    /* v8 ignore next -- length > 0 guarantees a last complete frame. */
+    if (consumed === undefined) continue
+    for (const frame of scan.frames) {
+      frames.push({ start: windowStart + frame.start, end: windowStart + frame.end })
+    }
+    window = Buffer.from(window.subarray(consumed.end))
+    windowStart += consumed.end
+  }
+
+  return { frames }
+}

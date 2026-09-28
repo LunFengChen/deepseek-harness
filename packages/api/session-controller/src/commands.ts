@@ -16,6 +16,7 @@ import {
 import type { MessageSource } from '@x1a0f3n9/dsh-llm'
 import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@x1a0f3n9/dsh-session'
+import type { SessionHandle } from '@x1a0f3n9/dsh-session-persistence'
 import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
 import { SessionTitleInvalidError } from '@x1a0f3n9/dsh-session-title'
 import { canonicalClientTimeZone } from '@x1a0f3n9/dsh-util-time'
@@ -57,6 +58,7 @@ import type {
 
 type SessionPersistenceForDeletion = {
   truncate(id: SessionId, length: SessionLogOffset): Promise<void>
+  open?(id: SessionId, access: 'read' | 'write'): Promise<SessionHandle>
 }
 
 interface SessionReadState {
@@ -254,13 +256,14 @@ export class SessionCommandController {
       )
     }
     using source = observed
-    const lastSeq = source.events.at(-1)?.seq ?? -1
+    const sourceEvents = await this.forkSourceEvents(request.sessionId, source.events)
+    const lastSeq = sourceEvents.at(-1)?.seq ?? -1
     const anchoredBoundary = atSeq === undefined
       ? undefined
-      : source.events.find(event => event.type === 'turn/end' && event.seq >= atSeq)
+      : sourceEvents.find(event => event.type === 'turn/end' && event.seq >= atSeq)
     const boundary = anchoredBoundary
       ?? (atSeq === undefined || atSeq > lastSeq
-        ? source.events.findLast(event => event.type === 'turn/end')
+        ? sourceEvents.findLast(event => event.type === 'turn/end')
         : undefined)
     if (boundary === undefined) {
       throw new RemoteError(
@@ -272,7 +275,7 @@ export class SessionCommandController {
       )
     }
     let cut = SessionLogOffset(boundary.seq + 1)
-    while (cut < source.events.length && source.events[cut]?.type !== 'turn/start') {
+    while (cut < sourceEvents.length && sourceEvents[cut]?.type !== 'turn/start') {
       cut = SessionLogOffset(cut + 1)
     }
     let workspace: Workspace | undefined
@@ -291,7 +294,7 @@ export class SessionCommandController {
       const { provider, model } = this.ctx.agentDefaultModel.currentSelection()
       await this.ctx.agents.create({
         sessionId: childId,
-        seed: source.events.slice(0, cut),
+        seed: sourceEvents.slice(0, cut),
         inheritedEventCount: cut,
         meta: {
           ...(source.header.cwd === undefined ? {} : { cwd: source.header.cwd }),
@@ -598,12 +601,72 @@ export class SessionCommandController {
     }
     await agent.runMaintenance(async () => {
       await persistence.truncate(agent.session.id, length)
-      agent.session.truncate(length)
+      if (agent.session.liveBaseSeq === 0) {
+        agent.session.truncate(length)
+      } else {
+        const prefix = await this.readPersistedPrefix(persistence, agent.session.id, length)
+        agent.session.replacePersistedPrefix(prefix)
+      }
       // Truncation starts at turn/start, after the wake splice. Replay would restore
       // that user message; regenerate would then prompt a second copy.
       agent.inbox.clear()
     })
     return { accepted: true }
+  }
+
+  /**
+   * Prefer the live log when it still starts at seq 0; otherwise reread the stored prefix.
+   * @param sessionId - source Session identity.
+   * @param observed - events from the opening observation.
+   * @returns a complete prefix suitable for fork seed.
+   */
+  private async forkSourceEvents(
+    sessionId: SessionId,
+    observed: readonly SessionEvent[],
+  ): Promise<readonly SessionEvent[]> {
+    const live = this.ctx.sessions.get(sessionId)
+    if (live === undefined || live.liveBaseSeq === 0) return observed
+    const persistence = this.ctx.get('sessionPersistence') as SessionPersistenceForDeletion | undefined
+    const handle = await persistence?.open?.(sessionId, 'read')
+    if (handle === undefined) {
+      throw new RemoteError(
+        'gateway/internal',
+        `fork source for session "${sessionId}" is outside the live RAM window`,
+        {},
+      )
+    }
+    try {
+      return (await handle.read(0)).events
+    } finally {
+      await handle.close().catch(() => {})
+    }
+  }
+
+  /**
+   * Reread the retained prefix after a durable truncate of a windowed live Session.
+   * @param persistence - backend that already rewrote the artifact.
+   * @param sessionId - Session identity.
+   * @param length - retained event count.
+   * @returns events `[0, length)`.
+   */
+  private async readPersistedPrefix(
+    persistence: SessionPersistenceForDeletion,
+    sessionId: SessionId,
+    length: SessionLogOffset,
+  ): Promise<readonly SessionEvent[]> {
+    const handle = await persistence.open?.(sessionId, 'read')
+    if (handle === undefined) {
+      throw new RemoteError(
+        'gateway/internal',
+        `session persistence cannot reread session "${sessionId}" after deletion`,
+        {},
+      )
+    }
+    try {
+      return (await handle.read(0, length)).events
+    } finally {
+      await handle.close().catch(() => {})
+    }
   }
 
   private async resolveAgent(sessionId: SessionId): Promise<Agent> {

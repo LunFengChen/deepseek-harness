@@ -1,5 +1,6 @@
 /** Tail-page JSONL reads must not restore the log from seq 0. */
 
+import { randomBytes } from 'node:crypto'
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -14,12 +15,27 @@ import {
 import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import * as format from '../src/format.ts'
 import { eventLines, generationLogPath, toHeaderLine } from '../src/format.ts'
-import { readJsonlHistorySuffix } from '../src/history-suffix.ts'
+import { readJsonlHistorySuffix, readJsonlHistorySuffixFromPath } from '../src/history-suffix.ts'
 import * as zstd from '../src/zstd.ts'
-import { compressZstdFrame } from '../src/zstd.ts'
+import { compressZstdFrame, scanZstdFramesFromReader } from '../src/zstd.ts'
 import { meta, oneTurnLog } from '../../session-persistence/tests/contract.ts'
 
 const dirs: string[] = []
+
+const wholeFileRead = vi.hoisted(() => ({ forbidden: false }))
+
+vi.mock('node:fs/promises', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs/promises')>()
+  return {
+    ...actual,
+    readFile: (async (...args: Parameters<typeof actual.readFile>) => {
+      if (wholeFileRead.forbidden) {
+        throw new Error(`readFile must not slurp ${String(args[0])}`)
+      }
+      return actual.readFile(...args)
+    }) as typeof actual.readFile,
+  }
+})
 
 async function freshRoot(): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), 'dsh-history-suffix-'))
@@ -54,6 +70,7 @@ function remapTurn(seq0: number, turn: number): SessionEvent[] {
 
 afterEach(async () => {
   const leftover = dirs.splice(0)
+  wholeFileRead.forbidden = false
   vi.restoreAllMocks()
   await Promise.all(leftover.map(dir => rm(dir, { recursive: true, force: true })))
 })
@@ -80,6 +97,211 @@ describe('readJsonlHistorySuffix', () => {
       event.type === 'user/message' || event.type === 'assistant/message'
     ))
     expect(messages.length).toBeGreaterThanOrEqual(50)
+  })
+
+  it('scans Zstandard frames from a reader without a whole-file Buffer', async () => {
+    const header = meta('suffix-zstd-reader', '/work')
+    const frames = [await compressZstdFrame(headerBytes(header))]
+    for (let turn = 1; turn <= 8; turn += 1) {
+      frames.push(await compressZstdFrame(Buffer.from(`${eventLines(remapTurn((turn - 1) * 6, turn))}\n`)))
+    }
+    const bytes = Buffer.concat(frames)
+    let reads = 0
+    const scan = await scanZstdFramesFromReader(bytes.length, (start, end) => {
+      reads += 1
+      expect(end - start).toBeLessThanOrEqual(256 * 1024)
+      return Promise.resolve(bytes.subarray(start, end))
+    })
+    expect(scan.frames).toHaveLength(frames.length)
+    expect(scan.tornStart).toBeUndefined()
+    expect(reads).toBeGreaterThan(0)
+    expect(scan.frames[0]?.start).toBe(0)
+    expect(scan.frames.at(-1)?.end).toBe(bytes.length)
+  })
+
+  it('slides the Zstandard reader window after a complete frame before EOF', async () => {
+    const frames = [
+      await compressZstdFrame(randomBytes(180_000)),
+      await compressZstdFrame(randomBytes(180_000)),
+    ]
+    const bytes = Buffer.concat(frames)
+    expect(frames[0]?.length ?? 0).toBeGreaterThan(64 * 1024)
+    expect(bytes.length).toBeGreaterThan(256 * 1024)
+    const scan = await scanZstdFramesFromReader(bytes.length, (start, end) => (
+      Promise.resolve(bytes.subarray(start, end))
+    ))
+    expect(scan.frames).toHaveLength(2)
+    expect(scan.tornStart).toBeUndefined()
+    expect(scan.frames[0]?.end).toBe(frames[0]?.length)
+    expect(scan.frames[1]?.end).toBe(bytes.length)
+  })
+
+  it('grows the Zstandard reader window when the first frame spans a chunk', async () => {
+    const frame = await compressZstdFrame(randomBytes(300_000))
+    expect(frame.length).toBeGreaterThan(256 * 1024)
+    const scan = await scanZstdFramesFromReader(frame.length, (start, end) => (
+      Promise.resolve(frame.subarray(start, end))
+    ))
+    expect(scan.frames).toEqual([{ start: 0, end: frame.length }])
+    expect(scan.tornStart).toBeUndefined()
+  })
+
+  it('stops a Zstandard reader scan when a range returns no bytes', async () => {
+    const scan = await scanZstdFramesFromReader(4096, () => Promise.resolve(Buffer.alloc(0)))
+    expect(scan).toEqual({ frames: [] })
+  })
+
+  it('reports a torn final Zstandard frame from a reader', async () => {
+    const frame = await compressZstdFrame(headerBytes(meta('suffix-zstd-torn', '/work')))
+    const bytes = Buffer.concat([frame, Buffer.from([0x28, 0xB5, 0x2F])])
+    const scan = await scanZstdFramesFromReader(bytes.length, (start, end) => (
+      Promise.resolve(bytes.subarray(start, end))
+    ))
+    expect(scan.frames).toEqual([{ start: 0, end: frame.length }])
+    expect(scan.tornStart).toBe(frame.length)
+  })
+
+  it('aborts a Zstandard reader scan before reading', async () => {
+    const abort = new AbortController()
+    abort.abort()
+    await expect(scanZstdFramesFromReader(16, () => Promise.resolve(Buffer.alloc(0)), abort.signal))
+      .rejects.toThrow()
+  })
+
+  it('reads a path suffix without slurping the complete artifact through readFile', async () => {
+    const header = meta('suffix-path-none', '/work')
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, plainLog(header, remapTurn(0, 1)))
+    wholeFileRead.forbidden = true
+    const scanner = vi.spyOn(format, 'SessionLogScanner')
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 })
+    expect(scanner).not.toHaveBeenCalled()
+    expect(suffix.cursor).toBe(5)
+  })
+
+  it('reads a Zstandard path suffix without slurping the complete artifact through readFile', async () => {
+    const header = meta('suffix-path-zstd', '/work')
+    const frames = [await compressZstdFrame(headerBytes(header))]
+    frames.push(await compressZstdFrame(Buffer.from(`${eventLines(remapTurn(0, 1))}\n`)))
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl.zst')
+    await writeFile(path, Buffer.concat(frames))
+    wholeFileRead.forbidden = true
+    const scan = vi.spyOn(zstd, 'scanZstdFramesFromReader')
+    const decompress = vi.spyOn(zstd, 'decompressZstdFrame')
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'zstd', { maxMessages: 50 })
+    expect(scan).toHaveBeenCalledOnce()
+    expect(decompress.mock.calls.length).toBeGreaterThan(0)
+    expect(suffix.cursor).toBe(5)
+  })
+
+  it('returns an empty path suffix when the log is only a header', async () => {
+    const header = meta('suffix-path-header-only', '/work')
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, headerBytes(header))
+    wholeFileRead.forbidden = true
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 })
+    expect(suffix.events).toEqual([])
+    expect(suffix.cursor).toBe(-1)
+  })
+
+  it('returns an empty path suffix when the body has no complete record', async () => {
+    const header = meta('suffix-path-incomplete', '/work')
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, Buffer.concat([headerBytes(header), Buffer.from('{"type":"turn/start"')]))
+    wholeFileRead.forbidden = true
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 })
+    expect(suffix.events).toEqual([])
+    expect(suffix.cursor).toBe(-1)
+  })
+
+  it('refuses a path log with no header line', async () => {
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, '{"type":"session"')
+    wholeFileRead.forbidden = true
+    await expect(readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 }))
+      .rejects.toThrow(/header-less/)
+  })
+
+  it('walks a path suffix across chunk boundaries', async () => {
+    const header = meta('suffix-path-chunk', '/work')
+    const user = remapTurn(0, 1).find(event => event.type === 'user/message')
+    if (user === undefined || user.type !== 'user/message') throw new Error('expected user/message')
+    const huge: SessionEvent = {
+      ...user,
+      seq: SessionSeq(0),
+      time: 1,
+      data: {
+        ...user.data,
+        content: [{ type: 'text', text: 'n'.repeat(300_000) }],
+      },
+    }
+    const later = remapTurn(1, 2)
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, plainLog(header, [huge, ...later]))
+    wholeFileRead.forbidden = true
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 })
+    expect(suffix.cursor).toBe(6)
+    expect(suffix.events.some(event => event.seq === 0)).toBe(true)
+  })
+
+  it('skips a torn leading record in a path suffix window', async () => {
+    const header = meta('suffix-path-torn-window', '/work')
+    const user = remapTurn(0, 1).find(event => event.type === 'user/message')
+    if (user === undefined || user.type !== 'user/message') throw new Error('expected user/message')
+    const huge: SessionEvent = {
+      ...user,
+      seq: SessionSeq(1),
+      time: 2,
+      data: {
+        ...user.data,
+        content: [{ type: 'text', text: 'n'.repeat(300_000) }],
+      },
+    }
+    const first: SessionEvent = { ...user, seq: SessionSeq(0), time: 1 }
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, plainLog(header, [first, huge]))
+    wholeFileRead.forbidden = true
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 })
+    expect(suffix.events.some(event => event.seq === 0)).toBe(true)
+    expect(suffix.events.some(event => event.seq === 1)).toBe(true)
+  })
+
+  it('returns a path suffix that never reaches seq 0', async () => {
+    const header = meta('suffix-path-origin', '/work')
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, plainLog(header, remapTurn(6, 2)))
+    wholeFileRead.forbidden = true
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 })
+    expect(suffix.events[0]?.seq).toBe(6)
+    expect(suffix.cursor).toBe(11)
+  })
+
+  it('reads a path header that spans more than one header chunk', async () => {
+    const header = meta('suffix-path-long-header', `/work/${'x'.repeat(9000)}`)
+    const dir = await freshRoot()
+    const path = join(dir, 'session.jsonl')
+    await writeFile(path, plainLog(header, remapTurn(0, 1)))
+    wholeFileRead.forbidden = true
+    const suffix = await readJsonlHistorySuffixFromPath(path, 'none', { maxMessages: 50 })
+    expect(suffix.header.cwd).toBe(header.cwd)
+    expect(suffix.cursor).toBe(5)
+  })
+
+  it('aborts a path suffix read before opening the log', async () => {
+    const abort = new AbortController()
+    abort.abort()
+    await expect(readJsonlHistorySuffixFromPath('/missing-suffix.jsonl', 'none', {
+      maxMessages: 50,
+      signal: abort.signal,
+    })).rejects.toThrow()
   })
 
   it('walks an uncompressed log from the end and ignores a torn final line', async () => {

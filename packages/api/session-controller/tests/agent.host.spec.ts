@@ -11,6 +11,7 @@ import type { SessionObservation } from '@x1a0f3n9/dsh-session-query'
 import TypertRegistry from '@x1a0f3n9/dsh-typert-registry'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
+  API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE,
   ApiSessionAgentController,
   ApiSessionCwdConflict,
   ApiSessionNotFound,
@@ -451,5 +452,248 @@ describe('ApiSession create or adoption', () => {
     writeFileSync(file, 'not a directory')
     await expect(agents.ensureSession(SessionId('mkdir-failure'), join(file, 'child'), false))
       .rejects.toThrow('failed to ensure project directory')
+  })
+
+  it('keeps idle ordinary Agents until the recent-session cache is full', async () => {
+    const { ctx, agents } = await harness()
+    const idleMeta = header('idle-root')
+    const nextMeta = header('next-root')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([idleMeta, nextMeta]),
+      inspect: (id: SessionId) => Promise.resolve({
+        meta: id === idleMeta.id ? idleMeta : nextMeta,
+        events: [],
+      }),
+    })
+    const idleDispose = vi.fn(() => Promise.resolve())
+    const nextDispose = vi.fn(() => Promise.resolve())
+    const idleAgent = unpublishedAgent(ctx, idleMeta)
+    const nextAgent = unpublishedAgent(ctx, nextMeta)
+    vi.spyOn(ctx.agents, 'resume').mockImplementation(async (options) => {
+      if (options.resumeSessionId === idleMeta.id) {
+        return { agent: idleAgent, dispose: idleDispose }
+      }
+      return { agent: nextAgent, dispose: nextDispose }
+    })
+
+    await expect(agents.resolveAgent(idleMeta.id)).resolves.toEqual({ agent: idleAgent })
+    expect(idleDispose).not.toHaveBeenCalled()
+    await expect(agents.resolveAgent(nextMeta.id)).resolves.toEqual({ agent: nextAgent })
+    expect(idleDispose).not.toHaveBeenCalled()
+    expect(nextDispose).not.toHaveBeenCalled()
+  })
+
+  it('disposes the least-recent idle ordinary Agent when the cache overflows', async () => {
+    const { ctx, agents } = await harness()
+    const metas = Array.from({ length: API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE + 1 }, (_, index) => (
+      header(`idle-cache-${String(index + 1)}`)
+    ))
+    providePersistence(ctx, {
+      list: () => Promise.resolve(metas),
+      inspect: (id: SessionId) => {
+        const meta = metas.find(item => item.id === id)
+        if (meta === undefined) return Promise.resolve(undefined)
+        return Promise.resolve({ meta, events: [] })
+      },
+    })
+    const disposers = new Map(metas.map(meta => [meta.id, vi.fn(() => Promise.resolve())]))
+    const live = new Map(metas.map(meta => [meta.id, unpublishedAgent(ctx, meta)]))
+    const handles = new Map(metas.map(meta => [
+      meta.id,
+      { agent: live.get(meta.id)!, dispose: disposers.get(meta.id)! },
+    ]))
+    vi.spyOn(ctx.agents, 'resume').mockImplementation(async options => handles.get(options.resumeSessionId)!)
+
+    for (const meta of metas.slice(0, API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE)) {
+      await expect(agents.resolveAgent(meta.id)).resolves.toEqual({ agent: live.get(meta.id) })
+    }
+    for (const meta of metas.slice(0, API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE)) {
+      expect(disposers.get(meta.id)).not.toHaveBeenCalled()
+    }
+
+    const extra = metas[API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE]!
+    await expect(agents.resolveAgent(extra.id)).resolves.toEqual({ agent: live.get(extra.id) })
+    expect(disposers.get(metas[0]!.id)).toHaveBeenCalledOnce()
+    for (const meta of metas.slice(1)) {
+      expect(disposers.get(meta.id)).not.toHaveBeenCalled()
+    }
+  })
+
+  it('treats a reused idle Agent as most recent before cache overflow', async () => {
+    const { ctx, agents } = await harness()
+    const metas = Array.from({ length: API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE + 1 }, (_, index) => (
+      header(`idle-reuse-${String(index + 1)}`)
+    ))
+    providePersistence(ctx, {
+      list: () => Promise.resolve(metas),
+      inspect: (id: SessionId) => {
+        const meta = metas.find(item => item.id === id)
+        if (meta === undefined) return Promise.resolve(undefined)
+        return Promise.resolve({ meta, events: [] })
+      },
+    })
+    const disposers = new Map(metas.map(meta => [meta.id, vi.fn(() => Promise.resolve())]))
+    const live = new Map(metas.map(meta => [meta.id, unpublishedAgent(ctx, meta)]))
+    const handles = new Map(metas.map(meta => [
+      meta.id,
+      { agent: live.get(meta.id)!, dispose: disposers.get(meta.id)! },
+    ]))
+    vi.spyOn(ctx.agents, 'resume').mockImplementation(async options => handles.get(options.resumeSessionId)!)
+
+    for (const meta of metas.slice(0, API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE)) {
+      await expect(agents.resolveAgent(meta.id)).resolves.toEqual({ agent: live.get(meta.id) })
+    }
+    await expect(agents.resolveAgent(metas[0]!.id)).resolves.toEqual({ agent: live.get(metas[0]!.id) })
+    const extra = metas[API_SESSION_IDLE_ORDINARY_AGENT_CACHE_SIZE]!
+    await expect(agents.resolveAgent(extra.id)).resolves.toEqual({ agent: live.get(extra.id) })
+    expect(disposers.get(metas[0]!.id)).not.toHaveBeenCalled()
+    expect(disposers.get(metas[1]!.id)).toHaveBeenCalledOnce()
+    expect(disposers.get(extra.id)).not.toHaveBeenCalled()
+  })
+
+  it('keeps a running ordinary Agent while resuming another Session', async () => {
+    const { ctx, agents } = await harness()
+    const runningMeta = header('running-root')
+    const nextMeta = header('keep-running-next')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([runningMeta, nextMeta]),
+      inspect: (id: SessionId) => Promise.resolve({
+        meta: id === runningMeta.id ? runningMeta : nextMeta,
+        events: [],
+      }),
+    })
+    const runningDispose = vi.fn(() => Promise.resolve())
+    const nextDispose = vi.fn(() => Promise.resolve())
+    const runningAgent = { ...unpublishedAgent(ctx, runningMeta), status: 'running' as const }
+    const nextAgent = unpublishedAgent(ctx, nextMeta)
+    vi.spyOn(ctx.agents, 'resume').mockImplementation(async (options) => {
+      if (options.resumeSessionId === runningMeta.id) {
+        return { agent: runningAgent, dispose: runningDispose }
+      }
+      return { agent: nextAgent, dispose: nextDispose }
+    })
+
+    await expect(agents.resolveAgent(runningMeta.id)).resolves.toEqual({ agent: runningAgent })
+    await expect(agents.resolveAgent(nextMeta.id)).resolves.toEqual({ agent: nextAgent })
+    expect(runningDispose).not.toHaveBeenCalled()
+  })
+
+  it('disposes owned Agent handles when the Host fiber unloads', async () => {
+    const { ctx, agents } = await harness()
+    const meta = header('fiber-dispose-root')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([meta]),
+      inspect: () => Promise.resolve({ meta, events: [] }),
+    })
+    const dispose = vi.fn(() => Promise.resolve())
+    const live = unpublishedAgent(ctx, meta)
+    vi.spyOn(ctx.agents, 'resume').mockResolvedValue({ agent: live, dispose })
+
+    await expect(agents.resolveAgent(meta.id)).resolves.toEqual({ agent: live })
+    await ctx.fiber.dispose()
+    expect(dispose).toHaveBeenCalledOnce()
+  })
+
+  it('keeps a repeated resume handle for the same unpublished Session', async () => {
+    const { ctx, agents } = await harness()
+    const meta = header('same-handle')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([meta]),
+      inspect: () => Promise.resolve({ meta, events: [] }),
+    })
+    const dispose = vi.fn(() => Promise.resolve())
+    const live = unpublishedAgent(ctx, meta)
+    const handle = { agent: live, dispose }
+    vi.spyOn(ctx.agents, 'resume').mockResolvedValue(handle)
+
+    await expect(agents.resolveAgent(meta.id)).resolves.toEqual({ agent: live })
+    await expect(agents.resolveAgent(meta.id)).resolves.toEqual({ agent: live })
+    expect(dispose).not.toHaveBeenCalled()
+  })
+
+  it('replaces a previous handle when the same unpublished Session is resumed again', async () => {
+    const { ctx, agents } = await harness()
+    const meta = header('replace-handle')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([meta]),
+      inspect: () => Promise.resolve({ meta, events: [] }),
+    })
+    const firstDispose = vi.fn(() => Promise.resolve())
+    const secondDispose = vi.fn(() => Promise.resolve())
+    const live = unpublishedAgent(ctx, meta)
+    vi.spyOn(ctx.agents, 'resume')
+      .mockResolvedValueOnce({ agent: live, dispose: firstDispose })
+      .mockResolvedValueOnce({ agent: live, dispose: secondDispose })
+
+    await expect(agents.resolveAgent(meta.id)).resolves.toEqual({ agent: live })
+    await expect(agents.resolveAgent(meta.id)).resolves.toEqual({ agent: live })
+    expect(firstDispose).toHaveBeenCalledOnce()
+    expect(secondDispose).not.toHaveBeenCalled()
+  })
+
+  it('keeps a subagent-owned idle Agent while resuming another Session', async () => {
+    const { ctx, agents } = await harness()
+    const childMeta = header('idle-subagent')
+    const nextMeta = header('after-subagent')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([childMeta, nextMeta]),
+      inspect: (id: SessionId) => Promise.resolve({
+        meta: id === childMeta.id ? childMeta : nextMeta,
+        events: [],
+      }),
+    })
+    const childDispose = vi.fn(() => Promise.resolve())
+    const nextDispose = vi.fn(() => Promise.resolve())
+    const childAgent = unpublishedAgent(ctx, {
+      ...childMeta,
+      origin: 'subagent',
+      parentSession: SessionId('parent-root'),
+    })
+    const nextAgent = unpublishedAgent(ctx, nextMeta)
+    vi.spyOn(ctx.agents, 'resume').mockImplementation(async (options) => {
+      if (options.resumeSessionId === childMeta.id) {
+        return { agent: childAgent, dispose: childDispose }
+      }
+      return { agent: nextAgent, dispose: nextDispose }
+    })
+
+    await expect(agents.resolveAgent(childMeta.id)).resolves.toEqual({ agent: childAgent })
+    await expect(agents.resolveAgent(nextMeta.id)).resolves.toEqual({ agent: nextAgent })
+    expect(childDispose).not.toHaveBeenCalled()
+  })
+
+  it('keeps an Agent owned by the Session being activated', async () => {
+    const { ctx, agents } = await harness()
+    const parentMeta = header('owner-parent')
+    const childMeta = header('owned-by-parent')
+    providePersistence(ctx, {
+      list: () => Promise.resolve([parentMeta, childMeta]),
+      inspect: (id: SessionId) => Promise.resolve({
+        meta: id === parentMeta.id ? parentMeta : childMeta,
+        events: [],
+      }),
+    })
+    const parentDispose = vi.fn(() => Promise.resolve())
+    const childDispose = vi.fn(() => Promise.resolve())
+    const parentAgent = unpublishedAgent(ctx, parentMeta)
+    const childAgent = unpublishedAgent(ctx, childMeta)
+    vi.spyOn(ctx.agents, 'resume').mockImplementation(async (options) => {
+      if (options.resumeSessionId === childMeta.id) {
+        return { agent: childAgent, dispose: childDispose }
+      }
+      return { agent: parentAgent, dispose: parentDispose }
+    })
+    vi.spyOn(ctx.agents, 'isOwnedBy').mockImplementation((id, owner) => (
+      id === childMeta.id && owner.id === parentMeta.id
+    ))
+
+    await expect(agents.resolveAgent(childMeta.id)).resolves.toEqual({ agent: childAgent })
+    const originalGet = ctx.agents.get.bind(ctx.agents)
+    vi.spyOn(ctx.agents, 'get').mockImplementation((id) => {
+      if (id === parentMeta.id) return parentAgent
+      return originalGet(id)
+    })
+    await expect(agents.resolveAgent(parentMeta.id)).resolves.toEqual({ agent: parentAgent })
+    expect(childDispose).not.toHaveBeenCalled()
   })
 })

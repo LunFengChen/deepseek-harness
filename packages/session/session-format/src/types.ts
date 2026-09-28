@@ -204,6 +204,12 @@ export interface SessionFormatRestoreOptions {
    * released current-format validation only after migration; current input receives only codec validation.
    */
   readonly validation: 'transformed' | 'current'
+  /**
+   * Receive each current-generation event instead of retaining the artifact array.
+   * Migrating restores ignore this and still accumulate. Finish then returns an
+   * empty `events` list; per-event validation belongs to the sink.
+   */
+  readonly adoptEvent?: (event: SessionFormatEvent) => void
 }
 
 /** Build-static physical dispatch and adjacent migration catalog. */

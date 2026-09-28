@@ -92,6 +92,12 @@ export interface SessionInspection extends SessionStorageMetadata {
 export interface SessionPersistenceOpenOptions {
   /** Optional cancellation observed before backend work starts. */
   readonly signal?: AbortSignal
+  /**
+   * Receive each current-generation event while opening instead of retaining
+   * the complete log on the handle. Backends that cannot stream ignore this
+   * and callers fall back to `SessionHandle.read(0)`.
+   */
+  readonly adoptEvent?: (event: SessionEvent) => void
 }
 
 /** Options for {@link SessionPersistence.stat}. */

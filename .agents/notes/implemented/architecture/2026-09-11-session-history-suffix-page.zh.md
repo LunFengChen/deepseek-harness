@@ -20,7 +20,7 @@ Status: implemented
 
 **继续恢复 Session，只在 `source.events` 之后分页。** 否决：live observation 的 getter 会在第一次读 `events` 时拷贝整份日志，而这正是点击后卡住的那一步。
 
-**从磁盘流式解码，不持有压缩文件。** 这次不做：扫帧仍需要制品字节，而用户能感觉到的停顿是对象图恢复。以后可以用 mmap/窗口读丢掉 127MB 缓冲区，不必改分页契约。
+**从磁盘流式解码，不持有压缩文件。** 当时推迟，因为用户能感觉到的停顿是对象图恢复。[Session 宿主内存上限](2026-09-23-session-host-memory-bounds.zh.md) 现在从文件描述符扫描 Zstandard 帧，并且只解压 header 加上尾页。
 
 **在后缀 follow 上 promote，让 prompt 已经是热的。** 否决：查看历史不得恢复 127MB Session；`prompt` 仍会为写入做观察。
 
@@ -30,6 +30,7 @@ Status: implemented
 - 打开历史不再激活 Agent。
 - seeded 后缀视图在完整观察之前可能省略继承投影。
 - 可写恢复和压缩仍然全量读取制品。
+- 后缀读取不再把完整压缩文件物化成一个 Buffer。
 
 ## Related
 

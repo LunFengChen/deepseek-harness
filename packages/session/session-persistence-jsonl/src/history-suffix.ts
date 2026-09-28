@@ -1,9 +1,11 @@
 /**
  * Tail-page decoder for JSONL session logs. It scans cheap Zstandard frame
  * boundaries and decompresses only the newest frames that cover one history
- * page, without constructing a {@link SessionLogScanner} from seq 0.
+ * page, without constructing a {@link SessionLogScanner} from seq 0. Path
+ * reads scan those frames from the file instead of one whole-artifact Buffer.
  */
 
+import { open as fsOpen, type FileHandle } from 'node:fs/promises'
 import { assertV3RowAdmission } from '@x1a0f3n9/dsh-session-format-v2-to-v3'
 import {
   decodeSeqRanges,
@@ -21,9 +23,16 @@ import type {
   SessionHistorySuffixOptions,
 } from '@x1a0f3n9/dsh-session-persistence'
 import { parseHeaderRecord, type JsonlCompression } from './format.ts'
-import { decompressZstdFrame, decompressZstdPrefix, scanZstdFrames } from './zstd.ts'
+import {
+  decompressZstdFrame,
+  decompressZstdPrefix,
+  scanZstdFrames,
+  scanZstdFramesFromReader,
+  type ZstdFrameRange,
+} from './zstd.ts'
 
 const MESSAGE_TYPES = new Set(['user/message', 'assistant/message'])
+const PLAIN_SUFFIX_CHUNK_BYTES = 256 * 1024
 
 /**
  * Decode one history-page suffix from a current-generation JSONL artifact.
@@ -43,6 +52,32 @@ export async function readJsonlHistorySuffix(
 }
 
 /**
+ * Decode one history-page suffix from a generation file without materializing
+ * the complete artifact as one Buffer.
+ * @param path - current-generation JSONL path.
+ * @param compression - physical encoding of this generation.
+ * @param options - page bounds and cancellation.
+ * @returns header, covering events, and the logical cursor.
+ */
+export async function readJsonlHistorySuffixFromPath(
+  path: string,
+  compression: JsonlCompression,
+  options: SessionHistorySuffixOptions,
+): Promise<SessionHistorySuffix> {
+  options.signal?.throwIfAborted()
+  const handle = await fsOpen(path, 'r')
+  try {
+    const size = (await handle.stat()).size
+    options.signal?.throwIfAborted()
+    return compression === 'zstd'
+      ? await readZstdSuffixFromHandle(handle, size, options)
+      : await readPlainSuffixFromHandle(handle, size, options)
+  } finally {
+    await handle.close()
+  }
+}
+
+/**
  * Decode a Zstandard log by scanning frame boundaries and decompressing only
  * the newest event frames that cover the requested page.
  * @param bytes - concatenated frames, possibly with a torn final frame.
@@ -54,10 +89,62 @@ async function readZstdSuffix(
   options: SessionHistorySuffixOptions,
 ): Promise<SessionHistorySuffix> {
   options.signal?.throwIfAborted()
-  const { frames, tornStart } = scanZstdFrames(bytes)
+  const scan = scanZstdFrames(bytes)
+  return collectZstdSuffix(
+    scan.frames,
+    scan.tornStart,
+    bytes.length,
+    (start, end) => Promise.resolve(bytes.subarray(start, end)),
+    options,
+  )
+}
+
+/**
+ * Decode a Zstandard log from a file handle by scanning frame boundaries and
+ * decompressing only the header plus the newest covering event frames.
+ * @param handle - readable generation file.
+ * @param fileSize - exclusive end of the readable range.
+ * @param options - page bounds and cancellation.
+ * @returns the covering suffix.
+ */
+async function readZstdSuffixFromHandle(
+  handle: FileHandle,
+  fileSize: number,
+  options: SessionHistorySuffixOptions,
+): Promise<SessionHistorySuffix> {
+  const scan = await scanZstdFramesFromReader(
+    fileSize,
+    (start, end) => readHandleRange(handle, start, end, options.signal),
+    options.signal,
+  )
+  return collectZstdSuffix(
+    scan.frames,
+    scan.tornStart,
+    fileSize,
+    (start, end) => readHandleRange(handle, start, end, options.signal),
+    options,
+  )
+}
+
+/**
+ * Collect one suffix page from already-located Zstandard frames.
+ * @param frames - complete frames in file order.
+ * @param tornStart - start of an incomplete final frame, when present.
+ * @param fileSize - exclusive end of the readable range.
+ * @param readSlice - exclusive-end byte reader.
+ * @param options - page bounds and cancellation.
+ * @returns the covering suffix.
+ */
+async function collectZstdSuffix(
+  frames: readonly ZstdFrameRange[],
+  tornStart: number | undefined,
+  fileSize: number,
+  readSlice: (start: number, end: number) => Promise<Buffer>,
+  options: SessionHistorySuffixOptions,
+): Promise<SessionHistorySuffix> {
   const headerFrame = frames[0]
   if (headerFrame === undefined) throw new Error('empty or header-less Zstandard session log')
-  const headerPlain = await decompressZstdFrame(bytes.subarray(headerFrame.start, headerFrame.end))
+  const headerPlain = await decompressZstdFrame(await readSlice(headerFrame.start, headerFrame.end))
   assertZstdHeaderFrame(headerPlain)
   const header = parseHeaderRecord(headerPlain).meta
   const eventFrames = frames.slice(1)
@@ -67,7 +154,7 @@ async function readZstdSuffix(
     options.signal?.throwIfAborted()
     let recovered: Buffer = Buffer.alloc(0)
     try {
-      recovered = Buffer.from(await decompressZstdPrefix(bytes.subarray(tornStart)))
+      recovered = Buffer.from(await decompressZstdPrefix(await readSlice(tornStart, fileSize)))
     } catch {
       if (options.signal?.aborted === true) options.signal.throwIfAborted()
     }
@@ -81,7 +168,7 @@ async function readZstdSuffix(
     if (last === undefined) throw new Error('empty or header-less Zstandard session log')
     options.signal?.throwIfAborted()
     collected.unshift(parseEventRecords(
-      await decompressZstdFrame(bytes.subarray(last.start, last.end)),
+      await decompressZstdFrame(await readSlice(last.start, last.end)),
     ))
     for (let index = eventFrames.length - 2; index >= 0; index -= 1) {
       if (suffixComplete(collected.flat(), options)) break
@@ -90,7 +177,7 @@ async function readZstdSuffix(
       if (frame === undefined) continue
       options.signal?.throwIfAborted()
       collected.unshift(parseEventRecords(
-        await decompressZstdFrame(bytes.subarray(frame.start, frame.end)),
+        await decompressZstdFrame(await readSlice(frame.start, frame.end)),
       ))
     }
   }
@@ -112,7 +199,102 @@ function readPlainSuffix(
   const headerEnd = bytes.indexOf(0x0A)
   if (headerEnd === -1) throw new Error('empty or header-less session log')
   const header = parseHeaderRecord(bytes.subarray(0, headerEnd + 1)).meta
-  const body = bytes.subarray(headerEnd + 1)
+  const records = eventsFromPlainBody(bytes.subarray(headerEnd + 1), options)
+  return Promise.resolve(finishSuffix(header, records, options.signal))
+}
+
+/**
+ * Walk complete JSONL records from the end of an uncompressed generation file.
+ * @param handle - readable generation file.
+ * @param fileSize - exclusive end of the readable range.
+ * @param options - page bounds and cancellation.
+ * @returns the covering suffix.
+ */
+async function readPlainSuffixFromHandle(
+  handle: FileHandle,
+  fileSize: number,
+  options: SessionHistorySuffixOptions,
+): Promise<SessionHistorySuffix> {
+  options.signal?.throwIfAborted()
+  const { header, headerEnd } = await readPlainHeader(handle, fileSize, options.signal)
+  if (headerEnd >= fileSize) return finishSuffix(header, [], options.signal)
+
+  let windowStart = fileSize
+  let tail = Buffer.alloc(0)
+  while (true) {
+    options.signal?.throwIfAborted()
+    const atHeader = windowStart <= headerEnd
+    const aligned = alignedPlainBody(tail, atHeader)
+    if (aligned.length > 0) {
+      const records = eventsFromPlainBody(aligned, options)
+      if (suffixComplete(records, options) || atHeader) {
+        return finishSuffix(header, records, options.signal)
+      }
+    } else if (atHeader) {
+      return finishSuffix(header, [], options.signal)
+    }
+    const readStart = Math.max(headerEnd, windowStart - PLAIN_SUFFIX_CHUNK_BYTES)
+    const older = await readHandleRange(handle, readStart, windowStart, options.signal)
+    tail = Buffer.concat([older, tail])
+    windowStart = readStart
+  }
+}
+
+/**
+ * Read the header line from the start of an uncompressed log.
+ * @param handle - readable generation file.
+ * @param fileSize - exclusive end of the readable range.
+ * @param signal - optional cancellation.
+ * @returns parsed header and exclusive end offset of its line.
+ */
+async function readPlainHeader(
+  handle: FileHandle,
+  fileSize: number,
+  signal: AbortSignal | undefined,
+): Promise<{ header: SessionHeader; headerEnd: number }> {
+  let offset = 0
+  let acc = Buffer.alloc(0)
+  while (offset < fileSize) {
+    signal?.throwIfAborted()
+    const end = Math.min(fileSize, offset + 8192)
+    acc = Buffer.concat([acc, await readHandleRange(handle, offset, end, signal)])
+    const newline = acc.indexOf(0x0A)
+    if (newline !== -1) {
+      return {
+        header: parseHeaderRecord(acc.subarray(0, newline + 1)).meta,
+        headerEnd: newline + 1,
+      }
+    }
+    offset = end
+  }
+  throw new Error('empty or header-less session log')
+}
+
+/**
+ * Complete JSONL body bytes that start on a record boundary.
+ * @param tail - bytes from the current window start through EOF.
+ * @param atHeader - whether the window start is the first event byte.
+ * @returns newline-terminated records, possibly empty.
+ */
+function alignedPlainBody(tail: Buffer, atHeader: boolean): Buffer {
+  const completeEnd = lastCompleteRecordEnd(tail)
+  if (completeEnd === 0) return Buffer.alloc(0)
+  if (atHeader) return tail.subarray(0, completeEnd)
+  const firstNewline = tail.indexOf(0x0A)
+  if (firstNewline + 1 >= completeEnd) return Buffer.alloc(0)
+  return tail.subarray(firstNewline + 1, completeEnd)
+}
+
+/**
+ * Walk complete JSONL records from the end of one uncompressed body.
+ * @param body - event-body bytes after the header line.
+ * @param options - page bounds and cancellation.
+ * @returns decoded events covering the requested page.
+ */
+function eventsFromPlainBody(
+  body: Buffer,
+  options: SessionHistorySuffixOptions,
+): SessionEvent[] {
   const records: SessionEvent[] = []
   let lineEnd = lastCompleteRecordEnd(body)
   while (lineEnd > 0) {
@@ -126,7 +308,38 @@ function readPlainSuffix(
     if (lineStart === 0) break
     lineEnd = lineStart
   }
-  return Promise.resolve(finishSuffix(header, records, options.signal))
+  return records
+}
+
+/**
+ * Read an exclusive byte range from a file handle.
+ * @param handle - readable file.
+ * @param start - inclusive start offset.
+ * @param end - exclusive end offset.
+ * @param signal - optional cancellation.
+ * @returns the bytes present in that range.
+ */
+async function readHandleRange(
+  handle: FileHandle,
+  start: number,
+  end: number,
+  signal?: AbortSignal,
+): Promise<Buffer> {
+  signal?.throwIfAborted()
+  const length = end - start
+  /* v8 ignore next -- callers pass a forward range from stat.size. */
+  if (length <= 0) return Buffer.alloc(0)
+  const buffer = Buffer.alloc(length)
+  let offset = 0
+  while (offset < length) {
+    signal?.throwIfAborted()
+    const { bytesRead } = await handle.read(buffer, offset, length - offset, start + offset)
+    /* v8 ignore next -- a concurrent truncate is the only zero read against stat.size. */
+    if (bytesRead === 0) break
+    offset += bytesRead
+  }
+  /* v8 ignore next -- zero-read above is the only short return. */
+  return offset === length ? buffer : buffer.subarray(0, offset)
 }
 
 /**
