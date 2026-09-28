@@ -706,7 +706,6 @@ describe('malformed replay and listener lifecycle', () => {
       donor.append('turn/end', { turn, reason: { kind: 'completed' } })
     }
     replaceSystem(donor, first, 'You are terse and answer in one line.')
-    // oxlint-disable-next-line typescript/no-deprecated -- Donor is unwindowed; this is the restore input.
     const events = donor.snapshotEvents()
 
     const header = {
@@ -734,6 +733,40 @@ describe('malformed replay and listener lifecycle', () => {
     const measured = service.measure(restored)
     expect(measured.nodes.length).toBeGreaterThan(0)
     expect(measured.logRevision).toBe(restored.seq)
+  })
+
+  it('folds a later current-surface replace after windowed measure bootstrap', () => {
+    const donor = Session.create(SessionId('window-meter-replace-donor'))
+    const first = appendSystem(donor, 'You are terse.')
+    const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 3) + 10
+    for (let turn = 1; turn <= turns; turn++) {
+      donor.append('turn/start', { turn })
+      donor.append('user/message', createUserMessage({
+        content: [{ type: 'text', text: `hello ${turn}` }],
+        source: { kind: 'user' },
+      }), { surfaceOp: 'append' })
+      donor.append('turn/end', { turn, reason: { kind: 'completed' } })
+    }
+    replaceSystem(donor, first, 'You are terse and answer in one line.')
+    const events = donor.snapshotEvents()
+    const header = {
+      version: SESSION_FORMAT_VERSION,
+      id: SessionId('window-meter-replace'),
+      createdAt: 1,
+      isSeeded: false,
+    }
+    const cold = Session.beginPersistedRestore(header.id, header)
+    for (const event of events) cold.adoptRestoredEvent(event)
+    cold.finishPersistedRestore(SessionLogOffset(0))
+    const service = meter()
+    const before = service.measure(cold)
+    expect(before.nodes.map(node => node.seq)).toEqual([...cold.surface.nodes])
+    const currentSystem = cold.surface.nodes[0]
+    if (currentSystem === undefined) throw new Error('windowed surface has no system node')
+    replaceSystem(cold, currentSystem, 'You are still terse.')
+    const after = service.measure(cold)
+    expect(after.nodes.map(node => node.seq)).toEqual([...cold.surface.nodes])
+    expect(after.logRevision).toBe(cold.seq)
   })
 
 })

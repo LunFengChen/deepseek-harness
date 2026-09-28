@@ -139,7 +139,7 @@ const price = ctx.tokenMeter.estimateMessage(message)
 - **系统提示词改写不带影子价**——循环替换 system 节点时没有紧邻的计量事件，因此 `contextPressure.projectedTokens` 以零增量折叠该替换，直到下一个用量样本；`contextBreakdown.systemTokens` 与 `measure()` 会立即按新提示词重新计价。
 - **构成检查点保留当前 surface**——精确的 system/message 分类需要位置条目；检查点大小和 surface 事件折叠成本为 O(当前保留 surface)。
 
-- **窗口化恢复不能从存活尾巴重建** — `ingestRestoredEvent` 在恢复期间折叠每条恢复事件；未经过该折叠的窗口化 Session 上调用 `measure()` 会明确失败。
+- **窗口化恢复不能从存活尾巴恢复已被替换掉的 seq** — `ingestRestoredEvent` 保留 usage 锚点和已被替换掉的 seq。缺少该 ingest 时，`measure()` 和 `contextBreakdown` 从存活尾巴和 prefixHot 快照当前 surface；它们不会重放已丢掉的 replace 区间。
 
 <a id="dev-note"></a>
 ### 开发备注

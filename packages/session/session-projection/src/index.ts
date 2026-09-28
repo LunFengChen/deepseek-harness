@@ -90,6 +90,18 @@ export interface ProjectionDefinition<
    * into garbage. Non-negative integer.
    */
   stateVersion: number
+  /**
+   * Snapshot current Session-owned state when a windowed Session has no ingested
+   * cell. The live tail is not a complete prefix, so folding `snapshotEvents()`
+   * as seq 0 cannot replay replace ranges that name dropped seqs. Units that
+   * only need the current surface implement this; units that need replaced-away
+   * prefix events keep ingesting during restore. The registry watermarks the
+   * cell at the current cursor and does not apply the triggering event again.
+   * @param session - the windowed Session whose current surface is complete in
+   *   the live tail plus prefixHot.
+   * @returns host state equivalent to folding every retained surface node.
+   */
+  bootstrapWindowed?(this: void, session: Session): NoInfer<S>
 }
 
 /**
@@ -142,6 +154,7 @@ interface ErasedDefinition {
   stateSchema: { parse(value: unknown): unknown }
   init(header: SessionHeader, inheritedEventCount: SessionLogOffset): unknown
   apply(state: unknown, event: SessionEvent): unknown
+  bootstrapWindowed: ((session: Session) => unknown) | undefined
   wire: { viewSchema: { parse(value: unknown): unknown }; view(state: unknown): unknown } | undefined
   stateVersion: number
 }
@@ -149,7 +162,7 @@ interface ErasedDefinition {
 /** Per-session per-unit watermark and fixed live-drive view buffer. */
 interface UnitCell {
   state: unknown
-  /** Seq of the last event passed through `apply` (regardless of change). */
+  /** Seq of the last event this cell reflects (apply or windowed bootstrap). */
   observedSeq: SessionSeqCursor
   /** `[previousView, currentView]`; undefined slots mean no cached comparison. */
   readonly views: [unknown, unknown]
@@ -264,11 +277,15 @@ export class SessionProjectionRegistry extends Service {
       viewSchema: ZodType
       view(state: S): unknown
     } | undefined
+    const bootstrapWindowed = definition.bootstrapWindowed
     const erased: ErasedDefinition = {
       key: definition.key,
       stateSchema: definition.stateSchema,
       init: (header, inheritedEventCount) => definition.init(header, inheritedEventCount),
       apply: (state, event) => definition.apply(state as S, event),
+      bootstrapWindowed: bootstrapWindowed === undefined
+        ? undefined
+        : session => bootstrapWindowed(session),
       wire: wire === undefined
         ? undefined
         : { viewSchema: wire.viewSchema, view: state => wire.view(state as S) },
@@ -672,13 +689,14 @@ export class SessionProjectionRegistry extends Service {
       cell = undefined
     }
     if (cell === undefined) {
-      cell = this.buildCell(
-        registration.def,
-        session.header,
-        session.inheritedEventCount,
-        // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
-        session.snapshotEvents(),
-      )
+      cell = this.windowedBootstrapCell(registration.def, session, cursorBefore(session.seq))
+        ?? this.buildCell(
+          registration.def,
+          session.header,
+          session.inheritedEventCount,
+          // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
+          session.snapshotEvents(),
+        )
       registration.cells.set(session, cell)
     } else {
       this.advanceCell(registration.def, cell, session, cursorBefore(session.seq))
@@ -720,6 +738,13 @@ export class SessionProjectionRegistry extends Service {
       }
       if (cell !== undefined && cell.observedSeq >= event.seq) continue
       if (cell === undefined) {
+        const bootstrapped = this.windowedBootstrapCell(registration.def, session, event.seq)
+        if (bootstrapped !== undefined) {
+          // The triggering event is already in the Session; do not apply it again.
+          registration.cells.set(session, bootstrapped)
+          this.publishBootstrapView(registration, session, bootstrapped, event.seq)
+          continue
+        }
         // Late build mid-stream: fold history before this event (seq = log
         // index, so the prefix slice is exact), then take the normal gate.
         // After a live window, this is only the tail; units that need the
@@ -771,6 +796,41 @@ export class SessionProjectionRegistry extends Service {
     const wire = registration.def.wire
     if (wire === undefined) throw new Error(`session projection ${JSON.stringify(registration.def.key)} has no wire view`)
     return wire.viewSchema.parse(wire.view(cell.state))
+  }
+
+  /**
+   * Build a cell from {@link ErasedDefinition.bootstrapWindowed} when the
+   * Session has already dropped a prefix and the unit can snapshot current
+   * surface state. Undefined when the unit still folds the live tail.
+   */
+  private windowedBootstrapCell(
+    def: ErasedDefinition,
+    session: Session,
+    observedSeq: SessionSeqCursor,
+  ): UnitCell | undefined {
+    if (session.liveBaseSeq === 0 || def.bootstrapWindowed === undefined) return undefined
+    return {
+      state: def.bootstrapWindowed(session),
+      observedSeq,
+      views: [undefined, undefined],
+    }
+  }
+
+  /** Notify the change feed the first time a windowed bootstrap materializes a wire view. */
+  private publishBootstrapView(
+    registration: Registration,
+    session: Session,
+    cell: UnitCell,
+    seq: SessionSeq,
+  ): void {
+    const wire = registration.def.wire
+    if (wire === undefined || this.listeners.size === 0) return
+    const view = wire.view(cell.state)
+    cell.views[1] = view
+    const value = wire.viewSchema.parse(view)
+    for (const listener of this.listeners) {
+      listener(session, registration.def.key as Extract<keyof SessionProjectionMap, string>, value, seq)
+    }
   }
 }
 

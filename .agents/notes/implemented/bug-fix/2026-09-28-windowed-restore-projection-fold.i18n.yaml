@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-28-windowed-restore-projection-fold.md
-2026-09-28-windowed-restore-projection-fold.md: fefc67ae532c314bdde0da4b1da427951e2a309c
-2026-09-28-windowed-restore-projection-fold.zh.md: d7bdb7a95184713a39097d93d63e8690f55c6927
+2026-09-28-windowed-restore-projection-fold.md: 1fadefcf9559f0d61dda7f71b722ad6841812c0d
+2026-09-28-windowed-restore-projection-fold.zh.md: 0b4f8cf41881a2e35d3a32444eb3bcc9210111f8
