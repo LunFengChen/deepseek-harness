@@ -20,12 +20,13 @@ describe('dsh-web-app bundle', () => {
       dependencies?: Record<string, string>
       dsh?: {
         bundle?: {
-          patch?: string
+          patch?: string | string[]
           plugins?: { id?: string; entryId?: string; packageName?: string }[]
         }
       }
     }
-    expect(manifest.dsh?.bundle?.patch).toBe('./cordis.patch.yml')
+    const patchFiles = manifest.dsh?.bundle?.patch
+    expect(patchFiles).toEqual(expect.arrayContaining(['./cordis.patch.yml']))
     expect(manifest.dependencies).toHaveProperty('@x1a0f3n9/dsh-web-search-pool')
     expect(manifest.dsh?.bundle?.plugins).toEqual(
       expect.arrayContaining([
@@ -38,7 +39,7 @@ describe('dsh-web-app bundle', () => {
     )
 
     const parsed = yaml.load(
-      readFileSync(resolve(root, manifest.dsh!.bundle!.patch!), 'utf8'),
+      readFileSync(resolve(root, './cordis.patch.yml'), 'utf8'),
       { schema: entryListSchema },
     )
     expect(Array.isArray(parsed)).toBe(true)
