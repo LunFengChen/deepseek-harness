@@ -1,0 +1,6 @@
+# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
+# side as of the last confirmed-consistent state. Both languages carry equal authority;
+# after editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-28-delete-from-pre-turn-inbox-splices.md
+2026-09-28-delete-from-pre-turn-inbox-splices.md: c3fc00e5a63eb31d6b1971a6420e3166303cad64
+2026-09-28-delete-from-pre-turn-inbox-splices.zh.md: 5dd85773ffc679ae0dec8ba6fb3b22c3bf930d6f
