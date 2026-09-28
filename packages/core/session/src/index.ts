@@ -615,10 +615,16 @@ export class Session {
    * after the last event.
    * @param id - restored session identity.
    * @param header - independently owned storage metadata.
+   * @param inheritedEventCount - exact fork-inherited prefix length when the
+   *   caller already knows it; omitted until {@link finishPersistedRestore}.
    * @returns an empty session ready to {@link adoptRestoredEvent}.
    */
-  static beginPersistedRestore(id: SessionId, header: SessionHeader): Session {
-    return new Session(id, undefined, header, 'streaming-restore')
+  static beginPersistedRestore(
+    id: SessionId,
+    header: SessionHeader,
+    inheritedEventCount?: SessionLogOffset,
+  ): Session {
+    return new Session(id, undefined, header, 'streaming-restore', inheritedEventCount)
   }
 
   private constructor(

@@ -133,6 +133,8 @@ const { asOfSeq, values } = ctx.sessionProjections.snapshot(session)
 - **注册表 cell 只活在内存里**——重启后首次触达时靠折叠日志重建；挂载了 `dsh-session-projection-cache` 的组合改由持久行播种该折叠。
 - **单元同步纪律只有部分可机械把关**——`wire.viewSchema.parse` 能拒绝返回 Promise 的 view，但阻塞的 `apply`、或读取撕裂的非会话状态的 `apply`，只能靠评审把关。
 
+- **窗口化恢复不能重建已丢掉的前缀** — `ingestRestoredEvent` 在窗口丢掉前缀之前折叠每条恢复事件。之后才注册的单元只能看见存活尾巴。
+
 <a id="dev-note"></a>
 ### 开发备注
 

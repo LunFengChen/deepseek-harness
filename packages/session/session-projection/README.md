@@ -133,6 +133,8 @@ These limits define where the projection registry needs care at scale. They are 
 - **Registry cells live in memory only** — a restart rebuilds by folding the log on first touch; compositions that mount `dsh-session-projection-cache` seed that fold from persisted rows instead.
 - **Synchronous unit discipline is only partially mechanical** — `wire.viewSchema.parse` rejects a Promise-returning view, but an `apply` that blocks or reads torn non-session state is a review concern.
 
+- **Windowed restore cannot reconstruct a dropped prefix** — `ingestRestoredEvent` folds each restored event before the window drops the prefix. A unit registered afterwards sees only the live tail.
+
 <a id="dev-note"></a>
 ### Dev Note
 

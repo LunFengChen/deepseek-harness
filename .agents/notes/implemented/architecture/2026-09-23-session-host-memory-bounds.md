@@ -18,7 +18,7 @@ The prepared-observation cache keeps its existing LRU of five cuts, including la
 
 `SessionPersistence.readHistorySuffix` opens the generation file and scans Zstandard frame boundaries through a sliding window. It decompresses only the header frame and the newest event frames that cover one page. Uncompressed logs walk complete JSONL lines from the end. The Buffer decoder remains for unit tests.
 
-After persistence stores the constructor seed, `Session.releaseLiveWindow()` keeps `this.log` as a contiguous tail of at most `SESSION_LIVE_WINDOW_EVENTS` events, cut at `turn/start`. Surface nodes, `request/header`, `request/context`, and `turn/start` that leave the tail stay in `prefixHot`. `snapshotEvents` returns only the tail. Write-open resume streams current-generation events through `adoptEvent` into `Session.adoptRestoredEvent`, which compacts that window as it goes, instead of `sessions.prepare` copying a full seed. `ctx.sessions.fork` throws `INVALID_BOUNDARY` when that tail is not a complete `0..boundary` prefix. The Remote API fork and windowed `deleteFrom` reread the persisted prefix. History UI pages the file suffix; Trajectory virtualizes the tail. They do not punch holes in the live array.
+After persistence stores the constructor seed, `Session.releaseLiveWindow()` keeps `this.log` as a contiguous tail of at most `SESSION_LIVE_WINDOW_EVENTS` events, cut at `turn/start`. Surface nodes, `request/header`, `request/context`, and `turn/start` that leave the tail stay in `prefixHot`. `snapshotEvents` returns only the tail. Write-open resume streams current-generation events through `adoptEvent` into `Session.adoptRestoredEvent`, which compacts that window as it goes, instead of `sessions.prepare` copying a full seed. Projection units and the token meter ingest each restored event during that stream so they do not rebuild from the live tail. `ctx.sessions.fork` throws `INVALID_BOUNDARY` when that tail is not a complete `0..boundary` prefix. The Remote API fork and windowed `deleteFrom` reread the persisted prefix. History UI pages the file suffix; Trajectory virtualizes the tail. They do not punch holes in the live array.
 
 ## Alternatives considered
 
@@ -50,3 +50,5 @@ After persistence stores the constructor seed, `Session.releaseLiveWindow()` kee
 [A session's agent is composed from a preset cordis.yml](2026-08-03-per-session-agent-presets.md) still owns preset composition; idle-root eviction now lives on API Session.
 
 [Deprecate synchronous reads of arbitrary Session events](2026-09-09-deprecate-synchronous-session-event-reads.md) still owns the storage direction to stop keeping the complete sequence in memory.
+
+[Windowed restore folds projections during ingest](../bug-fix/2026-09-28-windowed-restore-projection-fold.md) owns the restore-time ingest that keeps projection and token-meter folds correct after the tail window drops.
