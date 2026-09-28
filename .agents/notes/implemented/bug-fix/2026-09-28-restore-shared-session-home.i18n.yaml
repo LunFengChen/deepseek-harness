@@ -1,0 +1,22 @@
+# Bilingual-pair consistency record for 2026-09-28-restore-shared-session-home.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-28-restore-shared-session-home.md
+/agent-note-restore-shared-session-home-after-0-1-7:
+  en: 538d8b7f7d0ed2f9
+  zh: 7606d60dbddfa3cc
+/agent-note-restore-shared-session-home-after-0-1-7/problem:
+  en: fed07b059a6fc277
+  zh: deef5169b18b0b44
+/agent-note-restore-shared-session-home-after-0-1-7/decision:
+  en: df975d7e3adc3fcd
+  zh: d3e132af14d93c81
+/agent-note-restore-shared-session-home-after-0-1-7/verification:
+  en: cacbd5682db4017c
+  zh: 1dfb285824eb151a
+/agent-note-restore-shared-session-home-after-0-1-7/alternatives-considered:
+  en: 239a3c7f79c732c8
+  zh: 684e7d4c3b1a9dc7
+/agent-note-restore-shared-session-home-after-0-1-7/consequences:
+  en: ce51d2e03d65d74f
+  zh: 4eb543865e3bc3e8

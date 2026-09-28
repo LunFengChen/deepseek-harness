@@ -45,6 +45,18 @@ describe('dsh-base bundle', () => {
       searchProviderOrder: ['perplexity', 'exa', 'free'],
       fetchProvider: 'http',
     })
+    expect(rows.find(row => row.id === 'session-persistence-jsonl')?.config).toMatchObject({
+      root: { __jsExpr: "dshSessionPath('sessions')" },
+    })
+    expect(rows.find(row => row.id === 'storage-json')?.config).toMatchObject({
+      root: { __jsExpr: "dshSessionPath('storages')" },
+    })
+    expect(rows.find(row => row.id === 'credentials')?.config).toMatchObject({
+      dshHome: { __jsExpr: 'dshSessionPath()' },
+    })
+    expect(rows.find(row => row.id === 'attachment-local')?.config).toMatchObject({
+      dshHome: { __jsExpr: 'dshSessionPath()' },
+    })
     expect(rows.find(row => row.id === 'web-search-pool')).toBeUndefined()
     expect(rows.find(row => row.id === 'web-fetch-http')).toBeDefined()
     expect(manifest.dependencies).not.toHaveProperty('@x1a0f3n9/dsh-web-search-pool')
