@@ -16,12 +16,12 @@ import {
 } from '@x1a0f3n9/dsh-compaction'
 import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
 import type { CommandId } from '@x1a0f3n9/dsh-commands/brand'
-import { createUserMessage, errorChain } from '@x1a0f3n9/dsh-llm'
+import { CONTEXT_WINDOW_EXCEEDED_CODE, createUserMessage, errorChain } from '@x1a0f3n9/dsh-llm'
 import type { Message, UserMessage } from '@x1a0f3n9/dsh-llm'
 import type { TokenMeasurement, TokenMeter } from '@x1a0f3n9/dsh-token-meter'
 import { SessionSeq, type Session, type SessionEvent } from '@x1a0f3n9/dsh-session'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
-import { frameSummary } from './summarizer.ts'
+import { CONTEXT_OVERFLOW_FALLBACK_SUMMARY, frameSummary } from './summarizer.ts'
 import type { SummarizationInput, SummaryResult } from './summarizer.ts'
 
 interface RegionDependencies {
@@ -382,6 +382,36 @@ function prepareCompaction(
   }
 }
 
+/** True when a summarizer failed because the conversation itself overflowed the model. */
+function isContextOverflowFailure(error: unknown): boolean {
+  return typeof error === 'object'
+    && error !== null
+    && 'code' in error
+    && error.code === CONTEXT_WINDOW_EXCEEDED_CODE
+}
+
+/**
+ * Prefer a model summary; if that call overflows, land a short checkpoint so
+ * overflow recovery and `/compact` still reduce the surface.
+ */
+async function summarizeOrFallback(
+  dependencies: RegionDependencies,
+  prepared: PreparedCompaction,
+  agent: Agent,
+  signal?: AbortSignal,
+): Promise<SummaryResult> {
+  try {
+    return await dependencies.summarize(prepared.input, agent, signal)
+  } catch (error: unknown) {
+    if (signal?.aborted || !isContextOverflowFailure(error)) throw error
+    return {
+      summary: [{ type: 'text', text: CONTEXT_OVERFLOW_FALLBACK_SUMMARY }],
+      provider: 'compaction-overflow-fallback',
+      model: 'compaction-overflow-fallback',
+    }
+  }
+}
+
 /** Run the summarizer and frame its replacement checkpoint. */
 async function summarizeCompaction(
   dependencies: RegionDependencies,
@@ -391,7 +421,7 @@ async function summarizeCompaction(
   sourceCommandId: CommandId | undefined,
   signal?: AbortSignal,
 ): Promise<SummarizedCompaction> {
-  const summaryResult = await dependencies.summarize(prepared.input, agent, signal)
+  const summaryResult = await summarizeOrFallback(dependencies, prepared, agent, signal)
   const checkpointMessage = createUserMessage({
     content: frameSummary(summaryResult.summary),
     source: compactCheckpointSource(compactionId, sourceCommandId),
@@ -554,10 +584,12 @@ function inspectCompactionEntryState(session: Session): CompactionEntryState {
   let unmatchedCompactionStart: SessionEvent<'compaction/start'> | undefined
   let compactionEntryStateKnown = false
   let latestEndSeedSeq: SessionSeq | undefined
-  for (let seq = session.seq - 1; seq >= 0; seq -= 1) {
-    // Existing Session history read; migration deferred.
-    // oxlint-disable-next-line typescript/no-non-null-assertion, typescript/no-deprecated
-    const event = session.eventAt(SessionSeq(seq))!
+  // Live tail only: seqs below liveBaseSeq are a released prefix, not a hole.
+  // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
+  const events = session.snapshotEvents()
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index]
+    if (event === undefined) continue
     if (latestEndSeedSeq === undefined && event.type === 'session/end-seed') {
       latestEndSeedSeq = event.seq
     }

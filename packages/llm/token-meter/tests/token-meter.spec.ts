@@ -693,7 +693,7 @@ describe('malformed replay and listener lifecycle', () => {
     expect(activeMeter.measure(session).logRevision).toBe(3)
     await secondFiber.dispose()
   })
-  it('ingests restored events so a windowed replace does not rebuild from the live tail', () => {
+  it('measures a windowed Session from the current surface when resume ingest did not run', () => {
     const donor = Session.create(SessionId('window-meter-donor'))
     const first = appendSystem(donor, 'You are terse.')
     const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 3) + 10
@@ -719,7 +719,9 @@ describe('malformed replay and listener lifecycle', () => {
     for (const event of events) cold.adoptRestoredEvent(event)
     cold.finishPersistedRestore(SessionLogOffset(0))
     expect(cold.liveBaseSeq).toBeGreaterThan(0)
-    expect(() => meter().measure(cold)).toThrow(/live tail/)
+    const coldMeasured = meter().measure(cold)
+    expect(coldMeasured.nodes.map(node => node.seq)).toEqual([...cold.surface.nodes])
+    expect(coldMeasured.logRevision).toBe(cold.seq)
 
     const service = meter()
     const restored = Session.beginPersistedRestore(header.id, header)

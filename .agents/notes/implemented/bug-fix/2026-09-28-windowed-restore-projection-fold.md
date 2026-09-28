@@ -18,7 +18,7 @@ A later surface replace whose `startSeq` sits before `liveBaseSeq` then fails wi
 
 `AgentLoop.resumeWith` calls both ingest methods from the same `adopt` helper used by streaming `adoptEvent`, the `handle.read(0)` fallback, and interrupted-turn closers. Token meter ingest is skipped when that service is not mounted.
 
-Token-meter `_sync` refuses to rebuild from the live tail when it has no ingested replay state. Projection `cellFor` still late-builds from the tail for units registered after restore — those units never saw the dropped prefix.
+Token-meter `_sync` prefers resume ingest. If that replay state is missing, it snapshots the current surface from the live tail and prefixHot so `measure()` can still price pressure. That snapshot does not recover usage anchors or replaced-away seqs; ingest during resume remains the path that preserves them. Projection `cellFor` still late-builds from the tail for units registered after restore — those units never saw the dropped prefix.
 
 `Session.beginPersistedRestore` accepts an optional inherited cut so a caller that already knows it can seed `init` before the first ingest. Resume still records the durable cut in `finishPersistedRestore` after the scan; current-format storage does not expose that cut on `stat`.
 
@@ -47,3 +47,5 @@ Units whose `init` reads `inheritedEventCount` see `0` during streamed resume un
 [Session host memory bounds](../architecture/2026-09-23-session-host-memory-bounds.md) still owns the live tail, `prefixHot`, and streaming `adoptRestoredEvent`.
 
 [Deprecate synchronous reads of arbitrary Session events](../architecture/2026-09-09-deprecate-synchronous-session-event-reads.md) still owns the direction away from complete in-memory logs.
+
+[Windowed Sessions compact on context overflow](2026-09-28-windowed-overflow-compaction.md) owns measure() surface snapshot and compaction lock inspection on the live tail.
