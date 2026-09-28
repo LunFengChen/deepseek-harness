@@ -16,7 +16,7 @@ import type { Message } from '@x1a0f3n9/dsh-llm'
 import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq } from './types.ts'
 import type { TypertLookup } from '@x1a0f3n9/dsh-typert-protocol'
 import type { CreateSessionOptions, EpochHeader, PrepareSessionOptions, RequestContext, SessionEvent, SessionEventMap, SessionEventType, SessionHeader, SessionId, SessionSeedEventState, SurfaceIntent, SurfaceEventType } from './types.ts'
-import { deriveEventMessage, SurfaceManager, validateSessionEventData, validateSurfaceMetadata } from './surface.ts'
+import { deriveEventMessage, isSurfaceEvent, SurfaceManager, validateSessionEventData, validateSurfaceMetadata } from './surface.ts'
 import type { SessionSurface } from './surface.ts'
 import { foldRequestHeader } from './request-header.ts'
 
@@ -29,6 +29,32 @@ export type { SessionSurface, SurfaceFoldReplacement, SurfaceFoldResult } from '
 export { deriveEventMessage, foldSurface, isAppendSurfaceEvent, isReplacementSurfaceEvent, isSurfaceEvent, isSurfaceEligibleType } from './surface.ts'
 export { canonicalHeader, foldRequestHeader, headerEquals } from './request-header.ts'
 export { KNOWN_SESSION_EVENT_TYPES } from './known-event-types.ts'
+
+/**
+ * Maximum events retained in the live RAM tail after {@link Session.releaseLiveWindow}.
+ * The cut is the nearest `turn/start` so an in-flight turn is never split.
+ */
+export const SESSION_LIVE_WINDOW_EVENTS = 4096
+
+function liveWindowCut(log: readonly SessionEvent[]): number {
+  if (log.length <= SESSION_LIVE_WINDOW_EVENTS) return 0
+  const minKeep = log.length - SESSION_LIVE_WINDOW_EVENTS
+  for (let i = minKeep; i < log.length; i++) {
+    if (log[i]?.type === 'turn/start') return i
+  }
+  for (let i = minKeep - 1; i >= 0; i--) {
+    if (log[i]?.type === 'turn/start') return i
+  }
+  return minKeep
+}
+
+function keepDroppedLiveEvent(event: SessionEvent, surfaceSeqs: ReadonlySet<number>): boolean {
+  return event.type === 'turn/start'
+    || event.type === 'request/header'
+    || event.type === 'request/context'
+    || (isSurfaceEvent(event) && surfaceSeqs.has(event.seq))
+}
+
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
@@ -458,8 +484,17 @@ const attachments = new WeakMap<Session, SessionEntry>()
  */
 export class Session {
   private log: SessionEvent[] = []
+  private _liveBaseSeq = SessionLogOffset(0)
+  private readonly prefixHot = new Map<number, SessionEvent>()
+  private liveWindowActive = false
+  private streamingRestore = false
+  private restoreFinished = false
   /** Single incremental owner of surface acceptance and projection state. */
-  private readonly surfaceManager = new SurfaceManager(this.log)
+  private readonly surfaceManager = new SurfaceManager(
+    this.log,
+    SessionLogOffset(0),
+    seq => this.eventAt(seq),
+  )
 
   /** The ordered surface over this session's event log. */
   get surface(): SessionSurface {
@@ -476,13 +511,19 @@ export class Session {
    */
   readonly header: SessionHeader
 
+  private _inheritedEventCount = SessionLogOffset(0)
+
   /** Number of leading events inherited from this Session's fork parent. */
-  readonly inheritedEventCount: SessionLogOffset
+  get inheritedEventCount(): SessionLogOffset {
+    return this._inheritedEventCount
+  }
 
   /** The session identity, derived from its durable header's single copy. */
   get id(): SessionId {
     return this.header.id
   }
+
+  private _firstLiveSeq: SessionLogOffset = SessionLogOffset(0)
 
   /**
    * The first seq appended IN THIS PROCESS: the length of the constructor
@@ -492,9 +533,9 @@ export class Session {
    * the constructor-input boundary for lifecycle ownership and persistence
    * adoption; consumers that need complete canonical history still start at
    * seq 0. Distinct from {@link inheritedEventCount}, the DURABLE
-   * fork-lineage cut: a resumed session's constructor seed is its full stored
-   * log, while the inherited count keeps the original fork value — this field is the
-   * in-process construction fact.
+   * fork-lineage cut: a resumed session adopts stored events through
+   * {@link adoptRestoredEvent} and may window them, while the inherited count
+   * keeps the original fork value — this field is the in-process construction fact.
    *
    * Not persisted itself: a seeded session projects it into the log as the
    * `session/end-seed` event, which is what a consumer reading STORED history
@@ -506,8 +547,20 @@ export class Session {
    * When this lifecycle appends the marker, it occupies this seq before the
    * store attaches and therefore does not publish either. Otherwise this seq
    * holds an ordinary published write.
+   * @returns the first seq appended in this process.
    */
-  readonly firstLiveSeq: SessionLogOffset
+  get firstLiveSeq(): SessionLogOffset {
+    return this._firstLiveSeq
+  }
+
+  /**
+   * Absolute seq of the first event still held in the contiguous live tail.
+   * `0` until {@link releaseLiveWindow} drops a persisted prefix.
+   * @returns the live-window origin.
+   */
+  get liveBaseSeq(): SessionLogOffset {
+    return this._liveBaseSeq
+  }
 
   /**
    * Create a detached session by validating and snapshotting borrowed seed
@@ -556,14 +609,31 @@ export class Session {
     )
   }
 
+  /**
+   * Start a persisted restore that adopts events one at a time into the live window.
+   * The header may be seeded without a constructor seed; call {@link finishPersistedRestore}
+   * after the last event.
+   * @param id - restored session identity.
+   * @param header - independently owned storage metadata.
+   * @returns an empty session ready to {@link adoptRestoredEvent}.
+   */
+  static beginPersistedRestore(id: SessionId, header: SessionHeader): Session {
+    return new Session(id, undefined, header, 'streaming-restore')
+  }
+
   private constructor(
     id: SessionId,
     seed?: readonly SessionEvent[],
     header?: SessionHeader,
-    mode: 'snapshot' | SessionSeedEventState = 'snapshot',
+    mode: 'snapshot' | SessionSeedEventState | 'streaming-restore' = 'snapshot',
     suppliedInheritedEventCount?: SessionLogOffset,
   ) {
+    const streaming = mode === 'streaming-restore'
     const restoredHeader = mode === 'snapshot' ? undefined : validateRestoredSessionHeader(id, header)
+    if (streaming) {
+      this.streamingRestore = true
+      this.liveWindowActive = true
+    }
     if (seed !== undefined) {
       // Validate the seed to the SAME invariants `append` enforces, so a
       // replay/fork (`ctx.sessions.create(id, { seed })`) cannot construct a
@@ -594,25 +664,25 @@ export class Session {
         this.log.push(mode === 'snapshot' ? deepFreeze(snapshot) : snapshot)
       }
     }
-    this.firstLiveSeq = SessionLogOffset(this.log.length)
+    this._firstLiveSeq = SessionLogOffset(this.log.length)
     this.header = restoredHeader ?? snapshotSessionHeader(id, header)
-    if (this.header.isSeeded && seed === undefined) {
+    if (this.header.isSeeded && seed === undefined && !streaming) {
       throw new Error('seeded session requires an explicit constructor seed')
     }
-    if (this.header.isSeeded && suppliedInheritedEventCount === undefined) {
+    if (this.header.isSeeded && suppliedInheritedEventCount === undefined && !streaming) {
       throw new Error('seeded session requires an inherited event count')
     }
     const inheritedEventCount = SessionLogOffset(suppliedInheritedEventCount ?? 0)
     if (!this.header.isSeeded && inheritedEventCount !== 0) {
       throw new Error('unseeded session inherited event count must be 0')
     }
-    if (inheritedEventCount > this.log.length) {
+    if (!streaming && inheritedEventCount > this.log.length) {
       throw new Error('session inherited event count exceeds its event log')
     }
     if (mode === 'snapshot' && this.header.isSeeded && inheritedEventCount !== this.log.length) {
       throw new Error('seeded session constructor seed must equal its inherited prefix')
     }
-    this.inheritedEventCount = inheritedEventCount
+    this._inheritedEventCount = inheritedEventCount
     // A fresh seeded child always owns one tagged marker at its inherited cut,
     // even when the copied prefix already ends in an ancestor marker. Restore
     // retains that durable marker and appends only the ordinary resume marker.
@@ -623,23 +693,32 @@ export class Session {
     }
   }
 
-  /** Cached immutable full snapshot of the private append-only log. */
+  /** Cached immutable snapshot of the current live tail. */
   private eventsSnapshot: readonly SessionEvent[] | undefined
 
   /**
    * Return the immutable event stored at one exact sequence number.
+   * After {@link releaseLiveWindow}, seqs before {@link liveBaseSeq} are
+   * undefined unless they remain in prefixHot.
    * @deprecated Existing logic may remain unmigrated for now, but new calls are prohibited.
    * See the [Agent Note](../../../../.agents/notes/implemented/architecture/2026-09-09-deprecate-synchronous-session-event-reads.md).
    * @param seq - event sequence number.
    * @returns the accepted event, or undefined when the log does not contain it.
    */
   eventAt(seq: SessionSeq): SessionEvent | undefined {
-    return this.log[seq]
+    if (seq < 0 || seq >= this.seq) return undefined
+    if (seq >= this._liveBaseSeq) {
+      const event = this.log[seq - this._liveBaseSeq]
+      return event?.seq === seq ? event : undefined
+    }
+    return this.prefixHot.get(seq)
   }
 
   /**
-   * Materialize an immutable snapshot of a half-open event sequence range.
-   * A full current snapshot is reused until the next append; every previously
+   * Materialize an immutable snapshot of a half-open event sequence range
+   * intersected with the live tail. After {@link releaseLiveWindow}, ranges
+   * that start before {@link liveBaseSeq} omit the dropped prefix. A complete
+   * current tail snapshot is reused until the next append; every previously
    * returned snapshot remains stable after later appends.
    * @deprecated Existing logic may remain unmigrated for now, but new calls are prohibited.
    * See the [Agent Note](../../../../.agents/notes/implemented/architecture/2026-09-09-deprecate-synchronous-session-event-reads.md).
@@ -651,11 +730,14 @@ export class Session {
     fromSeq: SessionLogOffset = SessionLogOffset(0),
     toSeqExclusive: SessionLogOffset = this.seq,
   ): readonly SessionEvent[] {
-    if (fromSeq === 0 && toSeqExclusive === this.log.length) {
+    const from = Math.max(fromSeq, this._liveBaseSeq)
+    const to = Math.min(toSeqExclusive, this.seq)
+    if (from >= to) return Object.freeze([])
+    if (from === this._liveBaseSeq && to === this.seq) {
       this.eventsSnapshot ??= Object.freeze([...this.log])
       return this.eventsSnapshot
     }
-    return Object.freeze(this.log.slice(fromSeq, toSeqExclusive))
+    return Object.freeze(this.log.slice(from - this._liveBaseSeq, to - this._liveBaseSeq))
   }
 
   /**
@@ -685,11 +767,11 @@ export class Session {
    * @returns the first event sequence of the containing turn.
    */
   deletionStart(seq: SessionSeq): SessionLogOffset {
-    if (seq < 0 || seq >= this.log.length) {
+    if (seq < 0 || seq >= this.seq) {
       throw new RangeError(`session deletion sequence ${String(seq)} is outside the log`)
     }
     for (let index = Number(seq); index >= 0; index -= 1) {
-      if (this.log[index]?.type === 'turn/start') return SessionLogOffset(index)
+      if (this.eventAt(SessionSeq(index))?.type === 'turn/start') return SessionLogOffset(index)
     }
     throw new Error(`session deletion sequence ${String(seq)} is not inside a turn`)
   }
@@ -698,10 +780,15 @@ export class Session {
    * Replace this live log with the prefix `[0, length)`. Persistence must
    * already contain that prefix. A store-attached session then emits
    * `session/truncated`; detached sessions do not, so a seq-indexed reader
-   * must notice `session.seq` shrank.
+   * must notice `session.seq` shrank. After {@link releaseLiveWindow}, use
+   * {@link replacePersistedPrefix} instead.
    * @param length - retained event-prefix length.
+   * @throws if the live tail no longer starts at seq 0.
    */
   truncate(length: SessionLogOffset): void {
+    if (this._liveBaseSeq !== 0) {
+      throw new RangeError('session truncation is outside the live window')
+    }
     if (length < this.inheritedEventCount) {
       throw new RangeError(`session truncation length ${String(length)} would remove inherited events`)
     }
@@ -728,9 +815,9 @@ export class Session {
     invokeContainedSessionObservers(entry.emitCtx, 'session/truncated', entry.id, callbackArgs, callbacks)
   }
 
-  /** The next event's sequence number — always the log length (the `seq = log.length` contiguity contract). */
+  /** The next event's sequence number — `liveBaseSeq + live tail length`. */
   get seq(): SessionLogOffset {
-    return SessionLogOffset(this.log.length)
+    return SessionLogOffset(this._liveBaseSeq + this.log.length)
   }
 
   /**
@@ -794,7 +881,7 @@ export class Session {
     }
     const event = deepFreeze({
       type,
-      seq: SessionSeq(this.log.length),
+      seq: SessionSeq(this._liveBaseSeq + this.log.length),
       time: Date.now(),
       data: dataSnapshot,
       ...(surfaceMetadataSnapshot as { surfaceOp?: unknown; sourceEventSeqs?: unknown }),
@@ -811,6 +898,7 @@ export class Session {
       }
       this.log.push(event as SessionEvent)
       this.eventsSnapshot = undefined
+      if (this.liveWindowActive) this.compactLiveWindow()
       if (callbacks !== undefined && entry !== undefined) {
         invokeContainedSessionObservers(entry.emitCtx, 'session/event', entry.id, callbackArgs, callbacks)
       }
@@ -837,13 +925,14 @@ export class Session {
    * @returns the folded header, or undefined when no header event exists yet.
    */
   requestHeader(): EpochHeader | undefined {
-    if (this.headerFoldSeq < this.log.length) {
+    if (this.headerFoldSeq < this.seq) {
       // Frozen on update: the fold is session state exposed by reference — a
       // consumer mutating it in place (instead of building a replacement)
       // would desync every later comparison against the log, so mutation
       // throws instead.
-      this.headerFold = deepFreeze(foldRequestHeader(this.log.slice(this.headerFoldSeq), this.headerFold))
-      this.headerFoldSeq = this.log.length
+      const start = Math.max(0, this.headerFoldSeq - this._liveBaseSeq)
+      this.headerFold = deepFreeze(foldRequestHeader(this.log.slice(start), this.headerFold))
+      this.headerFoldSeq = this.seq
     }
     return this.headerFold
   }
@@ -858,11 +947,12 @@ export class Session {
    * @returns the latest immutable route metadata.
    */
   requestContext(): RequestContext | undefined {
-    if (this.contextFoldSeq < this.log.length) {
-      for (const event of this.log.slice(this.contextFoldSeq)) {
+    if (this.contextFoldSeq < this.seq) {
+      const start = Math.max(0, this.contextFoldSeq - this._liveBaseSeq)
+      for (const event of this.log.slice(start)) {
         if (event.type === 'request/context') this.contextFold = deepFreeze({ ...event.data })
       }
-      this.contextFoldSeq = this.log.length
+      this.contextFoldSeq = this.seq
     }
     return this.contextFold
   }
@@ -902,10 +992,11 @@ export class Session {
       this.derivedGeneration = generation
     }
     for (const seq of nodes.slice(this.derivedNodes)) {
-      // Surface sequences are built from this.log — seq is always a valid
-      // index by construction. The non-null assertion expresses that invariant.
-      // oxlint-disable-next-line typescript/no-non-null-assertion
-      const msg = this.deriveEventMessage(this.log[seq]!)
+      const event = this.eventAt(seq)
+      if (event === undefined) {
+        throw new Error(`session surface node ${String(seq)} is missing from the live window`)
+      }
+      const msg = this.deriveEventMessage(event)
       // A surface node is one of the five message-producing types, but an
       // empty-content assistant/message (a max-tokens step that hosts only
       // usage) derives to null and must not enter the transcript.
@@ -923,6 +1014,128 @@ export class Session {
    */
   deriveEventMessage(event: SessionEvent): Message | null {
     return deriveEventMessage(event)
+  }
+
+  /**
+   * Bound live memory to the tail window after the constructor seed is stored.
+   * In-memory sessions never call this; persistence owns the dropped prefix.
+   * Afterwards {@link snapshotEvents} returns only the tail.
+   */
+  releaseLiveWindow(): void {
+    this.liveWindowActive = true
+    this.requestHeader()
+    this.requestContext()
+    this.deriveMessages()
+    this.compactLiveWindow()
+  }
+
+  /**
+   * Admit one restored event into the live window without publishing `session/event`.
+   * Sequence must continue from {@link seq}. Persistence owns the dropped prefix.
+   * @param event - independently owned or already frozen restored event.
+   */
+  adoptRestoredEvent(event: SessionEvent): void {
+    if (!this.streamingRestore || this.restoreFinished) {
+      throw new Error('session is not accepting restored events')
+    }
+    const index = this.seq
+    assertSessionEventEnvelope(event, index)
+    if (event.seq !== index) {
+      throw new Error(`seed event at index ${index} has seq ${event.seq} (expected ${index}); seed must be contiguous from 0`)
+    }
+    try {
+      this.surfaceManager.validateNext(event)
+    } catch (error: unknown) {
+      throw new Error(`invalid seed event at index ${index}: ${error instanceof Error ? error.message : 'invalid surface metadata'}`)
+    }
+    this.log.push(event)
+    this.eventsSnapshot = undefined
+    this.compactLiveWindow()
+  }
+
+  /**
+   * Close a persisted restore: record the inherited cut, mark {@link firstLiveSeq},
+   * and append `session/end-seed` when the restored prefix does not already end in one.
+   * @param inheritedEventCount - exact fork-inherited prefix length decoded from storage.
+   */
+  finishPersistedRestore(inheritedEventCount: SessionLogOffset): void {
+    if (!this.streamingRestore || this.restoreFinished) {
+      throw new Error('session is not finishing a persisted restore')
+    }
+    if (!this.header.isSeeded && inheritedEventCount !== 0) {
+      throw new Error('unseeded session inherited event count must be 0')
+    }
+    if (inheritedEventCount > this.seq) {
+      throw new Error('session inherited event count exceeds its event log')
+    }
+    this._inheritedEventCount = inheritedEventCount
+    this._firstLiveSeq = SessionLogOffset(this.seq)
+    if (this.log.at(-1)?.type !== 'session/end-seed') {
+      this.append('session/end-seed', {})
+    }
+    this.restoreFinished = true
+    this.compactLiveWindow()
+  }
+
+  /**
+   * Replace the live log with a contiguous persisted prefix `[0, events.length)`.
+   * Used after a durable truncate when the live tail no longer starts at seq 0.
+   * @param events - retained events, contiguous from seq 0.
+   */
+  replacePersistedPrefix(events: readonly SessionEvent[]): void {
+    for (const [index, event] of events.entries()) {
+      if (event.seq !== index) {
+        throw new Error(`replaced prefix event at index ${index} has seq ${String(event.seq)}`)
+      }
+    }
+    const entry = attachments.get(this)
+    if (entry?.appending) throw new Error('session cannot be truncated while an append is being published')
+    this.log.splice(0, this.log.length)
+    for (const event of events) this.log.push(event)
+    this._liveBaseSeq = SessionLogOffset(0)
+    this.prefixHot.clear()
+    this.eventsSnapshot = undefined
+    this.surfaceManager.rebase(SessionLogOffset(0))
+    this.surfaceManager.reset()
+    this.headerFold = undefined
+    this.headerFoldSeq = 0
+    this.contextFold = undefined
+    this.contextFoldSeq = 0
+    this.derived = []
+    this.derivedNodes = 0
+    this.derivedGeneration = this.surfaceManager.replaceGeneration
+    this._firstLiveSeq = SessionLogOffset(events.length)
+    if (this.liveWindowActive) {
+      this.requestHeader()
+      this.requestContext()
+      this.deriveMessages()
+      this.compactLiveWindow()
+    }
+    if (entry === undefined) return
+    const callbackArgs: unknown[] = [this]
+    const callbacks = collectSessionCallbacks(entry.emitCtx, [entry.carrier, 'session/truncated', this])
+    invokeContainedSessionObservers(entry.emitCtx, 'session/truncated', entry.id, callbackArgs, callbacks)
+  }
+
+  private compactLiveWindow(): void {
+    if (!this.liveWindowActive) return
+    const cut = liveWindowCut(this.log)
+    if (cut <= 0) return
+    // Warm folds before splice: dropped events leave this.log and are not in prefixHot yet.
+    this.requestHeader()
+    this.requestContext()
+    this.deriveMessages()
+    const surfaceSeqs = new Set<number>(this.surface.nodes)
+    for (let index = 0; index < cut; index++) {
+      const event = this.log[index]
+      if (event !== undefined && keepDroppedLiveEvent(event, surfaceSeqs)) {
+        this.prefixHot.set(event.seq, event)
+      }
+    }
+    this.log.splice(0, cut)
+    this._liveBaseSeq = SessionLogOffset(this._liveBaseSeq + cut)
+    this.surfaceManager.rebase(this._liveBaseSeq)
+    this.eventsSnapshot = undefined
   }
 }
 
@@ -1305,15 +1518,22 @@ export class SessionStore extends Service {
     }
 
     // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
-    const boundaryEvent = session.eventAt(boundary)
+    const events = session.snapshotEvents(SessionLogOffset(0), SessionLogOffset(boundary + 1))
+    if (events.length !== boundary + 1 || events[0]?.seq !== 0) {
+      throw new SessionForkError(
+        session.liveBaseSeq > 0
+          ? `fork boundary ${boundary} is outside the live RAM window of session "${session.id}"`
+          : `fork boundary ${boundary} does not match a contiguous event seq in session "${session.id}"`,
+        'INVALID_BOUNDARY',
+      )
+    }
+    const boundaryEvent = events[boundary]
     if (boundaryEvent === undefined || boundaryEvent.seq !== boundary) {
       throw new SessionForkError(
         `fork boundary ${boundary} does not match a contiguous event seq in session "${session.id}"`,
         'INVALID_BOUNDARY',
       )
     }
-    // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
-    const events = session.snapshotEvents(SessionLogOffset(0), SessionLogOffset(boundary + 1))
     const lastTurnBoundary = events
       .findLast(event => event.type === 'turn/start' || event.type === 'turn/end')
     if (lastTurnBoundary?.type === 'turn/start') {

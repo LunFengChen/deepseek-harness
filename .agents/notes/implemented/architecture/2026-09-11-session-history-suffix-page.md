@@ -20,7 +20,7 @@ A suffix reports `inheritedEventCount: 0` when the seeded cut is not in the wind
 
 **Keep restoring the Session and only paginate after `source.events`.** Rejected: the live observation getter copies the whole log on first `events` read, which is the click that felt hung.
 
-**Stream-decode from disk without holding the compressed file.** Rejected for this change: frame scanning still needs the artifact bytes, and the object-graph restore was the user-visible stall. A later mmap/windowed read can drop the 127MB buffer without changing the page contract.
+**Stream-decode from disk without holding the compressed file.** Deferred then, because the object-graph restore was the user-visible stall. [Session host memory bounds](2026-09-23-session-host-memory-bounds.md) now scans Zstandard frames from a file descriptor and decompresses only the header plus the tail page.
 
 **Promote on suffix follow so prompt is already warm.** Rejected: viewing history must not restore a 127MB Session; `prompt` still observes for write.
 
@@ -30,6 +30,7 @@ A suffix reports `inheritedEventCount: 0` when the seeded cut is not in the wind
 - Opening history no longer activates an Agent.
 - Seeded suffix views may omit inherited projections until a full observe.
 - Writable resume and compaction still full-read the artifact.
+- Suffix reads no longer materialize the complete compressed file as one Buffer.
 
 ## Related
 

@@ -365,4 +365,29 @@ describe('Session format catalog', () => {
 
     expect(restore.finish().events).toEqual([event])
   })
+
+  it('does not accumulate current events when a live sink is set', () => {
+    const current = createSessionFormatCatalog({
+      currentVersion: 1,
+      codecs: [codec(0), codec(1)],
+      currentEncoder: codec(1),
+      migrations: [edge()],
+      restoreCurrent: () => {
+        throw new Error('restoreCurrent must not run for a live sink')
+      },
+      restoreTransformedCurrent: artifact => artifact,
+      restoreCurrentHeader: header => header,
+    })
+    const header = { ...oldHeader, version: 1 }
+    const seen: SessionFormatEvent[] = []
+    const restore = current.createRestore(header, {
+      recovery: 'strict',
+      validation: 'current',
+      adoptEvent: (event) => { seen.push(event) },
+    })
+    restore.decodeRow(event)
+
+    expect(restore.finish()).toEqual({ header, inheritedEventCount: 0, events: [] })
+    expect(seen).toEqual([event])
+  })
 })

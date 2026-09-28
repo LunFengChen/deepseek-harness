@@ -67,9 +67,7 @@ Status: implemented
 
 **这个选择属于它仍然可用的那个界面。** 控件位于新建会话界面、工作区选择器旁边，在 Host 默认开启策略下直接显示，仅在 `modeSelectionEnabled` 关闭后隐藏。选择在那里是**暂存**的：该界面先于它要应用到的会话存在，暂存值在某个会话成为当前会话且仍为空白时落地——这既覆盖工作区连接新建的会话，也覆盖它复用的那个空白会话，而搭 `sessions.create` 的便车会漏掉后者。它一经使用即被清空，与旁边的工作区选择器一致；隐藏选择器会丢弃尚未到达会话的暂存选择，并通过同一条选择链路把当前空白会话带回部署默认值。至于运行中或历史会话在跑什么，仍由其标题旁的只读标签展示：在那里放控件，等于承诺一次宿主会断然拒绝的切换。
 
-**preset 放大的是宿主本来就在付的代价：没有任何东西会 dispose 一个 agent。** 用 `--expose-gc` 对随附组装实测：一个存活的 agent 在 `minimal` 上约占 0.17 MB、在 `standard`/`cordis` 上约 1.31 MB，挂载耗时分别约 38 ms 与 135 ms；进程里第一个 agent 另需约 7 MB，那是 Node 首次 import 模块的一次性成本，此后每次挂载共享。增长严格线性——10、30、50 个的单个增量一致——且 dispose 后基本全额回收（50 个 `standard` 占住 57.8 MB，释放后全部归还）。所以对象图并不泄漏，缺的是生命周期。`ApiSessionAgentController` 会丢弃注册表返回的 `AgentHandle`，`archiveSession` 只改工作区注册表，`AgentRegistry` 没有驱逐机制，而宿主里唯一一处 dispose 是 JSON-RPC 服务器自身的关停。于是一个 web 宿主会留住它接触过的每一个会话，组装 preset 之后每个约 1.3 MB，而在此之前约 0.2 MB。注意：剪枝挂载注册表在这里没有用——它丢弃的是 fiber `uid` 已清空的记录，而永不死亡的 agent 永远不会清空它。
-
-- 遗留 TODO：idle agent 驱逐——会话持久化后 dispose，恢复时重新挂载。它属于持有 handle 的那个宿主，不属于本 seam。
+**preset 放大的是宿主本来就在付的代价。** 用 `--expose-gc` 对随附组装实测：一个存活的 agent 在 `minimal` 上约占 0.17 MB、在 `standard`/`cordis` 上约 1.31 MB，挂载耗时分别约 38 ms 与 135 ms；进程里第一个 agent 另需约 7 MB，那是 Node 首次 import 模块的一次性成本，此后每次挂载共享。增长严格线性——10、30、50 个的单个增量一致——且 dispose 后基本全额回收（50 个 `standard` 占住 57.8 MB，释放后全部归还）。所以对象图并不泄漏，缺的是生命周期。`AgentRegistry` 没有驱逐机制，`archiveSession` 只改工作区注册表。`ApiSessionAgentController` 现在会保留 `AgentHandle`，并留下五个最近用过的普通 Agent；超出这个 LRU 的空闲根会在激活另一个 Session 之前被 dispose。正在运行的 Agent 以及子代理拥有的身份会留下。见 [Session 宿主内存上限](2026-09-23-session-host-memory-bounds.zh.md)。压缩仍然不会缩小存活 Session 的日志。
 
 ## 考虑过的替代方案
 

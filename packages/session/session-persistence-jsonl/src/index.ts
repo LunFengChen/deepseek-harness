@@ -14,6 +14,7 @@ import {
   SessionFormatUnsupportedMigrationError,
   sessionFormatCatalog,
 } from '@x1a0f3n9/dsh-session-format-catalog'
+import type { SessionFormatEvent } from '@x1a0f3n9/dsh-session-format'
 import { readdirSync, type Dirent } from 'node:fs'
 import { open, mkdir, readdir, realpath, link, rename, rm, stat, truncate } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
@@ -45,7 +46,7 @@ import {
 import {
   compressZstdFrame, createZstdFrameDecoder, decompressZstdFrame, decompressZstdPrefix, scanZstdFrames,
 } from './zstd.ts'
-import { readJsonlHistorySuffix } from './history-suffix.ts'
+import { readJsonlHistorySuffixFromPath } from './history-suffix.ts'
 import { ensureDurableDirectoryWin32, publishNewFileWin32 } from './win32.ts'
 import { verifyCurrentGenerationInWorker } from './migration-verifier.ts'
 import {
@@ -372,6 +373,25 @@ class JsonlSessionPersistence extends SessionPersistence {
       const resolved = await this.findLog(id, options?.signal)
       if (resolved === undefined) throw new SessionPersistenceNotFoundError(id)
       lease = await this.acquireLease(id, undefined, dirname(resolved.currentPath))
+      if (
+        options?.adoptEvent !== undefined
+        && resolved.sourceVersion === SESSION_FORMAT_VERSION
+      ) {
+        const adopted = await this.adoptCurrentStoredLog(
+          id,
+          resolved,
+          options.adoptEvent,
+          options.signal,
+        )
+        options.signal?.throwIfAborted()
+        return this.tracker.adopt(new JsonlSessionHandle(this, id, adopted.meta, 'write', {
+          cursor: adopted.eventCount,
+          materialized: true,
+          tornTruncateTo: adopted.tornTruncateTo,
+          recoveredTail: adopted.recoveredTail,
+          inheritedEventCount: adopted.inheritedEventCount,
+        }, lease))
+      }
       const prepared = await this.requireStoredLog(id, options?.signal)
       options?.signal?.throwIfAborted()
       let stored: CurrentStoredLog
@@ -453,8 +473,7 @@ class JsonlSessionPersistence extends SessionPersistence {
         { kind: 'jsonl', path: selected.sourcePath },
       )
     }
-    const current = await readStableJsonlFile(selected.sourcePath, options.signal)
-    return readJsonlHistorySuffix(current.bytes, this.compression, options)
+    return readJsonlHistorySuffixFromPath(selected.sourcePath, this.compression, options)
   }
 
   /**
@@ -945,10 +964,117 @@ class JsonlSessionPersistence extends SessionPersistence {
     return this.acquireLease(header.id, header.cwd)
   }
 
+  /**
+   * Decode one current generation into a live sink without retaining the event array.
+   * Historical generations still take the full requireStoredLog path.
+   */
+  private async adoptCurrentStoredLog(
+    id: SessionId,
+    selected: ResolvedJsonlGeneration,
+    adoptEvent: (event: SessionEvent) => void,
+    signal?: AbortSignal,
+  ): Promise<{
+    meta: SessionHeader
+    inheritedEventCount: SessionLogOffsetType
+    eventCount: number
+    tornTruncateTo: number | undefined
+    recoveredTail: SessionEvent[]
+  }> {
+    const current = await readStableJsonlFile(selected.sourcePath, signal)
+    let eventCount = 0
+    const bound = (event: SessionEvent): void => {
+      adoptEvent(event)
+      eventCount += 1
+    }
+    let parsed: {
+      meta: SessionHeader
+      inheritedEventCount: SessionLogOffsetType
+      events: SessionEvent[]
+      tornTruncateTo: number | undefined
+      recoveredTail: SessionEvent[]
+    }
+    try {
+      if (this.compression === 'zstd') {
+        parsed = await this.readZstdPrefix(current.bytes, signal, bound, selected.sourcePath)
+      } else {
+        signal?.throwIfAborted()
+        parsed = this.scanCurrentPlaintext(current.bytes, bound, selected.sourcePath)
+        signal?.throwIfAborted()
+      }
+    } catch (error: unknown) {
+      signal?.throwIfAborted()
+      if (error instanceof SessionFormatUnsupportedError) {
+        throw new SessionFormatUnsupportedError(
+          `${error.message} (raw log: ${selected.sourcePath})`,
+          { kind: 'jsonl', path: selected.sourcePath },
+        )
+      }
+      throw new SessionPersistenceCorruptionError(
+        `session "${id}": stored log is corrupt: ${String(error)} (raw log: ${selected.sourcePath})`,
+        { cause: error },
+      )
+    }
+    signal?.throwIfAborted()
+    await this.assertStoredIdentity(selected.sourcePath, SESSION_FORMAT_VERSION, parsed.meta, id, signal)
+    signal?.throwIfAborted()
+    assertStoredId(id, parsed.meta)
+    return {
+      meta: parsed.meta,
+      inheritedEventCount: parsed.inheritedEventCount,
+      eventCount,
+      tornTruncateTo: parsed.tornTruncateTo,
+      recoveredTail: parsed.recoveredTail,
+    }
+  }
+
+  /** Scan one uncompressed current-generation buffer, optionally into a live sink. */
+  private scanCurrentPlaintext(
+    buffer: Buffer,
+    adoptEvent?: (event: SessionEvent) => void,
+    path?: string,
+  ): {
+    meta: SessionHeader
+    inheritedEventCount: SessionLogOffsetType
+    events: SessionEvent[]
+    tornTruncateTo: number | undefined
+    recoveredTail: SessionEvent[]
+  } {
+    const headerEnd = buffer.indexOf(0x0A)
+    if (headerEnd === -1) throw new Error('empty or header-less session log')
+    const box: { scanner?: SessionLogScanner } = {}
+    const formatSink = adoptEvent === undefined
+      ? undefined
+      : (event: SessionFormatEvent): void => {
+        const sessionEvent = event as unknown as SessionEvent
+        const liveScanner = box.scanner
+        if (liveScanner === undefined) throw new Error('session log scanner is not ready')
+        validateStoredEvents(
+          liveScanner.meta,
+          [sessionEvent],
+          path === undefined ? undefined : { kind: 'jsonl', path },
+        )
+        freezeStoredEvent(sessionEvent)
+        adoptEvent(sessionEvent)
+      }
+    const scanner = new SessionLogScanner(buffer.subarray(0, headerEnd + 1), 'recoverable', formatSink)
+    box.scanner = scanner
+    scanner.write(buffer.subarray(headerEnd + 1))
+    const prefix = scanner.finish()
+    return {
+      meta: prefix.meta,
+      inheritedEventCount: prefix.inheritedEventCount,
+      events: adoptEvent === undefined ? prefix.events : [],
+      tornTruncateTo: prefix.committedBytes < buffer.byteLength ? prefix.committedBytes : undefined,
+      recoveredTail: [],
+    }
+  }
+
   /** Decode complete frames and retain complete JSONL records from a torn final frame. */
   private async readZstdPrefix(
     buffer: Buffer,
     signal?: AbortSignal,
+    adoptEvent?: (event: SessionEvent) => void,
+    path?: string,
   ): Promise<{
     meta: SessionHeader
     inheritedEventCount: SessionLogOffsetType
@@ -971,7 +1097,26 @@ class JsonlSessionPersistence extends SessionPersistence {
       /* v8 ignore next -- a non-empty structural frame list makes the decoder yield its first frame or throw. */
       if (headerFrame.done) throw new Error('empty or header-less Zstandard session log')
       assertZstdHeaderFrame(headerFrame.value)
-      const scanner = new SessionLogScanner(headerFrame.value)
+      let collectingRecovered = false
+      const recoveredLive: SessionEvent[] = []
+      const box: { scanner?: SessionLogScanner } = {}
+      const formatSink = adoptEvent === undefined
+        ? undefined
+        : (event: SessionFormatEvent): void => {
+          const sessionEvent = event as unknown as SessionEvent
+          const liveScanner = box.scanner
+          if (liveScanner === undefined) throw new Error('session log scanner is not ready')
+          validateStoredEvents(
+            liveScanner.meta,
+            [sessionEvent],
+            path === undefined ? undefined : { kind: 'jsonl', path },
+          )
+          freezeStoredEvent(sessionEvent)
+          adoptEvent(sessionEvent)
+          if (collectingRecovered) recoveredLive.push(sessionEvent)
+        }
+      const scanner = new SessionLogScanner(headerFrame.value, 'recoverable', formatSink)
+      box.scanner = scanner
 
       let remainingFrames = frames.length - 1
       for (const plaintext of decodedFrames) {
@@ -994,7 +1139,7 @@ class JsonlSessionPersistence extends SessionPersistence {
         return {
           meta: prefix.meta,
           inheritedEventCount: prefix.inheritedEventCount,
-          events: prefix.events,
+          events: adoptEvent === undefined ? prefix.events : [],
           tornTruncateTo: undefined,
           recoveredTail: [],
         }
@@ -1013,14 +1158,17 @@ class JsonlSessionPersistence extends SessionPersistence {
         // can emit any plaintext; the complete prior frames remain recoverable.
       }
       signal?.throwIfAborted()
+      collectingRecovered = true
       scanner.write(recoveredPlaintext)
       const prefix = scanner.finish()
       return {
         meta: prefix.meta,
         inheritedEventCount: prefix.inheritedEventCount,
-        events: prefix.events,
+        events: adoptEvent === undefined ? prefix.events : [],
         tornTruncateTo: tornStart,
-        recoveredTail: prefix.events.slice(complete.eventCount),
+        recoveredTail: adoptEvent === undefined
+          ? prefix.events.slice(complete.eventCount)
+          : recoveredLive,
       }
     } catch (error) {
       /* v8 ignore next -- decoder failure plus concurrent abort is timing-dependent */

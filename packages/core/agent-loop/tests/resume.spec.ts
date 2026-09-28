@@ -433,7 +433,8 @@ describe('the session-persistence Agent Note: AgentLoop factory create/resume', 
     const originalOpen = ctx.sessionPersistence.open.bind(ctx.sessionPersistence)
     const spies: Array<{ mockRestore: () => void }> = []
     ctx.sessionPersistence.open = async (id, access, options) => {
-      const handle = await originalOpen(id, access, options)
+      // Omit adoptEvent so resume falls back to handle.read(0).
+      const handle = await originalOpen(id, access, { signal: options?.signal })
       spies.push(vi.spyOn(handle, 'read').mockRejectedValue(new Error('stored read failed')))
       spies.push(vi.spyOn(handle, 'close').mockRejectedValue(new Error('close failed')))
       return handle

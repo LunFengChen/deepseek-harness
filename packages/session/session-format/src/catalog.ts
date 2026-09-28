@@ -134,6 +134,7 @@ export function createSessionFormatCatalog(options: SessionFormatCatalogOptions)
         sourceCut,
         restoreOptions.validation === 'current' ? options.restoreCurrent : identityArtifact,
         chain.currentVersion,
+        restoreOptions.adoptEvent,
       )
     }
     const collector = new SessionFormatEventCollector()
@@ -169,15 +170,19 @@ type SessionFormatArtifactRestorer = (artifact: SessionFormatArtifact) => Sessio
 
 class CurrentSessionFormatRestore implements SessionFormatRestore {
   readonly header: SessionFormatArtifact['header']
-  private readonly collector = new SessionFormatEventCollector()
+  private readonly collector: SessionFormatEventCollector
+  private readonly adoptEvent: SessionFormatRestoreOptions['adoptEvent']
 
   constructor(
     private readonly decoder: SessionFormatArtifactDecoder,
     private readonly sourceInheritedEventCount: number | undefined,
     private readonly restoreArtifact: SessionFormatArtifactRestorer,
     private readonly currentVersion: number,
+    adoptEvent: SessionFormatRestoreOptions['adoptEvent'] = undefined,
   ) {
     this.header = decoder.header
+    this.adoptEvent = adoptEvent
+    this.collector = new SessionFormatEventCollector(adoptEvent)
   }
 
   decodeRow(rowValue: unknown): void {
@@ -190,6 +195,15 @@ class CurrentSessionFormatRestore implements SessionFormatRestore {
       this.collector,
       this.sourceInheritedEventCount,
     )
+    // A live sink already validated each event. Restoring an empty artifact
+    // would treat a non-empty log as header-only.
+    if (this.adoptEvent !== undefined) {
+      return restoreCurrentVersion({
+        header: this.header,
+        inheritedEventCount,
+        events: [],
+      }, this.currentVersion)
+    }
     return restoreCurrentVersion(this.restoreArtifact({
       header: this.header,
       inheritedEventCount,
