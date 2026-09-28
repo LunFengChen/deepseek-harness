@@ -3,23 +3,26 @@
 # After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/client/ui-settings-plugin-inventory/README.md
 /:
-  en: 9121298d88fe8ea6
-  zh: 5da705491f951d0e
+  en: dbdba2dbf24fdcf3
+  zh: 766fe9046bc66e0e
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory:
   en: dedb3f4083c12c62
   zh: a884f324ddc789f1
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/summary:
-  en: 56f5349b6e502525
-  zh: 691a0fe90b739e9d
+  en: 0363ba130e23b4b9
+  zh: b4302ff765b97d92
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/use-this-package:
-  en: 67637808e7940157
-  zh: d4d0716ea4d33e4a
+  en: dc4f54e434aae585
+  zh: d960c3fc7f698b12
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/use-this-package/reading-a-card:
   en: e615aaa891b5055f
   zh: 38769e763c8e54ca
+/x1a0f3n9-dsh-client-ui-settings-plugin-inventory/use-this-package/xfdsh-preset-plugins:
+  en: fbed66a7ba595bef
+  zh: 390bca3925c14eed
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/use-this-package/the-preset-switcher:
   en: 84e5938329199a22
   zh: 6f5cfaac56433e8b
@@ -27,11 +30,11 @@
   en: 2859449aaae5ab59
   zh: 06380059ae429026
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/understand-the-implementation:
-  en: cab883d26642c932
-  zh: 54e7321bd781b400
+  en: d5f6578dbdd66821
+  zh: 505d5e264539d3cf
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/understand-the-implementation/registration:
-  en: e4792880c5916ce0
-  zh: 4c8171a446dd153f
+  en: 59f99f274a9dba5b
+  zh: 271d09f51dbdf2ca
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/understand-the-implementation/rendering:
   en: b9aa850e5f101b68
   zh: 8a29025f19f6ce37
@@ -45,8 +48,8 @@
   en: ca75c51c89c2c9b0
   zh: de54f3467ef3b9be
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/known-limitations-and-deferred-work:
-  en: 3d3343d97eb73762
-  zh: 5fc9d1c1f0c4055d
+  en: 353602f540ca8fa0
+  zh: 63c4470c4111b3fd
 /x1a0f3n9-dsh-client-ui-settings-plugin-inventory/known-limitations-and-deferred-work/dev-note:
-  en: 7516b7e39304e5b3
-  zh: 8961c0cefb89ee12
+  en: cdbcb64ae7b493e5
+  zh: 923276ae7a0b3812

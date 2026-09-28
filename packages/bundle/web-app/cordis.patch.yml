@@ -450,6 +450,8 @@
     - id: better-sidebar
       name: '@x1a0f3n9/dsh-better-sidebar'
 
+    # xfdsh defaults HINDSIGHT_SERVER_MODE=daemon (local embed on 127.0.0.1:9077).
+    # ~/.hindsight/coding-agent.json still wins for cloud or a self-hosted URL.
     - id: hindsight
       name: '@x1a0f3n9/hindsight-coding-agents/dsh'
 

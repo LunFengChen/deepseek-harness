@@ -91,8 +91,6 @@
     - id: llm-retry
       name: '@x1a0f3n9/dsh-llm-retry'
 
-    # Live Config forms persist through the active profile patch.
-
     # Live configuration forms persist through the launcher's profile.
     - id: config-editor
       name: '@x1a0f3n9/dsh-config-editor'
@@ -103,9 +101,11 @@
       disabled: !!js "!ctx.get('profileContext')"
 
     # Credential sources: inherited environment over the managed
-    # `$DSH_HOME/.credentials.yaml`, with project and user `.env` fallbacks.
-    # Adapters resolve references per request; the Models page writes only the
-    # managed document, which is never materialized into the process environment.
+    # `$DSH_SESSION_HOME/.credentials.yaml`, with project and user `.env`
+    # fallbacks. Adapters resolve references per request; the Models page writes
+    # only the managed document, which is never materialized into the process
+    # environment. Sharing this file with official `dsh` is what keeps API keys
+    # usable without copying them into `~/.xfdsh`.
     - id: authorization
       name: '@x1a0f3n9/dsh-authorization'
 
@@ -116,6 +116,8 @@
 
     - id: credentials
       name: '@x1a0f3n9/dsh-credentials-local'
+      config:
+        dshHome: !!js dshSessionPath()
 
     # The pi-ai multi-provider twin, mounted dormant: zero routes (and no extra
     # models in the picker) until a `llm-pi-ai:` settings section supplies provider
@@ -130,13 +132,15 @@
     - id: session-persistence-jsonl
       name: '@x1a0f3n9/dsh-session-persistence-jsonl'
       config:
-        root: !!js dshHomePath('sessions')
+        root: !!js dshSessionPath('sessions')
 
     # Durable image bytes live outside the append-only session log. Messages
     # keep content-addressed references that this shared backend resolves for
     # provider requests and authorized history reads.
     - id: attachment-local
       name: '@x1a0f3n9/dsh-attachment-local'
+      config:
+        dshHome: !!js dshSessionPath()
 
     # Full-text session search is opt-in. `openAt: never` keeps
     # ctx.sessionQuery mounted — exact reads, titles, and lineage traces
@@ -168,7 +172,7 @@
     - id: storage-json
       name: '@x1a0f3n9/dsh-storage-json'
       config:
-        root: !!js dshHomePath('storages')
+        root: !!js dshSessionPath('storages')
 
     - id: storage-domain
       name: '@x1a0f3n9/dsh-storage-domain'

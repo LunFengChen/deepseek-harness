@@ -154,5 +154,5 @@
     - id: sessions
       name: '@x1a0f3n9/dsh-session-persistence-jsonl'
       config:
-        root: !!js dshHomePath('sessions')
+        root: !!js dshSessionPath('sessions')
         compression: none
