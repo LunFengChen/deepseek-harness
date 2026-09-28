@@ -1,6 +1,37 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/util/chunked-list/README.md
-README.md: 5a12f7c49e322c3c38d8f0bf629a3412383936d3
-README.zh.md: 14ad8d760fa4968f06381c47f2fe122473beffc1
+/:
+  en: e29affc07acbcf4f
+  zh: 10e2da625e145a68
+/x1a0f3n9-dsh-chunked-list:
+  en: 323dcd25cd5d8680
+  zh: 107af250f5448f58
+/x1a0f3n9-dsh-chunked-list/summary:
+  en: 15a30013f54b2076
+  zh: b287f44dfd029f20
+/x1a0f3n9-dsh-chunked-list/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 75f067b4c4218355
+/x1a0f3n9-dsh-chunked-list/use-this-package:
+  en: 6808bfba89c5ffbf
+  zh: f80761fdcd3db317
+/x1a0f3n9-dsh-chunked-list/understand-the-implementation:
+  en: c1d571642af3feeb
+  zh: c942c041a396ea94
+/x1a0f3n9-dsh-chunked-list/further-exploration:
+  en: dc2a6afae1585ff7
+  zh: 133604f9e6f08072
+/x1a0f3n9-dsh-chunked-list/model-experience:
+  en: bc7e4d8a0c8b8ebb
+  zh: e11fe3bd45d4354a
+/x1a0f3n9-dsh-chunked-list/model-experience/kv-cache-effect:
+  en: e7ba08477bf22c4e
+  zh: c38c528fe563bb51
+/x1a0f3n9-dsh-chunked-list/known-limitations-and-deferred-work:
+  en: fdc87d52574748eb
+  zh: e1e7cbd86cd2bde0
+/x1a0f3n9-dsh-chunked-list/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98

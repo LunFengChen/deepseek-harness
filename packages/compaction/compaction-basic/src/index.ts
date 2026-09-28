@@ -56,53 +56,30 @@ function routedTarget(
   return { provider: config.provider, model: config.model }
 }
 
-/** Resolve a UI-selected route that has not yet been written as request/header. */
-function pendingModelTarget(
-  session: Session,
-): Pick<LlmCallConfig, 'provider' | 'model'> | undefined {
-  const events = session.snapshotEvents()
-  for (let index = events.length - 1; index >= 0; index -= 1) {
-    const event = events[index]
-    if (event === undefined || (event.type as string) !== 'model/selection') continue
-    const data = event.data as { readonly provider?: unknown; readonly model?: unknown }
-    if (typeof data.provider !== 'string' || data.provider.length === 0
-      || typeof data.model !== 'string' || data.model.length === 0) {
-      return undefined
-    }
-    return { provider: data.provider, model: data.model }
-  }
-  return undefined
-}
-
-/** Resolve AgentOptions only when both provider and model are non-empty. */
-function optionsTarget(
-  agent: Agent,
-): Pick<LlmCallConfig, 'provider' | 'model'> | undefined {
-  if (agent.options.provider === undefined || agent.options.provider.length === 0
-    || agent.options.model === undefined || agent.options.model.length === 0) return undefined
-  return { provider: agent.options.provider, model: agent.options.model }
+/**
+ * Output tokens the routed request reserves, which the provider charges to the
+ * same window as the prompt. The effective envelope's own cap wins; otherwise
+ * the adapter's per-request default, which the adapter materializes when that
+ * envelope omits one. No declared cap means no reservation.
+ */
+function reservedCompletionTokens(agent: Agent, defaultMaxTokens: number | undefined): number {
+  const configured = agent.session.requestHeader()?.config.maxTokens
+  return configured ?? defaultMaxTokens ?? 0
 }
 
 /** Resolve the conversation target used to select an optional policy override. */
 function conversationTarget(
   agent: Agent,
 ): Pick<LlmCallConfig, 'provider' | 'model'> | undefined {
-  return routedTarget(agent.session) ?? optionsTarget(agent)
-}
-
-/**
- * Price pre-step pressure against the model about to be used.
- * `agent/pre-step` runs before the next `request/header`, so a UI switch lives
- * only as `model/selection` until that header lands. AgentOptions stay unused
- * here: they are spawn defaults, not the live picker.
- */
-function pressureTarget(
-  agent: Agent,
-): Pick<LlmCallConfig, 'provider' | 'model'> | undefined {
-  return pendingModelTarget(agent.session) ?? routedTarget(agent.session)
+  const routed = routedTarget(agent.session)
+  if (routed !== undefined) return routed
+  if (agent.options.provider === undefined || agent.options.provider.length === 0
+    || agent.options.model === undefined || agent.options.model.length === 0) return undefined
+  return { provider: agent.options.provider, model: agent.options.model }
 }
 
 const thresholdRatioSchema = z.number()
+const headroomTokensSchema = z.number().step(1).min(0)
 const retainRatioSchema = z.number()
 const retainTokensSchema = z.number().step(1).min(0)
 const summarizationProviderSchema = z.string()
@@ -115,6 +92,7 @@ const modelPolicy: z<ModelCompactPolicyConfig> = z.object({
   provider: z.string().required(),
   model: z.string().required(),
   thresholdRatio: thresholdRatioSchema,
+  headroomTokens: headroomTokensSchema,
   retainRatio: retainRatioSchema,
   retainTokens: retainTokensSchema,
   summarizationProvider: summarizationProviderSchema,
@@ -137,6 +115,7 @@ export class BasicCompactionEngine extends CompactionEngine {
 
   static Config: z<BasicCompactionConfig> = z.object({
     thresholdRatio: thresholdRatioSchema,
+    headroomTokens: headroomTokensSchema,
     retainRatio: retainRatioSchema,
     retainTokens: retainTokensSchema,
     summarizationProvider: summarizationProviderSchema,
@@ -214,7 +193,7 @@ export class BasicCompactionEngine extends CompactionEngine {
     ) => {
       if (failure.code !== CONTEXT_WINDOW_EXCEEDED_CODE || signal.aborted) return next()
       this.overflowAgents.set(agent.session, agent)
-      const target = conversationTarget(agent)
+      const target = routedTarget(agent.session)
       if (target === undefined) return next()
       const policy = resolveTargetPolicy(this.config, target)
       const retries = this.overflowRetries.get(agent) ?? 0
@@ -247,15 +226,8 @@ export class BasicCompactionEngine extends CompactionEngine {
         return next()
       }
       // oxlint-disable-next-line typescript/no-unnecessary-condition -- the signal can abort while compaction is awaited.
-      if (signal.aborted) return next()
-      if (agent.session.surface.replaceGeneration <= generation) {
-        ctx.logger.warn(
-          result === null
-            ? 'context-overflow compaction found no compactable range; preserving the original request error'
-            : 'context-overflow compaction reported success without replacing the surface; preserving the original request error',
-        )
-        return next()
-      }
+      if (signal.aborted
+        || agent.session.surface.replaceGeneration <= generation) return next()
       if (result !== null) logResult(result, 'context overflow recovery')
       this.overflowRetries.set(agent, retries + 1)
       return { kind: 'retry' }
@@ -286,11 +258,10 @@ export class BasicCompactionEngine extends CompactionEngine {
 
   /**
    * Compact for replayed step-boundary pressure or one provider-confirmed context
-   * overflow. Pressure prices a pending `model/selection` when present, otherwise
-   * the latest request header. Overflow uses that header, then AgentOptions, and
-   * bypasses the normal threshold and retained-tail policy so it can force one
-   * useful balanced reduction.
-   * @param agent - agent whose upcoming or latest durable route is measured.
+   * overflow. Both triggers price the latest durable routed request envelope;
+   * overflow bypasses the normal threshold and retained-tail policy so it can
+   * force one useful balanced reduction.
+   * @param agent - agent whose latest durable routed request is measured.
    * @param trigger - normal step-boundary pressure or context-overflow recovery.
    * @param signal - live turn cancellation signal forwarded to summarization.
    * @returns the latest summary compaction result, or `null` when no summary ran.
@@ -300,7 +271,7 @@ export class BasicCompactionEngine extends CompactionEngine {
     trigger: CompactionTrigger,
     signal: AbortSignal,
   ): Promise<CompactionResult | null> {
-    const target = trigger === 'pressure' ? pressureTarget(agent) : conversationTarget(agent)
+    const target = routedTarget(agent.session)
     if (target === undefined) return null
     const policy = resolveTargetPolicy(this.config, target)
     const meter = this.ctx.tokenMeter
@@ -330,17 +301,21 @@ export class BasicCompactionEngine extends CompactionEngine {
       return this.compactRegion(range.start, range.end, agent, signal)
     }
 
-    const context = (await this.ctx.llm.resolveModelInfo(target.provider, target.model, signal)).context
+    const info = await this.ctx.llm.resolveModelInfo(target.provider, target.model, signal)
     assertNoActiveCompaction(agent.session, 'automatic pressure compaction')
     const targetKey = `${target.provider}/${target.model}`
-    if (context === undefined) {
+    if (info.context === undefined) {
       throw new TargetPressureConfigError(
         targetKey,
         `compaction-basic: no context capacity for ${targetKey}; `
         + 'configure contextWindow on that adapter model',
       )
     }
-    const spec = resolveCompactSpec(policy, context.contextWindow)
+    const spec = resolveCompactSpec(
+      policy,
+      info.context.contextWindow,
+      reservedCompletionTokens(agent, info.defaultMaxTokens),
+    )
     if (measurement.totalTokens < spec.thresholdTokens) return null
 
     // Once pressure qualifies, land the model-free pass before choosing a

@@ -14,6 +14,7 @@ const artifactPath = resolve(import.meta.dirname, '__remote_proxy_artifact.d.ts'
 const protocolPath = resolve(root, 'packages/typert/protocol/src/types.ts')
 const proxyPath = resolve(import.meta.dirname, '../src/remote-proxy.ts')
 const protocolEntry = resolve(import.meta.dirname, '__remote_protocol.d.ts')
+const brandEntry = resolve(root, 'packages/util/brand/src/index.ts')
 const cordisEntry = resolve(import.meta.dirname, '__remote_cordis.d.ts')
 
 function modulePath(path: string): string {
@@ -40,6 +41,7 @@ function compile(source: string, artifact?: string) {
     types: ['node'],
     paths: {
       '@deepseek-ai/cordis': [cordisEntry],
+      '@x1a0f3n9/dsh-brand': [brandEntry],
       '@x1a0f3n9/dsh-typert-protocol': [protocolEntry],
       '@deepseek-ai/fixture/remote': [artifactPath],
     },

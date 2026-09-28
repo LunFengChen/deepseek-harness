@@ -1,6 +1,73 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/goal/goal/README.md
-README.md: 8bf6f73a23b878ee3bba885515e6122392c54166
-README.zh.md: 21b9e86738a4d2f8873bb9e5e362d8839c9572dc
+/:
+  en: 6509c63744950c59
+  zh: b7d4e056e0591155
+/x1a0f3n9-dsh-goal:
+  en: 723b5cb80de86188
+  zh: a5846b7eac89223a
+/x1a0f3n9-dsh-goal/summary:
+  en: 32376adc5d9c8dc9
+  zh: e52f84b741d192b4
+/x1a0f3n9-dsh-goal/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-goal/use-this-package:
+  en: 95829ddf63e72e3e
+  zh: 9bd77a0ce737b2b0
+/x1a0f3n9-dsh-goal/use-this-package/when-to-use-it:
+  en: 44fbecf68641514a
+  zh: afa1720f5128cf1b
+/x1a0f3n9-dsh-goal/use-this-package/set-up-the-service:
+  en: 35a4af821df9eafc
+  zh: 144eb9a9eb2a8ebc
+/x1a0f3n9-dsh-goal/use-this-package/session-projection:
+  en: 85233c7b1ccf8a4f
+  zh: 6edde72644e41646
+/x1a0f3n9-dsh-goal/use-this-package/drive-the-lifecycle:
+  en: 622890ced87a44e9
+  zh: 6ba1f3f872400452
+/x1a0f3n9-dsh-goal/use-this-package/what-survives-and-what-does-not:
+  en: e5cd2097500a9027
+  zh: 3ecae388f839c944
+/x1a0f3n9-dsh-goal/use-this-package/observing-a-goal:
+  en: 3074e4c76de81d22
+  zh: 10134afe344dafb3
+/x1a0f3n9-dsh-goal/understand-the-implementation:
+  en: 592af7e68423bd1c
+  zh: 9b1f08393db1b14e
+/x1a0f3n9-dsh-goal/understand-the-implementation/design:
+  en: e0ade76e16155d52
+  zh: 0552302d2e26a61e
+/x1a0f3n9-dsh-goal/understand-the-implementation/source-map:
+  en: f0451101cf73da7d
+  zh: 73176ab69bb63a7f
+/x1a0f3n9-dsh-goal/understand-the-implementation/events-and-attribution:
+  en: 502cf61dba8b22ca
+  zh: 2b6f672bb2ac84ba
+/x1a0f3n9-dsh-goal/further-exploration:
+  en: d94098c1e3f3c8cf
+  zh: f4be4de55703097a
+/x1a0f3n9-dsh-goal/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-goal/model-experience/goal-state-mutations:
+  en: 6e6274de7991ef9e
+  zh: be2048ca18b3cbab
+/x1a0f3n9-dsh-goal/model-experience/goal-state-mutations/what-the-model-sees:
+  en: 7f3f6cf3e85ca188
+  zh: 758596ce93635eab
+/x1a0f3n9-dsh-goal/model-experience/goal-state-mutations/token-effect:
+  en: 5c3d2b320679252b
+  zh: 67156a0cec8c8e60
+/x1a0f3n9-dsh-goal/model-experience/goal-state-mutations/kv-cache-effect:
+  en: 5fcc49f70cf6604d
+  zh: 39a3ba8fcdfba009
+/x1a0f3n9-dsh-goal/known-limitations-and-deferred-work:
+  en: 09c7547a18793a54
+  zh: ede9b4d55ee9e6bc
+/x1a0f3n9-dsh-goal/known-limitations-and-deferred-work/dev-note:
+  en: 0b672d0c3b09cd5d
+  zh: 8f5d79353a6e5d63

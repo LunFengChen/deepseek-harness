@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-desktop-host",
   "description": "Private Node-mode host process for the Electron desktop application",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -10,15 +10,19 @@
     "lib/index.js"
   ],
   "dependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-app-boot": "workspace:^",
-    "@x1a0f3n9/dsh-client-connection": "workspace:^",
-    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
-    "@x1a0f3n9/dsh-home-paths": "workspace:^",
-    "@x1a0f3n9/dsh-jobs": "workspace:^",
-    "@x1a0f3n9/dsh-tools": "workspace:^",
-    "@x1a0f3n9/dsh-skill-office": "workspace:^"
+    "@deepseek-ai/libreoffice-kit": "^0.1.1",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh": "workspace:*",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-app-boot": "workspace:*",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:*",
+    "@x1a0f3n9/dsh-home-paths": "workspace:*",
+    "@x1a0f3n9/dsh-jobs": "workspace:*",
+    "@x1a0f3n9/dsh-schedule": "workspace:*",
+    "@x1a0f3n9/dsh-tool-workspace-dependencies": "workspace:*",
+    "@x1a0f3n9/dsh-skill-office": "workspace:*",
+    "@x1a0f3n9/dsh-deepseek-account": "workspace:*",
+    "@x1a0f3n9/dsh-workspace": "workspace:*"
   }
 }

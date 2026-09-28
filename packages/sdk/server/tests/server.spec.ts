@@ -14,7 +14,7 @@ import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit
 
 import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
 import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
-import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek-api-key'
 import SubagentRuntime, { type SubagentResult, type SubagentRunEndInfo } from '@x1a0f3n9/dsh-subagent'
 import type { JsonRpcTransportPeer } from '@x1a0f3n9/dsh-sdk-protocol'
 import { HarnessSdkJsonRpcServer } from '../src/index.ts'
@@ -922,7 +922,9 @@ describe('HarnessSdkJsonRpcServer', () => {
       await expect(server.initialize({ cwd: storageDir, provider: 'private', model: 'new-model' }))
         .rejects.toThrow('no adapter registered for provider "private"')
 
-      expect(ctx.get('llm')?.listProviders()).toEqual([{ id: 'deepseek-official', name: 'DeepSeek' }])
+      expect(ctx.get('llm')?.listProviders()).toEqual([
+        { id: 'deepseek-official', name: 'DeepSeek' },
+      ])
       await server.shutdown()
     } finally {
       await ctx.fiber.dispose()

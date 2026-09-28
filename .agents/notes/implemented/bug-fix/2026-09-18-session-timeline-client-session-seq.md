@@ -22,7 +22,7 @@ Fix the plugin, not the host module table. `dsh-session-timeline` `0.1.5-xfdsh.2
 
 **Leave the pin at `v0.1.0` and patch `node_modules`.** The next install restores the broken factory.
 
-**Rewrite the plugin peer ranges to `npm:@x1a0f3n9/dsh-*@workspace:*`.** Rejected: other LunFengChen forks keep official `@deepseek-ai/dsh-*` names and let `pnpm-workspace.yaml` remap them.
+**Rewrite the plugin peer ranges to `npm:@x1a0f3n9/dsh-*@workspace:*`.** Rejected: other LunFengChen forks keep official `@x1a0f3n9/dsh-*` names and let `pnpm-workspace.yaml` remap them.
 
 ## Consequences
 

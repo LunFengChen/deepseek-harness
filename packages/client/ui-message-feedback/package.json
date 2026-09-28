@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-message-feedback",
   "description": "The Web feedback surface: per-message Like/Dislike in the assistant-message action strip and the feedback dialog behind both ratings and /feedback, backed by the messageFeedback and sessionFeedback Host Remotes",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -43,32 +43,32 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
-    "@x1a0f3n9/dsh-client-connection": "workspace:^",
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-message-feedback": "workspace:^",
-    "@x1a0f3n9/dsh-remote-mock": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-message-feedback": "workspace:*",
+    "@x1a0f3n9/dsh-remote-mock": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~",
     "@testing-library/react": "^16.1.0",
     "@types/react": "~18.3.1",
     "@types/react-dom": "~18.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@x1a0f3n9/dsh-client-ui-chat": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-commands": "workspace:^",
-    "@x1a0f3n9/dsh-command-feedback": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^"
+    "@x1a0f3n9/dsh-client-ui-chat": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-commands": "workspace:*",
+    "@x1a0f3n9/dsh-command-feedback": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*"
   },
   "files": [
     "lib/index.js",

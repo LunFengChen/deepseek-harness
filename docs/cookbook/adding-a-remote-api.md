@@ -97,8 +97,8 @@ export async function rename(noteId: string, title: string): Promise<void> {
     "./typert": { "types": "./lib/typert.host.d.ts", "default": "./lib/typert.host.js" },
     "./remote": { "types": "./lib/typert.remote-client.d.ts", "default": "./lib/typert.remote-client.js" }
   },
-  "peerDependencies": { "@x1a0f3n9/dsh-typert-protocol": "workspace:^" },
-  "devDependencies": { "@x1a0f3n9/dsh-typert-protocol": "workspace:^" }
+  "peerDependencies": { "@x1a0f3n9/dsh-typert-protocol": "workspace:*" },
+  "devDependencies": { "@x1a0f3n9/dsh-typert-protocol": "workspace:*" }
 }
 ```
 

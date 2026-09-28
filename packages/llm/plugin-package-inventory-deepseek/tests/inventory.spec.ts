@@ -10,7 +10,7 @@ import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 import { SessionId } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { createScope } from '@x1a0f3n9/dsh-scope'
-import AgentPresets, { mountPreset } from '@x1a0f3n9/dsh-agent-presets'
+import AgentPresets from '@x1a0f3n9/dsh-agent-preset-registry'
 import { PluginPackages } from '@x1a0f3n9/dsh-app-boot'
 import DeepSeekLlmApiExtensionRegistry from '@x1a0f3n9/dsh-deepseek-llm-api-extensions'
 import * as PluginInventory from '../src/index.ts'
@@ -50,7 +50,7 @@ async function harness(
   ctx.loader.builtins.include = Include
   await ctx.plugin(AgentRegistry)
   await ctx.plugin(SessionProjectionRegistry)
-  await ctx.plugin(AgentPresets, { default: 'fixture', roots: [], includeShippedRoot: false, includeUserRoot: false })
+  await ctx.plugin(AgentPresets, { default: 'fixture' })
   await ctx.plugin(DeepSeekLlmApiExtensionRegistry)
   const inventory = enabled === undefined
     ? ctx.plugin(PluginInventory)
@@ -219,20 +219,12 @@ describe('DeepSeek plugin package inventory', () => {
     ])
   })
 
-  it('mirrors the standing preset bare-package override instead of its local node_modules', async () => {
+  it('resolves a declared preset plugin from its owning composition', async () => {
     const { ctx, root } = await harness()
     await packagePlugin(root, 'node_modules/preset-only', { name: 'preset-only', version: '4.0.0' })
-    const presetDir = join(root, 'preset')
-    await mkdir(presetDir, { recursive: true })
-    await packagePlugin(presetDir, 'node_modules/preset-only', { name: 'preset-only', version: '9.0.0' })
-    const composition = join(presetDir, 'agent.cordis.yml')
-    await writeFile(composition, '- id: preset-only\n  name: preset-only/plugin.mjs\n')
-
-    const standingKey = {}
-    const standing = createScope(ctx, standingKey)
-    await mountPreset(standing.ctx, { id: 'fixture', trust: 'user', path: composition })
-    const agentKey = {}
-    const agentScope = createScope(ctx, agentKey, { parent: standingKey })
+    await ctx.agentPresets.register({ id: 'fixture', plugins: [{ id: 'preset-only', name: 'preset-only/plugin.mjs' }] })
+    const agentScope = createScope(ctx, {})
+    await ctx.agentPresets.mount(agentScope.ctx)
     const id = SessionId('preset-agent')
     const agent = { id, ctx: agentScope.ctx, session: { id } } as unknown as Agent
     await ctx.agents.register(agent)

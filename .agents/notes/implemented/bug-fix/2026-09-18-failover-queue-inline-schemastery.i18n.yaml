@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-18-failover-queue-inline-schemastery.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-18-failover-queue-inline-schemastery.md
-2026-09-18-failover-queue-inline-schemastery.md: 592cd0af464dab7d270c6e0d89195f8e66afd505
-2026-09-18-failover-queue-inline-schemastery.zh.md: 71eacca14bab04cc413e08b217fb56ca5f0076a0
+/agent-note-failover-queue-client-must-inline-schemastery:
+  en: 1ea7f13625e724d6
+  zh: 7f898315bc074644
+/agent-note-failover-queue-client-must-inline-schemastery/problem:
+  en: 078d7fa35abb552e
+  zh: d5b2d4c87395a0c5
+/agent-note-failover-queue-client-must-inline-schemastery/decision:
+  en: e6bc3c8ccf62c4ce
+  zh: cbe324ec05ddeedd
+/agent-note-failover-queue-client-must-inline-schemastery/verification:
+  en: a4ec18c701b45eb9
+  zh: e560715e91031215
+/agent-note-failover-queue-client-must-inline-schemastery/alternatives-considered:
+  en: 9606b370fbb3eb60
+  zh: 865e850fa003357b
+/agent-note-failover-queue-client-must-inline-schemastery/consequences:
+  en: 7c95673966f2df18
+  zh: 8bf251e60438a5d7

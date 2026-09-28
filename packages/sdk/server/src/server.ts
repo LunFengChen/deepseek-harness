@@ -15,7 +15,7 @@ import { carrierKeyOf, type Scoped } from '@x1a0f3n9/dsh-scope'
 import type { SessionId } from '@x1a0f3n9/dsh-session'
 import type SubagentRuntime from '@x1a0f3n9/dsh-subagent'
 import type { SubagentRunEndInfo } from '@x1a0f3n9/dsh-subagent'
-import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek-api-key'
 import type {
   InitializeParams,
   InitializeResult,
@@ -121,7 +121,9 @@ export class HarnessSdkJsonRpcServer {
         childSessionId: String(info.id),
         status: successStatus(info.stopReason, serverOptions),
         stopReason: info.stopReason,
-        ...(info.lastAssistantMessage === undefined ? {} : { lastAssistantMessage: info.lastAssistantMessage }),
+        ...(info.lastAssistantMessage === undefined
+          ? {}
+          : { lastAssistantMessage: [...info.lastAssistantMessage] }),
       }
       transport.notify('subagent.finished', payload)
     }))
@@ -275,7 +277,7 @@ export class HarnessSdkJsonRpcServer {
     // No preset composition: this server's compositions keep the model-facing
     // rows in the host plane, so this agent reads them from the global layer. A
     // deployment that configures a roster has to join one here first
-    // (@x1a0f3n9/dsh-agent-presets README, "Composing a child agent").
+    // (@x1a0f3n9/dsh-agent-preset-registry README, "Composing a child agent").
     const handle = await this.ctx.agents.create({
       sessionId: brandString<SessionId>(sessionId),
       meta: { cwd: this.cwd },

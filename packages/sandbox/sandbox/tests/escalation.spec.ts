@@ -14,6 +14,7 @@ import {
   escalationHintMarker,
   isEscalationSatisfiedByStandingMode,
   sandboxDenialMarker,
+  sandboxPermissionsDescription,
   validateEscalationArgs,
 } from '@x1a0f3n9/dsh-sandbox'
 import type { EscalationApprover, EscalationOutcome } from '@x1a0f3n9/dsh-sandbox'
@@ -49,6 +50,11 @@ describe('the model-facing markers', () => {
     expect(sandboxDenialMarker('workspace-write')).toBe('[sandbox: file access denied under workspace-write mode]')
   })
 
+  it('the sandbox_permissions description names the family subject', () => {
+    expect(sandboxPermissionsDescription('command')).toBe('The narrowest wider sandbox mode for a one-shot retry of the exact command the sandbox just denied; the retry asks the user for approval.')
+    expect(sandboxPermissionsDescription('operation')).toBe('The narrowest wider sandbox mode for a one-shot retry of the exact operation the sandbox just denied; the retry asks the user for approval.')
+  })
+
   it('the hint marker names the family subject', () => {
     expect(escalationHintMarker('command')).toContain('retry this exact command once with sandbox_permissions')
     expect(escalationHintMarker('operation')).toContain('retry this exact operation once with sandbox_permissions')
@@ -80,6 +86,12 @@ describe('approveEscalation', () => {
     const granted = await approveEscalation(req(), ingredients({ approver: approver('allowed-once', r => seen.push(r as { reason?: string })) }))
     expect(granted).toBe('workspace-write')
     expect(seen[0]?.reason).toBe('escalate sandbox to workspace-write: the user asked to write in the workspace')
+    expect(seen[0]).toMatchObject({
+      displayReason: {
+        en: 'Allow this operation with workspace-write permissions: the user asked to write in the workspace',
+        zh: '允许本次操作使用 workspace-write 权限：the user asked to write in the workspace',
+      },
+    })
   })
 
   it('a non-widening request fails closed with its own text and never asks', async () => {
@@ -113,7 +125,7 @@ describe('approveEscalation', () => {
 
   it('maps each non-grant outcome to its distinct verbatim text (subject in the rejection)', async () => {
     await expect(approveEscalation(req({ subject: 'operation' }), ingredients({ approver: approver('rejected') })))
-      .rejects.toThrow('the user rejected escalating this operation to "workspace-write"')
+      .rejects.toThrow('the user rejected escalating this operation to "workspace-write"; it stays denied, so stop and explain instead of working around it')
     await expect(approveEscalation(req(), ingredients({ approver: approver('cancelled') })))
       .rejects.toThrow('approval for escalating to "workspace-write" was cancelled')
     await expect(approveEscalation(req(), ingredients({ approver: approver('unavailable') })))

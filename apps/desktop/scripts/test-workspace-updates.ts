@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { createDevelopmentProjectMetadata, createPluginProfile } from '../src/project-manager.ts'
 import { removeOwnedDirectory } from '../src/owned-directory.ts'
 import { DESKTOP_HOST_PROTOCOL_VERSION } from '../src/host-protocol.ts'
+import { desktopTargetPlatform, developmentRuntimeDirectory, resolveDesktopBuildTarget } from './desktop-build-paths.mjs'
 
 const repo = resolve(import.meta.dirname, '../../..')
 const interactive = process.argv.includes('--interactive')
@@ -27,27 +28,32 @@ try {
     nodeVersion: execFileSync(electron, ['-p', 'process.versions.node'],
       { encoding: 'utf8', env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' }, windowsHide: true }).trim(),
     pnpmVersion: pnpm.version, hostProtocolVersion: DESKTOP_HOST_PROTOCOL_VERSION }
+  const target = resolveDesktopBuildTarget()
   createDevelopmentProjectMetadata(project, release)
   createPluginProfile(profile)
   await writeFile(join(project, 'desktop-runtime.json'), JSON.stringify({
-    schemaVersion: 1, release, platform: process.platform, arch: process.arch, files: [],
+    schemaVersion: 1, release, ...desktopTargetPlatform(target), files: [],
     sharedPackages: ['@x1a0f3n9/dsh', '@x1a0f3n9/dsh-desktop-host']
       .map(name => ({ name, version: manifest.version, path: `node_modules/${name}` })),
   }))
   await cp(join(repo, 'apps/desktop/lib/types'), join(application, 'lib'), { recursive: true })
   await cp(join(repo, 'apps/desktop/renderer'), join(application, 'renderer'), { recursive: true })
-  for (const name of ['preload-app', 'preload', 'preload-mandatory', 'preload-update-dialog']) {
+  for (const name of ['preload-app', 'preload-mandatory', 'preload-update-dialog']) {
     await cp(join(repo, `apps/desktop/lib/${name}.cjs`), join(application, `lib/${name}.cjs`))
   }
   await writeFile(join(application, 'package.json'), JSON.stringify({ name: 'desktop-update-qualification', version: manifest.version, type: 'module' }))
   for (const owner of [application, project]) {
     await symlink(join(repo, 'node_modules/.pnpm/node_modules'), join(owner, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir')
   }
+  const targetRoot = join(application, '.desktop-build/targets', target)
+  await mkdir(targetRoot, { recursive: true })
+  await symlink(join(repo, 'apps/desktop/.desktop-build/targets', target, 'runtime'), join(targetRoot, 'runtime'),
+    process.platform === 'win32' ? 'junction' : 'dir')
   await writeFile(join(profile, 'cordis.patch.yml'), JSON.stringify([
     { id: 'webserver', config: { host: '127.0.0.1', port: 0 } },
     { id: 'llm-deepseek', disabled: true }, { id: 'session-title-llm', disabled: true },
     { id: 'session-telemetry-otel', disabled: true },
-    { id: 'agent-presets', config: { default: 'standard', includeUserRoot: false } },
+    { id: 'agent-preset-registry', config: { default: 'standard' } },
     { insert: [{ id: 'update-control', name: new URL('../tests/fixtures/workspace-update-host.mjs', import.meta.url).href }] },
   ]))
   const environment = Object.fromEntries(Object.entries(process.env).filter(([name]) =>
@@ -56,7 +62,7 @@ try {
     ...(interactive ? ['--interactive'] : [])], {
     cwd: root, env: { ...environment, DSH_HOME: join(root, 'home'), USERPROFILE: root, HOME: root,
       TEMP: root, TMP: root, TMPDIR: root, DSH_WORKSPACE_UPDATE_ROOT: root, DSH_WORKSPACE_UPDATE_TOKEN: randomUUID(),
-      DSH_DESKTOP_OPEN_DEVTOOLS: '0' },
+      DSH_DESKTOP_PRIMARY_RUNTIME_DIR: developmentRuntimeDirectory(), DSH_DESKTOP_OPEN_DEVTOOLS: '0' },
     // Hiding the GUI process suppresses its first window and can suspend renderer frame callbacks.
     stdio: 'inherit', windowsHide: false,
   })

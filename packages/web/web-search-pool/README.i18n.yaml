@@ -1,6 +1,64 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/web/web-search-pool/README.md
-README.md: 0e07738b419f1e5f00446b1595d294383444b66a
-README.zh.md: 940324020e66c13854a9ca842acba62c50267f46
+/:
+  en: ca0fef21f6ae7a4a
+  zh: dc44146f2f73e387
+/x1a0f3n9-dsh-web-search-pool:
+  en: fcb0bf56e564f32e
+  zh: 7b245f2c4ce1cbe0
+/x1a0f3n9-dsh-web-search-pool/summary:
+  en: 03226630a27cdc2e
+  zh: fbae705d729cb29a
+/x1a0f3n9-dsh-web-search-pool/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 9f0336825ccdaacd
+/x1a0f3n9-dsh-web-search-pool/use-this-package:
+  en: 32604662fba2b452
+  zh: 8cf21f3ad4989d5c
+/x1a0f3n9-dsh-web-search-pool/use-this-package/when-to-choose-it:
+  en: 979eaef56e9c6c65
+  zh: cefa46b85a4eb1e9
+/x1a0f3n9-dsh-web-search-pool/use-this-package/minimal-configuration:
+  en: 01b0ed4d86ea0983
+  zh: d4a6b433101e1890
+/x1a0f3n9-dsh-web-search-pool/use-this-package/what-a-search-returns:
+  en: b0403cfed880042e
+  zh: 7afd562fcaa2569d
+/x1a0f3n9-dsh-web-search-pool/use-this-package/failures-and-recovery:
+  en: b9e6f7690382d3e6
+  zh: e3cc72c9f3c5acd3
+/x1a0f3n9-dsh-web-search-pool/understand-the-implementation:
+  en: 9842c69ad3636bb3
+  zh: 123730ed1ef31d03
+/x1a0f3n9-dsh-web-search-pool/understand-the-implementation/design-philosophy:
+  en: 705cc2a2f049740f
+  zh: 52976c1f69f7d2ee
+/x1a0f3n9-dsh-web-search-pool/understand-the-implementation/source-map:
+  en: 153fbfbdc6c022f9
+  zh: 0255471138685395
+/x1a0f3n9-dsh-web-search-pool/understand-the-implementation/request-and-mapping-flow:
+  en: 3dc52040233319ca
+  zh: f5f7ddfa9a015249
+/x1a0f3n9-dsh-web-search-pool/further-exploration:
+  en: 47e850e5797ba35e
+  zh: f5dcffb5873b15bc
+/x1a0f3n9-dsh-web-search-pool/model-experience:
+  en: 55109a73ef4b49d7
+  zh: 4f77bca192f23aca
+/x1a0f3n9-dsh-web-search-pool/model-experience/kv-cache-effect:
+  en: 40294c1c31b74824
+  zh: 0cebc8afeacf6fcd
+/x1a0f3n9-dsh-web-search-pool/known-limitations-and-deferred-work:
+  en: daba2a12b5aab154
+  zh: 4d05a5da4de727e6
+/x1a0f3n9-dsh-web-search-pool/known-limitations-and-deferred-work/dev-note:
+  en: 7f775cc79dbce94b
+  zh: 212b3649021fdb4d
+/x1a0f3n9-dsh-web-search-pool/known-limitations-and-deferred-work/dev-note/future-tavily-extract-map-crawl:
+  en: 1379b8dcf182a8e0
+  zh: dc1a294a7cbb31c0
+/x1a0f3n9-dsh-web-search-pool/known-limitations-and-deferred-work/dev-note/future-settings-key-card:
+  en: dd058dec3e0cb266
+  zh: f6704a8d5c01b4b4

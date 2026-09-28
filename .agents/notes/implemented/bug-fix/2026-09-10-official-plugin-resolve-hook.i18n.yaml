@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-official-plugin-resolve-hook.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-official-plugin-resolve-hook.md
-2026-09-10-official-plugin-resolve-hook.md: 5eb6da6209654ad5e053f065454ea9b18e173bd8
-2026-09-10-official-plugin-resolve-hook.zh.md: c0a1068c3509c5ae87a92f8d21a504fc0136eda3
+/agent-note-official-plugins-resolve-onto-fork-packages-at-launch:
+  en: 903a51705d1ae46b
+  zh: 61c10296f7e71262
+/agent-note-official-plugins-resolve-onto-fork-packages-at-launch/problem:
+  en: 20f3fffe2d946799
+  zh: f82229a2b70ebffe
+/agent-note-official-plugins-resolve-onto-fork-packages-at-launch/decision:
+  en: e939c904ab7157e0
+  zh: d38127abe045237d
+/agent-note-official-plugins-resolve-onto-fork-packages-at-launch/verification:
+  en: 431607bba47a7e18
+  zh: 431607bba47a7e18
+/agent-note-official-plugins-resolve-onto-fork-packages-at-launch/alternatives-considered:
+  en: e1b10cdaedf156af
+  zh: 4a49edca5598e330
+/agent-note-official-plugins-resolve-onto-fork-packages-at-launch/consequences:
+  en: 939bce44ab745d78
+  zh: 1cb8ecc8dca7c571

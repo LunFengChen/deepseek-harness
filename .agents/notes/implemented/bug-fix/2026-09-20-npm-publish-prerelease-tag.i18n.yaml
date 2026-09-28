@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-20-npm-publish-prerelease-tag.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-20-npm-publish-prerelease-tag.md
-2026-09-20-npm-publish-prerelease-tag.md: c8454a2b5b6d96c51901124266742da56b4e3c0b
-2026-09-20-npm-publish-prerelease-tag.zh.md: 02667c0ea9c4f8166198ac49b1b916e744e7f578
+/agent-note-npm-publish-always-passes-tag:
+  en: 86ca997ba95854ae
+  zh: 5b4cd1d47887a874
+/agent-note-npm-publish-always-passes-tag/problem:
+  en: c88bda370cb2a6ae
+  zh: 9d73cf240c7d5cf0
+/agent-note-npm-publish-always-passes-tag/decision:
+  en: 01a5ddbdea891861
+  zh: 2b8f5dd0f35148be
+/agent-note-npm-publish-always-passes-tag/verification:
+  en: 21f3d5eef86d1839
+  zh: 928cb50f8c11356a
+/agent-note-npm-publish-always-passes-tag/alternatives-considered:
+  en: e4f07ae3153c2f90
+  zh: 4a5543a89edfc293
+/agent-note-npm-publish-always-passes-tag/consequences:
+  en: a069a9521a7b426e
+  zh: 0981bbb1453c043b
+/agent-note-npm-publish-always-passes-tag/related:
+  en: ff307f0a79b244c0
+  zh: db11fecca4dc0bcf

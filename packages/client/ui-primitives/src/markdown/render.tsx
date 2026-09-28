@@ -16,17 +16,21 @@
  * may add node types this renderer has no mapping for.
  */
 
-import { Fragment, createElement, useState } from 'react'
+import { Fragment, createElement, useCallback, useState } from 'react'
 import type { Key, ReactNode } from 'react'
 import clsx from 'clsx'
 import type * as Md from 'mdast'
 import type {} from 'mdast-util-math'
 import { normalizeUri } from 'micromark-util-sanitize-uri'
+import type { CodeToolbarLabels } from '../CodeToolbar.tsx'
 import { CodeBlock } from './CodeBlock.tsx'
 import { parseFileLink } from './file-link.ts'
 import { renderTexToReact } from './katex.tsx'
-import { LinkIcon, classifyLinkPath } from '../LinkIcon.tsx'
+import { LinkIconMedium, classifyLinkPath } from '../LinkIcon.tsx'
 import { useMarkdownDelegate } from './MarkdownDelegate.tsx'
+import { HoverCard } from '../HoverCard.tsx'
+import { ImageLightbox } from '../ImageLightbox.tsx'
+import { ImagePreview } from '../ImagePreview.tsx'
 import type { PositionedBlock } from './incremental.ts'
 import css from './MarkdownText.module.css'
 
@@ -36,6 +40,8 @@ export interface MarkdownCodeLabels {
   copyLabel: string
   /** Copy-button label during the post-copy confirmation window. */
   copiedLabel: string
+  /** Shared card controls; omitted for custom toolbar layouts. */
+  toolbarLabels?: CodeToolbarLabels | undefined
 }
 
 /** Localized chrome for a Markdown document. */
@@ -71,11 +77,12 @@ function remoteImageUrl(url: string): string | undefined {
   }
 }
 
-/** Protocols a vocabulary-rewritten image destination may carry. */
+/** Rewritten images may use Web media protocols or the Desktop application's file route. */
 function vocabularyImageUrl(url: string): string | undefined {
   try {
     const protocol = new URL(url).protocol
     return protocol === 'http:' || protocol === 'https:' || protocol === 'blob:' || protocol === 'data:'
+      || url.startsWith('dsh-app://app/api/file?')
       ? url
       : undefined
   } catch {
@@ -315,7 +322,7 @@ function renderNode(node: Md.RootContent, key: Key, context: MarkdownRenderConte
               aria-label={mention.label}
               onClick={mention.open}
             >
-              <LinkIcon kind={classifyLinkPath(value)} className={css.linkIcon} />
+              <LinkIconMedium kind={classifyLinkPath(value)} className={css.linkIcon} />
               {value}
             </button>
           </code>
@@ -399,6 +406,7 @@ function renderCode(node: Md.Code, key: Key, context: MarkdownRenderContext): Re
       streaming={context.streaming}
       copyLabel={context.labels.code.copyLabel}
       copiedLabel={context.labels.code.copiedLabel}
+      toolbarLabels={context.labels.code.toolbarLabels}
     />
   )
 }
@@ -555,7 +563,7 @@ function MarkdownAnchor({ href, glyph, children }: {
         open(href)
       }}
     >
-      {glyph && <LinkIcon kind="url" href={href} className={css.linkIcon} />}
+      {glyph && <LinkIconMedium kind="url" href={href} className={css.linkIcon} />}
       {children}
     </a>
   )
@@ -575,19 +583,28 @@ function MarkdownFileLink({ file, glyph, children }: {
   readonly glyph: boolean
   readonly children: ReactNode[]
 }): ReactNode {
-  const { openFile } = useMarkdownDelegate()
+  const { openFile, fileImages } = useMarkdownDelegate()
   if (openFile === undefined) return <>{children}</>
-  return (
+  // Pure-image anchors already contain their preview and keep one navigation target.
+  const preview = glyph && classifyLinkPath(file.path) === 'image' ? fileImages : undefined
+  const src = preview?.resolve(file.path)
+  const anchor = (
     <button
       type="button"
       className={clsx(css.fileMention, css.fileLink)}
-      title={file.path}
+      title={src === undefined ? file.path : undefined}
       onClick={() => { openFile(file.path, file.line === undefined ? undefined : { line: file.line }) }}
     >
-      {glyph && <LinkIcon kind={classifyLinkPath(file.path)} className={css.linkIcon} />}
+      {glyph && <LinkIconMedium kind={classifyLinkPath(file.path)} className={css.linkIcon} />}
       {children}
     </button>
   )
+  if (src === undefined || preview === undefined) return anchor
+  return <HoverCard inline anchor={anchor}
+    content={<>
+      <ImagePreview src={src} alt={file.path} loadingLabel={preview.labels.loading} failedLabel={preview.labels.failed} />
+      <span className={css.previewName}>{file.path.split(/[\\/]/u).pop()}</span>
+    </>} />
 }
 
 /**
@@ -606,28 +623,43 @@ function inlineCodeHttpUrl(value: string): string | undefined {
 }
 
 function renderImage(url: string, alt: string, key: Key, context: MarkdownRenderContext): ReactNode {
-  const imageSrc = imageSource(url, context.pathImages)
-  if (imageSrc === undefined) {
-    return <span key={key} className={css.imageAlt}>{alt}</span>
-  }
-  return <MarkdownImage key={`${key}:${imageSrc}`} src={imageSrc} alt={alt} destination={url} />
+  return <MarkdownImage key={`${key}:${url}`} destination={url} alt={alt}
+    pathImages={context.pathImages} streaming={context.streaming} inLink={context.inLink === true} />
 }
 
-/** Failed loads retain the authored alt or destination; a new source remounts the image. */
-function MarkdownImage({ src, alt, destination }: { src: string; alt: string; destination: string }): ReactNode {
+function MarkdownImage({ destination, alt, pathImages, streaming, inLink }: {
+  destination: string
+  alt: string
+  pathImages: MarkdownPathImages | undefined
+  streaming: boolean
+  inLink: boolean
+}): ReactNode {
+  const { fileImages } = useMarkdownDelegate()
+  const file = streaming ? undefined : parseFileLink(destination)
+  const src = (file === undefined ? undefined : fileImages?.resolve(file.path)) ?? imageSource(destination, pathImages)
+  if (src === undefined) return <span className={css.imageAlt}>{alt}</span>
+  return <LoadedMarkdownImage key={src} src={src} alt={alt} destination={destination} preview={inLink ? undefined : fileImages} />
+}
+
+function LoadedMarkdownImage({ src, alt, destination, preview }: {
+  src: string
+  alt: string
+  destination: string
+  preview: ReturnType<typeof useMarkdownDelegate>['fileImages']
+}): ReactNode {
   const [failed, setFailed] = useState(false)
-  if (failed) return <span className={css.imageAlt}>{alt || destination}</span>
-  return (
-    <img
-      className={css.image}
-      src={src}
-      alt={alt}
-      onError={() => { setFailed(true) }}
-      loading="lazy"
-      decoding="async"
-      referrerPolicy="no-referrer"
-    />
-  )
+  const [open, setOpen] = useState(false)
+  const close = useCallback(() => { setOpen(false) }, [])
+  if (failed) return <span className={css.imageAlt}>{preview === undefined ? '' : `${preview.labels.failed} · `}{alt || destination}</span>
+  const img = <img className={css.image} src={src} alt={alt}
+    onError={() => { setFailed(true) }} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+  if (preview === undefined) return img
+  return <>
+    <button type="button" className={css.imageButton} title={preview.labels.open}
+      aria-label={alt ? `${preview.labels.open}: ${alt}` : preview.labels.open}
+      onClick={() => { setOpen(true) }}>{img}</button>
+    {open && <ImageLightbox src={src} alt={alt} labels={preview.labels} onClose={close} />}
+  </>
 }
 
 /** The bracketed source text a reference reverts to when its definition is missing. */

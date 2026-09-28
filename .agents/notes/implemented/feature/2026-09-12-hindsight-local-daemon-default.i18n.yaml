@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-12-hindsight-local-daemon-default.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-12-hindsight-local-daemon-default.md
-2026-09-12-hindsight-local-daemon-default.md: 46d1f4a82a45aafe6d46f33b47befcac693c5aa3
-2026-09-12-hindsight-local-daemon-default.zh.md: a7afc32b342d61305697cb943a2a3778a83a9013
+/agent-note-xfdsh-defaults-hindsight-to-a-local-daemon:
+  en: eabf501423bd55d4
+  zh: 1beece2b02beffb2
+/agent-note-xfdsh-defaults-hindsight-to-a-local-daemon/problem:
+  en: 0e083444b17e0d59
+  zh: 28ea55a126169c50
+/agent-note-xfdsh-defaults-hindsight-to-a-local-daemon/decision:
+  en: 0892725f101b16b8
+  zh: 8c59e1655e196dd6
+/agent-note-xfdsh-defaults-hindsight-to-a-local-daemon/alternatives-considered:
+  en: 447a457b93eb51cf
+  zh: b818129a908e5937
+/agent-note-xfdsh-defaults-hindsight-to-a-local-daemon/consequences:
+  en: dbf98c7b15d7f027
+  zh: 968da9ae067efc88

@@ -49,19 +49,23 @@ describe('release families', () => {
       .filter(member => member.directory.startsWith('packages/experimental/'))
       .map(member => member.name)).toEqual([
       '@x1a0f3n9/dsh-experimental-agent-team-profile',
-      '@x1a0f3n9/dsh-experimental-agent-team-web-profile',
       '@x1a0f3n9/dsh-experimental-agent-team',
+      '@x1a0f3n9/dsh-experimental-api-speech-to-text',
       '@x1a0f3n9/dsh-experimental-auto-review',
       '@x1a0f3n9/dsh-experimental-browser-use-chrome-devtools-mcp',
       '@x1a0f3n9/dsh-experimental-browser-use-playwright-mcp',
       '@x1a0f3n9/dsh-experimental-browser-use-runtime',
       '@x1a0f3n9/dsh-experimental-browser-use-stagehand-native',
       '@x1a0f3n9/dsh-experimental-client-ui-agent-team',
+      '@x1a0f3n9/dsh-experimental-client-ui-voice-input',
       '@x1a0f3n9/dsh-experimental-computer-use-cua-driver-mcp',
       '@x1a0f3n9/dsh-experimental-computer-use-cua-driver-native',
       '@x1a0f3n9/dsh-experimental-inspector',
       '@x1a0f3n9/dsh-experimental-ptc-runtime-python',
+      '@x1a0f3n9/dsh-experimental-speech-to-text-sensevoice',
+      '@x1a0f3n9/dsh-experimental-speech-to-text',
       '@x1a0f3n9/dsh-experimental-tool-agent-team',
+      '@x1a0f3n9/dsh-experimental-voice-input-bundle',
       '@x1a0f3n9/dsh-experimental-webworker-packer',
       '@x1a0f3n9/dsh-experimental-webworker-runtime',
     ])
@@ -98,7 +102,7 @@ describe('release families', () => {
   it('requires dsh members to use the @x1a0f3n9 scope', () => {
     const root = mkdtempSync(join(tmpdir(), 'dsh-release-scope-'))
     roots.push(root)
-    write(join(root, 'apps/public/package.json'), '{"name":"@deepseek-ai/dsh-public","version":"0.0.1"}\n')
+    write(join(root, 'apps/public/package.json'), '{"name":"@x1a0f3n9/dsh-public","version":"0.0.1"}\n')
 
     expect(() => { releaseFamily('dsh').members(root) }).toThrow(/must name a @x1a0f3n9 package/)
   })

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-agent-team",
   "description": "Implicit-root Agent Teams roster, durable peer mailbox, and shared task DAG",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -30,59 +30,47 @@
       "types": "./lib/types/types.d.ts",
       "default": "./lib/types/types.js"
     },
-    "./typert": {
-      "types": "./lib/typert.host.d.ts",
-      "default": "./lib/typert.host.js"
-    },
-    "./remote": {
-      "types": "./lib/typert.remote-client.d.ts",
-      "default": "./lib/typert.remote-client.js"
-    },
+    "./locale/*.json": "./locale/*.json",
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/invariant.js",
     "lib/types/**/*.js",
-    "lib/types/**/*.d.ts",
-    "lib/typert.host.js",
-    "lib/typert.host.d.ts",
-    "lib/typert.remote-client.js",
-    "lib/typert.remote-client.d.ts"
+    "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
   "dependencies": {
-    "@x1a0f3n9/dsh-brand": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:~",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-invariants": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^",
-    "@x1a0f3n9/dsh-subagent": "workspace:^",
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-invariants": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-subagent": "workspace:*"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-agent-loop": "workspace:^",
-    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:^",
-    "@x1a0f3n9/dsh-invariants": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-session-persistence": "workspace:^",
-    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^",
-    "@x1a0f3n9/dsh-session-query": "workspace:^",
-    "@x1a0f3n9/dsh-subagent": "workspace:^",
-    "@x1a0f3n9/dsh-subagent-fork-in-process": "workspace:^",
-    "@x1a0f3n9/dsh-subagent-spawn-in-process": "workspace:^",
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
+    "@x1a0f3n9/dsh-invariants": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-session-query": "workspace:*",
+    "@x1a0f3n9/dsh-subagent": "workspace:*",
+    "@x1a0f3n9/dsh-subagent-fork-in-process": "workspace:*",
+    "@x1a0f3n9/dsh-subagent-spawn-in-process": "workspace:*"
   }
 }

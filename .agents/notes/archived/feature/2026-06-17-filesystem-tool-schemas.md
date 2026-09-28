@@ -13,7 +13,7 @@ The schema must be small, yet stable enough that local/remote/sandboxed filesyst
 
 ## Decision
 
-`@deepseek-ai/dsh-tool-fs` exposes these three model-facing tools in the first filesystem suite:
+`@x1a0f3n9/dsh-tool-fs` exposes these three model-facing tools in the first filesystem suite:
 
 | Tool | Our schema | Claude Code | OpenCode | Notes |
 |---|---|---|---|---|

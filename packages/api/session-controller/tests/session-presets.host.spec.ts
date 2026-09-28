@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
 import AgentRegistry from '@x1a0f3n9/dsh-agent'
 import type { Agent, AgentFactory } from '@x1a0f3n9/dsh-agent'
-import { agentPresetProjectionDefinition } from '@x1a0f3n9/dsh-agent-presets'
+import { agentPresetProjectionDefinition } from '@x1a0f3n9/dsh-agent-preset-registry'
 import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
 import type { Session } from '@x1a0f3n9/dsh-session'
 import { RemoteError } from '@x1a0f3n9/dsh-typert-protocol'
@@ -29,7 +29,6 @@ function roster(ids: readonly string[]): unknown {
   const presetOf = (id: string): object => ({
     id,
     trust: 'system',
-    path: `/presets/${id}/agent.cordis.yml`,
   })
   return {
     defaultId: ids[0],

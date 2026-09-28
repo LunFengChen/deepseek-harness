@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-npm-registry-serial-spacing.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-npm-registry-serial-spacing.md
-2026-09-11-npm-registry-serial-spacing.md: 2e2989a31c0ecdbad6d81952ad02e58e12a84193
-2026-09-11-npm-registry-serial-spacing.zh.md: d03c9b8e8bc9570b779c704e523ab1383816d38b
+/agent-note-npm-registry-calls-must-be-spaced-and-fail-on-first-429:
+  en: 50ec8b3a2fedcaa7
+  zh: dd306e3f238299ad
+/agent-note-npm-registry-calls-must-be-spaced-and-fail-on-first-429/problem:
+  en: aa625a836e547b12
+  zh: d5e3715536e615ae
+/agent-note-npm-registry-calls-must-be-spaced-and-fail-on-first-429/decision:
+  en: a5f454a59d927bc2
+  zh: d09710806ccf2bfb
+/agent-note-npm-registry-calls-must-be-spaced-and-fail-on-first-429/verification:
+  en: 2201791db42b0e32
+  zh: 8d61910271d2f669
+/agent-note-npm-registry-calls-must-be-spaced-and-fail-on-first-429/alternatives-considered:
+  en: fa03748f86d8c775
+  zh: 4e175295708e5c8c
+/agent-note-npm-registry-calls-must-be-spaced-and-fail-on-first-429/consequences:
+  en: 11bc84f09f097cd7
+  zh: 6f021e55a0b42347
+/agent-note-npm-registry-calls-must-be-spaced-and-fail-on-first-429/related:
+  en: 7ffb85de610d4331
+  zh: f6eaafd73410f408

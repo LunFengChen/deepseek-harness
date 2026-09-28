@@ -35,4 +35,4 @@ This reverses [fork Hindsight coding agents](2026-09-12-fork-hindsight-coding-ag
 
 - Settings → xfdsh preset plugins shows `@x1a0f3n9/...` and opens the LunFengChen GitHub repository.
 - The pinned npm versions must exist before `pnpm install` can resolve them.
-- Official `@x1a0f3n9/dsh` is unchanged.
+- Official `@deepseek-ai/dsh` is unchanged.

@@ -1,6 +1,40 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/bundle/sdk-app/README.md
-README.md: d6d0eab44bc4ebe4cc9bad89c514e512b75628b6
-README.zh.md: 9dd1915b8fa3c09e96018533e86977ad93bff897
+/:
+  en: 8148fef9eb6f852e
+  zh: f4419bed153c9760
+/x1a0f3n9-dsh-sdk-app:
+  en: e57e2c65ea843f33
+  zh: 6267c1a8a4905ed0
+/x1a0f3n9-dsh-sdk-app/summary:
+  en: f96841d96dc95a30
+  zh: 88aa3e92ae1deb9c
+/x1a0f3n9-dsh-sdk-app/table-of-contents:
+  en: 4e53164159b5ce41
+  zh: 89582dc0294d0776
+/x1a0f3n9-dsh-sdk-app/use-this-package:
+  en: 465be8e510a86913
+  zh: 07e2e1efba1d108b
+/x1a0f3n9-dsh-sdk-app/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-sdk-app/model-experience/sdk-coding-agent-persona:
+  en: af149b1e7ed0a5fc
+  zh: fe483822d03deddb
+/x1a0f3n9-dsh-sdk-app/model-experience/sdk-coding-agent-persona/what-the-model-sees:
+  en: 895f2c7fc9357d23
+  zh: d2e6455f4adcf7d3
+/x1a0f3n9-dsh-sdk-app/model-experience/sdk-coding-agent-persona/token-effect:
+  en: 371d28831239e0a8
+  zh: 57595359ff30a259
+/x1a0f3n9-dsh-sdk-app/model-experience/sdk-coding-agent-persona/kv-cache-effect:
+  en: 5b0e33295fb90e19
+  zh: 4d48ca75bb677202
+/x1a0f3n9-dsh-sdk-app/known-limitations-and-deferred-work:
+  en: 416e2793f9786480
+  zh: 05cc4fd289d0185d
+/x1a0f3n9-dsh-sdk-app/known-limitations-and-deferred-work/dev-note:
+  en: 8bc6c774f783517d
+  zh: b1ae7ae9832b2444

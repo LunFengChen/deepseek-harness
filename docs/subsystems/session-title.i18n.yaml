@@ -1,6 +1,16 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for session-title.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write docs/subsystems/session-title.md
-session-title.md: 572e4d62096efc4b0f41c3a55468e21f89b7bdc9
-session-title.zh.md: edb584742cdcd9570c859201cdc9bed80899cc85
+/session-titles:
+  en: d736151b178d1139
+  zh: 83692de547103a14
+/session-titles/durable-title-state:
+  en: c6be2d86647daa6f
+  zh: fb259d9fb4738f39
+/session-titles/auxiliary-request-record:
+  en: 4942bec7a7d1d9de
+  zh: 9edfc1c908577c37
+/session-titles/provider-input-and-output:
+  en: 886e036e442ae06a
+  zh: 49f95782b8aa9bf3

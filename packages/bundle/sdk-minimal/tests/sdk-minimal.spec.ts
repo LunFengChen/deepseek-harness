@@ -31,7 +31,7 @@ describe('dsh-sdk-minimal bundle', () => {
       ['deepseek-llm-api-extensions', '@x1a0f3n9/dsh-deepseek-llm-api-extensions'],
       ['session-log-deepseek', '@x1a0f3n9/dsh-session-log-deepseek'],
       ['plugin-package-inventory-deepseek', '@x1a0f3n9/dsh-plugin-package-inventory-deepseek'],
-      ['llm-deepseek', '@x1a0f3n9/dsh-llm-deepseek'],
+      ['llm-deepseek', '@x1a0f3n9/dsh-llm-deepseek-api-key'],
       ['sandbox', '@x1a0f3n9/dsh-sandbox-local'],
       ['session-projection', '@x1a0f3n9/dsh-session-projection'],
       ['sandbox-policy', '@x1a0f3n9/dsh-sandbox-policy'],

@@ -4,7 +4,7 @@ import { SessionId } from '@x1a0f3n9/dsh-session'
 
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
-import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek-api-key'
 import SubagentRuntime from '@x1a0f3n9/dsh-subagent'
 import * as Spawn from '@x1a0f3n9/dsh-subagent-spawn-in-process'
 import PtcWorkflowEngine from '../src/index.ts'

@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-17-web-search-pool.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-17-web-search-pool.md
-2026-09-17-web-search-pool.md: cfe2c695ed1d9c3eb8c9fb9baa22e72d0aa023a6
-2026-09-17-web-search-pool.zh.md: c4da6ef4943db3cb8da45aed89a30d9d2bcea2c6
+/agent-note-first-party-multi-key-web-search-pool:
+  en: 9e3130604825bb96
+  zh: c48b46bd0bce93c6
+/agent-note-first-party-multi-key-web-search-pool/problem:
+  en: 0ab1b78876b162eb
+  zh: 7cfbc36a18ff40df
+/agent-note-first-party-multi-key-web-search-pool/decision:
+  en: 42dcc7d0d0cf1982
+  zh: 73e618e40dccf83b
+/agent-note-first-party-multi-key-web-search-pool/alternatives-considered:
+  en: 40077104e9d86386
+  zh: 513fe533d83e3c9c
+/agent-note-first-party-multi-key-web-search-pool/consequences:
+  en: 07012163a00b992d
+  zh: 1a55ab4bb1b047c2

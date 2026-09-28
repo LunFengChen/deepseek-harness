@@ -48,6 +48,7 @@ Status: implemented
 pnpm run build:
 tsc -b tsconfig.host.json
 tsdown --env.DSH_BUILD_FACE host
+pnpm --filter @x1a0f3n9/dsh-desktop run bundle
 tsc -b tsconfig.client.json
 tsdown --env.DSH_BUILD_FACE client
 pnpm run build:web

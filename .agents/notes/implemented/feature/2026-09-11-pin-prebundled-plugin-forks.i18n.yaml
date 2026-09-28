@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-pin-prebundled-plugin-forks.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-11-pin-prebundled-plugin-forks.md
-2026-09-11-pin-prebundled-plugin-forks.md: 8447bdde59e117f85fbd6ddcf97f4f4054c5ea07
-2026-09-11-pin-prebundled-plugin-forks.zh.md: 97086ec8c050dd4509a51e01555edeff9550d7e7
+/agent-note-pin-remaining-prebundled-plugins-to-lunfengchen-forks:
+  en: 0fe18b56c0201561
+  zh: 13b4fcdd7a49640b
+/agent-note-pin-remaining-prebundled-plugins-to-lunfengchen-forks/problem:
+  en: e451243eab90a2aa
+  zh: 7b6b37dc364dd33b
+/agent-note-pin-remaining-prebundled-plugins-to-lunfengchen-forks/decision:
+  en: 2251910702c978ce
+  zh: dd0f6b920dc95b32
+/agent-note-pin-remaining-prebundled-plugins-to-lunfengchen-forks/alternatives-considered:
+  en: fd8c45d2e5977097
+  zh: f149d8252c33ed83
+/agent-note-pin-remaining-prebundled-plugins-to-lunfengchen-forks/consequences:
+  en: 1ea9f345f67681a6
+  zh: a5fc75b27f8ca2c8

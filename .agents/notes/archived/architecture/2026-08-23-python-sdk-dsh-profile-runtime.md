@@ -15,7 +15,7 @@ A normal profile cannot be adopted only at the Python wrapper. The runtime execu
 
 ### One application launcher
 
-The runtime executable packages `@deepseek-ai/dsh` and runs its ordinary command grammar. The Python client selects `--profile sdk` by default, forwards ordered absolute `--patch` paths, and may select another `dsh` executable or profile. The runnable minimal example selects the shipped `sdk-minimal` profile. The private `@deepseek-ai/dsh-sdk-python-runtime` application package and checked-in runtime `cordis.yml` do not exist. JSON-RPC serving remains the `@deepseek-ai/dsh-sdk-app` bundle and `@deepseek-ai/dsh-sdk-jsonrpc-server` plugin, not a Python-owned boot path.
+The runtime executable packages `@x1a0f3n9/dsh` and runs its ordinary command grammar. The Python client selects `--profile sdk` by default, forwards ordered absolute `--patch` paths, and may select another `dsh` executable or profile. The runnable minimal example selects the shipped `sdk-minimal` profile. The private `@x1a0f3n9/dsh-sdk-python-runtime` application package and checked-in runtime `cordis.yml` do not exist. JSON-RPC serving remains the `@x1a0f3n9/dsh-sdk-app` bundle and `@x1a0f3n9/dsh-sdk-jsonrpc-server` plugin, not a Python-owned boot path.
 
 The public Python configuration is `dsh_bin`, `profile`, ordered `patches`, `dsh_home`, process cwd/environment, provider/model/token selection, a bounded initialization timeout, and optional turn/shutdown timeouts. It does not expose a complete Cordis tree or arbitrary launch argv. `RunResult` reports the protocol-owned run values and does not duplicate the profile's persistence path.
 

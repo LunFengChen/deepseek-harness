@@ -17,7 +17,7 @@ import { LocalBashExecutor } from '@x1a0f3n9/dsh-bash-local'
 import * as BashEnvPlugin from '@x1a0f3n9/dsh-shell-env'
 import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
 import * as ToolBash from '@x1a0f3n9/dsh-tool-bash'
-import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek'
+import * as LlmDeepSeek from '@x1a0f3n9/dsh-llm-deepseek-api-key'
 import NodeRuntime from '@x1a0f3n9/dsh-ptc-runtime-node'
 import Sandbox from '@x1a0f3n9/dsh-sandbox-local'
 import SandboxPolicy from '@x1a0f3n9/dsh-sandbox-policy'
@@ -28,6 +28,7 @@ import LocalJobRegistry from '@x1a0f3n9/dsh-jobs-local'
 import * as ToolJobs from '@x1a0f3n9/dsh-tool-jobs'
 import CordisHostRunner from '@x1a0f3n9/dsh-cordis-host-runner'
 import * as ToolCordis from '@x1a0f3n9/dsh-tool-cordis'
+import * as CordisInspectProviders from '@x1a0f3n9/dsh-tool-cordis/host'
 
 /**
  * With-key PTC mode proof: a real model receives only `run_code`, composes two
@@ -280,6 +281,7 @@ describe('PTC mode typed values: keyless real-process contracts', () => {
   it('uses runtime inspection results directly through PTC', async () => {
     ctx = await typedPtcModeHarness()
     await ctx.plugin(CordisHostRunner)
+    await ctx.plugin(CordisInspectProviders)
     await ctx.plugin(ToolCordis)
     const agent = {
       id: SessionId('ptc-cordis'),

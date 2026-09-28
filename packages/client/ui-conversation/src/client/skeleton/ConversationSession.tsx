@@ -6,7 +6,6 @@ import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type {
   ConversationSessionHeaderSlotProps, ConversationSessionSlotProps,
 } from '../contract/slots.ts'
-import { conversationPhase } from '../contract/snapshot.ts'
 import { resolveActiveView } from '../view-selection.ts'
 import { DefaultConversationViews } from './DefaultConversationViews.tsx'
 import css from './ConversationRoot.module.css'
@@ -57,42 +56,42 @@ function equalBreadcrumbs(left: readonly Breadcrumb[], right: readonly Breadcrum
  * @returns Session navigation controls, with title and tabs after conversation starts.
  */
 export function ConversationSessionHeader({
-  sessionId, useSession, useSessions, useConversation, useConversationViews, useStore,
+  sessionId, hideChrome, useSessions, useConversationViews, useStore,
   renderSlot, open, selectView, t,
 }: ConversationSessionHeaderProps) {
   const tabs = useConversationViews(value => value)
   const selectedId = useStore(s => s.view)
   const active = resolveActiveView(tabs, selectedId)
   const ancestry = useSessions(s => deriveAncestry(s, sessionId), equalBreadcrumbs)
-  const session = useSession(s => s)
-  const conversation = useConversation(s => s)
-  const hideChrome = session.blank && conversationPhase(session, conversation) === 'blank'
+  const showTabs = !hideChrome && tabs.length > 1
   return (
-    <header className={clsx(css.header, hideChrome && css.headerBlank)}>
+    <>
       <div className={css.titleRow}>
-        <div className={css.headerLeading} data-conversation-header-leading="">
-          {renderSlot('conversation.session.header.leading', {})}
-        </div>
         {!hideChrome && (
           <>
             <div className={css.titleCluster}>
               <nav className={css.crumbs} aria-label={t('session.hierarchy')}>
                 {ancestry.map((summary, index) => {
                   const last = index === ancestry.length - 1
-                  const title = (
-                    <button
-                      type="button"
-                      className={clsx(
-                        css.crumb,
-                        summary.subagent && css.crumbSubagent,
-                        last && css.crumbCurrent,
-                      )}
-                      disabled={last}
-                      onClick={() => { open(summary.id) }}
-                    >
-                      {summary.displayTitle}
-                    </button>
-                  )
+                  // The current crumb has no navigation, so it is plain text
+                  // rather than a disabled button: on darwin desktop a button
+                  // would subtract itself from the header's drag row (ui-web
+                  // base.css) and leave the title inert for dragging too.
+                  const title = last
+                    ? (
+                      <span className={clsx(css.crumb, summary.subagent && css.crumbSubagent, css.crumbCurrent)}>
+                        {summary.displayTitle}
+                      </span>
+                    )
+                    : (
+                      <button
+                        type="button"
+                        className={clsx(css.crumb, summary.subagent && css.crumbSubagent)}
+                        onClick={() => { open(summary.id) }}
+                      >
+                        {summary.displayTitle}
+                      </button>
+                    )
                   const lineage = last || summary.subagent
                   const lineageOwner = {
                     lineageSessionId: summary.id,
@@ -138,8 +137,10 @@ export function ConversationSessionHeader({
           {renderSlot('conversation.session.header.corner', {})}
         </div>
       </div>
-      {!hideChrome && tabs.length > 1 && (
-        <div className={css.tabs} role="tablist">
+      {showTabs && (
+        // data-conversation-tabs: marks the tab strip, which the window-chrome
+        // geometry and the browser coverage lane anchor on.
+        <div className={css.tabs} role="tablist" data-conversation-tabs="">
           {tabs.map(viewTab => (
             <button
               key={viewTab.id}
@@ -154,7 +155,7 @@ export function ConversationSessionHeader({
           ))}
         </div>
       )}
-    </header>
+    </>
   )
 }
 

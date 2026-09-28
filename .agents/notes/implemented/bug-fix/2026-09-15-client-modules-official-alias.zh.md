@@ -21,4 +21,4 @@ Web 客户端把平台模块种在 `@x1a0f3n9/dsh-*` 下。社区客户端插件
 ## Consequences
 
 - `dsh-context` 和其他官方 scope 的客户端插件会把 `@x1a0f3n9/dsh-client-ui-primitives` 解析到已种下的 fork 模块。
-- 测试钉住别名的两个方向，包括 `@x1a0f3n9/dsh` 不会被改写。
+- 测试钉住别名的两个方向，包括 `@deepseek-ai/dsh` 不会被改写。

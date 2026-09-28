@@ -1,6 +1,37 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/computer-use/computer-use/README.md
-README.md: 5a5ab005dd6816e3f512e1581c753c6ccaf926ec
-README.zh.md: 9cfed18e0f05c44e0a76887f7e2ff4363a53fc1e
+/:
+  en: 5c5d7b5f1329ac1b
+  zh: b68d332df957109f
+/x1a0f3n9-dsh-computer-use:
+  en: a4d268b17b09e9b6
+  zh: 6a3e1f60cab506b6
+/x1a0f3n9-dsh-computer-use/summary:
+  en: 4de047849e68701f
+  zh: 90a32c0e279b4b05
+/x1a0f3n9-dsh-computer-use/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 405b30feaf48c087
+/x1a0f3n9-dsh-computer-use/use-this-package:
+  en: 485e46871e9bf480
+  zh: 1cfadf1c167d4dac
+/x1a0f3n9-dsh-computer-use/understand-the-implementation:
+  en: c8a8d72c6944586c
+  zh: 0b216f8e9599543d
+/x1a0f3n9-dsh-computer-use/further-exploration:
+  en: b1bdbcbc150036b3
+  zh: 1d356e0522587abc
+/x1a0f3n9-dsh-computer-use/model-experience:
+  en: 8780c250dfaefaaa
+  zh: 1c4b3598a131fb65
+/x1a0f3n9-dsh-computer-use/model-experience/kv-cache-effect:
+  en: 0cc866a67a19d08b
+  zh: e1c3bb5ee2fed596
+/x1a0f3n9-dsh-computer-use/known-limitations-and-deferred-work:
+  en: 6b8a90585a227a46
+  zh: 7e0e3bf026fd67e9
+/x1a0f3n9-dsh-computer-use/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 6c5f9788c6536776

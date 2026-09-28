@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-pi-ai-capability-as-request-output-cap.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-11-pi-ai-capability-as-request-output-cap.md
-2026-09-11-pi-ai-capability-as-request-output-cap.md: 57dced87765bb2edf009c849d296ae937f47a5a7
-2026-09-11-pi-ai-capability-as-request-output-cap.zh.md: 059861f6baa6433506216f86ced270c80426712a
+/agent-note-pi-ai-sends-model-output-capability-as-the-request-cap:
+  en: c9e39eb5d7deefd2
+  zh: 738ed860382e7958
+/agent-note-pi-ai-sends-model-output-capability-as-the-request-cap/problem:
+  en: 83aae1c82095fd71
+  zh: 59a067a41b2a984d
+/agent-note-pi-ai-sends-model-output-capability-as-the-request-cap/decision:
+  en: 2af96e88d9be6852
+  zh: d20f03d34e0972c7
+/agent-note-pi-ai-sends-model-output-capability-as-the-request-cap/verification:
+  en: 6857767afe65cd15
+  zh: 362a2ce4c31b50ea
+/agent-note-pi-ai-sends-model-output-capability-as-the-request-cap/alternatives-considered:
+  en: eb1b60b4569adba5
+  zh: 68eb67b2b4a73ff8
+/agent-note-pi-ai-sends-model-output-capability-as-the-request-cap/consequences:
+  en: 32e6017ade2160bc
+  zh: a1150a303046d2b9
+/agent-note-pi-ai-sends-model-output-capability-as-the-request-cap/related:
+  en: 372e2a7240e21c99
+  zh: 1a793f13cf655335

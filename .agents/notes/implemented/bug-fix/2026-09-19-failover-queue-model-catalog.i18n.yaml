@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-19-failover-queue-model-catalog.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-19-failover-queue-model-catalog.md
-2026-09-19-failover-queue-model-catalog.md: 14eb7d06c96e7fd1bb850e9dc13a2ce24f8d8f86
-2026-09-19-failover-queue-model-catalog.zh.md: bbe390cfc12a0d73f5ba46fc52acdc558e83a843
+/agent-note-failover-queue-add-row-must-not-require-a-live-session:
+  en: bf3fbe0d8c70625c
+  zh: 4f1f3fdac97af9c5
+/agent-note-failover-queue-add-row-must-not-require-a-live-session/problem:
+  en: 82753ae4295ff867
+  zh: d3c3fa557a4d60e8
+/agent-note-failover-queue-add-row-must-not-require-a-live-session/decision:
+  en: 63d54b8fb78d09c0
+  zh: c798bda94cab019c
+/agent-note-failover-queue-add-row-must-not-require-a-live-session/verification:
+  en: f78cdf3647e95b54
+  zh: ab547422bb9f5b01
+/agent-note-failover-queue-add-row-must-not-require-a-live-session/alternatives-considered:
+  en: c74040351951ca3d
+  zh: aa8a2bbd53a87c2b
+/agent-note-failover-queue-add-row-must-not-require-a-live-session/consequences:
+  en: 1e0324160d3e2b6d
+  zh: 74a742a7946adb4c

@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-12-source-build-without-git.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-12-source-build-without-git.md
-2026-09-12-source-build-without-git.md: 7a7397709d74366a3c86b50696ccf3eee42ac8ac
-2026-09-12-source-build-without-git.zh.md: bb579710ab9e724976657b171a53c25fe1ff4047
+/agent-note-source-builds-without-a-git-checkout:
+  en: 0be0359f190948d5
+  zh: dda1553eab3dcc2f
+/agent-note-source-builds-without-a-git-checkout/problem:
+  en: 1c07f29e015193ce
+  zh: 1d3a10555d980b1d
+/agent-note-source-builds-without-a-git-checkout/decision:
+  en: 49d68ff1dabdd384
+  zh: aacad133516ee8b0
+/agent-note-source-builds-without-a-git-checkout/alternatives-considered:
+  en: fa08004653b19db3
+  zh: 2d05fb1f7d783eeb
+/agent-note-source-builds-without-a-git-checkout/consequences:
+  en: d0e79b00ddeda179
+  zh: 839cf99aed19c23b

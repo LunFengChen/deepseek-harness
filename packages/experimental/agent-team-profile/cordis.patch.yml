@@ -28,3 +28,6 @@
       config:
         freshProvider: spawn
         forkProvider: fork
+
+    - id: ui-agent-team
+      name: '@x1a0f3n9/dsh-experimental-client-ui-agent-team'

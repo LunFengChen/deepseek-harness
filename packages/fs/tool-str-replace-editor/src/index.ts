@@ -8,6 +8,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { FsError } from '@x1a0f3n9/dsh-fs'
 import type { FsInfo, FsTarget, FsWriteIntent } from '@x1a0f3n9/dsh-fs'
+import { truncateWithoutSplittingSurrogatePair } from '@x1a0f3n9/dsh-output-retention'
 import { sandboxDenialMarker } from '@x1a0f3n9/dsh-sandbox'
 import type { SandboxExecutionPolicy } from '@x1a0f3n9/dsh-sandbox'
 import type { SandboxPolicyService } from '@x1a0f3n9/dsh-sandbox-policy'
@@ -33,7 +34,7 @@ Notes for using the \`str_replace\` command:
 function maybeTruncate(content: string, maxOutputChars: number): string {
   return content.length <= maxOutputChars
     ? content
-    : content.slice(0, maxOutputChars) + TRUNCATED_MESSAGE
+    : truncateWithoutSplittingSurrogatePair(content, maxOutputChars) + TRUNCATED_MESSAGE
 }
 
 function codepointCompare(left: string, right: string): number {

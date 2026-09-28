@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-18-session-timeline-client-session-seq.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-18-session-timeline-client-session-seq.md
-2026-09-18-session-timeline-client-session-seq.md: f351e635d2d297d879289bdf6afdcaf6d9bfc32c
-2026-09-18-session-timeline-client-session-seq.zh.md: 12110b91befdee302f1b7c7880e9cb115504cd8c
+/agent-note-session-timeline-client-must-not-require-dsh-session-types:
+  en: 48ac7b768ba9f569
+  zh: 1a430a99c87f2f61
+/agent-note-session-timeline-client-must-not-require-dsh-session-types/problem:
+  en: bea09fdb37ae710d
+  zh: d85ddff1232c78a4
+/agent-note-session-timeline-client-must-not-require-dsh-session-types/decision:
+  en: d0e8b8d8a02ef6ef
+  zh: 5be0bbb77c23c32d
+/agent-note-session-timeline-client-must-not-require-dsh-session-types/verification:
+  en: 781879f8c060fcc7
+  zh: 5408d97f5c73caff
+/agent-note-session-timeline-client-must-not-require-dsh-session-types/alternatives-considered:
+  en: ccc6664ca9330187
+  zh: 5df3407499f5a3ec
+/agent-note-session-timeline-client-must-not-require-dsh-session-types/consequences:
+  en: 37ad1bd1dcab54bc
+  zh: 27e1f6c7640d9771

@@ -1,14 +1,12 @@
 /** Mandatory-update policy, independent of local business traffic and updater artifacts. */
 
 import { valid } from 'semver'
+import { platformClientHeaders, type AccountClientMetadata } from '@x1a0f3n9/dsh-deepseek-account'
 
 /** Installed release identity; no field is supplied by a renderer. */
 export interface DesktopPolicyIdentity {
-  readonly platform: 'desktop-win' | 'desktop-mac'
-  readonly version: string
+  readonly platform: 'win32' | 'darwin'
   readonly bundledDshVersion: string
-  readonly bundleId: string
-  readonly locale: string
   readonly arch: 'x64' | 'arm64'
 }
 
@@ -16,6 +14,7 @@ export interface DesktopPolicyIdentity {
 export interface DesktopPolicyConfig {
   readonly origin: string
   readonly allowedPageOrigins: readonly string[]
+  readonly allowedAuthOrigins: readonly string[]
   readonly intervalMs: number
   readonly timeoutMs: number
   readonly maxBackoffMs: number
@@ -74,12 +73,20 @@ export function resolveDesktopPolicyConfig(input: unknown, allowLoopback = false
   if (authentication !== 'anonymous' && authentication !== 'feishu-test') {
     throw new Error('desktop policy: authentication must be anonymous or feishu-test')
   }
+  const authOrigins = value.allowedAuthOrigins
+  if (authentication === 'feishu-test' && (!Array.isArray(authOrigins) || authOrigins.length === 0)) {
+    throw new Error('desktop policy: test authentication requires nonempty allowedAuthOrigins')
+  }
+  if (authentication === 'anonymous' && authOrigins !== undefined) {
+    throw new Error('desktop policy: anonymous policy must not configure allowedAuthOrigins')
+  }
   if (typeof jitter !== 'number' || !Number.isFinite(jitter) || jitter < 0 || jitter > 1 || maxBackoffMs < intervalMs) {
     throw new Error('desktop policy: jitter must be in [0, 1] and maxBackoffMs must cover intervalMs')
   }
   return {
     origin: origin(value.origin, authentication === 'anonymous' && allowLoopback),
     allowedPageOrigins: value.allowedPageOrigins.map(item => origin(item, false)),
+    allowedAuthOrigins: authentication === 'feishu-test' ? (authOrigins as unknown[]).map(item => origin(item, false)) : [],
     intervalMs, timeoutMs: duration('timeoutMs', 15_000), maxBackoffMs, jitter, authentication,
   }
 }
@@ -117,7 +124,7 @@ function parsePolicy(body: unknown, ok: boolean, config: DesktopPolicyConfig): D
   throw new Error('desktop policy: response does not contain a valid mandatory or no-force decision')
 }
 
-/** Owns one immutable installed-client context, its in-flight request, and polling schedule. */
+/** Owns one installed-client context, its in-flight request, and polling schedule. */
 export class DesktopMandatoryUpdatePolicy {
   private current: DesktopPolicyState = { blocking: false, checking: false }
   private pending: Promise<DesktopPolicyState> | undefined
@@ -126,30 +133,34 @@ export class DesktopMandatoryUpdatePolicy {
   private disposed = false
   private failures = 0
   private nextCheck = -Infinity
-  private readonly headers: Readonly<Record<string, string>>
 
   /**
    * @param config - Resolved deployment settings.
-   * @param identity - Installed software identity, copied once for this lifetime.
+   * @param identity - Installed software identity, fixed for this application build.
    * @param publish - Receives policy changes without controlling downloads or existing tasks.
    * @param request - Anonymous Fetch or the dedicated test-authentication Session transport.
+   * @param client - UI build version, language, and UTC offset, sampled for every check.
    * @param random - Jitter source, replaceable for clock-driven tests.
    */
   constructor(
     private readonly config: DesktopPolicyConfig,
-    identity: DesktopPolicyIdentity,
+    private readonly identity: DesktopPolicyIdentity,
     private readonly publish: (state: DesktopPolicyState) => void,
     private readonly request: typeof fetch = fetch,
+    private readonly client: () => AccountClientMetadata,
     private readonly random: () => number = Math.random,
   ) {
-    if (valid(identity.version) === null || valid(identity.bundledDshVersion) === null || identity.bundleId.trim() === ''
-      || (identity.platform === 'desktop-win' && identity.arch !== 'x64')) throw new Error('desktop policy: invalid installed client identity')
-    this.headers = Object.freeze({
-      'x-client-platform': identity.platform, 'x-client-version': identity.version,
-      'x-client-bundle-id': identity.bundleId, 'x-client-locale': identity.locale,
-      'x-client-arch': identity.arch, 'x-client-update-channel': 'nightly',
-      'x-client-bundled-dsh-version': identity.bundledDshVersion,
-    })
+    if (valid(this.client().version) === null || valid(identity.bundledDshVersion) === null
+      || (identity.platform === 'win32' && identity.arch !== 'x64')) throw new Error('desktop policy: invalid installed client identity')
+  }
+
+  /** Platform headers for one check; the calling UI's language and UTC offset are read now. */
+  private requestHeaders(): Record<string, string> {
+    return {
+      ...platformClientHeaders(this.identity.platform, this.client()),
+      'x-client-arch': this.identity.arch, 'x-client-update-channel': 'nightly',
+      'x-client-bundled-dsh-version': this.identity.bundledDshVersion,
+    }
   }
 
   /** Latest policy; failures never erase a known mandatory decision. */
@@ -175,7 +186,7 @@ export class DesktopMandatoryUpdatePolicy {
       try {
         const url = new URL('/api/v0/check_client_update', this.config.origin)
         url.searchParams.set('scenario', scenario)
-        const response = await this.request(url, { headers: this.headers, signal: controller.signal,
+        const response = await this.request(url, { headers: this.requestHeaders(), signal: controller.signal,
           credentials: this.config.authentication === 'feishu-test' ? 'include' : 'omit', cache: 'no-store', redirect: 'error' })
         const body: unknown = await response.json()
         if (this.config.authentication === 'feishu-test' && response.status === 401

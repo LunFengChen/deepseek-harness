@@ -1,6 +1,70 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/experimental/computer-use-cua-driver-native/README.md
-README.md: 3ece738207b00d137e299cd05d2369c0fcbed257
-README.zh.md: f5d84dd246527f0b1c8de8307ab30914df76ab1c
+/:
+  en: 7210ebd8c364c9af
+  zh: 3ea0e8c44830de0e
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native:
+  en: 522b5f35d4447a9e
+  zh: 24a6490eba8f9d6e
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/summary:
+  en: 00c3b5a33c17f35e
+  zh: 03b7d984edcab054
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 725b47765ee8f30b
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/use-this-package:
+  en: b1d93e5d9cdefd2c
+  zh: 26bf7c66a154e831
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/use-this-package/minimal-configuration:
+  en: 5dc426f9c8d17959
+  zh: 402fc48b02be911a
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/use-this-package/host-requirements:
+  en: 5b907271715ce730
+  zh: 21b71f9ce6e6dafd
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/use-this-package/verify-the-installed-sdk:
+  en: c3022cbadb94589b
+  zh: b426ea3dbeafd352
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/understand-the-implementation:
+  en: 956c3b0fb827a163
+  zh: 88bdf97cc5e36230
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/further-exploration:
+  en: d24023319ead888c
+  zh: ab28be480aced0a9
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/system-prompt:
+  en: cf78b9dd5596495f
+  zh: bd44560f8c2435e8
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/system-prompt/what-the-model-sees:
+  en: 5e8460349e8f1d2d
+  zh: d433e8906fd55619
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/system-prompt/what-the-model-sees/native-cua-driver-guidance:
+  en: 5e645aa8accd9ddc
+  zh: 49eaf528febf8c79
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/system-prompt/token-effect:
+  en: 150326bebe2020af
+  zh: f595c0f9339293aa
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/system-prompt/kv-cache-effect:
+  en: 30a65e32c47cacce
+  zh: c9a764af362c52a8
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/discovered-cua-driver-tools-and-results:
+  en: 78541947f8ec0263
+  zh: 8d7c86c98467f137
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/discovered-cua-driver-tools-and-results/what-the-model-sees:
+  en: 1f832b4ff07d1990
+  zh: 79b580515f1cd9a7
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/discovered-cua-driver-tools-and-results/token-effect:
+  en: 45ae4538a26eef00
+  zh: 1df500d07e8a5cb9
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/model-experience/discovered-cua-driver-tools-and-results/kv-cache-effect:
+  en: dd4780c267daf1a6
+  zh: 6502c0437085b37f
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/known-limitations-and-deferred-work:
+  en: 2a2a4b83ca83b5e0
+  zh: 32ca00d0ac9a30a5
+/x1a0f3n9-dsh-experimental-computer-use-cua-driver-native/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: e88aeb617ffb74ea

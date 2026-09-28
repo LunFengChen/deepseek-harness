@@ -7,7 +7,7 @@
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { IconPlusOutline16 } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { IconPlusOutlineRegular } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { en } from './locales.ts'
 import { ModelRow } from './ModelRow.tsx'
 import styles from './ModelsSection.module.css'
@@ -299,7 +299,7 @@ export function DeepSeekModelsEditor(props: DeepSeekModelsEditorProps): ReactNod
         disabled={props.disabled}
         onClick={() => { props.onChange([...props.models.map(model => ({ ...model })), { id: '' }]) }}
       >
-        <IconPlusOutline16 size={14} />
+        <IconPlusOutlineRegular size={14} />
         {props.t('addModel')}
       </button>
     </section>

@@ -6,6 +6,13 @@ import * as SessionTitleInvariantCompanion from '@x1a0f3n9/dsh-session-title/inv
 import InvariantRegistry, { InvariantError } from '@x1a0f3n9/dsh-invariants'
 import SessionStore, { SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
 import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
+
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'test': { kind: 'test' } & ContextFormed
+  }
+}
 
 async function setup(): Promise<Context> {
   const ctx = new Context()
@@ -64,7 +71,7 @@ describe('session-title source invariant', () => {
     })).toThrow(/invalid message seq/)
     const pluginMessage = session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: 'plugin context' }],
-      source: { kind: 'plugin', plugin: 'test' },
+      source: { kind: 'test' },
     }), { surfaceOp: 'append' })
     expect(() => session.append('session/title', {
       title: 'plugin source', messageSeqs: [pluginMessage.seq], source: { kind: 'fallback' },

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-api-terminal-controller",
   "description": "Session-owned interactive terminals with shell discovery, screen recovery and typed Remote control",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -54,32 +54,33 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@x1a0f3n9/dsh-deque": "workspace:^",
-    "@x1a0f3n9/dsh-lazy-require": "workspace:^",
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^",
+    "@x1a0f3n9/dsh-deque": "workspace:*",
+    "@x1a0f3n9/dsh-lazy-require": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:~",
     "@xterm/headless": "^6.0.0",
     "@xterm/addon-serialize": "^0.14.0",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-api-gateway": "workspace:^",
-    "@x1a0f3n9/dsh-brand": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^",
-    "@x1a0f3n9/dsh-fs": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
-    "@x1a0f3n9/dsh-util-crypto": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-api-gateway": "workspace:*",
+    "@x1a0f3n9/dsh-brand": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-remote-mock": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-util-crypto": "workspace:*"
   },
   "files": [
     "lib/index.js",

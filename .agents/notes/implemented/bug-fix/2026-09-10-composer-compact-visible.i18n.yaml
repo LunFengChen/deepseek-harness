@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-composer-compact-visible.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-composer-compact-visible.md
-2026-09-10-composer-compact-visible.md: 400c2fd6d013569c040655f6d5bfb94c416f9510
-2026-09-10-composer-compact-visible.zh.md: 633bbe68c805d584386f8db6659db592dd5b484d
+/agent-note-labeled-composer-compact-button:
+  en: 29719bba12a78285
+  zh: 35f4c0eb273fbfec
+/agent-note-labeled-composer-compact-button/problem:
+  en: 5d56ce1026b75a52
+  zh: db8d92de97610db8
+/agent-note-labeled-composer-compact-button/decision:
+  en: 683acace445771b7
+  zh: ed466f3ef294566b
+/agent-note-labeled-composer-compact-button/alternatives-considered:
+  en: aaf06bcc4de7da2a
+  zh: a2f9688a4a998977
+/agent-note-labeled-composer-compact-button/consequences:
+  en: b02a1e19b7535faa
+  zh: 3d7a14ac507142d6

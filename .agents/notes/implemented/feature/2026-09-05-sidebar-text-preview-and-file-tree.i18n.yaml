@@ -1,6 +1,37 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-05-sidebar-text-preview-and-file-tree.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-05-sidebar-text-preview-and-file-tree.md
-2026-09-05-sidebar-text-preview-and-file-tree.md: a96c05f1db49dc4c6c23fc2cc7be4af06a22f3ab
-2026-09-05-sidebar-text-preview-and-file-tree.zh.md: 6f6912c3255b753c9797c93f18eaefd8ddaead45
+/agent-note-sidebar-text-preview-and-file-tree:
+  en: 2f9ef6cc50ad825d
+  zh: 5ec8592ac9963f85
+/agent-note-sidebar-text-preview-and-file-tree/problem:
+  en: 4e647765dfcd2ef9
+  zh: 2c362ffdee7ff3d4
+/agent-note-sidebar-text-preview-and-file-tree/decision:
+  en: f8ea6a52a404b064
+  zh: c91528d66487bb33
+/agent-note-sidebar-text-preview-and-file-tree/decision/the-guide:
+  en: ee75f1f4a0124916
+  zh: 88eb35a3642cce91
+/agent-note-sidebar-text-preview-and-file-tree/decision/the-text-preview:
+  en: b86a9141fa01b4b0
+  zh: 0cb2b6e2e69c69c7
+/agent-note-sidebar-text-preview-and-file-tree/decision/the-file-tree:
+  en: a1447cbd2fc8d7ec
+  zh: 10718b6a985250d2
+/agent-note-sidebar-text-preview-and-file-tree/alternatives-considered:
+  en: 87fddbd01f117061
+  zh: 1810d283202db648
+/agent-note-sidebar-text-preview-and-file-tree/consequences:
+  en: 00b1675fcd76ad0d
+  zh: caf3eb340c74aef7
+/agent-note-sidebar-text-preview-and-file-tree/testing:
+  en: 2987a6417b7e4c14
+  zh: 97eeb97e67536c70
+/agent-note-sidebar-text-preview-and-file-tree/deferred:
+  en: 6c788b26fb65227b
+  zh: 1bafda76bac92edd
+/agent-note-sidebar-text-preview-and-file-tree/related:
+  en: 0a2531b19968c69b
+  zh: 4065017075aa11cc

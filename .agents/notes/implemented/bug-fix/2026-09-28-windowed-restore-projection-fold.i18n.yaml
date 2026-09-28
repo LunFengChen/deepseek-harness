@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-28-windowed-restore-projection-fold.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-28-windowed-restore-projection-fold.md
-2026-09-28-windowed-restore-projection-fold.md: dc7e3205707ce5e9909bb26d31dd13b0a1fafbd7
-2026-09-28-windowed-restore-projection-fold.zh.md: 208c8fe1a6910fc0df71c477e1e8a01be09f993b
+/agent-note-windowed-restore-folds-projections-during-ingest:
+  en: e8aaa2a681f3f83c
+  zh: ebedb633f3e76ef1
+/agent-note-windowed-restore-folds-projections-during-ingest/problem:
+  en: 2e390d596bdcd7cd
+  zh: f4b1e6ecb02dc826
+/agent-note-windowed-restore-folds-projections-during-ingest/decision:
+  en: 14cd6c4e7b8f14d2
+  zh: 5ce5ee470f68719d
+/agent-note-windowed-restore-folds-projections-during-ingest/alternatives-considered:
+  en: 4c5472c9e58e1d9e
+  zh: 43e40cfaa7171113
+/agent-note-windowed-restore-folds-projections-during-ingest/consequences:
+  en: 850ee675d793370f
+  zh: 55dcdbadcf598401
+/agent-note-windowed-restore-folds-projections-during-ingest/related:
+  en: 4f5837ada8665c6c
+  zh: eff58694f5c9a977

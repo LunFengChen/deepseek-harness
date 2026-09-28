@@ -1,11 +1,9 @@
 /** Office preview copy and Host render configuration guidance. */
 export const zh = {
   title: 'Office 文档',
-  loading: '正在读取…',
+  loading: '文档渲染中...',
   retry: '重试',
-  missingFonts: '缺少文档使用的字体：{fonts}，可能影响文字和排版。',
-  showMore: '显示更多',
-  dismissNotice: '关闭字体提示',
+  viewMissingFonts: '缺失 {count} 种字体，点击查看',
   missingFontsTitle: '缺失的字体',
   missingFontsDescription: '本次预览无法使用以下字体，预览中的文字和排版可能与原文档不同。',
   missingFontsCount: '{count} 种字体',
@@ -25,11 +23,9 @@ export type OfficePreviewKey = keyof typeof zh
 /** English translations checked against the Chinese key set. */
 export const en = {
   title: 'Office document',
-  loading: 'Reading…',
+  loading: 'Rendering document...',
   retry: 'Retry',
-  missingFonts: 'Fonts used in this document are unavailable: {fonts}. Text and layout may differ.',
-  showMore: 'Show more',
-  dismissNotice: 'Dismiss font notice',
+  viewMissingFonts: 'Missing fonts: {count}. Click to view.',
   missingFontsTitle: 'Missing fonts',
   missingFontsDescription: 'These fonts are unavailable for this preview. Text and layout may differ from the original document.',
   missingFontsCount: 'Fonts: {count}',

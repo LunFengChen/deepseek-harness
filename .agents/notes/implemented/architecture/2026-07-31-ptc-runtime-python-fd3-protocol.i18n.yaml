@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-07-31-ptc-runtime-python-fd3-protocol.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-07-31-ptc-runtime-python-fd3-protocol.md
-2026-07-31-ptc-runtime-python-fd3-protocol.md: 32e1934d2fa63d02e4af8ae260e0d03751b24a95
-2026-07-31-ptc-runtime-python-fd3-protocol.zh.md: b065a47950a301d80d44ff9fd6ed279f2dfc1abf
+/agent-note-the-ptc-runtime-python-fd-3-frame-protocol:
+  en: ba38a4f0a3500f7a
+  zh: a1265dafb481cb84
+/agent-note-the-ptc-runtime-python-fd-3-frame-protocol/problem:
+  en: a851c367a1d92769
+  zh: b6eb6e195d22a5be
+/agent-note-the-ptc-runtime-python-fd-3-frame-protocol/decision:
+  en: 1f93159850fc7f48
+  zh: dcc2a4788e3254f7
+/agent-note-the-ptc-runtime-python-fd-3-frame-protocol/wire-contract:
+  en: 913f9465320dc191
+  zh: f8e0338645d6c204
+/agent-note-the-ptc-runtime-python-fd-3-frame-protocol/mirror-alignment:
+  en: 26128b65f2763920
+  zh: df24359faebcbfed
+/agent-note-the-ptc-runtime-python-fd-3-frame-protocol/alternatives-considered:
+  en: cc42636bd7793305
+  zh: e196f980daec3037
+/agent-note-the-ptc-runtime-python-fd-3-frame-protocol/consequences:
+  en: 16df6efd46d71e85
+  zh: 4062475bec04ab5f

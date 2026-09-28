@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-20-chat-steering-user-slot-key.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-20-chat-steering-user-slot-key.md
-2026-09-20-chat-steering-user-slot-key.md: 605f8ec1612d5ad75701120587186fc866396cb5
-2026-09-20-chat-steering-user-slot-key.zh.md: c81d2bb717cde9063d4c550f0cb7fcb89467fbe1
+/agent-note-dispatch-admitted-steering-chat-nodes-through-the-user-keyed-occupant:
+  en: aa31a3f7fa2c6cc1
+  zh: 37ad43e5129fc844
+/agent-note-dispatch-admitted-steering-chat-nodes-through-the-user-keyed-occupant/problem:
+  en: f3a36cdfc15658b4
+  zh: 741cfc42c66fdec2
+/agent-note-dispatch-admitted-steering-chat-nodes-through-the-user-keyed-occupant/decision:
+  en: 37471a1f1e0dce9c
+  zh: d6ae7c04f4d38018
+/agent-note-dispatch-admitted-steering-chat-nodes-through-the-user-keyed-occupant/testing:
+  en: 6f47d1252873a8f2
+  zh: 60a3d5218b8e674f
+/agent-note-dispatch-admitted-steering-chat-nodes-through-the-user-keyed-occupant/alternatives-considered:
+  en: 7e0a212743cbd666
+  zh: 6a3450010ffb7e39
+/agent-note-dispatch-admitted-steering-chat-nodes-through-the-user-keyed-occupant/consequences:
+  en: 11a35d31b4507164
+  zh: 3ca6d273f55c9c78

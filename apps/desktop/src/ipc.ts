@@ -1,16 +1,33 @@
 /** Typed preload operations exposed only by the Electron shell. */
 
+import type { DesktopKeyboardApi, DesktopShortcutsApi } from '@x1a0f3n9/dsh-client-shortcuts/protocol'
 import type { IpcMainInvokeEvent } from 'electron'
+import type { DesktopBrowserBridge } from '@x1a0f3n9/dsh-client-ui-sidebar-browser/types'
 
 /** IPC channel names kept private to the desktop application bundle. */
 export const DESKTOP_IPC = {
+  shortcutsInput: 'dsh-desktop:shortcuts-input',
+  shortcutsCloseWindow: 'dsh-desktop:shortcuts-close-window',
+  shortcutsGet: 'dsh-desktop:shortcuts-get',
+  shortcutsEdit: 'dsh-desktop:shortcuts-edit',
+  shortcutsChanged: 'dsh-desktop:shortcuts-changed',
+  shortcutsRecording: 'dsh-desktop:shortcuts-recording',
   boot: 'dsh-desktop:boot',
+  enterWorkspace: 'dsh-desktop:enter-workspace',
+  onboardingActive: 'dsh-desktop:onboarding-active',
+  onboardingApiKey: 'dsh-desktop:onboarding-api-key',
   bootFailed: 'dsh-desktop:boot-failed',
+  browserAcquire: 'dsh-desktop:browser-acquire',
+  browserRelease: 'dsh-desktop:browser-release',
+  browserOpenRequested: 'dsh-desktop:browser-open-requested',
   directoryPick: 'dsh-desktop:directory-pick',
+  localeBootstrap: 'dsh-desktop:locale-bootstrap',
+  localeChanged: 'dsh-desktop:locale-changed',
   updatesStatus: 'dsh-desktop:updates-status',
   updatesOpen: 'dsh-desktop:updates-open',
   updatesPresentation: 'dsh-desktop:updates-presentation',
   nativeThemeSet: 'dsh-desktop:native-theme-set',
+  windowFullscreen: 'dsh-desktop:window-fullscreen',
   windowsAppearance: 'dsh-desktop:windows-appearance',
   windowsMenu: 'dsh-desktop:windows-menu',
 } as const
@@ -53,6 +70,9 @@ export interface DesktopUpdatePresentation {
 /** Product documents cannot supply update versions, package URLs, or installation authorization. */
 export interface DshDesktopProductApi {
   readonly protocolVersion: 1
+  readonly browser: DesktopBrowserBridge
+  readonly keyboard: DesktopKeyboardApi
+  readonly shortcuts: DesktopShortcutsApi
   readonly updates: {
     status(): Promise<DesktopUpdatePresentation>
     open(): Promise<void>

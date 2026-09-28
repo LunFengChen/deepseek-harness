@@ -141,7 +141,12 @@ describe('client bundle purity gate', () => {
     expect(() => resolveId('@x1a0f3n9/dsh-token-meter')).toThrow(/purity/)
     expect(() => resolveId('@x1a0f3n9/dsh-token-meter/client/internal')).toThrow(/purity/)
     expect(resolveId('@x1a0f3n9/dsh-host-open-in-app/shared')).toBeNull()
+    expect(resolveId('@x1a0f3n9/dsh-native-command/types')).toBeNull()
+    expect(() => resolveId('@x1a0f3n9/dsh-native-command')).toThrow('client bundle purity')
     expect(() => resolveId('@x1a0f3n9/dsh-host-open-in-app')).toThrow(/purity/)
+    expect(resolveId('@x1a0f3n9/dsh-plugin-manager/registry')).toBeNull()
+    expect(() => resolveId('@x1a0f3n9/dsh-plugin-manager')).toThrow(/purity/)
+    expect(() => resolveId('@x1a0f3n9/dsh-plugin-manager/registry/internal')).toThrow(/purity/)
   })
 
   it('admits only the pure spill notice entry, not its Host policy', () => {

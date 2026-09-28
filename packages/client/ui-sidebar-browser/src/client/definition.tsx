@@ -1,6 +1,7 @@
 /** Static Browser tab type and guide declaration. */
+import type { ShortcutCommandId } from '@x1a0f3n9/dsh-client-shortcuts/client'
 import type { TranslateNS } from '@x1a0f3n9/dsh-client-locale/client'
-import { IconGlobeOutline14 } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { GuideArtworkBrowser } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { SidebarRightTabDefinition } from '@x1a0f3n9/dsh-client-ui-sidebar-right/client'
 import type {} from './locales.ts'
 
@@ -19,8 +20,8 @@ export function browserDefinition(t: TranslateNS<'sidebarBrowser'>): SidebarRigh
     priority: 'builtin',
     title: () => t('type.label'),
     guide: [{
-      id: 'new', order: 30, title: () => t('guide.title'),
-      description: () => t('guide.description'), icon: IconGlobeOutline14,
+      id: 'new', commandId: 'browser.new' as ShortcutCommandId, order: 30, title: () => t('guide.title'),
+      description: () => t('guide.description'), icon: GuideArtworkBrowser,
     }],
   }
 }

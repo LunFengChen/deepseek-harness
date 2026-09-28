@@ -1,15 +1,22 @@
 import { describe, expect, it } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { createUserMessage } from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
 import { RuntimeContextProjection } from '../src/runtime-context.ts'
 
-const SOURCE = '@x1a0f3n9/dsh-system-prompt'
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'test-compaction': { kind: 'test-compaction' } & ContextFormed
+  }
+}
+
+const SOURCE = 'runtime-context'
 
 function contextMessage(text: string) {
   return createUserMessage({
     content: [{ type: 'text', text }],
-    source: { kind: 'plugin', plugin: SOURCE },
+    source: { kind: SOURCE },
   })
 }
 
@@ -22,7 +29,7 @@ describe('RuntimeContextProjection', () => {
     const shadowed = session.append('user/message', contextMessage('shadowed'), { surfaceOp: 'append' })
     session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: 'summary' }],
-      source: { kind: 'plugin', plugin: 'test-compaction' },
+      source: { kind: 'test-compaction' },
     }), {
       surfaceOp: { op: 'replace', startSeq: shadowed.seq, endSeq: shadowed.seq },
       sourceEventSeqs: [shadowed.seq],
@@ -32,8 +39,7 @@ describe('RuntimeContextProjection', () => {
     expect(session.surface.nodes).toContain(retained.seq)
     expect(projection.project('retained', [])).toBeUndefined()
     expect(projection.project('next', [{ name: 'sandbox:policy', text: 'policy' }])?.source).toEqual({
-      kind: 'plugin',
-      plugin: SOURCE,
+      kind: SOURCE,
       form: 'snapshot',
       sections: [{ name: 'sandbox:policy', text: 'policy' }],
     })
@@ -41,19 +47,5 @@ describe('RuntimeContextProjection', () => {
     const other = ctx.sessions.create(SessionId('runtime-context-other'))
     other.append('user/message', contextMessage('other'), { surfaceOp: 'append' })
     expect(projection.project('retained', [])).toBeUndefined()
-  })
-
-  it('restores the retained snapshot after a live log prefix rewrite', async () => {
-    const ctx = new Context()
-    await ctx.plugin(SessionStore)
-    const session = ctx.sessions.create(SessionId('runtime-context-truncate'))
-    session.append('user/message', contextMessage('kept'), { surfaceOp: 'append' })
-    session.append('user/message', contextMessage('dropped'), { surfaceOp: 'append' })
-    const projection = new RuntimeContextProjection(ctx, session)
-    expect(projection.project('dropped', [])).toBeUndefined()
-
-    session.truncate(SessionLogOffset(1))
-    expect(projection.project('kept', [])).toBeUndefined()
-    expect(projection.project('dropped', [])?.content).toEqual([{ type: 'text', text: 'dropped' }])
   })
 })

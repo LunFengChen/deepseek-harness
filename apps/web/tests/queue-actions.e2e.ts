@@ -16,7 +16,7 @@ import {
   assertFixtureInventory, captureExpandedTurnProcessAria, captureStableAria, compareOrRefreshGolden,
   launchWebScaffold, watchConsole, webSnapshotMode, type WebScaffold,
 } from './scaffold.ts'
-import { connectFreshWorkspace, newEnglishPage, saveFailureShot } from './support.ts'
+import { connectFreshWorkspace, expectTooltipOnTop, newEnglishPage, saveFailureShot } from './support.ts'
 
 const SNAPSHOT_DIR = fileURLToPath(new URL('../../../snapshots/web/queue-actions', import.meta.url))
 const FIXTURE = fileURLToPath(new URL('../../../snapshots/web/live-interactions/session.v3.jsonl', import.meta.url))
@@ -34,6 +34,10 @@ const MODE = webSnapshotMode()
 const ACTIVE_PROMPT = 'Reply with a one-sentence description of event sourcing, then stop.'
 const REMOVE = 'Queue item to remove'
 const EDIT = 'Queue item to edit'
+// The edited value is deliberately multi-line: the inline editor must keep the
+// line breaks through the queue mutation and into the model-bound user message.
+const EDITED_CONTENT = 'Edited\nqueue item'
+// The dock preview flattens the queued text, so row locators match this form.
 const EDITED = 'Edited queue item'
 const TAIL = 'Queue item preserved after stop'
 const WAKE = 'Wake the preserved queue'
@@ -76,7 +80,7 @@ describe('web e2e: queue row actions', () => {
     await expect.poll(() => row.getByRole('button', { name: 'Remove queued message' }).isEnabled()).toBe(true)
   }
 
-  it.skipIf(MODE === 'record')('edits and removes exact occurrences and preserves Queue across stop', async () => {
+  it.skipIf(MODE === 'record').each(['button', 'keyboard'] as const)('edits and removes exact occurrences and preserves Queue across %s stop', async (method) => {
     overrideDir = await mkdtemp(join(tmpdir(), 'dsh-web-queue-actions-'))
     const readyFile = join(overrideDir, '.hang-ready')
     const overridePath = join(overrideDir, 'replay.override.json')
@@ -187,12 +191,31 @@ describe('web e2e: queue row actions', () => {
     const editRow = page.locator('[data-queue-dock] li', { hasText: EDIT })
     await editRow.getByRole('button', { name: 'Edit queued message' }).click()
     const editor = page.getByRole('textbox', { name: 'Edit queued message' })
-    await editor.fill(EDITED)
-    await page.getByRole('button', { name: 'Save queued message' }).hover()
-    await page.getByRole('tooltip', { name: 'Save queued message', exact: true }).waitFor()
+    await editor.fill(EDITED_CONTENT)
+    const save = page.getByRole('button', { name: 'Save queued message' })
+    await save.hover()
+    const saveTooltip = page.getByRole('tooltip', { name: 'Save queued message', exact: true })
+    await saveTooltip.waitFor()
+    // The dock tucks under the input card, which paints later; the bubble must
+    // escape the panel's stacking context instead of landing behind it.
+    await expectTooltipOnTop(saveTooltip)
+    const tooltipGeometry = await page.evaluate(() => {
+      const element = document.querySelector<HTMLElement>('[role="tooltip"]')
+      if (element === null) return null
+      const tooltip = element.getBoundingClientRect()
+      return {
+        declaredLeft: Number.parseFloat(element.style.left),
+        declaredTop: Number.parseFloat(element.style.top),
+        tooltipCenter: tooltip.left + tooltip.width / 2,
+        tooltipTop: tooltip.top,
+      }
+    })
+    expect(tooltipGeometry).not.toBeNull()
+    expect(Math.abs(tooltipGeometry!.tooltipCenter - tooltipGeometry!.declaredLeft)).toBeLessThan(2)
+    expect(Math.abs(tooltipGeometry!.tooltipTop - tooltipGeometry!.declaredTop)).toBeLessThan(2)
     const editingSnapshot = await captureStableAria(page, '[class*="centerCol"]', scaffold.workspaceCwd)
     await compareOrRefreshGolden(EDITING_EXPECTED, editingSnapshot, MODE)
-    await settleQueueAction(() => page.getByRole('button', { name: 'Save queued message' }).click(), EDITED)
+    await settleQueueAction(() => save.click(), EDITED)
     await page.getByText(EDITED, { exact: true }).waitFor()
 
     const removeRow = page.locator('[data-queue-dock] li', { hasText: REMOVE })
@@ -202,7 +225,9 @@ describe('web e2e: queue row actions', () => {
     const remainingEdit = page.getByRole('button', { name: 'Edit queued message', exact: true })
     await expect.poll(() => remainingEdit.isEnabled(), { timeout: 10_000 }).toBe(true)
     await remainingEdit.hover()
-    await page.getByRole('tooltip', { name: 'Edit queued message', exact: true }).waitFor()
+    const editTooltip = page.getByRole('tooltip', { name: 'Edit queued message', exact: true })
+    await editTooltip.waitFor()
+    await expectTooltipOnTop(editTooltip)
 
     const snapshot = await captureStableAria(page, '[class*="centerCol"]', scaffold.workspaceCwd)
     await compareOrRefreshGolden(UI_EXPECTED, snapshot, MODE)
@@ -265,8 +290,13 @@ describe('web e2e: queue row actions', () => {
 
     const stopButton = page.getByRole('button', { name: 'Stop generating' })
     await stopButton.hover()
-    await page.getByRole('tooltip', { name: 'Stop generating', exact: true }).waitFor()
-    await stopButton.click()
+    await page.getByRole('tooltip', { name: 'Stop generating Esc Esc', exact: true }).waitFor()
+    if (method === 'button') await stopButton.click()
+    else {
+      await input.focus()
+      await page.keyboard.press('Escape')
+      await page.keyboard.press('Escape')
+    }
     await firstSettled
     await expect.poll(() => page.getByRole('button', { name: 'Stop generating' }).count())
       .toBe(0)
@@ -292,7 +322,7 @@ describe('web e2e: queue row actions', () => {
       .toEqual(['aborted', 'completed', 'completed', 'completed'])
     expect(sessionEvents.flatMap(event => event.type === 'user/message' && event.data.source.kind === 'user'
       ? event.data.content.flatMap(block => block.type === 'text' ? [block.text] : [])
-      : [])).toEqual([ACTIVE_PROMPT, EDITED, TAIL, WAKE])
+      : [])).toEqual([ACTIVE_PROMPT, EDITED_CONTENT, TAIL, WAKE])
     await expect.poll(() => page.locator('[data-queue-dock]').count()).toBe(0)
     expect(tripwire.pageErrors).toEqual([])
     expect(tripwire.warnings).toEqual([])

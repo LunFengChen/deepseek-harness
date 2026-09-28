@@ -46,8 +46,14 @@ flowchart LR
   cfg --> plugin_dsh_base_jobs
   plugin_dsh_base_llm_retry["llm-retry<br/>@x1a0f3n9/dsh-llm-retry"]
   cfg --> plugin_dsh_base_llm_retry
-  plugin_dsh_base_settings["settings<br/>@x1a0f3n9/dsh-settings-file"]
+  plugin_dsh_base_config_editor["config-editor<br/>@x1a0f3n9/dsh-config-editor"]
+  cfg --> plugin_dsh_base_config_editor
+  plugin_dsh_base_settings["settings<br/>@x1a0f3n9/dsh-settings"]
   cfg --> plugin_dsh_base_settings
+  plugin_dsh_base_authorization["authorization<br/>@x1a0f3n9/dsh-authorization"]
+  cfg --> plugin_dsh_base_authorization
+  plugin_dsh_base_deepseek_account["deepseek-account<br/>@x1a0f3n9/dsh-deepseek-account-platform"]
+  cfg --> plugin_dsh_base_deepseek_account
   plugin_dsh_base_credentials["credentials<br/>@x1a0f3n9/dsh-credentials-local"]
   cfg --> plugin_dsh_base_credentials
   plugin_dsh_base_llm_pi_ai["llm-pi-ai<br/>@x1a0f3n9/dsh-llm-pi-ai"]
@@ -184,8 +190,10 @@ flowchart LR
   cfg --> plugin_dsh_base_agent_loop
   plugin_dsh_base_fs_sandbox["fs-sandbox<br/>@x1a0f3n9/dsh-fs-sandbox"]
   cfg --> plugin_dsh_base_fs_sandbox
-  plugin_dsh_base_llm_deepseek["llm-deepseek<br/>@x1a0f3n9/dsh-llm-deepseek"]
+  plugin_dsh_base_llm_deepseek["llm-deepseek<br/>@x1a0f3n9/dsh-llm-deepseek-api-key"]
   cfg --> plugin_dsh_base_llm_deepseek
+  plugin_dsh_base_llm_deepseek_account["llm-deepseek-account<br/>@x1a0f3n9/dsh-llm-deepseek-account"]
+  cfg --> plugin_dsh_base_llm_deepseek_account
 ```
 
 | Plugin id | Package / module |
@@ -209,7 +217,10 @@ flowchart LR
 | `agent-default-model` | `@x1a0f3n9/dsh-agent-default-model` |
 | `jobs` | `@x1a0f3n9/dsh-jobs-local` |
 | `llm-retry` | `@x1a0f3n9/dsh-llm-retry` |
-| `settings` | `@x1a0f3n9/dsh-settings-file` |
+| `config-editor` | `@x1a0f3n9/dsh-config-editor` |
+| `settings` | `@x1a0f3n9/dsh-settings` |
+| `authorization` | `@x1a0f3n9/dsh-authorization` |
+| `deepseek-account` | `@x1a0f3n9/dsh-deepseek-account-platform` |
 | `credentials` | `@x1a0f3n9/dsh-credentials-local` |
 | `llm-pi-ai` | `@x1a0f3n9/dsh-llm-pi-ai` |
 | `session-persistence-jsonl` | `@x1a0f3n9/dsh-session-persistence-jsonl` |
@@ -278,7 +289,8 @@ flowchart LR
 | `system-prompt` | `@x1a0f3n9/dsh-system-prompt` |
 | `agent-loop` | `@x1a0f3n9/dsh-agent-loop` |
 | `fs-sandbox` | `@x1a0f3n9/dsh-fs-sandbox` |
-| `llm-deepseek` | `@x1a0f3n9/dsh-llm-deepseek` |
+| `llm-deepseek` | `@x1a0f3n9/dsh-llm-deepseek-api-key` |
+| `llm-deepseek-account` | `@x1a0f3n9/dsh-llm-deepseek-account` |
 
 Source config: [`packages/bundle/base/cordis.patch.yml`](../../packages/bundle/base/cordis.patch.yml).
 

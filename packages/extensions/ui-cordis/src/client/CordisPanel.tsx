@@ -3,8 +3,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import {
-  IconCheckOutline16, IconCloseOutline16, IconCordisPluginOutline14, IconPlayOutline16,
-  IconStopFill16, IconTrashOutline16, Tooltip, useDismissOnOutsidePointer,
+  IconCheckOutlineRegular, IconCloseOutlineRegular, IconCordisPluginOutlineRegular, IconPlayOutlineRegular,
+  IconStopFillRegular, IconTrashOutlineRegular, StateDot, Tooltip, useDismissOnOutsidePointer,
+  type StateDotState,
 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type {} from '@x1a0f3n9/dsh-client-ui-sidebar/client'
@@ -73,6 +74,17 @@ function visiblePanelStatus(
   return cordisVisibleStatus(listed, listed.activeRun.packageId, loaded)
 }
 
+function panelDotState(status: PanelStatus, busy: boolean): StateDotState {
+  if (busy) return 'ongoing'
+  switch (status) {
+    case 'idle': return 'idle'
+    case 'client-pending': return 'ongoing'
+    case 'running': return 'done'
+    case 'awaiting-approval': return 'warning'
+    case 'failed': return 'error'
+  }
+}
+
 function blockingFirst(rows: readonly RowView[]): readonly RowView[] {
   return [
     ...rows.filter(row => row.activity?.phase === 'awaiting-approval'),
@@ -96,8 +108,8 @@ function RowAction({ label, children, ...props }: {
 function DoubleCheckIcon() {
   return (
     <span className={css.doubleCheck} aria-hidden>
-      <IconCheckOutline16 size={12} />
-      <IconCheckOutline16 size={12} />
+      <IconCheckOutlineRegular size={12} />
+      <IconCheckOutlineRegular size={12} />
     </span>
   )
 }
@@ -247,7 +259,10 @@ export function CordisPanel({
         <div className={css.rowHead}>
           <span className={css.rowId}>{pluginId}</span>
           <span className={css.rowName}>{name}</span>
-          <span className={css.rowStatus}>{t(STATUS_LABELS[status])}</span>
+          <span className={css.rowStatus}>
+            <StateDot state={panelDotState(status, busy)} />
+            <span>{t(STATUS_LABELS[status])}</span>
+          </span>
         </div>
         {listed !== undefined && listed.packages.length > 1 && selectedPackageId !== undefined && (
           <label className={css.versionPicker}>
@@ -282,7 +297,7 @@ export function CordisPanel({
                     setOpen(false)
                   }) }}
                 >
-                  <IconCheckOutline16 size={14} />
+                  <IconCheckOutlineRegular size={14} />
                 </RowAction>
                 <RowAction
                   label={t('action.approvePlugin')}
@@ -304,7 +319,7 @@ export function CordisPanel({
                     setOpen(false)
                   }) }}
                 >
-                  <IconCloseOutline16 size={14} />
+                  <IconCloseOutlineRegular size={14} />
                 </RowAction>
               </>
             )}
@@ -322,7 +337,7 @@ export function CordisPanel({
                   hasClientHalf: selectedPackage?.hasClientHalf === true,
                 })) }}
               >
-                <IconPlayOutline16 size={14} />
+                <IconPlayOutlineRegular size={14} />
               </RowAction>
             )}
             {awaiting === undefined && listed !== undefined && listed.activeRun !== undefined
@@ -339,7 +354,7 @@ export function CordisPanel({
                   hasClientHalf: selectedPackage.hasClientHalf,
                 })) }}
               >
-                <IconPlayOutline16 size={14} />
+                <IconPlayOutlineRegular size={14} />
               </RowAction>
             )}
             {awaiting === undefined && listed !== undefined && listed.activeRun !== undefined && status === 'client-pending'
@@ -356,7 +371,7 @@ export function CordisPanel({
                   hasClientHalf: true,
                 })) }}
               >
-                <IconPlayOutline16 size={14} />
+                <IconPlayOutlineRegular size={14} />
               </RowAction>
             )}
             {awaiting === undefined && listed !== undefined && listed.activeRun !== undefined && (
@@ -366,7 +381,7 @@ export function CordisPanel({
                 disabled={busy}
                 onClick={() => { void runAction(pluginId, () => onStop(listed.agentId, pluginId)) }}
               >
-                <IconStopFill16 size={14} />
+                <IconStopFillRegular size={14} />
               </RowAction>
             )}
             {awaiting === undefined && listed !== undefined && (
@@ -376,7 +391,7 @@ export function CordisPanel({
                 disabled={busy}
                 onClick={() => { void runAction(pluginId, () => onRemove(listed.agentId, pluginId)) }}
               >
-                <IconTrashOutline16 size={14} />
+                <IconTrashOutlineRegular size={14} />
               </RowAction>
             )}
           </div>
@@ -478,7 +493,7 @@ export function CordisPanel({
           aria-expanded={open}
           onClick={() => { setOpen(value => !value) }}
         >
-          <IconCordisPluginOutline14 size={wide ? 16 : 18} />
+          <IconCordisPluginOutlineRegular size={wide ? 16 : 18} />
           {wide && (
             <>
               <span className={css.badgeLabel}>{t('panel.trigger')}</span>

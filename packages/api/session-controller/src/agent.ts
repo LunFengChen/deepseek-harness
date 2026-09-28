@@ -7,7 +7,7 @@ import type {
   Agent, AgentHandle, AgentOptions, AgentSetup, ModelSelection as AgentModelSelection, ModelSelectionRef,
 } from '@x1a0f3n9/dsh-agent'
 import type {} from '@x1a0f3n9/dsh-agent-default-model'
-import type {} from '@x1a0f3n9/dsh-agent-presets'
+import type {} from '@x1a0f3n9/dsh-agent-preset-registry'
 import { ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
 import type { Session, SessionId } from '@x1a0f3n9/dsh-session'
 import type { SessionInspection } from '@x1a0f3n9/dsh-session-persistence'

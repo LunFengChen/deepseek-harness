@@ -4,14 +4,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent } from '@testing-library/react'
 import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type {
-  ChatSnapshot, RunningToolCall, ToolCallBlock, ToolResultNode,
+  ChatSnapshot, StartedToolCall, ToolCallBlock, ToolResultNode,
 } from '@x1a0f3n9/dsh-client-ui-chat/client'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
-import { SlotTestRuntime, stubSettingsScope } from '@x1a0f3n9/dsh-client-test-runtime'
+import { SlotTestRuntime, stubConfigForm } from '@x1a0f3n9/dsh-client-test-runtime'
 import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import {
-  ConversationEventRegistry, ConversationViewRegistry, type ConvViewOwnerProps,
+  ConversationEventRegistry, ConversationViewRegistry, EMPTY_CONVERSATION_SNAPSHOT, type ConvViewOwnerProps,
 } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { en as conversationEn, NS as CONVERSATION_NS, zh as conversationZh } from '@x1a0f3n9/dsh-client-ui-conversation/src/client/locales.ts'
 import { apply as applyChat, inject as injectChat } from '@x1a0f3n9/dsh-client-ui-chat/client'
@@ -50,8 +50,8 @@ const codeResult = (seq: number, callId: string): ToolResultNode => ({
   subCalls: [],
 })
 
-const runningCode = (callId: string): RunningToolCall => ({
-  callId, name: 'run_code', argsRaw: RUN_CODE_ARGS, turn: 9, step: 0, time: 9_000,
+const runningCode = (callId: string): StartedToolCall => ({
+  phase: 'start' as const, callId, name: 'run_code', argsRaw: RUN_CODE_ARGS, turn: 9, step: 0, time: 9_000,
   subCalls: [],
 })
 
@@ -70,7 +70,7 @@ const subCall = (
 function snapshotWith(
   nodes: ToolResultNode[],
   subCalls: readonly ToolCallBlock[],
-  runningCalls: RunningToolCall[] = [],
+  runningCalls: StartedToolCall[] = [],
 ): ChatSnapshot {
   const nestedNodes = nodes.map(node => ({ ...node, subCalls }))
   const nestedRunningCalls = runningCalls.map(call => ({ ...call, subCalls }))
@@ -80,6 +80,7 @@ function snapshotWith(
 /** Test-owned AppFrame role: declares and renders the Chat view list. */
 type AppRootProps = PropsRenderSlots<'conversation.view'>
 const VIEW_OWNER: ConvViewOwnerProps = {
+  inspectCall: undefined,
   viewRequest: null,
   openView: () => {},
   completeViewRequest: () => {},
@@ -101,14 +102,20 @@ async function bench(snapshot: ChatSnapshot) {
   runtimes.push(runtime)
   const ctx = runtime.ctx
   const chat = createSnapshotStore(snapshot)
+  const conversation = createSnapshotStore(EMPTY_CONVERSATION_SNAPSHOT)
   const events = new ConversationEventRegistry(ctx)
   const views = new ConversationViewRegistry(ctx)
-  ctx.provide('settingsScope', { bind: () => stubSettingsScope().scope } as never)
+  ctx.provide('configForms', { developerTools: { enabled: createSnapshotStore(true) }, get: () => stubConfigForm().scope } as never)
   ctx.provide('uiConversation', {
     events,
     views,
-    binding: () => ({ target: () => chat }),
+    groups: { register: () => () => {} },
+    binding: () => ({ target: () => chat, snapshot: conversation }),
   } as never)
+  ctx.uiSession.provide({
+    hooks: ['conversation'],
+    resolve: () => ({ hooks: { conversation } }),
+  })
 
   await runtime.sessions.add({
     id: SID,
@@ -182,7 +189,7 @@ describe('run_code sub-calls through the real chat machinery', () => {
 
     // Each run-control verb names its act and shows the package id; without the
     // owned titles all three would read "Tool call · cordis_run · dyn-2".
-    expect(nest.querySelector('[data-tool="cordis_runtime_inspect"]')?.textContent).toContain('Inspect')
+    expect(nest.querySelector('[data-tool="cordis_runtime_inspect"]')?.textContent).toContain('Query Cordis environment')
     expect(nest.querySelector('[data-tool="cordis_run"]')?.textContent).toContain('Run Cordis Plugindyn-2')
     expect(nest.querySelector('[data-tool="cordis_undefine"]')?.textContent).toContain('Remove Cordis Plugindyn-2')
     // None of them is a code row: the program belongs to cordis_define, whose
@@ -206,7 +213,7 @@ describe('run_code sub-calls through the real chat machinery', () => {
     expect(pre!.querySelectorAll('span[style]').length).toBeGreaterThan(3)
   })
 
-  it('an isError sub-call renders the error state dot exactly like a failed native row', async () => {
+  it('an isError sub-call renders the same error row state as a failed native row', async () => {
     const parent = 'call-64'
     const subCalls = [
       subCall(11, parent, 1, 'mystery', { n: 1 }, 'Error: boom', true),
@@ -251,13 +258,13 @@ describe('run_code sub-calls through the real chat machinery', () => {
   it('a started-but-unsettled sub-call renders the running state exactly like a native in-flight row', async () => {
     const parent = 'call-live'
     const runningSub: ToolCallBlock = {
-      callId: `${parent}:code:1`, name: 'grep', argsRaw: '{"pattern":"todo"}',
+      phase: 'start' as const, callId: `${parent}:code:1`, name: 'grep', argsRaw: '{"pattern":"todo"}',
       parentCallId: parent,
       turn: 0, step: 0, time: 21_000, subCalls: [],
     }
     const b = await bench(snapshotWith([], [runningSub], [runningCode(parent)]))
     const view = mountApp(b.runtime)
-    // The nested row derives 'running' from the RunningToolCall shape — the
+    // The nested row derives 'running' from the StartedToolCall shape — the
     // same data-state chrome (row sweep) a native in-flight row wears.
     const nested = view.container.querySelector('[data-subcalls] [data-variant][data-state="running"]')
     expect(nested).not.toBeNull()

@@ -6,18 +6,12 @@
 
 /* v8 ignore file -- built-bin acceptance exercises this self-executing dispatch. */
 
-import { readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { loadLayeredEnv, registerOfficialDshPackageResolve, StartupError } from '@x1a0f3n9/dsh-app-boot'
+import { getDshRuntimeVersion, loadLayeredEnv, registerOfficialDshPackageResolve, StartupError } from '@x1a0f3n9/dsh-app-boot'
 import { resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
 import { parseDshArgs } from './args.ts'
 import { reportStartupFailure } from './startup-diagnostics.ts'
-
-// Both the source tree (apps/cli/src) and the bundled bin (apps/cli/lib) sit
-// one directory under apps/cli, so the checked-in manifest resolves with the
-// same relative hop from either artifact.
 
 /**
  * Apply fork-only defaults without overriding explicit user configuration.
@@ -41,19 +35,12 @@ export function applyForkDefaults(env: Record<string, string | undefined> = proc
   }
 }
 
-function readVersion(): string {
-  const manifest = JSON.parse(
-    readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'),
-  ) as { version?: unknown }
-  return typeof manifest.version === 'string' ? manifest.version : '0.0.0'
-}
-
 /**
  * Run the public dsh command-line interface.
  * @returns a promise that settles when the selected command mode finishes.
  */
 export async function runCli(): Promise<void> {
-  const version = readVersion()
+  const version = getDshRuntimeVersion()
   const invocation = parseDshArgs(process.argv.slice(2), version)
   applyForkDefaults()
   registerOfficialDshPackageResolve()
@@ -89,6 +76,11 @@ export async function runCli(): Promise<void> {
         invocation.patches,
         invocation.fromDefaultProfile,
       )
+      break
+    }
+    case 'dump-config-schema': {
+      const { runDumpConfigSchema } = await import('./dump-config-schema.ts')
+      await runDumpConfigSchema(invocation.profile, invocation.patches, invocation.fromDefaultProfile)
       break
     }
     default:

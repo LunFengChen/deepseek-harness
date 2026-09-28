@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-goal-default-round-cap.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-11-goal-default-round-cap.md
-2026-09-11-goal-default-round-cap.md: cd415d1b47a0cdaf3e8a66acb35cee32006b749a
-2026-09-11-goal-default-round-cap.zh.md: be4c078bc01d996eb87321a2a1cbf468362b3826
+/agent-note-default-goal-round-cap-is-100000:
+  en: a1907f589fb499e7
+  zh: 891c0cf0f555b20a
+/agent-note-default-goal-round-cap-is-100000/problem:
+  en: 60914b62f68dfd4a
+  zh: ec2e4b3487db80bb
+/agent-note-default-goal-round-cap-is-100000/decision:
+  en: 75f41e7649f4607c
+  zh: ed2ff055fc84e4fe
+/agent-note-default-goal-round-cap-is-100000/verification:
+  en: ebcf4f0faab8824a
+  zh: e14af11fa4488cdb
+/agent-note-default-goal-round-cap-is-100000/alternatives-considered:
+  en: 30f9f04da5a327c1
+  zh: a4b37a2932a74b15
+/agent-note-default-goal-round-cap-is-100000/consequences:
+  en: cc4d3b51a60c835a
+  zh: b1b025ee9514c0f5
+/agent-note-default-goal-round-cap-is-100000/related:
+  en: ad20a7d55ae96a83
+  zh: 4c47ff73cfe874d9

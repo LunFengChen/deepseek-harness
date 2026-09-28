@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-spill-policy",
-  "description": "Tool-result spill policy for the DeepSeek Harness — replaces oversized plain-text tool results with a retained preview plus a spill-file path (no service API)",
-  "version": "0.1.6-alpha.2",
+  "description": "Token-budgeted tool-result retention with recoverable text and image paths",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -32,29 +32,42 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-output-retention": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-spill": "workspace:^",
-    "@x1a0f3n9/dsh-tools": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-output-retention": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-spill": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-token-meter": "workspace:*"
   },
   "dependencies": {
-    "@deepseek-ai/schemastery": "workspace:^"
+    "@deepseek-ai/schemastery": "workspace:~"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-output-retention": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-spill": "workspace:^",
-    "@x1a0f3n9/dsh-tools": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-fs-local": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-local": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^"
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-output-retention": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-spill": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-fs-local": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-token-meter": "workspace:*",
+    "@x1a0f3n9/dsh-mcp-client": "workspace:*",
+    "@x1a0f3n9/dsh-spill-local": "workspace:*",
+    "@x1a0f3n9/dsh-llm-deepseek": "workspace:*",
+    "@x1a0f3n9/dsh-ptc-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-attachment-local": "workspace:*",
+    "@x1a0f3n9/dsh-tool-fs": "workspace:*",
+    "sharp": "^0.35.3"
   }
 }

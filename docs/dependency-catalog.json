@@ -529,11 +529,11 @@
       ]
     },
     {
-      "name": "@x1a0f3n9/dsh-agent-presets",
+      "name": "@x1a0f3n9/dsh-agent-preset-registry",
       "version": "0.1.5-rc.2",
       "installations": [
         {
-          "location": "node_modules/@x1a0f3n9/dsh-agent-presets",
+          "location": "node_modules/@x1a0f3n9/dsh-agent-preset-registry",
           "direct": false,
           "optional": false,
           "peer": false

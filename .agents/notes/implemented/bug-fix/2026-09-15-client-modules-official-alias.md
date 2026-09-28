@@ -21,4 +21,4 @@ The browser module table maps `@x1a0f3n9/dsh-*` onto `@x1a0f3n9/dsh-*` and back.
 ## Consequences
 
 - `dsh-context` and other official-scope client plugins resolve `@x1a0f3n9/dsh-client-ui-primitives` onto the seeded fork module.
-- Tests pin both directions of the alias, including that `@x1a0f3n9/dsh` is not rewritten.
+- Tests pin both directions of the alias, including that `@deepseek-ai/dsh` is not rewritten.

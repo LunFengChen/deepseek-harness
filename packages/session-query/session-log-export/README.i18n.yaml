@@ -1,6 +1,73 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/session-query/session-log-export/README.md
-README.md: 468ce08d6faa31e8f016ad83c87e0a8eeeff6694
-README.zh.md: 7936815b9775dbc5a004aca19d464c4886a0a5c6
+/:
+  en: 3b67077a6dfacd19
+  zh: e5b78d039d310dc2
+/x1a0f3n9-dsh-session-log-export:
+  en: f8509ca1aac571dd
+  zh: ebf4c9df9930d65c
+/x1a0f3n9-dsh-session-log-export/summary:
+  en: 26be400b3e9f7bb7
+  zh: b6e78f1f417a0e4e
+/x1a0f3n9-dsh-session-log-export/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-session-log-export/use-this-package:
+  en: 1135b03eb3423c74
+  zh: 2fd2a18d503df70c
+/x1a0f3n9-dsh-session-log-export/use-this-package/when-to-choose-it:
+  en: 2b9dbec4877d332e
+  zh: dcf6638938eedb01
+/x1a0f3n9-dsh-session-log-export/use-this-package/composition:
+  en: 2fef1fe4411cc5da
+  zh: cff5dbcc4901402b
+/x1a0f3n9-dsh-session-log-export/use-this-package/configuration:
+  en: 377a0d8860c46f63
+  zh: 9eb7698f813b2fa3
+/x1a0f3n9-dsh-session-log-export/use-this-package/command-contract:
+  en: 26329688b9a924a7
+  zh: 94e21c10fdcfc1ac
+/x1a0f3n9-dsh-session-log-export/use-this-package/what-to-expect:
+  en: 44be1f1d1903d12a
+  zh: c8f1eb5b92b71a30
+/x1a0f3n9-dsh-session-log-export/use-this-package/failures:
+  en: 3fc8985946d67024
+  zh: 5bb40a4b531d68f4
+/x1a0f3n9-dsh-session-log-export/understand-the-implementation:
+  en: 7cb82a6851405f95
+  zh: b8c525170d19dc6c
+/x1a0f3n9-dsh-session-log-export/understand-the-implementation/design-split:
+  en: d135d90a02c6d829
+  zh: 587d7ff2d17b056b
+/x1a0f3n9-dsh-session-log-export/understand-the-implementation/download-flow:
+  en: 028ea3bff05250ba
+  zh: 63250c4d3369ebbd
+/x1a0f3n9-dsh-session-log-export/further-exploration:
+  en: 8eef7e6c58c9f962
+  zh: 6c720c91c7f26299
+/x1a0f3n9-dsh-session-log-export/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-session-log-export/model-experience/human-export-control:
+  en: 55c1a61a041a2aeb
+  zh: 48e05043cc42304f
+/x1a0f3n9-dsh-session-log-export/model-experience/human-export-control/what-the-model-sees:
+  en: 6b3c3cfc5d68d5f9
+  zh: b1689c57ee3b4ccb
+/x1a0f3n9-dsh-session-log-export/model-experience/human-export-control/token-effect:
+  en: 380535e564a4ea2c
+  zh: 2672eac76afd90f5
+/x1a0f3n9-dsh-session-log-export/model-experience/human-export-control/kv-cache-effect:
+  en: 78163c30fdf0b43d
+  zh: 165043e307b38cb3
+/x1a0f3n9-dsh-session-log-export/known-limitations-and-deferred-work:
+  en: 9978d234cbfe7e73
+  zh: 9ba0b12300ff4d38
+/x1a0f3n9-dsh-session-log-export/known-limitations-and-deferred-work/dev-note:
+  en: 4ee4d24c26c127bf
+  zh: 1facdfbfa3ccefbc
+/x1a0f3n9-dsh-session-log-export/known-limitations-and-deferred-work/dev-note/future-export-destinations-beyond-the-browser:
+  en: 226726899a479680
+  zh: 26f72519513d4782

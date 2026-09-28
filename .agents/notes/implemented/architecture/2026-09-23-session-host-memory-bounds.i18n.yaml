@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-23-session-host-memory-bounds.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-23-session-host-memory-bounds.md
-2026-09-23-session-host-memory-bounds.md: 951aa061b4ce48de072b3609ff5954253261a6c2
-2026-09-23-session-host-memory-bounds.zh.md: 2e7fd0e1aa5eac3d7e0cfbc87d78c6a0f6810057
+/agent-note-session-host-memory-bounds:
+  en: 9671198ed3cc6b24
+  zh: 39d3c6c8e140417d
+/agent-note-session-host-memory-bounds/problem:
+  en: 37df8b912414397a
+  zh: 220e49caf0ac39de
+/agent-note-session-host-memory-bounds/decision:
+  en: 850ee29350c1bdf9
+  zh: d178c1931b12fb96
+/agent-note-session-host-memory-bounds/alternatives-considered:
+  en: ea787289dd520f06
+  zh: 8dbe8803a3aff727
+/agent-note-session-host-memory-bounds/consequences:
+  en: 08d243292bb357df
+  zh: ee0ae46fba6465bf
+/agent-note-session-host-memory-bounds/related:
+  en: fc5fc5df7e0c0c50
+  zh: d5ca15ee00dce6e3

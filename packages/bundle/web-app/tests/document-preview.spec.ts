@@ -60,7 +60,12 @@ it('loads the shipped Office rows with separately patched settings and authorize
     await writeFile(outputPath, pdf)
     return { backend: 'native', missingFonts: ['Missing Serif'] }
   })
-  kit.create.mockReset().mockResolvedValue({ backend: 'native', render, dispose: async () => {} })
+  kit.create.mockReset().mockResolvedValue({
+    backend: 'native', render, dispose: async () => {},
+    renderImages: vi.fn<Converter['renderImages']>().mockRejectedValue(new Error('Unexpected Converter.renderImages call')),
+    convert: vi.fn<Converter['convert']>().mockRejectedValue(new Error('Unexpected Converter.convert call')),
+    recalculate: vi.fn<Converter['recalculate']>().mockRejectedValue(new Error('Unexpected Converter.recalculate call')),
+  })
   ctx.baseUrl = pathToFileURL(directory).href + '/'
   await ctx.plugin(Loader)
   ctx.loader.builtins.include = Include
@@ -105,7 +110,7 @@ it('loads the shipped Office rows with separately patched settings and authorize
   const before = session.seq
   const result = await ctx.officeToPdf.render(scope, 'report.docx', 'foreground', signal)
   expect(result).toEqual({ absolutePath: sourcePath, version, offset: 0, eof: true, bytes: pdf.length,
-    data: pdf.toString('base64'), missingFonts: ['Missing Serif'], generation: ctx.officeToPdf.generation })
+    data: Uint8Array.from(pdf), missingFonts: ['Missing Serif'], generation: ctx.officeToPdf.generation })
   const readAgain = vi.spyOn(ctx.fs, 'readBytes')
   expect(await ctx.officeToPdf.render(scope, 'report.docx', 'foreground', signal)).toEqual(result)
   expect(readAgain).not.toHaveBeenCalled()

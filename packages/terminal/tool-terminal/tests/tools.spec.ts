@@ -8,10 +8,11 @@ import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime, { renderToolsSdk } from '@x1a0f3n9/dsh-tools'
 import type { ToolSdkSchema } from '@x1a0f3n9/dsh-tools/src/ts-types.ts'
 import TerminalSessionService, { TerminalSessionId } from '@x1a0f3n9/dsh-terminal'
-import type { TerminalBackend, TerminalBackendSession, TerminalSendOperation, TerminalSendRequest, TerminalSessionStatus, TerminalSignal } from '@x1a0f3n9/dsh-terminal'
+import type { TerminalBackend, TerminalBackendSession, TerminalSendOperation, TerminalSendRead, TerminalSendRequest, TerminalSessionStatus, TerminalSignal } from '@x1a0f3n9/dsh-terminal'
 import LocalJobRegistry from '@x1a0f3n9/dsh-jobs-local'
 import * as ToolJobs from '@x1a0f3n9/dsh-tool-jobs'
 import * as ToolPty from '@x1a0f3n9/dsh-tool-terminal'
+import { sendSource } from '../src/background.ts'
 import { unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 async function fakeAgent(ctx: Context, rawId: string): Promise<Agent> {
@@ -55,7 +56,11 @@ class StubSession implements TerminalBackendSession {
     }))
     const operation: TerminalSendOperation = {
       done,
-      readOutput: () => ({ delta: this.delta, truncated: this.deltaTruncated }),
+      readOutput: () => {
+        const delta = this.delta
+        this.delta = ''
+        return { delta, truncated: this.deltaTruncated }
+      },
       cancel: () => {
         if (cancelled) return false
         cancelled = true
@@ -400,6 +405,19 @@ describe('tool-terminal foreground API', () => {
     const result = await call(ctx, 'terminal_list', {}, agent)
     expect(result.isError).toBe(true)
     expect(result.content).toEqual([])
+  })
+})
+
+describe('sendSource', () => {
+  it('reads nothing before the send starts and counts delivered bytes afterwards', () => {
+    const reads: TerminalSendRead[] = [{ delta: '界', truncated: false }, { delta: '', truncated: true }]
+    const send: { operation?: TerminalSendOperation } = {}
+    const source = sendSource(() => send.operation)
+    expect(source.read(0)).toEqual({ text: '', nextOffset: 0, lossy: false })
+    send.operation = { readOutput: () => reads.shift()!, cancel: () => false, done: new Promise(() => {}) }
+    expect(source.read(0)).toEqual({ text: '界', nextOffset: 3, lossy: false })
+    // A truncated delta carries the same marker the foreground read shows.
+    expect(source.read(3)).toEqual({ text: '[output truncated]', nextOffset: 21, lossy: false })
   })
 })
 

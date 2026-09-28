@@ -91,26 +91,31 @@
     - id: llm-retry
       name: '@x1a0f3n9/dsh-llm-retry'
 
-    # User-settings document (`$DSH_SESSION_HOME/settings.yaml`, hot-reloaded): a
-    # `llm-deepseek:` or `llm-pi-ai:` section there overrides the adapter entries
-    # below without a restart, and is what the web Models page writes. The fork
-    # keeps plugins under `$DSH_HOME` while sharing this document with official
-    # `dsh`, so model routes do not need a history migration.
+    # Live Config forms persist through the active profile patch.
+
+    # Live configuration forms persist through the launcher's profile.
+    - id: config-editor
+      name: '@x1a0f3n9/dsh-config-editor'
+      disabled: !!js "!ctx.get('profileContext')"
+
     - id: settings
-      name: '@x1a0f3n9/dsh-settings-file'
-      config:
-        dshHome: !!js dshSessionPath()
+      name: '@x1a0f3n9/dsh-settings'
+      disabled: !!js "!ctx.get('profileContext')"
 
     # Credential sources: inherited environment over the managed
-    # `$DSH_SESSION_HOME/.credentials.yaml`, with project and user `.env`
-    # fallbacks. Adapters resolve references per request; the Models page writes
-    # only the managed document, which is never materialized into the process
-    # environment. Sharing this file with official `dsh` is what keeps API keys
-    # usable without copying them into `~/.xfdsh`.
+    # `$DSH_HOME/.credentials.yaml`, with project and user `.env` fallbacks.
+    # Adapters resolve references per request; the Models page writes only the
+    # managed document, which is never materialized into the process environment.
+    - id: authorization
+      name: '@x1a0f3n9/dsh-authorization'
+
+    - id: deepseek-account
+      name: '@x1a0f3n9/dsh-deepseek-account-platform'
+      config:
+        desktopPlatform: !!js "ctx.get('profileContext')?.name === 'desktop' && ['darwin', 'win32'].includes(process.platform) ? process.platform : null"
+
     - id: credentials
       name: '@x1a0f3n9/dsh-credentials-local'
-      config:
-        dshHome: !!js dshSessionPath()
 
     # The pi-ai multi-provider twin, mounted dormant: zero routes (and no extra
     # models in the picker) until a `llm-pi-ai:` settings section supplies provider
@@ -125,15 +130,13 @@
     - id: session-persistence-jsonl
       name: '@x1a0f3n9/dsh-session-persistence-jsonl'
       config:
-        root: !!js dshSessionPath('sessions')
+        root: !!js dshHomePath('sessions')
 
     # Durable image bytes live outside the append-only session log. Messages
     # keep content-addressed references that this shared backend resolves for
     # provider requests and authorized history reads.
     - id: attachment-local
       name: '@x1a0f3n9/dsh-attachment-local'
-      config:
-        dshHome: !!js dshSessionPath()
 
     # Full-text session search is opt-in. `openAt: never` keeps
     # ctx.sessionQuery mounted — exact reads, titles, and lineage traces
@@ -165,7 +168,7 @@
     - id: storage-json
       name: '@x1a0f3n9/dsh-storage-json'
       config:
-        root: !!js dshSessionPath('storages')
+        root: !!js dshHomePath('storages')
 
     - id: storage-domain
       name: '@x1a0f3n9/dsh-storage-domain'
@@ -403,7 +406,7 @@
     - id: spill-policy
       name: '@x1a0f3n9/dsh-spill-policy'
       config:
-        maxInlineBytes: 50000
+        maxInlineTokens: 12500
 
     # Durability checkpoints before each model request and top-level dispatch.
     - id: session-checkpoint-policy
@@ -447,11 +450,6 @@
         subagentProvider: spawn
         maxRounds: 64
 
-    - id: tool-str-replace-editor
-      name: '@x1a0f3n9/dsh-tool-str-replace-editor'
-      config:
-        maxOutputChars: 16000
-
     # Consecutive-repeat reminders on the tool chain.
     - id: repeat-tool-reminder
       name: '@x1a0f3n9/dsh-repeat-tool-reminder'
@@ -460,13 +458,11 @@
         argumentsPreviewChars: 500
 
     # The shared base enables the stable model-facing web_search and web_fetch
-    # tools. Search defaults to the ordered Perplexity → Exa → keyless Bing/DDG
-    # policy: an unavailable provider is skipped, while an explicit `searchProvider`
-    # pin (including `deepseek-official`) remains strict. The Web app disables this
-    # host row and composes both tools per agent preset; products with a stricter
-    # network policy override tool-web. Anonymous fetch accepts only public HTTP(S)
-    # destinations, resolves and validates every destination, and pins every actual
-    # connection.
+    # tools. Search defaults to Perplexity → Exa → keyless Bing/DDG. An unavailable
+    # provider is skipped; an explicit `searchProvider` pin remains strict. The Web
+    # app disables this host row and composes both tools per agent preset.
+    # Anonymous fetch accepts only public HTTP(S) destinations, resolves and
+    # validates every destination, and pins every actual connection.
     - id: web
       name: '@x1a0f3n9/dsh-web'
       config:
@@ -530,4 +526,7 @@
     # key coming from the credential store below. Thinking defaults are a deployment
     # choice.
     - id: llm-deepseek
-      name: '@x1a0f3n9/dsh-llm-deepseek'
+      name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
+
+    - id: llm-deepseek-account
+      name: '@x1a0f3n9/dsh-llm-deepseek-account'

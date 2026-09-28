@@ -2,7 +2,7 @@
 # script comes from the scenario's committed session JSONL.
 
 - id: llm-deepseek
-  name: '@x1a0f3n9/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
   disabled: true
 
 - id: plugin-package-inventory-deepseek
@@ -44,4 +44,4 @@
               - id: deepseek-v4-flash
               - id: deepseek-v4-pro
     - id: messages-history-snapshot
-      name: '../../../packages/llm/llm-deepseek/tests/messages/fixtures/history.ts'
+      name: '../../../packages/llm/llm-deepseek/tests/fixtures/history.ts'

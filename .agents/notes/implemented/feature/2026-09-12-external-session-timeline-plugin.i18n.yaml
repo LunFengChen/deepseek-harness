@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-12-external-session-timeline-plugin.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-09-12-external-session-timeline-plugin.md
-2026-09-12-external-session-timeline-plugin.md: 4c11654d3da113aaaccf6b5734d418f6942cd4d7
-2026-09-12-external-session-timeline-plugin.zh.md: 737e0cedcdf726e5b19f267117a9a893ea508d24
+/agent-note-extract-session-timeline-into-its-own-repository:
+  en: a4a3a993ad1776ea
+  zh: de3ceca2d7edda52
+/agent-note-extract-session-timeline-into-its-own-repository/problem:
+  en: 365870cd0bd1c6fb
+  zh: 29370556e9c4ba97
+/agent-note-extract-session-timeline-into-its-own-repository/decision:
+  en: 74afcffbfe0c7614
+  zh: 04a4a7d6dc2495e5
+/agent-note-extract-session-timeline-into-its-own-repository/alternatives-considered:
+  en: 0b47c0b98a5b1054
+  zh: 0d3dc8cdb2da5743
+/agent-note-extract-session-timeline-into-its-own-repository/consequences:
+  en: 1ed39735f026bc06
+  zh: 5d1354c5bf078f9e

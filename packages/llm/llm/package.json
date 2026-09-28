@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-llm",
   "description": "Provider-neutral LLM service interface for the DeepSeek Harness",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -61,20 +61,20 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "dependencies": {
-    "@x1a0f3n9/dsh-util-crypto": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^",
+    "@x1a0f3n9/dsh-util-crypto": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:~",
     "zod": "^4.4.3",
-    "@x1a0f3n9/dsh-timeout": "workspace:^",
-    "@x1a0f3n9/dsh-brand": "workspace:^",
-    "@x1a0f3n9/dsh-util-values": "workspace:^",
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
+    "@x1a0f3n9/dsh-timeout": "workspace:*",
+    "@x1a0f3n9/dsh-brand": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-attachment": "workspace:^",
-    "@x1a0f3n9/dsh-invariants": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-invariants": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~"
   }
 }

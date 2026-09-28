@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-16-listdir-bounded-concurrency.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-16-listdir-bounded-concurrency.md
-2026-09-16-listdir-bounded-concurrency.md: 4f03c45941b4e523b0440f577b2c7d199569b8e9
-2026-09-16-listdir-bounded-concurrency.zh.md: 88d022e196aa634aaecb94a8803268cb7a28a030
+/agent-note-list-directories-with-bounded-child-probes:
+  en: 29293dda73113a86
+  zh: 9b8eca7cfa2862ae
+/agent-note-list-directories-with-bounded-child-probes/problem:
+  en: f36529515403ca4b
+  zh: 86981cb2afb44544
+/agent-note-list-directories-with-bounded-child-probes/decision:
+  en: f03fc21df3c549ae
+  zh: 4f1ef23c7456a7dc
+/agent-note-list-directories-with-bounded-child-probes/verification:
+  en: cbda5814c355eee4
+  zh: cbda5814c355eee4
+/agent-note-list-directories-with-bounded-child-probes/alternatives-considered:
+  en: 38f5ee7a9fe49709
+  zh: 47ecddae8eef86ab
+/agent-note-list-directories-with-bounded-child-probes/consequences:
+  en: aa2407818e80afb3
+  zh: 94f000fa5bd3202d

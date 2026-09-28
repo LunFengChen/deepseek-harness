@@ -61,7 +61,10 @@ function harness() {
     const surface = instance.getSnapshot().bySession[SESSION]
     if (surface !== undefined) controller.tabDomain.sync(SESSION, surface.layout)
     return controller.bind({
-      sessionId: SESSION, actions: instance.actions, surfaces: instance.getSnapshot().bySession, canSplitPane: () => room.allowed,
+      sessionId: SESSION, actions: instance.actions, surfaces: instance.getSnapshot().bySession,
+      closeWithFocus: (_paneId, close) => { close() },
+      openWithFocus: (open) => { open() },
+      canSplitPane: () => room.allowed,
     })
   }
   const titles = (): string[] => {
@@ -109,6 +112,26 @@ describe('SidebarRightController — opening', () => {
     expect(() => { controller.split() }).toThrow('no session surface is mounted')
     expect(() => { controller.float('tab1' as TabId) }).toThrow('no session surface is mounted')
     expect(() => { controller.dock('pane1' as PaneId) }).toThrow('no session surface is mounted')
+  })
+
+  it('publishes the mounted session only on real transitions of the seat binding', () => {
+    const h = harness()
+    const seen: (string | undefined)[] = []
+    const unsubscribe = h.controller.mounted.subscribe(() => { seen.push(h.controller.mounted.getSnapshot()) })
+    try {
+      expect(h.controller.mounted.getSnapshot()).toBeUndefined()
+      const first = h.publish()
+      expect(h.controller.mounted.getSnapshot()).toBe(SESSION)
+      // The seat republishes on every store commit; the same session is silent.
+      const second = h.publish()
+      expect(seen).toEqual([SESSION])
+      // A stale release — the first seat's, after a newer one took over — changes nothing.
+      first()
+      expect(h.controller.mounted.getSnapshot()).toBe(SESSION)
+      second()
+      expect(h.controller.mounted.getSnapshot()).toBeUndefined()
+      expect(seen).toEqual([SESSION, undefined])
+    } finally { unsubscribe() }
   })
 
   it('refuses an address no registered type claims, before touching the surface', () => {
@@ -503,7 +526,8 @@ describe('SidebarRightController — a tab\'s own actions', () => {
       sessionId: OTHER,
       actions: other.actions,
       surfaces: other.getSnapshot().bySession,
-      canSplitPane: () => true,
+      closeWithFocus: (_paneId, close) => { close() },
+      openWithFocus: (open) => { open() }, canSplitPane: () => true,
     })
     controller.openResourceIn(SESSION, A_TXT)
     expect(titles()).toContain('a.txt')
@@ -530,7 +554,12 @@ describe('SidebarRightController — a tab\'s own actions', () => {
     other.actions.setExpanded(OTHER, true)
     const otherSurface = other.getSnapshot().bySession[OTHER]
     if (otherSurface === undefined) throw new Error('expected the other surface')
-    controller.bind({ sessionId: OTHER, actions: other.actions, surfaces: other.getSnapshot().bySession, canSplitPane: () => true })
+    controller.bind({
+      sessionId: OTHER, actions: other.actions, surfaces: other.getSnapshot().bySession,
+      closeWithFocus: (_paneId, close) => { close() },
+      openWithFocus: (open) => { open() },
+      canSplitPane: () => true,
+    })
     fromOwn.openResource(B_TXT)
     fromOwn.openTab('guide', { revealIfOpened: false })
     expect(Object.values(layout().tabs).map(tab => tab.title)).toContain('b.txt')

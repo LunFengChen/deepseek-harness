@@ -33,13 +33,13 @@ kind: "package-reference"
 
 ### 最小可用组合
 
-把后端与策略一起挂载；设置 `maxInlineBytes` 后，任何过大的纯文本工具结果都会自动变成预览加定位信息。
+把后端与策略一起挂载；设置 `maxInlineTokens` 后，过大的图文工具结果都会自动变成预览加定位信息。
 
 ```yaml
 - name: '@x1a0f3n9/dsh-spill-local'
 - name: '@x1a0f3n9/dsh-spill-policy'
   config:
-    maxInlineBytes: 50000
+    maxInlineTokens: 12500
 ```
 
 ### 保存文本

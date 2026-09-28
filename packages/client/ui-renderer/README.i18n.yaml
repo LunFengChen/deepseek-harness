@@ -1,6 +1,52 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/client/ui-renderer/README.md
-README.md: 6bf35f42dd5cb77cf54ebb1bb7b330d579e18028
-README.zh.md: aa543f0b167de47fd9ea6d51571077d7ecd515e3
+/:
+  en: 06bd9d926c743736
+  zh: 39acdcb577fd8c6d
+/x1a0f3n9-dsh-client-ui-renderer:
+  en: 3569f2670b8a1fce
+  zh: 5bbedcc4e539d186
+/x1a0f3n9-dsh-client-ui-renderer/summary:
+  en: cae0bce110641caf
+  zh: e5bde9dba75389bc
+/x1a0f3n9-dsh-client-ui-renderer/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-client-ui-renderer/use-this-package:
+  en: 4873b12ddeac04f2
+  zh: 027845407b207c4f
+/x1a0f3n9-dsh-client-ui-renderer/use-this-package/what-mounting-does:
+  en: 16f8f781e259f0ee
+  zh: aa2b4783807fe943
+/x1a0f3n9-dsh-client-ui-renderer/use-this-package/for-business-plugins:
+  en: 15a2bfee2c0bd051
+  zh: 0c5b336fc5afbbc6
+/x1a0f3n9-dsh-client-ui-renderer/understand-the-implementation:
+  en: 0de0a8ad857b93f6
+  zh: 98a0fae2d6606a7d
+/x1a0f3n9-dsh-client-ui-renderer/understand-the-implementation/activation-and-mount:
+  en: 822adba4ecd1b7e3
+  zh: bab3626fbe30ff55
+/x1a0f3n9-dsh-client-ui-renderer/understand-the-implementation/slot-bindings:
+  en: 6ab26cf5744a23d4
+  zh: 84a531322a724a84
+/x1a0f3n9-dsh-client-ui-renderer/understand-the-implementation/identity:
+  en: 2a349d500ead79cb
+  zh: ac49c8b1d73dcd6c
+/x1a0f3n9-dsh-client-ui-renderer/further-exploration:
+  en: 77b43b2f3d55c933
+  zh: 9847b53486372aeb
+/x1a0f3n9-dsh-client-ui-renderer/model-experience:
+  en: ca4e29db08d34e6d
+  zh: de6ec680414b1d54
+/x1a0f3n9-dsh-client-ui-renderer/model-experience/kv-cache-effect:
+  en: ca75c51c89c2c9b0
+  zh: de54f3467ef3b9be
+/x1a0f3n9-dsh-client-ui-renderer/known-limitations-and-deferred-work:
+  en: 686023788b76788f
+  zh: 2bb3ca909746c485
+/x1a0f3n9-dsh-client-ui-renderer/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98

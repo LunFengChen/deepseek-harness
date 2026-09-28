@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-06-agent-request-freeze-provenance.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/simplification/2026-09-06-agent-request-freeze-provenance.md
-2026-09-06-agent-request-freeze-provenance.md: 1235a87ea549c6bbd9c53620017cb1d96f8e7cf7
-2026-09-06-agent-request-freeze-provenance.zh.md: 357b25b0f252a9423c485b2cc119f1226ec16687
+/agent-note-reuse-only-loop-proven-message-freezes:
+  en: ce19876c3a3a20d4
+  zh: d79459228f4ee926
+/agent-note-reuse-only-loop-proven-message-freezes/problem:
+  en: af6aa6181efb2163
+  zh: 3f1630947294db0a
+/agent-note-reuse-only-loop-proven-message-freezes/decision:
+  en: 64e5058366d82142
+  zh: 073f4e1856c58294
+/agent-note-reuse-only-loop-proven-message-freezes/measurement-evidence:
+  en: 1428e6c4c59f628b
+  zh: 4b29ac3b424b649d
+/agent-note-reuse-only-loop-proven-message-freezes/measurement-evidence/standard-hosted-ci-calibration:
+  en: 42be316d6e931abf
+  zh: fcb8a4c801158403
+/agent-note-reuse-only-loop-proven-message-freezes/alternatives-considered:
+  en: 8a00552d7797826c
+  zh: 765a6b84eb663bab
+/agent-note-reuse-only-loop-proven-message-freezes/consequences:
+  en: 271808f11eb39794
+  zh: 147b5ea3d681ebd7

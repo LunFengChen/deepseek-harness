@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-subprocess-ssh",
   "description": "Subprocess and terminal provider over the shared POSIX SSH helper",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -27,19 +27,19 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-ssh": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess-local": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*"
   },
   "dependencies": {
-    "@deepseek-ai/schemastery": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:~",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-ssh": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess-local": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*"
   }
 }

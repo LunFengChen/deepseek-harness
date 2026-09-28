@@ -34,6 +34,7 @@ const DUPLICATE_SAFE_PACKAGES: readonly string[] = [
   '@x1a0f3n9/dsh-brand',
   '@x1a0f3n9/dsh-lazy-require',
   '@x1a0f3n9/dsh-typert-protocol',
+  '@x1a0f3n9/dsh-util-code-language',
   '@x1a0f3n9/dsh-util-crypto',
   '@x1a0f3n9/dsh-util-values',
 ]
@@ -55,8 +56,9 @@ const SAFE_HOST_DEPENDENCY_EXPORTS = {
 
 /** Runtime exports that require every consumer to resolve the provider's shared peer instance. */
 const PEER_REQUIRED_HOST_EXPORTS = {
+  '@x1a0f3n9/dsh-client-connection': ['OperatorPeer'],
   '@x1a0f3n9/dsh-subprocess': ['SubprocessExecutableNotFoundError'],
-  '@x1a0f3n9/dsh-scope': ['carrierKeyOf', 'scopeOf', 'scopeTarget'],
+  '@x1a0f3n9/dsh-scope': ['carrierKeyOf', 'createScope', 'scopeOf', 'scopeTarget'],
   '@x1a0f3n9/dsh-session': ['SESSION_FORMAT_VERSION'],
   '@x1a0f3n9/dsh-session-persistence': ['SessionPersistenceNotFoundError'],
 } as const satisfies HostDependencyExports

@@ -37,4 +37,4 @@ Pinned versions:
 
 - Friends install the fork with `npm install --global @x1a0f3n9/dsh` and run `xfdsh web` without cloning plugin repositories.
 - The pinned plugin versions must exist on npm before `pnpm install` can refresh the harness lockfile.
-- Official `@x1a0f3n9/dsh` is unchanged.
+- Official `@deepseek-ai/dsh` is unchanged.

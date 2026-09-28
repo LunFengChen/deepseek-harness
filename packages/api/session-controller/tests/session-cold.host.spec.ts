@@ -95,8 +95,9 @@ describe('sessions.list cold merge', () => {
       inspect,
     })
     ctx.provide('sessionProjectionCache', {
-      cachedListedHint: (meta: SessionHeader) => meta.id === sid('legacy-title')
-        ? { asOfSeq: -1, values: { title: 'Cached predecessor title' } }
+      cachedSnapshot: () => undefined,
+      cachedPredecessorTitle: (meta: SessionHeader) => meta.id === sid('legacy-title')
+        ? { asOfSeq: 2, values: { title: 'Cached predecessor title' } }
         : undefined,
     } as never)
     const remote = createSessionTestRemote(ctx, {
@@ -118,7 +119,7 @@ describe('sessions.list cold merge', () => {
         sessionId: sid('legacy-title'),
         blank: false,
         updatedAt: 100,
-        projections: { asOfSeq: -1, values: { title: 'Cached predecessor title' } },
+        projections: { kind: 'cached', asOfSeq: 2, values: { title: 'Cached predecessor title' } },
       }),
     ])
     expect(stat).not.toHaveBeenCalled()
@@ -143,7 +144,7 @@ describe('sessions.list cold merge', () => {
     })
     const cacheCalls: string[] = []
     ctx.provide('sessionProjectionCache', {
-      cachedListedHint: (meta: SessionHeader) => {
+      cachedSnapshot: (meta: SessionHeader) => {
         cacheCalls.push(String(meta.id))
         if (meta.id === sid('cached-blank')) {
           return { asOfSeq: 0, values: { sessionListMetadata: { blank: true, lastPromptAt: null } } }
@@ -152,10 +153,14 @@ describe('sessions.list cold merge', () => {
           return { asOfSeq: 1, values: { sessionListMetadata: { blank: false, lastPromptAt: 1000 } } }
         }
         if (meta.id === sid('seeded-cold')) {
-          return { asOfSeq: 12, values: { title: 'Seeded cached title' } }
+          return {
+            asOfSeq: 5,
+            values: { title: 'Forked title', sessionListMetadata: { blank: false, lastPromptAt: 1200 } },
+          }
         }
         return undefined
       },
+      cachedPredecessorTitle: () => undefined,
     } as never)
     const remote = createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
 
@@ -173,12 +178,16 @@ describe('sessions.list cold merge', () => {
       origin: 'subagent',
     })
     expect(byId['missing-cwd']).toBeUndefined()
-    // A cold seeded header has no inherited cut; listing still reads the
-    // cache hint so fork titles survive restart without a body read.
+    // A cold seeded header reads the cache by header alone, like any other
+    // cold row: the cache binds the lifecycle, and a listing never seeds a fold.
     expect(byId['seeded-cold']).toMatchObject({
       blank: false,
-      updatedAt: 450,
-      projections: { asOfSeq: 12, values: { title: 'Seeded cached title' } },
+      updatedAt: 1200,
+      projections: {
+        kind: 'cached',
+        asOfSeq: 5,
+        values: { title: 'Forked title', sessionListMetadata: { blank: false, lastPromptAt: 1200 } },
+      },
     })
     expect(cacheCalls).toContain('seeded-cold')
     expect(inspect).not.toHaveBeenCalled()
@@ -287,12 +296,12 @@ describe('Remote Agent and Session lookup policy', () => {
       content: [{ type: 'text', text: 'survives restart' }],
       source: { kind: 'user' },
     })
-    const events = [{
+    const events: SessionEvent[] = [{
       type: 'agent/inbox/spliced',
-      seq: 0,
+      seq: SessionSeq(0),
       time: 1001,
       data: { target: 'next-turn', start: 0, inserted: [message] },
-    }] as SessionEvent[]
+    }]
     providePersistence(ctx, {
       list: () => Promise.resolve([meta]),
       inspect: () => Promise.resolve({ meta, events }),
@@ -821,6 +830,7 @@ describe('sessions.prompt synchronous rejection', () => {
       AttachmentStore.prototype,
     ) as never)
     ctx.provide('llm', {
+      listModels: async () => [{ id: 'm', name: 'Model' }],
       listProviders: () => [{ id: 'p', name: 'Provider' }],
       resolveModelInfo: () => Promise.resolve({
         provider: 'p', id: 'm', name: 'Model', inputModalities: ['text', 'image'],

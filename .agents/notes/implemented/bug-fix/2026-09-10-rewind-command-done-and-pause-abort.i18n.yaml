@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-rewind-command-done-and-pause-abort.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-rewind-command-done-and-pause-abort.md
-2026-09-10-rewind-command-done-and-pause-abort.md: 07ee87b2e7cc126d01015160a92500ef029c332e
-2026-09-10-rewind-command-done-and-pause-abort.zh.md: 189def2fd3f5bf614e8a4fe50525885f738cd1d2
+/agent-note-rewind-command-done-walk-back-and-pause-abort:
+  en: f995e30d1358548e
+  zh: 8fe8ad86afabb490
+/agent-note-rewind-command-done-walk-back-and-pause-abort/problem:
+  en: 682ef8688da6a6c4
+  zh: 03aab5b0bc53e633
+/agent-note-rewind-command-done-walk-back-and-pause-abort/decision:
+  en: bd353447b39357a9
+  zh: 5106fd7150c4e5f7
+/agent-note-rewind-command-done-walk-back-and-pause-abort/verification:
+  en: 8db761d35e163724
+  zh: 427dbbbde04125cf
+/agent-note-rewind-command-done-walk-back-and-pause-abort/alternatives-considered:
+  en: f90d76d1cda50f4a
+  zh: 7ccc31a7e38d8080
+/agent-note-rewind-command-done-walk-back-and-pause-abort/consequences:
+  en: 51f1fd2f0100fc4a
+  zh: d38470314cec6e68

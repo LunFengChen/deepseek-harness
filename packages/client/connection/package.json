@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-connection",
   "description": "Authenticated RPC transport and generation lifecycle",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -34,8 +34,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@x1a0f3n9/dsh-credentials": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^",
+    "@x1a0f3n9/dsh-credentials": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:~",
     "zod": "^4.4.3"
   },
   "files": [
@@ -44,14 +44,17 @@
     "lib/types/**/*.d.ts"
   ],
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-scope": "workspace:*"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-attachment": "workspace:^",
-    "@x1a0f3n9/dsh-brand": "workspace:^",
-    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-brand": "workspace:*",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-scope": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*"
   }
 }

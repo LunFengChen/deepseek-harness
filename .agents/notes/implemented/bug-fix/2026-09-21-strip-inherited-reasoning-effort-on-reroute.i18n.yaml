@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-21-strip-inherited-reasoning-effort-on-reroute.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-21-strip-inherited-reasoning-effort-on-reroute.md
-2026-09-21-strip-inherited-reasoning-effort-on-reroute.md: 40095d9f99ad3806d7abe881a5bfd5a4d9de4cb0
-2026-09-21-strip-inherited-reasoning-effort-on-reroute.zh.md: 566a7c09af8bf8042a5d60c9ebfe0bb85db67581
+/agent-note-strip-inherited-reasoning-effort-on-route-only-overlays:
+  en: c68038a62398dc73
+  zh: 225022b072f35089
+/agent-note-strip-inherited-reasoning-effort-on-route-only-overlays/problem:
+  en: 0643fa7078ca353b
+  zh: b28342a713f191a3
+/agent-note-strip-inherited-reasoning-effort-on-route-only-overlays/decision:
+  en: 60f27c9e7401fed5
+  zh: 17976fa0887537f0
+/agent-note-strip-inherited-reasoning-effort-on-route-only-overlays/verification:
+  en: 8f4626d0ed75bf20
+  zh: 2103a3f178e16fc3
+/agent-note-strip-inherited-reasoning-effort-on-route-only-overlays/alternatives-considered:
+  en: 546b7e4075b0ddc4
+  zh: fa83d47ab31bf0fd
+/agent-note-strip-inherited-reasoning-effort-on-route-only-overlays/consequences:
+  en: 1268c0d6d9e3417c
+  zh: cd0fa5c074c58f1f

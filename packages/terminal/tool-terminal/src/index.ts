@@ -9,11 +9,12 @@ import z from '@deepseek-ai/schemastery'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
 import type { ContentBlock } from '@x1a0f3n9/dsh-llm'
 import { TerminalSessionId } from '@x1a0f3n9/dsh-terminal'
-import type { TerminalSendResult, TerminalSessionId as TerminalSessionIdType, TerminalSignal } from '@x1a0f3n9/dsh-terminal'
+import type { TerminalSendOperation, TerminalSendResult, TerminalSessionId as TerminalSessionIdType, TerminalSignal } from '@x1a0f3n9/dsh-terminal'
 import type {} from '@x1a0f3n9/dsh-jobs'
 import { defineTool } from '@x1a0f3n9/dsh-tools'
 import type { ToolDefinition } from '@x1a0f3n9/dsh-tools'
-import { boundTerminalText, renderList, renderRead, renderSend, renderSendRead, renderSpawn } from './render.ts'
+import { sendSource } from './background.ts'
+import { boundTerminalText, renderList, renderRead, renderSend, renderSpawn } from './render.ts'
 
 declare module '@x1a0f3n9/dsh-jobs' {
   interface JobKindMap {
@@ -252,23 +253,25 @@ export function apply(ctx: Context, config: Config = {}): void {
         const jobs = ctx.get('jobs')
         if (jobs === undefined) throw new Error('background terminal sends require @x1a0f3n9/dsh-jobs and @x1a0f3n9/dsh-tool-jobs')
         let cancelRequested = false
+        let operation: TerminalSendOperation | undefined
         const jobId = jobs.start({
           kind: 'pty-send',
           label: `${id}: ${args.text || '(input)'}`,
-          owner,
+          owner: owner.id,
           outputLimitBytes: maxResultBytes,
+          output: [sendSource(() => operation)],
           run: () => {
-            const operation = ctx.terminals.startSend(owner, id, request)
+            const started = ctx.terminals.startSend(owner, id, request)
+            operation = started
             return {
               cancel: () => {
                 cancelRequested = true
-                operation.cancel()
+                started.cancel()
               },
-              done: operation.done.then(
+              done: started.done.then(
                 result => ({ status: cancelRequested ? 'killed' as const : 'completed' as const, detail: sendDetail(result) }),
                 (error: unknown) => ({ status: 'failed' as const, detail: String(error) }),
               ),
-              readOutput: () => renderSendRead(operation.readOutput()),
             }
           },
         })

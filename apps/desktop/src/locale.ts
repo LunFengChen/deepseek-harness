@@ -2,7 +2,24 @@
 
 export const en = {
   application: 'Application',
+  fileMenu: 'File',
+  closePage: 'Close Page or Window',
   aboutMenu: 'About DeepSeek Harness',
+  aboutProduct: 'DeepSeek Harness',
+  aboutVersion: 'Version V{version}',
+  hideApplication: 'Hide DeepSeek Harness',
+  hideOtherApplications: 'Hide Others',
+  showAllApplications: 'Show All',
+  quitApplication: 'Quit DeepSeek Harness',
+  openApplication: 'Open DeepSeek Harness',
+  quit: 'Quit',
+  cancel: 'Cancel',
+  quitTitle: 'Quit DeepSeek Harness?',
+  quitActiveTasks: 'Running tasks will be interrupted.',
+  quitScheduledTasks: 'Scheduled tasks will not run while the app is closed.',
+  quitActiveAndScheduledTasks: 'Running tasks will be interrupted, and scheduled tasks will not run while the app is closed.',
+  backgroundNoticeBody: 'Running tasks will continue. You can reopen the window from the system tray.',
+  backgroundNoticeConfirm: 'Confirm',
   edit: 'Edit',
   menuBar: 'Application menu',
   delete: 'Delete',
@@ -15,13 +32,47 @@ export const en = {
   startupFailed: 'DeepSeek Harness is unavailable',
   fatalSummary: 'The application could not start or stopped unexpectedly.',
   startupAddressInUse: 'Another DSH instance (such as dsh web or the desktop app) is running. They cannot start at the same time. Quit the other running DSH instance, then restart.',
-  diagnosticTruncated: '… Error details shortened. The full diagnostic was written to the Electron console.',
+  diagnosticTruncated: '… Error details shortened.',
+  reportWrittenTo: 'Diagnostic report: {path}',
   startupReinstallAdvice: 'If application files are missing or damaged, close the application and reinstall it. Your tasks are stored separately.',
   exitApplication: 'Exit',
   restartApplication: 'Restart',
   recoveryOperationFailed: 'The recovery operation failed',
   disableThirdPartyPlugins: 'Disable third-party plugins, back up profile patch, and restart',
+  welcomeTitle: 'DeepSeek Harness',
+  welcomeBrand: 'DeepSeek Harness',
+  welcomeTaglineBefore: 'Welcome to ',
+  welcomeTaglineBrand: 'DeepSeek Harness',
+  welcomeTaglineAfter: '',
+  welcomeDescription: 'Build potential. Explore intelligence.',
+  welcomeAuthStarting: 'Opening sign in…',
+  welcomeAuthWaiting: 'Browser didn’t open automatically?',
+  welcomeAuthWaitingDescription: 'Copy the sign-in link and open it in your browser to sign in.',
+  welcomeAuthExchanging: 'Completing sign in…',
+  welcomeAuthExpired: 'Sign in timed out',
+  welcomeAuthExpiredDescription: 'Sign in again to continue',
+  welcomeAuthFailed: 'Could not complete sign in. Please try again.',
+  welcomeAuthCopyLink: 'Copy sign-in link',
+  welcomeAuthCopied: 'Copied',
+  welcomeAuthCopyFailed: 'Could not copy. Try again.',
+  welcomeAuthCancel: 'Cancel',
+  welcomeAuthRetry: 'Sign in again',
+  welcomeSignIn: 'Sign in',
+  welcomeApiKey: 'Add API Key',
+  welcomeKeyTitle: 'Add an API key to get started',
+  welcomeKeyDescription: 'Configure official DeepSeek models to start using Harness',
+  welcomeKeyPlaceholder: 'Enter API key',
+  welcomeKeySave: 'Save and continue',
+  welcomeKeyLater: 'Set up later',
+  welcomeKeyBack: 'Back to sign in',
+  welcomeSessionExpired: 'You have signed out of your account, please log in again.',
+  welcomeKeyBlank: 'Enter an API key.',
+  welcomeKeyInvalid: 'Enter the API key itself, without quotes, spaces, or an environment-variable assignment.',
+  welcomeKeyFailed: 'Could not save the API key. Please try again.',
+  welcomeContinueFailed: 'Could not open the workspace. Please try again.',
   checkUpdatesMenu: 'Check for Updates…',
+  reloadPageMenu: 'Reload Page',
+  restartAppHostMenu: 'Restart App and Host',
   updateCheckFailedTitle: 'Update Check Failed',
   updateCheckFailed: 'Could not check for updates. Please try again later.',
   updateDownloadFailed: 'Could not download the update. Please try again.',
@@ -36,6 +87,8 @@ export const en = {
   updateDownload: 'Download update',
   updateDownloadedTitle: 'DeepSeek Harness v{version} downloaded',
   updateDownloadedDetail: 'The update package has downloaded. Select “Install and Restart” to restart the app and begin installation.',
+  updateDownloadedTitleWindows: 'New version v{version} is ready',
+  updateDownloadedDetailWindows: 'The app will close temporarily during the update and reopen automatically when it is complete.\n\nThe update may take some time. Please wait and do not launch the app again during installation.',
   updateClose: 'Close',
   updateAcknowledge: 'OK',
   updateLater: 'Update later',
@@ -52,7 +105,7 @@ export const en = {
   updateTechnicalDetails: 'View technical details',
   updateTitle: 'DeepSeek Harness Update',
   updateAvailable: 'An update is available',
-  updateDetail: 'DeepSeek Harness {version}\n\nThis release includes its matching dsh version. The application will restart after installation.',
+  updateDetail: 'DeepSeek Harness {version}\n\nDeepSeek Harness will restart to complete the update.',
   installAndRestart: 'Install and Restart',
   later: 'Later',
   updateFailedTitle: 'Update Failed',
@@ -93,7 +146,24 @@ export type DesktopMessages = { readonly [Key in keyof typeof en]: string }
 
 export const zh = {
   application: '应用',
+  fileMenu: '文件',
+  closePage: '关闭页面或窗口',
   aboutMenu: '关于 DeepSeek Harness',
+  aboutProduct: 'DeepSeek Harness',
+  aboutVersion: '版本 V{version}',
+  hideApplication: '隐藏 DeepSeek Harness',
+  hideOtherApplications: '隐藏其他',
+  showAllApplications: '显示全部',
+  quitApplication: '退出 DeepSeek Harness',
+  openApplication: '打开 DeepSeek Harness',
+  quit: '退出',
+  cancel: '取消',
+  quitTitle: '退出 DeepSeek Harness？',
+  quitActiveTasks: '当前正在运行的任务将会中断',
+  quitScheduledTasks: '应用关闭期间，定时任务不会运行',
+  quitActiveAndScheduledTasks: '当前正在运行的任务将会中断，且应用关闭期间，定时任务不会运行',
+  backgroundNoticeBody: '正在运行的任务不会中断，可在系统托盘中重新打开窗口',
+  backgroundNoticeConfirm: '确认',
   edit: '编辑',
   menuBar: '应用菜单',
   delete: '删除',
@@ -106,13 +176,47 @@ export const zh = {
   startupFailed: 'DeepSeek Harness 无法使用',
   fatalSummary: '应用无法启动或已意外停止。',
   startupAddressInUse: '有其他正在运行的 DSH（如其他 dsh web、桌面端），无法同时启动，请退出其他正在运行的 DSH 后重启。',
-  diagnosticTruncated: '… 错误详情已截短，完整诊断已写入 Electron 控制台。',
+  diagnosticTruncated: '… 错误详情已截短。',
+  reportWrittenTo: '诊断报告：{path}',
   startupReinstallAdvice: '如果应用文件缺失或损坏，请关闭应用并重新安装。任务数据存储在独立位置。',
   exitApplication: '退出',
   restartApplication: '重启',
   recoveryOperationFailed: '恢复操作失败',
   disableThirdPartyPlugins: '禁用第三方插件、备份 profile patch 并重启',
+  welcomeTitle: 'DeepSeek Harness',
+  welcomeBrand: 'DeepSeek Harness',
+  welcomeTaglineBefore: '欢迎使用 ',
+  welcomeTaglineBrand: 'DeepSeek Harness',
+  welcomeTaglineAfter: '',
+  welcomeDescription: '组装无限可能，共探智能上限',
+  welcomeAuthStarting: '正在打开登录…',
+  welcomeAuthWaiting: '没有自动打开浏览器？',
+  welcomeAuthWaitingDescription: '复制登录链接，用浏览器手动打开完成登录',
+  welcomeAuthExchanging: '正在完成登录…',
+  welcomeAuthExpired: '登录已超时',
+  welcomeAuthExpiredDescription: '请重新登录后继续操作',
+  welcomeAuthFailed: '登录未完成，请重试。',
+  welcomeAuthCopyLink: '复制登录链接',
+  welcomeAuthCopied: '已复制',
+  welcomeAuthCopyFailed: '复制失败，请重试',
+  welcomeAuthCancel: '取消',
+  welcomeAuthRetry: '重新登录',
+  welcomeSignIn: '登录',
+  welcomeApiKey: '添加 API Key',
+  welcomeKeyTitle: '添加一个 API Key 开始使用',
+  welcomeKeyDescription: '配置 DeepSeek 官方模型，即可开始使用',
+  welcomeKeyPlaceholder: '输入 API 密钥',
+  welcomeKeySave: '保存并继续',
+  welcomeKeyLater: '稍后配置',
+  welcomeKeyBack: '返回登录',
+  welcomeSessionExpired: '登录信息已失效，请重新登录',
+  welcomeKeyBlank: '请输入 API 密钥。',
+  welcomeKeyInvalid: '请仅输入 API 密钥，不要包含引号、空格或环境变量赋值。',
+  welcomeKeyFailed: '无法保存 API 密钥，请重试。',
+  welcomeContinueFailed: '无法打开工作区，请重试。',
   checkUpdatesMenu: '检查更新…',
+  reloadPageMenu: '刷新页面',
+  restartAppHostMenu: '重启应用与 Host',
   updateCheckFailedTitle: '更新检查失败',
   updateCheckFailed: '检查更新失败，请稍后重试。',
   updateDownloadFailed: '下载更新失败，请重试。',
@@ -127,6 +231,8 @@ export const zh = {
   updateDownload: '下载更新',
   updateDownloadedTitle: 'DeepSeek Harness v{version} 下载完成',
   updateDownloadedDetail: '安装包已下载完毕，点击“安装并重启”，即刻重启客户端，开始部署。',
+  updateDownloadedTitleWindows: '新版本 v{version} 已准备就绪',
+  updateDownloadedDetailWindows: '更新期间应用将暂时关闭，完成后会自动打开。\n\n更新可能需要一些时间，请耐心等待，期间请勿重复启动应用。',
   updateClose: '关闭',
   updateAcknowledge: '确定',
   updateLater: '稍后更新',
@@ -143,7 +249,7 @@ export const zh = {
   updateTechnicalDetails: '查看技术详情',
   updateTitle: 'DeepSeek Harness 更新',
   updateAvailable: '发现可用更新',
-  updateDetail: 'DeepSeek Harness {version}\n\n新版本绑定匹配的 dsh，安装后将重新启动。',
+  updateDetail: 'DeepSeek Harness {version}\n\nDeepSeek Harness 将重启以完成更新。',
   installAndRestart: '安装并重启',
   later: '稍后',
   updateFailedTitle: '更新失败',
@@ -192,10 +298,44 @@ export function resolveDesktopLocale(locale: string): DesktopLocale {
     : { id: 'en', messages: en }
 }
 
+/**
+ * Choose a built-in dictionary from the shared preference, then ordered OS languages.
+ * @param preference - explicit locale.preference, or null when no language was selected.
+ * @param languages - operating-system languages in preference order.
+ * @returns the supported dictionary, falling back to English.
+ */
+export function resolveDesktopStartupLocale(preference: string | null, languages: readonly string[]): DesktopLocale {
+  const selected = preference?.toLowerCase()
+  if (selected === 'zh' || selected === 'en') return resolveDesktopLocale(selected)
+  for (const language of languages) {
+    const primary = language.toLowerCase().split('-')[0]
+    if (primary === 'zh' || primary === 'en') return resolveDesktopLocale(primary)
+  }
+  return resolveDesktopLocale('en')
+}
+
 /** Replace named placeholders in one locale-owned message. */
 export function formatDesktopMessage(
   message: string,
   values: Readonly<Record<string, string>>,
 ): string {
   return message.replaceAll(/\{([^{}]+)\}/gu, (placeholder, key: string) => values[key] ?? placeholder)
+}
+
+/**
+ * Select localized copy for an ordinary downloaded-update confirmation.
+ * @param messages - Selected Desktop dictionary.
+ * @param version - Prepared update version without a leading v.
+ * @param platform - Operating system presenting the confirmation.
+ * @returns The versioned title and installation guidance.
+ */
+export function desktopUpdateReadyConfirmation(
+  messages: DesktopMessages,
+  version: string,
+  platform: string,
+): { message: string; detail: string } {
+  return {
+    message: formatDesktopMessage(platform === 'win32' ? messages.updateDownloadedTitleWindows : messages.updateDownloadedTitle, { version }),
+    detail: platform === 'win32' ? messages.updateDownloadedDetailWindows : messages.updateDownloadedDetail,
+  }
 }

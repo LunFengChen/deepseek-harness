@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-workflow-run",
   "description": "Durable workflow-run Conversation Node and nested member disclosure for dsh web",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -50,25 +50,25 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-chat": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-tool-workflow": "workspace:^",
-    "@x1a0f3n9/dsh-workflow": "workspace:^",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-chat": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-tool-workflow": "workspace:*",
+    "@x1a0f3n9/dsh-workflow": "workspace:*",
     "@types/react": "~18.3.1",
-    "@deepseek-ai/cordis": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:~",
     "react": "^18.2.0"
   }
 }

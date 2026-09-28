@@ -37,4 +37,4 @@ Status: implemented
 
 - 朋友用 `npm install --global @x1a0f3n9/dsh` 安装 fork，然后 `xfdsh web`，不用 clone 插件仓库。
 - 刷新 harness lockfile 之前，这些 pin 版本必须已经在 npm 上。
-- 官方 `@x1a0f3n9/dsh` 不变。
+- 官方 `@deepseek-ai/dsh` 不变。

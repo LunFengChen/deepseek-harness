@@ -10,6 +10,7 @@
 import type { InjectFace, PropsLocale, PropsRenderSlots, PropsRuntime } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { ObservableSnapshot } from '@x1a0f3n9/dsh-client-store'
 import type { WorkspaceId } from '@x1a0f3n9/dsh-api-workspace-controller/client'
+import type { ShortcutCatalogEntry } from '@x1a0f3n9/dsh-client-shortcuts/client'
 import type { MainPanelId } from '@x1a0f3n9/dsh-client-ui-layout/client'
 
 declare module '@x1a0f3n9/dsh-client-ui-slots' {
@@ -125,7 +126,7 @@ export type SidebarRootInjected = {
   /** Select the global panel addressed by a sidebar row. */
   selectPanel: (id: MainPanelId) => void
   /** Private reactive sources bound to framework selector hooks. */
-  hooks: { panels: ObservableSnapshot<readonly SidebarPanelMetadata[]> }
+  hooks: { panels: ObservableSnapshot<readonly SidebarPanelMetadata[]>; shortcuts: ObservableSnapshot<readonly ShortcutCatalogEntry[]> }
 }
 
 /**

@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-session-history-suffix-page.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-11-session-history-suffix-page.md
-2026-09-11-session-history-suffix-page.md: e87411ceb2c751251710d5f61fc6271fd1dba33f
-2026-09-11-session-history-suffix-page.zh.md: 148824ebb9ed4f31f6af44ba6c4603b05c4976ff
+/agent-note-session-history-opens-from-a-log-suffix:
+  en: 448222901b64e990
+  zh: ddcde5e48d8d46e4
+/agent-note-session-history-opens-from-a-log-suffix/problem:
+  en: dfe5df670b26a6d1
+  zh: 7ed52ea60a98adf2
+/agent-note-session-history-opens-from-a-log-suffix/decision:
+  en: bf563e7322913940
+  zh: bcfd8be27f25480c
+/agent-note-session-history-opens-from-a-log-suffix/alternatives-considered:
+  en: e20b2fed11b0968b
+  zh: d39a83b9f7a5e1fe
+/agent-note-session-history-opens-from-a-log-suffix/consequences:
+  en: b7d145952a720085
+  zh: 2bf74b061d7cb5d2
+/agent-note-session-history-opens-from-a-log-suffix/related:
+  en: 27e6fdcd75d9f0fb
+  zh: e74a3b2d5a55c4d4

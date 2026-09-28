@@ -1,6 +1,76 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/schedule/schedule/README.md
-README.md: a199a64d518af4706e968e7b612b8cabfdf21834
-README.zh.md: a566b602b8ae3a4d3e220c5c19fed05162fc75a8
+/:
+  en: 1fc7b2d7d5139f74
+  zh: 195be90460ef9e44
+/x1a0f3n9-dsh-schedule:
+  en: 6bab5dbd9ec04400
+  zh: 8b4f99b98783fac9
+/x1a0f3n9-dsh-schedule/summary:
+  en: 6cc0239faf70fdfc
+  zh: 65b6b974c0b30e8b
+/x1a0f3n9-dsh-schedule/table-of-contents:
+  en: 23386452a66b2fbd
+  zh: 4a8d91b2f313fead
+/x1a0f3n9-dsh-schedule/use-this-package:
+  en: 401d9737620b86d9
+  zh: 0ebbc36e2fe157f3
+/x1a0f3n9-dsh-schedule/understand-the-implementation:
+  en: 676b7c508f37a1b7
+  zh: c5e8520b3350f0b0
+/x1a0f3n9-dsh-schedule/further-exploration:
+  en: d4404aa2dd7b3a94
+  zh: 2dcd3d98cf281c32
+/x1a0f3n9-dsh-schedule/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-schedule/model-experience/tool-schemas-on-root-agents:
+  en: c4c31a3f6826626d
+  zh: 5aa01bfa311b2f4c
+/x1a0f3n9-dsh-schedule/model-experience/tool-schemas-on-root-agents/what-the-model-sees:
+  en: fe159715b83e3058
+  zh: e86fa4871283720f
+/x1a0f3n9-dsh-schedule/model-experience/tool-schemas-on-root-agents/token-effect:
+  en: ae0eb4d2609d4329
+  zh: 4fe0a26e37c272dc
+/x1a0f3n9-dsh-schedule/model-experience/tool-schemas-on-root-agents/kv-cache-effect:
+  en: 7bf33bbe17e1da03
+  zh: 2af9a2f842b4f430
+/x1a0f3n9-dsh-schedule/model-experience/tool-results-after-management-calls:
+  en: 2a940dee68296bc7
+  zh: 5ad3f71bd69b3c4c
+/x1a0f3n9-dsh-schedule/model-experience/tool-results-after-management-calls/what-the-model-sees:
+  en: f30a961076f7c964
+  zh: 3d9bd2f09cea748f
+/x1a0f3n9-dsh-schedule/model-experience/tool-results-after-management-calls/token-effect:
+  en: c86ffe9c10e1b42f
+  zh: 11539c343d70dc4a
+/x1a0f3n9-dsh-schedule/model-experience/tool-results-after-management-calls/kv-cache-effect:
+  en: e358118905df355b
+  zh: a98fc6617fcf4335
+/x1a0f3n9-dsh-schedule/model-experience/due-reminders-in-the-original-session:
+  en: 39a747e5d135e241
+  zh: ad505b3d5bc27acf
+/x1a0f3n9-dsh-schedule/model-experience/due-reminders-in-the-original-session/what-the-model-sees:
+  en: 7b05d635d4cc9714
+  zh: d1c908f51115e4f5
+/x1a0f3n9-dsh-schedule/model-experience/due-reminders-in-the-original-session/what-the-model-sees/one-shot-framing:
+  en: d8635e0075bacc3f
+  zh: 685e16d812319f85
+/x1a0f3n9-dsh-schedule/model-experience/due-reminders-in-the-original-session/what-the-model-sees/recurring-batch-framing:
+  en: 400bfbaf7808ff3c
+  zh: ea984dc90b3ff5dd
+/x1a0f3n9-dsh-schedule/model-experience/due-reminders-in-the-original-session/token-effect:
+  en: cee966cc62db0b77
+  zh: 3ff87d41d7a2caac
+/x1a0f3n9-dsh-schedule/model-experience/due-reminders-in-the-original-session/kv-cache-effect:
+  en: 1006325fa610366d
+  zh: 476215d8a3c70fe4
+/x1a0f3n9-dsh-schedule/known-limitations-and-deferred-work:
+  en: fd511d607cbc7b8d
+  zh: f45a14991cfa47e6
+/x1a0f3n9-dsh-schedule/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 8ec3e73528ddb1a6

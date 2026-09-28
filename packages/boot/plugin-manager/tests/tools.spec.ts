@@ -27,6 +27,8 @@ async function fixture(mode: 'read-only' | 'workspace-write' | 'danger-full-acce
     setBundleEnabled: vi.fn(async () => ({ changed: true, application: 'applied' })),
     installBundle: vi.fn(async () => ({ changed: true, application: 'restart-required' })),
     removeBundle: vi.fn(async () => ({ changed: false, application: 'failed' })),
+    listVersionExemptions: vi.fn(() => ({ exemptions: { 'example@1.2.3': ['0.1.7-alpha.1'] }, warnings: [] })),
+    setVersionExemption: vi.fn(async () => ({ changed: true, application: 'applied' })),
   }
   ctx.provide('pluginManager', manager as unknown as PluginManager)
   await ctx.plugin(SystemPrompt)
@@ -43,12 +45,39 @@ async function fixture(mode: 'read-only' | 'workspace-write' | 'danger-full-acce
 
 it.each(['read-only', 'workspace-write'] as const)('denies every management action in %s before accessing the manager', async (mode) => {
   const { call, manager } = await fixture(mode)
-  for (const action of ['list_plugins', 'list_bundles', 'set_plugin', 'set_bundle', 'install_bundle', 'remove_bundle']) {
+  for (const action of ['list_plugins', 'list_bundles', 'set_plugin', 'set_bundle', 'install_bundle', 'remove_bundle', 'list_version_exemptions', 'set_version_exemption']) {
     const result = await call({ action, target: 'bundle', enabled: true })
     expect(result.isError).toBe(true)
     expect(JSON.stringify(result.content)).toContain('requires approval, but no approval service is composed')
   }
   for (const method of Object.values(manager)) expect(method).not.toHaveBeenCalled()
+})
+
+it('preserves selected bundle load errors in the agent list result', async () => {
+  const { manager, call } = await fixture()
+  const bundles = [{
+    name: 'bundle', enabled: true,
+    error: { code: 'operation-error', diagnostic: 'bundle patch is unreadable' }, rows: [], overrides: [],
+  }]
+  manager.listBundles.mockResolvedValue(bundles)
+  expect(JSON.parse(resultText(await call({ action: 'list_bundles' })))).toMatchInlineSnapshot(`
+    {
+      "entries": [
+        {
+          "enabled": true,
+          "error": {
+            "code": "operation-error",
+            "diagnostic": "bundle patch is unreadable",
+          },
+          "name": "bundle",
+          "overrides": [],
+          "rows": [],
+        },
+      ],
+      "nextOffset": null,
+      "total": 1,
+    }
+  `)
 })
 
 it('checks the calling session on each execution, including after permission is revoked', async () => {
@@ -78,14 +107,14 @@ it.each(['read-only', 'workspace-write'] as const)('approves each action once in
   const agent = activeAgent()
   const prompted = vi.fn(async () => 'allowed-once' as const)
   const dispose = ctx.on('approval/request', prompted)
-  for (const action of ['list_plugins', 'list_bundles', 'set_plugin', 'set_bundle', 'install_bundle', 'remove_bundle']) {
-    expect((await call({ action, target: 'bundle', enabled: true }, agent)).isError).toBe(false)
+  for (const action of ['list_plugins', 'list_bundles', 'set_plugin', 'set_bundle', 'install_bundle', 'remove_bundle', 'list_version_exemptions', 'set_version_exemption']) {
+    expect((await call({ action, target: 'bundle@1.0.0', enabled: true, runtimeVersion: '0.1.7-alpha.1', acceptRisk: true }, agent)).isError).toBe(false)
   }
-  expect(prompted).toHaveBeenCalledTimes(6)
+  expect(prompted).toHaveBeenCalledTimes(8)
   for (const method of Object.values(manager)) expect(method).toHaveBeenCalledTimes(1)
   expect(ctx.sandboxPolicy.resolve({ session: agent.session }).mode).toBe(mode)
   const audit = agent.session.snapshotEvents().filter(event => event.type.startsWith('approval/'))
-  expect(audit).toHaveLength(12)
+  expect(audit).toHaveLength(16)
   expect(audit[0]).toMatchObject({ type: 'approval/asked', data: {
     toolName: 'plugin_manager', callId: 'manager-call',
   } })
@@ -158,6 +187,21 @@ it('paginates inventories with an explicit continuation and total', async () => 
   expect(resultText(await call({ action: 'list_bundles' }))).toContain('"name":"bundle"')
 })
 
+it('keeps UI translation metadata out of model-facing plugin and bundle lists', async () => {
+  const { call, manager } = await fixture()
+  const meta = { title: { en: 'Plugin', zh: '插件' }, error: 'UI-only diagnostic' }
+  manager.listPlugins.mockImplementationOnce(async () => [{ entryId: 'include:plugin', enabled: true, meta }])
+  expect(JSON.parse(resultText(await call({ action: 'list_plugins' })))).toEqual({
+    entries: [{ entryId: 'include:plugin', enabled: true }], total: 1, nextOffset: null,
+  })
+  manager.listBundles.mockImplementationOnce(async () => [{
+    name: 'bundle', enabled: true, meta, rows: [{ rowId: 'plugin', moduleName: 'plugin', meta }],
+  }])
+  expect(JSON.parse(resultText(await call({ action: 'list_bundles' })))).toEqual({
+    entries: [{ name: 'bundle', enabled: true, rows: [{ rowId: 'plugin', moduleName: 'plugin' }] }], total: 1, nextOffset: null,
+  })
+})
+
 it('forwards all mutation actions and renders the returned outcome', async () => {
   const { call, manager } = await fixture()
   await call({ action: 'set_plugin', target: 'include:1', enabled: false })
@@ -170,6 +214,8 @@ it('forwards all mutation actions and renders the returned outcome', async () =>
   expect(manager.installBundle).toHaveBeenLastCalledWith('bundle', { enabled: false })
   await call({ action: 'install_bundle', target: 'bundle', approvedBuilds: ['native'] })
   expect(manager.installBundle).toHaveBeenLastCalledWith('bundle', { approvedBuilds: ['native'] })
+  await call({ action: 'install_bundle', target: 'bundle', registry: 'https://registry.npmmirror.com/' })
+  expect(manager.installBundle).toHaveBeenLastCalledWith('bundle', { registry: 'https://registry.npmmirror.com/' })
   expect(resultText(await call({ action: 'remove_bundle', target: 'bundle' }))).toContain('"application":"failed"')
   expect(manager.removeBundle).toHaveBeenCalledWith('bundle')
 })
@@ -184,6 +230,9 @@ it.each([
   { action: 'set_plugin', enabled: true },
   { action: 'set_bundle', target: 'bundle' },
   { action: 'install_bundle' }, { action: 'remove_bundle' },
+  { action: 'set_version_exemption', enabled: true, runtimeVersion: '1.0.0' },
+  { action: 'set_version_exemption', target: 'plugin@1.0.0', enabled: true },
+  { action: 'set_version_exemption', target: 'plugin@1.0.0', runtimeVersion: '1.0.0' },
 ])('rejects incomplete or unbounded tool inputs: %j', async (args) => {
   const { call } = await fixture()
   expect((await call(args)).isError).toBe(true)

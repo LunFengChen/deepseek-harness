@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-fork-dsh-context.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-fork-dsh-context.md
-2026-09-11-fork-dsh-context.md: 6ef4830b291823ff11450a1dec6e5b48d2d3429d
-2026-09-11-fork-dsh-context.zh.md: a635e1037fc3aeb60ff74a56677dcfd4136ac5a6
+/agent-note-fork-dsh-context-instead-of-remapping-the-official-cli-package:
+  en: 43742c5c8784ebc8
+  zh: 9d3428674581fbd2
+/agent-note-fork-dsh-context-instead-of-remapping-the-official-cli-package/problem:
+  en: 82a5b3ba4984657e
+  zh: 27cc9a4f111c508c
+/agent-note-fork-dsh-context-instead-of-remapping-the-official-cli-package/decision:
+  en: b58d4c6721324830
+  zh: 32cb78965b9891e1
+/agent-note-fork-dsh-context-instead-of-remapping-the-official-cli-package/alternatives-considered:
+  en: 4ee329277b60f4ca
+  zh: f364e2952b2a35d2
+/agent-note-fork-dsh-context-instead-of-remapping-the-official-cli-package/consequences:
+  en: 1b9f22462d352fc8
+  zh: 2f8f06f51ed14157

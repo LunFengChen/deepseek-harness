@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-14-preinstalled-fork-plugin-layout.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-14-preinstalled-fork-plugin-layout.md
-2026-09-14-preinstalled-fork-plugin-layout.md: 92588f5ac8ca742722773a13c0641fde1617bcf8
-2026-09-14-preinstalled-fork-plugin-layout.zh.md: b7399293e0861e40b91a828e1745207021c8b328
+/agent-note-preinstalled-fork-scoped-plugins-stay-outside-the-workspace-release:
+  en: b656cb4212345cb2
+  zh: a9ed9098cc93ef76
+/agent-note-preinstalled-fork-scoped-plugins-stay-outside-the-workspace-release/problem:
+  en: faf32d028c7adbf1
+  zh: 395bd98c1f136697
+/agent-note-preinstalled-fork-scoped-plugins-stay-outside-the-workspace-release/decision:
+  en: 5895c6747858ce77
+  zh: c9506353e30f723a
+/agent-note-preinstalled-fork-scoped-plugins-stay-outside-the-workspace-release/alternatives-considered:
+  en: 328dc99cee009728
+  zh: e2f3ddeceb30e619
+/agent-note-preinstalled-fork-scoped-plugins-stay-outside-the-workspace-release/consequences:
+  en: 2e94584106f2786a
+  zh: 24a94f2ba9e0cd90

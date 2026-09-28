@@ -8,9 +8,16 @@ import GoalService, { GoalId } from '@x1a0f3n9/dsh-goal'
 import type { GoalView } from '@x1a0f3n9/dsh-goal'
 import { createUserMessage, LlmAdapter, LlmError  } from '@x1a0f3n9/dsh-llm'
 import type { GenerateOptions, StreamChunk } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
 import { SessionId } from '@x1a0f3n9/dsh-session'
 import type { UserMessage } from '@x1a0f3n9/dsh-session'
 import * as goalSession from '../src/index.ts'
+
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'test': { kind: 'test' } & ContextFormed
+  }
+}
 
 type ScriptEntry = StreamChunk[] | Error | 'hang' | ((options: GenerateOptions) => StreamChunk[])
 
@@ -503,7 +510,7 @@ describe('same-session goal driving', () => {
     const test = await harness([textResponse('side contexts'), textResponse('revised goal')])
     const claimedContext = createUserMessage({
       content: [{ type: 'text', text: 'claimed context to restore' }],
-      source: { kind: 'plugin', plugin: 'test' },
+      source: { kind: 'test' },
     })
     const roundZeroContext = createUserMessage({
       content: [{ type: 'text', text: 'obsolete goal context' }],
@@ -511,11 +518,11 @@ describe('same-session goal driving', () => {
     })
     const queuedStepContext = createUserMessage({
       content: [{ type: 'text', text: 'context already queued for the next step' }],
-      source: { kind: 'plugin', plugin: 'test' },
+      source: { kind: 'test' },
     })
     const queuedTurnContext = createUserMessage({
       content: [{ type: 'text', text: 'context already queued for the next turn' }],
-      source: { kind: 'plugin', plugin: 'test' },
+      source: { kind: 'test' },
     })
     let staged = false
     const stopInserted = onInboxMessage(test.ctx, test.agent, (message) => {

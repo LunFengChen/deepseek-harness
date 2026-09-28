@@ -1,7 +1,9 @@
 /** Shared model fields and actions for both adapter catalog editors. */
 
 import type { ReactNode } from 'react'
-import { IconChevronDownOutline14, IconChevronRightOutline14, IconTrashOutline16 } from '@x1a0f3n9/dsh-client-ui-primitives'
+import {
+  IconChevronDownOutlineRegular, IconChevronRightOutlineRegular, IconTrashOutlineRegular,
+} from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { DeepSeekModelDraft } from './DeepSeekModelsEditor.tsx'
 import type { ModelsKey } from './locales.ts'
 import { ModelInputTypes } from './ModelInputTypes.tsx'
@@ -68,7 +70,7 @@ export function ModelRow(props: ModelRowProps): ReactNode {
           title={t('modelAdvanced')}
           onClick={props.onToggle}
         >
-          {props.expanded ? <IconChevronDownOutline14 /> : <IconChevronRightOutline14 />}
+          {props.expanded ? <IconChevronDownOutlineRegular /> : <IconChevronRightOutlineRegular />}
         </button>
         <button
           type="button"
@@ -78,7 +80,7 @@ export function ModelRow(props: ModelRowProps): ReactNode {
           disabled={disabled}
           onClick={props.onRemove}
         >
-          <IconTrashOutline16 size={14} />
+          <IconTrashOutlineRegular size={14} />
         </button>
       </div>
       {props.expanded

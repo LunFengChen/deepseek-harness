@@ -43,8 +43,7 @@ function systemPrompts(events: readonly SessionEvent[]): string[] {
 function runtimeContexts(events: readonly SessionEvent[]): string[] {
   return events.flatMap((event) => {
     if (event.type !== 'user/message'
-      || event.data.source.kind !== 'plugin'
-      || event.data.source.plugin !== '@x1a0f3n9/dsh-system-prompt') return []
+      || event.data.source.kind !== 'runtime-context') return []
     return event.data.content.flatMap(block => block.type === 'text' ? [block.text] : [])
   })
 }

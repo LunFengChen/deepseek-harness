@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-ssh",
   "description": "Shared OpenSSH connection and versioned POSIX remote helper",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -45,39 +45,39 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-fs": "workspace:^",
-    "@x1a0f3n9/dsh-fs-local": "workspace:^",
-    "@x1a0f3n9/dsh-fs-sandbox": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-local": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^",
-    "@x1a0f3n9/dsh-brand": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-fs-local": "workspace:*",
+    "@x1a0f3n9/dsh-fs-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-brand": "workspace:*"
   },
   "dependencies": {
-    "@deepseek-ai/schemastery": "workspace:^",
+    "@deepseek-ai/schemastery": "workspace:~",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@x1a0f3n9/dsh-fs": "workspace:^",
-    "@x1a0f3n9/dsh-fs-local": "workspace:^",
-    "@x1a0f3n9/dsh-fs-sandbox": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess-local": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-local": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^",
-    "@x1a0f3n9/dsh-session-projection": "workspace:^",
-    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:^",
-    "@x1a0f3n9/dsh-fs-ssh": "workspace:^",
-    "@x1a0f3n9/dsh-subprocess-ssh": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-ssh": "workspace:^",
-    "@x1a0f3n9/dsh-lsp": "workspace:^",
-    "@x1a0f3n9/dsh-lsp-stdio": "workspace:^",
-    "@x1a0f3n9/dsh-brand": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-fs-local": "workspace:*",
+    "@x1a0f3n9/dsh-fs-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:*",
+    "@x1a0f3n9/dsh-fs-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-lsp": "workspace:*",
+    "@x1a0f3n9/dsh-lsp-stdio": "workspace:*",
+    "@x1a0f3n9/dsh-brand": "workspace:*"
   }
 }

@@ -1,6 +1,37 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/experimental/browser-use-runtime/README.md
-README.md: 6247a771a05d8a68e82f44c9a1ad316b0801a6ec
-README.zh.md: b0afe45e6f0c8f1423966e14c48d0acb785c254e
+/:
+  en: 32bd01db6a5146ed
+  zh: 31e56827b98bc1b3
+/x1a0f3n9-dsh-experimental-browser-use-runtime:
+  en: 4fc8d5f1dc41f1be
+  zh: 8fcd711fbdc52bc2
+/x1a0f3n9-dsh-experimental-browser-use-runtime/summary:
+  en: ac29eb4a94d3cbff
+  zh: 66f2e800cabb19aa
+/x1a0f3n9-dsh-experimental-browser-use-runtime/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: f14f34fce35a8d90
+/x1a0f3n9-dsh-experimental-browser-use-runtime/use-this-package:
+  en: 3594c40983ebfcbf
+  zh: f949e05abd7463ee
+/x1a0f3n9-dsh-experimental-browser-use-runtime/understand-the-implementation:
+  en: 2b0a54595044ea15
+  zh: 9fc96f082e948b77
+/x1a0f3n9-dsh-experimental-browser-use-runtime/further-exploration:
+  en: 2a8d2c9b217b9e95
+  zh: 084c9ad664e55498
+/x1a0f3n9-dsh-experimental-browser-use-runtime/model-experience:
+  en: 705441e08df596c9
+  zh: d70a7ba9611daca5
+/x1a0f3n9-dsh-experimental-browser-use-runtime/model-experience/kv-cache-effect:
+  en: 68b91a73746b663a
+  zh: 18f6d14457ed81d9
+/x1a0f3n9-dsh-experimental-browser-use-runtime/known-limitations-and-deferred-work:
+  en: 77c2691497002522
+  zh: b8e8f66e86c21459
+/x1a0f3n9-dsh-experimental-browser-use-runtime/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 8ec3e73528ddb1a6

@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-hindsight-opt-in.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-11-hindsight-opt-in.md
-2026-09-11-hindsight-opt-in.md: a0b90d4a1152d1c331116befbd30330c737ea0ce
-2026-09-11-hindsight-opt-in.zh.md: feef07fecfe38fbd1fa0d449395d9e805e470e79
+/agent-note-hindsight-stays-cataloged-but-off-by-default:
+  en: 46d2e1700f47f374
+  zh: ff551c7a955a23fd
+/agent-note-hindsight-stays-cataloged-but-off-by-default/problem:
+  en: 2e508920547d84b7
+  zh: 69b5529e2e774f7e
+/agent-note-hindsight-stays-cataloged-but-off-by-default/decision:
+  en: e4d098cf8c1a7713
+  zh: 486336ab607c6817
+/agent-note-hindsight-stays-cataloged-but-off-by-default/alternatives-considered:
+  en: 7e3a27c1ed1d6caf
+  zh: 84c24199094eab46
+/agent-note-hindsight-stays-cataloged-but-off-by-default/consequences:
+  en: 057b1c82cdbdb6ef
+  zh: a2aa0a56c3ece006

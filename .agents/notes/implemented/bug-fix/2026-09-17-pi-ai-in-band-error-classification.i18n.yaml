@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-17-pi-ai-in-band-error-classification.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-17-pi-ai-in-band-error-classification.md
-2026-09-17-pi-ai-in-band-error-classification.md: e6f11a255392aff05bb884ad7a01a9b7f703715a
-2026-09-17-pi-ai-in-band-error-classification.zh.md: 0c646b8ba965deb587098e31f33db9c292b3d31f
+/agent-note-pi-ai-in-band-stream-error-classification:
+  en: 42502453939a426f
+  zh: 2a41e254f34d74a4
+/agent-note-pi-ai-in-band-stream-error-classification/problem:
+  en: b1bee78567eddc55
+  zh: f5c94eee4b814a1c
+/agent-note-pi-ai-in-band-stream-error-classification/decision:
+  en: 97114c5e44a616a7
+  zh: 0817071f92f29153
+/agent-note-pi-ai-in-band-stream-error-classification/verification:
+  en: bf8eda7827f642ad
+  zh: bf8eda7827f642ad
+/agent-note-pi-ai-in-band-stream-error-classification/alternatives-considered:
+  en: 2553257ade4674ad
+  zh: 3673b073be17ecba
+/agent-note-pi-ai-in-band-stream-error-classification/consequences:
+  en: 7e38c49412750427
+  zh: 4b9450d5bc8fc23b

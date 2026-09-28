@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-host-frontend-static",
   "description": "SPA dist server for the Web shell: owns the webserver fallback seat, serving explicit index entries and static assets with traversal rejection and 404 misses",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -27,18 +27,18 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
-    "@x1a0f3n9/dsh-client-connection": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@x1a0f3n9/dsh-host-webserver": "workspace:*",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "dependencies": {
-    "@deepseek-ai/schemastery": "workspace:^"
+    "@deepseek-ai/schemastery": "workspace:~"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@x1a0f3n9/dsh-client-connection": "workspace:^",
-    "@x1a0f3n9/dsh-credentials-local": "workspace:^",
-    "@x1a0f3n9/dsh-host-webserver": "workspace:^",
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis-plugin-loader": "workspace:~",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@x1a0f3n9/dsh-credentials-local": "workspace:*",
+    "@x1a0f3n9/dsh-host-webserver": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~"
   }
 }

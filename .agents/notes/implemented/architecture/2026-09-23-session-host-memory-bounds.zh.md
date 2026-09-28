@@ -47,7 +47,7 @@ API Session 保留它创建或恢复的每一个 `AgentHandle`。在观察或恢
 
 [会话历史从日志后缀打开](2026-09-11-session-history-suffix-page.zh.md) 仍然负责分页契约以及“查看 vs 恢复”的划分。
 
-[会话的 agent 由一份 preset cordis.yml 组装而成](2026-08-03-per-session-agent-presets.zh.md) 仍然负责 preset 组装；空闲根驱逐现在落在 API Session。
+[会话的 agent 由一份 preset cordis.yml 组装而成](2026-08-03-per-session-agent-presets.md) 仍然负责 preset 组装；空闲根驱逐现在落在 API Session。
 
 [弃用对会话任意位置事件的同步读取](2026-09-09-deprecate-synchronous-session-event-reads.zh.md) 仍然负责“停止在内存中保留完整序列”的存储方向。
 

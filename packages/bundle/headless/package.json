@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-headless",
   "description": "The dsh one-shot bundle: a direct core Agent/Session runner over dsh-base with no Host, HTTP, or browser layer",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -40,32 +40,32 @@
     }
   },
   "dependencies": {
-    "@x1a0f3n9/dsh-brand": "workspace:^",
-    "@x1a0f3n9/dsh-cmdline": "workspace:^",
-    "@x1a0f3n9/dsh-util-values": "workspace:^",
-    "@deepseek-ai/schemastery": "workspace:^",
+    "@x1a0f3n9/dsh-brand": "workspace:*",
+    "@x1a0f3n9/dsh-cmdline": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@deepseek-ai/schemastery": "workspace:~",
     "commander": "^15.0.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-agent-default-model": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-session-query": "workspace:^",
-    "@x1a0f3n9/dsh-fs": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-agent-default-model": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-query": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "workspace:^",
-    "@deepseek-ai/cordis-plugin-loader": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-agent-default-model": "workspace:^",
-    "@x1a0f3n9/dsh-agent-loop": "workspace:^",
-    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-session-query": "workspace:^",
-    "@x1a0f3n9/dsh-fs": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-agent-default-model": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-query": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*"
   }
 }

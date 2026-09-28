@@ -17,7 +17,7 @@ agent（智能体）可以通过 `session.header.cwd` 识别其工作区，但�
 
 注册表会为每次前台和后台 bash `ToolExecution` 重新构建受信任的覆盖层：
 
-- `DSH_HOME` 始终是配置的 Harness home 绝对路径。独立的 [`@deepseek-ai/dsh-home-paths`](../../../../packages/util/home-paths/README.zh.md) 工具库规定其优先级：显式 `dshHome`，其次是环境中的 `$DSH_HOME`，最后是 `~/.dsh`。
+- `DSH_HOME` 始终是配置的 Harness home 绝对路径。独立的 [`@x1a0f3n9/dsh-home-paths`](../../../../packages/util/home-paths/README.zh.md) 工具库规定其优先级：显式 `dshHome`，其次是环境中的 `$DSH_HOME`，最后是 `~/.dsh`。
 - `DSH_SHELL=1` 始终存在，用于标识由 DeepSeek Harness 管理、面向模型的 bash 子进程。
 - 执行具有关联 agent 时，`DSH_SESSION_ID` 存在并等于 `agent.session.header.id`。
 
@@ -39,7 +39,7 @@ bash 工具说明只讲解持久约定：当前 harness 环境事实通过受管
 
 新会话在第一个轮次之前获得 id，因此它的首次 bash 调用即可读取 `DSH_SESSION_ID`。恢复操作复用已加载的 header，因此 id 不变。fork 和 spawn 会创建新的会话 id。父子调用分别从自己的 `ToolExecution.agent` 解析事实；即使调用重叠，每条命令也会收到不可变快照。注册表受 effect 作用域约束，并且可安全用于 HMR（热模块替换）。
 
-`dshHome` 是与会话无关的部署上下文。agent-core 通过 `@deepseek-ai/dsh-home-paths` 解析出一个值，并将其同时传给 tool-bash 和本地 skill（技能）发现；独立消费方调用同一解析器。如果顶层 `dshHome` 与 `skills.local.dshHome` 均已提供但解析结果不同，组合会失败，而不会公开互相矛盾的 home。持久化可以独立变更，无需把其事实冻结到会话前缀中。
+`dshHome` 是与会话无关的部署上下文。agent-core 通过 `@x1a0f3n9/dsh-home-paths` 解析出一个值，并将其同时传给 tool-bash 和本地 skill（技能）发现；独立消费方调用同一解析器。如果顶层 `dshHome` 与 `skills.local.dshHome` 均已提供但解析结果不同，组合会失败，而不会公开互相矛盾的 home。持久化可以独立变更，无需把其事实冻结到会话前缀中。
 
 ## 测试
 

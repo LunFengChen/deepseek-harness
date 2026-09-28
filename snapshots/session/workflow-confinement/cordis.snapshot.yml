@@ -1,6 +1,6 @@
 # Replay the authored model turns through the shipped OS sandbox.
 - id: llm-deepseek
-  name: '@x1a0f3n9/dsh-llm-deepseek'
+  name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
   disabled: true
 
 - id: plugin-package-inventory-deepseek

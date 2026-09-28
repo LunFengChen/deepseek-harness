@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-plugin-inventory-nested-entry-id.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-plugin-inventory-nested-entry-id.md
-2026-09-10-plugin-inventory-nested-entry-id.md: 2d7109ae49f6766724cad0c4fcbe2e89f81cc870
-2026-09-10-plugin-inventory-nested-entry-id.zh.md: ed6d962f1e2142488e97b90986a09987d41573fb
+/agent-note-plugin-inventory-matches-nested-loader-ids:
+  en: 74d87748ff61bf97
+  zh: 9370c0e30baa01cf
+/agent-note-plugin-inventory-matches-nested-loader-ids/problem:
+  en: e989c2909079dac5
+  zh: 3fc707ec4e46a170
+/agent-note-plugin-inventory-matches-nested-loader-ids/decision:
+  en: 49719b1db3e94092
+  zh: 5cf9751ed3c9449e
+/agent-note-plugin-inventory-matches-nested-loader-ids/alternatives-considered:
+  en: 66b654de7c8a2b53
+  zh: c1e6bb761f77fa85
+/agent-note-plugin-inventory-matches-nested-loader-ids/consequences:
+  en: 738dab4def2c80ed
+  zh: dcb5726bb1b6beff

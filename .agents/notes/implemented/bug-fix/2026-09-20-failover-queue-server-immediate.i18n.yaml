@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-20-failover-queue-server-immediate.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-20-failover-queue-server-immediate.md
-2026-09-20-failover-queue-server-immediate.md: a7c0bfe65d828fa55d7e9d7ddd626e31f42e98eb
-2026-09-20-failover-queue-server-immediate.zh.md: dfd3d67357f62ccd678ff686a2ffb77ede988819
+/agent-note-failover-queue-503-skips-llm-retry:
+  en: e061a10b06fcf809
+  zh: c65d6545e2e062ea
+/agent-note-failover-queue-503-skips-llm-retry/problem:
+  en: a0527fb2ed35b8f3
+  zh: efd5b07a5004c120
+/agent-note-failover-queue-503-skips-llm-retry/decision:
+  en: a8151b1fa5a32cdc
+  zh: 117ae9ba64882985
+/agent-note-failover-queue-503-skips-llm-retry/verification:
+  en: b532de64e8498c08
+  zh: 1d116dffa5e3d930
+/agent-note-failover-queue-503-skips-llm-retry/alternatives-considered:
+  en: 01b0b06f6310d876
+  zh: 043b0dd453550a23
+/agent-note-failover-queue-503-skips-llm-retry/consequences:
+  en: db70f8ad91a6fc6b
+  zh: 1cea9f1601ac8807

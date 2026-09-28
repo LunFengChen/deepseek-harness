@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-11-web-boot-combo-first-paint.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/architecture/2026-09-11-web-boot-combo-first-paint.md
-2026-09-11-web-boot-combo-first-paint.md: 5fc8d788b2fed4d2d1ec5efa49466910388d6d2a
-2026-09-11-web-boot-combo-first-paint.zh.md: 538750cd8746dda92d02de049510c31a96850485
+/agent-note-web-boot-first-paint-combos:
+  en: 0aa57005fb45809b
+  zh: b3c56b7097da957b
+/agent-note-web-boot-first-paint-combos/problem:
+  en: f3be40b0654a95bb
+  zh: 5bff649cfd93e744
+/agent-note-web-boot-first-paint-combos/decision:
+  en: 10e24cbfb1b23d98
+  zh: 456501c6128beaf1
+/agent-note-web-boot-first-paint-combos/alternatives-considered:
+  en: 2ba4fa3ee49d5610
+  zh: 7db93e33ae4997c5
+/agent-note-web-boot-first-paint-combos/consequences:
+  en: 80ec2abe4ff7e4e9
+  zh: 4daad2d6ee8df46f
+/agent-note-web-boot-first-paint-combos/testing:
+  en: 14334687c24faec1
+  zh: c3f8b7c4fdcbe646

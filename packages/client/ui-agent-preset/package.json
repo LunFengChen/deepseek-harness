@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-agent-preset",
   "description": "Agent-preset surfaces: the default for later sessions, this session's seat, and the composition editor",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -46,32 +46,33 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
-    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
-    "@x1a0f3n9/dsh-agent-presets": "workspace:^",
-    "@x1a0f3n9/dsh-client-connection": "workspace:^",
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-settings": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-util-values": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:*",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-settings": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
     "@types/react": "~18.3.1",
-    "@deepseek-ai/cordis": "workspace:^",
-    "react": "^18.2.0",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-session": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:^"
+    "react": "^18.2.0"
   },
   "files": [
     "lib/index.js",
     "lib/client.js",
     "lib/types/**/*.d.ts"
-  ]
+  ],
+  "dependencies": {}
 }

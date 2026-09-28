@@ -12,9 +12,10 @@ import css from './ConversationRoot.module.css'
  */
 export function DefaultConversationViews({
   view, useSession, useConversation, useConversationViews, useInput, inputActions, useStore, actions,
-  renderSlot, bindDraftMirror, openView,
+  renderSlot, bindDraftMirror, openView, useInspectCall,
 }: ConversationSessionSlotProps) {
   const tabs = useConversationViews(value => value)
+  const inspectCall = useInspectCall(value => value)
   const selectedId = useStore(s => s.view)
   const active = resolveActiveView(tabs, selectedId)
   const session = useSession(s => s)
@@ -36,6 +37,7 @@ export function DefaultConversationViews({
   return (
     <div className={css.viewArea}>
       {viewId !== undefined && renderSlot('conversation.view', {
+        inspectCall,
         viewRequest,
         openView,
         completeViewRequest: actions.completeViewRequest,

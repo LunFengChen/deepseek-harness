@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-12-hindsight-quiet-git-stderr.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-12-hindsight-quiet-git-stderr.md
-2026-09-12-hindsight-quiet-git-stderr.md: f8449a795579a2ba829be68c88e2d942f509a2ae
-2026-09-12-hindsight-quiet-git-stderr.zh.md: 5d176fe9b42432b782421cbc333b4d15598cf394
+/agent-note-hindsight-git-probes-keep-stderr:
+  en: bdc8e89e34d56755
+  zh: c7c41effa1afd284
+/agent-note-hindsight-git-probes-keep-stderr/problem:
+  en: c0a18735a32d5368
+  zh: 3f8809e5f2581208
+/agent-note-hindsight-git-probes-keep-stderr/decision:
+  en: 1c9492b681ff7818
+  zh: a6d530f999d0cde2
+/agent-note-hindsight-git-probes-keep-stderr/alternatives-considered:
+  en: 8a0cdbee923800c4
+  zh: 6cf49c240efbe644
+/agent-note-hindsight-git-probes-keep-stderr/consequences:
+  en: f003f115cf6dd041
+  zh: 2841b89d9bde27b4

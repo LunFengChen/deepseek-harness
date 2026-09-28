@@ -28,6 +28,7 @@ import { z as zod } from 'zod'
 import type { ZodType } from 'zod'
 import type { Agent, PreStepDecision } from '@x1a0f3n9/dsh-agent'
 import { createUserMessage } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
 import type { Session, UserMessage } from '@x1a0f3n9/dsh-session'
 import { defineTool } from '@x1a0f3n9/dsh-tools'
 import { UserQuestionError } from '@x1a0f3n9/dsh-user-questions'
@@ -35,6 +36,11 @@ import type { CommandDefinitionId, CommandId } from '@x1a0f3n9/dsh-commands'
 import type {} from '@x1a0f3n9/dsh-session-projection'
 import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import type { PlanProjection, PlanUnitState } from './types.ts'
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'plan-mode': { kind: 'plan-mode' } & ContextFormed
+  }
+}
 export type * from './types.ts'
 
 declare module '@x1a0f3n9/dsh-session/types' {
@@ -77,7 +83,6 @@ const KEEP_PLANNING_LABEL = 'Keep planning'
 
 const EXIT_DESCRIPTION
   = 'Use only in plan mode. Present your plan for the user\'s review and, on approval, leave plan mode. '
-  + 'Send the COMPLETE plan as markdown, starting with a # heading that names it. '
   + 'The user may approve (carry out the plan from your next step) or keep '
   + 'planning — their feedback comes back in the tool result; revise and present again.'
 
@@ -458,7 +463,7 @@ export class PlanModeController extends Service {
     return createUserMessage({
       content: [{ type: 'text', text }],
       // The narration is already one sentence, so it is its own summary.
-      source: { kind: 'plugin', plugin: 'plan-mode', form: 'notice', summary: text },
+      source: { kind: 'plan-mode', form: 'notice', summary: text },
     })
   }
 }

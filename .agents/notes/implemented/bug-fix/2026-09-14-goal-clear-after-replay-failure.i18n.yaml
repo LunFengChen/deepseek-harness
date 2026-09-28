@@ -1,6 +1,25 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-14-goal-clear-after-replay-failure.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-14-goal-clear-after-replay-failure.md
-2026-09-14-goal-clear-after-replay-failure.md: 57b16c508b9375864d0a63a251238d2635fb5dd7
-2026-09-14-goal-clear-after-replay-failure.zh.md: 41a8a6ac296ecbff8d5ef7e8c5c37d3c6253fcee
+/agent-note-goal-clear-recovers-a-retained-replay-failure:
+  en: ceaf28cf2b66081a
+  zh: 6163702249158668
+/agent-note-goal-clear-recovers-a-retained-replay-failure/problem:
+  en: 7dfbf3cfbdfa3007
+  zh: 4a2073aabf79af8c
+/agent-note-goal-clear-recovers-a-retained-replay-failure/decision:
+  en: b4cb5a913cfabbbe
+  zh: 31b6007c3d2e11f4
+/agent-note-goal-clear-recovers-a-retained-replay-failure/verification:
+  en: 58ab807605408389
+  zh: cdb5d90fc4511612
+/agent-note-goal-clear-recovers-a-retained-replay-failure/alternatives-considered:
+  en: ad12c186965deaad
+  zh: d1ae8fff64357bdb
+/agent-note-goal-clear-recovers-a-retained-replay-failure/consequences:
+  en: 656e57802cd8cda3
+  zh: 16ce38c6d7c96f59
+/agent-note-goal-clear-recovers-a-retained-replay-failure/related:
+  en: 8992bc3c4a3c84c1
+  zh: 8b994a52f808e35f

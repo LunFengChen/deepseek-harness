@@ -1,6 +1,67 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/sandbox/sandbox-windows-acl/README.md
-README.md: 343a0f797fb1b4248900871ed663a567ef306df7
-README.zh.md: c1c4ed4c14a7aa27400a6731ceb27df2542eb404
+/:
+  en: 14d3fdd57b94c86f
+  zh: abcd3b4f9dd908fa
+/x1a0f3n9-dsh-sandbox-windows-acl:
+  en: 4db73839c341ff9e
+  zh: 5f58c15c5aaa5500
+/x1a0f3n9-dsh-sandbox-windows-acl/summary:
+  en: 777921135c23ee55
+  zh: 7c726cc63995d443
+/x1a0f3n9-dsh-sandbox-windows-acl/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-sandbox-windows-acl/use-this-package:
+  en: 58b220faa66b2f05
+  zh: dda42e4197d80bfe
+/x1a0f3n9-dsh-sandbox-windows-acl/use-this-package/when-to-choose-it:
+  en: 510d0b1ef7db159d
+  zh: dc2cf25b3db14c63
+/x1a0f3n9-dsh-sandbox-windows-acl/use-this-package/direct-api:
+  en: 16596607bbccc2a3
+  zh: 30bc370a5281bf0d
+/x1a0f3n9-dsh-sandbox-windows-acl/use-this-package/what-confinement-gives-you:
+  en: 289e65bddf20dd79
+  zh: 44b9fcedf944546a
+/x1a0f3n9-dsh-sandbox-windows-acl/use-this-package/failures-and-recovery:
+  en: f93372e784cda63e
+  zh: f8371114f3481550
+/x1a0f3n9-dsh-sandbox-windows-acl/understand-the-implementation:
+  en: c2cde86c85c2c619
+  zh: a29a114e591f9d3f
+/x1a0f3n9-dsh-sandbox-windows-acl/understand-the-implementation/mechanism:
+  en: a37ea37f2d527693
+  zh: 749b5a263d0e1534
+/x1a0f3n9-dsh-sandbox-windows-acl/understand-the-implementation/modes-and-token-lists:
+  en: 9c8d9af84f9abd99
+  zh: 1c82b355aa5f210f
+/x1a0f3n9-dsh-sandbox-windows-acl/understand-the-implementation/the-confinement-runner:
+  en: 0847de0e53e50061
+  zh: 90fa3dcaf080c3be
+/x1a0f3n9-dsh-sandbox-windows-acl/understand-the-implementation/verified-boundaries:
+  en: ad02570eae90037f
+  zh: fd78c2318de18dda
+/x1a0f3n9-dsh-sandbox-windows-acl/understand-the-implementation/header-verification-and-source-map:
+  en: 690236f5cb321bf8
+  zh: ed774a1888f1a4fe
+/x1a0f3n9-dsh-sandbox-windows-acl/further-exploration:
+  en: 7850da9522bf984b
+  zh: a9f2273a85bafcf9
+/x1a0f3n9-dsh-sandbox-windows-acl/model-experience:
+  en: c94416e26fec28cd
+  zh: a16f435e8afbdf30
+/x1a0f3n9-dsh-sandbox-windows-acl/model-experience/kv-cache-effect:
+  en: 796af37d6f6add68
+  zh: 1e0dc5a58e5456be
+/x1a0f3n9-dsh-sandbox-windows-acl/known-limitations-and-deferred-work:
+  en: 2b6b967c62766d47
+  zh: 0faf9ec390504967
+/x1a0f3n9-dsh-sandbox-windows-acl/known-limitations-and-deferred-work/dev-note:
+  en: cc273320f6a1beaf
+  zh: 5c57a312ddc50651
+/x1a0f3n9-dsh-sandbox-windows-acl/known-limitations-and-deferred-work/dev-note/future-warnings-and-cleanup-surfaces:
+  en: 4c65be775f25c367
+  zh: 467b2ce99030dcf5

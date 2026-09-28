@@ -1,6 +1,7 @@
 /** Consumer-owned navigation for Markdown links. */
 import { createContext, useContext, useMemo } from 'react'
 import type { ReactNode } from 'react'
+import type { ImageLightboxLabels } from '../ImageLightbox.tsx'
 
 /**
  * Handle one sanitized absolute HTTP(S) URL selected from Markdown.
@@ -10,6 +11,11 @@ export type MarkdownExternalLinkHandler = (href: string) => void
 
 /** Navigation capabilities supplied by the nearest Markdown owner. */
 export interface MarkdownDelegate {
+  /** Image previews for decoded local paths in this owner's workspace. */
+  readonly fileImages?: {
+    resolve: (path: string) => string | undefined
+    labels: ImageLightboxLabels & { open: string; loading: string; failed: string }
+  } | undefined
   /** Ordinary HTTP(S) activation; absent handlers retain native anchor behavior. */
   readonly openExternalLink?: MarkdownExternalLinkHandler | undefined
   /**
@@ -37,8 +43,9 @@ export function MarkdownDelegateProvider({
   children,
   openExternalLink,
   openFile,
+  fileImages,
 }: MarkdownDelegateProviderProps): ReactNode {
-  const delegate = useMemo(() => ({ openExternalLink, openFile }), [openExternalLink, openFile])
+  const delegate = useMemo(() => ({ openExternalLink, openFile, fileImages }), [openExternalLink, openFile, fileImages])
   return (
     <MarkdownDelegateContext.Provider value={delegate}>
       {children}

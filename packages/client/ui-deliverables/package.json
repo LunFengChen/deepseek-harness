@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-deliverables",
   "description": "Changed-files card with per-file comparison tabs, delivery cards, and clickable final-response file references for Web",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
@@ -35,7 +35,8 @@
         "@x1a0f3n9/dsh-client-ui-conversation",
         "@x1a0f3n9/dsh-client-ui-renderer",
         "@x1a0f3n9/dsh-client-ui-sidebar-right",
-        "@x1a0f3n9/dsh-client-ui-tool"
+        "@x1a0f3n9/dsh-client-ui-tool",
+        "@x1a0f3n9/dsh-client-ui-settings"
       ],
       "platform": "web"
     }
@@ -46,38 +47,39 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@deepseek-ai/cordis": "workspace:^"
+    "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
-    "@x1a0f3n9/dsh-api-remotes": "workspace:^",
-    "@x1a0f3n9/dsh-client-connection": "workspace:^",
-    "@x1a0f3n9/dsh-client-locale": "workspace:^",
-    "@x1a0f3n9/dsh-client-store": "workspace:^",
-    "@x1a0f3n9/dsh-client-test-runtime": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-chat": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-dockkit": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-slots": "workspace:^",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-client-connection": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-chat": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-conversation": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-dockkit": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-sidebar-right": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
     "@types/react": "~18.3.1",
-    "@deepseek-ai/cordis": "workspace:^",
+    "@deepseek-ai/cordis": "workspace:~",
     "react": "^18.2.0",
-    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:^",
-    "@x1a0f3n9/dsh-session": "workspace:^",
-    "@x1a0f3n9/dsh-system-prompt": "workspace:^",
-    "@x1a0f3n9/dsh-session-query": "workspace:^",
-    "@x1a0f3n9/dsh-llm": "workspace:^",
-    "@x1a0f3n9/dsh-client-ui-tool": "workspace:^",
-    "@x1a0f3n9/dsh-tool-present": "workspace:^",
-    "@x1a0f3n9/dsh-workspace-changes": "workspace:^",
-    "@x1a0f3n9/dsh-api-session-controller": "workspace:^",
-    "@x1a0f3n9/dsh-util-workspace-path": "workspace:^",
-    "@x1a0f3n9/dsh-api-workspace-files": "workspace:^",
-    "@x1a0f3n9/dsh-fs": "workspace:^",
-    "@x1a0f3n9/dsh-fs-local": "workspace:^",
-    "@x1a0f3n9/dsh-agent": "workspace:^",
-    "@x1a0f3n9/dsh-sandbox-policy": "workspace:^"
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-session-query": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-tool": "workspace:*",
+    "@x1a0f3n9/dsh-tool-present": "workspace:*",
+    "@x1a0f3n9/dsh-workspace-changes": "workspace:*",
+    "@x1a0f3n9/dsh-api-session-controller": "workspace:*",
+    "@x1a0f3n9/dsh-util-workspace-path": "workspace:*",
+    "@x1a0f3n9/dsh-api-workspace-files": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-fs-local": "workspace:*",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-settings": "workspace:*"
   },
   "files": [
     "lib/index.js",
@@ -85,6 +87,6 @@
     "lib/types/**/*.d.ts"
   ],
   "dependencies": {
-    "@x1a0f3n9/dsh-typert-protocol": "workspace:^"
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*"
   }
 }

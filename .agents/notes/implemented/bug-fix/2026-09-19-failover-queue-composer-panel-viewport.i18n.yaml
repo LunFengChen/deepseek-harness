@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-19-failover-queue-composer-panel-viewport.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-19-failover-queue-composer-panel-viewport.md
-2026-09-19-failover-queue-composer-panel-viewport.md: 7c618fc9cdb895b89cbaef99cd092c987aa9f17e
-2026-09-19-failover-queue-composer-panel-viewport.zh.md: 1ab8990480364f81a71cf4bd2e6f8730b428a409
+/agent-note-composer-failover-panel-must-stay-inside-the-viewport:
+  en: ef1f1e477c8053f2
+  zh: c37e4d34824ca7cf
+/agent-note-composer-failover-panel-must-stay-inside-the-viewport/problem:
+  en: 5b3fe9f8c769551d
+  zh: d0641f847c0c6a4a
+/agent-note-composer-failover-panel-must-stay-inside-the-viewport/decision:
+  en: 106b71a517c2032c
+  zh: bcf1b5bf6df91179
+/agent-note-composer-failover-panel-must-stay-inside-the-viewport/verification:
+  en: 91b40fdf8b84fe74
+  zh: 69d1a1baba2667e1
+/agent-note-composer-failover-panel-must-stay-inside-the-viewport/alternatives-considered:
+  en: a39b701483633203
+  zh: 1f2b1d170ef8b8d5
+/agent-note-composer-failover-panel-must-stay-inside-the-viewport/consequences:
+  en: 2312d9ac0edf0fd1
+  zh: bcbbc5dd9cbf5648

@@ -75,6 +75,7 @@ import WorkflowEngine from '@x1a0f3n9/dsh-workflow'
 import type { WorkflowRun, WorkflowStartRequest } from '@x1a0f3n9/dsh-workflow'
 import * as ToolRalph from '@x1a0f3n9/dsh-tool-ralph'
 import * as ToolWorkflow from '@x1a0f3n9/dsh-tool-workflow'
+import * as ToolWorkspaceDependencies from '@x1a0f3n9/dsh-tool-workspace-dependencies'
 import { githubSlug } from './verify-md-links.ts'
 
 /** Attachment seam marker that makes the attachments-conditional `read_image` schema harvestable. */
@@ -285,16 +286,19 @@ const TOOL_PACKAGES: ToolPackage[] = [
     pkg: '@x1a0f3n9/dsh-tool-bash',
     dir: 'tool-bash',
     source: 'packages/shell/tool-bash/src/index.ts',
-    requires: ['ctx.tools', 'ctx.shell', 'ctx.systemPrompt', 'ctx.shellEnv', 'ctx.jobs at call time for run_in_background'],
+    requires: ['ctx.tools', 'ctx.shell', 'ctx.systemPrompt', 'ctx.shellEnv', 'ctx.jobs for run_in_background and the job-backed foreground path'],
     writes: ['tool/call', 'tool/result'],
     async mount(ctx) {
       await ctx.plugin(LocalSubprocessRuntime)
       await ctx.plugin(BashEnvPlugin)
       await ctx.plugin(LocalBashExecutor)
+      // The shipped profiles compose the job registry, and the tool's
+      // background surface follows it: harvest the job-backed schema.
+      await ctx.plugin(LocalJobRegistry)
       await ctx.plugin(ToolBash)
     },
     note:
-      'The bash tool is the model-facing consumer of the bash executor seam. A `run_in_background` run registers with the generic `ctx.jobs` runtime and is collected/stopped through the `job_*` tools from `@x1a0f3n9/dsh-tool-jobs`; the `enableRunInBackground` config (default true) removes the parameter entirely when disabled.',
+      'The bash tool is the model-facing consumer of the bash executor seam. With a job registry composed every call registers with the generic `ctx.jobs` runtime as it starts, collected/stopped through the `job_*` tools from `@x1a0f3n9/dsh-tool-jobs`; without one, or with `enableRunInBackground: false`, the tool registers a foreground-only schema without the `run_in_background` parameter.',
   },
   {
     pkg: '@x1a0f3n9/dsh-tool-present',
@@ -312,15 +316,17 @@ const TOOL_PACKAGES: ToolPackage[] = [
     pkg: '@x1a0f3n9/dsh-tool-pwsh',
     dir: 'tool-pwsh',
     source: 'packages/shell/tool-pwsh/src/index.ts',
-    requires: ['ctx.tools', 'ctx.shell', 'ctx.systemPrompt', 'ctx.shellEnv', 'ctx.jobs at call time for run_in_background'],
+    requires: ['ctx.tools', 'ctx.shell', 'ctx.systemPrompt', 'ctx.shellEnv', 'ctx.jobs for run_in_background and the job-backed foreground path'],
     writes: ['tool/call', 'tool/result'],
     async mount(ctx) {
       // The pwsh tool consumes the bash executor seam; the schema harvest
       // mounts the pwsh-local implementation so the inject resolves without
-      // executing anything (registration never spawns a process).
+      // executing anything (registration never spawns a process). The job
+      // registry is composed for the same reason as the bash entry.
       await ctx.plugin(LocalSubprocessRuntime)
       await ctx.plugin(BashEnvPlugin)
       await ctx.plugin(PwshLocalExecutor)
+      await ctx.plugin(LocalJobRegistry)
       await ctx.plugin(ToolPwsh)
     },
     note:
@@ -444,22 +450,22 @@ const TOOL_PACKAGES: ToolPackage[] = [
     pkg: '@x1a0f3n9/dsh-schedule',
     dir: 'schedule',
     source: 'packages/schedule/schedule/src/tools.ts',
-    requires: ['ctx.tools', 'ctx.sessions', 'Session persistence', 'a future live root Agent'],
-    writes: ['tool/call', 'schedule/change create or delete', 'tool/result'],
+    requires: ['ctx.tools', 'ctx.schedule', 'a live root Agent'],
+    writes: ['tool/call', 'Schedule storage domain create, update, or delete', 'tool/result'],
     async mount(ctx) {
       await ctx.plugin(SessionStore)
       const session = ctx.sessions.create(SessionId('tool-catalog-schedule'))
       const agent = { id: session.id, session } as Agent
       await mountCatalogChildScope(ctx, (childCtx) => {
-        ToolSchedule.registerScheduleTools(ctx, childCtx, agent, () => {})
+        ToolSchedule.registerScheduleTools(ctx, childCtx, agent)
       }, agent, ['tools', 'systemPrompt'])
     },
     scope: ctx => catalogChildScopes.get(ctx) as Agent,
     note:
-      'Registered only inside live root Agent scopes created after the opt-in Schedule plugin loads. '
-      + 'Version 1 accepts after_seconds, explicit absolute at, and bounded fixed-rate every_seconds, '
-      + 'and discloses session-local delivery; '
-      + 'management reads and mutations require the shared Session persistence barrier.',
+      'Registered in live root Agent scopes while the Schedule service is loaded. '
+      + 'Accepts after_seconds, explicit absolute at, bounded fixed-rate every_seconds, daily and weekly '
+      + 'local times in an explicit IANA zone, and cron as a five-field expression. '
+      + 'Management uses the Host storage domain; due messages resume the original Session.',
   },
   {
     pkg: '@x1a0f3n9/dsh-tool-lsp',
@@ -635,6 +641,17 @@ const TOOL_PACKAGES: ToolPackage[] = [
       registerCatalogSubagentProvider(ctx, 'mock')
       await ctx.plugin(CatalogWorkflowEngine)
       await ctx.plugin(ToolWorkflow)
+    },
+  },
+  {
+    pkg: '@x1a0f3n9/dsh-tool-workspace-dependencies',
+    dir: 'tool-workspace-dependencies',
+    source: 'packages/skill/tool-workspace-dependencies/src/index.ts',
+    requires: ['ctx.tools'],
+    writes: ['tool/call', 'tool/result'],
+    async mount(ctx) {
+      // Schema harvest never prepares a payload; the directory need not exist.
+      await ctx.plugin(ToolWorkspaceDependencies, { source: resolve(root, '.tmp/tool-catalog/primary-runtime') })
     },
   },
   {

@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-18-layout-skips-git-hosted-dsh-plugins.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-18-layout-skips-git-hosted-dsh-plugins.md
-2026-09-18-layout-skips-git-hosted-dsh-plugins.md: ee546688796335c29f994c1a625e933425f6234d
-2026-09-18-layout-skips-git-hosted-dsh-plugins.zh.md: 629d9b4724851022ff2aa094fefe0306d13a6925
+/agent-note-layout-verifier-must-not-rewrite-git-hosted-dsh-plugins:
+  en: 01b856af6d5c7e3c
+  zh: fb7ac4298e4e0c2f
+/agent-note-layout-verifier-must-not-rewrite-git-hosted-dsh-plugins/problem:
+  en: 0309a31e90157169
+  zh: 9bd437ecf312b8ec
+/agent-note-layout-verifier-must-not-rewrite-git-hosted-dsh-plugins/decision:
+  en: 34f2c9129a1dddb9
+  zh: 7e0eb02759f9b93a
+/agent-note-layout-verifier-must-not-rewrite-git-hosted-dsh-plugins/alternatives-considered:
+  en: e4530045ab859e27
+  zh: f4f64e39a7477be9
+/agent-note-layout-verifier-must-not-rewrite-git-hosted-dsh-plugins/consequences:
+  en: 08b8962918b64ef9
+  zh: 7a37d10d7b895bce

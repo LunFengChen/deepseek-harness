@@ -1,6 +1,31 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/experimental/webworker-packer/README.md
-README.md: 60128db3bf064c712a8db191dbdafcc8d29d61c6
-README.zh.md: 64759ff7c08a9723528ae1e9fee0955946060679
+/:
+  en: 5bf871fc6ff3da7c
+  zh: eae970e01432a92a
+/x1a0f3n9-dsh-experimental-webworker-packer:
+  en: db0340315fc417a1
+  zh: 261c3985246915f2
+/x1a0f3n9-dsh-experimental-webworker-packer/summary:
+  en: 2cafd7568fd7ba2d
+  zh: 8879b809950a6034
+/x1a0f3n9-dsh-experimental-webworker-packer/table-of-contents:
+  en: 4e53164159b5ce41
+  zh: 89582dc0294d0776
+/x1a0f3n9-dsh-experimental-webworker-packer/use-this-package:
+  en: c0795340638d1eb3
+  zh: 5e6ece80b713eb79
+/x1a0f3n9-dsh-experimental-webworker-packer/model-experience:
+  en: e16b355530dadc1c
+  zh: 8488e03b253b7b33
+/x1a0f3n9-dsh-experimental-webworker-packer/model-experience/kv-cache-effect:
+  en: ca75c51c89c2c9b0
+  zh: 64715dc7e6d02f71
+/x1a0f3n9-dsh-experimental-webworker-packer/known-limitations-and-deferred-work:
+  en: 6cd07b34072a2d61
+  zh: 44c4017e727c19ff
+/x1a0f3n9-dsh-experimental-webworker-packer/known-limitations-and-deferred-work/dev-note:
+  en: 46176f90f22845c7
+  zh: 8e6ba8ba2958fba3

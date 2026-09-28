@@ -33,5 +33,7 @@
 - insert:
     - id: cordis-host-runner
       name: '@x1a0f3n9/dsh-cordis-host-runner'
+    - id: cordis-inspect-providers
+      name: '@x1a0f3n9/dsh-tool-cordis/host'
     - id: tool-cordis
       name: '@x1a0f3n9/dsh-tool-cordis'

@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-rewind-running-command-hang.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-rewind-running-command-hang.md
-2026-09-10-rewind-running-command-hang.md: 9486fc7b96564c2157b39040881951718a5c7f0b
-2026-09-10-rewind-running-command-hang.zh.md: cc03264e3e9de9c3c104d5d9d2973e4729c2d0c1
+/agent-note-rewind-ui-no-longer-hangs-on-a-running-command-card:
+  en: 617c4fb04d06dd59
+  zh: ef5db4a844620b05
+/agent-note-rewind-ui-no-longer-hangs-on-a-running-command-card/problem:
+  en: 9a9b1b5b480aa230
+  zh: 12e166aa481343e9
+/agent-note-rewind-ui-no-longer-hangs-on-a-running-command-card/decision:
+  en: 5a0bf376722cfd75
+  zh: dad10438de5033bc
+/agent-note-rewind-ui-no-longer-hangs-on-a-running-command-card/verification:
+  en: 423dcf153e75ae25
+  zh: 423dcf153e75ae25
+/agent-note-rewind-ui-no-longer-hangs-on-a-running-command-card/alternatives-considered:
+  en: fbd3a10312695c95
+  zh: e1a2747f3625758d
+/agent-note-rewind-ui-no-longer-hangs-on-a-running-command-card/consequences:
+  en: 2c485958aab59cb7
+  zh: e030e6dcc3bbbfcb

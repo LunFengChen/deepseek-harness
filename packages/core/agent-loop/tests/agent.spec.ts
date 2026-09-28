@@ -5,10 +5,19 @@ import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import LlmRuntime from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SessionId, SessionLogOffset } from '@x1a0f3n9/dsh-session'
+import type { MessageSource } from '@x1a0f3n9/dsh-llm'
+import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
+import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
 import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime from '@x1a0f3n9/dsh-tools'
 import { MockAdapter, textResponse } from './mock-adapter.ts'
+
+declare module '@x1a0f3n9/dsh-llm' {
+  interface MessageSourceMap {
+    'p': { kind: 'p' } & ContextFormed
+    'test': { kind: 'test' } & ContextFormed
+  }
+}
 
 async function harness(adapter: MockAdapter): Promise<Context> {
   const ctx = new Context()
@@ -33,7 +42,7 @@ describe('Agent', () => {
     const ctx = await harness(adapter)
     const agent = await ctx.agentLoop.create(SessionId('a1'), { provider: 'mock', model: 'mock' })
 
-    agent.inject(createUserMessage({ content: [{ type: 'text', text: 'context' }], source: { kind: 'plugin', plugin: 'p' } }))
+    agent.inject(createUserMessage({ content: [{ type: 'text', text: 'context' }], source: { kind: 'p' } }))
 
     expect(agent.session.snapshotEvents().map(event => event.type)).toEqual(['agent/inbox/spliced'])
     expect(agent.status).toBe('idle')
@@ -41,15 +50,16 @@ describe('Agent', () => {
     await agent.whenIdle()
   })
 
-  it('inject() preserves an explicitly empty plugin source', async () => {
+  it('inject() preserves an unknown producer source', async () => {
     const ctx = await harness(new MockAdapter([textResponse('ok')]))
     const agent = await ctx.agentLoop.create(SessionId('a1'), { provider: 'mock', model: 'mock' })
 
-    agent.inject(createUserMessage({ content: [{ type: 'text', text: 'empty plugin source' }], source: { kind: 'plugin', plugin: '' } }))
+    const source = { kind: 'unknown-producer' } as unknown as MessageSource
+    agent.inject(createUserMessage({ content: [{ type: 'text', text: 'empty plugin source' }], source }))
 
     const injected = agent.session.snapshotEvents().at(-1)
     expect(injected?.type === 'agent/inbox/spliced' && injected.data.inserted[0]?.source)
-      .toEqual({ kind: 'plugin', plugin: '' })
+      .toEqual({ kind: 'unknown-producer' })
   })
 
   it('emits exact inserted, claimed, and discarded inbox messages', async () => {
@@ -76,7 +86,7 @@ describe('Agent', () => {
     })
     const context = createUserMessage({
       content: [{ type: 'text', text: 'discard me' }],
-      source: { kind: 'plugin', plugin: 'test' },
+      source: { kind: 'test' },
     })
     agent.inject(context)
     agent.inbox.remove(context.id)
@@ -90,54 +100,12 @@ describe('Agent', () => {
     expect(lifecycle).toEqual(['turn/start', 'agent/inbox/claimed'])
   })
 
-  it('starts prompt assembly on a later macrotask after claiming', async () => {
-    const ctx = await harness(new MockAdapter([textResponse('ok')]))
-    const agent = await ctx.agentLoop.create(SessionId('yield-assemble'), { provider: 'mock', model: 'mock' })
-    const assemble = vi.spyOn(ctx.systemPrompt, 'assemble')
-    const lifecycle: string[] = []
-    ctx.on('session/event', (session, event) => {
-      if (session === agent.session && event.type === 'turn/start') lifecycle.push('turn/start')
-    })
-    ctx.on('agent/inbox/claimed', ({ agent: subject }) => {
-      if (subject === agent) lifecycle.push('agent/inbox/claimed')
-    })
-
-    try {
-      send(agent, 'run')
-      expect(lifecycle).toEqual(['turn/start', 'agent/inbox/claimed'])
-      expect(assemble).not.toHaveBeenCalled()
-
-      await new Promise<void>((resolve) => { setImmediate(resolve) })
-      expect(assemble).toHaveBeenCalledTimes(1)
-      await agent.whenIdle()
-    } finally {
-      assemble.mockRestore()
-    }
-  })
-
-  it('skips prompt assembly when cancelled during the post-claim yield', async () => {
-    const ctx = await harness(new MockAdapter([textResponse('ok')]))
-    const agent = await ctx.agentLoop.create(SessionId('yield-cancel'), { provider: 'mock', model: 'mock' })
-    const assemble = vi.spyOn(ctx.systemPrompt, 'assemble')
-
-    try {
-      send(agent, 'run')
-      expect(assemble).not.toHaveBeenCalled()
-      agent.cancel({ kind: 'user' })
-      await new Promise<void>((resolve) => { setImmediate(resolve) })
-      expect(assemble).not.toHaveBeenCalled()
-      await agent.whenIdle()
-    } finally {
-      assemble.mockRestore()
-    }
-  })
-
   it('idle inject() rejects invalid input before enqueue', async () => {
     const ctx = await harness(new MockAdapter([textResponse('ok')]))
     const agent = await ctx.agentLoop.create(SessionId('a1'), { provider: 'mock', model: 'mock' })
 
     expect(() => {
-      agent.inject(createUserMessage({ content: [{ type: 'text', text: 'x', bad: 1n } as never], source: { kind: 'plugin', plugin: 'p' } }))
+      agent.inject(createUserMessage({ content: [{ type: 'text', text: 'x', bad: 1n } as never], source: { kind: 'p' } }))
     }).toThrow(/non-JSON-serializable/)
     expect(agent.session.snapshotEvents()).toHaveLength(0)
   })
@@ -147,7 +115,7 @@ describe('Agent', () => {
     const ctx = await harness(adapter)
     const agent = await ctx.agentLoop.create(SessionId('a1'), { provider: 'mock', model: 'mock' })
 
-    agent.steer(createUserMessage({ content: [{ type: 'text', text: 'steer idle' }], source: { kind: 'plugin', plugin: 'test' } }))
+    agent.steer(createUserMessage({ content: [{ type: 'text', text: 'steer idle' }], source: { kind: 'test' } }))
     await agent.whenIdle()
 
     expect(agent.session.snapshotEvents().some(event => event.type === 'user/message')).toBe(true)
@@ -207,67 +175,5 @@ describe('Agent', () => {
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining('agent event "agent/status" listener threw'),
     )
-  })
-
-  it('followup after truncating the logged header still admits a user message', async () => {
-    const adapter = new MockAdapter([textResponse('one'), textResponse('two')])
-    const ctx = await harness(adapter)
-    const agent = await ctx.agentLoop.create(SessionId('truncate-header'), {
-      provider: 'mock', model: 'mock',
-    })
-    send(agent, 'first')
-    await agent.whenIdle()
-    const userEvent = agent.session.snapshotEvents().find(event => event.type === 'user/message')
-    if (userEvent === undefined) throw new Error('expected a user/message')
-    agent.session.truncate(agent.session.deletionStart(userEvent.seq))
-    agent.inbox.clear()
-    send(agent, 'second')
-    await agent.whenIdle()
-    expect(agent.session.snapshotEvents().flatMap((event) => {
-      if (event.type !== 'user/message') return []
-      return event.data.content.flatMap(part => part.type === 'text' ? [part.text] : [])
-    })).toEqual(['second'])
-  })
-})
-
-describe('seeded create', () => {
-  it('drops the reconstructed source queue as cancel splices and leaves the parent queued', async () => {
-    const ctx = await harness(new MockAdapter([]))
-    const parent = await ctx.agentLoop.create(SessionId('inbox-fork-parent'), {
-      provider: 'mock', model: 'mock',
-    })
-    const queued = createUserMessage({
-      content: [{ type: 'text', text: 'parent pending' }],
-      source: { kind: 'user' },
-    })
-    const nextStep = createUserMessage({
-      content: [{ type: 'text', text: 'parent next-step' }],
-      source: { kind: 'user' },
-    })
-    parent.inbox.append('next-turn', queued)
-    parent.inbox.append('next-step', nextStep)
-    const seed = parent.session.snapshotEvents()
-    const { agent: child } = await ctx.agents.create({
-      sessionId: SessionId('inbox-fork-child'),
-      seed,
-      inheritedEventCount: SessionLogOffset(seed.length),
-      meta: { parentSession: parent.id, isSeeded: true },
-      agentOptions: { provider: 'mock', model: 'mock' },
-    })
-
-    expect(parent.inbox.nextTurn).toEqual([queued])
-    expect(parent.inbox.nextStep).toEqual([nextStep])
-    expect(child.inbox.nextTurn).toEqual([])
-    expect(child.inbox.nextStep).toEqual([])
-    expect(child.session.snapshotEvents().at(seed.length)).toMatchObject({
-      type: 'session/end-seed',
-      data: { inherited: true },
-    })
-    expect(child.session.snapshotEvents().slice(seed.length + 1).map(event => (
-      event.type === 'agent/inbox/spliced' ? event.data : event.type
-    ))).toEqual([
-      { target: 'next-step', start: 0, removedCount: 1, inserted: [], outcome: 'canceled' },
-      { target: 'next-turn', start: 0, removedCount: 1, inserted: [], outcome: 'canceled' },
-    ])
   })
 })

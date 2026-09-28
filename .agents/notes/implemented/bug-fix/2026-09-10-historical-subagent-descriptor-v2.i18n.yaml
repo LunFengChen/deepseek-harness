@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-historical-subagent-descriptor-v2.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-historical-subagent-descriptor-v2.md
-2026-09-10-historical-subagent-descriptor-v2.md: eae8df863d773b940ea46dcbe8874f85d9d9b8a1
-2026-09-10-historical-subagent-descriptor-v2.zh.md: 429a16468093b5edf37da9d43388475ea0ba13bd
+/agent-note-historical-subagent-descriptor-version-2:
+  en: 297e4f63ce91df30
+  zh: 91b4ea4a7e7b0de7
+/agent-note-historical-subagent-descriptor-version-2/problem:
+  en: 04f4c3f8c3acf957
+  zh: 16283c6bde7d11b3
+/agent-note-historical-subagent-descriptor-version-2/decision:
+  en: ad2db97933fe5f1c
+  zh: 2af3720010fa0fc2
+/agent-note-historical-subagent-descriptor-version-2/alternatives-considered:
+  en: ca9c220aae581554
+  zh: 3ecc5c952b50d5f2
+/agent-note-historical-subagent-descriptor-version-2/consequences:
+  en: 19d9f05686afa972
+  zh: 887d904374e587a5

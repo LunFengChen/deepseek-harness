@@ -1,6 +1,64 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/feedback/command-feedback/README.md
-README.md: a4ca3a33b6c093a127f420d570ceb0098210c26b
-README.zh.md: da3dbcf7e4c4c76bb9604f979dd715cc5fb0ffda
+/:
+  en: 6fde8a2c01a13756
+  zh: 63b06f1e5373a1f0
+/x1a0f3n9-dsh-command-feedback:
+  en: 4d7b19d1c1b1a57d
+  zh: f1e35967b65f4992
+/x1a0f3n9-dsh-command-feedback/summary:
+  en: b3803d4fff915e52
+  zh: d2584d750443fd91
+/x1a0f3n9-dsh-command-feedback/table-of-contents:
+  en: d152484eb41ac6b4
+  zh: 09388d293f9be9cb
+/x1a0f3n9-dsh-command-feedback/use-this-package:
+  en: 2e9c7334f5ed57b3
+  zh: 8c25b5a898fb5895
+/x1a0f3n9-dsh-command-feedback/use-this-package/the-feedback-command:
+  en: 645ee72ee1af491d
+  zh: 32b86c39307093e3
+/x1a0f3n9-dsh-command-feedback/use-this-package/the-web-feedback-dialog:
+  en: 21fae542942446d2
+  zh: 34d83535891dabee
+/x1a0f3n9-dsh-command-feedback/use-this-package/recording-feedback-from-your-own-ui:
+  en: c6ee98ae5229d76f
+  zh: e058dae4cb5dd254
+/x1a0f3n9-dsh-command-feedback/understand-the-implementation:
+  en: 42b15ac6321706aa
+  zh: 4ed0861911abaf5d
+/x1a0f3n9-dsh-command-feedback/understand-the-implementation/design-concept:
+  en: 8363f597c28788d2
+  zh: 9dda2a864a01f4ce
+/x1a0f3n9-dsh-command-feedback/understand-the-implementation/how-a-remark-is-recorded:
+  en: 0c6ceecbb1f45224
+  zh: 8138bb0fd3e68317
+/x1a0f3n9-dsh-command-feedback/understand-the-implementation/source-map:
+  en: 4fd622508f032a28
+  zh: fa336bcbaabca58e
+/x1a0f3n9-dsh-command-feedback/further-exploration:
+  en: 3f3b9c53cd589403
+  zh: 13ca15c564be3521
+/x1a0f3n9-dsh-command-feedback/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/x1a0f3n9-dsh-command-feedback/model-experience/human-feedback-capture:
+  en: 987bab29bbe8ec43
+  zh: 725efc45361172b5
+/x1a0f3n9-dsh-command-feedback/model-experience/human-feedback-capture/what-the-model-sees:
+  en: 6ad8e2a4f961d2f4
+  zh: b510d05a74d6df0c
+/x1a0f3n9-dsh-command-feedback/model-experience/human-feedback-capture/token-effect:
+  en: 1fcbd4d84eff267f
+  zh: 8da9902c44bf8dc4
+/x1a0f3n9-dsh-command-feedback/model-experience/human-feedback-capture/kv-cache-effect:
+  en: c72e7dfee7b0957a
+  zh: b122fce5efccfafa
+/x1a0f3n9-dsh-command-feedback/known-limitations-and-deferred-work:
+  en: b45e656a009e37b7
+  zh: 4949bd712564ee54
+/x1a0f3n9-dsh-command-feedback/known-limitations-and-deferred-work/dev-note:
+  en: b4bf58d55f599bc2
+  zh: fea7a6b69b0266e1

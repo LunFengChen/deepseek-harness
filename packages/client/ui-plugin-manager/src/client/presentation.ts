@@ -1,25 +1,48 @@
 /** Display labels and toast sentences for global plugin management. */
 
-import type { ManagementError } from '@x1a0f3n9/dsh-api-remotes/client'
+import type { IncompatiblePlugin, ManagementError, Registry } from '@x1a0f3n9/dsh-api-remotes/client'
 import type { PropsLocale } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { PluginManagerLocaleKey } from './locales.ts'
-import type { FailedAction, ManagerNotice, PackageView } from './manager-store.ts'
+import type { FailedAction, ManagerNotice, PackageRow, PackageView, PluginManagerFace } from './manager-store.ts'
 
 /** The translate seat of the manager's dictionary. */
 export type Translate = PropsLocale<'pluginManager'>['t']
 
-/** The official packages with copy of their own, and whether each is a beta feature the page tags as such. */
-const BUILTIN_COPY = new Map<string, { title: PluginManagerLocaleKey; description: PluginManagerLocaleKey; beta: boolean }>([
-  ['@x1a0f3n9/dsh-experimental-agent-team-profile', {
-    title: 'builtinAgentTeamTitle', description: 'builtinAgentTeamDescription', beta: true,
-  }],
-  ['@x1a0f3n9/dsh-experimental-agent-team-web-profile', {
-    title: 'builtinAgentTeamWebTitle', description: 'builtinAgentTeamWebDescription', beta: true,
-  }],
-  ['@x1a0f3n9/dsh-experimental-auto-review', {
-    title: 'builtinAutoReviewTitle', description: 'builtinAutoReviewDescription', beta: true,
-  }],
+/** The registries with a name of their own, by host. */
+const REGISTRY_COPY = new Map<string, PluginManagerLocaleKey>([
+  ['registry.npmmirror.com', 'registryNpmmirror'],
 ])
+
+/** npm's own registry, which reads by name rather than by host. */
+const OFFICIAL_NPM_HOST = 'registry.npmjs.org'
+
+/**
+ * What a registry reads as: npm's own by its name, a known mirror by its name, any other registry by its host;
+ * and the host each names, for where the name alone would leave it unsaid. The registry pnpm's own configuration
+ * names reads by the registry it names, so the label never claims npm's own for another one.
+ * @param registry - the registry, null for the one pnpm's own configuration names.
+ * @param t - the manager's translate seat.
+ * @param resolved - the URL pnpm's own configuration names, null while the Host could not read it.
+ * @returns the name and the host.
+ */
+export function registryText(registry: Registry, t: Translate, resolved: string | null): { name: string; host: string } {
+  const url = registry ?? resolved
+  // A configuration the Host could not read names no registry: the entry keeps the neutral default name.
+  if (url === null) return { name: t('registryDefault'), host: OFFICIAL_NPM_HOST }
+  const host = registryHost(url)
+  const key = host === OFFICIAL_NPM_HOST ? 'registryOfficial' : REGISTRY_COPY.get(host)
+  return { name: key === undefined ? host : t(key), host }
+}
+
+/** The host of a registry URL; the URL as written when it does not parse. */
+function registryHost(registry: string): string {
+  try {
+    return new URL(registry).host
+  } catch {
+    // The Host validated its own registries; a remembered one that no longer parses is shown as written.
+    return registry
+  }
+}
 
 /** The sentence each of the Host's refusal codes reads as. */
 const CODE_KEYS = {
@@ -33,6 +56,7 @@ const CODE_KEYS = {
   'stop-profile': 'reasonStopProfile',
   'bundle-in-use': 'reasonBundleInUse',
   'stale-approval': 'reasonStaleApproval',
+  'incompatible-version': 'reasonIncompatibleVersionUnnamed',
   'operation-error': 'reasonOperationError',
 } satisfies Record<ManagementError['code'], PluginManagerLocaleKey>
 
@@ -46,13 +70,23 @@ const FAILED_KEYS = {
 } satisfies Record<FailedAction, PluginManagerLocaleKey>
 
 /**
- * What a management error reads as: the code's sentence, or, for an
- * operation error, the Host's diagnostic as it is.
- * @param error - the Host's code and its diagnostic, when it has one.
+ * What a management error reads as: the code's sentence, one sentence per
+ * package an incompatibility names, or, for an operation error, the Host's diagnostic as it is.
+ * @param error - the Host's code, its diagnostic, and the packages an incompatibility names.
  * @param t - the manager's translate seat.
  * @returns the sentence.
  */
-export function managementText(error: { readonly code: ManagementError['code']; readonly diagnostic?: string }, t: Translate): string {
+export function managementText(error: {
+  readonly code: ManagementError['code']
+  readonly diagnostic?: string
+  readonly incompatible?: readonly IncompatiblePlugin[]
+}, t: Translate): string {
+  if (error.code === 'incompatible-version' && error.incompatible !== undefined && error.incompatible.length > 0) {
+    return error.incompatible.map(plugin => t('reasonIncompatibleVersion', {
+      plugin: `${plugin.name}@${plugin.version}`, runtime: plugin.runtimeVersion,
+      peers: Object.entries(plugin.peers).map(([name, range]) => `${name} ${range}`).join(', '),
+    })).join(' ')
+  }
   if (error.code !== 'operation-error') return t(CODE_KEYS[error.code])
   return error.diagnostic === undefined || error.diagnostic === '' ? t('reasonOperationError') : error.diagnostic
 }
@@ -68,18 +102,34 @@ export function shortName(name: string): string {
 }
 
 /**
- * Localize known official packages by exact npm name at render time.
- * @param pkg - original package identity and optional metadata description.
- * @param t - the manager's current translate function.
- * @returns localized copy and whether the package is a beta feature, or the package's short name and original description.
+ * Resolve installed package metadata without changing its technical identity.
+ * @param pkg - package identity and local metadata.
+ * @param resolveText - current-locale package text resolver.
+ * @returns localized copy with a technical-name fallback and the independent beta status.
  */
 export function packageText(
-  pkg: Pick<PackageView, 'name' | 'description'>, t: Translate,
+  pkg: Pick<PackageView, 'name' | 'meta'>, resolveText: PluginManagerFace['resolveText'],
 ): { title: string; description: string | undefined; beta: boolean } {
-  const keys = BUILTIN_COPY.get(pkg.name)
-  return keys === undefined
-    ? { title: shortName(pkg.name), description: pkg.description, beta: false }
-    : { title: t(keys.title), description: t(keys.description), beta: keys.beta }
+  return {
+    title: pkg.meta?.title === undefined ? pkg.name : resolveText(pkg.meta.title),
+    description: pkg.meta?.description === undefined ? undefined : resolveText(pkg.meta.description) || undefined,
+    beta: pkg.name.startsWith('@x1a0f3n9/dsh-experimental-'),
+  }
+}
+
+/**
+ * Resolve a bundle row's plugin metadata, using its full module specifier as the final title fallback.
+ * @param row - row identity and local metadata.
+ * @param resolveText - current-locale package text resolver.
+ * @returns the row's display title and optional description.
+ */
+export function rowText(
+  row: Pick<PackageRow, 'moduleName' | 'meta'>, resolveText: PluginManagerFace['resolveText'],
+): { title: string; description: string | undefined } {
+  return {
+    title: row.meta?.title === undefined ? row.moduleName : resolveText(row.meta.title),
+    description: row.meta?.description === undefined ? undefined : resolveText(row.meta.description) || undefined,
+  }
 }
 
 /**
@@ -93,8 +143,14 @@ export function noticeText(notice: ManagerNotice, t: Translate): string {
     case 'restart': return t('restartNotice')
     case 'overridden': return t('overriddenNotice', { name: notice.packageName })
     case 'cancelled': return t('installCancelled')
+    case 'install': return t(({
+      done: 'installBackgroundDone', failed: 'installBackgroundFailed',
+      unconfirmed: 'installBackgroundUnconfirmed', applying: 'installBackgroundApplying', unknown: 'installBackgroundUnknown',
+    } as const)[notice.outcome])
     case 'failed': {
-      const reason = notice.code === undefined ? notice.reason : managementText({ code: notice.code, diagnostic: notice.reason }, t)
+      const reason = notice.code === undefined ? notice.reason : managementText({
+        code: notice.code, diagnostic: notice.reason, ...notice.incompatible === undefined ? {} : { incompatible: notice.incompatible },
+      }, t)
       return t(FAILED_KEYS[notice.action], { reason: reason === '' ? t('reasonOperationError') : reason })
     }
   }

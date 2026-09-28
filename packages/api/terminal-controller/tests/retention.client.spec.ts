@@ -2,6 +2,7 @@
 import { afterEach, expect, it, vi } from 'vitest'
 import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import { RemoteStream, type ClientRemote } from '@x1a0f3n9/dsh-api-gateway/client'
+import { streamMethod } from '@x1a0f3n9/dsh-remote-mock'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type { TerminalRemote } from '../src/client/model.ts'
 import { TerminalWindowHold } from '../src/client/retention.ts'
@@ -9,9 +10,14 @@ import type { TerminalRetentionFrame, WebTerminalId } from '../src/types.ts'
 
 const holds: TerminalWindowHold[] = []
 afterEach(async () => { await Promise.all(holds.splice(0).map(hold => hold.dispose())) })
-function hold(retain: TerminalRemote['retain']) {
+function hold(retain: Parameters<typeof streamMethod<TerminalRemote['retain']>>[0]) {
   const gateway: Pick<ClientRemote, '$stream'> = { $stream: options => new RemoteStream({ generation: createSnapshotStore(undefined) }, options) }
-  const held = new TerminalWindowHold(gateway, { retain } as TerminalRemote, 'session' as SessionId, 'terminal' as WebTerminalId)
+  const held = new TerminalWindowHold(
+    gateway,
+    { retain: streamMethod<TerminalRemote['retain']>(retain) } as TerminalRemote,
+    'session' as SessionId,
+    'terminal' as WebTerminalId,
+  )
   holds.push(held)
   return held
 }

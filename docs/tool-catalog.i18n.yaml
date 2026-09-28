@@ -1,6 +1,313 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for tool-catalog.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write docs/tool-catalog.md
-tool-catalog.md: 4113c1f987cd5e64f61428a2a74de53e2d6d3ea6
-tool-catalog.zh.md: 9c61c6278a23352f58dfc82f24901935b439c856
+/:
+  en: 0be8ffbf23193557
+  zh: ce2c69aa86875171
+/tool-schema-catalog:
+  en: 6cc2cd9ced70bb09
+  zh: 1c0e6cb4ba2ed637
+/tool-schema-catalog/tool-package-map:
+  en: 076c0024553008a3
+  zh: cf20488123df2bb2
+/tool-schema-catalog/x1a0f3n9-dsh-plugin-manager:
+  en: 15b535aa303b00b3
+  zh: 15b535aa303b00b3
+/tool-schema-catalog/x1a0f3n9-dsh-plugin-manager/plugin-manager:
+  en: ab4d1e7f7aa435b5
+  zh: 70af9245b9b98039
+/tool-schema-catalog/x1a0f3n9-dsh-mcp-resources:
+  en: 01ad620d35f73f48
+  zh: 01ad620d35f73f48
+/tool-schema-catalog/x1a0f3n9-dsh-mcp-resources/list-mcp-resource-templates:
+  en: 96275ece9d040944
+  zh: 1fa9744642601ece
+/tool-schema-catalog/x1a0f3n9-dsh-mcp-resources/list-mcp-resources:
+  en: bf4236607199d61e
+  zh: 82f4f749dcabc89f
+/tool-schema-catalog/x1a0f3n9-dsh-mcp-resources/read-mcp-resource:
+  en: 5d92c07fa062734f
+  zh: 2d6f0cb8116cf567
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-browser-use-stagehand-native:
+  en: 0cd4321065980630
+  zh: 0cd4321065980630
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-browser-use-stagehand-native/stagehand-act:
+  en: c4b27bf62c534dcc
+  zh: 70c53824ed57ac23
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-browser-use-stagehand-native/stagehand-extract:
+  en: ec7462ab99848155
+  zh: 632fe0249040708e
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-browser-use-stagehand-native/stagehand-navigate:
+  en: ef97f063a037a006
+  zh: 27727ccc908e007f
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-browser-use-stagehand-native/stagehand-observe:
+  en: 2068f1baa0a59e1b
+  zh: 5743c7b33e2c5ccb
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-browser-use-stagehand-native/stagehand-screenshot:
+  en: 4910ab327694ee97
+  zh: 17e79e4366cb636d
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-browser-use-stagehand-native/stagehand-tabs:
+  en: 095b18f9376e073d
+  zh: abd8785f8acaa555
+/tool-schema-catalog/x1a0f3n9-dsh-tool-ask-user:
+  en: 1ac56400d5f36fee
+  zh: 1ac56400d5f36fee
+/tool-schema-catalog/x1a0f3n9-dsh-tool-ask-user/ask-user-question:
+  en: f42b7f17ad59577a
+  zh: 7e1eee22ff35d4b1
+/tool-schema-catalog/x1a0f3n9-dsh-tools:
+  en: ec0686f90ddbf1c3
+  zh: ec0686f90ddbf1c3
+/tool-schema-catalog/x1a0f3n9-dsh-tools/run-code:
+  en: 8358b1f3dd09e202
+  zh: 0dbce569ba4b4c76
+/tool-schema-catalog/x1a0f3n9-dsh-plan-mode:
+  en: 4d0035945ec1a16f
+  zh: 4d0035945ec1a16f
+/tool-schema-catalog/x1a0f3n9-dsh-plan-mode/exit-plan-mode:
+  en: b410483c2bd0c1a1
+  zh: a07ceea6abf1dda3
+/tool-schema-catalog/x1a0f3n9-dsh-tool-bash:
+  en: a6f2cd6ae0d3054a
+  zh: a6f2cd6ae0d3054a
+/tool-schema-catalog/x1a0f3n9-dsh-tool-bash/bash:
+  en: 35cd0629cc53b14c
+  zh: eb8e0960941b6dea
+/tool-schema-catalog/x1a0f3n9-dsh-tool-present:
+  en: 1fb96aa8ddf0b936
+  zh: 1fb96aa8ddf0b936
+/tool-schema-catalog/x1a0f3n9-dsh-tool-present/present:
+  en: 24ef5efe4c0edf50
+  zh: a2914d345bd8eefa
+/tool-schema-catalog/x1a0f3n9-dsh-tool-pwsh:
+  en: cbbf6ee351e50868
+  zh: cbbf6ee351e50868
+/tool-schema-catalog/x1a0f3n9-dsh-tool-pwsh/pwsh:
+  en: 46b6dfe2a1c27ca1
+  zh: 9991662a649f7fd0
+/tool-schema-catalog/x1a0f3n9-dsh-tool-cordis:
+  en: 0f3d6a22b35a858e
+  zh: 0f3d6a22b35a858e
+/tool-schema-catalog/x1a0f3n9-dsh-tool-cordis/cordis-inspect-list:
+  en: 594e5b42047969cc
+  zh: 72189ca21345c210
+/tool-schema-catalog/x1a0f3n9-dsh-tool-cordis/cordis-inspect-query:
+  en: 8321129f661db9f7
+  zh: 6d9c220c84d47b06
+/tool-schema-catalog/x1a0f3n9-dsh-tool-bash-persistent:
+  en: e68110d88c2eba54
+  zh: e68110d88c2eba54
+/tool-schema-catalog/x1a0f3n9-dsh-tool-bash-persistent/bash:
+  en: 86421501a9d65ccc
+  zh: d1dc400507952331
+/tool-schema-catalog/x1a0f3n9-dsh-tool-pwsh-persistent:
+  en: 10240bf8039d2647
+  zh: 10240bf8039d2647
+/tool-schema-catalog/x1a0f3n9-dsh-tool-pwsh-persistent/pwsh:
+  en: 214866b3419c8e12
+  zh: c23368fc61772d52
+/tool-schema-catalog/x1a0f3n9-dsh-tool-str-replace-editor:
+  en: 1a87173ea3cf78eb
+  zh: 1a87173ea3cf78eb
+/tool-schema-catalog/x1a0f3n9-dsh-tool-str-replace-editor/str-replace-editor:
+  en: 3d11196a13e69228
+  zh: 56019c74cf0633cd
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs:
+  en: aca5aa33436ffbe7
+  zh: aca5aa33436ffbe7
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs/edit:
+  en: 5b6a252adde51af6
+  zh: 7aa172a5d8b9cbd2
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs/read:
+  en: 94bfc5b03c63baef
+  zh: 339338a0e74696c3
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs/read-image:
+  en: f6f7a1140066ce04
+  zh: d528e01a0939795a
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs/write:
+  en: 93c06e9519bdb0f3
+  zh: 7ef205215ecbc06d
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs-search:
+  en: c89e4de6e2a67024
+  zh: c89e4de6e2a67024
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs-search/glob:
+  en: 3ba734ba7852cdd5
+  zh: c6ce31ff2c195520
+/tool-schema-catalog/x1a0f3n9-dsh-tool-fs-search/grep:
+  en: 6e1f7da62cc9a35b
+  zh: ee7f3081887f8067
+/tool-schema-catalog/x1a0f3n9-dsh-tool-terminal:
+  en: b5eafd861e64c90e
+  zh: b5eafd861e64c90e
+/tool-schema-catalog/x1a0f3n9-dsh-tool-terminal/terminal-close:
+  en: 6d6e428c866ac6c1
+  zh: 8033539fcdcb6e7b
+/tool-schema-catalog/x1a0f3n9-dsh-tool-terminal/terminal-list:
+  en: ae7d5bce32142aa5
+  zh: e956a650a5bf294b
+/tool-schema-catalog/x1a0f3n9-dsh-tool-terminal/terminal-open:
+  en: c542bd7f7e872441
+  zh: 14731de81780b518
+/tool-schema-catalog/x1a0f3n9-dsh-tool-terminal/terminal-read:
+  en: 6a7491d2436e4404
+  zh: 772ff408ec0a67e3
+/tool-schema-catalog/x1a0f3n9-dsh-tool-terminal/terminal-send:
+  en: e24ca8735dd59adb
+  zh: 24f7140a0aed0968
+/tool-schema-catalog/x1a0f3n9-dsh-tool-terminal/terminal-signal:
+  en: 36a7f502acf00049
+  zh: 00b4567b534eb7b2
+/tool-schema-catalog/x1a0f3n9-dsh-tool-goal:
+  en: 51d6ddc909c165a7
+  zh: 51d6ddc909c165a7
+/tool-schema-catalog/x1a0f3n9-dsh-tool-goal/create-goal:
+  en: 9ae877cdf8a641a3
+  zh: f83c3c09e80e4190
+/tool-schema-catalog/x1a0f3n9-dsh-tool-goal/get-goal:
+  en: 0b517f13dfde11fe
+  zh: b7ee7482e8ecde56
+/tool-schema-catalog/x1a0f3n9-dsh-tool-goal/update-goal:
+  en: e6b92fac5aad585c
+  zh: 6b3cdd87b059a98f
+/tool-schema-catalog/x1a0f3n9-dsh-schedule:
+  en: e324e0ecafca5288
+  zh: e324e0ecafca5288
+/tool-schema-catalog/x1a0f3n9-dsh-schedule/schedule-create:
+  en: 0a10b5db8919d316
+  zh: 175d680a29f59b63
+/tool-schema-catalog/x1a0f3n9-dsh-schedule/schedule-delete:
+  en: cff096695f06e298
+  zh: 3d0063a1e529377f
+/tool-schema-catalog/x1a0f3n9-dsh-schedule/schedule-list:
+  en: d8543c8503d0947e
+  zh: 205e6c813ad2b37c
+/tool-schema-catalog/x1a0f3n9-dsh-schedule/schedule-update:
+  en: 3d5e2517b510238b
+  zh: d6e5c4c4465c9645
+/tool-schema-catalog/x1a0f3n9-dsh-tool-lsp:
+  en: ba69ed30b84976ef
+  zh: ba69ed30b84976ef
+/tool-schema-catalog/x1a0f3n9-dsh-tool-lsp/lsp:
+  en: 55c6bfde36367542
+  zh: a3f8c70f3cdecfb4
+/tool-schema-catalog/x1a0f3n9-dsh-tool-ralph:
+  en: 3bcf059b2f8d1e43
+  zh: 3bcf059b2f8d1e43
+/tool-schema-catalog/x1a0f3n9-dsh-tool-ralph/ralph:
+  en: a14c562ee26ddfd8
+  zh: caa6d1acf95a8199
+/tool-schema-catalog/x1a0f3n9-dsh-tool-skill:
+  en: 493c70446184ef5a
+  zh: 493c70446184ef5a
+/tool-schema-catalog/x1a0f3n9-dsh-tool-skill/skill:
+  en: 9b159d5831855afb
+  zh: 275ee82af0e0f59a
+/tool-schema-catalog/x1a0f3n9-dsh-tool-session-query:
+  en: 69629f11e2800331
+  zh: 69629f11e2800331
+/tool-schema-catalog/x1a0f3n9-dsh-tool-session-query/session-event-read:
+  en: 6687105065ac3a5f
+  zh: 48b2f4d38536e4c7
+/tool-schema-catalog/x1a0f3n9-dsh-tool-session-query/session-event-search:
+  en: 41251b4cbe9af70d
+  zh: 8855a5f32b4720e5
+/tool-schema-catalog/x1a0f3n9-dsh-tool-session-query/session-event-trace:
+  en: 14b5ec05fa8c0932
+  zh: 3c85d44c13cc42c5
+/tool-schema-catalog/x1a0f3n9-dsh-tool-session-query/session-search:
+  en: 8263202c97568fc3
+  zh: 92067337294c7a00
+/tool-schema-catalog/x1a0f3n9-dsh-tool-session-query/session-trace:
+  en: 22866623e207d94e
+  zh: 59f4f8eadcdba85c
+/tool-schema-catalog/x1a0f3n9-dsh-tool-subagent:
+  en: fa395aa95c48b274
+  zh: fa395aa95c48b274
+/tool-schema-catalog/x1a0f3n9-dsh-tool-subagent/list-subagent-models:
+  en: c89084b31ffccbce
+  zh: d7b3b7000f2d2be9
+/tool-schema-catalog/x1a0f3n9-dsh-tool-subagent/subagent:
+  en: 55cbd29d70bcf3d7
+  zh: 886a1b57446bd5e1
+/tool-schema-catalog/x1a0f3n9-dsh-tool-subagent-control:
+  en: c6bc1abd058ee322
+  zh: c6bc1abd058ee322
+/tool-schema-catalog/x1a0f3n9-dsh-tool-subagent-control/interrupt-agent:
+  en: 0cec3f2520050839
+  zh: 06735f086cea84f1
+/tool-schema-catalog/x1a0f3n9-dsh-tool-subagent-control/list-agents:
+  en: ae22e8543d123c39
+  zh: 4943a5c5980fc2d3
+/tool-schema-catalog/x1a0f3n9-dsh-tool-subagent-control/send-message:
+  en: 2ebdc450faef6446
+  zh: 7e3cff35fedc6a32
+/tool-schema-catalog/x1a0f3n9-dsh-tool-jobs:
+  en: 0e541d7419a7d336
+  zh: 0e541d7419a7d336
+/tool-schema-catalog/x1a0f3n9-dsh-tool-jobs/job-kill:
+  en: 14294cc1988ae768
+  zh: 80a9152bdc02723f
+/tool-schema-catalog/x1a0f3n9-dsh-tool-jobs/job-list:
+  en: 0c37fb1fed979d72
+  zh: 5ea9d07f5a4a8a6c
+/tool-schema-catalog/x1a0f3n9-dsh-tool-jobs/job-output:
+  en: f927cca09b283e21
+  zh: 2acd9b36737f17c2
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team:
+  en: de3e3a1e4a363603
+  zh: de3e3a1e4a363603
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/interrupt-agent:
+  en: c3c7af05ceb9f8c9
+  zh: ec379e0b42110c6a
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/list-agents:
+  en: f9457f033f75f00a
+  zh: a2d60ec44118c34c
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/send-message:
+  en: e99455aec4656ff2
+  zh: a8f88ec35cfe38b8
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/spawn-teammate:
+  en: 02d6cc746e234b99
+  zh: 49bc60ac098bca48
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/team-task-create:
+  en: 91e84febe063c3bd
+  zh: 550555d0f44f603b
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/team-task-get:
+  en: 1c6ae0aba0b8041d
+  zh: f8d634387b74121d
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/team-task-list:
+  en: 2084d494aae8798a
+  zh: e4c136c91028a7b1
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/team-task-update:
+  en: 2eac7360ba68b1bd
+  zh: b5d676bf288c245e
+/tool-schema-catalog/x1a0f3n9-dsh-experimental-tool-agent-team/wait-agent:
+  en: fbc4d75a9bcf6816
+  zh: 672131ac2705f411
+/tool-schema-catalog/x1a0f3n9-dsh-tool-todo:
+  en: d9bdde426ec220ed
+  zh: d9bdde426ec220ed
+/tool-schema-catalog/x1a0f3n9-dsh-tool-todo/todo-write:
+  en: 8c64fe5f2e58a890
+  zh: e3c780fc842aeb43
+/tool-schema-catalog/x1a0f3n9-dsh-tool-workflow:
+  en: 0de4a4f5ab89a0db
+  zh: 0de4a4f5ab89a0db
+/tool-schema-catalog/x1a0f3n9-dsh-tool-workflow/workflow:
+  en: fdd667cfe21481e8
+  zh: 88864d3b958398a4
+/tool-schema-catalog/x1a0f3n9-dsh-tool-workspace-dependencies:
+  en: 8ea49d42eb299091
+  zh: 8ea49d42eb299091
+/tool-schema-catalog/x1a0f3n9-dsh-tool-workspace-dependencies/load-workspace-dependencies:
+  en: 77b88764ff3464e9
+  zh: a9ca7eeb15ada747
+/tool-schema-catalog/x1a0f3n9-dsh-tool-web:
+  en: d21b223155041668
+  zh: d21b223155041668
+/tool-schema-catalog/x1a0f3n9-dsh-tool-web/web-fetch:
+  en: 8673f203aea9bdf2
+  zh: 4e17783ffdf34c83
+/tool-schema-catalog/x1a0f3n9-dsh-tool-web/web-search:
+  en: cc1ad38bf0006710
+  zh: 324eacb827a09e93

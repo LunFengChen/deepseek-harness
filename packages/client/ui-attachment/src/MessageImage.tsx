@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
-import { IconLoadingOutline16, IconRefreshOutline16 } from '@x1a0f3n9/dsh-client-ui-primitives'
-import { ImageLightbox } from './ImageLightbox.tsx'
-import type { ImageLightboxLabels } from './ImageLightbox.tsx'
+import { IconLoadingOutlineRegular, IconRefreshOutlineRegular } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { ImageLightbox } from '@x1a0f3n9/dsh-client-ui-primitives'
+import type { ImageLightboxLabels } from '@x1a0f3n9/dsh-client-ui-primitives'
 import css from './MessageImage.module.css'
 
 /** Loads a session-authorized durable image URL and may expose a cached URL synchronously. */
@@ -135,7 +135,7 @@ export function MessageImage({ image, load, variant, labels }: {
       onClick={request}
     >
       {variant === 'thumbnail'
-        ? <span aria-hidden="true"><IconRefreshOutline16 /></span>
+        ? <span aria-hidden="true"><IconRefreshOutlineRegular /></span>
         : labels.loadFailed}
     </button>
   )
@@ -154,7 +154,7 @@ export function MessageImage({ image, load, variant, labels }: {
         {src === null
           ? (
             <span className={css.loading} aria-hidden={loadingThumbnail || undefined}>
-              {loadingThumbnail ? <IconLoadingOutline16 className={css.spinner} /> : labels.loading}
+              {loadingThumbnail ? <IconLoadingOutlineRegular className={css.spinner} /> : labels.loading}
             </span>
           )
           : <img src={src} alt={label} style={fit === undefined ? undefined : { objectPosition: fit.objectPosition }} />}

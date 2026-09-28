@@ -22,7 +22,7 @@ Status: implemented
 
 **钉在 `v0.1.0` 并改 `node_modules`。** 下一次安装会把坏掉的 factory 装回来。
 
-**把插件 peer 改写成 `npm:@x1a0f3n9/dsh-*@workspace:*`。** 否决：其它 LunFengChen fork 仍用官方 `@deepseek-ai/dsh-*` 名，由 `pnpm-workspace.yaml` 做映射。
+**把插件 peer 改写成 `npm:@x1a0f3n9/dsh-*@workspace:*`。** 否决：其它 LunFengChen fork 仍用官方 `@x1a0f3n9/dsh-*` 名，由 `pnpm-workspace.yaml` 做映射。
 
 ## Consequences
 

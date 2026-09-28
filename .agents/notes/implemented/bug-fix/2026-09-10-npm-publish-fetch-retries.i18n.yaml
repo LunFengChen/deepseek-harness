@@ -1,6 +1,22 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-09-10-npm-publish-fetch-retries.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-09-10-npm-publish-fetch-retries.md
-2026-09-10-npm-publish-fetch-retries.md: f24dd94fd2aa3b6d87996b8ed686f91ab27d705b
-2026-09-10-npm-publish-fetch-retries.zh.md: 7a92be45c034d40b505104dd507568b40b6a6fe1
+/agent-note-npm-publish-must-not-retry-429-internally:
+  en: 72c393e1bdb77d6f
+  zh: 58b4866820509c7a
+/agent-note-npm-publish-must-not-retry-429-internally/problem:
+  en: e8ab306a8f5e9cf6
+  zh: e5b656c55103e1ad
+/agent-note-npm-publish-must-not-retry-429-internally/decision:
+  en: 4204a4a6777e088e
+  zh: b993dce0b3c4063a
+/agent-note-npm-publish-must-not-retry-429-internally/verification:
+  en: 4751d4de76cacdaa
+  zh: 4be6b90d062a7db6
+/agent-note-npm-publish-must-not-retry-429-internally/alternatives-considered:
+  en: 1dbda6ea77553fe5
+  zh: ba187abdce8caa6e
+/agent-note-npm-publish-must-not-retry-429-internally/consequences:
+  en: 863ae9f1fa157807
+  zh: 3538d92da01c1447
