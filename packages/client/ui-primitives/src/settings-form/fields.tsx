@@ -119,7 +119,7 @@ export function SettingsValueField(props: Omit<SettingsFieldProps, 'hint'> & {
  * @param props - the field's copy, staged value, choices, and edit actions.
  * @returns the labelled select control.
  */
-export function SelectField(props: FieldProps & {
+export function SelectField(props: SettingsFieldProps & {
   /** Choices rendered in the same order as the provider policy. */
   options: readonly { value: string; label: string }[]
 }) {

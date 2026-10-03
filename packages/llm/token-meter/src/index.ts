@@ -101,7 +101,6 @@ declare module '@deepseek-ai/cordis' {
 
 /** Open step in the live tail; the window never splits an in-flight turn. */
 function openStepStart(session: Session): { turn: number; step: number } | undefined {
-  // oxlint-disable-next-line typescript/no-deprecated -- Live tail snapshot; prefix is not required.
   const events = session.snapshotEvents()
   for (let index = events.length - 1; index >= 0; index -= 1) {
     const event = events[index]
@@ -164,7 +163,7 @@ export class TokenMeter extends Service {
       }
       this.states.set(session, state)
     }
-    if (state.consumedEvents !== event.seq) {
+    if (SessionSeq(state.consumedEvents) !== event.seq) {
       throw new Error(
         `token meter cannot ingest seq ${String(event.seq)} after consumed seq ${String(state.consumedEvents)}`,
       )
@@ -277,7 +276,6 @@ export class TokenMeter extends Service {
   private _bootstrapWindowed(session: Session): ReplayState {
     const surface: MeterSurfaceNode[] = []
     for (const seq of session.surface.nodes) {
-      // oxlint-disable-next-line typescript/no-deprecated -- Current surface nodes stay in the live tail or prefixHot.
       const event = session.eventAt(seq)
       if (event === undefined || !isSurfaceEvent(event)) {
         throw new Error(
@@ -317,7 +315,7 @@ export class TokenMeter extends Service {
 
     while (state.consumedEvents < session.seq) {
       // Contiguous session seqs index the durable log; existing Session history read, migration deferred.
-      // oxlint-disable-next-line typescript/no-non-null-assertion, typescript/no-deprecated
+      // oxlint-disable-next-line typescript/no-non-null-assertion
       const event = session.eventAt(SessionSeq(state.consumedEvents))!
       this._foldEvent(state, event)
       state.consumedEvents = SessionLogOffset(state.consumedEvents + 1)

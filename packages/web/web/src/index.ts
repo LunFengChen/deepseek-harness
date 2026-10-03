@@ -8,7 +8,6 @@
 
 import { Context, Service } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
-import type {} from '@x1a0f3n9/dsh-settings'
 import type {
   WebFetchProvider,
   WebFetchRequest,
@@ -93,12 +92,6 @@ export class WebRuntime extends Service {
   constructor(ctx: Context, config: WebRuntimeConfig = {}) {
     super(ctx, 'web')
     this.currentConfig = () => config
-    ctx.inject(['settings'], (settingsCtx) => {
-      settingsCtx.settings.installSection(ctx, 'web', WebRuntime.Config, config, {
-        setSource: (source) => { this.currentConfig = source },
-        onChange: () => {},
-      })
-    })
   }
 
   /**

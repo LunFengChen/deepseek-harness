@@ -441,7 +441,7 @@ describe('the session-persistence Agent Note: AgentLoop factory create/resume', 
     const spies: Array<{ mockRestore: () => void }> = []
     ctx.sessionPersistence.open = async (id, access, options) => {
       // Omit adoptEvent so resume falls back to handle.read(0).
-      const handle = await originalOpen(id, access, { signal: options?.signal })
+      const handle = await originalOpen(id, access, options?.signal === undefined ? {} : { signal: options.signal })
       spies.push(vi.spyOn(handle, 'read').mockRejectedValue(new Error('stored read failed')))
       spies.push(vi.spyOn(handle, 'close').mockRejectedValue(new Error('close failed')))
       return handle
@@ -951,7 +951,7 @@ describe('the session-persistence Agent Note: AgentLoop factory create/resume', 
     const a1 = (await ctx1.agents.create({ sessionId: SessionId('inject-sess'), meta: { cwd: '/w' }, agentOptions: { provider: 'mock', model: 'mock' } })).agent
     a1.followup(createUserMessage({ content: [{ type: 'text', text: 'q' }], source: { kind: 'user' } }))
     await waitForIdle(ctx1, a1)
-    a1.inject(createUserMessage({ content: [{ type: 'text', text: 'background job 42 finished' }], source: { kind: 'plugin', plugin: 'tool-bash' } }))
+    a1.inject(createUserMessage({ content: [{ type: 'text', text: 'background job 42 finished' }], source: { kind: 'user' } }))
     await a1.whenIdle()
     await ctx1.sessions.flush(a1.session)
     // Simulate a wedged first lifecycle: a graceful dispose would durably
@@ -1035,7 +1035,7 @@ describe('the session-persistence Agent Note: AgentLoop factory create/resume', 
     const handle = await ctx2.agents.resume({ resumeSessionId: sessionId })
     expect(handle.agent.session.liveBaseSeq).toBeGreaterThan(0)
     expect(() => ctx2.sessionProjections.snapshot(handle.agent.session)).not.toThrow()
-    expect(ctx2.sessionProjections.stateOf(handle.agent.session, 'turnBoundary').lastTurn).toBe(turns)
+    expect(ctx2.sessionProjections.stateOf(handle.agent.session, 'turnBoundary')?.lastTurn).toBe(turns)
     await ctx2.fiber.dispose()
   })
 

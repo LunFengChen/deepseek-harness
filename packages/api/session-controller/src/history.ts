@@ -170,7 +170,6 @@ export class SessionHistoryController {
       // Constructor seed events have no session/event notification. Normally
       // only the end-seed suffix is new; if persistence advanced after the
       // opening observation, replay everything beyond that snapshot cursor.
-      // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
       const suffix = session.snapshotEvents(snapshotCursor === undefined
         ? session.firstLiveSeq
         : SessionLogOffset(snapshotCursor + 1))
@@ -208,7 +207,6 @@ export class SessionHistoryController {
         page = paginate(suffix.events, undefined, maxMessages, cursor)
         projections = this.ctx.get('sessionProjectionCache')?.cachedSnapshot(
           suffix.header,
-          suffix.inheritedEventCount,
         )
       } else {
         const source = await this.sourceFor(address, signal, true)

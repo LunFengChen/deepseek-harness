@@ -14,6 +14,7 @@ import SessionStore, {
   SessionLogOffset,
   SessionSeq,
 } from '@x1a0f3n9/dsh-session'
+import type { SessionHeader } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
 
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
@@ -526,7 +527,7 @@ describe('contextBreakdown session projection', () => {
       createdAt: 1,
       isSeeded: false,
     }
-    const cold = Session.beginPersistedRestore(header.id, header)
+    const cold = Session.beginPersistedRestore(header.id, header as SessionHeader)
     for (const event of events) cold.adoptRestoredEvent(event)
     cold.finishPersistedRestore(SessionLogOffset(0))
     expect(cold.liveBaseSeq).toBeGreaterThan(0)

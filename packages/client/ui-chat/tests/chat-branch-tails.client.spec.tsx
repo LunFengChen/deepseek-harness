@@ -72,7 +72,7 @@ function MessageItem({ node, t: translate, referenceLabels, skillNames }: Messag
   switch (node.kind) {
     case 'user':
     case 'steering':
-      return <UserMessageNodeView {...props as ChatNodeViewProps<'user' | 'steering'>} renderSlot={() => null} SessionProvider={() => null} />
+      return <UserMessageNodeView {...props as ChatNodeViewProps<'user' | 'steering'>} />
     case 'context':
       return <ContextMessageNodeView {...props as ChatNodeViewProps<'context'>} />
     case 'compaction':

@@ -282,6 +282,8 @@ export const en = {
   'chat.loadError': 'Failed to load history: {message} ({code})',
   'chat.loadOlder': 'Load earlier',
   'chat.toBottom': 'Back to bottom',
+  'chat.preparing': 'Preparing...',
+  'chat.retrying': 'Retrying...',
   'chat.deepDiving': 'Deep diving...',
   'chat.turnNavigation.label': 'Turn navigation',
   'chat.turnNavigation.jump': 'Jump to turn {turn}',

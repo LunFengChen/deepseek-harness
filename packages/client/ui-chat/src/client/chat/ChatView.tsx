@@ -7,7 +7,7 @@ import type {
 } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import type { SessionSeq } from '@x1a0f3n9/dsh-session/types'
 import type { InboxState } from '@x1a0f3n9/dsh-agent/types'
-import { Button, IconChevronDownOutline14, MarkdownDelegateProvider, Modal } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { Button, IconChevronDownOutlineRegular, MarkdownDelegateProvider, Modal } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { ChatViewSlotProps, OpenFileOptions } from '../contract/slots.ts'
 import type {
   AssistantChatData, ChatConversationViewNode, RetryChatData, ToolChatData,
@@ -262,8 +262,8 @@ const ChatNodeList = memo(function ChatNodeList({ order, ...seatProps }: ChatNod
  */
 export function ChatView({
   useSession, useChat, useChatNode, useChatNodeProcess, useSessions, useStore, actions, renderSlot,
-  sessionId, openFile, openSkill, openExternalLink, loadOlder, loadThrough, loadImage, openView, chatScroll, forkAt, fileMentions,
-  useTranscriptView, useProjection, t,
+  sessionId, openFile, openSkill, openExternalLink, loadOlder, loadThrough, loadImage, inspectCall, chatScroll, forkAt, fileMentions,
+  usePresentation, useProjection, t,
 }: ChatViewSlotProps) {
   const order = useChat(s => s.order)
   const nodeStore = useChat(s => s.nodes)
@@ -287,10 +287,6 @@ export function ChatView({
   const openError = useSession(s => s.openError)
   const hasMore = useSession(s => s.hasMore)
   const loadingOlder = useSession(s => s.loadingOlder)
-  const compactTranscript = useTranscriptView(mode => mode === 'compact')
-  const inspectCall = useCallback((callId: string) => {
-    openView('trajectory', callId)
-  }, [openView])
   const [fileOpenError, setFileOpenError] = useState<{ path: string; message: string } | null>(null)
   const [fileOpenBusy, setFileOpenBusy] = useState(false)
   // Close/retry must ignore a settlement that started before the latest
@@ -841,8 +837,8 @@ export function ChatView({
               order={order}
               useChatNode={useChatNode}
               useChatNodeProcess={useChatNodeProcess}
+              usePresentation={usePresentation}
               historyIncomplete={hasMore}
-              compactTranscript={compactTranscript}
               useStore={useStore}
               actions={actions}
               cwd={cwd}
@@ -897,7 +893,7 @@ export function ChatView({
                 if (local !== null) toBottom(scrollerOf(local))
               }}
             >
-              <IconChevronDownOutline14 />
+              <IconChevronDownOutlineRegular />
             </button>
           </div>
         )}

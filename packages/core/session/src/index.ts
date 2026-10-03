@@ -16,7 +16,7 @@ import type { Message } from '@x1a0f3n9/dsh-llm'
 import { SESSION_FORMAT_VERSION, SessionLogOffset, SessionSeq } from './types.ts'
 import type { TypertLookup } from '@x1a0f3n9/dsh-typert-protocol'
 import type { CreateSessionOptions, EpochHeader, PrepareSessionOptions, RequestContext, SessionEvent, SessionEventMap, SessionEventType, SessionHeader, SessionId, SessionSeedEventState, SurfaceIntent, SurfaceEventType } from './types.ts'
-import { deriveEventMessage, isSurfaceEvent, SurfaceManager, validateSessionEventData, validateSurfaceMetadata } from './surface.ts'
+import { isSurfaceEvent, SurfaceManager, validateSessionEventData, validateSurfaceMetadata } from './surface.ts'
 import type { SessionSurface, SessionMessageProjection } from './surface.ts'
 import { foldRequestHeader } from './request-header.ts'
 import { ToolHistoryProjection } from './tool-history.ts'
@@ -765,7 +765,6 @@ export class Session {
    * @returns a fresh array containing child-owned events in log order.
    */
   ownEvents(): readonly SessionEvent[] {
-    // oxlint-disable-next-line typescript/no-deprecated -- Deprecated reader delegates to the deprecated range read.
     return this.snapshotEvents(this.inheritedEventCount)
   }
 
@@ -1074,7 +1073,7 @@ export class Session {
     }
     const index = this.seq
     assertSessionEventEnvelope(event, index)
-    if (event.seq !== index) {
+    if (event.seq !== SessionSeq(index)) {
       throw new Error(`seed event at index ${index} has seq ${event.seq} (expected ${index}); seed must be contiguous from 0`)
     }
     try {
@@ -1483,7 +1482,6 @@ export class SessionStore extends Service {
       } catch (error: unknown) {
         // Preserve the listener's exact rejection value; flush is a caller-owned
         // failure boundary, and Cordis listeners may throw arbitrary values.
-        // oxlint-disable-next-line typescript/prefer-promise-reject-errors
         return Promise.reject(error)
       }
     }))
@@ -1539,7 +1537,6 @@ export class SessionStore extends Service {
       throw new SessionForkError(`session "${childSessionId}" already exists`, 'SESSION_ALREADY_EXISTS')
     }
     const liveSource = this._resolveForkSource(source)
-    // oxlint-disable-next-line typescript/no-deprecated -- Existing fork snapshot read; migration deferred.
     const events = liveSource.snapshotEvents()
     const resolved = this._forkBoundary(liveSource.id, events, boundary)
     const seed = resolved === undefined ? [] : buildForkSeed(events, resolved)
