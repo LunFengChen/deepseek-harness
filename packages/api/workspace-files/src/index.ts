@@ -321,7 +321,10 @@ export class WorkspaceFiles extends TypertRemoteService {
         { path, kind: entry.type },
       )
     }
-    const target = await this.confine(root, workspaceRoot, path, signal)
+    const target = await this.ctx.fs.resolve(path, { cwd: workspaceRoot, signal })
+    if (entry.type === 'symlink' && !this.ctx.fs.contains(root, target)) {
+      throw new RemoteError('workspace-file/outside-workspace', `"${path}" is outside the workspace`, { path })
+    }
     if (entry.type === 'symlink') {
       const info = await this.ctx.fs.stat(target, signal)
       if (info?.type !== 'directory') {
