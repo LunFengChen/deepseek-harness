@@ -506,10 +506,10 @@ describe('SessionProjectionCache listing read', () => {
     const { cache } = await harness({ root })
     const seededHeader = { ...headerOf(id, 0, '/work'), isSeeded: true }
 
-    expect(cache.cachedListedHint(seededHeader)?.values['cache-test/marks'])
+    expect(cache.cachedSnapshot(seededHeader)?.values['cache-test/marks'])
       .toEqual({ marks: ['seed'] })
-    expect(cache.cachedListedHint({ ...seededHeader, cwd: '/elsewhere' })).toBeUndefined()
-    expect(cache.cachedListedHint(headerOf(id, 0, '/work'))).toBeUndefined()
+    expect(cache.cachedSnapshot({ ...seededHeader, cwd: '/elsewhere' })).toBeUndefined()
+    expect(cache.cachedSnapshot(headerOf(id, 0, '/work'))).toBeUndefined()
   })
 
   it('serves a creation-time checkpoint at the before-first-event cursor', async () => {

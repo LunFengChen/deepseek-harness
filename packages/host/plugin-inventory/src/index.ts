@@ -27,8 +27,12 @@ import type {
 
 export type * from './types.ts'
 
-/** Brand an existing Loader-tree entry id at the owning boundary. */
-function pluginEntryId(value: string): PluginEntryId {
+/**
+ * Brand an existing Loader-tree entry id at the owning boundary.
+ * @param value - the entry id as the Loader tree spells it.
+ * @returns the same id as the inventory's branded entry id.
+ */
+export function pluginEntryId(value: string): PluginEntryId {
   return value as PluginEntryId
 }
 

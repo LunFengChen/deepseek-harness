@@ -509,7 +509,7 @@ describe('SessionTitleService Provider lifecycle', () => {
     session.append('turn/start', { turn: 1 })
     session.append('user/message', createUserMessage({
       content: [{ type: 'text', text: 'later' }],
-      source: { kind: 'plugin', plugin: 'test' },
+      source: { kind: 'user' },
     }), { surfaceOp: 'append' })
     expect(() => session.truncate(SessionLogOffset(1))).not.toThrow()
     expect(ctx.sessionTitle.get(session)).toBeUndefined()

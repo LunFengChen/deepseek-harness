@@ -1,8 +1,9 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { JsonBlock } from '@x1a0f3n9/dsh-client-ui-primitives'
+import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type { ConversationLocationDataStore, ConversationTurnDataMap } from '@x1a0f3n9/dsh-client-ui-conversation/client'
-import type { ChatNodeOwnerProps, ChatViewSlotProps } from '../contract/slots.ts'
+import type { ChatNodeHookContext, ChatNodeOwnerProps, ChatViewSlotProps, UsePresentation } from '../contract/slots.ts'
 import type { ChatNode } from '../contract/chat-nodes.ts'
 import { TURN_PROCESS_INDEPENDENT_KINDS } from '../contract/turn-process.ts'
 import { storedTurnProcessEntry } from '../stores.ts'
@@ -14,8 +15,8 @@ interface ChatNodeSeatProps extends ChatNodeOwnerProps {
   readonly nodeKey: string
   readonly useChatNode: ChatViewSlotProps['useChatNode']
   readonly useChatNodeProcess: ChatViewSlotProps['useChatNodeProcess']
+  readonly usePresentation: UsePresentation
   readonly historyIncomplete: boolean
-  readonly compactTranscript: boolean
   readonly useStore: ChatViewSlotProps['useStore']
   readonly actions: ChatViewSlotProps['actions']
   readonly renderSlot: ChatViewSlotProps['renderSlot']
@@ -72,10 +73,11 @@ function chatNodeFallback(
 
 /** Subscribe, apply Turn-process visibility, and dispatch one stable Context key. */
 export const ChatNodeSeat = memo(function ChatNodeSeat({
-  nodeKey, useChatNode, useChatNodeProcess, historyIncomplete, compactTranscript,
+  nodeKey, groupPart, useChatNode, useChatNodeProcess, usePresentation, historyIncomplete,
   cwd, openFile, openSkill, inspectCall, forkAt,
   loadImage, renderMessageImages, fileMentions, useStore, actions, renderSlot, t,
 }: ChatNodeSeatProps) {
+  const compactTranscript = usePresentation(policy => policy.mode === 'compact')
   const node = useChatNode(nodeKey)
   const routedNode = node as ChatNode | undefined
   const turn = turnOf(routedNode)
@@ -120,10 +122,11 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
     : {
       spec: processSpec,
       foldable,
+      hasContent: processPresentation?.hasExternalProcess === true || processSpec.inlineReasoning,
       open: processOpen,
       setOpen,
     }, [
-    foldable, processOpen, processSpec, setOpen,
+    foldable, processOpen, processSpec, processPresentation?.hasExternalProcess, setOpen,
   ])
   const controllerInactive = routedNode?.kind === 'turn-process'
     && !foldable
@@ -136,9 +139,18 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
     if (processMember) setOpen(true)
   }, [processMember, setOpen])
   const wrapperRef = useSearchableHidden(processHidden, revealProcess)
+  const [disclosureReset] = useState(() => createSnapshotStore(0))
+  const turnData = turnDataOf(routedNode)
+  const hookContext = useMemo<ChatNodeHookContext>(() => ({ turnData, disclosureReset }), [turnData, disclosureReset])
+  useEffect(() => {
+    if (processMember && processHidden && wrapperRef.current?.hasAttribute('hidden')) {
+      disclosureReset.set(disclosureReset.getSnapshot() + 1)
+    }
+  }, [processMember, processHidden, wrapperRef, disclosureReset])
   const owner = useMemo<ChatNodeOwnerProps | null>(() => node === undefined
     ? null
     : {
+      ...groupPart === undefined ? {} : { groupPart },
       cwd,
       openFile,
       openSkill,
@@ -149,11 +161,10 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
       fileMentions,
       turnProcess,
     }, [
-    node, cwd, openFile, openSkill, inspectCall, forkAt,
+    node, groupPart, cwd, openFile, openSkill, inspectCall, forkAt,
     loadImage, renderMessageImages, fileMentions, turnProcess,
   ])
   if (routedNode === undefined || owner === null) return null
-  const turnData = turnDataOf(routedNode)
   // User-style nodes share the user keyed occupant; other kinds keep their
   // discriminant. TypeScript does not distribute an object containing a union
   // into a union of objects itself.
@@ -172,7 +183,7 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
     >
       {renderSlot('conversation.chat.node', routedOwner, {
         entryKey: chatNodeRendererKey(routedNode),
-        hookContext: turnData,
+        hookContext,
         fallback: chatNodeFallback(routedOwner, t),
       })}
     </div>

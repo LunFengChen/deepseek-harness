@@ -14,11 +14,11 @@
  * rows the user can still fill in by hand.
  */
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { LlmDiscoveredModel } from '@x1a0f3n9/dsh-api-remotes/client'
 import {
-  Button, IconChevronDownOutline14, IconChevronRightOutline14, IconTrashOutline16, Modal, Switch,
+  Button, IconChevronDownOutlineRegular, IconChevronRightOutlineRegular, IconTrashOutlineRegular, Modal, Switch,
 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import { IMAGE_INPUT, acceptsImages, withImageInput } from './image-input.ts'
 import { formatCapacity, parseCapacity } from './DeepSeekModelsEditor.tsx'
@@ -74,6 +74,10 @@ export interface ProbeTarget {
 export interface ModelListEditorProps {
   /** The rows as currently drafted. */
   models: readonly ModelDraft[]
+  /** Installed provider whose catalog supplies defaults without endpoint I/O. */
+  catalogProvider?: string | undefined
+  /** Route input types for models absent from the installed catalog. */
+  defaultInput?: readonly string[] | undefined
   /** Whether the user layer currently owns the whole array; absent on a create. */
   overridden?: boolean
   /** Replace the drafted rows. */
@@ -95,6 +99,11 @@ export interface ModelListEditorProps {
   t: (key: keyof typeof en) => string
   /** Disable every control (read-only deployment or a pending write). */
   disabled: boolean
+  /**
+   * Called once per change with whether an endpoint interrogation is in
+   * flight.
+   */
+  onBusyChange?: (busy: boolean) => void
 }
 
 /** The two token counts edited as K/M-suffixed text behind a row's disclosure. */
@@ -152,6 +161,7 @@ function reasoningFailureCopy(model: ModelDraft, t: ModelListEditorProps['t']): 
 export function ModelListEditor(props: ModelListEditorProps): ReactNode {
   const { models, onChange, probe, operations, t, disabled } = props
   const [busy, setBusy] = useState(false)
+  useEffect(() => { props.onBusyChange?.(busy) }, [busy, props.onBusyChange])
   const [failure, setFailure] = useState<string | undefined>(undefined)
   const [candidates, setCandidates] = useState<readonly LlmDiscoveredModel[] | undefined>(undefined)
   const [picked, setPicked] = useState<ReadonlySet<string>>(new Set())
@@ -417,7 +427,7 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
               title={t('modelAdvanced')}
               onClick={() => { toggleExpanded(index) }}
             >
-              {expanded.has(index) ? <IconChevronDownOutline14 /> : <IconChevronRightOutline14 />}
+              {expanded.has(index) ? <IconChevronDownOutlineRegular /> : <IconChevronRightOutlineRegular />}
             </button>
             <button
               type="button"
@@ -450,7 +460,7 @@ export function ModelListEditor(props: ModelListEditorProps): ReactNode {
                 setEditing(current => reindexOnRemove(current, index))
               }}
             >
-              <IconTrashOutline16 size={14} />
+              <IconTrashOutlineRegular size={14} />
             </button>
           </div>
           {expanded.has(index)

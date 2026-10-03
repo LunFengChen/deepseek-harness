@@ -12,6 +12,7 @@ import SessionStore, {
   SessionSeq,
   canonicalHeader,
 } from '@x1a0f3n9/dsh-session'
+import type { SessionHeader } from '@x1a0f3n9/dsh-session'
 
 import type { EpochHeader, SessionEvent, SessionSeq as SessionSeqType } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
@@ -669,7 +670,7 @@ describe('malformed replay and listener lifecycle', () => {
       createdAt: 1,
       isSeeded: false,
     }
-    const cold = Session.beginPersistedRestore(header.id, header)
+    const cold = Session.beginPersistedRestore(header.id, header as SessionHeader)
     for (const event of events) cold.adoptRestoredEvent(event)
     cold.finishPersistedRestore(SessionLogOffset(0))
     expect(cold.liveBaseSeq).toBeGreaterThan(0)
@@ -678,7 +679,7 @@ describe('malformed replay and listener lifecycle', () => {
     expect(coldMeasured.logRevision).toBe(cold.seq)
 
     const service = meter()
-    const restored = Session.beginPersistedRestore(header.id, header)
+    const restored = Session.beginPersistedRestore(header.id, header as SessionHeader)
     for (const event of events) {
       restored.adoptRestoredEvent(event)
       service.ingestRestoredEvent(restored, event)
@@ -710,7 +711,7 @@ describe('malformed replay and listener lifecycle', () => {
       createdAt: 1,
       isSeeded: false,
     }
-    const cold = Session.beginPersistedRestore(header.id, header)
+    const cold = Session.beginPersistedRestore(header.id, header as SessionHeader)
     for (const event of events) cold.adoptRestoredEvent(event)
     cold.finishPersistedRestore(SessionLogOffset(0))
     const service = meter()

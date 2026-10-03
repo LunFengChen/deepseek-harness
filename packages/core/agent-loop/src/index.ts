@@ -23,7 +23,6 @@ import type {
   TurnBoundaryProjection,
 } from '@x1a0f3n9/dsh-agent'
 import { errorChain, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
-import type {} from '@x1a0f3n9/dsh-settings'
 import { interruptedTurnClosers, Session, SessionLogOffset, SessionPreparation, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
 import type {} from '@x1a0f3n9/dsh-system-prompt'
@@ -180,7 +179,6 @@ async function raceAbortCall<T>(
   try {
     return await raceAbort(pending, signal, id)
   } catch (error: unknown) {
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- the signal can abort while the operation is awaited.
     if (signal.aborted && releaseAbandoned !== undefined) {
       void pending.then(releaseAbandoned, () => undefined)
     }
@@ -699,7 +697,6 @@ export class AgentLoop extends Service implements AgentFactory {
    */
   private async appendUnstoredSuffix(stored: StoredSession | undefined, session: Session): Promise<void> {
     if (stored === undefined) return
-    // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
     const suffix = session.snapshotEvents(SessionLogOffset(stored.storedCount))
     if (suffix.length > 0) await stored.handle.append(suffix)
     // Advance by what was stored, not to `session.seq`: an event appended
@@ -882,7 +879,6 @@ export class AgentLoop extends Service implements AgentFactory {
           // back the physically valid log; an interrupted final turn receives
           // synthetic closers (missing tool errors, step/end, turn/end) that
           // are appended through the same handle as an ordinary batch.
-          // oxlint-disable-next-line typescript/no-deprecated -- Tail includes the whole open turn.
           const closers = interruptedTurnClosers(session.snapshotEvents())
           if (closers.length > 0) {
             await handle.append(closers)

@@ -1,6 +1,5 @@
 import { Fragment, memo, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { PropsRenderSlots } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { PendingSubmission } from '@x1a0f3n9/dsh-api-session-controller/client'
 import type { MessageImageSource } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { fileExtension, FileTypeIcon, fileSizeText, JsonBlock, projectUserText, StateDot } from '@x1a0f3n9/dsh-client-ui-primitives'
@@ -376,16 +375,9 @@ export function UserMessageFallbackView({
 }
 
 /** User and admitted-steering keyed Chat renderer. */
-type UserOrSteeringViewProps = ChatNodeViewProps<'user' | 'steering'>
-  & PropsRenderSlots<'conversation.chat.user-actions'>
-
 export const UserMessageNodeView = memo(function UserMessageNodeView({
-  node, renderMessageImages, openFile, openSkill, renderSlot, t,
-}: UserOrSteeringViewProps) {
-  const extraActions = renderSlot('conversation.chat.user-actions', {
-    seq: node.data.seq,
-    content: node.data.content,
-  })
+  node, renderMessageImages, openFile, openSkill, t,
+}: ChatNodeViewProps<'user' | 'steering'>) {
   return (
     <UserMessageBubble
       data={node.data}
@@ -393,7 +385,6 @@ export const UserMessageNodeView = memo(function UserMessageNodeView({
       openFile={openFile}
       openSkill={openSkill}
       t={t}
-      extraActions={extraActions}
     />
   )
 })

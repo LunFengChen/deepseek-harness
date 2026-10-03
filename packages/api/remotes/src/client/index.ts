@@ -35,7 +35,12 @@ export type {
 } from '@x1a0f3n9/dsh-plugin-manager/types'
 export type {} from '@x1a0f3n9/dsh-plugin-manager/remote'
 export type {} from '@x1a0f3n9/dsh-client-ui-plugin-manager/remote'
-export type { PluginInventorySnapshot } from '@x1a0f3n9/dsh-host-plugin-inventory/types'
+export type {
+  PluginInventoryCatalogEntry,
+  PluginInventorySetEnabledRequest,
+  PluginInventorySetEnabledValue,
+  PluginInventorySnapshot,
+} from '@x1a0f3n9/dsh-host-plugin-inventory/types'
 export type {} from '@x1a0f3n9/dsh-agent-preset-registry/remote'
 export type {} from '@x1a0f3n9/dsh-commands/remote'
 export type {} from '@x1a0f3n9/dsh-api-settings-controller/remote'

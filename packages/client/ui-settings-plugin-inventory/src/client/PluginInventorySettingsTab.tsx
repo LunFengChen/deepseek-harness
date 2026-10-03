@@ -8,8 +8,8 @@ import type {
   PluginInventorySnapshot,
 } from '@x1a0f3n9/dsh-api-remotes/client'
 import {
-  IconChevronDownOutline14,
-  IconSearchOutline16,
+  IconChevronDownOutlineRegular,
+  IconSearchOutlineRegular,
   Menu,
   StateDot,
   Tag,
@@ -179,7 +179,7 @@ function PluginCard({ rowKey, moduleName, entryId, trailing, ariaLabel, failed, 
         <strong className={css.cardTitle} title={moduleName}>{moduleShortName(moduleName)}</strong>
         <span className={css.cardTrailing}>
           {trailing}
-          <IconChevronDownOutline14 className={css.chevron} size={12} aria-hidden="true" />
+          <IconChevronDownOutlineRegular className={css.chevron} size={12} aria-hidden="true" />
         </span>
       </button>
       {open ? <div className={css.cardDetails} id={detailId}>{children}</div> : null}
@@ -489,7 +489,7 @@ export function PluginInventorySettingsTab({
       {snapshot !== undefined ? (
         <div className={css.catalog}>
           <label className={css.search}>
-            <IconSearchOutline16 aria-hidden="true" />
+            <IconSearchOutlineRegular aria-hidden="true" />
             <span className={css.visuallyHidden}>{t('search')}</span>
             <input
               type="search"
@@ -579,7 +579,7 @@ export function PluginInventorySettingsTab({
                   aria-controls={`${sectionId}-preset`}
                   onClick={() => { setPresetOpen(!presetEffectiveOpen) }}
                 >
-                  <IconChevronDownOutline14 className={css.chevron} size={12} aria-hidden="true" />
+                  <IconChevronDownOutlineRegular className={css.chevron} size={12} aria-hidden="true" />
                   <span className={css.groupTitle}>{t('presetTitle')}</span>
                 </button>
                 <div className={css.headerEnd}>
@@ -604,7 +604,7 @@ export function PluginInventorySettingsTab({
                         onClick={() => { setSwitcherOpen(value => !value) }}
                       >
                         <span className={css.switcherLabel}>{presetLabel(selected, t, presetName)}</span>
-                        <IconChevronDownOutline14 className={css.chevron} aria-hidden="true" />
+                        <IconChevronDownOutlineRegular className={css.chevron} aria-hidden="true" />
                       </button>
                     )}
                   />
@@ -656,7 +656,7 @@ export function PluginInventorySettingsTab({
                   aria-controls={`${sectionId}-global`}
                   onClick={() => { setGlobalOpen(!globalEffectiveOpen) }}
                 >
-                  <IconChevronDownOutline14 className={css.chevron} size={12} aria-hidden="true" />
+                  <IconChevronDownOutlineRegular className={css.chevron} size={12} aria-hidden="true" />
                   <span className={css.groupTitle}>{t('globalTitle')}</span>
                 </button>
               </div>

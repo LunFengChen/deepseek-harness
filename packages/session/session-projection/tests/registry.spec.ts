@@ -171,14 +171,12 @@ function fillPastLiveWindow(session: Session): void {
   }
 }
 
-const SYSTEM_PLUGIN = '@x1a0f3n9/dsh-system-prompt'
-
 function restoreWindowedSession(id: string): Session {
   const donor = Session.create(SessionId(`${id}-donor`))
   const first = donor.append('system/message', {
     turn: 1,
     step: 1,
-    message: createSystemMessage('You are terse.', SYSTEM_PLUGIN),
+    message: createSystemMessage('You are terse.'),
   }, { surfaceOp: 'append' }).seq
   const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 3) + 10
   for (let turn = 1; turn <= turns; turn++) {
@@ -192,7 +190,7 @@ function restoreWindowedSession(id: string): Session {
   donor.append('system/message', {
     turn: 1,
     step: 1,
-    message: createSystemMessage('You are terse and answer in one line.', SYSTEM_PLUGIN),
+    message: createSystemMessage('You are terse and answer in one line.'),
   }, { surfaceOp: { op: 'replace', startSeq: first, endSeq: first }, sourceEventSeqs: [first] })
   const events = donor.snapshotEvents()
   const header = {
@@ -201,7 +199,7 @@ function restoreWindowedSession(id: string): Session {
     createdAt: 1,
     isSeeded: false,
   }
-  const restored = Session.beginPersistedRestore(header.id, header)
+  const restored = Session.beginPersistedRestore(header.id, header as SessionHeader)
   for (const event of events) restored.adoptRestoredEvent(event)
   restored.finishPersistedRestore(SessionLogOffset(0))
   return restored
@@ -852,7 +850,6 @@ describe('SessionProjectionRegistry drive', () => {
     ctx.sessionProjections.register(countUnit())
     const donor = Session.create(SessionId('window-restore-donor'))
     fillPastLiveWindow(donor)
-    // oxlint-disable-next-line typescript/no-deprecated -- Donor is unwindowed; this is the restore input.
     const events = donor.snapshotEvents()
 
     const id = SessionId('window-restore')
@@ -862,14 +859,13 @@ describe('SessionProjectionRegistry drive', () => {
       createdAt: 1,
       isSeeded: false,
     }
-    const cold = Session.beginPersistedRestore(id, header)
+    const cold = Session.beginPersistedRestore(id, header as SessionHeader)
     for (const event of events) cold.adoptRestoredEvent(event)
     cold.finishPersistedRestore(SessionLogOffset(0))
     expect(cold.liveBaseSeq).toBeGreaterThan(0)
-    // oxlint-disable-next-line typescript/no-deprecated -- Tail length is the late-build input.
     expect(ctx.sessionProjections.stateOf(cold, 'test/count')).toBe(cold.snapshotEvents().length)
 
-    const restored = Session.beginPersistedRestore(id, header)
+    const restored = Session.beginPersistedRestore(id, header as SessionHeader)
     for (const event of events) {
       restored.adoptRestoredEvent(event)
       ctx.sessionProjections.ingestRestoredEvent(restored, event)
@@ -895,7 +891,7 @@ describe('SessionProjectionRegistry drive', () => {
       createdAt: 1,
       isSeeded: true,
       parentSession: SessionId('window-restore-parent'),
-    }, SessionLogOffset(inherited.length))
+    } as SessionHeader, SessionLogOffset(inherited.length))
     for (const event of inherited) {
       restored.adoptRestoredEvent(event)
       ctx.sessionProjections.ingestRestoredEvent(restored, event)

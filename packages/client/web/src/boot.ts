@@ -45,9 +45,10 @@ export class AppWebEntry {
    * mount point to the UI renderer when that service exists. Deferred
    * entries start after that wave. Later plugin failures remain visible
    * on the boot page.
+   * @param onFailure - Optional carrier-owned fatal presentation; keeps the boot page visible.
    * @returns Resolves after application mount or failure rendering.
    */
-  async run(): Promise<void> {
+  async run(onFailure?: (reason: unknown) => void): Promise<void> {
     try {
       // Boot-readiness gate: whichever bootstrap applies the injection table
       // settles this deferred once every row has taken effect — the served
@@ -86,7 +87,9 @@ export class AppWebEntry {
         ctx,
         modules: this.modules,
         manifest: this.manifest,
-        onEntryState: (name, state) => { this.page.setState(name, state) },
+        onEntryState: (name, state) => {
+          if (onFailure === undefined || state !== 'failed') this.page.setState(name, state)
+        },
       })
       // The shell owns the one watcher that keeps Electron's window drag rects in
       // step with the rows that own them (electron#32341), so no chrome row has to
@@ -96,7 +99,8 @@ export class AppWebEntry {
       await mountClient(ctx, this.container)
     } catch (reason) {
       console.error(reason)
-      this.page.fail(reason instanceof Error ? reason.message : String(reason))
+      if (onFailure !== undefined) onFailure(reason)
+      else this.page.fail(reason instanceof Error ? reason.message : String(reason))
     }
   }
 
