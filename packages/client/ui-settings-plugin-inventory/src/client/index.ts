@@ -9,7 +9,7 @@ import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 // dictionaries the shipped-preset name resolution below reads.
 import type {} from '@x1a0f3n9/dsh-client-ui-agent-preset/client'
 // Inline-safe shared fold: shipped ids map to dictionary keys in one home.
-import { presetDisplayText } from '@x1a0f3n9/dsh-agent-presets/display'
+import { presetDisplayText } from '@x1a0f3n9/dsh-agent-preset-registry/display'
 import { PluginInventorySettingsTab, type PluginInventorySettingsTabInjected } from './PluginInventorySettingsTab.tsx'
 import { en, zh, type PluginInventoryLocaleKey } from './locales.ts'
 
