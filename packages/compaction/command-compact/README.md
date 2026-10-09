@@ -32,7 +32,7 @@ Type `/compact` in a chat UI when the conversation has grown long and you want t
 | Input | Result |
 |---|---|
 | `/compact` | Condense one useful balanced older span even below automatic pressure, then report the replaced history-item count and estimated tokens. |
-| `/compact` with no compactable history | `No compactable history yet.` — nothing changes. |
+| `/compact` with no compactable history | `No compactable history yet.` — nothing changes. Checkpoint-only history and a summary that is not cheaper take this path. |
 | `/compact <anything>` | `Usage: /compact (no arguments)` — the command takes no arguments. |
 
 ### What you see
@@ -43,7 +43,7 @@ The command turns each expected failure into a stable message you can show direc
 |---|---|
 | Compaction already running, or the agent is mid-turn | `Compaction is unavailable because this process has an active compaction, or the agent is not idle.` |
 | The history changed while condensing | `The history selected for compaction changed before it could be replaced. The attempt is recorded in the session log.` |
-| No useful summary could be produced | `Compaction could not produce a useful summary. The attempt is recorded in the session log.` |
+| The summarizer failed before a cheaper checkpoint could land | `Compaction could not produce a useful summary. The attempt is recorded in the session log.` |
 | Condensation did not finish cleanly | `Compaction did not finish cleanly; some session history may have changed. Inspect the current session state before retrying.` |
 | The conversation could not be saved | `Compaction finished, but the session could not be saved.` |
 

@@ -32,7 +32,7 @@ kind: "package-reference"
 | 输入 | 结果 |
 |---|---|
 | `/compact` | 即使未达到自动压力，也压缩一段有效、平衡的较早范围，然后报告被替换的历史项数量与估算 token 数。 |
-| `/compact`，但没有可压缩历史 | `No compactable history yet.`——不会有任何改变。 |
+| `/compact`，但没有可压缩历史 | `No compactable history yet.`——不会有任何改变。仅含检查点的历史，以及未能更便宜的摘要，走这条路径。 |
 | `/compact <anything>` | `Usage: /compact (no arguments)`——该命令不接受参数。 |
 
 ### 你会看到什么
@@ -43,7 +43,7 @@ kind: "package-reference"
 |---|---|
 | 压缩已在运行，或 agent 正在轮次中 | `Compaction is unavailable because this process has an active compaction, or the agent is not idle.` |
 | 压缩过程中历史发生了变化 | `The history selected for compaction changed before it could be replaced. The attempt is recorded in the session log.` |
-| 无法产生有用的摘要 | `Compaction could not produce a useful summary. The attempt is recorded in the session log.` |
+| 摘要器在更便宜的检查点落地前失败 | `Compaction could not produce a useful summary. The attempt is recorded in the session log.` |
 | 压缩未干净地完成 | `Compaction did not finish cleanly; some session history may have changed. Inspect the current session state before retrying.` |
 | 会话无法保存 | `Compaction finished, but the session could not be saved.` |
 

@@ -25,7 +25,9 @@ import {
 import {
   assertNoActiveCompaction,
   compactSurfaceRegion,
+  rangeLacksFoldableHistory,
   selectCompactableRange,
+  SummaryDidNotShrinkError,
 } from './region.ts'
 import { summarizeWithLlm } from './summarizer.ts'
 import type { SummarizationInput, SummaryResult } from './summarizer.ts'
@@ -260,7 +262,9 @@ export class BasicCompactionEngine extends CompactionEngine {
    * Compact for replayed step-boundary pressure or one provider-confirmed context
    * overflow. Both triggers price the latest durable routed request envelope;
    * overflow bypasses the normal threshold and retained-tail policy so it can
-   * force one useful balanced reduction.
+   * force one useful balanced reduction. Pressure skips a compact-checkpoint-only
+   * span regardless of size, so a just-written replacement is not summarized
+   * again until non-checkpoint history ages into the range.
    * @param agent - agent whose latest durable routed request is measured.
    * @param trigger - normal step-boundary pressure or context-overflow recovery.
    * @param signal - live turn cancellation signal forwarded to summarization.
@@ -327,23 +331,23 @@ export class BasicCompactionEngine extends CompactionEngine {
     if (measurement.totalTokens < spec.thresholdTokens) return null
 
     let result: CompactionResult | null = null
-    for (let attempt = 0; attempt <= spec.compactionRetries; attempt += 1) {
+    let attempts = 0
+    for (;;) {
       const range = selectCompactableRange(agent.session, measurement, spec.retainTokens)
-      if (range === null) {
-        /* v8 ignore else -- concrete replacement preserves a compactable checkpoint; subclass hooks cannot mutate it. */
-        if (result === null) return null
-        /* v8 ignore next -- paired with the defensive post-success branch above. */
-        break
+      if (range === null || rangeLacksFoldableHistory(agent.session, range)) {
+        return result
+      }
+      if (attempts > spec.compactionRetries) {
+        throw new Error(
+          `compaction still above threshold after ${spec.compactionRetries + 1} compaction attempts `
+          + `(${measurement.totalTokens} estimated tokens >= threshold ${spec.thresholdTokens})`,
+        )
       }
       result = await this.compactRegion(range.start, range.end, agent, signal)
+      attempts += 1
       measurement = meter.measure(agent.session)
       if (measurement.totalTokens < spec.thresholdTokens) return result
     }
-
-    throw new Error(
-      `compaction still above threshold after ${spec.compactionRetries + 1} compaction attempts `
-      + `(${measurement.totalTokens} estimated tokens >= threshold ${spec.thresholdTokens})`,
-    )
   }
 
   /**
@@ -375,6 +379,8 @@ export class BasicCompactionEngine extends CompactionEngine {
   /**
    * Force one useful idle-session compaction below the pressure threshold, and
    * resolve only after its standalone marker pair is durably checkpointed.
+   * Checkpoint-only spans and non-shrinking summaries return `null` so `/compact`
+   * reports no compactable history instead of a summary error.
    * @param agent - idle agent whose next-turn admission this call reserves.
    * @param signal - cancellation scoped to this compaction request.
    * @param sourceCommandId - initiating command identity for presentation correlation.
@@ -391,12 +397,13 @@ export class BasicCompactionEngine extends CompactionEngine {
         const operationSignal = AbortSignal.any([agentSignal, signal])
         try {
           operationSignal.throwIfAborted()
+          assertNoActiveCompaction(agent.session, 'manual compaction')
           const range = selectCompactableRange(
             agent.session,
             this.ctx.tokenMeter.measure(agent.session),
             0,
           )
-          if (range === null) return null
+          if (range === null || rangeLacksFoldableHistory(agent.session, range)) return null
           return await compactSurfaceRegion(
             this.regionDependencies(),
             agent.session,
@@ -422,6 +429,13 @@ export class BasicCompactionEngine extends CompactionEngine {
             )
           }
           operationSignal.throwIfAborted()
+          if (
+            error instanceof ManualCompactionError
+            && error.code === 'summary'
+            && error.cause instanceof SummaryDidNotShrinkError
+          ) {
+            return null
+          }
           throw error
         }
       })

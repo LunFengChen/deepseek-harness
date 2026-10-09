@@ -11,6 +11,7 @@ import {
   CompactionId,
   ManualCompactionError,
   compactCheckpointSource,
+  isCompactCheckpointSource,
   toolPairingBalancedAfter,
   toolPairingBalancedBefore,
 } from '@x1a0f3n9/dsh-compaction'
@@ -152,6 +153,49 @@ export function selectCompactableRange(
   // oxlint-disable-next-line typescript/no-non-null-assertion
   const cutoff = surfaceNodes[keepFromIdx - 1]!
   return { start: first, end: cutoff }
+}
+
+/**
+ * True when every node in the selected span is already a compact-checkpoint.
+ * Size is ignored: a fat checkpoint still has no newly aged-out history to fold.
+ * @param session - session owning the surface seqs in `range`.
+ * @param range - inclusive candidate span from `selectCompactableRange`.
+ * @returns whether pressure and `/compact` should skip this span.
+ */
+export function rangeLacksFoldableHistory(
+  session: Session,
+  range: { start: SessionSeq; end: SessionSeq },
+): boolean {
+  const surfaceNodes = session.surface.nodes
+  const startIdx = surfaceNodes.indexOf(range.start)
+  const endIdx = surfaceNodes.indexOf(range.end)
+  if (startIdx === -1 || endIdx < startIdx) return false
+  for (let index = startIdx; index <= endIdx; index += 1) {
+    // oxlint-disable-next-line typescript/no-non-null-assertion, typescript/no-deprecated
+    const event = session.eventAt(surfaceNodes[index]!)!
+    if (event.type !== 'user/message' || !isCompactCheckpointSource(event.data.source)) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Commit-time shrink failure: the framed checkpoint is not cheaper than the
+ * span it would replace.
+ */
+export class SummaryDidNotShrinkError extends Error {
+  override readonly name = 'SummaryDidNotShrinkError'
+
+  /**
+   * @param framedSummaryTokenCount - route-priced framed checkpoint.
+   * @param shadowedRouteTokenCount - route-priced selected span.
+   */
+  constructor(framedSummaryTokenCount: number, shadowedRouteTokenCount: number) {
+    super(
+      `summary is not smaller than the shadowed content (${framedSummaryTokenCount} estimated framed tokens >= ${shadowedRouteTokenCount})`,
+    )
+  }
 }
 
 /**
@@ -446,9 +490,7 @@ async function summarizeCompaction(
   // question — does the replacement lower the next request's pressure.
   const framedSummaryTokenCount = dependencies.meter.estimateMessage(checkpointMessage)
   if (framedSummaryTokenCount >= prepared.shadowedRouteTokenCount) {
-    throw new Error(
-      `summary is not smaller than the shadowed content (${framedSummaryTokenCount} estimated framed tokens >= ${prepared.shadowedRouteTokenCount})`,
-    )
+    throw new SummaryDidNotShrinkError(framedSummaryTokenCount, prepared.shadowedRouteTokenCount)
   }
   return {
     ...prepared,
@@ -603,8 +645,8 @@ function inspectCompactionEntryState(session: Session): CompactionEntryState {
   // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
   const events = session.snapshotEvents()
   for (let index = events.length - 1; index >= 0; index -= 1) {
-    const event = events[index]
-    if (event === undefined) continue
+    // oxlint-disable-next-line typescript/no-non-null-assertion -- index is in [0, length).
+    const event = events[index]!
     if (latestEndSeedSeq === undefined && event.type === 'session/end-seed') {
       latestEndSeedSeq = event.seq
     }

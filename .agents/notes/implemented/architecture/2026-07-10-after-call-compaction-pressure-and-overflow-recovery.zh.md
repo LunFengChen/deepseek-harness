@@ -32,7 +32,7 @@ Compact-basic 会在每个拟议请求之前包装 `agent/pre-step`。在续步�
 
 `CompactionEngine.compactIfNeeded(agent, trigger, signal)` 接收 `trigger: 'pressure' | 'context-overflow'`。接口不增加估算方法或 token 类型；`ctx.tokenMeter` 继续作为可复用的核算所有者。
 
-对于 `pressure`，compaction-basic 先解析持久提供方/模型目标对应适配器所维护的容量与精确目标策略，再把得到的阈值与保留尾部预算应用到一次统一的 `ctx.tokenMeter.measure()` 结果。未达到压力阈值时直接返回，不执行剪枝。压力达到条件后，可选的 `ctx.toolResultPruner` 会改写当前表层中过大的工具结果，compaction-basic 再通过同一个 meter 重新计量；若压力已降至安全水平则跳过模型调用，否则从已剪枝表层选择范围并生成摘要。范围定价、引用的源事件计量、被遮蔽 token 数与非缩小摘要拒绝也由同一个单例 meter 完成。通用默认值保持为阈值比例 `0.8`、保留历史比例 `0.16`、摘要提供方/模型 `''`、`maxTokens: 8192`、`compactionRetries: 1` 与 `auto: true`；可选 `modelPolicies` 项可以按精确提供方/模型组合覆盖这些值。
+对于 `pressure`，compaction-basic 先解析持久提供方/模型目标对应适配器所维护的容量与精确目标策略，再把得到的阈值与保留尾部预算应用到一次统一的 `ctx.tokenMeter.measure()` 结果。未达到压力阈值时直接返回，不执行剪枝。压力达到条件后，可选的 `ctx.toolResultPruner` 会改写当前表层中过大的工具结果，compaction-basic 再通过同一个 meter 重新计量；若压力已降至安全水平则跳过模型调用，否则从已剪枝表层选择范围并生成摘要。仅含 compact-checkpoint 的范围会被跳过；只有仍有非检查点历史时才继续重试（[fold-new-history](../bug-fix/2026-10-08-compaction-fold-new-history.zh.md)）。范围定价、引用的源事件计量、被遮蔽 token 数与非缩小摘要拒绝也由同一个单例 meter 完成。通用默认值保持为阈值比例 `0.8`、保留历史比例 `0.16`、摘要提供方/模型 `''`、`maxTokens: 2048`、`compactionRetries: 1` 与 `auto: true`；可选 `modelPolicies` 项可以按精确提供方/模型组合覆盖这些值。
 
 对于规范化溢出，compaction-basic 不要求容量元数据，并绕过标量压力与普通保留 token 预算。它先执行剪枝，再在保留最新不可分割单元的同时选择最大的工具配对平衡头部范围；存在范围时，才在同一 signal 下尝试一次缩小摘要压缩。自动监听器先对 `session.surface.replaceGeneration` 建立快照，剪枝或摘要让 generation 增加时就返回 `{ kind: 'retry' }`。即使剪枝先落盘而后续摘要工作抛错，这条规则仍然成立；取消依然优先。后端若只返回结果但没有替换表层，不能授权重试；只有剪枝取得进展时，即使没有 `CompactionResult` 也可以授权重试。
 

@@ -69,21 +69,21 @@ kind: "package-reference"
 | `retainTokens` | — | 逐字保留的近期对话绝对预算；与 `retainRatio` 互斥，并且必须低于已解析阈值。 |
 | `summarizationProvider` | `''` | 与 `summarizationModel` 一起设置；空对使用最新已路由请求目标，再回退到 `AgentOptions` 对。 |
 | `summarizationModel` | `''` | 与 `summarizationProvider` 一起设置；空对使用最新已路由请求目标，再回退到 `AgentOptions` 对。 |
-| `maxTokens` | `headroomTokens`（`65536`） | 正数摘要输出上限，包含提供方计入的推理 token。显式模型上限覆盖显式全局上限；否则跟随解析后的余量。 |
-| `compactionRetries` | `1` | 压力仍高于阈值时，在首次压缩后进行的额外尝试次数。 |
+| `maxTokens` | `2048` | 正数摘要输出上限，包含提供方计入的推理 token。显式模型上限覆盖显式全局上限。该上限不继承 `headroomTokens`。 |
+| `compactionRetries` | `1` | 所选范围仍含非检查点历史且压力仍高于阈值时，在首次压缩后进行的额外尝试次数。 |
 | `maxOverflowRetries` | `1` | 已确认上下文窗口溢出后的最大重试次数；`0` 只禁用恢复。 |
 | `modelPolicies` | `[]` | 针对个别模型路由的精确 `{ provider, model, ...partialPolicy }` 覆盖。 |
 | `auto` | `true` | 启用自动压缩与溢出恢复；设为 `false` 则仅手动执行。 |
 
-配置错误会快速失败：未知设置、重复的按模型覆盖、无效 token 数、两种保留形式同时出现，或保留比例不小于阈值比例，都会在加载时拒绝插件。模型首次使用时，`W − O − B` 必须为正，且解析出的保留预算必须低于触发阈值。余量为零时，必须在全局或对应模型策略中显式设置正数 `maxTokens`。小窗口部署必须配置适合其容量的余量；降低 `thresholdRatio` 可以提早压缩。
+配置错误会快速失败：未知设置、重复的按模型覆盖、无效 token 数、两种保留形式同时出现，或保留比例不小于阈值比例，都会在加载时拒绝插件。模型首次使用时，`W − O − B` 必须为正，且解析出的保留预算必须低于触发阈值。小窗口部署必须配置适合其容量的余量；降低 `thresholdRatio` 可以提早压缩。
 
 ### 压缩运行时会发生什么
 
-最旧的平衡范围会被替换为一条摘要消息，近期尾部保持逐字不变；对话从摘要继续。操作会报告压缩了多少历史项以及估算释放的 token 数。如果没有任何内容可以安全压缩——例如整个对话就是一个不可分单元——则不会有任何改变，也不会向会话日志写入任何内容。如果没有模型可以撰写摘要（既未配置目标，也还没有已路由请求），压缩会失败并给出清晰错误，提示你配置摘要提供方与模型，或先路由一次请求。
+最旧的平衡范围会被替换为一条摘要消息，近期尾部保持逐字不变；对话从摘要继续。自动压力压缩和 `/compact` 会跳过只含替换检查点的范围，不论检查点大小；溢出恢复仍会替换它。未能缩小源范围的摘要不是 `/compact` 错误——命令会报告暂无可压缩历史。操作会报告压缩了多少历史项以及估算释放的 token 数。如果没有任何内容可以安全压缩——例如整个对话就是一个不可分单元——则不会有任何改变，也不会向会话日志写入任何内容。如果没有模型可以撰写摘要（既未配置目标，也还没有已路由请求），压缩会失败并给出清晰错误，提示你配置摘要提供方与模型，或先路由一次请求。
 
 ### 通过 /compact 按需压缩
 
-挂载 `dsh-command-compact` 后，在聊天 UI 中输入 `/compact` 即可立即压缩，即使未达到压力阈值。命令会报告压缩了多少历史项以及估算节省的 token 数。当 agent 正在轮次中或压缩已在运行时，`/compact` 会报告压缩暂不可用；运行期间你发送的提示词会被接受，并在压缩结束后才开始。
+挂载 `dsh-command-compact` 后，在聊天 UI 中输入 `/compact` 即可立即压缩，即使未达到压力阈值。命令会报告压缩了多少历史项以及估算节省的 token 数。仅含检查点的范围，或未能更便宜的摘要，会报告暂无可压缩历史。当 agent 正在轮次中或压缩已在运行时，`/compact` 会报告压缩暂不可用；运行期间你发送的提示词会被接受，并在压缩结束后才开始。
 
 ### 修剪超大工具输出
 
@@ -110,7 +110,7 @@ kind: "package-reference"
 
 ### 自动触发与溢出恢复
 
-当 `auto: true` 时，串行 `agent/pre-step` listener 会在请求派生前检查压力：它通过 `ctx.tokenMeter` 为最新持久路由请求 envelope 定价，当压力越过路由模型的阈值时，先剪枝，再在保留已定价近期尾部的同时摘要最旧的平衡范围。每个选定范围都从第一个不是 `system/message` 的 surface 节点开始，因此位于 surface 节点 0 的系统提示词永不会被遮蔽；由历史内提示词更新追加的后续 `system/message` 是普通历史，范围可以遮蔽它，agent loop（智能体循环）的投影随后会在二者文本不同时用当前提示词替换节点 0（[决策规则](../../core/agent-loop/README.zh.md#understand-the-implementation)）。`agent/request-error` listener 响应提供方确认的 `CONTEXT_WINDOW_EXCEEDED`：它绕过常规阈值与保留策略，尝试一次最大平衡头部缩减，并且只在表层替换 generation 前进后才授权重试。若摘要调用自己返回 `CONTEXT_WINDOW_EXCEEDED`，事务会落下一段短的回退检查点，让表层仍然缩小。压缩锁检查只读存活尾巴。取消全程保持最终决定权。
+当 `auto: true` 时，串行 `agent/pre-step` listener 会在请求派生前检查压力：它通过 `ctx.tokenMeter` 为最新持久路由请求 envelope 定价，当压力越过路由模型的阈值时，先剪枝，再在保留已定价近期尾部的同时摘要最旧的平衡范围。仅含 compact-checkpoint 的选定范围会被跳过；只有范围里仍有非检查点历史时才会继续重试，剩余的保留尾部或 envelope 压力则返回上一次成功结果。每个选定范围都从第一个不是 `system/message` 的 surface 节点开始，因此位于 surface 节点 0 的系统提示词永不会被遮蔽；由历史内提示词更新追加的后续 `system/message` 是普通历史，范围可以遮蔽它，agent loop（智能体循环）的投影随后会在二者文本不同时用当前提示词替换节点 0（[决策规则](../../core/agent-loop/README.zh.md#understand-the-implementation)）。`agent/request-error` listener 响应提供方确认的 `CONTEXT_WINDOW_EXCEEDED`：它绕过常规阈值与保留策略，即使范围只含检查点也尝试一次最大平衡头部缩减，并且只在表层替换 generation 前进后才授权重试。若摘要调用自己返回 `CONTEXT_WINDOW_EXCEEDED`，事务会落下一段短的回退检查点，让表层仍然缩小。压缩锁检查只读存活尾巴。取消全程保持最终决定权。
 
 压力策略从拥有持久路由的适配器解析容量。容量缺失、输出预留与余量耗尽窗口，或保留预算不小于阈值时，手动压力路径会抛出目标特定配置错误。自动 listener 会对该精确目标警告一次，并在配置修正前跳过主动压缩；提供方确认溢出后的恢复仍然可用。
 
@@ -189,36 +189,37 @@ This is an automatically generated checkpoint condensing an earlier span of the 
 ##### 压缩指令（最终 user 消息）
 
 ```markdown
-You are now acting as a compaction engine for this AI coding assistant. Condense the conversation ABOVE into a structured checkpoint that lets another model resume the work with no loss of essential context.
+You are now acting as a compaction engine for this AI coding assistant. Condense the conversation ABOVE into a short structured checkpoint that lets another model resume. Forget tool transcripts, restated history, and long quotes. Keep only facts still required to act.
 
 Output EXACTLY the Markdown structure below: keep every section, in order. Use terse bullets, not prose paragraphs. Write "(none)" for an empty section — never drop a section.
 
 ## Primary Request and Intent
-- [the user's original and evolving goals; quote verbatim where the exact wording matters]
+- [current goal in one line; do not quote the original request in full]
 
 ## Key Technical Concepts
-- [technologies, frameworks, patterns, and conventions in play]
+- [names only]
 
 ## Files and Code
-- [exact path: why it matters, key changes or snippets]
+- [exact path: one-line why it matters; no snippets unless a signature is required to continue]
 
 ## Errors and Fixes
-- [error: how it was resolved, plus any related user feedback]
+- [error string: resolution]
 
 ## Pending Jobs
-- [explicitly requested work not yet completed]
+- [unfinished requested work]
 
 ## Current Work
-- [precisely what was in progress at this checkpoint]
+- [what was in progress at this checkpoint]
 
 ## Next Step
-- [the single next action, directly in line with the most recent request, or "(none)"]
+- [the single next action, or "(none)"]
 
 ## Critical Context
-- [decisions and their rationale, constraints, user preferences, open questions, data needed to continue]
+- [hard constraints, user preferences, open questions]
 
 Rules:
 - Write concise English engineering prose. Preserve exact file paths, commands, error strings, identifiers, numeric values, function signatures, and syntax fragments.
+- At most a few bullets per section. Do not rewrite the whole task. Do not dump code or logs.
 - Capture user feedback and explicit instructions faithfully, especially corrections.
 - Do NOT mention this summarization request or that the context was compacted.
 - Output only the checkpoint text: do not call any tool or take any other action.

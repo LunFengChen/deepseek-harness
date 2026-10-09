@@ -10,7 +10,12 @@ import * as AgentInvariant from '@x1a0f3n9/dsh-agent/invariant'
 import * as AgentLoopInvariant from '@x1a0f3n9/dsh-agent-loop/invariant'
 import * as CompactionInvariant from '@x1a0f3n9/dsh-compaction/invariant'
 import { BasicCompactionEngine } from '@x1a0f3n9/dsh-compaction-basic'
-import { CompactionId, isCompactCheckpointSource, ManualCompactionError } from '@x1a0f3n9/dsh-compaction'
+import {
+  CompactionId,
+  compactCheckpointSource,
+  isCompactCheckpointSource,
+  ManualCompactionError,
+} from '@x1a0f3n9/dsh-compaction'
 import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
 import {
   createAssistantMessage,
@@ -427,6 +432,47 @@ describe('compactNow transaction and failure classification', () => {
     expect(released).toBe(1)
     expect(compact.calls).toHaveLength(0)
     expect(compactEvents(session)).toEqual([])
+  })
+
+  it('returns null without writing a bracket for a checkpoint-only span', async () => {
+    const { compact } = detachedService()
+    const session = Session.create(SessionId('checkpoint-only'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: `${PROMPT} checkpoint` }],
+      source: compactCheckpointSource(CompactionId('checkpoint-only')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: `${PROMPT} tail` }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    let released = 0
+    const agent = fakeAgent(session, () => () => { released += 1 })
+
+    expect(await compact.compactNow(agent, SIGNAL)).toBeNull()
+    expect(released).toBe(1)
+    expect(compact.calls).toHaveLength(0)
+    expect(compactEvents(session)).toEqual([])
+  })
+
+  it('returns null for a non-shrinking summary instead of a summary error', async () => {
+    const { compact } = detachedService()
+    const session = closedConversation(2)
+    let released = 0
+    const agent = fakeAgent(session, () => () => { released += 1 })
+    compact.summary = Array.from({ length: 100 }, (_, index) => ({
+      type: 'text',
+      text: `verbose ${index} ${PROMPT}`,
+    }))
+
+    expect(await compact.compactNow(agent, SIGNAL)).toBeNull()
+    expect(released).toBe(1)
+    expect(compact.calls).toHaveLength(1)
+    const markers = compactEvents(session)
+    expect(markers.map(event => event.type)).toEqual(['compaction/start', 'compaction/end'])
+    expect(markers[1]?.type === 'compaction/end' && markers[1].data.error)
+      .toContain('summary is not smaller')
   })
 
   it('commits a standalone bracket without consuming a turn number and checkpoints durability', async () => {

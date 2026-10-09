@@ -24,14 +24,14 @@
   en: 4cb73d7a57908948
   zh: 7ba2ddc4c76e4957
 /x1a0f3n9-dsh-compaction-basic/use-this-package/tuning-when-condensation-starts:
-  en: 3446c54c062d7e34
-  zh: fb502c941e508ae0
+  en: 9f8b26d09d897bce
+  zh: c7d3a84191af0b02
 /x1a0f3n9-dsh-compaction-basic/use-this-package/what-happens-when-condensation-runs:
-  en: c872a8ef069596f0
-  zh: b3a48e309ae830d4
+  en: 7e0aa1db7cf2bf13
+  zh: 9c621286652bb5e3
 /x1a0f3n9-dsh-compaction-basic/use-this-package/on-demand-condensation-with-compact:
-  en: 4c5067e4c57ca708
-  zh: 1c0e70319b9b2112
+  en: 61a47e88fedf58d8
+  zh: 609e0e9bb1a68f44
 /x1a0f3n9-dsh-compaction-basic/use-this-package/trimming-oversized-tool-outputs:
   en: 1d6a74c0dc874dc8
   zh: bcfa95549308c030
@@ -42,8 +42,8 @@
   en: 54945a18965f12a8
   zh: fecd5d4fc2f2e6d6
 /x1a0f3n9-dsh-compaction-basic/understand-the-implementation/automatic-triggers-and-overflow-recovery:
-  en: f60a99921b299780
-  zh: 9e5ce1eed845a82c
+  en: ff22593d9117a06f
+  zh: 09e38d494abb7461
 /x1a0f3n9-dsh-compaction-basic/understand-the-implementation/summarization-mechanics:
   en: 967531b71453eb88
   zh: c7919b46e36763e6

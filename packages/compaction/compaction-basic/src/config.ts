@@ -22,6 +22,9 @@ const DEFAULT_THRESHOLD_RATIO = 0.8
 /** Default verbatim-tail fraction for every routed model. */
 const DEFAULT_RETAIN_RATIO = 0.16
 
+/** Default summarization output cap. Independent of pressure headroom. */
+const DEFAULT_SUMMARY_MAX_TOKENS = 2_048
+
 /** Fields shared by top-level defaults and exact-target overrides. */
 const POLICY_CONFIG_KEYS = [
   'thresholdRatio',
@@ -73,19 +76,15 @@ export function resolveConfig(config: BasicCompactionConfig = {}): ResolvedConfi
   }
 
   const headroomTokens = config.headroomTokens ?? 65_536
-  const maxTokens = config.maxTokens ?? headroomTokens
-  assertPositiveInteger('BasicCompactionConfig.maxTokens (explicit or from headroomTokens)', maxTokens)
+  const maxTokens = config.maxTokens ?? DEFAULT_SUMMARY_MAX_TOKENS
+  assertPositiveInteger('BasicCompactionConfig.maxTokens', maxTokens)
   const thresholdRatio = config.thresholdRatio ?? DEFAULT_THRESHOLD_RATIO
   const retention = resolveRetention(config, { retainRatio: DEFAULT_RETAIN_RATIO })
   validateRatioRetention(thresholdRatio, retention, 'BasicCompactionConfig')
   const modelPolicies = resolveModelPolicies(config.modelPolicies)
   for (const [index, policy] of modelPolicies.entries()) {
-    if (policy.maxTokens === undefined && config.maxTokens === undefined
-      && policy.headroomTokens !== undefined) {
-      policy.maxTokens = policy.headroomTokens
-    }
     assertPositiveInteger(
-      `BasicCompactionConfig: modelPolicies[${index}].maxTokens (explicit or from headroomTokens)`,
+      `BasicCompactionConfig: modelPolicies[${index}].maxTokens`,
       policy.maxTokens ?? maxTokens,
     )
     validateRatioRetention(

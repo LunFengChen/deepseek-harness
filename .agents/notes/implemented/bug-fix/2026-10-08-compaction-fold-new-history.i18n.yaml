@@ -1,0 +1,22 @@
+# Bilingual-pair consistency record for 2026-10-08-compaction-fold-new-history.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write .agents/notes/implemented/bug-fix/2026-10-08-compaction-fold-new-history.md
+/agent-note-fold-only-newly-aged-out-history-into-the-head-checkpoint:
+  en: e3cafe8c5832966c
+  zh: 0ff8cfa12b0fadaa
+/agent-note-fold-only-newly-aged-out-history-into-the-head-checkpoint/problem:
+  en: 4a2e70729a283873
+  zh: 7d1f38dabb0b1379
+/agent-note-fold-only-newly-aged-out-history-into-the-head-checkpoint/decision:
+  en: 1d7f84e81590223e
+  zh: 65f563f3e1ab7127
+/agent-note-fold-only-newly-aged-out-history-into-the-head-checkpoint/alternatives-considered:
+  en: 3fc6c7eb698403a1
+  zh: 6b6f0b6d385125ad
+/agent-note-fold-only-newly-aged-out-history-into-the-head-checkpoint/consequences:
+  en: 69431eaaafa1872c
+  zh: a7483b9691ddad9d
+/agent-note-fold-only-newly-aged-out-history-into-the-head-checkpoint/testing:
+  en: 4a91616f27fc79b0
+  zh: d94ce82046ed0d39

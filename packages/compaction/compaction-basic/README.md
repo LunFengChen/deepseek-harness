@@ -69,21 +69,21 @@ All settings are optional. With context window `W`, effective request output cap
 | `retainTokens` | — | Absolute recent-conversation budget kept verbatim; mutually exclusive with `retainRatio` and must be below the resolved threshold. |
 | `summarizationProvider` | `''` | Set together with `summarizationModel`; an empty pair uses the latest routed request target, then the `AgentOptions` pair. |
 | `summarizationModel` | `''` | Set together with `summarizationProvider`; an empty pair uses the latest routed request target, then the `AgentOptions` pair. |
-| `maxTokens` | `headroomTokens` (`65536`) | Positive summary output cap, including any provider-counted reasoning tokens. Explicit per-model caps override explicit global caps; otherwise the cap follows the resolved headroom. |
-| `compactionRetries` | `1` | Extra condensation attempts after the first when pressure remains above threshold. |
+| `maxTokens` | `2048` | Positive summary output cap, including any provider-counted reasoning tokens. Explicit per-model caps override explicit global caps. The cap does not inherit `headroomTokens`. |
+| `compactionRetries` | `1` | Extra condensation attempts after the first when the selected span still contains non-checkpoint history and pressure remains above threshold. |
 | `maxOverflowRetries` | `1` | Maximum retries after a confirmed context-window overflow; `0` disables recovery only. |
 | `modelPolicies` | `[]` | Exact `{ provider, model, ...partialPolicy }` overrides for individual model routes. |
 | `auto` | `true` | Enable automatic condensation and overflow recovery; set `false` for manual-only operation. |
 
-Misconfiguration fails fast: unknown settings, duplicate per-model overrides, invalid token counts, both retention forms together, or a retention ratio at least as large as the threshold ratio reject the plugin at load. When the model is first used, `W − O − B` must be positive and the resolved retained budget must be below the trigger. Zero headroom requires an explicit positive `maxTokens`, globally or in that model policy. Small-window deployments must configure headroom that fits their capacity; lower `thresholdRatio` to compact earlier.
+Misconfiguration fails fast: unknown settings, duplicate per-model overrides, invalid token counts, both retention forms together, or a retention ratio at least as large as the threshold ratio reject the plugin at load. When the model is first used, `W − O − B` must be positive and the resolved retained budget must be below the trigger. Small-window deployments must configure headroom that fits their capacity; lower `thresholdRatio` to compact earlier.
 
 ### What happens when condensation runs
 
-The oldest balanced span is replaced by one summary message and the recent tail stays verbatim; the conversation continues from the summary. The operation reports how many history items were condensed and the estimated tokens freed. If nothing can be condensed safely — for example the whole conversation is one indivisible unit — nothing changes and nothing is written to the session log. If no model is available to write the summary (no configured target and no routed request yet), condensation fails with a clear error telling you to configure the summarization provider and model or route one request.
+The oldest balanced span is replaced by one summary message and the recent tail stays verbatim; the conversation continues from the summary. Automatic pressure compaction and `/compact` skip a span that is only replacement checkpoints, regardless of checkpoint size; overflow recovery still replaces it. A summary that does not shrink its source is not a `/compact` error — the command reports that nothing compactable remains. The operation reports how many history items were condensed and the estimated tokens freed. If nothing can be condensed safely — for example the whole conversation is one indivisible unit — nothing changes and nothing is written to the session log. If no model is available to write the summary (no configured target and no routed request yet), condensation fails with a clear error telling you to configure the summarization provider and model or route one request.
 
 ### On-demand condensation with /compact
 
-With `dsh-command-compact` mounted, type `/compact` in a chat UI to condense immediately, even below the pressure threshold. The command reports how many history items were condensed and the estimated tokens saved. While the agent is mid-turn or condensation is already running, `/compact` reports that condensation is unavailable; prompts you send while it runs are accepted and start after it finishes.
+With `dsh-command-compact` mounted, type `/compact` in a chat UI to condense immediately, even below the pressure threshold. The command reports how many history items were condensed and the estimated tokens saved. A checkpoint-only span or a summary that is not cheaper reports that no compactable history remains. While the agent is mid-turn or condensation is already running, `/compact` reports that condensation is unavailable; prompts you send while it runs are accepted and start after it finishes.
 
 ### Trimming oversized tool outputs
 
@@ -110,7 +110,7 @@ The backend is built on four commitments:
 
 ### Automatic triggers and overflow recovery
 
-With `auto: true`, a serial `agent/pre-step` listener checks pressure before request derivation: it prices the latest durable routed request envelope through `ctx.tokenMeter`, and when pressure crosses the routed model's threshold it prunes, then summarizes the oldest balanced span while keeping a priced recent tail. Every selected range starts at the first surface node that is not a `system/message`, so a system prompt at surface node 0 is never shadowed; a later `system/message` appended by an in-history prompt update is ordinary history that the range may shadow, and the agent loop's projection then replaces node 0 with the current prompt when their text differs ([decision rule](../../core/agent-loop/README.md#understand-the-implementation)). The `agent/request-error` listener reacts to a provider-confirmed `CONTEXT_WINDOW_EXCEEDED`: it bypasses the normal threshold and retention policy, attempts one maximal balanced head reduction, and authorizes a retry only after the surface replacement generation advances. If the summarizer call itself returns `CONTEXT_WINDOW_EXCEEDED`, the transaction lands a short fallback checkpoint so the surface still shrinks. Compaction lock inspection reads only the live tail. Cancellation stays authoritative throughout.
+With `auto: true`, a serial `agent/pre-step` listener checks pressure before request derivation: it prices the latest durable routed request envelope through `ctx.tokenMeter`, and when pressure crosses the routed model's threshold it prunes, then summarizes the oldest balanced span while keeping a priced recent tail. A selected span that is only compact-checkpoints is skipped; retries continue only while non-checkpoint history remains in the span, and leftover retain-tail or envelope pressure returns the last successful result. Every selected range starts at the first surface node that is not a `system/message`, so a system prompt at surface node 0 is never shadowed; a later `system/message` appended by an in-history prompt update is ordinary history that the range may shadow, and the agent loop's projection then replaces node 0 with the current prompt when their text differs ([decision rule](../../core/agent-loop/README.md#understand-the-implementation)). The `agent/request-error` listener reacts to a provider-confirmed `CONTEXT_WINDOW_EXCEEDED`: it bypasses the normal threshold and retention policy, attempts one maximal balanced head reduction even when the span is checkpoint-only, and authorizes a retry only after the surface replacement generation advances. If the summarizer call itself returns `CONTEXT_WINDOW_EXCEEDED`, the transaction lands a short fallback checkpoint so the surface still shrinks. Compaction lock inspection reads only the live tail. Cancellation stays authoritative throughout.
 
 Pressure policy resolves capacity from the adapter that owns the durable route. Missing capacity, output plus headroom exhausting the window, or a retained budget at least as large as the threshold makes the manual pressure path throw a target-specific configuration error. The automatic listener warns once for that exact target and skips proactive compaction until its configuration is corrected; provider-confirmed overflow recovery remains available.
 
@@ -189,36 +189,37 @@ The summarization model receives the system prompt and shadowed-region history, 
 ##### Compaction instruction (final user message)
 
 ```markdown
-You are now acting as a compaction engine for this AI coding assistant. Condense the conversation ABOVE into a structured checkpoint that lets another model resume the work with no loss of essential context.
+You are now acting as a compaction engine for this AI coding assistant. Condense the conversation ABOVE into a short structured checkpoint that lets another model resume. Forget tool transcripts, restated history, and long quotes. Keep only facts still required to act.
 
 Output EXACTLY the Markdown structure below: keep every section, in order. Use terse bullets, not prose paragraphs. Write "(none)" for an empty section — never drop a section.
 
 ## Primary Request and Intent
-- [the user's original and evolving goals; quote verbatim where the exact wording matters]
+- [current goal in one line; do not quote the original request in full]
 
 ## Key Technical Concepts
-- [technologies, frameworks, patterns, and conventions in play]
+- [names only]
 
 ## Files and Code
-- [exact path: why it matters, key changes or snippets]
+- [exact path: one-line why it matters; no snippets unless a signature is required to continue]
 
 ## Errors and Fixes
-- [error: how it was resolved, plus any related user feedback]
+- [error string: resolution]
 
 ## Pending Jobs
-- [explicitly requested work not yet completed]
+- [unfinished requested work]
 
 ## Current Work
-- [precisely what was in progress at this checkpoint]
+- [what was in progress at this checkpoint]
 
 ## Next Step
-- [the single next action, directly in line with the most recent request, or "(none)"]
+- [the single next action, or "(none)"]
 
 ## Critical Context
-- [decisions and their rationale, constraints, user preferences, open questions, data needed to continue]
+- [hard constraints, user preferences, open questions]
 
 Rules:
 - Write concise English engineering prose. Preserve exact file paths, commands, error strings, identifiers, numeric values, function signatures, and syntax fragments.
+- At most a few bullets per section. Do not rewrite the whole task. Do not dump code or logs.
 - Capture user feedback and explicit instructions faithfully, especially corrections.
 - Do NOT mention this summarization request or that the context was compacted.
 - Output only the checkpoint text: do not call any tool or take any other action.

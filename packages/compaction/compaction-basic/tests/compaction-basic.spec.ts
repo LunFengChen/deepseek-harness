@@ -3,10 +3,10 @@ import { Context } from '@deepseek-ai/cordis'
 import { AttachmentId } from '@x1a0f3n9/dsh-attachment'
 import BasicCompactionEngine from '@x1a0f3n9/dsh-compaction-basic'
 import type { BasicCompactionConfig } from '@x1a0f3n9/dsh-compaction-basic'
-import { selectCompactableRange } from '@x1a0f3n9/dsh-compaction-basic/src/region.ts'
+import { rangeLacksFoldableHistory, selectCompactableRange } from '@x1a0f3n9/dsh-compaction-basic/src/region.ts'
 import { CONTEXT_OVERFLOW_FALLBACK_SUMMARY, frameSummary } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
 import type { SummarizationInput, SummaryResult } from '@x1a0f3n9/dsh-compaction-basic/src/summarizer.ts'
-import { CompactionId, toolPairingBalancedAfter, toolPairingBalancedBefore } from '@x1a0f3n9/dsh-compaction'
+import { CompactionId, compactCheckpointSource, toolPairingBalancedAfter, toolPairingBalancedBefore } from '@x1a0f3n9/dsh-compaction'
 import {
   resolveCompactSpec,
   resolveConfig,
@@ -316,7 +316,7 @@ describe('compact configuration and defaults', () => {
       retainRatio: 0.16,
       summarizationProvider: '',
       summarizationModel: '',
-      maxTokens: 65_536,
+      maxTokens: 2_048,
       compactionRetries: 1,
       maxOverflowRetries: 1,
       modelPolicies: [],
@@ -325,13 +325,14 @@ describe('compact configuration and defaults', () => {
     expect(Object.isFrozen(resolved)).toBe(true)
   })
 
-  it('defaults summary generation to headroom and preserves explicit caps', () => {
+  it('keeps the summary cap independent of headroom and preserves explicit caps', () => {
     const target = { provider: MODEL, model: MODEL }
-    expect(resolveConfig({ headroomTokens: 16_384 }).maxTokens).toBe(16_384)
+    expect(resolveConfig({ headroomTokens: 16_384 }).maxTokens).toBe(2_048)
+    expect(resolveConfig({ headroomTokens: 0 }).maxTokens).toBe(2_048)
     expect(resolveConfig({ headroomTokens: 0, maxTokens: 32 }).maxTokens).toBe(32)
     expect(resolveTargetPolicy(resolveConfig({
       modelPolicies: [{ ...target, headroomTokens: 16_384 }],
-    }), target).maxTokens).toBe(16_384)
+    }), target).maxTokens).toBe(2_048)
     expect(resolveTargetPolicy(resolveConfig({
       maxTokens: 512,
       modelPolicies: [{ ...target, headroomTokens: 0 }],
@@ -340,13 +341,6 @@ describe('compact configuration and defaults', () => {
       maxTokens: 512,
       modelPolicies: [{ ...target, headroomTokens: 0, maxTokens: 32 }],
     }), target).maxTokens).toBe(32)
-  })
-
-  it('rejects a zero summary cap inherited from headroom', () => {
-    expect(() => resolveConfig({ headroomTokens: 0 })).toThrow(/maxTokens.*positive integer/)
-    expect(() => resolveConfig({
-      modelPolicies: [{ provider: MODEL, model: MODEL, headroomTokens: 0 }],
-    })).toThrow(/modelPolicies\[0\].maxTokens.*positive integer/)
   })
 
   it('resolves threshold and retention overrides independently', () => {
@@ -860,7 +854,7 @@ describe('pressure measurement and retention', () => {
     expect(measure).toHaveBeenCalledTimes(1)
   })
 
-  it('bounds retries when a shrinking checkpoint remains above threshold', async () => {
+  it('returns the last result when leftover pressure is a checkpoint-only span', async () => {
     const compact = service({
       auto: false,
       compactionRetries: 0,
@@ -872,8 +866,157 @@ describe('pressure measurement and retention', () => {
       text: `summary ${index}`,
     }))
 
+    const result = await compactIfNeeded(compact, conversation(4))
+    expect(result).not.toBeNull()
+    expect(compact.calls).toHaveLength(1)
+  })
+
+  it('throws when retries exhaust while non-checkpoint history remains', async () => {
+    const compact = service({
+      auto: false,
+      compactionRetries: 0,
+      thresholdRatio: 0.3,
+      retainTokens: 180,
+    })
+    const compactRegion = vi.spyOn(compact, 'compactRegion').mockResolvedValue({
+      compactionId: CompactionId('no-op-compaction'),
+      startSeq: SessionSeq(1),
+      summarySeq: SessionSeq(2),
+      endSeq: SessionSeq(3),
+      summary: [{ type: 'text', text: 'no-op' }],
+      shadowedRange: { start: SessionSeq(1), end: SessionSeq(2) },
+      shadowedSeqs: [SessionSeq(1), SessionSeq(2)],
+      shadowedTokenCount: 10,
+    })
+
     await expect(compactIfNeeded(compact, conversation(4)))
       .rejects.toThrow(/still above threshold after 1 compaction attempts/)
+    expect(compactRegion).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not re-summarize a leftover checkpoint that already fits the cap', async () => {
+    const compact = service({
+      auto: false,
+      compactionRetries: 1,
+      thresholdRatio: 0.3,
+      retainTokens: 180,
+    })
+    compact.summary = Array.from({ length: 7 }, (_, index) => ({
+      type: 'text',
+      text: `summary ${index}`,
+    }))
+
+    const result = await compactIfNeeded(compact, conversation(4))
+    expect(result).not.toBeNull()
+    expect(compact.calls).toHaveLength(1)
+  })
+
+  it('skips pressure compaction when the only compactable span is a short checkpoint', async () => {
+    const ctx = createContext()
+    const compact = service({
+      auto: false,
+      thresholdRatio: 0.5,
+      retainTokens: 1,
+      maxTokens: 8_192,
+    }, ctx)
+    const session = Session.create(SessionId('short-checkpoint'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'short checkpoint' }],
+      source: compactCheckpointSource(CompactionId('short-checkpoint')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'tail' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('request/header', {
+      header: {
+        config: { provider: MODEL, model: MODEL },
+        tools: [{ name: 'bulk', description: 'x'.repeat(100_000), parameters: { type: 'object' } }],
+      },
+      reason: 'initial',
+    })
+    expect(rangeLacksFoldableHistory(
+      session,
+      { start: session.surface.nodes[0]!, end: session.surface.nodes[0]! },
+    )).toBe(true)
+
+    await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
+    expect(compact.calls).toHaveLength(0)
+  })
+
+  it('skips pressure compaction for an oversized checkpoint-only span', async () => {
+    const compact = service({
+      auto: false,
+      thresholdRatio: 0.5,
+      retainTokens: 1,
+      maxTokens: 32,
+    })
+    const session = Session.create(SessionId('huge-checkpoint'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'checkpoint '.repeat(400) }],
+      source: compactCheckpointSource(CompactionId('huge-checkpoint')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'tail' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('request/header', {
+      header: { config: { provider: MODEL, model: MODEL } },
+      reason: 'initial',
+    })
+
+    await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
+    expect(compact.calls).toHaveLength(0)
+  })
+
+  it('still force-compacts a checkpoint-only span on overflow', async () => {
+    const compact = service({
+      auto: false,
+      thresholdRatio: 0.5,
+      retainTokens: 1,
+      maxTokens: 32,
+    })
+    const session = Session.create(SessionId('overflow-checkpoint'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'checkpoint '.repeat(400) }],
+      source: compactCheckpointSource(CompactionId('overflow-checkpoint')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'tail' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('request/header', {
+      header: { config: { provider: MODEL, model: MODEL } },
+      reason: 'initial',
+    })
+
+    const result = await compactIfNeeded(compact, session, 'context-overflow')
+    expect(result).not.toBeNull()
+    expect(compact.calls).toHaveLength(1)
+  })
+
+  it('treats mixed or inverted spans as having foldable history', () => {
+    const session = conversation(2)
+    const [first, second] = session.surface.nodes
+    expect(rangeLacksFoldableHistory(
+      session,
+      { start: first!, end: second! },
+    )).toBe(false)
+    expect(rangeLacksFoldableHistory(
+      session,
+      { start: second!, end: second! },
+    )).toBe(false)
+    expect(rangeLacksFoldableHistory(
+      session,
+      { start: second!, end: first! },
+    )).toBe(false)
+    expect(rangeLacksFoldableHistory(
+      session,
+      { start: SessionSeq(99_999), end: SessionSeq(99_999) },
+    )).toBe(false)
   })
 
   it('rounds a retention cut head-ward to preserve tool-call/result pairing', async () => {
@@ -1494,6 +1637,7 @@ describe('default one-shot summarizer', () => {
     expect(lastText).toContain('Write concise English engineering prose.')
     expect(lastText).toContain('numeric values, function signatures, and syntax fragments.')
     expect(lastText).toContain('## Primary Request and Intent')
+    expect(lastText).toContain('Do not rewrite the whole task.')
   })
 
   it('applies the routed model policy without changing the replayed prefix', async () => {
