@@ -2,8 +2,8 @@
 /**
  * The shipped Session row actions rendered directly with hand-built props:
  * the pin, rename, fork, and archive menu rows, the archive and pin hover
- * buttons, and the two `shell.overlay` surfaces they raise (rename dialog,
- * row notice). Every action reads its own injected hooks and calls its own
+ * buttons, and the overlay surfaces they raise (rename dialog, archive
+ * confirmation, row notice). Every action reads its own injected hooks and calls its own
  * injected callbacks; what those callbacks do is apply.client.spec's
  * subject. The browser and the slot machinery stay out; the assembled
  * chain lives in rename-assembly.client.spec.
@@ -374,7 +374,11 @@ describe('SessionRenameDialog', () => {
 
 describe('SessionArchiveConfirmDialog', () => {
   /** The dialog over a test-owned request source; settling clears the request the way apply does. */
-  function archiveDialog(stopAndArchiveSession: SessionArchiveConfirmInjected['stopAndArchiveSession'], translate = t) {
+  function archiveDialog(
+    stopAndArchiveSession: SessionArchiveConfirmInjected['stopAndArchiveSession'],
+    translate = t,
+    archiveSession: SessionArchiveConfirmInjected['archiveSession'] = async () => 'archived',
+  ) {
     const request = createSnapshotStore<SessionArchiveConfirmRequest | null>(null)
     const settleSessionArchive = vi.fn(() => { request.set(null) })
     render(
@@ -383,6 +387,7 @@ describe('SessionArchiveConfirmDialog', () => {
         t={translate}
         useArchiveRequest={bindSnapshotSelector(request)}
         settleSessionArchive={settleSessionArchive}
+        archiveSession={archiveSession}
         stopAndArchiveSession={stopAndArchiveSession}
       />,
     )
@@ -395,6 +400,58 @@ describe('SessionArchiveConfirmDialog', () => {
   it('renders nothing until a confirmation is requested', () => {
     archiveDialog(vi.fn(async () => {}))
     expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
+  it('asks to archive a quiet Session, and Cancel settles without archiving', () => {
+    const archiveSession = vi.fn(async () => 'archived' as const)
+    const stopAndArchiveSession = vi.fn(async () => {})
+    const { settleSessionArchive, ask } = archiveDialog(stopAndArchiveSession, t, archiveSession)
+    ask([])
+    const dialog = screen.getByRole('dialog', { name: '归档此会话？' })
+    expect(dialog.textContent).toContain('“Busy session”将移到已归档')
+    expect(screen.queryByRole('list', { name: '将被停止的工作' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: '取消' }))
+    expect(settleSessionArchive).toHaveBeenCalledOnce()
+    expect(archiveSession).not.toHaveBeenCalled()
+    expect(stopAndArchiveSession).not.toHaveBeenCalled()
+  })
+
+  it('archives a quiet Session on confirm', async () => {
+    const pending = Promise.withResolvers<'archived'>()
+    const archiveSession = vi.fn(() => pending.promise)
+    const stopAndArchiveSession = vi.fn(async () => {})
+    const { settleSessionArchive, ask } = archiveDialog(stopAndArchiveSession, t, archiveSession)
+    ask([])
+    fireEvent.click(screen.getByRole('button', { name: '归档' }))
+    expect(archiveSession).toHaveBeenCalledWith(sid('one'))
+    expect(stopAndArchiveSession).not.toHaveBeenCalled()
+    expect(screen.getByRole('status').textContent).toBe('正在归档…')
+    fireEvent.click(screen.getByRole('button', { name: '取消' }))
+    expect(settleSessionArchive).not.toHaveBeenCalled()
+    await act(async () => { pending.resolve('archived') })
+    expect(settleSessionArchive).toHaveBeenCalledOnce()
+    expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
+  it('archives a quiet Session on confirm, and upgrades to stop-and-archive when the hop returns needs-stop', async () => {
+    const archiveSession = vi.fn<SessionArchiveConfirmInjected['archiveSession']>()
+    const stopAndArchiveSession = vi.fn(async () => {})
+    const { settleSessionArchive, ask } = archiveDialog(stopAndArchiveSession, t, archiveSession)
+    archiveSession.mockImplementation(async () => {
+      ask([{ kind: 'turn' }])
+      return 'needs-stop'
+    })
+    ask([])
+    fireEvent.click(screen.getByRole('button', { name: '归档' }))
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: '停止并归档此会话？' })).toBeTruthy()
+    })
+    expect(archiveSession).toHaveBeenCalledWith(sid('one'))
+    expect(settleSessionArchive).not.toHaveBeenCalled()
+    expect(stopAndArchiveSession).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: '停止并归档' }))
+    await waitFor(() => { expect(stopAndArchiveSession).toHaveBeenCalledWith(sid('one')) })
+    await waitFor(() => { expect(settleSessionArchive).toHaveBeenCalledOnce() })
   })
 
   it('names the session and lists every reported family with its items, then stops and archives on confirm', async () => {

@@ -6,8 +6,9 @@
 // duplicate-name pre-check, the
 // flat "In one list" and opt-in Workspace tree views with persisted grouping, the session
 // hover card and row action menu, and the session archive round trip (row
-// menu → workspace.archiveSession RPC → durable global set → row hidden
-// across reload). Zero model calls: workspace.create/rename/archiveSession
+// menu → archive confirmation → workspace.archiveSession RPC → durable
+// global set → row hidden across reload). Zero model calls:
+// workspace.create/rename/archiveSession
 // are host RPCs with no model involvement, and the one session row the
 // flat/hover/menu/archive scenarios need comes from a seeded fixture (the
 // seeded-history seed reused verbatim — no new recording).
@@ -608,10 +609,13 @@ describe('web e2e: workspace management (create / rename / grouping / hover affo
     await expect.poll(() => sessionRow.getAttribute('aria-selected'), { timeout: 10_000 }).toBe('true')
     const ungroupedSection = page.getByText('Ungrouped', { exact: true }).locator('..').locator('..').locator('..')
     await expect.poll(() => ungroupedSection.locator('[role="treeitem"]').count(), { timeout: 10_000 }).toBe(2)
-    // Row menu: hover reveals the actions button; Archive session commits
-    // without a confirmation dialog (non-destructive: log + accounting stay).
+    // Row menu: hover reveals the actions button; Archive session asks first
+    // (non-destructive: log + accounting stay).
     await clickHoverAction(sessionRow, `Session actions for ${title}`)
     await page.getByRole('menuitem', { name: 'Archive session' }).click()
+    const ask = page.getByRole('dialog', { name: 'Archive this session?' })
+    await ask.waitFor({ timeout: 5_000 })
+    await ask.getByRole('button', { name: 'Archive', exact: true }).click()
     // The row disappears on the archive-set echo; with no other visible
     // stray, the whole Ungrouped bucket withdraws.
     await expect.poll(() => sessionRow.count(), { timeout: 10_000 }).toBe(0)

@@ -1,10 +1,11 @@
 /**
  * The archive action: a `sidebar.workspaces.session.menu.item` row and a
  * `sidebar.workspaces.session.row.action` button over one injected behavior,
- * plus the `shell.overlay` dialog that confirms stopping a Session's running
- * work before archiving it. The same entries restore an archived row; the
- * notice a successful archive raises and the diagnostics for Host rejections
- * live in the injected callbacks, not here.
+ * plus the `shell.overlay` dialog that confirms an archive, and that upgrades
+ * to stopping a Session's running work when the Host names it. The same
+ * entries restore an archived row; the notice a successful archive raises
+ * and the diagnostics for Host rejections live in the injected callbacks,
+ * not here.
  */
 import { useState } from 'react'
 import type { SessionActivity } from '@x1a0f3n9/dsh-api-workspace-controller/client'
@@ -73,14 +74,14 @@ export function ArchiveSessionRowButton({
 
 /**
  * The `shell.overlay` entry: nothing while no confirmation is pending,
- * otherwise one dialog per request (keyed by the Session). Confirming asks
- * the Host to stop the listed work and archive; cancelling leaves the
- * Session running and visible.
- * @param props - the request hook, its settlement, the stop-and-archive hop, and the locale seat.
+ * otherwise one dialog per request (keyed by the Session). A quiet request
+ * confirms archive; a request that names running work confirms
+ * stop-and-archive. Cancelling leaves the Session as it was.
+ * @param props - the request hook, its settlement, the archive hops, and the locale seat.
  * @returns the open dialog, or null.
  */
 export function SessionArchiveConfirmDialog({
-  useArchiveRequest, settleSessionArchive, stopAndArchiveSession, t,
+  useArchiveRequest, settleSessionArchive, archiveSession, stopAndArchiveSession, t,
 }: SessionArchiveConfirmProps) {
   const request = useArchiveRequest(pending => pending)
   if (request === null) return null
@@ -88,6 +89,7 @@ export function SessionArchiveConfirmDialog({
     <ArchiveConfirmForm
       key={request.sessionId}
       request={request}
+      archiveSession={archiveSession}
       stopAndArchiveSession={stopAndArchiveSession}
       onSettle={settleSessionArchive}
       t={t}
@@ -96,14 +98,16 @@ export function SessionArchiveConfirmDialog({
 }
 
 /** One request's dialog: in-flight and error state die with it. */
-function ArchiveConfirmForm({ request, stopAndArchiveSession, onSettle, t }: {
+function ArchiveConfirmForm({ request, archiveSession, stopAndArchiveSession, onSettle, t }: {
   request: SessionArchiveConfirmRequest
+  archiveSession: SessionArchiveConfirmInjected['archiveSession']
   stopAndArchiveSession: SessionArchiveConfirmInjected['stopAndArchiveSession']
   onSettle: () => void
   t: SessionArchiveConfirmProps['t']
 }) {
   const [archiving, setArchiving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const stopping = request.activity.length > 0
   const close = () => {
     if (archiving) return
     onSettle()
@@ -111,8 +115,12 @@ function ArchiveConfirmForm({ request, stopAndArchiveSession, onSettle, t }: {
   const confirm = () => {
     setArchiving(true)
     setError(null)
-    stopAndArchiveSession(request.sessionId).then(() => {
+    const hop = stopping
+      ? stopAndArchiveSession(request.sessionId).then(() => 'archived' as const)
+      : archiveSession(request.sessionId)
+    hop.then((result) => {
       setArchiving(false)
+      if (result === 'needs-stop') return
       onSettle()
     }).catch((reason: unknown) => {
       setArchiving(false)
@@ -124,28 +132,34 @@ function ArchiveConfirmForm({ request, stopAndArchiveSession, onSettle, t }: {
       open
       onClose={close}
       closeLabel={t('close')}
-      title={t('archive.confirm.title')}
-      description={t('archive.confirm.desc', { title: request.displayTitle })}
+      title={t(stopping ? 'archive.confirm.title' : 'archive.ask.title')}
+      description={t(stopping ? 'archive.confirm.desc' : 'archive.ask.desc', { title: request.displayTitle })}
       footer={(
         <>
           <Button variant="outline" disabled={archiving} onClick={close}>{t('cancel')}</Button>
           <Button
-            variant="outline"
-            className={browserCss.deleteAction}
+            variant={stopping ? 'outline' : 'primary'}
+            className={stopping ? browserCss.deleteAction : undefined}
             disabled={archiving}
             onClick={confirm}
           >
-            {t('archive.confirm.action')}
+            {t(stopping ? 'archive.confirm.action' : 'archive.ask.action')}
           </Button>
         </>
       )}
     >
-      <ul className={browserCss.archiveActivity} aria-label={t('archive.confirm.activity')}>
-        {request.activity.map((entry, index) => (
-          <li key={`${entry.kind}-${String(index)}`}>{activityLine(entry, t)}</li>
-        ))}
-      </ul>
-      {archiving && <div className={browserCss.deleteStatus} role="status">{t('archive.confirm.pending')}</div>}
+      {stopping && (
+        <ul className={browserCss.archiveActivity} aria-label={t('archive.confirm.activity')}>
+          {request.activity.map((entry, index) => (
+            <li key={`${entry.kind}-${String(index)}`}>{activityLine(entry, t)}</li>
+          ))}
+        </ul>
+      )}
+      {archiving && (
+        <div className={browserCss.deleteStatus} role="status">
+          {t(stopping ? 'archive.confirm.pending' : 'archive.ask.pending')}
+        </div>
+      )}
       {error !== null && <div className={browserCss.renameError} role="alert">{error}</div>}
     </Modal>
   )

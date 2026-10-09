@@ -359,7 +359,7 @@ describe('ui-workspace apply', () => {
     expect(view.getSnapshot().sessionOrderByAccount).toEqual({})
   })
 
-  it('archives through the navigation service and raises the archived notice; Host rejections are console diagnostics', async () => {
+  it('opens archive confirmation without calling the Host, then archives on confirm; Host rejections surface from the hop', async () => {
     const b = await bench()
     declare(b.slots, 'sidebar.workspaces', 'shell.overlay')
     await b.ctx.plugin({ inject: [...inject], apply }).await()
@@ -367,12 +367,17 @@ describe('ui-workspace apply', () => {
     const unarchiveSession = vi.spyOn(b.ctx.uiWorkspace, 'unarchiveSession').mockResolvedValue(undefined)
     const toast = faceOf(entry(b.slots, 'shell.overlay', 'workspace.row-toast')) as RowToastInjected
     const archive = faceOf(entry(b.slots, ROW_ACTION, 'archive')) as ArchiveSessionInjected
+    const confirm = faceOf(entry(b.slots, 'shell.overlay', 'workspace.session-archive')) as SessionArchiveConfirmInjected
 
     archive.archiveSession(sid('one'))
+    expect(archiveSession).not.toHaveBeenCalled()
+    expect(confirm.hooks.archiveRequest.getSnapshot()).toEqual({ sessionId: 'one', displayTitle: 'one', activity: [] })
+    expect(toast.hooks.toast.getSnapshot()).toBeNull()
+
+    await expect(confirm.archiveSession(sid('one'))).resolves.toBe('archived')
     expect(archiveSession).toHaveBeenCalledWith('one')
-    await vi.waitFor(() => {
-      expect(toast.hooks.toast.getSnapshot()).toEqual({ kind: 'archived', sessionId: 'one', seq: 1 })
-    })
+    expect(toast.hooks.toast.getSnapshot()).toEqual({ kind: 'archived', sessionId: 'one', seq: 1 })
+
     // The menu row's face is the same behavior; a restore raises no notice.
     const archiveRow = faceOf(entry(b.slots, MENU_ITEM, 'archive')) as ArchiveSessionInjected
     archiveRow.unarchiveSession(sid('one'))
@@ -386,8 +391,7 @@ describe('ui-workspace apply', () => {
     unarchiveSession.mockRejectedValueOnce(unarchiveRejection)
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     try {
-      archive.archiveSession(sid('two'))
-      await vi.waitFor(() => { expect(warn).toHaveBeenCalledWith('session archive rejected:', archiveRejection) })
+      await expect(confirm.archiveSession(sid('two'))).rejects.toBe(archiveRejection)
       archive.unarchiveSession(sid('two'))
       await vi.waitFor(() => { expect(warn).toHaveBeenCalledWith('session unarchive rejected:', unarchiveRejection) })
     } finally {
@@ -413,26 +417,26 @@ describe('ui-workspace apply', () => {
     const archive = faceOf(entry(b.slots, ROW_ACTION, 'archive')) as ArchiveSessionInjected
     const confirm = faceOf(entry(b.slots, 'shell.overlay', 'workspace.session-archive')) as SessionArchiveConfirmInjected
     const toast = faceOf(entry(b.slots, 'shell.overlay', 'workspace.row-toast')) as RowToastInjected
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    try {
-      archive.archiveSession(sid('busy'))
-      await vi.waitFor(() => {
-        expect(confirm.hooks.archiveRequest.getSnapshot()).toEqual({ sessionId: 'busy', displayTitle: 'Busy session', activity })
-      })
-      // The refusal is a question, not a diagnostic, and nothing is archived yet.
-      expect(warn).not.toHaveBeenCalled()
-      expect(toast.hooks.toast.getSnapshot()).toBeNull()
-      expect(archiveSession).toHaveBeenCalledWith('busy')
 
-      // Cancelling settles the request; confirming asks the Host to stop the work.
-      confirm.settleSessionArchive()
-      expect(confirm.hooks.archiveRequest.getSnapshot()).toBeNull()
-      await confirm.stopAndArchiveSession(sid('busy'))
-      expect(archiveSession).toHaveBeenLastCalledWith('busy', { stopActivity: true })
-      expect(toast.hooks.toast.getSnapshot()).toEqual({ kind: 'stoppedAndArchived', sessionId: 'busy', seq: 1 })
-    } finally {
-      warn.mockRestore()
-    }
+    archive.archiveSession(sid('busy'))
+    expect(confirm.hooks.archiveRequest.getSnapshot()).toEqual({
+      sessionId: 'busy', displayTitle: 'Busy session', activity: [],
+    })
+    expect(archiveSession).not.toHaveBeenCalled()
+    expect(toast.hooks.toast.getSnapshot()).toBeNull()
+
+    await expect(confirm.archiveSession(sid('busy'))).resolves.toBe('needs-stop')
+    expect(archiveSession).toHaveBeenCalledWith('busy')
+    expect(confirm.hooks.archiveRequest.getSnapshot()).toEqual({
+      sessionId: 'busy', displayTitle: 'Busy session', activity,
+    })
+    expect(toast.hooks.toast.getSnapshot()).toBeNull()
+
+    confirm.settleSessionArchive()
+    expect(confirm.hooks.archiveRequest.getSnapshot()).toBeNull()
+    await confirm.stopAndArchiveSession(sid('busy'))
+    expect(archiveSession).toHaveBeenLastCalledWith('busy', { stopActivity: true })
+    expect(toast.hooks.toast.getSnapshot()).toEqual({ kind: 'stoppedAndArchived', sessionId: 'busy', seq: 1 })
   })
 
   it('the notice share takes the notice down, undoes an archive, and shows the archived rows', async () => {

@@ -176,24 +176,13 @@ export function apply(ctx: Context): void {
       uiWorkspace.unpinSession(sessionId).catch(() => { notify({ kind: 'unpinFailed' }) })
     },
   })
+  const sessionDisplayTitle = (sessionId: SessionId): string => (
+    sessions.list.getSnapshot().byId[sessionId]?.displayTitle ?? sessionId
+  )
   const archiveInjected = (): ArchiveSessionInjected => ({
     hooks: { archived: archivedSet },
-    // Archive preserves the log and the account position, so a quiet Session
-    // needs no confirmation; the notice offers undo and the archived filter.
-    // The Host's refusal for running work is the one case that asks first:
-    // the confirmation names that work and offers to stop it.
     archiveSession: (sessionId) => {
-      uiWorkspace.archiveSession(sessionId).then(() => {
-        notify({ kind: 'archived', sessionId })
-      }).catch((reason: unknown) => {
-        const activity = activeSessionRefusal(reason)
-        if (activity === undefined) {
-          console.warn('session archive rejected:', reason)
-          return
-        }
-        const displayTitle = sessions.list.getSnapshot().byId[sessionId]?.displayTitle ?? sessionId
-        archiveRequest.set({ sessionId, displayTitle, activity })
-      })
+      archiveRequest.set({ sessionId, displayTitle: sessionDisplayTitle(sessionId), activity: [] })
     },
     unarchiveSession,
   })
@@ -201,6 +190,18 @@ export function apply(ctx: Context): void {
   const archiveConfirmInjected = (): SessionArchiveConfirmInjected => ({
     hooks: { archiveRequest },
     settleSessionArchive: () => { archiveRequest.set(null) },
+    archiveSession: async (sessionId) => {
+      try {
+        await uiWorkspace.archiveSession(sessionId)
+        notify({ kind: 'archived', sessionId })
+        return 'archived'
+      } catch (reason: unknown) {
+        const activity = activeSessionRefusal(reason)
+        if (activity === undefined) throw reason
+        archiveRequest.set({ sessionId, displayTitle: sessionDisplayTitle(sessionId), activity })
+        return 'needs-stop'
+      }
+    },
     stopAndArchiveSession: async (sessionId) => {
       await uiWorkspace.archiveSession(sessionId, { stopActivity: true })
       notify({ kind: 'stoppedAndArchived', sessionId })

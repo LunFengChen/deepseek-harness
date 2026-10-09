@@ -30,7 +30,7 @@ Status: implemented
 
 `WorkspaceRegistry.unarchiveSession` 与归档及其他注册表写入共用串行操作链，从全局归档集合移除一个 id。id 不在集合中时是幂等空操作，不产生持久写入或通知。恢复保留 Workspace 成员关系与 Session 日志，不恢复置顶，也不改变保存的顺序。
 
-取消归档不探测 Session 是否存在：移除 id 不会引入未知引用，因此即使 Session 已不存在，也能在不列举持久化记录的情况下移除归档项。Remote 返回完整归档集合，既有 `archived` 增量把同一状态传给其他 Client。Client 只在一元响应仍属于最新归档集合请求时安装它；更新的请求、follow 增量或替换基线会覆盖旧响应的资格。写入失败不改变集合，侧边栏记录拒绝原因并保留原行；唯一例外是“仍有工作在跑”的拒绝，它会打开停止并归档的确认（[归档仍有工作在跑的 Session](2026-09-21-archive-stops-running-session-work.zh.md)）。
+取消归档不探测 Session 是否存在：移除 id 不会引入未知引用，因此即使 Session 已不存在，也能在不列举持久化记录的情况下移除归档项。Remote 返回完整归档集合，既有 `archived` 增量把同一状态传给其他 Client。Client 只在一元响应仍属于最新归档集合请求时安装它；更新的请求、follow 增量或替换基线会覆盖旧响应的资格。写入失败不改变集合，会话列表记录拒绝原因并保留原行；唯一例外是“仍有工作在跑”的拒绝，它会把归档确认升级为停止并归档（[归档仍有工作在跑的 Session](2026-09-21-archive-stops-running-session-work.zh.md)）。
 
 ### 归档显隐与行动画
 

@@ -325,9 +325,8 @@ export interface PinSessionInjected {
 
 /**
  * Archive action share (menu row and hover button). The callbacks carry the
- * whole behavior: the Host call, the notice a success raises, the
- * stop-and-archive confirmation a Host refusal for running work raises, and
- * the diagnostics for any other rejection.
+ * whole behavior: opening the archive confirmation, restoring an archived
+ * row, and the diagnostics for an unarchive rejection.
  */
 export interface ArchiveSessionInjected {
   hooks: {
@@ -335,11 +334,10 @@ export interface ArchiveSessionInjected {
     archived: HostObservable<ReadonlySet<SessionId>>
   }
   /**
-   * Archive a Session into the registry-global set: the row keeps its
-   * account position and shows per the archived filter; archiving the
-   * current session clears the selection into the New Session view state.
-   * A Session with running work is not archived by this call: the Host's
-   * refusal opens the stop-and-archive confirmation instead.
+   * Ask to archive a Session: opens the confirmation overlay. The row keeps
+   * its account position; archiving the current session clears the selection
+   * into the New Session view state. Confirming a quiet Session archives it.
+   * A Host refusal for running work upgrades the same overlay to stop-and-archive.
    */
   archiveSession: (sessionId: SessionId) => void
   /** Remove a Session from the registry-global archived set. */
@@ -347,21 +345,22 @@ export interface ArchiveSessionInjected {
 }
 
 /**
- * A stop-and-archive confirmation the archive action asked for: the Host
- * refused the plain archive because this work still runs.
+ * An archive confirmation the archive action asked for. Empty `activity` is
+ * a quiet archive. A non-empty list is the Host's running work, named so
+ * the user can stop it before archiving.
  */
 export interface SessionArchiveConfirmRequest {
-  /** Session to stop and archive. */
+  /** Session to archive, or to stop and archive. */
   sessionId: SessionId
   /** The row's display title, named in the dialog. */
   displayTitle: string
-  /** What the Host reported running, in family order. */
+  /** Running work the Host reported, in family order; empty for a quiet archive. */
   activity: readonly SessionActivity[]
 }
 
 /**
- * Stop-and-archive dialog share: the pending confirmation, its settlement,
- * and the archive hop that asks the Host to stop the work first.
+ * Archive-confirmation dialog share: the pending confirmation, its
+ * settlement, the quiet-archive hop, and the stop-and-archive hop.
  */
 export interface SessionArchiveConfirmInjected {
   hooks: {
@@ -371,9 +370,18 @@ export interface SessionArchiveConfirmInjected {
   /** Consume or cancel the pending confirmation. */
   settleSessionArchive: () => void
   /**
+   * Archive a quiet Session.
+   * @param sessionId - Session to archive.
+   * @returns `archived` once the archive set is durable and the archived
+   *   notice is raised; `needs-stop` when the Host named running work and
+   *   the request upgraded to stop-and-archive. Other Host failures reject.
+   */
+  archiveSession: (sessionId: SessionId) => Promise<'archived' | 'needs-stop'>
+  /**
    * Archive a Session after the Host stops its running work; resolves once
    * the archive set is durable (the stops settle in the background) and
    * raises the stopped-and-archived notice.
+   * @param sessionId - Session to stop and archive.
    */
   stopAndArchiveSession: (sessionId: SessionId) => Promise<void>
 }
@@ -431,7 +439,7 @@ export type SessionRenameDialogProps =
   & Omit<SessionRenameDialogInjected, 'hooks'>
   & PropsHooks<SessionRenameDialogInjected['hooks']>
 
-/** Props of the stop-and-archive dialog entry in `shell.overlay`. */
+/** Props of the archive confirmation dialog entry in `shell.overlay`. */
 export type SessionArchiveConfirmProps =
   PropsRuntime<'shell.overlay'>
   & PropsLocale<'workspace'>

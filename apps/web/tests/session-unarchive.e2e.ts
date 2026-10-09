@@ -89,10 +89,13 @@ describe('web e2e: archived sessions are restored from the sidebar filter', () =
     await expect.poll(() => sessionRow.count(), { timeout: 10_000 }).toBe(1)
     await expect.poll(() => sessionRow.getAttribute('aria-selected'), { timeout: 10_000 }).toBe('true')
 
-    // Archive from the row menu: no confirmation dialog, and losing the last
+    // Archive from the row menu: confirmation, then losing the last
     // visible Session withdraws the whole Ungrouped bucket.
     await clickHoverAction(sessionRow, `Session actions for ${title}`)
     await page.getByRole('menuitem', { name: 'Archive session' }).click()
+    const ask = page.getByRole('dialog', { name: 'Archive this session?' })
+    await ask.waitFor({ timeout: 5_000 })
+    await ask.getByRole('button', { name: 'Archive', exact: true }).click()
     await expect.poll(() => sessionRow.count(), { timeout: 10_000 }).toBe(0)
     await expect.poll(() => page.getByText('Ungrouped', { exact: true }).count(), { timeout: 10_000 }).toBe(0)
     // Durable on the host: the registry-global set carries the id while the

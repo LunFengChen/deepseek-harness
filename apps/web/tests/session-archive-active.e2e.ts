@@ -1,6 +1,7 @@
-// Web e2e: archiving a Session whose turn is still running. The Host refuses
-// the plain archive, the sidebar turns that refusal into the stop-and-archive
-// confirmation, and confirming stops the turn the way the stop button does —
+// Web e2e: archiving a Session whose turn is still running. Archive always
+// asks first; confirming a running Session, the Host refuses the plain
+// archive and the same dialog upgrades to stop-and-archive. Confirming that
+// stops the turn the way the stop button does —
 // the aborted Bash call settles with a tool/result and the turn ends as
 // cancelled — before the row hides. Unarchiving restores a Session that
 // continues the conversation. Keyless: the model is a replay override whose
@@ -157,6 +158,9 @@ describe.skipIf(MODE === 'record')('web e2e: archiving a running Session stops i
 
     await clickHoverAction(sessionRow(), 'Session actions for ')
     await page.getByRole('menuitem', { name: 'Archive session' }).click()
+    const ask = page.getByRole('dialog', { name: 'Archive this session?' })
+    await ask.waitFor({ timeout: 10_000 })
+    await ask.getByRole('button', { name: 'Archive', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Stop and archive this session?' })
     await dialog.waitFor({ timeout: 10_000 })
     // A foreground Bash command is a registered job from its start, so the
@@ -186,6 +190,9 @@ describe.skipIf(MODE === 'record')('web e2e: archiving a running Session stops i
     const settled = scaffold.whenTurnSettled(30_000)
     await clickHoverAction(sessionRow(), 'Session actions for ')
     await page.getByRole('menuitem', { name: 'Archive session' }).click()
+    const ask = page.getByRole('dialog', { name: 'Archive this session?' })
+    await ask.waitFor({ timeout: 10_000 })
+    await ask.getByRole('button', { name: 'Archive', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Stop and archive this session?' })
     await dialog.waitFor({ timeout: 10_000 })
     await dialog.getByRole('button', { name: 'Stop and archive', exact: true }).click()
