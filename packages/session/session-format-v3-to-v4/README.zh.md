@@ -159,7 +159,7 @@ Stage 只把最终继承截点之后的父目录记录作为候选。每个 inhe
 <a id="sequence-references"></a>
 ### 序号引用与继承
 
-当回合仍打开但没有打开的 step，且下一个连续编号的 `turn/start` 紧跟非空的 `next-turn` 类型 `agent/inbox/spliced` 时，Stage 可补齐该回合。它紧挨新 start 之前插入原因是 `interrupted` 的 `turn/end`，时间戳取该 start。开放尾部仍保持开放。其他回合顺序错误、未结算工具和进行中的 compaction 仍被目标校验拒绝。原生 V4 不执行此修复。
+当回合仍打开但没有打开的 step，且下一个连续编号的 `turn/start` 紧跟非空的 `next-turn` 类型 `agent/inbox/spliced` 时，Stage 可补齐该回合。它紧挨新 start 之前插入原因是 `interrupted` 的 `turn/end`，时间戳取该 start。开放尾部仍保持开放。已关闭回合之后出现更大的 `turn/start` 编号时保留该跳号，不补写被跳过的回合；原生 V4 读取时同样接受这种关闭后跳号。其他回合顺序错误、未结算工具和进行中的 compaction 仍被目标校验拒绝。原生 V4 不执行中断回合修复。
 
 插入后，后续信封重新连续编号，并重映射已审计的同日志引用：`sourceEventSeqs`、替换端点 `startSeq/endSeq`、命令完成的 `sourceEventSeq`、标题的 `messageSeqs`、compaction 的 `shadowedRange` 与 `shadowedSeqs`，以及图片 offload 目标的 `seq`。捕获的 Session 引用、带代际的 delivery 坐标、turn／step 编号、stream 与图片索引、id 和任意 JSON 保持原值。未知可忽略事件的载荷和表面元数据保持不透明，只重排其信封序号。没有插入时，源事件坐标不变；追加的目录记录只扩展后缀。
 

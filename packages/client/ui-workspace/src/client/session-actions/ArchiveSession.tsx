@@ -1,11 +1,10 @@
 /**
- * The archive action: a `sidebar.workspaces.session.menu.item` row and a
- * `sidebar.workspaces.session.row.action` button over one injected behavior,
- * plus the `shell.overlay` dialog that confirms an archive, and that upgrades
- * to stopping a Session's running work when the Host names it. The same
- * entries restore an archived row; the notice a successful archive raises
- * and the diagnostics for Host rejections live in the injected callbacks,
- * not here.
+ * The archive action: a `sidebar.workspaces.session.menu.item` row over one
+ * injected behavior, plus the `shell.overlay` dialog that confirms an archive,
+ * and that upgrades to stopping a Session's running work when the Host names
+ * it. The same entry restores an archived row; the notice a successful archive
+ * raises and the diagnostics for Host rejections live in the injected
+ * callbacks, not here.
  */
 import { useState } from 'react'
 import type { SessionActivity } from '@x1a0f3n9/dsh-api-workspace-controller/client'
@@ -15,13 +14,12 @@ import type {} from '@x1a0f3n9/dsh-jobs/view'
 import type {} from '@x1a0f3n9/dsh-schedule/client'
 import type {} from '@x1a0f3n9/dsh-subagent/client'
 import {
-  Button, IconArchiveOutlineRegular, IconUnarchiveOutlineRegular, MenuItemButton, Modal, Tooltip,
+  Button, IconArchiveOutlineRegular, IconUnarchiveOutlineRegular, MenuItemButton, Modal,
 } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type {
   ArchiveSessionInjected, SessionArchiveConfirmInjected, SessionArchiveConfirmProps, SessionArchiveConfirmRequest,
-  SessionMenuItemProps, SessionRowActionProps,
+  SessionMenuItemProps,
 } from '../contract/slots.ts'
-import css from '../rows/Rows.module.css'
 import browserCss from '../rows/WorkspaceBrowser.module.css'
 
 /**
@@ -46,29 +44,6 @@ export function ArchiveSessionMenuItem({
     >
       {t(archived ? 'menu.unarchiveSession' : 'menu.archiveSession')}
     </MenuItemButton>
-  )
-}
-
-/**
- * Hover button (order 100): archive, or restore an archived row.
- * @param props - owner share and the archive share.
- * @returns the button.
- */
-export function ArchiveSessionRowButton({
-  sessionId, useArchived, archiveSession, unarchiveSession, t,
-}: SessionRowActionProps<ArchiveSessionInjected>) {
-  const archived = useArchived(set => set.has(sessionId))
-  return (
-    <Tooltip label={t(archived ? 'actions.unarchive' : 'actions.archive')} side="bottom" align="end" delayMs={500}>
-      <button
-        type="button"
-        className={css.iconButton}
-        aria-label={t(archived ? 'menu.unarchiveSession' : 'menu.archiveSession')}
-        onClick={() => { (archived ? unarchiveSession : archiveSession)(sessionId) }}
-      >
-        {archived ? <IconUnarchiveOutlineRegular size={14} /> : <IconArchiveOutlineRegular size={14} />}
-      </button>
-    </Tooltip>
   )
 }
 

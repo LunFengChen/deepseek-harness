@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 /**
  * The shipped Session row actions rendered directly with hand-built props:
- * the pin, rename, fork, and archive menu rows, the archive and pin hover
- * buttons, and the overlay surfaces they raise (rename dialog, archive
+ * the pin, rename, fork, archive, and copy-session-id menu rows, the pin hover
+ * button, and the overlay surfaces they raise (rename dialog, archive
  * confirmation, row notice). Every action reads its own injected hooks and calls its own
  * injected callbacks; what those callbacks do is apply.client.spec's
  * subject. The browser and the slot machinery stay out; the assembled
@@ -24,8 +24,9 @@ import type {
   SessionRenameDialogInjected, SessionRenameTarget,
 } from '../src/client/contract/slots.ts'
 import {
-  ArchiveSessionMenuItem, ArchiveSessionRowButton, SessionArchiveConfirmDialog,
+  ArchiveSessionMenuItem, SessionArchiveConfirmDialog,
 } from '../src/client/session-actions/ArchiveSession.tsx'
+import { CopySessionIdMenuItem } from '../src/client/session-actions/CopySessionId.tsx'
 import { ForkSessionMenuItem } from '../src/client/session-actions/ForkSession.tsx'
 import { PinSessionMenuItem, PinSessionRowButton } from '../src/client/session-actions/PinSession.tsx'
 import { RenameSessionMenuItem, SessionRenameDialog } from '../src/client/session-actions/RenameSession.tsx'
@@ -197,15 +198,36 @@ describe('archive action', () => {
     expect(callOrder(setMenuOpen)).toBeLessThan(callOrder(archive.unarchiveSession))
   })
 
-  it('row button archives and restores', () => {
-    const archive = archiveShare()
-    const view = render(<ArchiveSessionRowButton {...actionRow} {...archive} />)
-    fireEvent.click(screen.getByRole('button', { name: '归档会话' }))
-    expect(archive.archiveSession).toHaveBeenCalledWith(sid('one'))
-    view.rerender(<ArchiveSessionRowButton {...actionRow} {...archive} useArchived={hook(idSet('one'))} />)
-    fireEvent.click(screen.getByRole('button', { name: '取消归档' }))
-    expect(archive.unarchiveSession).toHaveBeenCalledWith(sid('one'))
-    expect(archive.archiveSession).toHaveBeenCalledOnce()
+})
+
+describe('copy session id', () => {
+  it('copies the id, keeps the menu open, and shows the copied label', async () => {
+    const { state, setMenuOpen } = openMenu()
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    })
+    render(<CopySessionIdMenuItem {...menuRow(state)} />)
+    fireEvent.click(screen.getByRole('menuitem', { name: '复制会话 ID' }))
+    expect(writeText).toHaveBeenCalledWith('one')
+    expect(setMenuOpen).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(screen.getByRole('menuitem', { name: '已复制' })).toBeTruthy()
+    })
+  })
+
+  it('keeps the copy label when the host rejects the write', async () => {
+    const { state } = openMenu()
+    const writeText = vi.fn().mockRejectedValue(new Error('denied'))
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    })
+    render(<CopySessionIdMenuItem {...menuRow(state)} />)
+    fireEvent.click(screen.getByRole('menuitem', { name: '复制会话 ID' }))
+    await waitFor(() => { expect(writeText).toHaveBeenCalledWith('one') })
+    expect(screen.getByRole('menuitem', { name: '复制会话 ID' })).toBeTruthy()
   })
 })
 

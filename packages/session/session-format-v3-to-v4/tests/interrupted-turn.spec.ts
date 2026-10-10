@@ -41,6 +41,17 @@ describe('V3 interrupted-turn migration', () => {
     expect(() => restore(source, { ...header, version: 4 })).toThrow('turn/start does not open the expected turn')
   })
 
+  it('retains a closed-turn numbering gap without synthesizing the skipped turn', () => {
+    const source = events([start(1), end(1), splice(), splice(), start(3), end(3)])
+    const original = structuredClone(source)
+    const artifact = restore(source)
+    expect(artifact.events).toEqual(source)
+    expect(source).toEqual(original)
+    const native = sessionFormatCatalog.createRestore({ ...header, version: 4 }, { recovery: 'strict', validation: 'current' })
+    for (const event of artifact.events) native.decodeRow(event)
+    expect(native.finish()).toEqual(artifact)
+  })
+
   it('retains open tails and balanced turns, and repairs each independently evidenced restart', () => {
     const tail = events(prefix())
     expect(restore(tail).events).toEqual(tail)

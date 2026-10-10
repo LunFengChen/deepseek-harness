@@ -6,11 +6,12 @@
  */
 
 import { open as fsOpen, type FileHandle } from 'node:fs/promises'
-import { assertV3RowAdmission } from '@x1a0f3n9/dsh-session-format-v2-to-v3'
+import { assertV4RowAdmission } from '@x1a0f3n9/dsh-session-format-v3-to-v4'
 import {
   decodeSeqRanges,
   interruptedTurnClosers,
   isAppendSurfaceEvent,
+  KNOWN_SESSION_EVENT_TYPES,
   SessionSeq,
   SessionLogOffset,
 } from '@x1a0f3n9/dsh-session'
@@ -483,7 +484,7 @@ function parseEventRecords(plaintext: Buffer): SessionEvent[] {
  * @returns the logical event used for pagination.
  */
 function decodeSuffixEvent(parsed: unknown): SessionEvent {
-  assertV3RowAdmission(parsed)
+  assertV4RowAdmission(parsed, KNOWN_SESSION_EVENT_TYPES)
   if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
     throw new Error('corrupt session log: event row is not a JSON object')
   }

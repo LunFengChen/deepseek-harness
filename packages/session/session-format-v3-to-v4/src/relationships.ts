@@ -273,7 +273,12 @@ class Relationships {
     this.foldSurface(event)
     switch (event.type) {
       case 'turn/start':
-        if (this.turn !== null || data['turn'] !== this.nextTurn) throw new SessionFormatError('turn/start does not open the expected turn')
+        if (this.turn !== null) throw new SessionFormatError('turn/start does not open the expected turn')
+        // Historical V3 logs can close turn N and open N+k without writing the skipped numbers.
+        if (typeof data['turn'] === 'number' && data['turn'] > this.nextTurn && this.nextTurn > 1) {
+          this.nextTurn = data['turn']
+        }
+        if (data['turn'] !== this.nextTurn) throw new SessionFormatError('turn/start does not open the expected turn')
         this.turn = this.nextTurn
         this.nextStep = 1
         this.tools.clear()

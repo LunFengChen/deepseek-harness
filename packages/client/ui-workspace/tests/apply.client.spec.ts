@@ -18,7 +18,8 @@ import {
   type WorkspaceViewStoreHandle,
 } from '../src/client/contract/slots.ts'
 import { WorkspaceBrowser } from '../src/client/rows/WorkspaceBrowser.tsx'
-import { ArchiveSessionMenuItem, ArchiveSessionRowButton, SessionArchiveConfirmDialog } from '../src/client/session-actions/ArchiveSession.tsx'
+import { ArchiveSessionMenuItem, SessionArchiveConfirmDialog } from '../src/client/session-actions/ArchiveSession.tsx'
+import { CopySessionIdMenuItem } from '../src/client/session-actions/CopySessionId.tsx'
 import { ForkSessionMenuItem } from '../src/client/session-actions/ForkSession.tsx'
 import { PinSessionMenuItem, PinSessionRowButton } from '../src/client/session-actions/PinSession.tsx'
 import { RenameSessionMenuItem, SessionRenameDialog } from '../src/client/session-actions/RenameSession.tsx'
@@ -218,8 +219,8 @@ describe('ui-workspace apply', () => {
     await Promise.resolve()
     expect(after.slots.entries('conversation.hero.workspace')[0]!.component).toBe(WorkspacePicker)
     // The row actions follow the browser's own declaration, whenever it lands.
-    expect(after.slots.entries(MENU_ITEM)).toHaveLength(4)
-    expect(after.slots.entries(ROW_ACTION)).toHaveLength(2)
+    expect(after.slots.entries(MENU_ITEM)).toHaveLength(5)
+    expect(after.slots.entries(ROW_ACTION)).toHaveLength(1)
     expect(after.slots.entries('shell.overlay')).toHaveLength(3)
   })
 
@@ -241,9 +242,9 @@ describe('ui-workspace apply', () => {
       ['rename', 200, RenameSessionMenuItem, 'workspace'],
       ['fork', 300, ForkSessionMenuItem, 'workspace'],
       ['archive', 400, ArchiveSessionMenuItem, 'workspace'],
+      ['copySessionId', 500, CopySessionIdMenuItem, 'workspace'],
     ])
     expect(rows(ROW_ACTION)).toEqual([
-      ['archive', 100, ArchiveSessionRowButton, 'workspace'],
       ['pin', 200, PinSessionRowButton, 'workspace'],
     ])
     expect(rows('shell.overlay')).toEqual([
@@ -267,8 +268,8 @@ describe('ui-workspace apply', () => {
     // Each share raises its own notices inside its callbacks.
     for (const id of ['pin', 'archive']) {
       expect(faceOf(entry(b.slots, MENU_ITEM, id))).not.toHaveProperty('notify')
-      expect(faceOf(entry(b.slots, ROW_ACTION, id))).not.toHaveProperty('notify')
     }
+    expect(faceOf(entry(b.slots, ROW_ACTION, 'pin'))).not.toHaveProperty('notify')
   })
 
   it('derives the pinned and archived Sets from the Workspace snapshot, rebuilt only when it changes', async () => {
@@ -278,7 +279,7 @@ describe('ui-workspace apply', () => {
     await b.ctx.plugin({ inject: [...inject], apply }).await()
     const pin = faceOf(entry(b.slots, MENU_ITEM, 'pin')) as PinSessionInjected
     const pinButton = faceOf(entry(b.slots, ROW_ACTION, 'pin')) as PinSessionInjected
-    const archive = faceOf(entry(b.slots, ROW_ACTION, 'archive')) as ArchiveSessionInjected
+    const archive = faceOf(entry(b.slots, MENU_ITEM, 'archive')) as ArchiveSessionInjected
     const pinned = pin.hooks.pinned.getSnapshot()
     const archived = pin.hooks.archived.getSnapshot()
     expect(pinned).toEqual(new Set(['one']))
@@ -366,7 +367,7 @@ describe('ui-workspace apply', () => {
     const archiveSession = vi.spyOn(b.ctx.uiWorkspace, 'archiveSession').mockResolvedValue(undefined)
     const unarchiveSession = vi.spyOn(b.ctx.uiWorkspace, 'unarchiveSession').mockResolvedValue(undefined)
     const toast = faceOf(entry(b.slots, 'shell.overlay', 'workspace.row-toast')) as RowToastInjected
-    const archive = faceOf(entry(b.slots, ROW_ACTION, 'archive')) as ArchiveSessionInjected
+    const archive = faceOf(entry(b.slots, MENU_ITEM, 'archive')) as ArchiveSessionInjected
     const confirm = faceOf(entry(b.slots, 'shell.overlay', 'workspace.session-archive')) as SessionArchiveConfirmInjected
 
     archive.archiveSession(sid('one'))
@@ -414,7 +415,7 @@ describe('ui-workspace apply', () => {
     const archiveSession = vi.spyOn(b.ctx.uiWorkspace, 'archiveSession')
       .mockRejectedValueOnce(refusal)
       .mockResolvedValueOnce(undefined)
-    const archive = faceOf(entry(b.slots, ROW_ACTION, 'archive')) as ArchiveSessionInjected
+    const archive = faceOf(entry(b.slots, MENU_ITEM, 'archive')) as ArchiveSessionInjected
     const confirm = faceOf(entry(b.slots, 'shell.overlay', 'workspace.session-archive')) as SessionArchiveConfirmInjected
     const toast = faceOf(entry(b.slots, 'shell.overlay', 'workspace.row-toast')) as RowToastInjected
 
@@ -600,8 +601,8 @@ describe('ui-workspace apply', () => {
     declare(b.slots, 'sidebar.workspaces', 'conversation.hero.workspace', 'conversation.empty.workspace', 'shell.overlay')
     const fiber = b.ctx.plugin({ inject: [...inject], apply })
     await fiber.await()
-    expect(b.slots.entries(MENU_ITEM)).toHaveLength(4)
-    expect(b.slots.entries(ROW_ACTION)).toHaveLength(2)
+    expect(b.slots.entries(MENU_ITEM)).toHaveLength(5)
+    expect(b.slots.entries(ROW_ACTION)).toHaveLength(1)
     expect(b.slots.entries('shell.overlay')).toHaveLength(3)
     await fiber.dispose()
     expect(b.slots.entries('sidebar.workspaces')).toHaveLength(0)

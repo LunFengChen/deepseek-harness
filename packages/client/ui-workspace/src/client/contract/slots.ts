@@ -26,11 +26,11 @@
  * row of a Session's "..." menu is an entry of
  * `sidebar.workspaces.session.menu.item`, and every hover button at the row's
  * end is an entry of `sidebar.workspaces.session.row.action`. The shipped
- * actions — pin, rename, fork, archive — are ordinary entries this package
+ * actions — pin, rename, fork, archive, copy session ID — are ordinary entries this package
  * registers from `apply`, each carrying its own behavior in its own inject
  * face and reading its own Host state through hooks that face injects, so a
  * client plugin's action lands beside them by `order` and needs nothing from
- * the browser beyond the row identity.
+ * the browser beyond the row identity. Pin also occupies `row.action`; archive does not.
  *
  * The browser entry additionally declares two `list` seats per Session row
  * (`sidebar.session.row.leading` / `sidebar.session.row.hover`) for ambient
@@ -135,7 +135,7 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
     /**
      * The rows of one Session's "..." menu, in ascending `order`. ui-workspace
      * registers the shipped rows here — `pin` (100), `rename` (200), `fork`
-     * (300), `archive` (400) — so a plugin row is placed by its own `order`
+     * (300), `archive` (400), `copySessionId` (500) — so a plugin row is placed by its own `order`
      * among them. Use a package-namespaced `id`; reusing a shipped id at
      * another `priority` shadows that row. Each entry renders one
      * `role="menuitem"` `<button>` (the shipped rows use ui-primitives'
@@ -148,15 +148,14 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
      * return {
      *   inject: ['slots'],
      *   apply(ctx) {
-     *     const copyLabel = 'Copy Session ID' // Localize in the contributing package.
      *     ctx.slots.inject('sidebar.workspaces.session.menu.item', () => ctx.slots.register(
-     *       { name: 'sidebar.workspaces.session.menu.item', id: 'copy-session-id', order: 500 },
-     *       ({ sessionId, useMenuOpenState }) => {
+     *       { name: 'sidebar.workspaces.session.menu.item', id: 'my-entry', order: 150, label: 'My entry' },
+     *       ({ useMenuOpenState }) => {
      *         const [, setMenuOpen] = useMenuOpenState()
      *         return React.createElement(
      *           'button',
-     *           { type: 'button', role: 'menuitem', onClick: () => { setMenuOpen(false); void navigator.clipboard.writeText(sessionId) } },
-     *           copyLabel,
+     *           { type: 'button', role: 'menuitem', onClick: () => { setMenuOpen(false) } },
+     *           'My entry',
      *         )
      *       },
      *     ))
@@ -175,8 +174,8 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
     }
     /**
      * The hover buttons at the end of one Session row, in ascending `order`,
-     * after the "..." menu trigger. ui-workspace registers `archive` (100) and
-     * `pin` (200) here. An entry renders one icon button (or nothing, when its
+     * after the "..." menu trigger. ui-workspace registers `pin` (200) here.
+     * An entry renders one icon button (or nothing, when its
      * action does not apply to the row) and owns the action it performs. Clicks
      * inside the strip stay in the strip, so the button needs no propagation
      * handling to keep the row from opening.

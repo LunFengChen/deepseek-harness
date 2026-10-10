@@ -378,6 +378,46 @@ describe('readJsonlHistorySuffix', () => {
     expect(suffix.events.some(event => (event as { type: string }).type === 'session')).toBe(false)
   })
 
+  it('admits a current-generation system/message with system-prompt source', async () => {
+    const header = meta('suffix-system-prompt', '/work')
+    const events = [
+      { type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } },
+      { type: 'step/start', seq: SessionSeq(1), time: 2, data: { turn: 1, step: 1 } },
+      {
+        type: 'system/message', seq: SessionSeq(2), time: 3, surfaceOp: 'append',
+        data: {
+          turn: 1, step: 1,
+          message: {
+            id: 'system', role: 'system', source: { kind: 'system-prompt' },
+            content: [{ type: 'text', text: 'prompt' }],
+          },
+        },
+      },
+      { type: 'step/end', seq: SessionSeq(3), time: 4, data: { turn: 1, step: 1 } },
+      { type: 'turn/end', seq: SessionSeq(4), time: 5, data: { turn: 1, reason: { kind: 'completed' } } },
+    ] as SessionEvent[]
+    const suffix = await readJsonlHistorySuffix(plainLog(header, events), 'none', { maxMessages: 50 })
+    expect(suffix.events.some(event => event.type === 'system/message')).toBe(true)
+  })
+
+  it('refuses a retired plugin source on a current-generation system/message', async () => {
+    const header = meta('suffix-plugin-source', '/work')
+    const row = {
+      type: 'system/message', seq: 0, time: 1, surfaceOp: 'append',
+      data: {
+        turn: 1, step: 1,
+        message: {
+          id: 'system', role: 'system',
+          source: { kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt' },
+          content: [],
+        },
+      },
+    }
+    const bytes = Buffer.concat([headerBytes(header), Buffer.from(`${JSON.stringify(row)}\n`)])
+    await expect(readJsonlHistorySuffix(bytes, 'none', { maxMessages: 50 }))
+      .rejects.toThrow(/producer-owned source kind/)
+  })
+
   it('refuses a suffix that is not dense', async () => {
     const header = meta('suffix-gap', '/work')
     const gapped = [
