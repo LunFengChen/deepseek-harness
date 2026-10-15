@@ -3,7 +3,7 @@
 import { SessionFormatError, isSessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
 import type { SessionFormatCodec, SessionFormatCurrentEncoder, SessionFormatHeader, SessionFormatEvent } from '@x1a0f3n9/dsh-session-format'
 import { releasedV2SessionFormatCodec } from '@x1a0f3n9/dsh-session-format-v2-to-v3'
-import { assertV4SourceRowAdmission } from './message-sources.ts'
+import { assertV4SourceRowAdmission, liftRetiredPluginSources } from './message-sources.ts'
 import { assertV4RetiredSyntax } from './retired-syntax.ts'
 import { assertV4SystemMessageFields } from './system-message.ts'
 import { assertV4DeveloperData } from './developer.ts'
@@ -44,12 +44,13 @@ export const releasedV4SessionFormatCodec = Object.freeze({
     return { ...releasedV2SessionFormatCodec.encodeHeader({ ...header, version: 2 }, inheritedEventCount), version: 4 }
   },
   encodeEvent(event: SessionFormatEvent) {
-    if (event.type === 'developer/message' && event['ignorable'] === true) {
-      assertV4DeveloperData(event)
-      assertV4RetiredSyntax(event)
+    const native = liftRetiredPluginSources(event)
+    if (native.type === 'developer/message' && native['ignorable'] === true) {
+      assertV4DeveloperData(native)
+      assertV4RetiredSyntax(native)
     }
-    assertV4RowAdmission(event)
-    return releasedV2SessionFormatCodec.encodeEvent(event)
+    assertV4RowAdmission(native)
+    return releasedV2SessionFormatCodec.encodeEvent(native)
   },
 } satisfies SessionFormatCodec & SessionFormatCurrentEncoder)
 

@@ -1,14 +1,65 @@
 /** Native source admission preserves unknown attribution and refuses retired plugin wrappers. */
 
 import { SessionFormatError, isSessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
-import type { SessionFormatEvent } from '@x1a0f3n9/dsh-session-format'
-import { mapEventMessages } from './sources.ts'
+import type { SessionFormatEvent, SessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
+import { mapEventMessages, rewritePluginSource } from './sources.ts'
+
+function jsonObject(value: object): SessionFormatJsonObject {
+  return value as SessionFormatJsonObject
+}
 
 function source(message: Readonly<Record<string, unknown>>): void {
   const value = message['source']
   if (!isSessionFormatJsonObject(value) || typeof value['kind'] !== 'string' || value['kind'].length === 0 || value['kind'] === 'plugin') {
     throw new SessionFormatError('format v4 message requires a producer-owned source kind')
   }
+}
+
+function liftMessage(
+  message: SessionFormatJsonObject,
+  seq: number,
+): SessionFormatJsonObject {
+  const value = message['source']
+  if (!isSessionFormatJsonObject(value) || value['kind'] !== 'plugin') return message
+  return { ...message, source: rewritePluginSource(jsonObject(value), seq, message['role']) }
+}
+
+/**
+ * Lift retired `{ kind: 'plugin', plugin }` wrappers to producer-owned kinds
+ * before native V4 encode. Persistence encodes a turn's `step/start` in the
+ * same batch as prefix `user/message` rows; refusing the wrapper drops the
+ * whole batch and surfaces as a turn failure. Incomplete slots stay for
+ * admission, matching {@link assertV4SourceRowAdmission}.
+ * @param event - native event about to be encoded.
+ * @returns the event with every complete retired plugin wrapper rewritten.
+ */
+export function liftRetiredPluginSources(event: SessionFormatEvent): SessionFormatEvent {
+  const data = event.data
+  if (!isSessionFormatJsonObject(data)) return event
+  const payload = jsonObject(data)
+  if (event.type === 'user/message') {
+    const message = liftMessage(payload, event.seq)
+    return message === payload ? event : { ...event, data: message }
+  }
+  if (event.type === 'developer/message' || event.type === 'system/message'
+    || event.type === 'assistant/message' || event.type === 'tool/result') {
+    if (!isSessionFormatJsonObject(data['message'])) return event
+    const nested = jsonObject(data['message'])
+    const message = liftMessage(nested, event.seq)
+    return message === nested ? event : { ...event, data: { ...payload, message } }
+  }
+  const key = event.type === 'agent/inbox/spliced' ? 'inserted'
+    : event.type === 'session/title-llm-request' ? 'messages' : undefined
+  if (key === undefined || !Array.isArray(data[key])) return event
+  let changed = false
+  const mapped = data[key].map((item) => {
+    if (!isSessionFormatJsonObject(item)) return item
+    const current = jsonObject(item)
+    const message = liftMessage(current, event.seq)
+    if (message !== current) changed = true
+    return message
+  })
+  return changed ? { ...event, data: { ...payload, [key]: mapped } } : event
 }
 
 /**

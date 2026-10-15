@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { SessionFormatEventCollector } from '@x1a0f3n9/dsh-session-format'
 import type { SessionFormatEvent, SessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
 import { createSessionFormatCatalogWithChildren, sessionFormatCatalog } from '@x1a0f3n9/dsh-session-format-catalog'
-import { assertV4MessageSources, assertV4SourceRowAdmission } from '../src/message-sources.ts'
+import { assertV4MessageSources, assertV4SourceRowAdmission, liftRetiredPluginSources } from '../src/message-sources.ts'
 import { releasedV4SessionFormatCodec } from '../src/codec.ts'
 
 const header = { type: 'session', version: 4, id: 'sources', createdAt: 1, delegationDepth: 0, isSeeded: false }
@@ -49,8 +49,24 @@ describe('V4 source admission', () => {
       const output = new SessionFormatEventCollector()
       decoder.decodeRow(null, output)
       expect(() => { decoder.decodeRow(row, output) }).toThrow(/producer-owned source kind/)
-      expect(() => sessionFormatCatalog.encodeCurrentEvent(row)).toThrow(/producer-owned source kind/)
     }
+  })
+
+  it('lifts retired plugin wrappers on encode so a live producer can persist as v4', () => {
+    const recall = event({ kind: 'plugin', plugin: 'hindsight', form: 'recall' })
+    const encoded = sessionFormatCatalog.encodeCurrentEvent(recall)
+    expect(encoded).toMatchObject({ data: { source: { kind: 'plugin:hindsight', form: 'recall' } } })
+    expect((encoded['data'] as { source: object }).source).not.toHaveProperty('plugin')
+    expect(liftRetiredPluginSources(event({ kind: 'plugin', plugin: 'compact' }))).toMatchObject({
+      data: { source: { kind: 'compact-checkpoint' } },
+    })
+    const system = {
+      type: 'system/message', seq: 0, time: 1,
+      data: { turn: 1, step: 1, message: { id: 's', role: 'system', source: { kind: 'plugin', plugin: '@x1a0f3n9/dsh-system-prompt' }, content: [] } },
+    }
+    expect(sessionFormatCatalog.encodeCurrentEvent(system)).toMatchObject({
+      data: { message: { source: { kind: 'system-prompt' } } },
+    })
   })
 
   it('leaves malformed incomplete rows for normal scanner corruption handling', () => {
