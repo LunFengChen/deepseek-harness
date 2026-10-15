@@ -122,6 +122,13 @@ export class DirectoryBrowseError extends Error {
   }
 }
 
+/**
+ * Unique live Conversation scopes kept for fast Session switching
+ * (current `mainView` plus parked `mainViewCache`). Same size as the Host
+ * idle ordinary Agent cache; the client bundle does not import that Host constant.
+ */
+const MAIN_VIEW_RETAIN_LIMIT = 5
+
 /** Implements Workspace archive and directory UI operations. */
 class UiWorkspaceService extends Service implements UiWorkspace {
   private readonly connecting = new Map<WorkspaceId, Promise<SessionId>>()
@@ -130,6 +137,7 @@ class UiWorkspaceService extends Service implements UiWorkspace {
     {}, { persist: { name: 'dsh.sessions.current' } },
   )
   private mainReference: SessionReference | undefined
+  private readonly retainedMains = new Map<SessionId, SessionReference>()
 
   /**
    * @param ctx - Client root Context.
@@ -153,9 +161,7 @@ class UiWorkspaceService extends Service implements UiWorkspace {
       return () => {
         stop()
         this.lifetime.abort()
-        const reference = this.mainReference
-        this.mainReference = undefined
-        reference?.release()
+        this.releaseAllMains()
       }
     }, 'ui-workspace: Workspace navigation policy')
   }
@@ -242,6 +248,7 @@ class UiWorkspaceService extends Service implements UiWorkspace {
   async archiveSession(sessionId: SessionId, options: { readonly stopActivity?: boolean } = {}): Promise<void> {
     await this.workspaces.archiveSession(sessionId, options)
     if (this.mainReference?.sessionId === sessionId) this.clearMain()
+    else this.dropParked(sessionId)
   }
 
   async unarchiveSession(sessionId: SessionId): Promise<void> {
@@ -356,18 +363,24 @@ class UiWorkspaceService extends Service implements UiWorkspace {
 
   /** @returns true when an archived current selection was cleared. */
   private clearArchivedCurrent(): boolean {
+    const archived = this.workspaces.list.getSnapshot().archivedSessionIds
     const current = this.mainReference?.sessionId
-    if (current === undefined
-      || !this.workspaces.list.getSnapshot().archivedSessionIds.includes(current)) return false
-    this.clearMain()
-    return true
+    const cleared = current !== undefined && archived.includes(current)
+    if (cleared) this.clearMain()
+    for (const sessionId of [...this.retainedMains.keys()]) {
+      if (archived.includes(sessionId)) this.dropParked(sessionId)
+    }
+    return cleared
   }
 
   private clearMain(): void {
     const previous = this.mainReference
     this.mainReference = undefined
     this.selection.set({})
-    previous?.release()
+    if (previous !== undefined) {
+      this.dropParked(previous.sessionId)
+      previous.release()
+    }
     this.ctx.layout.selectPanel(null)
   }
 
@@ -378,12 +391,19 @@ class UiWorkspaceService extends Service implements UiWorkspace {
     beforeOpen?: (sessionId: SessionId) => void,
   ): void {
     signal.throwIfAborted()
-    const reference = this.sessions.retain(target, { source: 'mainView' })
+    const sessionId = sessionIdOf(target)
+    const previous = this.mainReference
+    const alreadyCurrent = previous !== undefined && previous.sessionId === sessionId
+    if (!alreadyCurrent && previous !== undefined) this.ensureCached(previous.sessionId)
+    const reference = alreadyCurrent
+      ? previous
+      : this.sessions.retain(target, { source: 'mainView' })
+    const fresh = !alreadyCurrent
     try {
       signal.throwIfAborted()
       beforeOpen?.(reference.sessionId)
       if (signal.aborted) {
-        reference.release()
+        if (fresh) reference.release()
         return
       }
       const subagentAddress = typeof target === 'string'
@@ -394,13 +414,54 @@ class UiWorkspaceService extends Service implements UiWorkspace {
         ...(subagentAddress === undefined ? {} : { subagentAddress }),
       })
     } catch (error: unknown) {
-      reference.release()
+      if (fresh) reference.release()
       throw error
     }
-    const previous = this.mainReference
     this.mainReference = reference
-    previous?.release()
+    if (fresh && previous !== undefined) previous.release()
+    this.evictParkedMains()
     if (panel === 'reveal') this.ctx.layout.selectPanel(null)
+  }
+
+  private ensureCached(sessionId: SessionId): void {
+    const existing = this.retainedMains.get(sessionId)
+    if (existing !== undefined) {
+      this.retainedMains.delete(sessionId)
+      this.retainedMains.set(sessionId, existing)
+      return
+    }
+    this.retainedMains.set(sessionId, this.sessions.retain(sessionId, { source: 'mainViewCache' }))
+  }
+
+  private evictParkedMains(): void {
+    const keep = this.mainReference?.sessionId
+    const extra = keep !== undefined && !this.retainedMains.has(keep) ? 1 : 0
+    while (this.retainedMains.size + extra > MAIN_VIEW_RETAIN_LIMIT) {
+      let victim: SessionId | undefined
+      for (const sessionId of this.retainedMains.keys()) {
+        if (sessionId !== keep) {
+          victim = sessionId
+          break
+        }
+      }
+      if (victim === undefined) break
+      this.dropParked(victim)
+    }
+  }
+
+  private dropParked(sessionId: SessionId): void {
+    const parked = this.retainedMains.get(sessionId)
+    if (parked === undefined) return
+    this.retainedMains.delete(sessionId)
+    parked.release()
+  }
+
+  private releaseAllMains(): void {
+    const references = new Set(this.retainedMains.values())
+    if (this.mainReference !== undefined) references.add(this.mainReference)
+    this.retainedMains.clear()
+    this.mainReference = undefined
+    for (const reference of references) reference.release()
   }
 
 }
@@ -422,6 +483,10 @@ function creationFailureMessage(error: unknown): string {
   const refused = sessionCreateErrorOf(error)
   if (refused !== undefined) return `${refused.rpcError.code}: ${refused.rpcError.message}`
   return error instanceof Error ? error.message : String(error)
+}
+
+function sessionIdOf(target: SessionTarget): SessionId {
+  return typeof target === 'string' ? target : target.childSessionId
 }
 
 /** Stable tie-breaking follows Host Workspace order. */
