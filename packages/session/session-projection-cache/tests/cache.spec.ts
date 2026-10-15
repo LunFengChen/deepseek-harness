@@ -33,6 +33,7 @@ import {
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
 } from '@x1a0f3n9/dsh-storage-domain'
+import { titleProjectionDefinition } from '@x1a0f3n9/dsh-session-title'
 import SessionProjectionCache from '../src/index.ts'
 import { checkpointRecord, projectionCacheDomainSpec } from '../src/spec.ts'
 import type { CheckpointRecord } from '../src/spec.ts'
@@ -45,13 +46,11 @@ declare module '@x1a0f3n9/dsh-session-projection/types' {
     'cache-test/count': number
     'cache-test/secret': string
     'cache-test/marks3': MarksState
-    title: string | null
   }
   interface SessionProjectionMap {
     'cache-test/marks': { marks: string[] }
     'cache-test/secondary-marks': { marks: string[] }
     'cache-test/marks3': { marks: string[] }
-    title: string | null
   }
 }
 
@@ -109,16 +108,6 @@ const secondaryMarksUnit = {
   },
   stateVersion: 1,
 } satisfies ProjectionDefinition<'cache-test/secondary-marks', MarksState>
-
-/** Mirrors the shipped title unit's storage face (stateVersion 1, bare-string state). */
-const titleUnit = {
-  key: 'title',
-  stateSchema: z.string().nullable(),
-  init: () => null,
-  apply: state => state,
-  wire: { viewSchema: z.string().nullable(), view: state => state },
-  stateVersion: 1,
-} satisfies ProjectionDefinition<'title', string | null>
 
 /** One session's record document on the per-record medium. */
 const recordPath = (root: string, id: Session['id']): string =>
@@ -475,7 +464,7 @@ describe('SessionProjectionCache listing read', () => {
       },
     )
     const { ctx, cache } = await harness({ root })
-    ctx.sessionProjections.register(titleUnit)
+    ctx.sessionProjections.register(titleProjectionDefinition)
     const seededHeader = { ...headerOf(id), isSeeded: true }
 
     // An older format generation never serves the full block, but its title

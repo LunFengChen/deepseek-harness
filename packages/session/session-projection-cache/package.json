@@ -41,6 +41,7 @@
     "@deepseek-ai/cordis": "workspace:~",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-session-title": "workspace:*",
     "@x1a0f3n9/dsh-storage": "workspace:*",
     "@x1a0f3n9/dsh-storage-domain": "workspace:*",
     "@x1a0f3n9/dsh-storage-json": "workspace:*"

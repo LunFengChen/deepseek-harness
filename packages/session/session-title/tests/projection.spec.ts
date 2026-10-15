@@ -62,6 +62,24 @@ describe('title projection unit', () => {
     })).toEqual({ title: 'Cached title' })
   })
 
+  it('reads a version-1 snapshot checkpoint as the same wire string', async () => {
+    const { ctx } = await harness(true)
+
+    expect(ctx.sessionProjections.viewCheckpoint({
+      title: {
+        ver: 1,
+        seq: SessionSeq(8),
+        val: {
+          title: 'Record title',
+          messageSeqs: [1],
+          source: { kind: 'user' },
+          eventSeq: 8,
+          updatedAt: 1,
+        },
+      },
+    })).toEqual({ title: 'Record title' })
+  })
+
   it('folds titles already in the log when the service mounts late (lazy cell build)', async () => {
     const { ctx, session } = await harness(false)
     appendTitle(session, 'Pre-mount title')

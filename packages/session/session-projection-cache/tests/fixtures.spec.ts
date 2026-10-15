@@ -19,11 +19,9 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
-import { z } from 'zod'
 import SessionStore, { SESSION_FORMAT_VERSION, SessionId } from '@x1a0f3n9/dsh-session'
 import type { SessionHeader } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
-import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
 import Storage from '@x1a0f3n9/dsh-storage'
 import {
   apply as storageJsonApply, Config as storageJsonConfig, inject as storageJsonInject, name as storageJsonName,
@@ -31,41 +29,9 @@ import {
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
 } from '@x1a0f3n9/dsh-storage-domain'
+import { titleProjectionDefinition } from '@x1a0f3n9/dsh-session-title'
 import SessionProjectionCache from '../src/index.ts'
 import { checkpointRow, projectionCacheDomainSpec } from '../src/spec.ts'
-
-// Declarations must match the shipped title unit's exactly (the repo-wide
-// compile face sees both).
-declare module '@x1a0f3n9/dsh-session-projection/types' {
-  interface SessionProjectionStateMap {
-    title: string | null
-  }
-  interface SessionProjectionMap {
-    title: string | null
-  }
-}
-
-declare module '@x1a0f3n9/dsh-session/types' {
-  interface SessionEventMap {
-    'fixtures-test/set-title': { title: string }
-  }
-
-  interface OutOfBandSessionEventMap {
-    'fixtures-test/set-title': true
-  }
-}
-
-// Mirrors the shipped title unit's storage face: stateVersion 1, bare-string
-// state (the fixture rows carry exactly this shape in every archived
-// version), folding a test event so the rewrite path has fresh data.
-const titleUnit = {
-  key: 'title',
-  stateSchema: z.string().nullable(),
-  init: () => null,
-  apply: (state, event) => (event.type === 'fixtures-test/set-title' ? event.data.title : state),
-  wire: { viewSchema: z.string().nullable(), view: state => state },
-  stateVersion: 1,
-} satisfies ProjectionDefinition<'title', string | null>
 
 const FIXTURES = fileURLToPath(new URL('./fixtures/', import.meta.url))
 
@@ -110,7 +76,7 @@ async function harness(root: string) {
   const ctx = await storageHarness(root)
   await ctx.plugin(SessionStore)
   await ctx.plugin(SessionProjectionRegistry)
-  ctx.sessionProjections.register(titleUnit)
+  ctx.sessionProjections.register(titleProjectionDefinition)
   await ctx.plugin(SessionProjectionCache, { writeEveryEvents: 100, writeIntervalMs: 60_000 })
   return { ctx, cache: ctx.sessionProjectionCache }
 }
@@ -130,7 +96,11 @@ async function placeDoc(root: string, id: string, name: string): Promise<Fixture
  */
 async function assertRewrite(ctx: Context, root: string, id: SessionId): Promise<void> {
   const session = ctx.sessions.create(id)
-  session.append('fixtures-test/set-title', { title: '重写标题' })
+  session.append('session/title', {
+    title: '重写标题',
+    messageSeqs: [],
+    source: { kind: 'fallback' },
+  })
   session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
   const path = join(root, projectionCacheDomainSpec.name, 'sessions', `${id}.json`)
   await vi.waitFor(async () => {
@@ -141,7 +111,7 @@ async function assertRewrite(ctx: Context, root: string, id: SessionId): Promise
       isSeeded: false,
       inheritedEventCount: 0,
     })
-    expect(doc.record.rows['title']?.val).toBe('重写标题')
+    expect(doc.record.rows['title']?.val).toMatchObject({ title: '重写标题' })
   }, { timeout: 5_000 })
 }
 
@@ -326,7 +296,7 @@ describe('archived version recovery', () => {
     await ctx.plugin({ name: storageDomainName, inject: storageDomainInject, apply: storageDomainApply, Config: storageDomainConfig }, { backend: 'json' })
     await ctx.plugin(SessionStore)
     await ctx.plugin(SessionProjectionRegistry)
-    ctx.sessionProjections.register(titleUnit)
+    ctx.sessionProjections.register(titleProjectionDefinition)
     const error = vi.spyOn(ctx.logger, 'error').mockImplementation(() => {})
     // The boot survives the broken record — this line rejecting IS the fixed bug.
     await ctx.plugin(SessionProjectionCache, { writeEveryEvents: 100, writeIntervalMs: 60_000 })

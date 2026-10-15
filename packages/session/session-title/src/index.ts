@@ -259,20 +259,78 @@ function collectSessionTitleMessages(
 
 const titleViewSchema: ZodType<string | null> = zod.string().min(1).nullable()
 
-/** Latest logged title text and its client view. */
+const titleSourceSchema = zod.union([
+  zod.object({ kind: zod.literal('fallback') }).strict(),
+  zod.object({
+    kind: zod.literal('provider'),
+    provider: zod.string().min(1),
+    model: zod.object({
+      provider: zod.string().min(1),
+      model: zod.string().min(1),
+    }).strict().optional(),
+  }).strict(),
+  zod.object({ kind: zod.literal('user') }).strict(),
+]).transform((source): SessionTitleSource => {
+  if (source.kind === 'fallback') return { kind: 'fallback' }
+  if (source.kind === 'user') return { kind: 'user' }
+  return source.model === undefined
+    ? { kind: 'provider', provider: SessionTitleProviderId(source.provider) }
+    : {
+      kind: 'provider',
+      provider: SessionTitleProviderId(source.provider),
+      model: { provider: source.model.provider, model: source.model.model },
+    }
+})
+
+const titleRecordSchema: ZodType<SessionTitleSnapshot> = zod.object({
+  title: zod.string().min(1),
+  messageSeqs: zod.array(zod.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).transform(SessionSeq)),
+  source: titleSourceSchema,
+  eventSeq: zod.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).transform(SessionSeq),
+  updatedAt: zod.number(),
+}).strict()
+
+const titleStateSchema: ZodType<SessionTitleSnapshot | null> = zod.union([
+  zod.string().min(1).transform((title): SessionTitleSnapshot => ({
+    title,
+    messageSeqs: [],
+    source: { kind: 'fallback' },
+    eventSeq: SessionSeq(0),
+    updatedAt: 0,
+  })),
+  titleRecordSchema,
+]).nullable()
+
+function titleSnapshotFromEvent(
+  event: Extract<SessionEvent, { type: 'session/title' }>,
+): SessionTitleSnapshot {
+  return {
+    title: event.data.title,
+    messageSeqs: event.data.messageSeqs,
+    source: event.data.source,
+    eventSeq: event.seq,
+    updatedAt: event.time,
+  }
+}
+
+function titleWireView(state: SessionTitleSnapshot | null): string | null {
+  return state === null ? null : state.title
+}
+
+/** Latest logged title snapshot and its client string view. */
 export const titleProjectionDefinition = {
   key: 'title',
   stateVersion: 1,
-  stateSchema: titleViewSchema,
+  stateSchema: titleStateSchema,
   init: () => null,
   apply: (state, event) => (event.type === 'session/title'
-    ? event.data.title
+    ? titleSnapshotFromEvent(event)
     : state),
   wire: {
     viewSchema: titleViewSchema,
-    view: state => state,
+    view: titleWireView,
   },
-} satisfies ProjectionDefinition<'title', string | null>
+} satisfies ProjectionDefinition<'title', SessionTitleSnapshot | null>
 
 /**
  * Fold the latest logged title without consulting mutable metadata.
@@ -398,8 +456,11 @@ export class SessionTitleService extends Service {
    * @returns latest title snapshot, or `undefined` before eligible input.
    */
   get(session: Session): SessionTitleSnapshot | undefined {
-    // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
-    return foldSessionTitle(session.snapshotEvents())
+    // session/title is log-only and drops out of the live RAM window; the
+    // projection cell is the fold that survives releaseLiveWindow.
+    const state = this.ctx.sessionProjections.stateOf(session, 'title')
+    if (state === undefined || state === null) return undefined
+    return titleSnapshotFromState(state)
   }
 
   /**
