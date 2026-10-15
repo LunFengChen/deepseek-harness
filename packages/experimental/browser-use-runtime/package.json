@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-browser-use-runtime",
   "description": "Session-owned browser resource lifecycles and MCP integration for experimental providers",
-  "version": "0.1.7-rc.2",
+  "version": "0.1.7-rc.3",
   "publishConfig": {
     "access": "public"
   },

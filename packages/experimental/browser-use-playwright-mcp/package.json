@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-browser-use-playwright-mcp",
   "description": "Experimental per-Session Chromium browser tools through @playwright/mcp",
-  "version": "0.1.7-rc.2",
+  "version": "0.1.7-rc.3",
   "publishConfig": {
     "access": "public"
   },

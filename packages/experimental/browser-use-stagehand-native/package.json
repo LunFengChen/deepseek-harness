@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-browser-use-stagehand-native",
   "description": "Experimental Stagehand browser tools with separately configured native models",
-  "version": "0.1.7-rc.2",
+  "version": "0.1.7-rc.3",
   "publishConfig": {
     "access": "public"
   },

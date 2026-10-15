@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-plan",
   "description": "Plan mode controls, persistent transcript plan cards, and sidebar Markdown previews",
-  "version": "0.1.7-rc.2",
+  "version": "0.1.7-rc.3",
   "publishConfig": {
     "access": "public"
   },
