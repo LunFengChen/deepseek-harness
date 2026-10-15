@@ -11,8 +11,9 @@ afterEach(cleanup)
 
 // Icon components all share the IconProps signature; the barrel also exports
 // non-icon atoms (different props shapes), so filter by prefix BEFORE typing.
+// Size-suffixed names are 0.1.5 plugin aliases of Regular, not extra glyphs.
 const icons = Object.fromEntries(
-  Object.entries(primitives).filter(([name]) => name.startsWith('Icon')),
+  Object.entries(primitives).filter(([name]) => name.startsWith('Icon') && !/\d+$/.test(name)),
 ) as Record<string, (p: primitives.IconProps) => React.JSX.Element>
 const iconNames = Object.keys(icons)
 
