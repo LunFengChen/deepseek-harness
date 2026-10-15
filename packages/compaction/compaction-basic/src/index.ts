@@ -264,7 +264,9 @@ export class BasicCompactionEngine extends CompactionEngine {
    * overflow bypasses the normal threshold and retained-tail policy so it can
    * force one useful balanced reduction. Pressure skips a compact-checkpoint-only
    * span regardless of size, so a just-written replacement is not summarized
-   * again until non-checkpoint history ages into the range.
+   * again until non-checkpoint history ages into the range. Overflow prefers
+   * newly aged-out history and only force-folds a checkpoint-only span when
+   * that is all that remains.
    * @param agent - agent whose latest durable routed request is measured.
    * @param trigger - normal step-boundary pressure or context-overflow recovery.
    * @param signal - live turn cancellation signal forwarded to summarization.
@@ -300,7 +302,13 @@ export class BasicCompactionEngine extends CompactionEngine {
         prune.pruneSession(agent.session)
         measurement = meter.measure(agent.session)
       }
-      const range = selectCompactableRange(agent.session, measurement, 0)
+      const foldable = selectCompactableRange(
+        agent.session,
+        measurement,
+        0,
+        { skipCheckpointPrefix: true },
+      )
+      const range = foldable ?? selectCompactableRange(agent.session, measurement, 0)
       if (range === null) return null
       return this.compactRegion(range.start, range.end, agent, signal)
     }
@@ -333,7 +341,12 @@ export class BasicCompactionEngine extends CompactionEngine {
     let result: CompactionResult | null = null
     let attempts = 0
     for (;;) {
-      const range = selectCompactableRange(agent.session, measurement, spec.retainTokens)
+      const range = selectCompactableRange(
+        agent.session,
+        measurement,
+        spec.retainTokens,
+        { skipCheckpointPrefix: true },
+      )
       if (range === null || rangeLacksFoldableHistory(agent.session, range)) {
         return result
       }
@@ -379,8 +392,11 @@ export class BasicCompactionEngine extends CompactionEngine {
   /**
    * Force one useful idle-session compaction below the pressure threshold, and
    * resolve only after its standalone marker pair is durably checkpointed.
-   * Checkpoint-only spans and non-shrinking summaries return `null` so `/compact`
-   * reports no compactable history instead of a summary error.
+   * Leading checkpoints are skipped so `/compact` folds newly aged-out history.
+   * When that skip leaves nothing, the remaining checkpoint-only span is still
+   * folded — same fallback overflow uses — so occupancy over the window is not
+   * stuck behind `No compactable history yet.` A model summary that does not
+   * shrink lands the overflow stub when that stub is cheaper.
    * @param agent - idle agent whose next-turn admission this call reserves.
    * @param signal - cancellation scoped to this compaction request.
    * @param sourceCommandId - initiating command identity for presentation correlation.
@@ -398,12 +414,17 @@ export class BasicCompactionEngine extends CompactionEngine {
         try {
           operationSignal.throwIfAborted()
           assertNoActiveCompaction(agent.session, 'manual compaction')
-          const range = selectCompactableRange(
+          const measurement = this.ctx.tokenMeter.measure(agent.session)
+          const foldable = selectCompactableRange(
             agent.session,
-            this.ctx.tokenMeter.measure(agent.session),
+            measurement,
             0,
+            { skipCheckpointPrefix: true },
           )
-          if (range === null || rangeLacksFoldableHistory(agent.session, range)) return null
+          const range = foldable === null || rangeLacksFoldableHistory(agent.session, foldable)
+            ? selectCompactableRange(agent.session, measurement, 0)
+            : foldable
+          if (range === null) return null
           return await compactSurfaceRegion(
             this.regionDependencies(),
             agent.session,
@@ -413,6 +434,7 @@ export class BasicCompactionEngine extends CompactionEngine {
             {
               owner: null,
               stability: 'selected-span',
+              shrinkFallback: true,
               ...sourceCommandId === undefined ? {} : { sourceCommandId },
               flush: async () => {
                 await this.ctx.sessions.flush(agent.session)

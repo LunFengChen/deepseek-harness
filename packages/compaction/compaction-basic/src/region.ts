@@ -30,6 +30,16 @@ interface RegionDependencies {
   recover(error: unknown, agent: Agent, sourceEventSeqs: readonly SessionSeq[], signal?: AbortSignal): boolean
 }
 
+/** Optional constraints on `selectCompactableRange` beyond the retained tail. */
+export interface CompactableRangeOptions {
+  /**
+   * Advance the start past leading compact-checkpoints so a later `/compact`
+   * or pressure pass folds newly aged-out history instead of re-summarizing
+   * a checkpoint that already replaced an earlier span.
+   */
+  readonly skipCheckpointPrefix?: boolean
+}
+
 /** One validated inclusive span of current surface positions. */
 interface SurfaceSelection {
   readonly start: SessionSeq
@@ -62,6 +72,11 @@ interface CompactionTransactionOptions {
   readonly flush?: () => Promise<void>
   /** Manual command that initiated this transaction, when present. */
   readonly sourceCommandId?: CommandId
+  /**
+   * When the model summary is not cheaper than the span, land
+   * {@link CONTEXT_OVERFLOW_FALLBACK_SUMMARY} if that stub is cheaper.
+   */
+  readonly shrinkFallback?: boolean
 }
 
 interface CompactionEntryState {
@@ -113,12 +128,14 @@ function systemHead(session: Session, headSeq: SessionSeq): SessionEvent<'system
  * @param session - session supplying authoritative current surface positions.
  * @param measurement - unified pressure and surface measurement from the conversation meter.
  * @param retainTokens - minimum recent tail budget retained verbatim.
+ * @param options - optional leading-checkpoint skip.
  * @returns the inclusive positional seq range to compact, or `null`.
  */
 export function selectCompactableRange(
   session: Session,
   measurement: TokenMeasurement,
   retainTokens: number,
+  options?: CompactableRangeOptions,
 ): { start: SessionSeq; end: SessionSeq } | null {
   const pricedNodes = measurement.nodes
   if (pricedNodes.length === 0) return null
@@ -148,11 +165,30 @@ export function selectCompactableRange(
   }
   if (keepFromIdx <= firstIdx) return null
 
+  let startIdx = firstIdx
+  if (options?.skipCheckpointPrefix === true) {
+    while (startIdx < keepFromIdx) {
+      // oxlint-disable-next-line typescript/no-non-null-assertion
+      if (!isCompactCheckpointNode(session, surfaceNodes[startIdx]!)) break
+      startIdx += 1
+    }
+    while (startIdx < keepFromIdx) {
+      // oxlint-disable-next-line typescript/no-non-null-assertion
+      if (toolPairingBalancedBefore(session, surfaceNodes[startIdx]!)) break
+      startIdx += 1
+    }
+  }
+  if (startIdx >= keepFromIdx) return null
+
   // oxlint-disable-next-line typescript/no-non-null-assertion
-  const first = surfaceNodes[firstIdx]!
-  // oxlint-disable-next-line typescript/no-non-null-assertion
-  const cutoff = surfaceNodes[keepFromIdx - 1]!
-  return { start: first, end: cutoff }
+  return { start: surfaceNodes[startIdx]!, end: surfaceNodes[keepFromIdx - 1]! }
+}
+
+/** True when the surface node at `seq` is a compact-checkpoint user message. */
+function isCompactCheckpointNode(session: Session, seq: SessionSeq): boolean {
+  // oxlint-disable-next-line typescript/no-non-null-assertion, typescript/no-deprecated
+  const event = session.eventAt(seq)!
+  return event.type === 'user/message' && isCompactCheckpointSource(event.data.source)
 }
 
 /**
@@ -272,6 +308,7 @@ export async function compactSurfaceRegion(
       options.sourceCommandId,
       assertStable,
       signal,
+      options.shrinkFallback === true,
     )
     if (options.owner === null) signal?.throwIfAborted()
     assertStable(dependencies, session, summarized)
@@ -429,16 +466,33 @@ function prepareCompaction(
 
 /** True when a summarizer failed because the conversation itself overflowed the model. */
 function isContextOverflowFailure(error: unknown): boolean {
-  return typeof error === 'object'
-    && error !== null
-    && 'code' in error
-    && error.code === CONTEXT_WINDOW_EXCEEDED_CODE
+  let current: unknown = error
+  for (let depth = 0; depth < 6; depth += 1) {
+    if (typeof current !== 'object' || current === null) return false
+    const code = 'code' in current ? current.code : undefined
+    const message = current instanceof Error ? current.message : ''
+    if (code === CONTEXT_WINDOW_EXCEEDED_CODE) return true
+    // Mid-stream gateway drops after a too-large summarizer prompt surface as
+    // undici `terminated` TRANSPORT, not as canonical context overflow.
+    if (code === 'TRANSPORT' && /\bterminated\b/i.test(message)) return true
+    if (!('cause' in current)) return false
+    current = current.cause
+  }
+  return false
 }
 
 /**
  * Prefer a model summary; if that call overflows, land a short checkpoint so
  * overflow recovery and `/compact` still reduce the surface.
  */
+function overflowFallbackResult(): SummaryResult {
+  return {
+    summary: [{ type: 'text', text: CONTEXT_OVERFLOW_FALLBACK_SUMMARY }],
+    provider: 'compaction-overflow-fallback',
+    model: 'compaction-overflow-fallback',
+  }
+}
+
 async function summarizeOrFallback(
   dependencies: RegionDependencies,
   prepared: PreparedCompaction,
@@ -449,11 +503,7 @@ async function summarizeOrFallback(
     return await dependencies.summarize(prepared.input, agent, signal)
   } catch (error: unknown) {
     if (signal?.aborted || !isContextOverflowFailure(error)) throw error
-    return {
-      summary: [{ type: 'text', text: CONTEXT_OVERFLOW_FALLBACK_SUMMARY }],
-      provider: 'compaction-overflow-fallback',
-      model: 'compaction-overflow-fallback',
-    }
+    return overflowFallbackResult()
   }
 }
 
@@ -466,6 +516,7 @@ async function summarizeCompaction(
   sourceCommandId: CommandId | undefined,
   assertStable: StabilityCheck,
   signal?: AbortSignal,
+  shrinkFallback = false,
 ): Promise<SummarizedCompaction> {
   let summaryResult: SummaryResult
   for (;;) {
@@ -481,17 +532,34 @@ async function summarizeCompaction(
         validateSurfaceRegion(agent.session, prepared.start, prepared.end))
     }
   }
-  const checkpointMessage = createUserMessage({
-    content: frameSummary(summaryResult.summary),
-    source: compactCheckpointSource(compactionId, sourceCommandId),
-  })
-  // The checkpoint is text-only, so its fixed-heuristic price IS its route
-  // price; comparing it against the span's route price asks the real
-  // question — does the replacement lower the next request's pressure.
-  const framedSummaryTokenCount = dependencies.meter.estimateMessage(checkpointMessage)
-  if (framedSummaryTokenCount >= prepared.shadowedRouteTokenCount) {
-    throw new SummaryDidNotShrinkError(framedSummaryTokenCount, prepared.shadowedRouteTokenCount)
+  const frameCheckpoint = (result: SummaryResult) => {
+    const checkpointMessage = createUserMessage({
+      content: frameSummary(result.summary),
+      source: compactCheckpointSource(compactionId, sourceCommandId),
+    })
+    return {
+      checkpointMessage,
+      framedSummaryTokenCount: dependencies.meter.estimateMessage(checkpointMessage),
+    }
   }
+  let framed = frameCheckpoint(summaryResult)
+  // `/compact` still has to reduce occupancy after a leading checkpoint whose
+  // model rewrite is not cheaper; the overflow stub is shorter than any
+  // compactable span, so the shrink check can pass without a second LLM call.
+  if (
+    framed.framedSummaryTokenCount >= prepared.shadowedRouteTokenCount
+    && shrinkFallback
+  ) {
+    summaryResult = overflowFallbackResult()
+    framed = frameCheckpoint(summaryResult)
+  }
+  if (framed.framedSummaryTokenCount >= prepared.shadowedRouteTokenCount) {
+    throw new SummaryDidNotShrinkError(
+      framed.framedSummaryTokenCount,
+      prepared.shadowedRouteTokenCount,
+    )
+  }
+  const { checkpointMessage } = framed
   return {
     ...prepared,
     ...summaryResult,

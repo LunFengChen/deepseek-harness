@@ -13,7 +13,7 @@ import {
   resolveTargetPolicy,
 } from '@x1a0f3n9/dsh-compaction-basic/src/config.ts'
 import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
-import LlmRuntime, { createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, createSystemMessage, createToolResultMessage, LlmAdapter , createMessage } from '@x1a0f3n9/dsh-llm'
+import LlmRuntime, { createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, createSystemMessage, createToolResultMessage, LlmAdapter , createMessage, LlmError } from '@x1a0f3n9/dsh-llm'
 import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
 import type {
   ContentBlock,
@@ -971,6 +971,19 @@ describe('pressure measurement and retention', () => {
     expect(compact.calls).toHaveLength(0)
   })
 
+  it('overflow-compacts a surface larger than the summarizer window', async () => {
+    const compact = service({
+      auto: false,
+      maxTokens: 32,
+    }, createContext(120))
+    const session = conversation(6, 'overflow-chunk '.repeat(400))
+    const before = session.surface.nodes.length
+    const result = await compactIfNeeded(compact, session, 'context-overflow')
+    expect(result).not.toBeNull()
+    expect(compact.calls.length).toBeGreaterThan(0)
+    expect(session.surface.nodes.length).toBeLessThan(before)
+  })
+
   it('still force-compacts a checkpoint-only span on overflow', async () => {
     const compact = service({
       auto: false,
@@ -1017,6 +1030,30 @@ describe('pressure measurement and retention', () => {
       session,
       { start: SessionSeq(99_999), end: SessionSeq(99_999) },
     )).toBe(false)
+  })
+
+  it('skips a leading compact-checkpoint when selecting a foldable range', () => {
+    const ctx = createContext()
+    const session = Session.create(SessionId('skip-checkpoint-prefix'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'old checkpoint' }],
+      source: compactCheckpointSource(CompactionId('old-checkpoint')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'newer history' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'tail' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    const priced = ctx.tokenMeter.measure(session)
+    const [checkpoint, history, tail] = session.surface.nodes
+    expect(selectCompactableRange(session, priced, 0)?.start).toBe(checkpoint)
+    const skipped = selectCompactableRange(session, priced, 0, { skipCheckpointPrefix: true })
+    expect(skipped).toEqual({ start: history, end: history })
+    expect(skipped?.end).not.toBe(tail)
   })
 
   it('rounds a retention cut head-ward to preserve tool-call/result pairing', async () => {
@@ -2153,6 +2190,35 @@ describe('automatic listener and loader composition', () => {
       message.content.some(block => block.type === 'text' && block.text.includes(CONTEXT_OVERFLOW_FALLBACK_SUMMARY)))
     expect(checkpoint).toBeDefined()
     expect(compact.calls).toHaveLength(1)
+  })
+
+  it('lands a fallback checkpoint when CONTEXT_WINDOW_EXCEEDED is on the cause chain', async () => {
+    const ctx = createContext()
+    const compact = new TestCompactionEngine(ctx)
+    compact.error = new LlmError('summarizer failed', 'SERVER', {
+      cause: Object.assign(new Error('inner overflow'), { code: CONTEXT_WINDOW_EXCEEDED_CODE }),
+    })
+    const session = conversation(3)
+
+    expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(true)
+    const checkpoint = session.deriveMessages().find(message =>
+      message.content.some(block => block.type === 'text' && block.text.includes(CONTEXT_OVERFLOW_FALLBACK_SUMMARY)))
+    expect(checkpoint).toBeDefined()
+  })
+
+  it('lands a fallback checkpoint when the summarizer stream is a terminated TRANSPORT drop', async () => {
+    const ctx = createContext()
+    const compact = new TestCompactionEngine(ctx)
+    compact.error = Object.assign(
+      new Error('terminated (lastEvent=error, sawContent=yes, text_delta:2495|error:1)'),
+      { code: 'TRANSPORT' },
+    )
+    const session = conversation(3)
+
+    expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(true)
+    const checkpoint = session.deriveMessages().find(message =>
+      message.content.some(block => block.type === 'text' && block.text.includes(CONTEXT_OVERFLOW_FALLBACK_SUMMARY)))
+    expect(checkpoint).toBeDefined()
   })
 
   it('recovers overflow on a windowed Session without token-meter ingest', async () => {
