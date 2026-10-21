@@ -4,6 +4,7 @@
  * documented on the public interfaces in `./manifest.ts`; this file owns the
  * state tables and the load/materialize machinery.
  */
+import { aliasedKey, lookupAliased } from '../package-alias.ts'
 import { stripClientSuffix } from './manifest.ts'
 import { ClientEntries } from './entries.ts'
 import { removeOwnedStyles } from './entry-lifecycle.ts'
@@ -318,11 +319,13 @@ export class ClientModuleSystem implements ClientModuleLoader {
   private makeRequire(ownerId: string, edges: Set<string>): ClientBundleRequire {
     const require = (spec: string): unknown => {
       edges.add(spec)
-      if (this.seed.has(spec)) return this.seed.get(spec)
+      const seedKey = aliasedKey(this.seed, spec)
+      if (seedKey !== undefined) return this.seed.get(seedKey)
       const id = stripClientSuffix(spec)
-      const record = this.loadCache.get(id)
+      const record = lookupAliased(this.loadCache, id)
       if (record !== undefined) return record.exports
-      if (this.factories.has(id)) return this.materialize(id).exports
+      const factoryId = aliasedKey(this.factories, id)
+      if (factoryId !== undefined) return this.materialize(factoryId).exports
       throw new Error(
         `client-modules: require("${spec}") missed the module table — not a platform seed word, not a materialized module, `
         + 'and no registered package factory (a build-time externals drift, or a dynamic dependency that did not arrive)',
@@ -371,21 +374,23 @@ export class ClientModuleSystem implements ClientModuleLoader {
   }
 
   async import(specifier: string): Promise<unknown> {
-    if (this.seed.has(specifier)) return this.seed.get(specifier)
+    const seedKey = aliasedKey(this.seed, specifier)
+    if (seedKey !== undefined) return this.seed.get(seedKey)
     const id = stripClientSuffix(specifier)
-    const existing = this.loadCache.get(id)
+    const existing = lookupAliased(this.loadCache, id)
     if (existing !== undefined) return existing.exports
-    const row = this.graphRows.get(id)
+    const row = lookupAliased(this.graphRows, id)
     if (row === undefined) {
-      if (this.factories.has(id)) return this.materialize(id).exports
+      const factoryId = aliasedKey(this.factories, id)
+      if (factoryId !== undefined) return this.materialize(factoryId).exports
       throw new Error(
         `client-modules: cannot resolve "${specifier}" — not a seed word, not a materialized module, `
         + 'and not a row in the boot graph (the runtime mirror of the bundle purity gate)',
       )
     }
-    return this.recordingImportError(id, async () => {
+    return this.recordingImportError(row.id, async () => {
       await this.arriveGraphRow(row)
-      return this.materialize(id).exports
+      return this.materialize(row.id).exports
     })
   }
 
