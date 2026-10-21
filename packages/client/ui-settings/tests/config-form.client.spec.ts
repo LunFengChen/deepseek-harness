@@ -538,6 +538,7 @@ describe('ConfigForms.get', () => {
     })
     expect(describeCall).toHaveBeenCalledTimes(1)
     expect(theme).toBe(locale)
+    expect(ctx.configForms.bind<UiTestSettings>({ namespace: 'ui-test' })).toBe(theme)
     await fiber.dispose()
     await mirror.load()
     expect(theme.getSnapshot()).toMatchObject({ revision: 1 })

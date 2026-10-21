@@ -19,8 +19,21 @@ describe('settings domain base plugin', () => {
     const { ctx, describeCall, fiber } = bench()
     await fiber.await()
     expect(ctx.get('configForms')).toBeInstanceOf(ConfigForms)
+    expect(ctx.get('settingsScope')).toBeInstanceOf(ConfigForms)
     expect(ctx.get('settingsSchema')).toBeInstanceOf(SettingsSchemaService)
     await vi.waitFor(() => { expect(describeCall).toHaveBeenCalledTimes(1) })
+  })
+
+  it('activates a plugin that injects the community settingsScope name', async () => {
+    const { ctx, fiber } = bench()
+    await fiber.await()
+    const waiter = ctx.plugin({
+      inject: ['settingsScope'],
+      apply: (plugin: Context) => {
+        plugin.settingsScope.bind({ namespace: 'ui-test' })
+      },
+    })
+    await waiter.await()
   })
 
   it('refreshes the mirror on document commits and connection resets, once each', async () => {
@@ -39,6 +52,7 @@ describe('settings domain base plugin', () => {
     await vi.waitFor(() => { expect(describeCall).toHaveBeenCalledTimes(1) })
     await fiber.dispose()
     expect(ctx.get('configForms')).toBeUndefined()
+    expect(ctx.get('settingsScope')).toBeUndefined()
     expect(ctx.get('settingsSchema')).toBeUndefined()
     remote.emit('settings/document-updated', ['ui-test', 0])
     ctx.emit('connection/reset')

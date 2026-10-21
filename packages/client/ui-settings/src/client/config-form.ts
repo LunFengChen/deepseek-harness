@@ -228,6 +228,7 @@ export class ConfigFormController<T> implements ConfigForm<T> {
 declare module '@deepseek-ai/cordis' {
   interface Context {
     configForms: ConfigForms
+    settingsScope: ConfigForms
   }
 }
 
@@ -264,6 +265,7 @@ export class ConfigForms extends Service {
     persistence: 'host' | 'memory'
   }) {
     super(ctx, 'configForms')
+    ctx.provide('settingsScope', this)
     this.mirror = config.mirror
     this.schema = config.schema
     this.persistence = config.persistence
@@ -299,6 +301,16 @@ export class ConfigForms extends Service {
     this.forms.set(entryId, form)
     void this.mirror.ensure()
     return form
+  }
+
+  /**
+   * Bind one Host settings namespace. Community plugins call this as
+   * `ctx.settingsScope.bind({ namespace })`; in-repo code uses {@link get}.
+   * @param spec - namespace the Host plugin registered.
+   * @returns the shared form for that namespace.
+   */
+  bind<T>(spec: { namespace: string }): ConfigForm<T> {
+    return this.get(spec.namespace)
   }
 
   /**
