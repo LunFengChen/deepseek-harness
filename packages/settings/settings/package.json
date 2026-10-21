@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@x1a0f3n9/dsh-home-paths": "workspace:*",
     "@x1a0f3n9/dsh-config-editor": "workspace:*",
     "@deepseek-ai/cordis-plugin-loader": "workspace:~",
     "@deepseek-ai/cosmokit": "workspace:~",

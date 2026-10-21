@@ -8,6 +8,7 @@ import type z from '@deepseek-ai/schemastery'
 import { interpolate, type Entry } from '@deepseek-ai/cordis-plugin-loader'
 import type {} from '@x1a0f3n9/dsh-config-editor'
 import type {} from '@x1a0f3n9/dsh-app-boot'
+import { resolveDshSessionHome } from '@x1a0f3n9/dsh-home-paths'
 import { redactSecrets, type RedactedSecret } from './redact.ts'
 import { isVolatilePath, plainConfig, projectForm, volatileForm } from './schema.ts'
 import type { SettingsNamespace } from './types.ts'
@@ -237,10 +238,21 @@ export class SettingsForms extends Service {
 
   /** Move the sections of the removed `settings.yaml` into the active profile once the Loader has settled every entry.
    * The document is renamed before the first write, so a partial import never repeats; a section the running
-   * composition rejects is logged and remains only in the renamed file. */
+   * composition rejects is logged and remains only in the renamed file. xfdsh keeps plugins under `DSH_HOME`
+   * and settings under `DSH_SESSION_HOME`, so both homes are scanned. */
   private async importLegacyDocument(): Promise<void> {
-    const profile = this.ownerContext.profileContext
-    const path = join(profile.home, 'settings.yaml')
+    const seen = new Set<string>()
+    for (const home of [this.ownerContext.profileContext.home, resolveDshSessionHome()]) {
+      const path = join(home, 'settings.yaml')
+      if (seen.has(path)) continue
+      seen.add(path)
+      await this.importLegacyDocumentAt(path)
+    }
+  }
+
+  /** Import one `settings.yaml` path into the active profile, then leave it renamed.
+   * @param path - absolute `settings.yaml` in either harness home or session home. */
+  private async importLegacyDocumentAt(path: string): Promise<void> {
     if (!existsSync(path)) return
     const imported = `${path}.imported`
     await rename(path, imported)
@@ -254,7 +266,7 @@ export class SettingsForms extends Service {
         this.ownerContext.logger.warn(error)
       }
     }
-    this.ownerContext.logger.info('settings: imported %s into profile %s', imported, profile.name)
+    this.ownerContext.logger.info('settings: imported %s into profile %s', imported, this.ownerContext.profileContext.name)
   }
 
   /** Register the calling plugin instance's page policy without changing its Config.

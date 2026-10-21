@@ -2,6 +2,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import yaml from 'js-yaml'
+import { vi } from 'vitest'
 import type { Context } from '@deepseek-ai/cordis'
 import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
 import type { EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
@@ -13,6 +14,8 @@ import Settings from '../src/index.ts'
 
 /** Attach the profile runtime to an initialized Loader with a source-module importer. */
 export async function profileComposition(ctx: Context, home: string, baseFile: string): Promise<string> {
+  vi.stubEnv('DSH_HOME', home)
+  vi.stubEnv('DSH_SESSION_HOME', home)
   const dir = join(home, 'profile')
   initProfile(dir, ['test-profile-bundle'])
   const bundle = join(dir, 'node_modules', 'test-profile-bundle')

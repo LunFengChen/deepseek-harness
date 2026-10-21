@@ -1,5 +1,6 @@
 /** Real profile patch behavior and reference lifetime. */
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, it, vi } from 'vitest'
 import { parse } from 'yaml'
@@ -337,6 +338,21 @@ it('imports the removed settings.yaml into the profile once and keeps rejected s
   // The rename fails with EISDIR on POSIX and EPERM on Windows; the reported error names the rename either way.
   await vi.waitFor(() => { expect(failures().some(failure => failure instanceof Error && failure.message.includes('rename'))).toBe(true) })
   expect(blocked.agentDefaultModel.currentSelection().model).toBe('legacy')
+})
+
+it('imports settings.yaml from DSH_SESSION_HOME when it is not the harness home', async () => {
+  const { ctx, profile, start } = await fixture()
+  await ctx.fiber.dispose()
+  const sessionHome = realpathSync(mkdtempSync(join(tmpdir(), 'settings-session-')))
+  vi.stubEnv('DSH_SESSION_HOME', sessionHome)
+  const legacy = join(sessionHome, 'settings.yaml')
+  writeFileSync(legacy, 'default-model:\n  model: shared\n')
+  const restored = await start()
+  await vi.waitFor(() => { expect(restored.agentDefaultModel.currentSelection().model).toBe('shared') })
+  expect(existsSync(legacy)).toBe(false)
+  expect(readFileSync(`${legacy}.imported`, 'utf8')).toContain('shared')
+  expect(parse(readFileSync(profile.patchPath, 'utf8'))).toContainEqual({ id: 'default-model', name: 'cordis:model', config: { provider: 'test', model: 'shared' } })
+  rmSync(sessionHome, { recursive: true, force: true })
 })
 
 it('describes an entry whose required field only the profile supplies, and reports a failed refresh instead of crashing', async () => {

@@ -24,6 +24,9 @@
       "path": "../../util/values"
     },
     {
+      "path": "../../util/home-paths"
+    },
+    {
       "path": "../../boot/config-editor"
     },
     {

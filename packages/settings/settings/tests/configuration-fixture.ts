@@ -2,7 +2,7 @@
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { onTestFinished } from 'vitest'
+import { onTestFinished, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import Timer from '@deepseek-ai/cordis-plugin-timer'
@@ -15,6 +15,8 @@ import Settings from '../src/index.ts'
 export async function configurationFixture(options: { schema?: z; apply?: (ctx: Context, config: unknown) => void; hmr?: boolean } = {}) {
   const home = realpathSync(mkdtempSync(join(tmpdir(), 'settings-config-')))
   const dir = join(home, 'profiles', 'test')
+  vi.stubEnv('DSH_HOME', home)
+  vi.stubEnv('DSH_SESSION_HOME', home)
   onTestFinished(() => { rmSync(home, { recursive: true, force: true }) })
   initProfile(dir, ['test-bundle'])
   const bundle = join(dir, 'node_modules', 'test-bundle')

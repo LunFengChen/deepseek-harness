@@ -11225,6 +11225,9 @@ importers:
       '@x1a0f3n9/dsh-config-editor':
         specifier: workspace:*
         version: link:../../boot/config-editor
+      '@x1a0f3n9/dsh-home-paths':
+        specifier: workspace:*
+        version: link:../../util/home-paths
       '@x1a0f3n9/dsh-util-values':
         specifier: workspace:*
         version: link:../../util/values
