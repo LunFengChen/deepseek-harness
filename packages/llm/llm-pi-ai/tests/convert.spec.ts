@@ -997,6 +997,15 @@ describe('mapStopReason / mapUsage', () => {
         code: CONTEXT_WINDOW_EXCEEDED_CODE,
       },
     })
+    const completedPastCatalog = assistant({
+      stopReason: 'stop',
+      usage: usage(304_170, 842, 256),
+      content: [{ type: 'text', text: 'ok' }],
+    })
+    expect(mapStopReason(completedPastCatalog, 200_000)).toMatchObject({
+      kind: 'error',
+      failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
+    })
 
     const truncated = assistant({ stopReason: 'length', usage: usage(80, 0, 19) })
     expect(mapStopReason(truncated)).toMatchObject({
