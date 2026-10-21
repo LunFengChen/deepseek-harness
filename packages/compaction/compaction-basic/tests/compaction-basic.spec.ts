@@ -11,6 +11,7 @@ import {
   resolveCompactSpec,
   resolveConfig,
   resolveTargetPolicy,
+  scalePressureBudgets,
 } from '@x1a0f3n9/dsh-compaction-basic/src/config.ts'
 import type { CompactionResult } from '@x1a0f3n9/dsh-compaction'
 import LlmRuntime, { createUserMessage, ToolCallId, CONTEXT_WINDOW_EXCEEDED_CODE, createSystemMessage, createToolResultMessage, LlmAdapter , createMessage, LlmError } from '@x1a0f3n9/dsh-llm'
@@ -427,6 +428,8 @@ describe('compact configuration and defaults', () => {
     [1_000_000, 100_000, 800_000, 144_000],
     [1_000_000, 134_464, 800_000, 138_485],
     [1_000_000, 256_000, 678_464, 119_040],
+    [200_000, 0, 134_464, 32_000],
+    [200_000, 256_000, 160_000, 26_904],
   ])('reserves 64K headroom in window %i with output cap %i', (window, output, threshold, retained) => {
     const policy = resolveTargetPolicy(resolveConfig({}), { provider: MODEL, model: MODEL })
 
@@ -437,11 +440,23 @@ describe('compact configuration and defaults', () => {
     })
   })
 
-  it.each([500, 501])('rejects headroom %i that exhausts the remaining capacity', (headroomTokens) => {
-    const policy = resolveTargetPolicy(resolveConfig({ headroomTokens }), { provider: MODEL, model: MODEL })
-    expect(() => resolveCompactSpec(policy, 1_000, 500))
-      .toThrow(/headroom tokens.*leaving no pressure budget/)
-  })
+  it.each([
+    [500, 100, 100, 800, 144],
+    [501, 99, 101, 800, 144],
+  ])(
+    'scales headroom %i that exhausts the remaining capacity',
+    (headroomTokens, reserved, headroom, threshold, retained) => {
+      const policy = resolveTargetPolicy(resolveConfig({ headroomTokens }), { provider: MODEL, model: MODEL })
+      expect(scalePressureBudgets(1_000, 500, headroomTokens, 0.8)).toEqual({
+        reservedCompletionTokens: reserved,
+        headroomTokens: headroom,
+      })
+      expect(resolveCompactSpec(policy, 1_000, 500)).toMatchObject({
+        thresholdTokens: threshold,
+        retainTokens: retained,
+      })
+    },
+  )
 
   it('rejects ratio retention that reaches the headroom-limited threshold', () => {
     const policy = resolveTargetPolicy(resolveConfig({ headroomTokens: 420 }), { provider: MODEL, model: MODEL })
@@ -449,13 +464,47 @@ describe('compact configuration and defaults', () => {
       .toThrow(/retainTokens \(80\) must be less than threshold tokens 80/)
   })
 
-  it('rejects a reserve that leaves no message budget or is not a count', () => {
+  it('scales an output cap that cannot share the configured window', () => {
+    expect(scalePressureBudgets(200_000, 256_000, 65_536, 0.8)).toEqual({
+      reservedCompletionTokens: 31_847,
+      headroomTokens: 8_153,
+    })
+    expect(scalePressureBudgets(200_000, 10_000, 65_536, 0.8)).toEqual({
+      reservedCompletionTokens: 10_000,
+      headroomTokens: 65_536,
+    })
+    expect(scalePressureBudgets(1_000, 1_000, 0, 0.8)).toEqual({
+      reservedCompletionTokens: 200,
+      headroomTokens: 0,
+    })
+    expect(scalePressureBudgets(1_000, 100, 0, 0.8)).toEqual({
+      reservedCompletionTokens: 100,
+      headroomTokens: 0,
+    })
+    expect(scalePressureBudgets(1_000, -1, 0, 0.8)).toEqual({
+      reservedCompletionTokens: -1,
+      headroomTokens: 0,
+    })
+
+    const policy = resolveTargetPolicy(resolveConfig({}), { provider: MODEL, model: MODEL })
+    expect(resolveCompactSpec(policy, 200_000, 256_000)).toMatchObject({
+      contextWindow: 200_000,
+      thresholdTokens: 160_000,
+      retainTokens: 26_904,
+    })
+  })
+
+  it('rejects a reserve that is not a count and scales one that fills the window', () => {
     const policy = resolveTargetPolicy(resolveConfig({}), { provider: MODEL, model: MODEL })
 
-    expect(() => resolveCompactSpec(policy, 1_000, 1_000))
-      .toThrow(/reserves 1000 completion tokens.*leaving no message budget/)
-    expect(() => resolveCompactSpec(policy, 1_000, 1_500))
-      .toThrow(/leaving no message budget/)
+    expect(resolveCompactSpec(policy, 1_000, 1_000)).toMatchObject({
+      thresholdTokens: 800,
+      retainTokens: 159,
+    })
+    expect(resolveCompactSpec(policy, 1_000, 1_500)).toMatchObject({
+      thresholdTokens: 800,
+      retainTokens: 159,
+    })
     expect(() => resolveCompactSpec(policy, 1_000, -1))
       .toThrow(/reservedCompletionTokens \(-1\) must be a non-negative integer/)
     expect(() => resolveCompactSpec(policy, 1_000, 1.5))
@@ -672,6 +721,38 @@ describe('pressure measurement and retention', () => {
     }))
 
     await expect(compactIfNeeded(compact, session)).resolves.not.toBeNull()
+  })
+
+  it('compacts against the configured window when the adapter output cap exceeds it', async () => {
+    const ctx = createContext(200)
+    const compact = service({ auto: false, thresholdRatio: 0.5, retainTokens: 50 }, ctx)
+    const session = conversation(4)
+    vi.spyOn(ctx.llm, 'resolveModelInfo').mockImplementation((provider, model) => Promise.resolve({
+      provider,
+      id: model,
+      name: model,
+      context: { contextWindow: 200 },
+      defaultMaxTokens: 256,
+    }))
+
+    await expect(compactIfNeeded(compact, session)).resolves.not.toBeNull()
+    expect(compact.calls).toHaveLength(1)
+  })
+
+  it('keeps occupancy under a larger window when the adapter output cap still does not fit', async () => {
+    const ctx = createContext(200_000)
+    const compact = service({ auto: false, thresholdRatio: 0.8, retainRatio: 0.16 }, ctx)
+    const session = conversation(4)
+    vi.spyOn(ctx.llm, 'resolveModelInfo').mockImplementation((provider, model) => Promise.resolve({
+      provider,
+      id: model,
+      name: model,
+      context: { contextWindow: 200_000 },
+      defaultMaxTokens: 256_000,
+    }))
+
+    await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
+    expect(compact.calls).toHaveLength(0)
   })
 
   it('requires capacity only for proactive pressure, not provider-confirmed overflow', async () => {
@@ -1980,7 +2061,33 @@ describe('automatic listener and loader composition', () => {
     ])
   })
 
-  it.each([1_000, 1_500])('warns once and continues when the output reserve is %i for a 1,000-token window', async (maxTokens) => {
+  it('compacts on pre-step when the adapter output cap exceeds the configured window', async () => {
+    const ctx = createContext(200)
+    const warnings: string[] = []
+    ctx.logger.warn = ((message: string) => void warnings.push(message)) as typeof ctx.logger.warn
+    vi.spyOn(ctx.llm, 'resolveModelInfo').mockResolvedValue({
+      provider: MODEL,
+      id: MODEL,
+      name: MODEL,
+      context: { contextWindow: 200 },
+      defaultMaxTokens: 256,
+    })
+    const compact = new TestCompactionEngine(ctx, {
+      headroomTokens: 0,
+      maxTokens: 8192,
+      thresholdRatio: 0.5,
+      retainTokens: 50,
+    })
+    const session = conversation(4)
+
+    await expect(preStep(ctx, agent(session, MODEL))).resolves.toEqual({ kind: 'enter', messages: [] })
+
+    expect(warnings).toEqual([])
+    expect(session.snapshotEvents().some(event => event.type === 'compaction/summary')).toBe(true)
+    expect(compact.calls).toHaveLength(1)
+  })
+
+  it('keeps pre-step pressure when headroom and output cap overflow the window', async () => {
     const ctx = createContext(1_000)
     const warnings: string[] = []
     ctx.logger.warn = ((message: string) => void warnings.push(message)) as typeof ctx.logger.warn
@@ -1989,20 +2096,15 @@ describe('automatic listener and loader composition', () => {
       id: MODEL,
       name: MODEL,
       context: { contextWindow: 1_000 },
-      defaultMaxTokens: maxTokens,
+      defaultMaxTokens: 1_500,
     })
     const compact = new TestCompactionEngine(ctx, {})
     const session = conversation(4)
-    const before = session.snapshotEvents()
 
     await expect(preStep(ctx, agent(session, MODEL))).resolves.toEqual({ kind: 'enter', messages: [] })
     await expect(preStep(ctx, agent(session, MODEL))).resolves.toEqual({ kind: 'enter', messages: [] })
 
-    expect(warnings).toEqual([
-      expect.stringContaining(`reserves ${maxTokens} completion tokens`),
-    ])
-    expect(warnings[0]).toContain('configure the adapter model\'s contextWindow above the effective request maxTokens')
-    expect(session.snapshotEvents()).toEqual(before)
+    expect(warnings).toEqual([])
     expect(compact.calls).toHaveLength(0)
   })
 

@@ -138,6 +138,51 @@ export function resolveTargetPolicy(
 }
 
 /**
+ * When reserved output plus headroom cannot share `contextWindow`, shrink
+ * them by the same factor into the slice past `thresholdRatio`.
+ *
+ * Adapter `maxTokens` is often a native output cap for a larger catalog
+ * window. Zeroing it would ignore that split; leaving it absolute would skip
+ * pressure compaction. Fitting models keep their absolute budgets so a large
+ * output cap still pulls the threshold down.
+ *
+ * @param contextWindow - configured occupancy envelope for the routed model.
+ * @param reservedCompletionTokens - envelope or adapter output cap.
+ * @param headroomTokens - extra pressure headroom deducted after the reservation.
+ * @param thresholdRatio - occupancy fraction that should remain the trigger.
+ * @returns the original pair when it still leaves a pressure budget; otherwise
+ *   a proportional pair whose pressure budget equals `floor(window * ratio)`.
+ */
+export function scalePressureBudgets(
+  contextWindow: number,
+  reservedCompletionTokens: number,
+  headroomTokens: number,
+  thresholdRatio: number,
+): { reservedCompletionTokens: number; headroomTokens: number } {
+  if (
+    !Number.isInteger(contextWindow) || contextWindow <= 0
+    || !Number.isInteger(reservedCompletionTokens) || reservedCompletionTokens < 0
+    || !Number.isInteger(headroomTokens) || headroomTokens < 0
+    || !Number.isFinite(thresholdRatio) || thresholdRatio <= 0
+  ) {
+    return { reservedCompletionTokens, headroomTokens }
+  }
+  if (contextWindow - reservedCompletionTokens - headroomTokens > 0) {
+    return { reservedCompletionTokens, headroomTokens }
+  }
+  const maxParked = contextWindow - Math.floor(contextWindow * thresholdRatio)
+  const parked = reservedCompletionTokens + headroomTokens
+  if (maxParked <= 0 || parked <= 0) {
+    return { reservedCompletionTokens: 0, headroomTokens: 0 }
+  }
+  const reserved = Math.floor(maxParked * reservedCompletionTokens / parked)
+  return {
+    reservedCompletionTokens: reserved,
+    headroomTokens: maxParked - reserved,
+  }
+}
+
+/**
  * Scale one routed policy into concrete token budgets for its model capacity.
  *
  * Pressure is capped by both the window fraction and the capacity remaining
@@ -168,21 +213,27 @@ export function resolveCompactSpec(
       + 'must be a non-negative integer',
     )
   }
-  const messageBudgetTokens = contextWindow - reservedCompletionTokens
+  const fitted = scalePressureBudgets(
+    contextWindow,
+    reservedCompletionTokens,
+    policy.headroomTokens,
+    policy.thresholdRatio,
+  )
+  const messageBudgetTokens = contextWindow - fitted.reservedCompletionTokens
   if (messageBudgetTokens <= 0) {
     throw new TargetPressureConfigError(
       targetKey,
-      `compaction-basic: ${targetKey} reserves ${reservedCompletionTokens} completion tokens `
+      `compaction-basic: ${targetKey} reserves ${fitted.reservedCompletionTokens} completion tokens `
       + `of its ${contextWindow}-token context window, leaving no message budget; configure `
       + "the adapter model's contextWindow above the effective request maxTokens",
     )
   }
-  const pressureBudgetTokens = messageBudgetTokens - policy.headroomTokens
+  const pressureBudgetTokens = messageBudgetTokens - fitted.headroomTokens
   if (pressureBudgetTokens <= 0) {
     throw new TargetPressureConfigError(
       targetKey,
-      `compaction-basic: ${targetKey} reserves ${reservedCompletionTokens} completion tokens `
-      + `and ${policy.headroomTokens} headroom tokens of its ${contextWindow}-token context `
+      `compaction-basic: ${targetKey} reserves ${fitted.reservedCompletionTokens} completion tokens `
+      + `and ${fitted.headroomTokens} headroom tokens of its ${contextWindow}-token context `
       + 'window, leaving no pressure budget; reduce the effective request maxTokens or '
       + 'compaction headroomTokens, or configure a larger adapter model contextWindow',
     )
