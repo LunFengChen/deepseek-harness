@@ -160,6 +160,28 @@ function conversation(turns = 4, text = 'fixture '.repeat(40).trim(), system?: s
   return session
 }
 
+/** Checkpoint-only surface whose request envelope alone exceeds the default test window. */
+function toolEnvelopeSession(): Session {
+  const session = Session.create(SessionId('short-checkpoint'))
+  session.append('turn/start', { turn: 1 })
+  session.append('user/message', createUserMessage({
+    content: [{ type: 'text', text: 'short checkpoint' }],
+    source: compactCheckpointSource(CompactionId('short-checkpoint')),
+  }), { surfaceOp: 'append' })
+  session.append('user/message', createUserMessage({
+    content: [{ type: 'text', text: 'tail' }],
+    source: { kind: 'user' },
+  }), { surfaceOp: 'append' })
+  session.append('request/header', {
+    header: {
+      config: { provider: MODEL, model: MODEL },
+      tools: [{ name: 'bulk', description: 'x'.repeat(100_000), parameters: { type: 'object' } }],
+    },
+    reason: 'initial',
+  })
+  return session
+}
+
 function toolConversation(): Session {
   const session = Session.create(SessionId('tools'))
   for (let turn = 1; turn <= 3; turn += 1) {
@@ -992,7 +1014,7 @@ describe('pressure measurement and retention', () => {
     expect(compact.calls).toHaveLength(1)
   })
 
-  it('skips pressure compaction when the only compactable span is a short checkpoint', async () => {
+  it('pressure-folds a checkpoint-only span once when occupancy is past the window', async () => {
     const ctx = createContext()
     const compact = service({
       auto: false,
@@ -1000,33 +1022,19 @@ describe('pressure measurement and retention', () => {
       retainTokens: 1,
       maxTokens: 8_192,
     }, ctx)
-    const session = Session.create(SessionId('short-checkpoint'))
-    session.append('turn/start', { turn: 1 })
-    session.append('user/message', createUserMessage({
-      content: [{ type: 'text', text: 'short checkpoint' }],
-      source: compactCheckpointSource(CompactionId('short-checkpoint')),
-    }), { surfaceOp: 'append' })
-    session.append('user/message', createUserMessage({
-      content: [{ type: 'text', text: 'tail' }],
-      source: { kind: 'user' },
-    }), { surfaceOp: 'append' })
-    session.append('request/header', {
-      header: {
-        config: { provider: MODEL, model: MODEL },
-        tools: [{ name: 'bulk', description: 'x'.repeat(100_000), parameters: { type: 'object' } }],
-      },
-      reason: 'initial',
-    })
+    const session = toolEnvelopeSession()
     expect(rangeLacksFoldableHistory(
       session,
       { start: session.surface.nodes[0]!, end: session.surface.nodes[0]! },
     )).toBe(true)
+    expect(ctx.tokenMeter.measure(session).totalTokens).toBeGreaterThanOrEqual(1_000)
 
     await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
-    expect(compact.calls).toHaveLength(0)
+    expect(compact.calls).toHaveLength(1)
+    expect(ctx.tokenMeter.measure(session).totalTokens).toBeGreaterThanOrEqual(1_000)
   })
 
-  it('skips pressure compaction for an oversized checkpoint-only span', async () => {
+  it('pressure-folds an oversized checkpoint-only span that can land under the window', async () => {
     const compact = service({
       auto: false,
       thresholdRatio: 0.5,
@@ -1048,8 +1056,9 @@ describe('pressure measurement and retention', () => {
       reason: 'initial',
     })
 
-    await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
-    expect(compact.calls).toHaveLength(0)
+    const result = await compactIfNeeded(compact, session)
+    expect(result).not.toBeNull()
+    expect(compact.calls).toHaveLength(1)
   })
 
   it('overflow-compacts a surface larger than the summarizer window', async () => {
@@ -1111,6 +1120,70 @@ describe('pressure measurement and retention', () => {
       session,
       { start: SessionSeq(99_999), end: SessionSeq(99_999) },
     )).toBe(false)
+  })
+
+  it('pressure-folds leading checkpoints when occupancy is past the window', async () => {
+    const compact = service({
+      auto: false,
+      thresholdRatio: 0.5,
+      retainTokens: 1,
+      maxTokens: 8_192,
+    })
+    const session = Session.create(SessionId('occupancy-checkpoint-prefix'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'old checkpoint '.repeat(400) }],
+      source: compactCheckpointSource(CompactionId('old-checkpoint')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'newer history '.repeat(20) }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'tail' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('request/header', {
+      header: { config: { provider: MODEL, model: MODEL } },
+      reason: 'initial',
+    })
+
+    const result = await compactIfNeeded(compact, session)
+    expect(result).not.toBeNull()
+    expect(compact.calls).toHaveLength(1)
+    expect(summarizedText(compact.calls[0]!.input)).toContain('old checkpoint')
+  })
+
+  it('overflow-folds leading checkpoints after a skip slice that cannot land under the window', async () => {
+    const compact = service({
+      auto: false,
+      thresholdRatio: 0.5,
+      retainTokens: 1,
+      maxTokens: 8_192,
+    })
+    const session = Session.create(SessionId('overflow-occupancy-prefix'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'old checkpoint '.repeat(400) }],
+      source: compactCheckpointSource(CompactionId('old-overflow-checkpoint')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'newer history '.repeat(20) }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'tail' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('request/header', {
+      header: { config: { provider: MODEL, model: MODEL } },
+      reason: 'initial',
+    })
+
+    const result = await compactIfNeeded(compact, session, 'context-overflow')
+    expect(result).not.toBeNull()
+    expect(compact.calls.length).toBeGreaterThanOrEqual(1)
+    expect(compact.calls.some(call => summarizedText(call.input).includes('old checkpoint'))).toBe(true)
   })
 
   it('skips a leading compact-checkpoint when selecting a foldable range', () => {
@@ -1962,6 +2035,17 @@ describe('automatic listener and loader composition', () => {
     return Object.assign(new Error(message), { code: CONTEXT_WINDOW_EXCEEDED_CODE })
   }
 
+  function proposeRequest(
+    ctx: Context,
+    owner: Agent,
+    seed: { provider: string; model: string; maxTokens?: number } = { provider: MODEL, model: MODEL },
+  ) {
+    return agentEvents(ctx, owner).waterfall(
+      'agent/request', { turn: 1, step: 1, signal: SIGNAL },
+      () => Promise.resolve(seed),
+    )
+  }
+
   it('compacts before a step above threshold using the durable routed model and remains idle below it', async () => {
     const ctx = createContext()
     const compact = new TestCompactionEngine(ctx, {
@@ -2108,6 +2192,64 @@ describe('automatic listener and loader composition', () => {
     expect(compact.calls).toHaveLength(0)
   })
 
+  it('blocks the turn when occupancy remains past the window after pressure compaction', async () => {
+    const ctx = createContext()
+    const warnings: string[] = []
+    ctx.logger.warn = ((message: string) => void warnings.push(message)) as typeof ctx.logger.warn
+    const compact = new TestCompactionEngine(ctx, {
+      thresholdRatio: 0.5,
+      retainTokens: 1,
+      maxTokens: 8_192,
+    })
+    const session = toolEnvelopeSession()
+
+    await expect(preStep(ctx, agent(session, MODEL))).resolves.toEqual({ kind: 'reject' })
+    expect(compact.calls).toHaveLength(1)
+    expect(warnings).toContainEqual(expect.stringContaining('blocking the turn'))
+  })
+
+  it('caps request maxTokens to the remaining occupancy window', async () => {
+    const ctx = createContext(200)
+    vi.spyOn(ctx.llm, 'resolveModelInfo').mockImplementation((provider, model) => Promise.resolve({
+      provider,
+      id: model,
+      name: model,
+      context: { contextWindow: 200 },
+      defaultMaxTokens: 256,
+    }))
+    void new TestCompactionEngine(ctx, { headroomTokens: 0, maxTokens: 8_192 })
+    const session = conversation(1)
+    const occupancy = ctx.tokenMeter.measure(session).totalTokens
+    expect(occupancy).toBeLessThan(200)
+
+    await expect(proposeRequest(ctx, agent(session, MODEL))).resolves.toMatchObject({
+      maxTokens: 200 - occupancy,
+    })
+  })
+
+  it('recomputes the remaining output cap from the adapter default, not a prior envelope', async () => {
+    const ctx = createContext(200)
+    vi.spyOn(ctx.llm, 'resolveModelInfo').mockImplementation((provider, model) => Promise.resolve({
+      provider,
+      id: model,
+      name: model,
+      context: { contextWindow: 200 },
+      defaultMaxTokens: 256,
+    }))
+    void new TestCompactionEngine(ctx, { headroomTokens: 0, maxTokens: 8_192 })
+    const session = conversation(1)
+    const occupancy = ctx.tokenMeter.measure(session).totalTokens
+    const remaining = 200 - occupancy
+    expect(remaining).toBeGreaterThan(0)
+    expect(remaining).toBeLessThan(256)
+
+    await expect(proposeRequest(ctx, agent(session, MODEL), {
+      provider: MODEL,
+      model: MODEL,
+      maxTokens: 1,
+    })).resolves.toMatchObject({ maxTokens: remaining })
+  })
+
   it('force-compacts below normal pressure for canonical overflow and retries only after replacement', async () => {
     const ctx = createContext(10_000)
     void new TestCompactionEngine(ctx, {
@@ -2220,7 +2362,7 @@ describe('automatic listener and loader composition', () => {
   })
 
   it('preserves the newest whole tool-call/result pair during forced overflow compaction', async () => {
-    const ctx = createContext()
+    const ctx = createContext(10_000)
     void new TestCompactionEngine(ctx, {
       headroomTokens: 0,
       maxTokens: 8192,
@@ -2238,6 +2380,39 @@ describe('automatic listener and loader composition', () => {
     expect(currentResult).toBeDefined()
     expect(toolPairingBalancedBefore(session, currentAssistant!)).toBe(true)
     expect(toolPairingBalancedAfter(session, currentResult!)).toBe(true)
+  })
+
+  it('does not retry overflow when occupancy remains past the window', async () => {
+    const ctx = createContext()
+    const warnings: string[] = []
+    ctx.logger.warn = ((message: string) => void warnings.push(message)) as typeof ctx.logger.warn
+    const compact = new TestCompactionEngine(ctx, {
+      thresholdRatio: 0.5,
+      retainTokens: 1,
+      maxTokens: 8_192,
+    })
+    const session = Session.create(SessionId('overflow-envelope'))
+    session.append('turn/start', { turn: 1 })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'checkpoint '.repeat(400) }],
+      source: compactCheckpointSource(CompactionId('overflow-envelope')),
+    }), { surfaceOp: 'append' })
+    session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'tail' }],
+      source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    session.append('request/header', {
+      header: {
+        config: { provider: MODEL, model: MODEL },
+        tools: [{ name: 'bulk', description: 'x'.repeat(100_000), parameters: { type: 'object' } }],
+      },
+      reason: 'initial',
+    })
+
+    expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(false)
+    expect(compact.calls).toHaveLength(1)
+    expect(session.surface.replaceGeneration).toBe(1)
+    expect(warnings).toContainEqual(expect.stringContaining('preserving the original request error'))
   })
 
   it('does not retry when a backend reports success without replacing the surface', async () => {
