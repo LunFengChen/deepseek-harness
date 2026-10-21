@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-speech-to-text-sensevoice",
   "description": "Local SenseVoice ONNX transcription with a managed sherpa-onnx process",
-  "version": "0.1.7-rc.3",
+  "version": "0.1.7-rc.4",
   "publishConfig": {
     "access": "public"
   },

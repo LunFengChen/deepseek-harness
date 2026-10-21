@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-schedule",
   "description": "Host task management page and Session reminder catalog",
-  "version": "0.1.7-rc.3",
+  "version": "0.1.7-rc.4",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",

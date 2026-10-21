@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-hmr",
   "description": "Web client graph synchronization and rebuilt-bundle reload transport",
-  "version": "0.1.7-rc.3",
+  "version": "0.1.7-rc.4",
   "publishConfig": {
     "access": "public"
   },

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-browser-use",
   "description": "Exclusive named browser-use provider registration",
-  "version": "0.1.7-rc.3",
+  "version": "0.1.7-rc.4",
   "publishConfig": {
     "access": "public"
   },
