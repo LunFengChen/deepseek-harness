@@ -31,7 +31,7 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
 export const NS = 'settings.pluginInventory'
 
 /** Services required by the Settings registration and generated Remote face. */
-export const inject = ['slots', 'locale', 'remote', 'remote.pluginInventory']
+export const inject = ['slots', 'locale', 'remote', 'remote.pluginInventory', 'modules']
 
 /** Contribute the inventory and xfdsh preset-plugin tabs to the Plugins settings section. */
 export function apply(ctx: ClientContext): void {
@@ -59,6 +59,7 @@ export function apply(ctx: ClientContext): void {
     presetDisplayText(preset, agentPresetCopy).name
   const injected = (surface: PluginInventorySettingsTabInjected['surface']): PluginInventorySettingsTabInjected => ({
     list, setEnabled, presetName, surface,
+    resolveText: text => ctx.locale.resolveText(text),
     hooks: { clientSync: ctx.modules.entries.state },
     retryClient: () => { void ctx.modules.entries.retry().catch((error: unknown) => { ctx.logger.error(error) }) },
   })

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-llm",
   "description": "Provider-neutral LLM service interface for the DeepSeek Harness",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -17,10 +17,6 @@
     ".": {
       "types": "./lib/types/index.d.ts",
       "default": "./lib/index.js"
-    },
-    "./invariant": {
-      "types": "./lib/types/invariant.d.ts",
-      "default": "./lib/invariant.js"
     },
     "./types": {
       "types": "./lib/types/types.d.ts",
@@ -47,11 +43,12 @@
       "default": "./lib/typert.remote-client.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
-    "lib/invariant.js",
     "lib/types/**/*.js",
     "lib/types/**/*.d.ts",
     "lib/typert.host.js",
@@ -66,7 +63,7 @@
   "dependencies": {
     "@x1a0f3n9/dsh-util-crypto": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:~",
-    "zod": "^4.4.3",
+    "zod": "4.4.3",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
     "@x1a0f3n9/dsh-brand": "workspace:*",
     "@x1a0f3n9/dsh-util-values": "workspace:*",
@@ -74,7 +71,6 @@
   },
   "devDependencies": {
     "@x1a0f3n9/dsh-attachment": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
     "@deepseek-ai/cordis": "workspace:~"
   }
 }

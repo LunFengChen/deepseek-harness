@@ -1,5 +1,5 @@
 /**
- * SessionProjectionCache behavior: mandatory-point writes (turn/end, truncate, detach),
+ * SessionProjectionCache behavior: mandatory-point writes (turn/end, detach),
  * count/interval throttling between them, fail-soft durability (a failed
  * write logs and stays stale, never throws into the event path), and the
  * synchronous cached listing read. The durable medium is the
@@ -33,7 +33,6 @@ import {
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
 } from '@x1a0f3n9/dsh-storage-domain'
-import { titleProjectionDefinition } from '@x1a0f3n9/dsh-session-title'
 import SessionProjectionCache from '../src/index.ts'
 import { checkpointRecord, projectionCacheDomainSpec } from '../src/spec.ts'
 import type { CheckpointRecord } from '../src/spec.ts'
@@ -46,11 +45,13 @@ declare module '@x1a0f3n9/dsh-session-projection/types' {
     'cache-test/count': number
     'cache-test/secret': string
     'cache-test/marks3': MarksState
+    title: string | null
   }
   interface SessionProjectionMap {
     'cache-test/marks': { marks: string[] }
     'cache-test/secondary-marks': { marks: string[] }
     'cache-test/marks3': { marks: string[] }
+    title: string | null
   }
 }
 
@@ -108,6 +109,16 @@ const secondaryMarksUnit = {
   },
   stateVersion: 1,
 } satisfies ProjectionDefinition<'cache-test/secondary-marks', MarksState>
+
+/** Mirrors the shipped title unit's storage face (stateVersion 1, bare-string state). */
+const titleUnit = {
+  key: 'title',
+  stateSchema: z.string().nullable(),
+  init: () => null,
+  apply: state => state,
+  wire: { viewSchema: z.string().nullable(), view: state => state },
+  stateVersion: 1,
+} satisfies ProjectionDefinition<'title', string | null>
 
 /** One session's record document on the per-record medium. */
 const recordPath = (root: string, id: Session['id']): string =>
@@ -216,24 +227,6 @@ describe('SessionProjectionCache write policy', () => {
     await written
     expect((await storedRows(root, session.id))?.['cache-test/marks'])
       .toEqual({ ver: 1, seq: end.seq, val: { marks: ['a'] } })
-  })
-
-  it('rewrites the durable checkpoint after the live session log is truncated', async () => {
-    const { ctx, root } = await harness()
-    const session = ctx.sessions.create(SessionId('truncate-cache'))
-    mark(session, ['keep'])
-    const firstEnd = endTurn(session)
-    mark(session, ['drop'])
-    const secondEnd = endTurn(session)
-    await vi.waitFor(async () => {
-      expect((await storedRows(root, session.id))?.['cache-test/marks'])
-        .toEqual({ ver: 1, seq: secondEnd.seq, val: { marks: ['drop'] } })
-    }, { timeout: 5_000 })
-    session.truncate(SessionLogOffset(firstEnd.seq + 1))
-    await vi.waitFor(async () => {
-      expect((await storedRows(root, session.id))?.['cache-test/marks'])
-        .toEqual({ ver: 1, seq: firstEnd.seq, val: { marks: ['keep'] } })
-    }, { timeout: 5_000 })
   })
 
   it('writes a checkpoint at session creation, capturing the seed-derived cut', async () => {
@@ -464,7 +457,7 @@ describe('SessionProjectionCache listing read', () => {
       },
     )
     const { ctx, cache } = await harness({ root })
-    ctx.sessionProjections.register(titleProjectionDefinition)
+    ctx.sessionProjections.register(titleUnit)
     const seededHeader = { ...headerOf(id), isSeeded: true }
 
     // An older format generation never serves the full block, but its title
@@ -474,31 +467,6 @@ describe('SessionProjectionCache listing read', () => {
       .toEqual({ asOfSeq: 3, values: { title: 'forked title' } })
     // An unseeded header names another lifecycle: no title either.
     expect(cache.cachedPredecessorTitle(headerOf(id))).toBeUndefined()
-  })
-
-  it('serves a seeded listing hint from the stored inherited cut', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'dsh-projcache-'))
-    roots.push(root)
-    const id = SessionId('listed-seeded')
-    await seedRecord(
-      root,
-      id,
-      { 'cache-test/marks': { ver: 1, seq: SessionSeq(1), val: { marks: ['seed'] } } },
-      {
-        formatVersion: SESSION_FORMAT_VERSION,
-        createdAt: 0,
-        cwd: '/work',
-        isSeeded: true,
-        inheritedEventCount: SessionLogOffset(2),
-      },
-    )
-    const { cache } = await harness({ root })
-    const seededHeader = { ...headerOf(id, 0, '/work'), isSeeded: true }
-
-    expect(cache.cachedSnapshot(seededHeader)?.values['cache-test/marks'])
-      .toEqual({ marks: ['seed'] })
-    expect(cache.cachedSnapshot({ ...seededHeader, cwd: '/elsewhere' })).toBeUndefined()
-    expect(cache.cachedSnapshot(headerOf(id, 0, '/work'))).toBeUndefined()
   })
 
   it('serves a creation-time checkpoint at the before-first-event cursor', async () => {

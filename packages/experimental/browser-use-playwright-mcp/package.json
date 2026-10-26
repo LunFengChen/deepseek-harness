@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-browser-use-playwright-mcp",
   "description": "Experimental per-Session Chromium browser tools through @playwright/mcp",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -37,7 +37,8 @@
     "@x1a0f3n9/dsh-browser-use": "workspace:*",
     "@x1a0f3n9/dsh-agent": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
-    "@x1a0f3n9/dsh-system-prompt": "workspace:*"
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
@@ -50,6 +51,7 @@
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
-    "@x1a0f3n9/dsh-session-projection": "workspace:*"
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   }
 }

@@ -1,0 +1,8 @@
+- insert:
+    - id: experimental-inspector
+      name: '@x1a0f3n9/dsh-experimental-inspector'
+      disabled: false
+      config:
+        captureFetch: true
+    - id: session-inspector
+      name: '@x1a0f3n9/dsh-experimental-session-inspector'

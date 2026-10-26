@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-agent-preset",
   "description": "Declare an Agent capability composition in Cordis YAML",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -19,9 +19,11 @@
       "default": "./lib/index.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "skills",
     "lib/types/**/*.d.ts"
@@ -42,8 +44,9 @@
     "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
     "@x1a0f3n9/dsh-compaction-tool-result-pruner": "workspace:*",
     "@x1a0f3n9/dsh-skill": "workspace:*",
+    "@x1a0f3n9/dsh-skill-filesystem": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:~",
     "@types/js-yaml": "^4.0.9",
-    "js-yaml": "^4.2.0"
+    "js-yaml": "^4.3.2"
   }
 }

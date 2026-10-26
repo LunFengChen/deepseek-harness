@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { officialClientBuildEnvironment, writeClientBuildRecord } from '../client-build-environment.ts'
+import { ON_DEMAND_BUNDLES } from '../../packages/boot/app-boot/src/official-bundles.ts'
 import { releaseFamily, type ReleaseMember } from './families.ts'
 import { compareVersions, nextVendorVersion, planShared, reachesPayload } from './bump.ts'
 
@@ -52,22 +53,49 @@ describe('release families', () => {
       '@x1a0f3n9/dsh-experimental-agent-team',
       '@x1a0f3n9/dsh-experimental-api-speech-to-text',
       '@x1a0f3n9/dsh-experimental-auto-review',
+      '@x1a0f3n9/dsh-experimental-badge-skill-bundle',
       '@x1a0f3n9/dsh-experimental-browser-use-chrome-devtools-mcp',
       '@x1a0f3n9/dsh-experimental-browser-use-playwright-mcp',
       '@x1a0f3n9/dsh-experimental-browser-use-runtime',
       '@x1a0f3n9/dsh-experimental-browser-use-stagehand-native',
+      '@x1a0f3n9/dsh-experimental-claude-code-mods',
       '@x1a0f3n9/dsh-experimental-client-ui-agent-team',
+      '@x1a0f3n9/dsh-experimental-client-ui-claude-code-mods',
+      '@x1a0f3n9/dsh-experimental-client-ui-cot-translation',
       '@x1a0f3n9/dsh-experimental-client-ui-voice-input',
       '@x1a0f3n9/dsh-experimental-computer-use-cua-driver-mcp',
       '@x1a0f3n9/dsh-experimental-computer-use-cua-driver-native',
+      '@x1a0f3n9/dsh-experimental-cot-translation-bundle',
+      '@x1a0f3n9/dsh-experimental-cua-macos',
+      '@x1a0f3n9/dsh-cua',
+      '@x1a0f3n9/dsh-hook-protocol',
+      '@x1a0f3n9/dsh-hooks-claude-code',
+      '@x1a0f3n9/dsh-hooks-codex',
+      '@x1a0f3n9/dsh-experimental-inspector-profile',
       '@x1a0f3n9/dsh-experimental-inspector',
+      '@x1a0f3n9/dsh-experimental-plugin-market-bundle',
       '@x1a0f3n9/dsh-experimental-ptc-runtime-python',
+      '@x1a0f3n9/dsh-experimental-ralph-bundle',
+      '@x1a0f3n9/dsh-experimental-session-inspector',
+      '@x1a0f3n9/dsh-experimental-session-search',
+      '@x1a0f3n9/dsh-session-title-all-prompts-llm',
+      '@x1a0f3n9/dsh-experimental-session-titles-bundle',
+      '@x1a0f3n9/dsh-skill-badge',
       '@x1a0f3n9/dsh-experimental-speech-to-text-sensevoice',
       '@x1a0f3n9/dsh-experimental-speech-to-text',
+      '@x1a0f3n9/dsh-experimental-terminal-bundle',
       '@x1a0f3n9/dsh-experimental-tool-agent-team',
+      '@x1a0f3n9/dsh-tool-ralph',
+      '@x1a0f3n9/dsh-tool-session-query',
+      '@x1a0f3n9/dsh-tool-terminal',
+      '@x1a0f3n9/dsh-experimental-tool-worktree',
+      '@x1a0f3n9/dsh-experimental-translator',
       '@x1a0f3n9/dsh-experimental-voice-input-bundle',
+      '@x1a0f3n9/dsh-webhook-github',
+      '@x1a0f3n9/dsh-webhook',
       '@x1a0f3n9/dsh-experimental-webworker-packer',
       '@x1a0f3n9/dsh-experimental-webworker-runtime',
+      '@x1a0f3n9/dsh-experimental-worktree',
     ])
   })
 
@@ -99,14 +127,6 @@ describe('release families', () => {
     ])
   })
 
-  it('requires dsh members to use the @x1a0f3n9 scope', () => {
-    const root = mkdtempSync(join(tmpdir(), 'dsh-release-scope-'))
-    roots.push(root)
-    write(join(root, 'apps/public/package.json'), '{"name":"@x1a0f3n9/dsh-public","version":"0.0.1"}\n')
-
-    expect(() => { releaseFamily('dsh').members(root) }).toThrow(/must name a @x1a0f3n9 package/)
-  })
-
   it('bumps private dsh workspaces without adding release tags', () => {
     const root = mkdtempSync(join(tmpdir(), 'dsh-release-version-'))
     roots.push(root)
@@ -121,7 +141,7 @@ describe('release families', () => {
 
     expect(planned.map(entry => ({ path: entry.manifestPath, tag: entry.tag }))).toEqual([
       { path: 'package.json', tag: undefined },
-      { path: 'packages/core/published/package.json', tag: 'xfdsh-v0.0.2' },
+      { path: 'packages/core/published/package.json', tag: 'dsh-v0.0.2' },
       { path: 'apps/desktop/package.json', tag: undefined },
       { path: 'packages/experimental/prototype/package.json', tag: undefined },
     ])
@@ -139,7 +159,7 @@ describe('release families', () => {
       const plan = planShared(dsh, root, [published], version)
 
       expect(plan.version).toBe(version)
-      expect(plan.planned[1]?.tag).toBe(`xfdsh-v${version}`)
+      expect(plan.planned[1]?.tag).toBe(`dsh-v${version}`)
     },
   )
 
@@ -149,7 +169,7 @@ describe('release families', () => {
     const cli = member('apps/cli', '@x1a0f3n9/dsh')
     const cordis = { ...member('vendor/cordis', '@deepseek-ai/cordis'), version: '4.0.1' }
 
-    expect(dsh.tagFor(cli)).toBe('xfdsh-v0.0.1')
+    expect(dsh.tagFor(cli)).toBe('dsh-v0.0.1')
     expect(vendor.tagFor(cordis)).toBe('vendor-cordis-v4.0.1')
     // The prefix is constructed, not recovered from a tag: a version with a
     // hyphen would defeat any suffix-stripping.
@@ -163,8 +183,7 @@ describe('release families', () => {
 
     expect(dsh.distTagForVersion('0.0.2-alpha.1')).toBe('alpha')
     expect(dsh.distTagForVersion('0.0.2-canary.1')).toBe('canary')
-    expect(dsh.distTagForVersion('0.0.2-rc.1')).toBeUndefined()
-    expect(dsh.distTagForVersion('0.0.2-beta.1')).toBeUndefined()
+    expect(dsh.distTagForVersion('0.0.2-rc.1')).toBe('next')
     expect(dsh.distTagForVersion('0.0.2')).toBeUndefined()
     expect(vendor.distTagForVersion('4.0.1-alpha.1')).toBe('next')
     expect(vendor.distTagForVersion('4.0.1-canary.1')).toBe('next')
@@ -221,6 +240,52 @@ describe('release families', () => {
       '@x1a0f3n9/dsh-consumer',
       '@x1a0f3n9/dsh-zebra',
     ])
+  })
+
+  it('publishes on-demand catalog members before dsh without adding installed dependencies', () => {
+    const dsh = member('apps/cli', '@x1a0f3n9/dsh')
+    const providers = ON_DEMAND_BUNDLES.map(name => member(`packages/subagent/${name}`, name))
+    const plan = releaseFamily('dsh').publishOrder([dsh, ...providers])
+    expect(plan.order.map(entry => entry.name)).toEqual([...ON_DEMAND_BUNDLES, dsh.name])
+    expect(dsh.manifest).toEqual({})
+    expect(plan.droppedPeerEdges).toEqual([])
+  })
+
+  it('rejects an advertised provider missing from the public release family', () => {
+    expect(() => releaseFamily('dsh').publishOrder([member('apps/cli', '@x1a0f3n9/dsh')]))
+      .toThrow('Official catalog prerequisite')
+  })
+
+  it('keeps catalog prerequisites ahead of a dsh peer declaration', () => {
+    const dsh = member('apps/cli', '@x1a0f3n9/dsh')
+    const providers = ON_DEMAND_BUNDLES.map(name => member(`packages/subagent/${name}`, name, {
+      peerDependencies: { '@x1a0f3n9/dsh': 'workspace:*' },
+    }))
+    const plan = releaseFamily('dsh').publishOrder([dsh, ...providers])
+    expect(plan.order.map(entry => entry.name)).toEqual([...ON_DEMAND_BUNDLES, dsh.name])
+    expect(plan.droppedPeerEdges).toEqual(ON_DEMAND_BUNDLES.map(name => ({ consumer: name, peer: dsh.name })))
+  })
+
+  it.each(['dependencies', 'optionalDependencies', 'peerDependencies'])(
+    'requires exact packed DSH %s while preserving external ranges', (section) => {
+      const pkg = member('packages/example/provider', '@x1a0f3n9/dsh-provider')
+      const family = releaseFamily('dsh')
+      const manifest = { name: pkg.name, version: pkg.version, [section]: { '@x1a0f3n9/dsh-tools': pkg.version, external: '^4.0.0' } }
+      expect(() => { family.validatePackedManifest(pkg, manifest) }).not.toThrow()
+      for (const range of ['workspace:*', '^0.0.1', '~0.0.1', '0.0.2', '*']) {
+        expect(() => { family.validatePackedManifest(pkg, { ...manifest, [section]: { '@x1a0f3n9/dsh-tools': range } }) })
+          .toThrow(`packed ${section}.@x1a0f3n9/dsh-tools must equal`)
+      }
+    },
+  )
+
+  it('checks packed identities and preserves independent vendor versions', () => {
+    const pkg = member('vendor/example', '@deepseek-ai/example')
+    const family = releaseFamily('vendor')
+    expect(() => { family.validatePackedManifest(pkg, { name: pkg.name, version: pkg.version, dependencies: { '@x1a0f3n9/dsh-tools': '^4.0.0' } }) })
+      .not.toThrow()
+    expect(() => { family.validatePackedManifest(pkg, { name: '@deepseek-ai/other', version: pkg.version }) }).toThrow('packed identity')
+    expect(() => { family.validatePackedManifest(pkg, { name: pkg.name, version: '0.0.2' }) }).toThrow('packed identity')
   })
 
   it('reports a runtime dependency cycle instead of emitting an arbitrary order', () => {
@@ -301,7 +366,7 @@ describe('release families', () => {
     // would order this, and the traversal drops the install edge instead. That
     // order would publish charlie before the alpha it installs, so it is refused
     // here rather than published.
-    expect(() => { dsh.publishOrder(members) }).toThrow(/no publish order honours @x1a0f3n9\/dsh-charlie -> @x1a0f3n9\/dsh-alpha/)
+    expect(() => { dsh.publishOrder(members) }).toThrow(/no publish order honours @deepseek-ai\/dsh-charlie -> @deepseek-ai\/dsh-alpha/)
   })
 
   it('ignores devDependencies when ordering', () => {

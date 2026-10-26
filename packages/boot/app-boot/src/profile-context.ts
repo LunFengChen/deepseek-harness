@@ -54,6 +54,17 @@ export function resolveTelemetryPatch(disabledEnv: string | undefined, hasRow: b
   return { id: TELEMETRY_ROW_ID, disabled: true }
 }
 
+/** Read the selected bundles' patches, which apply before the profile patch file.
+ * @param binName Diagnostic prefix for malformed or missing configuration.
+ * @param context Data supplied by the profile launcher.
+ * @param initialProfile Already loaded startup profile; omitted reads the current files.
+ * @returns Bundle patches in application order.
+ */
+export function readBundlePatches(binName: string, context: ProfileContext, initialProfile?: Profile): PatchOptions[] {
+  const profile = initialProfile ?? loadProfileDirectory(binName, context.dir, context.installAnchor, { userLayer: false })
+  return profile.layers.flatMap(layer => layer.patches)
+}
+
 /** Read current bundle and user layers with the launch-time overlays.
  * @param binName Diagnostic prefix for malformed or missing configuration.
  * @param context Data supplied by the profile launcher.

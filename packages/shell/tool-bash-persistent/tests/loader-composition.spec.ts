@@ -1,4 +1,5 @@
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { provideWorkingDirectoryFixture, unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -20,7 +21,6 @@ import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
 import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime from '@x1a0f3n9/dsh-tools'
 import * as ToolBashPersistent from '@x1a0f3n9/dsh-tool-bash-persistent'
-import { unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 let root: string | undefined
 let context: Context | undefined
@@ -104,6 +104,8 @@ suite('persistent Bash through a real cordis.yml Loader composition', () => {
     ].join('\n'))
 
     context = new Context()
+
+    provideWorkingDirectoryFixture(context)
     context.baseUrl = pathToFileURL(root).href + '/'
     await context.plugin(Loader)
     context.loader.builtins.include = Include

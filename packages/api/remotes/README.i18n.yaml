@@ -5,33 +5,33 @@
 /:
   en: 1c32778606f3027a
   zh: db7994fdb50333c8
-/x1a0f3n9-dsh-api-remotes:
-  en: 570c580b89f4a5eb
-  zh: 35e180d7b0e026fb
-/x1a0f3n9-dsh-api-remotes/summary:
+/deepseek-ai-dsh-api-remotes:
+  en: f0e152bd9c846ec4
+  zh: dba8ab5fa1181276
+/deepseek-ai-dsh-api-remotes/summary:
   en: 3c54c157bb823fd0
   zh: 0db6778e94ae671c
-/x1a0f3n9-dsh-api-remotes/table-of-contents:
+/deepseek-ai-dsh-api-remotes/table-of-contents:
   en: a7a78c6d1aeebeb3
   zh: 4bb69f32d8b05ba3
-/x1a0f3n9-dsh-api-remotes/use-this-package:
-  en: ad308b5e0e72b37e
-  zh: 0216aa8618e39f02
-/x1a0f3n9-dsh-api-remotes/forwarded-host-events:
-  en: d6d82bf0e55ae5e9
-  zh: c3a0c80f8b115039
-/x1a0f3n9-dsh-api-remotes/build-boundary:
-  en: 668871461b8f1b4d
-  zh: a7aad4663ed31701
-/x1a0f3n9-dsh-api-remotes/model-experience:
+/deepseek-ai-dsh-api-remotes/use-this-package:
+  en: a80d44e0683768a5
+  zh: 379833ac180e5418
+/deepseek-ai-dsh-api-remotes/forwarded-host-events:
+  en: 31bb9a2f50094b84
+  zh: 226c055739d5def7
+/deepseek-ai-dsh-api-remotes/build-boundary:
+  en: 7a9934a3ba5b185f
+  zh: 40457fd5707f57f0
+/deepseek-ai-dsh-api-remotes/model-experience:
   en: 6a60ae036c71e76f
   zh: bf5e86a5ac5b4be4
-/x1a0f3n9-dsh-api-remotes/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-api-remotes/model-experience/kv-cache-effect:
   en: 6b51b98ce6368599
   zh: 3d7a63126352741d
-/x1a0f3n9-dsh-api-remotes/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-api-remotes/known-limitations-and-deferred-work:
   en: 00a837c9e7b5a800
   zh: 1b86e789327b7798
-/x1a0f3n9-dsh-api-remotes/known-limitations-and-deferred-work/dev-note:
-  en: 947ba019d2a6a7e7
-  zh: ad4d687f3bc77dbb
+/deepseek-ai-dsh-api-remotes/known-limitations-and-deferred-work/dev-note:
+  en: d60df1790fac729c
+  zh: cfc4e027025639bf

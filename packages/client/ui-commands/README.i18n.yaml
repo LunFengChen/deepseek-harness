@@ -5,42 +5,42 @@
 /:
   en: e85ec1ccd1b80d98
   zh: 1272b2ae6abeabdc
-/x1a0f3n9-dsh-client-ui-commands:
-  en: f04b76b145e7795c
-  zh: 2f5ee04f2826b5b8
-/x1a0f3n9-dsh-client-ui-commands/summary:
+/deepseek-ai-dsh-client-ui-commands:
+  en: 095001426d586338
+  zh: 80dec4efefd726f7
+/deepseek-ai-dsh-client-ui-commands/summary:
   en: 770b1f492ac735e7
   zh: 5602493729149219
-/x1a0f3n9-dsh-client-ui-commands/table-of-contents:
+/deepseek-ai-dsh-client-ui-commands/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-client-ui-commands/use-this-package:
+/deepseek-ai-dsh-client-ui-commands/use-this-package:
   en: 01adce72791579fa
   zh: 70eb55a1529038e7
-/x1a0f3n9-dsh-client-ui-commands/use-this-package/kinds-and-decorations:
-  en: 86841942f6989fbb
-  zh: 901557d3a5d0528e
-/x1a0f3n9-dsh-client-ui-commands/use-this-package/built-in-row-faces:
+/deepseek-ai-dsh-client-ui-commands/use-this-package/kinds-and-decorations:
+  en: 57679a20574d8b3f
+  zh: 98d5e5a7781e6de1
+/deepseek-ai-dsh-client-ui-commands/use-this-package/built-in-row-faces:
   en: e96156be95ea87e3
   zh: f5350db26483ec9f
-/x1a0f3n9-dsh-client-ui-commands/use-this-package/attachment-carrying-submissions:
+/deepseek-ai-dsh-client-ui-commands/use-this-package/attachment-carrying-submissions:
   en: 4feecdbec0c3f39e
   zh: 618944ecade8a3a2
-/x1a0f3n9-dsh-client-ui-commands/understand-the-implementation:
-  en: 0fd2b19e41605440
-  zh: 52d5c653b877a1f0
-/x1a0f3n9-dsh-client-ui-commands/further-exploration:
+/deepseek-ai-dsh-client-ui-commands/understand-the-implementation:
+  en: a44d56484412ac85
+  zh: 6d6012485211908c
+/deepseek-ai-dsh-client-ui-commands/further-exploration:
   en: 409c04f534d23de7
   zh: 165022d7a0a554eb
-/x1a0f3n9-dsh-client-ui-commands/model-experience:
+/deepseek-ai-dsh-client-ui-commands/model-experience:
   en: 3ec197644f2fe6ce
   zh: a06a6fe8909b064f
-/x1a0f3n9-dsh-client-ui-commands/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-client-ui-commands/model-experience/kv-cache-effect:
   en: 08efc268737977ca
   zh: 7772a59064ea4039
-/x1a0f3n9-dsh-client-ui-commands/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-client-ui-commands/known-limitations-and-deferred-work:
   en: cfce26d6a603cb7d
   zh: 8332a8d1ad44abcf
-/x1a0f3n9-dsh-client-ui-commands/known-limitations-and-deferred-work/dev-note:
-  en: 2f5e19244ac6c305
-  zh: e43b52ae5b4af798
+/deepseek-ai-dsh-client-ui-commands/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98

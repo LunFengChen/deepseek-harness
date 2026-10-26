@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-spill-policy",
   "description": "Token-budgeted tool-result retention with recoverable text and image paths",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -23,9 +23,11 @@
       "default": "./lib/types/notice.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/types/**/*.js",
     "lib/types/**/*.d.ts"
@@ -68,6 +70,7 @@
     "@x1a0f3n9/dsh-ptc-runtime": "workspace:*",
     "@x1a0f3n9/dsh-attachment-local": "workspace:*",
     "@x1a0f3n9/dsh-tool-fs": "workspace:*",
-    "sharp": "^0.35.3"
+    "sharp": "0.35.5",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*"
   }
 }

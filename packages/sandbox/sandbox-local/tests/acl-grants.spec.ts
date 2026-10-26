@@ -50,6 +50,7 @@ vi.mock('@x1a0f3n9/dsh-sandbox-windows-acl', () => {
     }
   }
   return {
+    registerAclDiagnosisSkill: vi.fn(),
     AclWriteGrant: MockAclWriteGrant,
     assertTempRootOutsideWorkspace: (workspaceRoot: string, tempRoot: string) => {
       const workspace = realpathSync.native(workspaceRoot)

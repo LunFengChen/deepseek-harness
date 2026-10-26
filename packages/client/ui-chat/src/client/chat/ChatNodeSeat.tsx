@@ -1,26 +1,30 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import type { ReactNode } from 'react'
 import { JsonBlock } from '@x1a0f3n9/dsh-client-ui-primitives'
 import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type { ConversationLocationDataStore, ConversationTurnDataMap } from '@x1a0f3n9/dsh-client-ui-conversation/client'
-import type { ChatNodeHookContext, ChatNodeOwnerProps, ChatViewSlotProps, UsePresentation } from '../contract/slots.ts'
+import type { ChatNodeHookContext, ChatNodeOwnerProps, ChatFlowSlotProps, UsePresentation } from '../contract/slots.ts'
 import type { ChatNode } from '../contract/chat-nodes.ts'
-import { TURN_PROCESS_INDEPENDENT_KINDS } from '../contract/turn-process.ts'
-import { storedTurnProcessEntry } from '../stores.ts'
-import { useSearchableHidden } from './searchable-hidden.ts'
-import { UserMessageFallbackView } from './MessageItem.tsx'
+import type { ChatNodeStore } from '../contract/snapshot.ts'
+import { isAtOrOutside } from '../contract/group-tree.ts'
+import { turnProcessAlwaysOpen } from '../contract/turn-process.ts'
+import { turnProcessOpen } from '../stores.ts'
+import { hiddenOrCollapsing } from './flow-motion.ts'
 import css from './ChatView.module.css'
 
 interface ChatNodeSeatProps extends ChatNodeOwnerProps {
   readonly nodeKey: string
-  readonly useChatNode: ChatViewSlotProps['useChatNode']
-  readonly useChatNodeProcess: ChatViewSlotProps['useChatNodeProcess']
+  /** A replaced Builder must rebind keyed hooks even when references and keys survive. */
+  readonly nodeStore: ChatNodeStore
+  readonly useChatNode: ChatFlowSlotProps['useChatNode']
+  readonly useChatNodeProcess: ChatFlowSlotProps['useChatNodeProcess']
   readonly usePresentation: UsePresentation
-  readonly historyIncomplete: boolean
-  readonly useStore: ChatViewSlotProps['useStore']
-  readonly actions: ChatViewSlotProps['actions']
-  readonly renderSlot: ChatViewSlotProps['renderSlot']
-  readonly t: ChatViewSlotProps['t']
+  readonly useStore: ChatFlowSlotProps['useStore']
+  readonly actions: ChatFlowSlotProps['actions']
+  readonly renderSlot: ChatFlowSlotProps['renderSlot']
+  readonly t: ChatFlowSlotProps['t']
+  readonly useChatNodeBottom: ChatFlowSlotProps['useChatNodeBottom']
+  readonly deferCollapse: boolean
+  readonly useGroupAction: ChatFlowSlotProps['useGroupAction']
 }
 
 type RoutedChatNodeOwner = {
@@ -37,99 +41,68 @@ function turnOf(node: ChatNode | undefined): number | undefined {
   return location?.kind === 'turn' || location?.kind === 'step' ? location.turn.turn : undefined
 }
 
-function isUserStyleChatNode(node: ChatNode): node is ChatNode<'user' | 'steering'> {
-  return node.kind === 'user' || node.kind === 'steering'
-}
-
-/** Admitted steering reuses the user keyed occupant; the seat wrapper keeps kind steering. */
-function chatNodeRendererKey(node: ChatNode): ChatNode['kind'] {
-  return isUserStyleChatNode(node) ? 'user' : node.kind
-}
-
-/** User and steering rows stay ordinary bubbles when the keyed renderer is absent. */
-function chatNodeFallback(
-  owner: RoutedChatNodeOwner,
-  t: ChatViewSlotProps['t'],
-): ReactNode {
-  if (isUserStyleChatNode(owner.node)) {
-    return (
-      <UserMessageFallbackView
-        node={owner.node}
-        renderMessageImages={owner.renderMessageImages}
-        openFile={owner.openFile}
-        openSkill={owner.openSkill}
-        t={t}
-      />
-    )
-  }
-  return (
-    <JsonBlock
-      label={t('message.unknownSurface', { type: owner.node.kind })}
-      payload={owner.node.data}
-      truncatedLabel={total => t('json.truncated', { total })}
-    />
-  )
-}
-
-/** Subscribe, apply Turn-process visibility, and dispatch one stable Context key. */
+/**
+ * Subscribe, apply Turn-process visibility, and dispatch one stable Context key.
+ * Policy reads select this seat's own conclusion, so a mode change re-renders
+ * only seats whose visibility actually changes.
+ */
 export const ChatNodeSeat = memo(function ChatNodeSeat({
-  nodeKey, groupPart, useChatNode, useChatNodeProcess, usePresentation, historyIncomplete,
-  cwd, openFile, openSkill, inspectCall, forkAt,
-  loadImage, renderMessageImages, fileMentions, useStore, actions, renderSlot, t,
+  nodeKey, groupPart, useChatNode, useChatNodeProcess, usePresentation,
+  cwd, openFile, inspectCall, forkAt,
+  loadImage, fileMentions, useStore, actions, renderSlot, t, useChatNodeBottom, deferCollapse, useGroupAction,
 }: ChatNodeSeatProps) {
-  const compactTranscript = usePresentation(policy => policy.mode === 'compact')
+  const bottom = useChatNodeBottom(nodeKey)
   const node = useChatNode(nodeKey)
   const routedNode = node as ChatNode | undefined
   const turn = turnOf(routedNode)
   const processPresentation = useChatNodeProcess(nodeKey)
   const processSpec = processPresentation?.spec
-  const storedEntry = useStore(state => processSpec === undefined
-    ? undefined
-    : storedTurnProcessEntry(state, processSpec.turn))
-  const processEntry = processSpec !== undefined
-    && processSpec.answerStep !== null
-    && storedEntry?.answerStep === processSpec.answerStep
-    ? storedEntry
-    : undefined
-  const processOpen = processEntry !== undefined
+  const storedOpen = useStore(state => processSpec !== undefined
+    && turnProcessOpen(state, processSpec, bottom === true && deferCollapse))
+  const liveProcess = processPresentation !== undefined && !processPresentation.turnClosed
+  const interleavedInput = processPresentation?.hasInterleavedInput === true
+  const alwaysOpen = liveProcess || interleavedInput || turnProcessAlwaysOpen(routedNode)
+  const processOpen = alwaysOpen || storedOpen
   const setOpen = useCallback((open: boolean) => {
-    if (processSpec !== undefined && processSpec.answerStep !== null) {
-      actions.setTurnProcessOpen(processSpec.turn, processSpec.answerStep, open)
+    if (processSpec !== undefined && !alwaysOpen) {
+      actions.setTurnProcessOpen(processSpec.turn, processSpec.answerStep ?? 0, open)
     }
-  }, [actions, processSpec])
+  }, [actions, processSpec, alwaysOpen])
+  const foldCompleted = usePresentation(policy => policy.foldCompletedTurns)
+  // A loaded end makes a partial historical Turn eligible without its start.
   const processWindowReady = processSpec !== undefined
     && processPresentation !== undefined
-    && compactTranscript
-    && processSpec.answerAnchorSeq !== null
+    && foldCompleted
     && processPresentation.turn === processSpec.turn
-    && processPresentation.turnClosed
-    && !historyIncomplete
+    && (processPresentation.turnStarted || processPresentation.turnClosed)
   const processMember = routedNode !== undefined
     && processWindowReady
-    && !TURN_PROCESS_INDEPENDENT_KINDS.has(routedNode.kind)
+    && !isAtOrOutside(routedNode, 'turn')
     && routedNode.anchorSeq >= processSpec.processStartSeq
-    && routedNode.anchorSeq < processSpec.answerAnchorSeq
+    && (liveProcess || processSpec.answerAnchorSeq === null || routedNode.anchorSeq < processSpec.answerAnchorSeq
+      || (groupPart === 'reasoning' && routedNode.kind === 'assistant-step' && routedNode.data.step === processSpec.answerStep))
   const processAnswer = routedNode !== undefined
     && processWindowReady
+    && !liveProcess
+    && groupPart !== 'reasoning'
     && routedNode.kind === 'assistant-step'
     && routedNode.data.step === processSpec.answerStep
   const ownsDisclosure = routedNode?.kind === 'turn-process' || processAnswer
   const foldable = processWindowReady
-    && (processMember || (ownsDisclosure
-      && (processPresentation.hasExternalProcess || processSpec.inlineReasoning)))
+    && (liveProcess || processMember || ownsDisclosure)
   const turnProcess = useMemo(() => processSpec === undefined
     ? undefined
     : {
       spec: processSpec,
       foldable,
-      hasContent: processPresentation?.hasExternalProcess === true || processSpec.inlineReasoning,
+      hasContent: !interleavedInput && (processPresentation?.hasExternalProcess === true || processSpec.inlineReasoning),
       open: processOpen,
       setOpen,
     }, [
-    foldable, processOpen, processSpec, processPresentation?.hasExternalProcess, setOpen,
+    foldable, interleavedInput, processOpen, processSpec, processPresentation?.hasExternalProcess, setOpen,
   ])
   const controllerInactive = routedNode?.kind === 'turn-process'
-    && !foldable
+    && foldCompleted && !foldable
   const compactAnswer = processAnswer
     && foldable
     && processPresentation.compactAnswer
@@ -138,12 +111,14 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
   const revealProcess = useCallback(() => {
     if (processMember) setOpen(true)
   }, [processMember, setOpen])
-  const wrapperRef = useSearchableHidden(processHidden, revealProcess)
+  const wrapperRef = useGroupAction(processHidden, revealProcess)
   const [disclosureReset] = useState(() => createSnapshotStore(0))
   const turnData = turnDataOf(routedNode)
-  const hookContext = useMemo<ChatNodeHookContext>(() => ({ turnData, disclosureReset }), [turnData, disclosureReset])
+  const hookContext = useMemo<ChatNodeHookContext>(
+    () => ({ turnData, disclosureReset, useGroupAction }), [turnData, disclosureReset, useGroupAction],
+  )
   useEffect(() => {
-    if (processMember && processHidden && wrapperRef.current?.hasAttribute('hidden')) {
+    if (processMember && processHidden && wrapperRef.current !== null && hiddenOrCollapsing(wrapperRef.current)) {
       disclosureReset.set(disclosureReset.getSnapshot() + 1)
     }
   }, [processMember, processHidden, wrapperRef, disclosureReset])
@@ -153,28 +128,30 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
       ...groupPart === undefined ? {} : { groupPart },
       cwd,
       openFile,
-      openSkill,
       inspectCall,
       forkAt,
       loadImage,
-      renderMessageImages,
       fileMentions,
       turnProcess,
     }, [
-    node, groupPart, cwd, openFile, openSkill, inspectCall, forkAt,
-    loadImage, renderMessageImages, fileMentions, turnProcess,
+    node, groupPart, cwd, openFile, inspectCall, forkAt,
+    loadImage, fileMentions, turnProcess,
   ])
   if (routedNode === undefined || owner === null) return null
-  // User-style nodes share the user keyed occupant; other kinds keep their
-  // discriminant. TypeScript does not distribute an object containing a union
-  // into a union of objects itself.
+  // Runtime dispatch owns the correlation: every Node's discriminant is the
+  // keyed-slot entry passed alongside that same Node. TypeScript does not
+  // distribute an object containing a union into a union of objects itself.
   const routedOwner = { ...owner, node: routedNode } as RoutedChatNodeOwner
+  const flowKey = groupPart === undefined || groupPart === 'response' ? routedNode.key : JSON.stringify([routedNode.key, groupPart])
   return (
     <div
       ref={wrapperRef}
       className={css.flowItem}
-      data-chat-anchor-key={routedNode.key}
-      data-chat-flow-key={routedNode.key}
+      data-chat-anchor-key={flowKey}
+      data-chat-flow-key={flowKey}
+      data-chat-paging-anchor={routedNode.kind !== 'turn-process' || undefined}
+      data-chat-node-key={routedNode.key}
+      data-chat-group-part={groupPart}
       data-chat-flow-kind={routedNode.kind}
       data-chat-turn={turn}
       data-turn-process-member={processMember || undefined}
@@ -182,9 +159,15 @@ export const ChatNodeSeat = memo(function ChatNodeSeat({
       data-turn-process-answer={compactAnswer || undefined}
     >
       {renderSlot('conversation.chat.node', routedOwner, {
-        entryKey: chatNodeRendererKey(routedNode),
+        entryKey: routedNode.kind,
         hookContext,
-        fallback: chatNodeFallback(routedOwner, t),
+        fallback: (
+          <JsonBlock
+            label={t('message.unknownSurface', { type: routedNode.kind })}
+            payload={routedNode.data}
+            truncatedLabel={total => t('json.truncated', { total })}
+          />
+        ),
       })}
     </div>
   )

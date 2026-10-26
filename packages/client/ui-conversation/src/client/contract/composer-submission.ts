@@ -9,3 +9,23 @@ export type InputSubmitMode = BusyEnterBehavior
 
 /** Keyboard gesture whose delivery mode the submission policy resolves. */
 export type ComposerSubmitGesture = 'enter' | 'accelerated'
+
+/** Session facts captured when a message submission starts, before asynchronous command arbitration. */
+export interface MessageSubmissionState {
+  readonly sessionId?: import('@x1a0f3n9/dsh-session/types').SessionId
+  readonly model?: { readonly provider: string; readonly name: string; readonly effort?: string }
+  readonly runMode: 'default' | 'plan' | 'goal'
+  readonly running: boolean
+  /** Whether the Session is still blank, so this message is its first. */
+  readonly newSession: boolean
+  /** Agent preset id the Session records, when known. */
+  readonly agentPreset?: string
+}
+
+/** Immutable occurrence and delivery intent carried by one composer attempt. */
+export interface MessageSubmission {
+  readonly timestamp: number
+  readonly source?: 'click' | 'enter'
+  readonly mode: InputSubmitMode
+  readonly state?: MessageSubmissionState
+}

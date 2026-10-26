@@ -10,6 +10,7 @@
  * only the Turn-level card.
  */
 import { isAppendSurfaceEvent } from '@x1a0f3n9/dsh-session/surface'
+import { PartialArguments } from '@x1a0f3n9/dsh-util-values'
 import type {
   ConversationMatch, ConversationNodeDefinition, ToolResultNode, TurnLocation,
 } from '@x1a0f3n9/dsh-client-ui-conversation/client'
@@ -112,6 +113,8 @@ function createdTask(match: ConversationMatch, call: ScheduleCall): ToolResultNo
     seq: match.event.seq,
     time: match.event.time,
     callId: String(match.event.data.message.source.callId),
+    name: call.name,
+    args: PartialArguments.fromText(call.argsRaw),
     call: { name: call.name, argsRaw: call.argsRaw },
     callTime: call.time,
     content: message.content,

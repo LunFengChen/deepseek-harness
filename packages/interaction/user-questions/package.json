@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-user-questions",
   "description": "Abstract user-questions seam (ctx.userQuestions) for asking the human during agent runs",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -23,24 +23,50 @@
       "default": "./lib/types/types.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./typert": {
+      "types": "./lib/typert.host.d.ts",
+      "default": "./lib/typert.host.js"
+    },
+    "./remote": {
+      "types": "./lib/typert.remote-client.d.ts",
+      "default": "./lib/typert.remote-client.js"
+    },
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/types/**/*.js",
-    "lib/types/**/*.d.ts"
+    "lib/types/**/*.d.ts",
+    "lib/typert.host.js",
+    "lib/typert.host.d.ts",
+    "lib/typert.remote-client.js",
+    "lib/typert.remote-client.d.ts"
   ],
   "license": "MIT",
   "peerDependencies": {
     "@x1a0f3n9/dsh-agent": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-scope": "workspace:*",
-    "@deepseek-ai/cordis": "workspace:~"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*"
   },
   "devDependencies": {
     "@x1a0f3n9/dsh-agent": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-scope": "workspace:*",
-    "@deepseek-ai/cordis": "workspace:~"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*"
+  },
+  "dependencies": {
+    "zod": "4.4.3",
+    "@deepseek-ai/schemastery": "workspace:~"
   }
 }

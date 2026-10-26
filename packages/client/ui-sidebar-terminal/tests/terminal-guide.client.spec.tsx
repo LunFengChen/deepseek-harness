@@ -2,7 +2,7 @@
 /** Guide shell discovery, direct launch and cancellation stay within the entry lifetime. */
 import { act, cleanup, fireEvent, render } from '@testing-library/react'
 import { afterEach, expect, it, vi } from 'vitest'
-import { makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
+import { allowAllAccess, makeTranslate } from '@x1a0f3n9/dsh-client-test-runtime'
 import type { TerminalLaunchShells } from '@x1a0f3n9/dsh-api-terminal-controller/client'
 import type { GlobalStandardProps, SessionStandardProps } from '@x1a0f3n9/dsh-client-ui-slots'
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
@@ -19,7 +19,8 @@ const standard: GlobalStandardProps & SessionStandardProps = {
   useInput: unused, useChat: unused, useTrajectory: unused,
   usePanelInfo: unused, useSessions: unused, useSessionStatus: unused,
   useSessionRetainInfo: unused, useResource: unused, useWorkspaces: unused,
-  inputActions: { captureInsertion: unused, insertText: unused, setDraft: unused,
+  ...allowAllAccess,
+  inputActions: { captureInsertion: unused, insertText: unused, setDraft: unused, persistDraft: unused,
     addAttachments: unused, removeAttachment: unused, pruneAttachments: unused, submit: unused },
 }
 const choices: TerminalLaunchShells = {

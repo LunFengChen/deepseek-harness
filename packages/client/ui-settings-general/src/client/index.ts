@@ -3,7 +3,8 @@
  * `sidebar.settings` occupant — panel chrome, section navigation, and the
  * onboarding stage — and registers everything on the Settings pages that
  * belongs to no single feature: the trigger/header chrome content,
- * local-document action, General section, and `settings` dictionaries.
+ * local-document action, General section, `settings` dictionaries, and the
+ * Host release change confirmation.
  * Feature-owned rows and sections stay with their features.
  * Export discipline: packages/client/AGENTS.md.
  */
@@ -11,6 +12,8 @@ import type { Context as ClientContext } from '@deepseek-ai/cordis'
 // Type-only: pulls the ctx.remote merge and its fixed Host facts.
 import type {} from '@x1a0f3n9/dsh-api-remotes/client'
 import type { ConnectionHandle } from '@x1a0f3n9/dsh-client-connection/client'
+// Type-only: pulls the ctx.modules merge.
+import type {} from '@x1a0f3n9/dsh-client-modules/client'
 import { resolveSlotLabel } from '@x1a0f3n9/dsh-client-ui-slots'
 import { closeTopModal } from '@x1a0f3n9/dsh-client-ui-primitives'
 // Type-only: the settings slot declarations plus the ctx.configForms Context
@@ -21,6 +24,7 @@ import type {} from '@x1a0f3n9/dsh-client-ui-settings/client'
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import type {} from '@x1a0f3n9/dsh-client-ui-session/client'
+import type {} from '@x1a0f3n9/dsh-client-product-analytics/client'
 import type {
   SettingsOnboardingStep, SettingsRootInjected, SettingsSectionRow,
 } from './shell-contract.ts'
@@ -37,6 +41,7 @@ import { DeveloperToolsRow, type DeveloperToolsRowInjected } from './DeveloperTo
 import { SettingsDocumentAction } from './SettingsDocumentAction.tsx'
 import type { SettingsDocumentActionInjected } from './SettingsDocumentAction.tsx'
 import { SettingsDocumentStore } from './settings-document-store.ts'
+import { HostReleasePrompt, type HostReleasePromptInjected } from './HostReleasePrompt.tsx'
 import { en, zh, type SettingsKey } from './locales.ts'
 
 export type {
@@ -65,7 +70,7 @@ const NS = 'settings'
  * ui-settings' apply, whose activation order relative to this one is NOT
  * constrained; registrations depend on their slots through `slots.inject()`.
  */
-export const inject = ['slots', 'locale', 'connection', 'remote', 'remote.settings', 'configForms', 'shortcuts']
+export const inject = ['slots', 'locale', 'connection', 'remote', 'remote.settings', 'configForms', 'shortcuts', 'modules']
 
 /**
  * Register the `settings` dictionaries, the chrome content, and the General
@@ -77,10 +82,18 @@ export function apply(ctx: ClientContext): void {
     name: 'settings.general.item', id: 'developer-tools', order: 15, locale: NS,
     inject: (): DeveloperToolsRowInjected => ({
       hooks: { developerTools: ctx.configForms.developerTools.enabled },
-      setEnabled: enabled => ctx.configForms.developerTools.setEnabled(enabled),
+      setEnabled: async (enabled) => {
+        const settings = ctx.configForms.get<{ enabled: boolean }>('ui-settings')
+        const previous = settings.getSnapshot().value?.enabled
+        const timestamp = Date.now()
+        await ctx.configForms.developerTools.setEnabled(enabled)
+        if (previous !== undefined && previous !== enabled && settings.getSnapshot().value?.enabled === enabled) {
+          ctx.get('productAnalytics')?.track('code_work_view_toggle', { is_enabled: enabled }, timestamp)
+        }
+      },
     }),
   }, DeveloperToolsRow))
-  // Last row: every feature-registered preference row orders below 100.
+  // Version information follows the core preferences.
   ctx.slots.inject('settings.general.item', () => ctx.slots.register({
     name: 'settings.general.item', id: 'current-version', order: 100, locale: NS,
   }, CurrentVersionRow))
@@ -182,8 +195,8 @@ export function apply(ctx: ClientContext): void {
         'desktop:macos': { code: 'Comma', modifiers: ['primary'] },
         'desktop:windows': { code: 'Comma', modifiers: ['primary'] },
         'desktop:linux': { code: 'Comma', modifiers: ['primary'] },
-        'web:macos': { code: 'Comma', modifiers: ['primary'] },
-        'web:windows': { code: 'Comma', modifiers: ['primary'] },
+        'web:macos': { code: 'Comma', modifiers: ['primary', 'alt'] },
+        'web:windows': { code: 'Comma', modifiers: ['primary', 'alt'] },
       },
       regions: ['page', 'editable', 'terminal'], modals: ['settings'],
       resolve: ({ modal }) => {
@@ -236,4 +249,13 @@ export function apply(ctx: ClientContext): void {
     locale: NS,
     children: { 'settings.general.item': { kind: 'list', scope: 'root' } },
   }, GeneralSection))
+  // The page's module system applies no plugin update from another Host release; this dialog offers the reload.
+  const releasePromptInjected = (): HostReleasePromptInjected => ({
+    dismissRelease: () => { ctx.modules.entries.dismissRelease() },
+    reloadPage: () => { globalThis.location.reload() },
+    hooks: { releaseChange: ctx.modules.entries.releaseChange },
+  })
+  ctx.slots.inject('shell.overlay', () => ctx.slots.register({
+    name: 'shell.overlay', id: 'host-release-change', locale: NS, inject: releasePromptInjected,
+  }, HostReleasePrompt))
 }

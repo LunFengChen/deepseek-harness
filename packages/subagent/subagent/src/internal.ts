@@ -9,7 +9,7 @@ import type { ContentBlock, MessageId, MessageSource } from '@x1a0f3n9/dsh-llm'
 import type { SessionId } from '@x1a0f3n9/dsh-session'
 import type { ToolDefinition } from '@x1a0f3n9/dsh-tools'
 import type SubagentRuntime from './index.ts'
-import type { SubagentDelivery } from './inbox.ts'
+import type { SubagentDelivery } from './control-types.ts'
 
 /** Process-stable identity carried only by the standard adjacent-Agent messaging tool. */
 export const adjacentAgentSendMessageTool = Symbol.for('dsh.subagent.adjacentAgentSendMessageTool')

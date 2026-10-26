@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-experimental-ptc-runtime-python",
   "description": "CPython subprocess implementation of the DeepSeek Harness PTC execution seam",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
@@ -27,13 +27,20 @@
     "@x1a0f3n9/dsh-ptc-runtime": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
     "@deepseek-ai/cordis": "workspace:~",
-    "@x1a0f3n9/dsh-util-values": "workspace:*"
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*"
   },
   "devDependencies": {
     "@x1a0f3n9/dsh-ptc-runtime": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
     "@deepseek-ai/cordis": "workspace:~",
-    "@x1a0f3n9/dsh-util-values": "workspace:*"
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-local": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:~"

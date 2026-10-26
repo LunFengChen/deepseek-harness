@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-win32-process",
   "description": "Shared low-level Win32 process, stdio, and Job Object primitives",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@x1a0f3n9/dsh-lazy-require": "workspace:*",
-    "koffi": "^3.1.0"
+    "koffi": "3.1.1"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:~"

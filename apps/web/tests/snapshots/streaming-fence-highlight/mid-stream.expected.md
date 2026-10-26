@@ -6,14 +6,15 @@
   - tablist:
     - tab "Chat" [selected]
     - tab "Trajectory"
+  - button "More conversation views"
 - text: Stream one TypeScript fence for the highlighting snapshot. {{clock}}
 - button "Copy"
-- status: Deep diving...
-- button "Deep diving for {{duration}}" [disabled] [expanded]
 - text: ts
 - button "Wrap lines" [pressed]
 - button "Copy"
 - code: "const first: number = 1 const second = \"two\" let tail"
+- status: Deep diving
+- text: Deep diving for {{duration}} ···
 - textbox "Message or run a task, / commands, @ files or sessions"
 - button "Add files or run commands"
 - 'button "Access mode, current: Workspace Write"': Workspace Write

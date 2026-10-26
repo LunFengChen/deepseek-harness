@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-session-telemetry-otel",
-  "description": "OpenTelemetry backend for the DeepSeek Harness telemetry seam: hands captured session records to the OTel JS SDK's log pipeline",
-  "version": "0.1.7-rc.4",
+  "description": "Feedback-authorized Session logs over byte-bounded OpenTelemetry HTTP requests",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -19,20 +19,17 @@
       "default": "./lib/index.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
   "dependencies": {
-    "@opentelemetry/api": "^1.9.1",
-    "@opentelemetry/api-logs": "^0.220.0",
-    "@opentelemetry/exporter-logs-otlp-http": "^0.220.0",
-    "@opentelemetry/otlp-exporter-base": "^0.220.0",
-    "@opentelemetry/resources": "^2.9.0",
-    "@opentelemetry/sdk-logs": "^0.220.0",
+    "@opentelemetry/api-logs": "0.222.0",
     "@deepseek-ai/schemastery": "workspace:~"
   },
   "peerDependencies": {
@@ -42,7 +39,8 @@
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-telemetry": "workspace:*",
     "@x1a0f3n9/dsh-anonymous-user-id": "workspace:*",
-    "@deepseek-ai/cordis": "workspace:~"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-otel": "workspace:*"
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-logger-console": "workspace:~",
@@ -60,6 +58,7 @@
     "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
     "@x1a0f3n9/dsh-anonymous-user-id": "workspace:*",
     "@deepseek-ai/cordis": "workspace:~",
-    "@x1a0f3n9/dsh-http-proxy": "workspace:*"
+    "@x1a0f3n9/dsh-http-proxy": "workspace:*",
+    "@x1a0f3n9/dsh-otel": "workspace:*"
   }
 }

@@ -59,6 +59,16 @@ describe('Pill', () => {
 })
 
 describe('Input', () => {
+  it('exposes its native input for focus and releases the ref on unmount', () => {
+    const ref = createRef<HTMLInputElement>()
+    const { unmount } = render(<Input ref={ref} aria-label="Search" />)
+    expect(ref.current).toBe(screen.getByRole('textbox', { name: 'Search' }))
+    ref.current?.focus()
+    expect(document.activeElement).toBe(ref.current)
+    unmount()
+    expect(ref.current).toBeNull()
+  })
+
   it('forwards value/onChange and renders the leading icon', () => {
     const onChange = vi.fn()
     render(<Input icon={<svg data-testid="ic" />} value="q" onChange={onChange} placeholder="search" />)
@@ -67,6 +77,21 @@ describe('Input', () => {
     fireEvent.change(input, { target: { value: 'qq' } })
     expect(onChange).toHaveBeenCalled()
     expect(screen.getByTestId('ic')).toBeDefined()
+  })
+})
+
+describe('MenuItemButton', () => {
+  it('exposes the current page without preventing activation and clears it when selection moves', () => {
+    const onSelect = vi.fn()
+    const { rerender } = render(<MenuItemButton current onSelect={onSelect}>Notes</MenuItemButton>)
+    const row = screen.getByRole('menuitem', { name: 'Notes' })
+    expect(row.getAttribute('aria-current')).toBe('page')
+    fireEvent.click(row)
+    expect(onSelect).toHaveBeenCalledOnce()
+    rerender(<MenuItemButton current={false} onSelect={onSelect}>Notes</MenuItemButton>)
+    expect(row.hasAttribute('aria-current')).toBe(false)
+    rerender(<MenuItemButton onSelect={onSelect}>Notes</MenuItemButton>)
+    expect(row.hasAttribute('aria-current')).toBe(false)
   })
 })
 

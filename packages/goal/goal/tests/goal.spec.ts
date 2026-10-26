@@ -14,6 +14,7 @@ import GoalService, {
 } from '@x1a0f3n9/dsh-goal'
 import type { GoalChangeMeta, GoalRef, GoalSnapshotChangeMeta } from '@x1a0f3n9/dsh-goal'
 import { createInboxStub } from '@x1a0f3n9/dsh-agent-loop-testkit'
+import { remoteMethods } from '@x1a0f3n9/dsh-typert-protocol'
 
 declare module '@x1a0f3n9/dsh-llm' {
   interface MessageSourceMap {
@@ -152,7 +153,7 @@ describe('GoalService creation and replay', () => {
     vi.useRealTimers()
   })
 
-  it('uses 100000 rounds by default and validates create input inside create', async () => {
+  it('uses 256 rounds by default and validates create input inside create', async () => {
     const { ctx, agent } = await harness()
     expect(() => ctx.goals.create(agent, { objective: '   ' })).toThrow(expect.objectContaining({
       code: 'GOAL_INVALID_OBJECTIVE',
@@ -165,7 +166,7 @@ describe('GoalService creation and replay', () => {
     expect(() => ctx.goals.create(agent, {
       objective: 'x', maxGoalRounds: Number.MAX_SAFE_INTEGER + 1,
     })).toThrow(GoalError)
-    expect(ctx.goals.create(agent, { objective: 'x' }).maxGoalRounds).toBe(100000)
+    expect(ctx.goals.create(agent, { objective: 'x' }).maxGoalRounds).toBe(256)
   })
 
   it('also resolves the default when constructed directly without Cordis config normalization', async () => {
@@ -177,8 +178,18 @@ describe('GoalService creation and replay', () => {
     const goals = new GoalService(ctx)
     await new Promise(resolve => setImmediate(resolve))
     expect(goals.create(stub.agent, { objective: 'direct' })).toMatchObject({
-      objective: 'direct', maxGoalRounds: 100000,
+      objective: 'direct', maxGoalRounds: 256,
     })
+  })
+
+  it('declares no resource readers on goals/get, leaving its Session resource to the Agent lookup', async () => {
+    const ctx = new Context()
+    await ctx.plugin(AgentRegistry)
+    await ctx.plugin(SessionProjectionRegistry)
+    const goals = new GoalService(ctx)
+    const marker = remoteMethods(goals).find(method => method.method === 'get')
+    expect(marker).toMatchObject({ method: 'get' })
+    expect(marker?.resources).toBeUndefined()
   })
 
   it('rejects invalid direct configuration', async () => {
@@ -538,31 +549,6 @@ describe('GoalService mutations', () => {
     })
   })
 
-  it('rejects a corrupt append while preserving the valid prefix', async () => {
-    const { ctx, agent, session } = await harness()
-    expect(ctx.goals.get(agent)).toBeUndefined()
-    const change: GoalSnapshotChangeMeta = {
-      kind: 'goal/change',
-      version: 1,
-      operation: 'create',
-      goal: {
-        id: GoalId('goal-valid-prefix'),
-        revision: 1,
-        objective: 'valid prefix',
-        phase: 'active',
-        maxGoalRounds: 4,
-      },
-      roundsStarted: 0,
-      createdAt: 12,
-      updatedAt: 12,
-    }
-    session.append('goal/change', change)
-    expect(() => {
-      session.append('goal/change', { ...change, operation: 'edit', extra: true } as never)
-    }).toThrow('snapshot change must have exactly')
-
-    expect(ctx.goals.get(agent)).toMatchObject({ id: change.goal.id, objective: 'valid prefix' })
-  })
 })
 
 describe('goal replay validation', () => {

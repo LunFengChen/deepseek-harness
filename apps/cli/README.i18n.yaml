@@ -2,21 +2,21 @@
 # section, a hash of its English and Chinese blocks outside code blocks and generated regions.
 # After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write apps/cli/README.md
-/x1a0f3n9-dsh:
-  en: a3a46bbc907cf458
-  zh: 1232943801d4a218
-/x1a0f3n9-dsh/entry-modes:
-  en: 093936b9e1a59bea
-  zh: 12be7d2d931d9671
-/x1a0f3n9-dsh/app-arguments:
+/deepseek-ai-dsh:
+  en: ebdc75fa0da18801
+  zh: 5c6cd2554b8f8a98
+/deepseek-ai-dsh/entry-modes:
+  en: a1e035a813554366
+  zh: b87053214afe71b6
+/deepseek-ai-dsh/app-arguments:
   en: cc03e6b75206661b
   zh: 99e41f4143198352
-/x1a0f3n9-dsh/profiles:
-  en: 66ce4590bae1f92b
-  zh: 4c85bbcb8fae9ffd
-/x1a0f3n9-dsh/optional-overlays:
+/deepseek-ai-dsh/profiles:
+  en: 523477a093beb0c2
+  zh: f88ea21e5fbea969
+/deepseek-ai-dsh/optional-overlays:
   en: 3a40ddc44e55f79c
   zh: 8d3949132e1ef93c
-/x1a0f3n9-dsh/development:
-  en: b764b7b068bbf8cb
-  zh: 5aeed3b0c3ad15df
+/deepseek-ai-dsh/development:
+  en: 0a289c1235869927
+  zh: a1f473f70036ad37

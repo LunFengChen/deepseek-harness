@@ -1,0 +1,19 @@
+- insert:
+    - id: optional-persistent-terminals
+      name: cordis:group
+      group: true
+      isolate:
+        terminals: true
+      config:
+        - id: optional-terminal-registry
+          name: '@x1a0f3n9/dsh-terminal'
+        - id: optional-terminal-bash
+          name: '@x1a0f3n9/dsh-terminal-bash'
+          disabled: !!js process.platform === 'win32'
+        - id: optional-terminal-pwsh
+          name: '@x1a0f3n9/dsh-terminal-bash'
+          disabled: !!js process.platform !== 'win32'
+          config:
+            shellDialect: pwsh
+        - id: optional-tool-terminal
+          name: '@x1a0f3n9/dsh-tool-terminal'

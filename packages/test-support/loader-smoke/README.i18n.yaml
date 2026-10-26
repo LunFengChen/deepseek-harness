@@ -5,54 +5,54 @@
 /:
   en: 00a7ac59f751e4d0
   zh: 35334966b956621d
-/x1a0f3n9-dsh-loader-smoke:
-  en: 7ef4cd9eca2a6a20
-  zh: b412cde5bde6b873
-/x1a0f3n9-dsh-loader-smoke/summary:
+/deepseek-ai-dsh-loader-smoke:
+  en: 28364f937b7e24e7
+  zh: 6e5d0574c5331643
+/deepseek-ai-dsh-loader-smoke/summary:
   en: b7b36ca4623a546e
   zh: 8c9be89d36f19423
-/x1a0f3n9-dsh-loader-smoke/table-of-contents:
+/deepseek-ai-dsh-loader-smoke/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-loader-smoke/use-this-package:
+/deepseek-ai-dsh-loader-smoke/use-this-package:
   en: 682780f6cbeb85cb
   zh: 07a2458db985471a
-/x1a0f3n9-dsh-loader-smoke/use-this-package/booting-an-application-fixture:
+/deepseek-ai-dsh-loader-smoke/use-this-package/booting-an-application-fixture:
   en: e2144d78d4e83030
   zh: b3e415f69dac20a2
-/x1a0f3n9-dsh-loader-smoke/use-this-package/testing-a-shipped-profile:
+/deepseek-ai-dsh-loader-smoke/use-this-package/testing-a-shipped-profile:
   en: aa24542429ab0917
   zh: 0725fd0950e0993b
-/x1a0f3n9-dsh-loader-smoke/use-this-package/driving-a-fixture-turn:
+/deepseek-ai-dsh-loader-smoke/use-this-package/driving-a-fixture-turn:
   en: c99402b3d2219738
   zh: cbff00f4bfb7d625
-/x1a0f3n9-dsh-loader-smoke/use-this-package/source-or-built-mode:
+/deepseek-ai-dsh-loader-smoke/use-this-package/source-or-built-mode:
   en: 312abd1eddcc5015
   zh: 4fb5c6842f4d49d1
-/x1a0f3n9-dsh-loader-smoke/use-this-package/what-can-go-wrong:
+/deepseek-ai-dsh-loader-smoke/use-this-package/what-can-go-wrong:
   en: cd38599b474efc54
   zh: 353237fb992a1b1c
-/x1a0f3n9-dsh-loader-smoke/understand-the-implementation:
+/deepseek-ai-dsh-loader-smoke/understand-the-implementation:
   en: 3ffb8df759bf5071
   zh: a93d3dd6472d9782
-/x1a0f3n9-dsh-loader-smoke/understand-the-implementation/design:
+/deepseek-ai-dsh-loader-smoke/understand-the-implementation/design:
   en: f3407557b8aafb9c
   zh: 06c9faf218c69829
-/x1a0f3n9-dsh-loader-smoke/understand-the-implementation/source-map:
-  en: 4212f963f739e76e
-  zh: 1a08bcb7654df951
-/x1a0f3n9-dsh-loader-smoke/further-exploration:
+/deepseek-ai-dsh-loader-smoke/understand-the-implementation/source-map:
+  en: 1dd2e4e1cd1fad2d
+  zh: 4783ddacfbcf2cd5
+/deepseek-ai-dsh-loader-smoke/further-exploration:
   en: f6719ecd2dbb7870
   zh: 758b46fefe666dbd
-/x1a0f3n9-dsh-loader-smoke/model-experience:
+/deepseek-ai-dsh-loader-smoke/model-experience:
   en: 27696a3c4d31d171
   zh: 48b6df074e0b0911
-/x1a0f3n9-dsh-loader-smoke/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-loader-smoke/model-experience/kv-cache-effect:
   en: c204a02c386ca3a0
   zh: ce9b24304f9644aa
-/x1a0f3n9-dsh-loader-smoke/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-loader-smoke/known-limitations-and-deferred-work:
   en: a3e0e21178bb00cc
   zh: f3dc6139370330f6
-/x1a0f3n9-dsh-loader-smoke/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-loader-smoke/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 3bb0c20c93f16f98

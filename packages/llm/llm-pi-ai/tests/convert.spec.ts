@@ -84,17 +84,16 @@ describe('toPiContext', () => {
       })],
       tools: [{ name: 'f', description: 'F', parameters: { type: 'object', properties: {} } }],
     })
-    expect(context.systemPrompt).toBe('be helpful')
-    expect(context.messages).toEqual([{ role: 'user', content: 'hi', timestamp: 0 }])
-    expect(context.tools).toEqual([
-      { name: 'f', description: 'F', parameters: { type: 'object', properties: {} } },
-    ])
+    expect(context).toEqual({
+      systemPrompt: 'be helpful',
+      tools: [{ name: 'f', description: 'F', parameters: { type: 'object', properties: {} } }],
+      messages: [{ role: 'user', content: 'hi', timestamp: 0 }],
+    })
   })
 
   it('omits empty tools and absent system prompt', () => {
     const context = toPiContext({ provider: 'deepseek', model: 'm', messages: [], tools: [] })
-    expect(context.systemPrompt).toBeUndefined()
-    expect(context.tools).toBeUndefined()
+    expect(context).toEqual({ messages: [] })
   })
 
   it('resolves durable image references into native pi-ai image content', async () => {
@@ -317,7 +316,7 @@ describe('toPiContext', () => {
     })
   })
 
-  it('splits mixed user text + tool results and lifts a leading system message into systemPrompt', () => {
+  it('preserves the leading system message ahead of user text and tool results', () => {
     const context = toPiContext({
       provider: 'deepseek',
       model: 'm',
@@ -368,7 +367,7 @@ describe('toPiContext', () => {
       content: [
         { type: 'thinking', thinking: 'private reasoning', thinkingSignature: 'think-sig', redacted: true },
         { type: 'text', text: 'calling', textSignature: 'text-sig' },
-        { type: 'toolCall', id: 'c1', name: 'f', arguments: { a: 1 }, thoughtSignature: 'tool-sig' },
+        { type: 'toolCall', id: 'c1', name: 'f', arguments: { a: 1 }, thoughtSignature: 'tool-sig', namespace: 'functions' },
       ],
     }))
     const context = toPiContext({
@@ -399,7 +398,7 @@ describe('toPiContext', () => {
       content: [
         { type: 'thinking', thinking: 'private reasoning', thinkingSignature: 'think-sig', redacted: true },
         { type: 'text', text: 'calling', textSignature: 'text-sig' },
-        { type: 'toolCall', id: 'c1', name: 'f', arguments: { a: 1 }, thoughtSignature: 'tool-sig' },
+        { type: 'toolCall', id: 'c1', name: 'f', arguments: { a: 1 }, thoughtSignature: 'tool-sig', namespace: 'functions' },
       ],
     })
   })
@@ -441,6 +440,33 @@ describe('toPiContext', () => {
       content: [{ type: 'text', text: 'done' }],
     })
     expect(onDegrade).not.toHaveBeenCalled()
+  })
+
+  it('replays saved v2 Anthropic alias metadata with the requested model and signed thinking', () => {
+    const requestedModel = 'claude-haiku-4-5'
+    const responseModel = 'claude-haiku-4-5-20251001'
+    const replayState = {
+      response: {
+        kind: 'pi-ai', version: 2, api: 'anthropic-messages', provider: 'anthropic',
+        model: requestedModel, responseModel, stopReason: 'stop',
+      },
+      blocks: [{ type: 'reasoning', thinkingSignature: 'saved-signature' }],
+    }
+    const onDegrade = vi.fn()
+    const context = toPiContext({
+      provider: 'anthropic', model: requestedModel,
+      messages: [createMessage({
+        role: 'assistant', content: [{ type: 'reasoning', text: 'saved reasoning' }],
+        source: { kind: 'model', provider: 'anthropic', model: requestedModel, replayState },
+      })],
+    }, undefined, onDegrade)
+    const model = getBuiltinModels('anthropic').find(candidate => candidate.id === requestedModel)
+    if (model === undefined) throw new Error('missing Anthropic catalog model')
+    expect(onDegrade).not.toHaveBeenCalled()
+    expect(context.messages[0]).toMatchObject({ model: requestedModel, responseModel })
+    expect(transformMessages(context.messages, model)[0]).toMatchObject({
+      content: [{ type: 'thinking', thinking: 'saved reasoning', thinkingSignature: 'saved-signature' }],
+    })
   })
 
   it('replays all native block kinds when optional metadata is absent', () => {
@@ -650,6 +676,7 @@ describe('toPiContext', () => {
     ['null block', { ...validReplay, blocks: [null] }, 'block 0 must be an object'],
     ['array block', { ...validReplay, blocks: [[]] }, 'block 0 must be an object'],
     ['unknown block type', { ...validReplay, blocks: [{ type: 'audio' }] }, 'block 0 has an unknown type'],
+    ['non-string namespace', { ...validReplay, blocks: [{ type: 'tool-call', namespace: 1 }] }, 'namespace must be a string'],
     ['non-string signature', { ...validReplay, blocks: [{ type: 'text', textSignature: 1 }] }, 'textSignature must be a string'],
     ['non-boolean redaction', { ...validReplay, blocks: [{ type: 'reasoning', redacted: 'yes' }] }, 'redacted must be boolean'],
   ])('degrades malformed replay state: %s', (_name, replayState, message) => {
@@ -660,22 +687,25 @@ describe('toPiContext', () => {
 describe('toStreamChunks', () => {
   it.each([
     ['claude-haiku-4-5', 'claude-haiku-4-5-20251001'],
-    ['claude-fable-5', 'claude-opus-5'],
-    ['claude-opus-5', 'claude-opus-5'],
-  ])('replays Anthropic request %s with native response model %s', async (requestedModel, returnedModel) => {
+    ['claude-opus-5', 'kimi-for-coding'],
+    ['claude-opus-5', undefined],
+  ])('retains signed thinking for Anthropic request %s reported as %s', async (requestedModel, reportedModel) => {
     const native = assistant({
-      api: 'anthropic-messages', provider: 'anthropic', model: returnedModel,
+      api: 'anthropic-messages', provider: 'anthropic', model: requestedModel,
+      ...reportedModel === undefined ? {} : { responseModel: reportedModel },
       providerThinkingLevel: 'high',
       content: [{ type: 'thinking', thinking: 'reason', thinkingSignature: 'signed' }],
     })
     const chunks = await collect(toStreamChunks(feed(
       { type: 'done', reason: 'stop', message: native },
-    ), undefined, { model: requestedModel }))
+    ), undefined, undefined, requestedModel))
     const finish = chunks.find(chunk => chunk.type === 'finish')
     const replayState: unknown = JSON.parse(JSON.stringify(finish?.replayState))
     expect(replayState).toMatchObject({ response: { model: requestedModel } })
-    if (requestedModel !== returnedModel) {
-      expect(replayState).toMatchObject({ response: { responseModel: returnedModel } })
+    if (reportedModel === undefined) {
+      expect(finish?.replayState?.response).not.toHaveProperty('responseModel')
+    } else {
+      expect(replayState).toMatchObject({ response: { responseModel: reportedModel } })
     }
     const onDegrade = vi.fn()
     const context = toPiContext({
@@ -687,16 +717,14 @@ describe('toStreamChunks', () => {
     }, undefined, onDegrade)
     expect(onDegrade).not.toHaveBeenCalled()
     expect(context.messages[0]).toMatchObject({
-      api: 'anthropic-messages', model: returnedModel, providerThinkingLevel: 'high',
+      api: 'anthropic-messages', model: requestedModel, providerThinkingLevel: 'high',
       content: native.content,
     })
-    const catalog = getBuiltinModels('anthropic')
-    const requested = catalog.find(model => model.id === requestedModel)
-    const returned = catalog.find(model => model.id === returnedModel)
-    if (requested === undefined || returned === undefined) throw new Error('missing Anthropic catalog model')
-    expect(transformMessages(context.messages, returned)[0]).toMatchObject({ content: native.content })
-    expect(transformMessages(context.messages, requested)[0]).toMatchObject({
-      content: requestedModel === returnedModel ? native.content : [{ type: 'text', text: 'reason' }],
+    const requested = getBuiltinModels('anthropic').find(model => model.id === requestedModel)
+    if (requested === undefined) throw new Error('missing Anthropic catalog model')
+    expect(transformMessages(context.messages, requested)[0]).toMatchObject({ content: native.content })
+    expect(transformMessages(context.messages, { ...requested, id: 'other-model' })[0]).toMatchObject({
+      content: [{ type: 'text', text: 'reason' }],
     })
   })
 
@@ -834,6 +862,7 @@ describe('toStreamChunks', () => {
 describe('mapStopReason / mapUsage', () => {
   it.each([
     ['stop', { kind: 'stop' }],
+    ['length', { kind: 'max-tokens' }],
     ['toolUse', { kind: 'tool-calls' }],
     ['pending', {
       kind: 'error',
@@ -881,12 +910,6 @@ describe('mapStopReason / mapUsage', () => {
     }))).toMatchObject({ kind: 'error', failure: { code: 'QUOTA' } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'HTTP 500: backend down' })))
       .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
-    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'OpenAI API error (502): 502 status code (no body)' })))
-      .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
-    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'OpenAI API error (503): {"message":"Service temporarily unavailable","type":"api_error"}' })))
-      .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
-    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'OpenAI API error (524): 524 status code (no body)' })))
-      .toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'provider timed out' })))
       .toMatchObject({ kind: 'error', failure: { code: 'TIMEOUT' } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'ECONNRESET socket closed' })))
@@ -903,14 +926,6 @@ describe('mapStopReason / mapUsage', () => {
       stopReason: 'error',
       errorMessage: 'HTTP 400: invalid input: temperature exceeds maximum allowed value',
     }))).toMatchObject({ kind: 'error', failure: { code: 'INVALID_REQUEST' } })
-    expect(mapStopReason(assistant({
-      stopReason: 'error',
-      errorMessage: "HTTP 400: This model's maximum prompt length is 131072 but the request contains 136973 tokens.",
-    }))).toMatchObject({ kind: 'error', failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE } })
-    expect(mapStopReason(assistant({
-      stopReason: 'error',
-      errorMessage: 'HTTP 400: 上下文长度超过限制',
-    }))).toMatchObject({ kind: 'error', failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE } })
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage: 'HTTP 413: Payload Too Large' })))
       .toMatchObject({ kind: 'error', failure: { code: 'INVALID_REQUEST' } })
     expect(mapStopReason(assistant({
@@ -935,43 +950,10 @@ describe('mapStopReason / mapUsage', () => {
     'Anthropic stream ended before message_stop',
     'OpenAI Responses stream ended before a terminal response event',
     'openrouter stream ended without a terminal event',
-    'stream_read_error',
     'Stream ended without finish_reason',
-    'Bad control character in string literal in JSON at position 75 (line 1 column 76)',
   ])('maps pi-ai transport wording %j', (errorMessage) => {
     expect(mapStopReason(assistant({ stopReason: 'error', errorMessage })))
       .toMatchObject({ kind: 'error', failure: { code: 'TRANSPORT' } })
-  })
-
-  it.each([
-    ['gateway_concurrency_limit: Concurrency limit exceeded for account, please retry later', 'RATE_LIMIT'],
-    ['Concurrency limit exceeded for account, please retry later', 'RATE_LIMIT'],
-    ['Error Code internal_server_error: Internal Server Error', 'SERVER'],
-    ['upstream_error: Upstream service temporarily unavailable', 'SERVER'],
-    ['An error occurred in model serving, error message is: [Backend buffer overflow.]', 'SERVER'],
-    ['Error Code cyber_policy: This content was flagged for possible cybersecurity risk.', 'INVALID_REQUEST'],
-    ['OpenAI API error (404): {"message":"Model \\"gpt-5.5\\" is not supported","type":"model_not_found"}', 'INVALID_REQUEST'],
-    ['The service encountered an unexpected internal error. Request id: 0217877372827183742719bd01cfbc48', 'SERVER'],
-    ['You have exceeded the 5-hour usage quota. It will reset at 2026-08-28 18:52:12 +0800 CST.', 'QUOTA'],
-    ["You've reached your usage limit for this billing cycle. Your quota will reset soon.", 'QUOTA'],
-    ["OpenAI API error (403): You've reached your usage limit for this billing cycle.", 'QUOTA'],
-    ['OpenAI API error (429): {"message":"You have exceeded the 5-hour usage quota","type":"rate_limit_error"}', 'QUOTA'],
-  ] as const)('maps in-band provider wording %j to %s', (errorMessage, code) => {
-    expect(mapStopReason(assistant({ stopReason: 'error', errorMessage })))
-      .toMatchObject({ kind: 'error', failure: { code } })
-  })
-
-  it('classifies an HTML or empty 5xx body from the captured HTTP status', () => {
-    expect(mapStopReason(
-      assistant({ stopReason: 'error', errorMessage: '<html>Bad Gateway</html>' }),
-      undefined,
-      { status: 502 },
-    )).toMatchObject({ kind: 'error', failure: { code: 'SERVER' } })
-    expect(mapStopReason(
-      assistant({ stopReason: 'error', errorMessage: 'gateway_concurrency_limit: please retry later' }),
-      undefined,
-      { status: 200 },
-    )).toMatchObject({ kind: 'error', failure: { code: 'RATE_LIMIT' } })
   })
 
   it('uses pi-ai provider-specific overflow classification without losing rate-limit exclusions', () => {
@@ -997,40 +979,13 @@ describe('mapStopReason / mapUsage', () => {
         code: CONTEXT_WINDOW_EXCEEDED_CODE,
       },
     })
-    const completedPastCatalog = assistant({
-      stopReason: 'stop',
-      usage: usage(304_170, 842, 256),
-      content: [{ type: 'text', text: 'ok' }],
-    })
-    expect(mapStopReason(completedPastCatalog, 200_000)).toMatchObject({
-      kind: 'error',
-      failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
-    })
 
     const truncated = assistant({ stopReason: 'length', usage: usage(80, 0, 19) })
-    expect(mapStopReason(truncated)).toMatchObject({
-      kind: 'error',
-      failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
-    })
+    expect(mapStopReason(truncated)).toEqual({ kind: 'max-tokens' })
     expect(mapStopReason(truncated, 100)).toMatchObject({
       kind: 'error',
       failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
     })
-
-    const pressure = assistant({ stopReason: 'length', usage: usage(85, 12) })
-    expect(mapStopReason(pressure)).toEqual({ kind: 'max-tokens' })
-    expect(mapStopReason(pressure, 100)).toMatchObject({
-      kind: 'error',
-      failure: { code: CONTEXT_WINDOW_EXCEEDED_CODE },
-    })
-
-    const outputCap = assistant({
-      stopReason: 'length',
-      usage: usage(20, 50),
-      content: [{ type: 'text', text: 'ok' }],
-    })
-    expect(mapStopReason(outputCap)).toEqual({ kind: 'max-tokens' })
-    expect(mapStopReason(outputCap, 100)).toEqual({ kind: 'max-tokens' })
   })
 
   it('maps cache fields only when nonzero', () => {

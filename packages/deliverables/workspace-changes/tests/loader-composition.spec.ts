@@ -13,6 +13,7 @@ import Loader from '@deepseek-ai/cordis-plugin-loader'
 import Include from '@deepseek-ai/cordis-plugin-include'
 import SessionStore, { SessionId } from '@x1a0f3n9/dsh-session'
 import LocalSubprocessRuntime from '@x1a0f3n9/dsh-subprocess-local'
+import LocalFileSystem from '@x1a0f3n9/dsh-fs-local'
 import * as WorkspaceChangesPlugin from '@x1a0f3n9/dsh-workspace-changes'
 import { changes, endTurn, git, startTurn, toolCall } from './support.ts'
 
@@ -33,6 +34,7 @@ describe('real Loader composition', () => {
     await writeFile(join(root, 'cordis.yml'), [
       "- name: '@x1a0f3n9/dsh-session'",
       "- name: '@x1a0f3n9/dsh-subprocess-local'",
+      "- name: '@x1a0f3n9/dsh-fs-local'",
       "- name: '@x1a0f3n9/dsh-workspace-changes'",
       '',
     ].join('\n'))
@@ -43,6 +45,7 @@ describe('real Loader composition', () => {
     const modules = new Map<string, unknown>([
       ['@x1a0f3n9/dsh-session', SessionStore],
       ['@x1a0f3n9/dsh-subprocess-local', LocalSubprocessRuntime],
+      ['@x1a0f3n9/dsh-fs-local', LocalFileSystem],
       ['@x1a0f3n9/dsh-workspace-changes', WorkspaceChangesPlugin],
     ])
     context.loader.internal = {

@@ -5,75 +5,75 @@
 /:
   en: d510765ec1bebc28
   zh: 35efb9f71f05f326
-/x1a0f3n9-dsh-subagent-spawn-in-process:
-  en: 107c97ec7fc97b57
-  zh: adc4257e38704d34
-/x1a0f3n9-dsh-subagent-spawn-in-process/summary:
+/deepseek-ai-dsh-subagent-spawn-in-process:
+  en: c949befcfe1e376c
+  zh: 13c78d0fbbd323ae
+/deepseek-ai-dsh-subagent-spawn-in-process/summary:
   en: 84d0a0acfc4251fe
   zh: 8480ddf68e377522
-/x1a0f3n9-dsh-subagent-spawn-in-process/table-of-contents:
+/deepseek-ai-dsh-subagent-spawn-in-process/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-subagent-spawn-in-process/use-this-package:
+/deepseek-ai-dsh-subagent-spawn-in-process/use-this-package:
   en: ca895c3af2ec6371
   zh: 51dbe9e2fa79de30
-/x1a0f3n9-dsh-subagent-spawn-in-process/use-this-package/when-to-choose-it:
+/deepseek-ai-dsh-subagent-spawn-in-process/use-this-package/when-to-choose-it:
   en: 5f14443940e59bb5
   zh: 3e8610aec21c55e8
-/x1a0f3n9-dsh-subagent-spawn-in-process/use-this-package/minimal-configuration:
+/deepseek-ai-dsh-subagent-spawn-in-process/use-this-package/minimal-configuration:
   en: 3f53b0d5f4037171
   zh: e0f2ac931cfbef95
-/x1a0f3n9-dsh-subagent-spawn-in-process/use-this-package/what-a-delegation-does:
-  en: 9f4e6f31ad4d86d1
-  zh: 4ad77e0b80c6efcc
-/x1a0f3n9-dsh-subagent-spawn-in-process/understand-the-implementation:
-  en: 9e00b9dc2f9cf38c
-  zh: 60ce00ce6c3b5564
-/x1a0f3n9-dsh-subagent-spawn-in-process/understand-the-implementation/design-concept:
-  en: 80716c24d7a0ee78
-  zh: 9bead3317f5a357e
-/x1a0f3n9-dsh-subagent-spawn-in-process/understand-the-implementation/source-map:
-  en: 6252313b7a004fda
-  zh: 85c1b0a872d4d846
-/x1a0f3n9-dsh-subagent-spawn-in-process/understand-the-implementation/run-flow:
-  en: 7b55a5649bc38155
-  zh: 51fe220c84ca759a
-/x1a0f3n9-dsh-subagent-spawn-in-process/understand-the-implementation/ownership-and-scope:
-  en: 8af949dc29cb4a5c
-  zh: f4e4f9f9f4a4b7c9
-/x1a0f3n9-dsh-subagent-spawn-in-process/further-exploration:
-  en: 742e34ea6c31adf9
-  zh: 599d993ba5a3c8f1
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience:
+/deepseek-ai-dsh-subagent-spawn-in-process/use-this-package/what-a-delegation-does:
+  en: 0c90404ed53cf451
+  zh: 161e38b7d7c10182
+/deepseek-ai-dsh-subagent-spawn-in-process/understand-the-implementation:
+  en: 7f34637751939818
+  zh: 2937553168e1aee5
+/deepseek-ai-dsh-subagent-spawn-in-process/understand-the-implementation/design-concept:
+  en: a5b418fb260e2b9f
+  zh: 06dd949e350e9585
+/deepseek-ai-dsh-subagent-spawn-in-process/understand-the-implementation/source-map:
+  en: b7c55a4bff3ae1f0
+  zh: 9d0f514f433250c6
+/deepseek-ai-dsh-subagent-spawn-in-process/understand-the-implementation/run-flow:
+  en: 5f07f1044bf7c370
+  zh: d31a485a3e333500
+/deepseek-ai-dsh-subagent-spawn-in-process/understand-the-implementation/ownership-and-scope:
+  en: 1288272d1eabfdc1
+  zh: 6efde7517f434179
+/deepseek-ai-dsh-subagent-spawn-in-process/further-exploration:
+  en: c247efa590d8b78a
+  zh: 999f8281df521384
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience:
   en: 215e7ba838619b7b
   zh: a311da3843709f90
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/child-agent-request:
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/child-agent-request:
   en: 05e6180f1498fdf9
   zh: 2b05d2b97bfa67da
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/child-agent-request/what-the-model-sees:
-  en: 2035bdd8640e5a8a
-  zh: 5afa645d7dbe31a5
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/child-agent-request/token-effect:
-  en: e74d21e38e4a53a9
-  zh: 6a5e3ef5fe0f4f14
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/child-agent-request/kv-cache-effect:
-  en: 78d800b26fb3b0af
-  zh: 313169b62c29af1d
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly:
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/child-agent-request/what-the-model-sees:
+  en: c9dfab9a4d363fed
+  zh: 6cb3b0914ccb73e2
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/child-agent-request/token-effect:
+  en: eb373a4b35a4b548
+  zh: 9537d0e466e8bcd9
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/child-agent-request/kv-cache-effect:
+  en: 6da85bad412c741e
+  zh: c9af9fd1b4e7eed2
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly:
   en: 75d061c2151624a7
   zh: 71e58e020b60ff90
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly/what-the-model-sees:
-  en: 93ae79a8f38c984b
-  zh: 6ede5c4312685ff0
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly/token-effect:
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly/what-the-model-sees:
+  en: caf11edef2516b8c
+  zh: 25bcb16cceaad06d
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly/token-effect:
   en: ff8045aa0f466c2a
   zh: e38fc5c6af2ce076
-/x1a0f3n9-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly/kv-cache-effect:
+/deepseek-ai-dsh-subagent-spawn-in-process/model-experience/parent-tool-result-indirectly/kv-cache-effect:
   en: f5d5f97a153f7c70
   zh: 3d6bc05b9eadfbc2
-/x1a0f3n9-dsh-subagent-spawn-in-process/known-limitations-and-deferred-work:
-  en: 68720f2a663a4aad
-  zh: a472436c5cc2b801
-/x1a0f3n9-dsh-subagent-spawn-in-process/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-subagent-spawn-in-process/known-limitations-and-deferred-work:
+  en: 0c0b19dc1ccec027
+  zh: a7799c516dc3b034
+/deepseek-ai-dsh-subagent-spawn-in-process/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 3bb0c20c93f16f98

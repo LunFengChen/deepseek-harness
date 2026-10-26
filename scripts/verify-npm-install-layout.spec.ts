@@ -2,14 +2,16 @@ import { describe, expect, it } from 'vitest'
 import type { NpmPackageLock, RegistryIndex } from './benchmark-npm-resolution.ts'
 import {
   assertDualDshInstallLayout,
+  assertResolutionWorkBudget,
   buildDualDshRegistry,
+  MAX_RESOLUTION_WORK_UNITS,
 } from './verify-npm-install-layout.ts'
 
 function validLayout(): NpmPackageLock {
   return {
     lockfileVersion: 3,
     packages: {
-      '': { dependencies: { '@x1a0f3n9/dsh': '0.2.0', 'dsh-previous': 'npm:@x1a0f3n9/dsh@0.1.0' } },
+      '': { dependencies: { '@x1a0f3n9/dsh': '0.2.0', 'dsh-previous': 'npm:@deepseek-ai/dsh@0.1.0' } },
       'node_modules/@deepseek-ai/cordis': { version: '4.0.1' },
       'node_modules/@x1a0f3n9/dsh': {
         version: '0.2.0',
@@ -42,7 +44,7 @@ describe('npm install layout verifier', () => {
       ['@x1a0f3n9/dsh', new Map([['0.1.1-rc.2', {
         name: '@x1a0f3n9/dsh',
         version: '0.1.1-rc.2',
-        dependencies: { '@x1a0f3n9/dsh-child': '^0.1.1-rc.2', '@deepseek-ai/dsh-child': '^0.1.1-rc.2', 'dsh-better-sidebar': '0.19.0-alpha.1' },
+        dependencies: { '@x1a0f3n9/dsh-child': '^0.1.1-rc.2' },
         peerDependencies: { '@deepseek-ai/cordis': '^4.0.1' },
       }]])],
       ['@x1a0f3n9/dsh-child', new Map([['0.1.1-rc.2', {
@@ -60,7 +62,7 @@ describe('npm install layout verifier', () => {
     expect([...dual.get('@x1a0f3n9/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
     expect(dual.get('@x1a0f3n9/dsh')?.get('0.1.0')).toMatchObject({
       version: '0.1.0',
-      dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0', '@deepseek-ai/dsh-child': '^0.1.0' },
+      dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0' },
       peerDependencies: { '@deepseek-ai/cordis': '^4.0.1' },
     })
     expect(dual.get('@x1a0f3n9/dsh')?.get('0.2.0')).toMatchObject({
@@ -68,75 +70,6 @@ describe('npm install layout verifier', () => {
       dependencies: { '@x1a0f3n9/dsh-child': '^0.2.0' },
     })
     expect(dual.get('@deepseek-ai/cordis')).toBe(index.get('@deepseek-ai/cordis'))
-    expect(dual.get('@x1a0f3n9/dsh')?.get('0.1.0')?.dependencies).not.toHaveProperty('dsh-better-sidebar')
-    expect([...dual.get('@deepseek-ai/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
-    expect(dual.get('@deepseek-ai/dsh')?.get('0.1.0')).toMatchObject({
-      name: '@deepseek-ai/dsh',
-      version: '0.1.0',
-      dependencies: { '@x1a0f3n9/dsh-child': '^0.1.0' },
-    })
-    expect(dual.get('@deepseek-ai/dsh-child')?.get('0.2.0')).toMatchObject({
-      name: '@deepseek-ai/dsh-child',
-      version: '0.2.0',
-    })
-  })
-
-  it('keeps a fork-scoped preinstalled plugin on its own version', () => {
-    const index: RegistryIndex = new Map([
-      ['@x1a0f3n9/dsh', new Map([['0.1.5-rc.2', {
-        name: '@x1a0f3n9/dsh',
-        version: '0.1.5-rc.2',
-        dependencies: { '@x1a0f3n9/dsh-session-timeline': '0.1.0' },
-      }]])],
-      ['@x1a0f3n9/dsh-session-timeline', new Map([['0.1.0', {
-        name: '@x1a0f3n9/dsh-session-timeline',
-        version: '0.1.0',
-      }]])],
-    ])
-
-    const dual = buildDualDshRegistry(index, '0.1.5-rc.2')
-
-    expect([...dual.get('@x1a0f3n9/dsh')?.keys() ?? []]).toEqual(['0.1.0', '0.2.0'])
-    expect(dual.get('@x1a0f3n9/dsh')?.get('0.1.0')?.dependencies).not.toHaveProperty(
-      '@x1a0f3n9/dsh-session-timeline',
-    )
-    expect([...dual.get('@x1a0f3n9/dsh-session-timeline')?.keys() ?? []]).toEqual(['0.1.0'])
-    expect(dual.get('@x1a0f3n9/dsh-session-timeline')?.get('0.1.0')).toMatchObject({
-      name: '@x1a0f3n9/dsh-session-timeline',
-      version: '0.1.0',
-    })
-  })
-
-  it('does not rewrite a scoped preinstalled plugin onto the synthetic versions', () => {
-    const index: RegistryIndex = new Map([
-      ['@x1a0f3n9/dsh-web-app', new Map([['0.1.5-rc.3', {
-        name: '@x1a0f3n9/dsh-web-app',
-        version: '0.1.5-rc.3',
-        dependencies: {
-          '@x1a0f3n9/dsh-child': 'workspace:^',
-          '@x1a0f3n9/dsh-better-sidebar': '0.19.3',
-        },
-      }]])],
-      ['@x1a0f3n9/dsh-child', new Map([['0.1.5-rc.3', {
-        name: '@x1a0f3n9/dsh-child',
-        version: '0.1.5-rc.3',
-      }]])],
-      ['@x1a0f3n9/dsh-better-sidebar', new Map([['0.19.3', {
-        name: '@x1a0f3n9/dsh-better-sidebar',
-        version: '0.19.3',
-      }]])],
-    ])
-
-    const dual = buildDualDshRegistry(index, '0.1.5-rc.3')
-
-    expect(dual.get('@x1a0f3n9/dsh-web-app')?.get('0.2.0')?.dependencies).toEqual({
-      '@x1a0f3n9/dsh-child': '^0.2.0',
-    })
-    expect(dual.get('@x1a0f3n9/dsh-better-sidebar')?.get('0.19.3')).toMatchObject({
-      name: '@x1a0f3n9/dsh-better-sidebar',
-      version: '0.19.3',
-    })
-    expect(dual.get('@x1a0f3n9/dsh-better-sidebar')?.has('0.2.0')).toBe(false)
   })
 
   it('accepts isolated DSH releases with one shared Cordis installation', () => {
@@ -180,5 +113,32 @@ describe('npm install layout verifier', () => {
     expect(() => assertDualDshInstallLayout({ ...layout, packages })).toThrow(
       'expected one shared @deepseek-ai/cordis',
     )
+  })
+})
+
+describe('resolution work budget', () => {
+  it('accepts the measured dual-release graph', () => {
+    expect(assertResolutionWorkBudget({ dshPackagesPerVersion: 277, checkedDshEdges: 2524 }))
+      .toBe(699_148)
+  })
+
+  it('accepts a graph exactly at the budget and rejects one internal edge above it', () => {
+    const packages = 350
+    const edgesAtBudget = Math.floor(MAX_RESOLUTION_WORK_UNITS / packages)
+
+    expect(packages * edgesAtBudget).toBe(MAX_RESOLUTION_WORK_UNITS)
+    expect(assertResolutionWorkBudget({ dshPackagesPerVersion: packages, checkedDshEdges: edgesAtBudget }))
+      .toBe(MAX_RESOLUTION_WORK_UNITS)
+    expect(() => assertResolutionWorkBudget({
+      dshPackagesPerVersion: packages,
+      checkedDshEdges: edgesAtBudget + 1,
+    })).toThrow(`= ${String(MAX_RESOLUTION_WORK_UNITS + packages)} unit(s), budget ${String(MAX_RESOLUTION_WORK_UNITS)} unit(s)`)
+  })
+
+  it('accepts the headroom and rejects a runaway graph with its own measured counts', () => {
+    expect(assertResolutionWorkBudget({ dshPackagesPerVersion: 300, checkedDshEdges: 2800 }))
+      .toBe(840_000)
+    expect(() => assertResolutionWorkBudget({ dshPackagesPerVersion: 400, checkedDshEdges: 3000 }))
+      .toThrow('400 package(s) per release x 3000 internal edge(s) = 1200000 unit(s), budget 875000 unit(s)')
   })
 })

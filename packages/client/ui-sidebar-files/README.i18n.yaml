@@ -5,30 +5,30 @@
 /:
   en: d6514e0d092a210b
   zh: 9980cb0f4fc6f903
-/x1a0f3n9-dsh-client-ui-sidebar-files:
-  en: d027b39ce16bf468
-  zh: 75c930643c9c2c34
-/x1a0f3n9-dsh-client-ui-sidebar-files/summary:
+/deepseek-ai-dsh-client-ui-sidebar-files:
+  en: ae5625c23b3a864f
+  zh: 20cf48a229e806bf
+/deepseek-ai-dsh-client-ui-sidebar-files/summary:
   en: 1605ae92aee5c231
   zh: ad519ddb9e338892
-/x1a0f3n9-dsh-client-ui-sidebar-files/table-of-contents:
+/deepseek-ai-dsh-client-ui-sidebar-files/table-of-contents:
   en: 9411fb4809692e09
   zh: dd13990d39c5be7f
-/x1a0f3n9-dsh-client-ui-sidebar-files/what-it-registers:
-  en: 11a5444e25670d84
-  zh: 384be203f049f86b
-/x1a0f3n9-dsh-client-ui-sidebar-files/the-tree:
-  en: 5c21d9dbb87323c5
-  zh: 00e653641c6e9ea5
-/x1a0f3n9-dsh-client-ui-sidebar-files/model-experience:
+/deepseek-ai-dsh-client-ui-sidebar-files/what-it-registers:
+  en: ed52405be7c3fa24
+  zh: d06dbd49c786c5f0
+/deepseek-ai-dsh-client-ui-sidebar-files/the-tree:
+  en: a0ae0b1f223b3df1
+  zh: 8ddc325519bd75b2
+/deepseek-ai-dsh-client-ui-sidebar-files/model-experience:
   en: a18a43f6842f1371
   zh: 69f2a2b35f06dfc7
-/x1a0f3n9-dsh-client-ui-sidebar-files/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-client-ui-sidebar-files/model-experience/kv-cache-effect:
   en: 5a6febb45089991a
   zh: b17ed755fd098b83
-/x1a0f3n9-dsh-client-ui-sidebar-files/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-client-ui-sidebar-files/known-limitations-and-deferred-work:
   en: c0e1831d8975186c
   zh: 332aac8738458bb0
-/x1a0f3n9-dsh-client-ui-sidebar-files/known-limitations-and-deferred-work/dev-note:
-  en: 3e8f2f242d43973b
-  zh: fb919fb393d51b20
+/deepseek-ai-dsh-client-ui-sidebar-files/known-limitations-and-deferred-work/dev-note:
+  en: d8b51fb935f38650
+  zh: fee9d330ecf8ec0e

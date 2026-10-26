@@ -18,7 +18,7 @@ import { afterAll, beforeAll, describe, expect, it, onTestFailed } from 'vitest'
 import {
   SESSION_FORMAT_VERSION, SessionId as sessionId, type SessionEvent, type SessionHeader, type SessionId,
 } from '@x1a0f3n9/dsh-session'
-import { snapshotSubagentDescriptor } from '@x1a0f3n9/dsh-subagent'
+import { SUBAGENT_DESCRIPTOR_VERSION } from '@x1a0f3n9/dsh-subagent'
 import { createSystemMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
 import {
   captureStableAria, compareOrRefreshGolden, launchWebScaffold, seedSession, watchConsole,
@@ -163,9 +163,10 @@ async function seedSubagent(scaffold: WebScaffold, parentId: SessionId): Promise
       type: 'subagent/descriptor',
       seq: 2,
       time: SEEDED_CHILD_CREATED_AT + 2,
-      data: snapshotSubagentDescriptor({
+      data: {
+        version: SUBAGENT_DESCRIPTOR_VERSION,
         mode: 'one-shot', provider: 'spawn', label: 'header order probe',
-      }),
+      },
     },
     {
       type: 'turn/end',
@@ -183,9 +184,10 @@ async function seedSubagent(scaffold: WebScaffold, parentId: SessionId): Promise
  * seeded session records `minimal` too, so a substring match over the whole
  * list answers before the switch has landed.
  * @param scaffold - authenticated Web Host scaffold.
+ * @param targetId - exact Session to inspect after several Sessions have been created.
  * @returns the live session's preset, or undefined before it is listed.
  */
-async function livePreset(scaffold: WebScaffold): Promise<string | undefined> {
+async function livePreset(scaffold: WebScaffold, targetId?: SessionId): Promise<string | undefined> {
   const response = await scaffold.hostFetch('/api/session/list', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -204,7 +206,7 @@ async function livePreset(scaffold: WebScaffold): Promise<string | undefined> {
       }
     }
   }
-  const preset = body.result.value?.items.find(item => item.sessionId !== SEED_ID)
+  const preset = body.result.value?.items.find(item => targetId === undefined ? item.sessionId !== SEED_ID : item.sessionId === targetId)
     ?.projections?.values.agentPreset
   return typeof preset === 'string' ? preset : undefined
 }
@@ -249,13 +251,25 @@ describe('web e2e: agent-preset selection', () => {
     await rm(fixtureRoot, { recursive: true, force: true })
   })
 
-  it('starts on the Standard default with the roster editable in Settings', async () => {
+  it('clears an unapplied hidden pick and creates a Standard session with the roster editable in Settings', async () => {
     onTestFailed(() => saveFailureShot(page, 'web-e2e-agent-preset-hero'))
-    await connectFreshWorkspace(page, scaffold.workspaceCwd)
-    await page.getByRole('button', { name: 'Standard mode', exact: true }).waitFor({ timeout: 10_000 })
-
+    expect(await livePreset(scaffold)).toBeUndefined()
+    await page.getByRole('button', { name: 'Standard mode', exact: true }).click()
+    await page.getByRole('menuitem', { name: /^Minimal mode/ }).click()
+    await page.getByRole('button', { name: 'Minimal mode', exact: true }).waitFor()
     await openSettings(page, 'en')
     const dialog = page.getByRole('dialog', { name: 'Settings' })
+    const codingTools = dialog.getByRole('switch', { name: 'Show coding view' })
+    await codingTools.click()
+    await expect.poll(() => codingTools.getAttribute('aria-checked')).toBe('false')
+    await dialog.getByRole('button', { name: 'Close' }).last().click()
+    await connectFreshWorkspace(page, scaffold.workspaceCwd)
+    await page.getByRole('button', { name: 'Standard mode', exact: true }).waitFor({ timeout: 10_000 })
+    await expect.poll(() => livePreset(scaffold)).toBe('standard')
+
+    await openSettings(page, 'en')
+    await codingTools.click()
+    await expect.poll(() => codingTools.getAttribute('aria-checked')).toBe('true')
     await dialog.getByRole('button', { name: 'Agent presets' }).click()
     await dialog.getByRole('button', { name: 'New task default: Standard mode' }).waitFor({ timeout: 10_000 })
     expect(await dialog.getByRole('switch').count()).toBe(0)
@@ -309,7 +323,7 @@ describe('web e2e: agent-preset selection', () => {
     onTestFailed(() => saveFailureShot(page, 'web-e2e-agent-preset-slash-catalog'))
     const composer = page.locator('[data-composer-input][contenteditable="true"]').last()
 
-    // `minimal` mounts neither the compaction group nor plan mode nor local
+    // `minimal` mounts compaction, but neither plan mode nor local
     // skill discovery, so the catalog the composer warmed under the
     // deployment default must not survive the switch.
     await writeComposerDraft(page, composer, '/')
@@ -317,7 +331,7 @@ describe('web e2e: agent-preset selection', () => {
       .not.toEqual(expect.arrayContaining([expect.stringContaining(SKILL_NAME)]))
     // Rows read as `Title Description`; the title is the capitalized command name.
     const onMinimal = (await menuOptions(page)).map(option => option.toLowerCase())
-    expect(onMinimal.some(option => option.startsWith('compact'))).toBe(false)
+    expect(onMinimal.some(option => option.startsWith('compact'))).toBe(true)
     expect(onMinimal.some(option => option.startsWith('plan'))).toBe(false)
     // Preset-scoped commands follow the switch; the client's own model command
     // remains outside every preset.
@@ -343,7 +357,7 @@ describe('web e2e: agent-preset selection', () => {
     await writeComposerDraft(page, composer, '')
   }, 90_000)
 
-  it('keeps the saved default composing sessions while Developer tools only gate the choice', async () => {
+  it('preserves the current mode until New Session reuses its blank under the reset Standard default', async () => {
     onTestFailed(() => saveFailureShot(page, 'web-e2e-agent-preset-disabled'))
     await expect.poll(() => livePreset(scaffold), { timeout: 15_000 }).toBe('standard')
 
@@ -354,26 +368,51 @@ describe('web e2e: agent-preset selection', () => {
     await dialog.getByRole('button', { name: 'New task default: Minimal mode' }).waitFor({ timeout: 10_000 })
     await expect.poll(() => livePreset(scaffold), { timeout: 15_000 }).toBe('minimal')
     await dialog.getByRole('button', { name: 'General', exact: true }).click()
-    const developerTools = dialog.getByRole('switch', { name: 'Coding Tools' })
+    const developerTools = dialog.getByRole('switch', { name: 'Show coding view' })
     await developerTools.click()
     await expect.poll(() => developerTools.getAttribute('aria-checked')).toBe('false')
     await dialog.getByRole('button', { name: 'Close' }).last().click()
 
-    // The gate hides the choice; the blank task keeps its saved composition.
-    await expect.poll(() => page.getByRole('button', { name: / mode$/ }).count()).toBe(0)
     await expect.poll(() => livePreset(scaffold), { timeout: 15_000 }).toBe('minimal')
+    await page.getByRole('button', { name: 'Minimal mode', exact: true }).click()
+    await page.getByRole('menu').waitFor()
+    expect(await page.getByRole('menuitem', { name: /^PTC mode|^Minimal mode/ }).count()).toBe(0)
+    expect(await page.getByRole('menuitem', { name: /^Standard mode|^Creator mode/ }).count()).toBe(2)
+    await page.keyboard.press('Escape')
+    await expect.poll(async () => (await scaffold.ctx.agentPresets.remoteExportList()).presets.find(preset => preset.isDefault)?.id).toBe('standard')
+
+    // The current Session is still the Workspace's only blank, so New Session names it for
+    // reuse and the Host runs it under the reset default instead of its kept Minimal mode.
+    const currentSessionId = await page.evaluate(() =>
+      (JSON.parse(localStorage.getItem('dsh.sessions.current') ?? '{}') as { sessionId?: string }).sessionId)
+    expect(currentSessionId).toBeDefined()
+    const creation = page.waitForResponse('**/api/session/create')
+    await page.getByRole('button', { name: 'New session', exact: true }).last().click()
+    const created = await creation
+    expect(created.request().postDataJSON()).toHaveProperty('payload.args.request.sessionId', currentSessionId)
+    expect(created.request().postDataJSON()).not.toHaveProperty('payload.args.request.agentPreset')
+    const createdBody = await created.json() as { result: { value: { sessionId: SessionId; agentPreset: string } } }
+    expect(createdBody).toMatchObject({ result: { ok: true, value: { sessionId: currentSessionId, agentPreset: 'standard' } } })
+    const newSessionId = createdBody.result.value.sessionId
+    const newConversation = page.locator(`[data-conversation-session="${newSessionId}"]`)
+    await newConversation.waitFor()
+    await page.reload()
+    await newConversation.waitFor()
+    await page.getByRole('button', { name: 'Standard mode', exact: true }).waitFor()
 
     await openSettings(page, 'en')
     const reopened = page.getByRole('dialog', { name: 'Settings' })
     await reopened.getByRole('button', { name: 'General', exact: true }).click()
-    const reopenedDeveloperTools = reopened.getByRole('switch', { name: 'Coding Tools' })
+    const reopenedDeveloperTools = reopened.getByRole('switch', { name: 'Show coding view' })
+    await expect.poll(() => reopenedDeveloperTools.getAttribute('aria-checked')).toBe('false')
     await reopenedDeveloperTools.click()
     await expect.poll(() => reopenedDeveloperTools.getAttribute('aria-checked')).toBe('true')
     await reopened.getByRole('button', { name: 'Agent presets' }).click()
-    await reopened.getByRole('button', { name: 'New task default: Minimal mode' }).waitFor({ timeout: 10_000 })
+    await reopened.getByRole('button', { name: 'New task default: Standard mode' }).waitFor({ timeout: 10_000 })
+    await reopened.getByRole('button', { name: 'Set as new task default: Minimal mode' }).waitFor({ timeout: 10_000 })
     await reopened.getByRole('button', { name: 'Close' }).last().click()
-    await expect.poll(() => livePreset(scaffold), { timeout: 15_000 }).toBe('minimal')
-    await page.getByRole('button', { name: 'Minimal mode' }).waitFor({ timeout: 10_000 })
+    await expect.poll(() => livePreset(scaffold, newSessionId), { timeout: 15_000 }).toBe('standard')
+    await page.getByRole('button', { name: 'Standard mode' }).waitFor({ timeout: 10_000 })
   })
 
   it('labels a resumed session with the preset it was created under', async () => {
@@ -389,7 +428,7 @@ describe('web e2e: agent-preset selection', () => {
     await compareOrRefreshGolden(HEADER_EXPECTED, snapshot, MODE)
     expect(snapshot).toContain('Minimal mode')
     expect(snapshot).toContain('button "1 subagent"')
-    expect(snapshot.indexOf('button "1 subagent"')).toBeLessThan(snapshot.indexOf('Minimal mode'))
+    expect(snapshot.indexOf('Minimal mode')).toBeLessThan(snapshot.indexOf('button "1 subagent"'))
     expect(snapshot.indexOf('button "1 subagent"')).toBeLessThan(snapshot.indexOf('button "More actions"'))
     // Static chrome, not a control: the header can only report a composition
     // the host would refuse to change.
@@ -400,4 +439,92 @@ describe('web e2e: agent-preset selection', () => {
     expect(tripwire.pageErrors).toEqual([])
     expect(tripwire.warnings).toEqual([])
   })
+})
+
+it.each([false, true])('starts Creator from Plugins with Coding Tools=%s without changing drafts or defaults', async (developerTools) => {
+  const scaffold = await launchWebScaffold({ developerTools, agentPresets: { default: 'standard' } })
+  let browser: Browser | undefined
+  try {
+    browser = await chromium.launch()
+    const page = await newEnglishPage(browser)
+    const tripwire = watchConsole(page)
+    onTestFailed(() => saveFailureShot(page, 'web-e2e-plugin-creator'))
+    await page.goto(scaffold.authenticatedUrl, { waitUntil: 'load' })
+    await connectFreshWorkspace(page, scaffold.workspaceCwd)
+    const standard = scaffold.ctx.agents.list()[0]
+    if (standard === undefined) throw new Error('Connecting the workspace did not create a Session')
+    expect(scaffold.ctx.agentPresets.composedPreset(standard.ctx)).toBe('standard')
+    await page.getByRole('button', { name: 'Standard mode', exact: true }).waitFor()
+    const composerOf = (sessionId: SessionId) =>
+      page.locator(`[data-conversation-session="${sessionId}"] [data-composer-input][contenteditable="true"]`)
+    const draft = 'Keep this unsent plugin idea.'
+    await writeComposerDraft(page, composerOf(standard.id), draft)
+
+    await page.getByRole('navigation', { name: 'Global panels' }).getByRole('button', { name: 'Plugins', exact: true }).click()
+    await page.getByRole('button', { name: 'Choose how to add a plugin', exact: true }).click()
+    // The draft's blank lists Standard, so the Creator entry names no blank and the Host creates a separate Creator Session.
+    const [creation] = await Promise.all([
+      page.waitForResponse('**/api/session/create'),
+      page.getByRole('menuitem', { name: /^Let the agent create a plugin/ }).click(),
+    ])
+    expect(creation.request().postDataJSON()).toHaveProperty('payload.args.request.agentPreset', 'cordis')
+    expect(creation.request().postDataJSON()).not.toHaveProperty('payload.args.request.sessionId')
+    const creationBody = await creation.json() as { result: { ok: boolean; value: { sessionId: SessionId; agentPreset: string } } }
+    expect(creationBody).toMatchObject({ result: { ok: true, value: { agentPreset: 'cordis' } } })
+    const creator = scaffold.ctx.agents.get(creationBody.result.value.sessionId)
+    if (creator === undefined) throw new Error('The Creator entry did not publish its Session')
+    expect(creator.id).not.toBe(standard.id)
+    const picker = page.getByTitle('Choose the agent preset for your new task', { exact: true }).filter({ hasText: 'Creator mode' })
+    await picker.waitFor()
+    const creatorComposer = composerOf(creator.id)
+    await creatorComposer.waitFor()
+    expect((await creatorComposer.innerText()).trim()).toBe('')
+    expect(await picker.getAttribute('aria-haspopup')).toBe('menu')
+    expect(await page.getByRole('dialog', { name: 'Add plugin', exact: true }).count()).toBe(0)
+    expect(creator.session.header.agentPreset).toBe('cordis')
+    expect(scaffold.ctx.sessionProjections.stateOf(creator.session, 'agentPreset')).toBe('cordis')
+    expect(scaffold.ctx.agentPresets.composedPreset(creator.ctx)).toBe('cordis')
+    expect(scaffold.ctx.tools.schemas(creator).map(tool => tool.name))
+      .toEqual(expect.arrayContaining(['cordis_inspect_list', 'cordis_inspect_query', 'plugin_manager']))
+    // The Session starts under Creator; a chip selection after the list updates records no switch.
+    expect(creator.session.snapshotEvents().filter(event => event.type === 'agent-preset/selected')).toEqual([])
+    expect(creator.session.snapshotEvents().some(event => event.type === 'user/message' || event.type === 'turn/start')).toBe(false)
+    // The draft's blank keeps its preset and starts no turn.
+    expect(scaffold.ctx.sessionProjections.stateOf(standard.session, 'agentPreset')).toBe('standard')
+    expect(scaffold.ctx.agentPresets.composedPreset(standard.ctx)).toBe('standard')
+    expect(standard.session.snapshotEvents().some(event => event.type === 'agent-preset/selected'
+      || event.type === 'user/message' || event.type === 'turn/start')).toBe(false)
+    expect(scaffold.ctx.settings.describe().find(row => row.ns === 'ui-settings')?.value).toMatchObject({ enabled: developerTools })
+    expect(scaffold.ctx.agentPresets.defaultId).toBe('standard')
+
+    // Close a fixture turn on the real Creator Session without requesting a model.
+    creator.session.append('turn/start', { turn: 1 })
+    creator.session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'Creator fixture completed without a model call.' }], source: { kind: 'user' },
+    }), { surfaceOp: 'append' })
+    creator.session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
+    await scaffold.ctx.sessions.flush(creator.session)
+    await page.getByText('Creator fixture completed without a model call.', { exact: true }).waitFor()
+    // New Session returns to the Standard blank and its unsent draft.
+    const newSession = page.getByRole('button', { name: 'New session', exact: true }).filter({ hasText: 'New Session' })
+    const [reopening] = await Promise.all([page.waitForResponse('**/api/session/create'), newSession.click()])
+    expect(reopening.request().postDataJSON()).toHaveProperty('payload.args.request.sessionId', standard.id)
+    expect(await reopening.json()).toMatchObject({ result: { ok: true, value: { sessionId: standard.id, agentPreset: 'standard' } } })
+    await composerOf(standard.id).filter({ hasText: draft }).waitFor()
+    expect(await composerOf(standard.id).innerText()).toBe(draft)
+    const reopened = scaffold.ctx.agents.get(standard.id)
+    if (reopened === undefined) throw new Error('New Session did not keep the Standard blank live')
+    expect(reopened.session.header.agentPreset).toBe('standard')
+    expect(scaffold.ctx.sessionProjections.stateOf(reopened.session, 'agentPreset')).toBe('standard')
+    expect(scaffold.ctx.agentPresets.composedPreset(reopened.ctx)).toBe('standard')
+    expect(scaffold.ctx.sessionProjections.stateOf(creator.session, 'agentPreset')).toBe('cordis')
+    await page.getByRole('button', { name: 'Standard mode', exact: true }).waitFor()
+    expect(scaffold.ctx.settings.describe().find(row => row.ns === 'ui-settings')?.value).toMatchObject({ enabled: developerTools })
+    expect(scaffold.ctx.agentPresets.defaultId).toBe('standard')
+    expect(tripwire.pageErrors).toEqual([])
+    expect(tripwire.warnings).toEqual([])
+  } finally {
+    await browser?.close()
+    await scaffold.close()
+  }
 })

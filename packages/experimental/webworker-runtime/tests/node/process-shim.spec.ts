@@ -16,19 +16,21 @@ afterEach(() => {
 })
 
 describe('process shim', () => {
-  it('publishes cwd, env, and version zero for the loader probe', () => {
+  it('publishes cwd, env, and the Node release its internal modules follow', () => {
     const shim = installProcessGlobal({ cwd: '/dsh', env: { DSH_HOME: '/dsh/home' } })
     expect(shim.cwd()).toBe('/dsh')
     expect(shim.env.DSH_HOME).toBe('/dsh/home')
     expect(shim.title).toBe('dsh-webworker')
-    // "0.0.0" keeps the vendored Loader off Node internals so the worker owns
-    // the module seam.
-    expect(shim.versions.node).toBe('0.0.0')
+    // The vendored Loader reaches Node internals from Node 22 on; execArgv carries no --expose-internals.
+    expect(shim.versions.node).toBe('24.18.0')
+    expect(shim.execArgv).toEqual([])
   })
 
   it('exposes an executable identity without enabling Node programs', () => {
     const shim = installProcessGlobal({ cwd: '/dsh', env: {} })
     expect(shim.execPath).toBe('/dsh/bin/node')
+    // No entry script: consumers that read argv[1] as the main module find none.
+    expect(shim.argv).toEqual([shim.execPath])
     expect(spawnSync(shim.execPath, ['--eval', 'throw new Error("must not execute")']).error?.code).toBe('ENOENT')
   })
 

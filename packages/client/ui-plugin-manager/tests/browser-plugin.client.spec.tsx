@@ -1,21 +1,24 @@
 // @vitest-environment jsdom
 import assert from 'node:assert/strict'
 import { Context, Service } from '@deepseek-ai/cordis'
-import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest'
 import { cleanup, render } from '@testing-library/react'
 import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
 import type { ILayout, PanelInfo } from '@x1a0f3n9/dsh-client-ui-layout/client'
 import { SlotRegistry } from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import { resolveSlotLabel } from '@x1a0f3n9/dsh-client-ui-slots'
-import { TestRemote, usePinnedBrowserLanguages } from '@x1a0f3n9/dsh-client-test-runtime'
+import { allowAllAccess, TestRemote, usePinnedBrowserLanguages } from '@x1a0f3n9/dsh-client-test-runtime'
 import * as settings from '@x1a0f3n9/dsh-client-ui-settings/client'
 import { apply, inject, NS, PANEL_ID } from '../src/client/index.ts'
 import { PluginManagerPage } from '../src/client/PluginManagerPage.tsx'
+import { PluginRefreshToast, type PluginRefreshToastFace } from '../src/client/PluginRefreshToast.tsx'
 import { PluginsPanelIcon } from '../src/client/PluginsPanelIcon.tsx'
 import type { PluginManagerFace } from '../src/client/manager-store.ts'
+import type { createNavigationStore } from '../src/client/navigation-store.ts'
 
 usePinnedBrowserLanguages('zh-CN')
+beforeEach(() => { localStorage.clear() })
 afterEach(cleanup)
 
 async function bench() {
@@ -54,6 +57,7 @@ function declare(slots: SlotRegistry): () => void {
     name: 'root',
     children: {
       'main': { kind: 'keyed', scope: 'root' },
+      'shell.overlay': { kind: 'list', scope: 'root' },
       'sidebar.panellist': { kind: 'list', scope: 'root' },
     },
   } as never, () => null)
@@ -67,17 +71,83 @@ describe('ui-plugin-manager browser plugin', () => {
     const entry = b.slots.entries('main')[0]!
     assert(entry.store && 'create' in entry.store)
     const navigation = entry.store.create()
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'list' } })
     b.ctx.pluginNavigation.openBundle('dsh-navigation-test')
     expect(b.panelInfo.getSnapshot().activePanelId).toBe(PANEL_ID)
-    expect(navigation.getSnapshot()).toEqual({ view: { kind: 'package', name: 'dsh-navigation-test' } })
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'package', name: 'dsh-navigation-test' } })
     b.selectPanel(null)
-    expect(navigation.getSnapshot()).toEqual({ view: { kind: 'list' } })
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'list' } })
     b.selectPanel(PANEL_ID)
-    expect(navigation.getSnapshot()).toEqual({ view: { kind: 'list' } })
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'list' } })
+    assert(navigation.actions.setView)
+    navigation.actions.setView({ kind: 'more' })
+    b.selectPanel(null)
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'list' } })
     b.ctx.pluginNavigation.openBundle('dsh-navigation-test')
     removeRoot()
     b.selectPanel(null)
-    expect(navigation.getSnapshot()).toEqual({ view: { kind: 'package', name: 'dsh-navigation-test' } })
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'package', name: 'dsh-navigation-test' } })
+  })
+
+  it('opens the Plugins list from another panel and resets bundle details without opening installation', async () => {
+    const b = await bench()
+    declare(b.slots)
+    await b.ctx.plugin({ inject: [...inject], apply }).await()
+    const entry = b.slots.entries('main')[0]!
+    assert(entry.store && 'create' in entry.store)
+    const navigation = entry.store.create() as ReturnType<ReturnType<typeof createNavigationStore>['create']>
+    const injected: object = entry.inject!()
+    const face = injected as PluginManagerFace
+    expect(face.hooks.pluginManager.getSnapshot().install.open).toBe(false)
+
+    b.ctx.pluginNavigation.openList()
+    expect(b.panelInfo.getSnapshot().activePanelId).toBe(PANEL_ID)
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'list' } })
+    expect(face.hooks.pluginManager.getSnapshot().install.open).toBe(false)
+
+    b.ctx.pluginNavigation.openBundle('dsh-navigation-test')
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'package', name: 'dsh-navigation-test' } })
+    navigation.actions.setTab('fixture-discover')
+    b.ctx.pluginNavigation.openList()
+    expect(b.panelInfo.getSnapshot().activePanelId).toBe(PANEL_ID)
+    expect(navigation.getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'list' } })
+    expect(face.hooks.pluginManager.getSnapshot().install.open).toBe(false)
+    expect(b.list).not.toHaveBeenCalled()
+  })
+
+  it('shares refresh failures with the overlay after navigation and releases both registrations across reloads', async () => {
+    const b = await bench()
+    const fiber = b.ctx.plugin({ inject: [...inject], apply })
+    await fiber.await()
+    expect(b.slots.entries('shell.overlay')).toHaveLength(0)
+    const removeRoot = declare(b.slots)
+    const mainInjected: object = b.slots.entries('main')[0]!.inject!()
+    const face = mainInjected as PluginManagerFace
+    const overlayInjected: object = b.slots.entries('shell.overlay')[0]!.inject!()
+    const overlay = overlayInjected as PluginRefreshToastFace
+    expect(overlay.hooks.pluginManager).toBe(face.hooks.pluginManager)
+    face.ensure()
+    await vi.waitFor(() => { expect(face.hooks.pluginManager.getSnapshot().status).toBe('ready') })
+    b.selectPanel(PANEL_ID)
+    b.list.mockRejectedValueOnce(new Error('offline'))
+    face.refresh()
+    b.selectPanel(null)
+    await vi.waitFor(() => { expect(overlay.hooks.pluginManager.getSnapshot().notice?.kind).toBe('refresh-failed') })
+    overlay.dismissNotice()
+    expect(face.hooks.pluginManager.getSnapshot().notice).toBeNull()
+    removeRoot()
+    expect(b.slots.entries('shell.overlay')).toHaveLength(0)
+    expect(b.slots.entries('main')).toHaveLength(0)
+    declare(b.slots)
+    const remountedInjected: object = b.slots.entries('shell.overlay')[0]!.inject!()
+    expect((remountedInjected as PluginRefreshToastFace).hooks.pluginManager).toBe(face.hooks.pluginManager)
+    await fiber.dispose()
+    expect(b.slots.entries('shell.overlay')).toHaveLength(0)
+    expect(b.slots.entries('main')).toHaveLength(0)
+    await b.ctx.plugin({ inject: [...inject], apply }).await()
+    const reloadedInjected: object = b.slots.entries('shell.overlay')[0]!.inject!()
+    expect((reloadedInjected as PluginRefreshToastFace).hooks.pluginManager).not.toBe(face.hooks.pluginManager)
+    expect((reloadedInjected as PluginRefreshToastFace).hooks.pluginManager.getSnapshot().notice).toBeNull()
   })
 
   it('declares only the services the page and its Remote methods use', () => {
@@ -94,7 +164,7 @@ describe('ui-plugin-manager browser plugin', () => {
     expect(b.selectPanel).toHaveBeenCalledWith(PANEL_ID)
     const entry = b.slots.entries('main')[0]!
     assert(entry.store && 'create' in entry.store)
-    expect(entry.store.create().getSnapshot()).toEqual({ view: { kind: 'package', name: 'dsh-navigation-test' } })
+    expect(entry.store.create().getSnapshot()).toEqual({ tab: 'installed', view: { kind: 'package', name: 'dsh-navigation-test' } })
     expect(entry.component).toBe(PluginManagerPage)
     expect(entry.options).toMatchObject({ key: PANEL_ID })
     expect(entry.locale).toBe(NS)
@@ -104,19 +174,31 @@ describe('ui-plugin-manager browser plugin', () => {
     const unread = () => { throw new Error('The sidebar icon must not read application state') }
     const glyph = render(<PluginsPanelIcon size={18} active={false}
       usePanelInfo={unread} useSessions={unread} useSessionStatus={unread} useSessionRetainInfo={unread}
-      useWorkspaces={unread} useResource={unread} />)
+      useWorkspaces={unread} useResource={unread} {...allowAllAccess} />)
     expect(glyph.container.querySelector('svg')?.getAttribute('width')).toBe('18')
     expect(icon.options).toMatchObject({ id: PANEL_ID, order: 0 })
     expect(icon.locale).toBe(NS)
     expect(resolveSlotLabel(icon.options.label)).toBe('插件')
     // The page declares the slots a plugin's configuration arrives through, and binds their projection beside its state.
+    expect(b.slots.spec('plugins.add.actions')).toMatchObject({ kind: 'list', scope: 'root' })
     expect(b.slots.spec('plugins.item')).toMatchObject({ kind: 'list', scope: 'root' })
     expect(b.slots.spec('plugins.bundle.config')).toMatchObject({ kind: 'keyed', scope: 'root' })
     expect(b.slots.spec('plugins.row.config')).toMatchObject({ kind: 'keyed', scope: 'root' })
     for (const name of ['plugins.detail.actions', 'plugins.detail.badge', 'plugins.detail.section'] as const) {
       expect(b.slots.spec(name)).toMatchObject({ kind: 'list', scope: 'root' })
     }
-    const face = (entry.inject as unknown as () => PluginManagerFace)()
+    const injected: object = entry.inject!()
+    const face = injected as PluginManagerFace
+    const overlay = b.slots.entries('shell.overlay')[0]!
+    expect(overlay.component).toBe(PluginRefreshToast)
+    expect(overlay.options).toMatchObject({ id: 'plugin-manager.refresh-toast' })
+    expect(overlay.locale).toBe(NS)
+    const overlayInjected: object = overlay.inject!()
+    const overlayFace = overlayInjected as PluginRefreshToastFace
+    expect(overlayFace.hooks.pluginManager).toBe(face.hooks.pluginManager)
+    expect(overlayFace.dismissNotice).toBe(face.dismissNotice)
+    expect(Object.keys(overlayFace).sort()).toEqual(['dismissNotice', 'hooks'])
+    expect(Object.keys(overlayFace.hooks)).toEqual(['pluginManager'])
     const text = { en: 'Local tools', zh: '本地工具' }
     expect(face.resolveText(text)).toBe('本地工具')
     b.locale.setLocale('en')
@@ -146,6 +228,7 @@ describe('ui-plugin-manager browser plugin', () => {
     await fiber.dispose()
     expect(b.ctx.get('pluginNavigation')).toBeUndefined()
     expect(b.slots.entries('main')).toHaveLength(0)
+    expect(b.slots.entries('shell.overlay')).toHaveLength(0)
     expect(b.slots.entries('sidebar.panellist')).toHaveLength(0)
     b.remote.emit('plugin-manager/changed', [{ reason: 'install' }])
     await Promise.resolve()

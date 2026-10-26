@@ -14,6 +14,7 @@ import type {
 import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import { ComposerBlockRegistry } from '../src/client/input/blocks.ts'
 import { InputHub } from '../src/client/input/hub.ts'
+import { reportMessageSubmission } from '../src/client/input/submission-analytics.ts'
 import { ConversationController } from '../src/client/service.ts'
 import { zh } from '../src/client/locales.ts'
 
@@ -755,7 +756,7 @@ describe('sendSession submission echo', () => {
     await b.runtime.dispose()
   })
 
-  it('sends a subagent continuation without registering an unobservable echo', async () => {
+  it('echoes a subagent continuation and sends it under the echo request id', async () => {
     const b = await bench()
     const session = b.runtime.sessions.binding('s1')!.session
     const snapshot = session.getSnapshot()
@@ -768,8 +769,11 @@ describe('sendSession submission echo', () => {
     })
     const prompt = vi.spyOn(session, 'prompt').mockResolvedValue({ ok: true, value: { accepted: true } })
     await expect(b.root.sendSession(session, '继续', [], 'queue')).resolves.toEqual({ kind: 'success' })
-    expect(beginSubmission).not.toHaveBeenCalled()
-    expect(prompt).toHaveBeenCalledWith([{ type: 'text', text: '继续' }], 'queue', undefined)
+    expect(beginSubmission).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ mode: 'queue', text: '继续' }))
+    const echo = beginSubmission.mock.results[0]
+    const requestId = echo?.type === 'return' ? echo.value.requestId : undefined
+    expect(requestId).toEqual(expect.any(String))
+    expect(prompt).toHaveBeenCalledWith([{ type: 'text', text: '继续' }], 'queue', undefined, requestId)
     await b.runtime.dispose()
   })
 })
@@ -875,4 +879,139 @@ describe('InputHub queue steering (empty-draft accelerated Enter)', () => {
     expect(b.updateQueue).not.toHaveBeenCalled()
     await b.runtime.dispose()
   })
+})
+
+
+it('captures run mode and queue intent at submission before later projection changes', async () => {
+  const b = await bench()
+  const track = vi.fn()
+  b.runtime.ctx.provide('productAnalytics', { enabled: true, track } as never)
+  try {
+    await b.runtime.sessions.setProjection('s1', 'plan', { active: true, pending: false })
+    await b.runtime.sessions.setProjection('s1', 'goal', { goal: { phase: 'active' } })
+    await b.runtime.sessions.setProjection('s1', 'modelSelection', { next: { provider: 'fixture', model: 'model', reasoningEffort: 'high' }, lastUsed: null })
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.running = true; state.blank = false })
+    b.shell.setDraft('private prompt')
+    b.shell.submit('queue', 'click')
+    expect(track).toHaveBeenCalledExactlyOnceWith('send_button_click', {
+      session_id: 's1', model_name: 'fixture/model', thinking_effort: 'high', run_mode: 'plan', msg_type: 'queue',
+      is_new_session: false,
+    }, expect.any(Number))
+    await b.runtime.sessions.setProjection('s1', 'plan', { active: false, pending: false })
+    expect(track).toHaveBeenCalledTimes(1)
+    expect(JSON.stringify(track.mock.calls)).not.toContain('private prompt')
+  } finally { await b.runtime.dispose() }
+})
+
+it.each([
+  { running: false, mode: 'queue', expected: 'default' },
+  { running: true, mode: 'steer', expected: 'steer' },
+] as const)('reports msg_type=$expected without gesture fields', async ({ running, mode, expected }) => {
+  const b = await bench()
+  const track = vi.fn()
+  b.runtime.ctx.provide('productAnalytics', { enabled: true, track } as never)
+  try {
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.running = running; state.blank = true })
+    b.shell.setDraft('message')
+    b.shell.submit(mode, 'enter')
+    expect(track).toHaveBeenCalledExactlyOnceWith('send_button_click', {
+      run_mode: 'default', msg_type: expected, is_new_session: true,
+    }, expect.any(Number))
+  } finally { await b.runtime.dispose() }
+})
+
+it('marks only a message sent from a blank Session as a new Session', async () => {
+  const b = await bench()
+  const track = vi.fn()
+  b.runtime.ctx.provide('productAnalytics', { enabled: true, track } as never)
+  try {
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.running = false; state.blank = true })
+    b.shell.setDraft('first message')
+    b.shell.submit('queue', 'click')
+    expect(track).toHaveBeenLastCalledWith('send_button_click', {
+      run_mode: 'default', msg_type: 'default', is_new_session: true,
+    }, expect.any(Number))
+    await vi.waitFor(() => { expect(b.shell.snapshot.phase).toBe('plain') })
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.blank = false })
+    b.shell.setDraft('second message')
+    b.shell.submit('queue', 'click')
+    expect(track).toHaveBeenLastCalledWith('send_button_click', {
+      session_id: 's1', run_mode: 'default', msg_type: 'default', is_new_session: false,
+    }, expect.any(Number))
+    expect(track).toHaveBeenCalledTimes(2)
+  } finally { await b.runtime.dispose() }
+})
+
+it.each([
+  { preset: 'cordis', category: 'creator' },
+  { preset: 'ptc', category: 'ptc' },
+  { preset: 'minimal', category: 'minimal' },
+  { preset: 'standard', category: 'standard' },
+] as const)('reports the built-in $preset preset as $category', async ({ preset, category }) => {
+  const b = await bench()
+  const track = vi.fn()
+  b.runtime.ctx.provide('productAnalytics', { enabled: true, track } as never)
+  try {
+    await b.runtime.sessions.setProjection('s1', 'agentPreset', preset)
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.running = false; state.blank = true })
+    b.shell.setDraft('message')
+    b.shell.submit('queue', 'click')
+    expect(track).toHaveBeenCalledExactlyOnceWith('send_button_click', {
+      run_mode: 'default', msg_type: 'default', is_new_session: true, agent_preset: category,
+    }, expect.any(Number))
+  } finally { await b.runtime.dispose() }
+})
+
+it('reports a custom preset as other without its id', async () => {
+  const b = await bench()
+  const track = vi.fn()
+  b.runtime.ctx.provide('productAnalytics', { enabled: true, track } as never)
+  try {
+    await b.runtime.sessions.setProjection('s1', 'agentPreset', 'private-preset')
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.running = false; state.blank = false })
+    b.shell.setDraft('message')
+    b.shell.submit('queue', 'click')
+    expect(track).toHaveBeenCalledExactlyOnceWith('send_button_click', {
+      session_id: 's1', run_mode: 'default', msg_type: 'default', is_new_session: false, agent_preset: 'other',
+    }, expect.any(Number))
+    expect(JSON.stringify(track.mock.calls)).not.toContain('private-preset')
+  } finally { await b.runtime.dispose() }
+})
+
+it('omits the preset category while the Session records no preset', async () => {
+  const b = await bench()
+  const track = vi.fn()
+  b.runtime.ctx.provide('productAnalytics', { enabled: true, track } as never)
+  try {
+    await b.runtime.sessions.setProjection('s1', 'agentPreset', null)
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.running = false; state.blank = true })
+    b.shell.setDraft('message')
+    b.shell.submit('queue', 'click')
+    expect(track).toHaveBeenCalledOnce()
+    expect(track.mock.calls[0]?.[1]).not.toHaveProperty('agent_preset')
+  } finally { await b.runtime.dispose() }
+})
+
+it('reports an active goal and a model without an explicit effort', async () => {
+  const b = await bench()
+  const track = vi.fn()
+  b.runtime.ctx.provide('productAnalytics', { enabled: true, track } as never)
+  try {
+    await b.runtime.sessions.setProjection('s1', 'goal', { goal: { phase: 'active' } })
+    await b.runtime.sessions.setProjection('s1', 'modelSelection', { next: null, lastUsed: { provider: 'fixture', model: 'model' } })
+    await b.runtime.sessions.updateSessionSnapshot('s1', (state) => { state.running = false; state.blank = false })
+    b.shell.setDraft('message')
+    b.shell.submit('queue', 'click')
+    expect(track).toHaveBeenCalledExactlyOnceWith('send_button_click', {
+      session_id: 's1', model_name: 'fixture/model', run_mode: 'goal', msg_type: 'default', is_new_session: false,
+    }, expect.any(Number))
+  } finally { await b.runtime.dispose() }
+})
+
+it('reports nothing for a submission whose Session facts were not captured', () => {
+  const ctx = new Context()
+  const track = vi.fn()
+  ctx.provide('productAnalytics', { enabled: true, track } as never)
+  reportMessageSubmission(ctx, { timestamp: 1, mode: 'queue', source: 'click' })
+  expect(track).not.toHaveBeenCalled()
 })

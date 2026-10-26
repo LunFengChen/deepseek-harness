@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-web-app",
-  "description": "The dsh browser-surface bundle: the web patch layer over dsh-base plus the runtime glue plugin (frontend dist serving, web-surface prompt, bash runtime variables, URL line)",
-  "version": "0.1.7-rc.4",
+  "description": "The dsh browser-surface bundle: the web patch layer over dsh-base plus the runtime glue plugin (frontend dist serving, bash runtime variables, URL line)",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -25,9 +25,13 @@
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./presets/*.patch.yml": "./presets/*.patch.yml",
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./startup/locale/*.json": "./locale/startup/*.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
+    "locale/startup/*.json",
     "lib/index.js",
     "lib/startup.js",
     "cordis.patch.yml",
@@ -35,6 +39,7 @@
     "presets/ptc.patch.yml",
     "presets/minimal.patch.yml",
     "presets/cordis.patch.yml",
+    "lib/public-url-*.js",
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
@@ -91,22 +96,11 @@
         {
           "id": "better-sidebar",
           "entryId": "better-sidebar",
-          "packageName": "@x1a0f3n9/dsh-better-sidebar",
+          "packageName": "dsh-better-sidebar",
           "title": "Better sidebar",
           "description": "File, terminal, Git, and subagent workbench in the sidebar.",
           "defaultEnabled": true,
-          "author": "LunFengChen",
-          "homepage": "https://github.com/LunFengChen/DSH-better-sidebar"
-        },
-        {
-          "id": "hindsight",
-          "entryId": "hindsight",
-          "packageName": "@x1a0f3n9/hindsight-coding-agents",
-          "title": "Hindsight memory",
-          "description": "Long-term project memory. Defaults to a local Hindsight daemon; cloud is optional.",
-          "defaultEnabled": true,
-          "author": "LunFengChen",
-          "homepage": "https://github.com/LunFengChen/hindsight-coding-agents"
+          "homepage": "https://github.com/omdsh-dev/DSH-better-sidebar"
         },
         {
           "id": "failover-queue",
@@ -170,20 +164,23 @@
     "@x1a0f3n9/dsh-client-ui-deliverables": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-directory-picker-browse": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-directory-picker-native": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-entry-customization": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-goal": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-input-trigger": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-jobs": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-layout": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-message-feedback": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-model-selection": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-deepseek-model-label-1017": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-open-in-app": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-permission-presets": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-plan": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-plugin-manager": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-reference": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
-    "@x1a0f3n9/dsh-client-ui-schedule": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-secret-mask": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-schedule": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-settings": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-settings-general": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-settings-models": "workspace:*",
@@ -229,6 +226,7 @@
     "@x1a0f3n9/dsh-persona": "workspace:*",
     "@x1a0f3n9/dsh-plan-mode": "workspace:*",
     "@x1a0f3n9/dsh-plugin-manager": "workspace:*",
+    "@x1a0f3n9/dsh-plugin-market": "workspace:*",
     "@x1a0f3n9/dsh-schedule": "workspace:*",
     "@x1a0f3n9/dsh-session-log-export": "workspace:*",
     "@x1a0f3n9/dsh-session-reference": "workspace:*",
@@ -250,7 +248,7 @@
     "@x1a0f3n9/dsh-tool-present": "workspace:*",
     "@x1a0f3n9/dsh-tool-pwsh": "workspace:*",
     "@x1a0f3n9/dsh-tool-pwsh-persistent": "workspace:*",
-    "@x1a0f3n9/dsh-tool-ralph": "workspace:*",
+    "@x1a0f3n9/dsh-tool-schedule": "workspace:*",
     "@x1a0f3n9/dsh-tool-skill": "workspace:*",
     "@x1a0f3n9/dsh-tool-subagent": "workspace:*",
     "@x1a0f3n9/dsh-tool-subagent-control": "workspace:*",
@@ -263,26 +261,28 @@
     "@x1a0f3n9/dsh-workspace-changes": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:~",
     "commander": "^15.0.0",
-    "open": "^11.0.0",
+    "open": "^11.0.2",
     "@x1a0f3n9/dsh-api-account-controller": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-settings-account": "workspace:*",
     "@x1a0f3n9/dsh-client-shortcuts": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-shortcuts": "workspace:*",
-    "@x1a0f3n9/dsh-session-timeline": "0.1.5-xfdsh.3",
-    "@x1a0f3n9/dshmarket": "1.45.3",
-    "@x1a0f3n9/dsh-reasoning-effort": "github:LunFengChen/dsh-reasoning-effort#e7e9e1d",
-    "@x1a0f3n9/dsh-context": "0.49.8",
-    "@x1a0f3n9/dsh-better-sidebar": "0.19.4",
-    "@x1a0f3n9/hindsight-coding-agents": "0.5.2-xfdsh.4",
+    "@x1a0f3n9/dsh-client-product-analytics": "workspace:*",
+    "@x1a0f3n9/dsh-host-product-telemetry-otel": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-settings-session-log": "workspace:*",
+    "@x1a0f3n9/dsh-harness-dev-context": "workspace:*",
+    "@x1a0f3n9/dsh-session-timeline": "0.1.6",
+    "@x1a0f3n9/dshmarket": "1.45.4",
+    "@x1a0f3n9/dsh-reasoning-effort": "0.7.7",
+    "@x1a0f3n9/dsh-context": "0.49.9",
+    "dsh-better-sidebar": "0.28.0",
     "@x1a0f3n9/dsh-failover-queue": "0.1.13",
-    "@x1a0f3n9/dsh-skills-manager": "0.1.53-xfdsh.2",
+    "@x1a0f3n9/dsh-skills-manager": "0.1.54",
     "@x1a0f3n9/dsh-web-search-pool": "workspace:^"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
     "@deepseek-ai/cordis-plugin-loader": "workspace:~",
-    "@x1a0f3n9/dsh-shell-env": "workspace:*",
-    "@x1a0f3n9/dsh-system-prompt": "workspace:*"
+    "@x1a0f3n9/dsh-shell-env": "workspace:*"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
@@ -294,8 +294,8 @@
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-projection": "workspace:*",
     "@x1a0f3n9/dsh-shell-env": "workspace:*",
-    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
     "@x1a0f3n9/dsh-typert-registry": "workspace:*",
-    "@deepseek-ai/libreoffice-kit": "^0.1.1"
+    "@deepseek-ai/libreoffice-kit": "^0.1.5",
+    "@x1a0f3n9/dsh-otel": "workspace:*"
   }
 }

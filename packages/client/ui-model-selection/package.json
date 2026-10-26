@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-model-selection",
   "description": "Model selection over the shared model catalog, Session projection, and session.selectModel",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -23,7 +23,8 @@
       "default": "./lib/client.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "dsh": {
     "client": {
@@ -55,19 +56,19 @@
     "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
-    "@types/react": "~18.3.1",
     "@deepseek-ai/cordis": "workspace:~",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@types/react-dom": "~18.3.0",
     "@x1a0f3n9/dsh-client-store": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-util-values": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
-    "clsx": "^2.1.1"
+    "clsx": "^2.1.1",
+    "@x1a0f3n9/dsh-client-product-analytics": "workspace:*"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/client.js",
     "lib/types/**/*.d.ts"

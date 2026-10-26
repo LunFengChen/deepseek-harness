@@ -3,12 +3,13 @@
 import { FiberState } from '@deepseek-ai/cordis'
 import type { WebBootGraph } from '@x1a0f3n9/dsh-client-modules/client'
 import { expect, it } from 'vitest'
-import { experimentalRuntimeReferences, modulePackage } from './runtime-roster.ts'
+import { modulePackage } from './runtime-roster.ts'
+import { experimentalRuntimeReferences } from './runtime-roster-isolation.ts'
 import { withDefaultWeb, webGet } from './default-web-process.ts'
 
 const experimentalName = '@x1a0f3n9/dsh-experimental-client-ui-agent-team'
 
-it('boots default Web without experimental modules, scheduling, time context, or an active built-in Browser', async (test) => {
+it('boots default Web with the shipped Schedule rows, without experimental modules, time context, or an active built-in Browser', async (test) => {
   await withDefaultWeb(test, async ({ url, request }) => {
     const auth = await webGet(url, test.signal)
     const cookie = auth.headers['set-cookie']?.[0]?.split(';', 1)[0]
@@ -29,17 +30,19 @@ it('boots default Web without experimental modules, scheduling, time context, or
     expect(roster.plugins.length).toBeGreaterThan(roster.entries.length)
     expect(roster.modules.some(url => modulePackage(url) === '@x1a0f3n9/dsh')).toBe(true)
     expect(roster.client.entries.length).toBeGreaterThan(0)
-    for (const name of [
-      '@x1a0f3n9/dsh-client-ui-sidebar-browser',
-      '@x1a0f3n9/dsh-time-context',
-      '@x1a0f3n9/dsh-schedule',
-      '@x1a0f3n9/dsh-client-ui-schedule',
-    ]) {
-      const entry = roster.entries.find(entry => entry.name === name)
-      expect(entry, name).toBeDefined()
-      expect(entry!.state, name).toBeUndefined()
-      expect(delivered.entries.some(entry => entry.id === name), name).toBe(false)
-    }
+    const browser = roster.entries.find(entry => entry.name === '@x1a0f3n9/dsh-client-ui-sidebar-browser')
+    expect(browser).toBeDefined()
+    expect(browser!.state).toBeUndefined()
+    expect(delivered.entries.some(entry => entry.id === '@x1a0f3n9/dsh-client-ui-sidebar-browser')).toBe(false)
+    // The shipped composition mounts the Host Schedule service and its task
+    // page; the clock stays preset-level, so neither plane carries a row for it.
+    expect(roster.entries).toEqual(expect.arrayContaining([
+      expect.objectContaining({ name: '@x1a0f3n9/dsh-schedule', state: FiberState.ACTIVE }),
+      expect.objectContaining({ name: '@x1a0f3n9/dsh-client-ui-schedule', state: FiberState.ACTIVE }),
+    ]))
+    expect(delivered.entries.some(entry => entry.id === '@x1a0f3n9/dsh-client-ui-schedule')).toBe(true)
+    expect(roster.entries.some(entry => entry.name === '@x1a0f3n9/dsh-time-context')).toBe(false)
+    expect(delivered.entries.some(entry => entry.id === '@x1a0f3n9/dsh-time-context')).toBe(false)
     expect(experimentalRuntimeReferences(roster)).toEqual([])
 
     const contaminated = await request('mount-experimental')

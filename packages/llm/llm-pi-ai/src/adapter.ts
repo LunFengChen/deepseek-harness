@@ -54,13 +54,24 @@ import type {
   ReasoningEffortId as ReasoningEffortIdType,
   ResolvedRetryPolicy,
   StreamChunk,
+  ToolSchema,
 } from '@x1a0f3n9/dsh-llm'
 import type { AttachmentStore, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
 import { idleWatchdog, timeoutOf } from '@x1a0f3n9/dsh-timeout'
 import type { ResolvedPiAiProviderProfile } from './config.ts'
-import { toPiContext } from './context.ts'
-import { createModels, getSupportedThinkingLevels } from './models.ts'
-import { toStreamChunks, type PiAiStreamDiagnostics } from './stream.ts'
+import { requestImageTarget, toPiContext } from './context.ts'
+import { conversationUpdates, createModels, getSupportedThinkingLevels } from './models.ts'
+import { toStreamChunks } from './stream.ts'
+
+/**
+ * Initially active declaration added to an Anthropic request whose projected
+ * tools are all deferred, because Anthropic rejects a tool list without one.
+ */
+const ANTHROPIC_TOOL_UPDATE_PLACEHOLDER: ToolSchema = {
+  name: 'DeferredToolPlaceholder',
+  description: 'Reserved placeholder that keeps deferred tool loading active; never call this tool.',
+  parameters: { type: 'object', properties: {} },
+}
 
 /** One resolution's frozen view: the profiles and the collection built from them. */
 interface PiAiSnapshot {
@@ -76,7 +87,8 @@ export interface PiAiAdapterOptions {
   profiles: () => ReadonlyMap<string, ResolvedPiAiProviderProfile>
   /**
    * Resolve the credential for one already-resolved profile; called once per
-   * stream call and frozen for that call. `undefined` defers to the route's own
+   * stream call and frozen for that call, and by `listModels`, which offers no
+   * models while it throws `MISSING_CREDENTIAL`. `undefined` defers to the route's own
    * pi-ai auth, which for an installed catalog route is its provider-native
    * ambient discovery; the plugin allows that only for a profile naming no
    * credential at all, because a named reference that misses throws `LlmError`
@@ -201,16 +213,6 @@ function reasoningInfo(
   }
 }
 
-/** Read the first common provider/gateway request-id header, case-insensitively. */
-function responseRequestId(headers: Readonly<Record<string, string>>): string | undefined {
-  for (const name of ['x-request-id', 'request-id', 'x-amzn-requestid', 'cf-ray', 'x-cache', 'x-vercel-id']) {
-    for (const [key, value] of Object.entries(headers)) {
-      if (key.toLowerCase() === name && value.length > 0) return value
-    }
-  }
-  return undefined
-}
-
 /** Merge deployment headers while removing case-insensitive attribution collisions. */
 function requestHeaders(headers: Readonly<Record<string, string>> | undefined): Record<string, string> {
   const attribution = attributionHeaders()
@@ -231,6 +233,13 @@ export class PiAiAdapter extends LlmAdapter {
 
   constructor(private readonly config: PiAiAdapterOptions) {
     super()
+  }
+
+  override imageRequestTarget(provider: string, model: string, image: ImageAttachmentRef) {
+    const snapshot = this.current()
+    this.modelOf(snapshot, provider, model)
+    const profile = this.profileOf(snapshot, provider)
+    return requestImageTarget(image, { maxPixels: profile.requestImagePixelBudget, maxBytes: profile.requestImageMaxBytes })
   }
 
   /**
@@ -284,9 +293,15 @@ export class PiAiAdapter extends LlmAdapter {
   }
 
   override listModels(provider: string): Promise<readonly LlmModelInfo[]> {
-    return Promise.resolve().then(() => {
+    return Promise.resolve().then(async () => {
       const snapshot = this.current()
-      this.profileOf(snapshot, provider)
+      const profile = this.profileOf(snapshot, provider)
+      try { await this.config.resolveApiKey(provider, profile) }
+      catch (error) {
+        // A route whose named key does not resolve cannot serve a request, so it offers no models until the key is stored.
+        if (error instanceof LlmError && error.code === 'MISSING_CREDENTIAL') return []
+        throw error
+      }
       return snapshot.models.getModels(provider).map(model => ({
         provider,
         id: model.id,
@@ -311,9 +326,8 @@ export class PiAiAdapter extends LlmAdapter {
     const profile = this.profileOf(snapshot, provider)
     const resolvedModel = this.modelOf(snapshot, provider, model)
     const defaultLevel = describableReasoningLevel(resolvedModel, profile.reasoning)
-    // Send an output cap on every request so a gateway cannot apply its own
-    // smaller default. Explicit profile config wins; otherwise the model's
-    // capability (catalog or route fallback) is the request default.
+    // Only a cap the deployment configured is a request default; the
+    // catalog's `maxTokens` sizes the model and stops there.
     const configuredMaxTokens = profile.configuredMaxTokens.get(model)
     return {
       provider,
@@ -321,8 +335,9 @@ export class PiAiAdapter extends LlmAdapter {
       name: resolvedModel.name,
       inputModalities: [...resolvedModel.input],
       context: { contextWindow: resolvedModel.contextWindow },
-      defaultMaxTokens: configuredMaxTokens ?? resolvedModel.maxTokens,
+      ...configuredMaxTokens === undefined ? {} : { defaultMaxTokens: configuredMaxTokens },
       ...reasoningInfo(resolvedModel, defaultLevel),
+      ...conversationUpdates(resolvedModel),
     }
   }
 
@@ -352,18 +367,21 @@ export class PiAiAdapter extends LlmAdapter {
     // the one it started with and the next call picks up the new one.
     const profile = this.profileOf(snapshot, options.provider)
     const model = this.modelOf(snapshot, options.provider, options.model)
+    const updates = conversationUpdates(model)
+    // pi-ai collapses Anthropic tool updates without an initially active declaration.
+    const tools = options.tools ?? []
+    const needsPlaceholder = model.api === 'anthropic-messages' && updates.toolUpdate === 'in-history'
+      && tools.every(tool => tool.deferLoading === true)
+      && options.messages.some(message => message.role === 'developer'
+        && message.content.some(block => block.type === 'tool-addition' || block.type === 'tool-removal'))
+    const request = needsPlaceholder
+      ? { ...options, tools: [ANTHROPIC_TOOL_UPDATE_PLACEHOLDER, ...tools] }
+      : options
     const reasoning = resolveReasoningLevel(
       model,
       options.reasoningEffort ?? profile.reasoning,
     )
     const apiKey = await this.config.resolveApiKey(options.provider, profile)
-
-    const diagnostics: PiAiStreamDiagnostics = {
-      provider: options.provider,
-      model: model.id,
-      api: String(model.api),
-      baseURL: model.baseUrl,
-    }
 
     const consumer = new AbortController()
     const upstream = options.signal === undefined
@@ -385,8 +403,8 @@ export class PiAiAdapter extends LlmAdapter {
         this.config.onReplayDegrade?.({ provider: options.provider, model: options.model, reason })
       }
       const context = attachments === undefined
-        ? toPiContext(options, undefined, onReplayDegrade)
-        : await toPiContext({ ...options, signal: watchdog.signal }, {
+        ? toPiContext(request, undefined, onReplayDegrade)
+        : await toPiContext({ ...request, signal: watchdog.signal }, {
           attachments,
           resolveImageAccess: ref => this.config.resolveImageAccess?.(attachments, ref),
           maxRequestImageBytes: profile.maxRequestImageBytes,
@@ -404,19 +422,12 @@ export class PiAiAdapter extends LlmAdapter {
         // Profile headers are deployment-owned; attribution names are
         // Harness-owned and therefore win collisions.
         headers: requestHeaders(profile.headers),
-        onResponse: (response, _model) => {
-          diagnostics.status = response.status
-          const requestId = responseRequestId(response.headers)
-          if (requestId !== undefined) diagnostics.requestId = requestId
-        },
       })
-      const iterator = toStreamChunks(events, model.contextWindow, diagnostics, options.signal)[Symbol.asyncIterator]()
+      const iterator = toStreamChunks(events, model.contextWindow, options.signal, model.id)[Symbol.asyncIterator]()
       let exhausted = false
       try {
         while (true) {
           const result = await watchdog.next(iterator)
-          const timeout = timeoutOf(watchdog.signal, 'LLM_STREAM_IDLE_TIMEOUT')
-          if (timeout !== undefined) throw timeout
           if (result.done) {
             exhausted = true
             return
@@ -426,11 +437,10 @@ export class PiAiAdapter extends LlmAdapter {
       } finally {
         if (!exhausted) {
           consumer.abort('pi-ai stream consumer stopped')
-          try {
-            await iterator.return(undefined)
-          } catch (_abortedSdkTeardown) {
-            // The stable signal already owns SDK termination; return-time abort cannot add an outcome.
-          }
+          // A demand the deadline abandoned can stay pending forever, and this
+          // generator queues its return behind it; the abort above owns SDK termination.
+          /* v8 ignore next -- the detached drain only rejects while unwinding an abandoned stream. */
+          void iterator.return(undefined).catch(() => {})
         }
       }
     } catch (error: unknown) {

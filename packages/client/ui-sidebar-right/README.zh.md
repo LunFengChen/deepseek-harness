@@ -58,7 +58,7 @@ kind: "package-reference"
 
 面板取会话区的底色与正文字号，而不是自成一层浮起的表面：它是页面的一列，不是压在页面上的卡片。
 
-root 作用域的 `rightbar` 入口通过独立的 `rightbar.session` 子树渲染选中的 Session，以及拥有已初始化 `keepMounted` 正文的后台 Session。每个 View 拥有自身的 Session reference。只有前台 Conversation 上报框架列宽并绑定公共导航；其他子树保持隐藏，不删除 tab 状态。
+root 作用域的 `rightbar` 入口通过独立的 `rightbar.session` 子树渲染选中的 Session，以及拥有已初始化 `keepMounted` 正文的后台 Session。每个 View 拥有自身的 Session reference。只有前台子树上报框架列宽；其他子树保持隐藏，不删除 tab 状态。
 
 <a id="state"></a>
 ## 状态
@@ -94,9 +94,9 @@ tab 类型分两阶段注册，随包发布的引导类型走的正是别的包�
 
 `preferNewPane: true` 会先按普通的两格上限与空间规则尝试分割目标停靠格，无法分栏时回退到该格。`replaceTab` 优先并会禁用这项偏好。
 
-`close(tabId)` 关闭一个 tab；`active()` 读取活动 tab。`isExpanded()` 与 `toggleExpanded()` 读取并驱动该列的展开；`toggleFullscreen(target)` 对捕获的停靠分栏执行面板控件的显示模式操作。布局操作供以编程方式安排该列的调用方使用，每个都像它替代的手势一样被记录：`focus(tabId)` 聚焦一个 tab 及其格；`split(paneId?)` 在与 tab 条控件相同的格预算与空间规则下分栏一个停靠格（默认活跃格），返回新格的 id，做不到时返回 `undefined`——且不记录任何东西；`float(tabId, rect?)` 把停靠 tab 浮出为浮窗；`dock(paneId)` 把浮窗放回活跃停靠格。不存在的 tab 或格、或已处于调用目标状态的，都原样不动。该接口只暴露操作：没有布局快照、没有操作日志、没有按地址查找。`_undo()` / `_redo()` 步进已挂载停靠面的历史；它们是 `@internal`——序列没有面向用户的控件，这两个只为测试存在。命令需要一个已挂载的会话停靠面；没有时它们 throw，而不是写进一个没人绘制的面里。`mounted` 是「席位正在屏幕上的那个会话」的可观察值，全局面板替代 Conversation 或没有选中会话时为 `undefined`。要在自己的挂载 effect 里打开内容的组件通过绑定的 hook 读取它，并在它有值后再行动：框架把 Conversation 列挂载在这个席位之前，而席位在同一次提交的 passive effect 里才发布绑定，一个假定席位已绑定的 effect 会先运行并 throw。计划审阅的自动打开就是这样读取它的。
+`close(tabId)` 关闭一个 tab；`active()` 读取活动 tab。`isExpanded()` 与 `toggleExpanded()` 读取并驱动该列的展开；`toggleFullscreen(target)` 对捕获的停靠分栏执行面板控件的显示模式操作。布局操作供以编程方式安排该列的调用方使用，每个都像它替代的手势一样被记录：`focus(tabId)` 聚焦一个 tab 及其格；`split(paneId?)` 在与 tab 条控件相同的格预算与空间规则下分栏一个停靠格（默认活跃格），返回新格的 id，做不到时返回 `undefined`——且不记录任何东西；`float(tabId, rect?)` 把停靠 tab 浮出为浮窗；`dock(paneId)` 把浮窗放回活跃停靠格。不存在的 tab 或格、或已处于调用目标状态的，都原样不动。该接口只暴露操作：没有布局快照、没有操作日志、没有按地址查找。`_undo()` / `_redo()` 步进屏幕上停靠面的历史；它们是 `@internal`——序列没有面向用户的控件，这两个只为测试存在。命令通过屏幕上会话已采用的 store 作用于该会话；没有会话在屏幕上、或运行时尚未创建它的 store 时，命令 throw，而不是写进一个没人绘制的面里。`mounted` 是「屏幕上的会话」的可观察值：Conversation 占据主栏时为选中的会话，全局面板替代它或没有选中会话时为 `undefined`。插件从会话选择与 `ctx.layout.panelInfo` 推导它，它在 React 渲染引起变化的那次更新之前就已改变，因此同一次提交里渲染的组件读到的是到来的会话，并可以在自己的 effect 里对它行动：框架在同一轮渲染里渲染该会话的席位，席位随之创建它的 store。席位从不发布它；每个席位只上报它渲染时依据的事实：停靠套件测得的空间，`split` 与 `preferNewPane` 把它用于该会话的分栏（未测量的分栏视为有空间）；以及框架宽度是否让面板自动全屏，全屏命令据此执行。计划审阅的自动打开通过绑定的 hook 读取 `mounted`。
 
-`focusedTarget(element?)` 解析当前 DOM 分栏和标签页，也接受嵌入 iframe；焦点位于外部时不返回页面。`commandTarget(element?)` 另外允许外部打开动作使用已挂载会话的活动停靠分栏。捕获值包含 occurrence 和导航版本；`isTargetCurrent(target)` 拒绝会话变更、已移动或重新打开的标签页，以及期间发生的导航。焦点和指针激活独立于持久化的布局选择。
+`focusedTarget(element?)` 解析当前 DOM 分栏和标签页，也接受嵌入 iframe；焦点位于外部时不返回页面。`commandTarget(element?)` 另外允许外部打开动作使用屏幕上会话的活动停靠分栏。捕获值包含 occurrence 和导航版本；`isTargetCurrent(target)` 拒绝会话变更、已移动或重新打开的标签页，以及期间发生的导航。焦点和指针激活独立于持久化的布局选择。
 
 <a id="the-tab-domain"></a>
 ## Tab 域
@@ -113,6 +113,8 @@ Tab 域按（Session，Tab id）保留品牌化 occurrence id、导航、中止�
 ## 引导页
 
 每个 `guide` 入口具有 provider 内唯一的 `id`。开始页按当前生效的定义 id 渲染 `sidebar.right.tab.guide.entry`，传入入口 id、解析后的标题、可选描述，以及框架提供的 `useTabInfo` hook。provider 可按自己的定义 id 注册自定义卡片；未注册时使用默认图标与标题按钮。侧栏负责宽度和排列，自定义组件负责内部结构和交互。引导卡片统一使用 R20，包含悬停底色与提供方自有的分体按钮。排序或其他注册变化不会改变入口身份。无背景的快捷键文字右对齐。终端 Shell 菜单位于入口标题旁。
+
+root 作用域的 `sidebar.right.tab.guide.actions` list 有注册项时，引导卡片之后显示**更多工具**卡片。它的菜单与卡片末端对齐，不窄于卡片，并随菜单行增宽，最大为 480px 与视口宽度减 24px 中的较小值。菜单行为该 list 的注册项。每个注册项接收 `entries`（按注册表顺序的卡片，含 `id`、`label` 与 `pinned`；不含 kind 为 `files` 的卡片）、在引导页位置打开卡片标签类型的 `onOpen(id)`、`onPinnedChange(id, pinned)`，以及关闭菜单的 `onDismiss()`。引导页在内存中保存已收起卡片 id 列表，每个 id 为 `kind:入口 id`。插件重新加载时 Pin 选择重置，不读取旧 localStorage 值。默认更多菜单只提供插件浏览和创建；其他注册项仍可使用 Pin 回调。卡片由 kind 而不是提供方 id 标识，因此扩展接管某个 kind 且保持入口 id 时，Pin 选择仍然有效。kind 为 `files` 的卡片始终显示。收起只隐藏卡片，不关闭标签，也不改变标签类型注册或默认页。描述的显示密度按可见卡片数计算。未注册卡片的 id 保留在内存中，直到插件重新加载。
 
 终端等需要独立实例的 tab 类型可声明 `multiple: true`。每次打开都会获得独立内容地址，因此移动和停靠会保留这些实例；普通页面仍在每个格内去重。
 
@@ -155,5 +157,3 @@ Tab 域按（Session，Tab id）保留品牌化 occurrence id、导航、中止�
 无。
 
 </details>
-
-**运行时不变量：** 不发布 companion。两个服务（`sidebarRight`、`sidebarRightTabs`）在同一个 effect 内经 `ctx.reflect.provide` 提供并随之拆除；席位绑定与 Tab 域 occurrence 的生命周期由本包的 spec 直接断言，不存在会与之分歧的独立观察。

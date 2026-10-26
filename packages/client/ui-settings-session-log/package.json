@@ -1,0 +1,67 @@
+{
+  "name": "@x1a0f3n9/dsh-client-ui-settings-session-log",
+  "description": "General settings control for Session-log upload with DeepSeek API requests",
+  "version": "0.2.1-rc.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/client/ui-settings-session-log"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "dsh": {
+    "client": {
+      "inject": [
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-settings",
+        "@x1a0f3n9/dsh-client-ui-layout"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:~"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-settings": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "react": "^18.2.0",
+    "@x1a0f3n9/dsh-client-ui-layout": "workspace:*",
+    "react-dom": "^18.2.0"
+  },
+  "files": [
+    "locale/*.json",
+    "lib/index.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ]
+}

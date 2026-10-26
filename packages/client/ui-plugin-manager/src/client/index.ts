@@ -6,7 +6,7 @@
  * A plugin that carries its own configuration renders it on this page through
  * the slots the page declares (`slot-contract.ts`).
  */
-
+import type {} from '@x1a0f3n9/dsh-client-product-analytics/client'
 import type {} from '@x1a0f3n9/dsh-client-locale/client'
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
 // Type-only: the root `main` keyed slot the page registers into, declared by
@@ -21,8 +21,10 @@ import type {} from '@x1a0f3n9/dsh-api-remotes/client'
 // through the owning package's client-safe types subpath).
 import type {} from '@x1a0f3n9/dsh-plugin-manager/types'
 import { PluginManagerPage } from './PluginManagerPage.tsx'
+import { PluginRefreshToast, type PluginRefreshToastFace } from './PluginRefreshToast.tsx'
 import { PluginsPanelIcon } from './PluginsPanelIcon.tsx'
 import { configLedgerSource } from './config-ledger.ts'
+import { tabLedgerSource } from './tab-ledger.ts'
 import { PluginManagerController } from './manager-store.ts'
 import { en, zh, type PluginManagerLocaleKey } from './locales.ts'
 import { createNavigationStore } from './navigation-store.ts'
@@ -38,6 +40,8 @@ declare module '@deepseek-ai/cordis' {
        * @param packageName - npm package name of the bundle.
        */
       openBundle(packageName: string): void
+      /** Open the Plugins main list without opening a dialog or changing the current Session. */
+      openList(): void
     }
   }
 }
@@ -47,7 +51,8 @@ export type { ConfigLedger, OfficialItem } from './config-ledger.ts'
 export type { PluginManagerFace } from './manager-store.ts'
 export type { PluginManagerLocaleKey } from './locales.ts'
 export type {
-  ConfigPageForm, PluginActivationOwnerProps, PluginConfigViewProps, PluginDetailProps, PluginPackageRef, PluginRowRef, PluginsSubject,
+  ConfigPageForm, PluginActivationOwnerProps, PluginAddActionsProps, PluginTabInstall, PluginTabProps,
+  PluginConfigViewProps, PluginDetailProps, PluginPackageRef, PluginRowRef, PluginsSubject,
 } from './slot-contract.ts'
 
 declare module '@x1a0f3n9/dsh-client-ui-slots' {
@@ -97,6 +102,14 @@ export function apply(ctx: ClientContext): void {
   // the page's own; a plugin's configuration arrives through the slots the
   // page declares here, so the page never names a configurable plugin.
   const configLedger = configLedgerSource(ctx)
+  const face = controller.inject(configLedger, tabLedgerSource(ctx), text => ctx.locale.resolveText(text))
+  ctx.slots.inject('shell.overlay', () => ctx.slots.register({
+    name: 'shell.overlay', id: 'plugin-manager.refresh-toast', locale: NS,
+    inject: (): PluginRefreshToastFace => ({
+      hooks: { pluginManager: face.hooks.pluginManager },
+      dismissNotice: face.dismissNotice,
+    }),
+  }, PluginRefreshToast))
   ctx.slots.inject('main', function* () {
     const handle = createNavigationStore(), instance = handle.create()
     const store: typeof handle = { ...handle, create: () => instance }
@@ -105,8 +118,10 @@ export function apply(ctx: ClientContext): void {
       key: PANEL_ID,
       locale: NS,
       store,
-      inject: () => controller.inject(configLedger, text => ctx.locale.resolveText(text)),
+      inject: () => face,
       children: {
+        'plugins.add.actions': { kind: 'list', scope: 'root' },
+        'plugins.tab': { kind: 'list', scope: 'root' },
         'plugins.item': { kind: 'list', scope: 'root' },
         'plugins.bundle.activation': { kind: 'keyed', scope: 'root' },
         'plugins.bundle.config': { kind: 'keyed', scope: 'root' },
@@ -120,8 +135,14 @@ export function apply(ctx: ClientContext): void {
       if (ctx.layout.panelInfo.getSnapshot().activePanelId !== PANEL_ID) instance.actions.setView({ kind: 'list' })
     })
     const disposeNavigation = ctx.reflect.provide('pluginNavigation', {
+      openList: () => {
+        ctx.layout.selectPanel(PANEL_ID)
+        instance.actions.setTab('installed')
+        instance.actions.setView({ kind: 'list' })
+      },
       openBundle: (packageName: string) => {
         ctx.layout.selectPanel(PANEL_ID)
+        instance.actions.setTab('installed')
         instance.actions.setView({ kind: 'package', name: packageName })
       },
     })

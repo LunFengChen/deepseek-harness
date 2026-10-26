@@ -15,6 +15,7 @@ import { LocaleRuntime } from '@x1a0f3n9/dsh-client-locale/client'
 import { apply as applyConversation, inject as injectConversation } from '@x1a0f3n9/dsh-client-ui-conversation/client'
 import { apply as applyTool, inject as injectTool } from '@x1a0f3n9/dsh-client-ui-tool/client'
 import type { ToolCallViewProps } from '@x1a0f3n9/dsh-client-ui-tool/client'
+import { PartialArguments } from '@x1a0f3n9/dsh-util-values'
 import { toolSessionEvents } from './tool-fixtures.client.ts'
 
 const SID = 's1' as SessionId
@@ -47,12 +48,16 @@ const toolResult = (
   name: string,
   args = '{"command":"make build","description":"Build"}',
   over: Partial<ToolResultNode> = {},
-): ToolResultNode => ({
-  kind: 'tool-result', seq, time: seq * 1_000, callId,
-  call: { name, argsRaw: args },
-  callTime: seq * 1_000 - 500,
-  content: [], isError: false, subCalls: [], ...over,
-})
+): ToolResultNode => {
+  const call = over.call === undefined ? { name, argsRaw: args } : over.call
+  return {
+    kind: 'tool-result', seq, time: seq * 1_000, callId,
+    name: call?.name ?? '', args: call === null ? PartialArguments.EMPTY : PartialArguments.fromText(call.argsRaw),
+    call,
+    callTime: seq * 1_000 - 500,
+    content: [], isError: false, subCalls: [], ...over,
+  }
+}
 
 /** Test-owned AppFrame role: declares and renders the resident conversation area. */
 type AppRootProps = PropsRenderSlots<'main'>

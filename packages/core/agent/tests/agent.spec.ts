@@ -51,11 +51,13 @@ describe('AgentRegistry', () => {
     expect(lookup).toMatchObject({
       parameter: 'agent',
       wire: 'agentId',
+      resource: 'session',
       hostTypeSymbol: '@x1a0f3n9/dsh-agent#Agent',
       wireTypeSymbol: '@x1a0f3n9/dsh-session/types#SessionId',
     })
     expect(lookup?.resolve(agent.id)).toBe(agent)
     const context = ctx.typert.contexts.getHost('agent')
+    expect(context).toMatchObject({ wire: 'agentId', resource: 'session' })
     expect(context?.resolve(agent.id)).toBe(agent.ctx)
 
     await disposeAgent()

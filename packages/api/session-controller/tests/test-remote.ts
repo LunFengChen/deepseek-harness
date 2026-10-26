@@ -31,6 +31,7 @@ import {
   remoteErrorOf,
   type RemoteResult,
 } from '@x1a0f3n9/dsh-typert-protocol'
+import RemoteAccessService from '@x1a0f3n9/dsh-api-remote-access'
 import SessionController from '../src/index.ts'
 import type {
   ModelCatalog,
@@ -41,8 +42,6 @@ import type {
   SessionControlFrame,
   SessionCreateRequest,
   SessionCreateValue,
-  SessionDeleteFromRequest,
-  SessionDeleteFromValue,
   SessionForkRequest,
   SessionForkValue,
   SessionFollowFrame,
@@ -80,7 +79,6 @@ export interface TestSessionRemote {
   modelCatalog(): Promise<RemoteResult<ModelCatalog>>
   rename(request: SessionRenameRequest): Promise<RemoteResult<SessionRenameValue>>
   fork(request: SessionForkRequest): Promise<RemoteResult<SessionForkValue>>
-  deleteFrom(request: SessionDeleteFromRequest): Promise<RemoteResult<SessionDeleteFromValue>>
   prompt(request: SessionPromptRequest, signal?: AbortSignal): Promise<RemoteResult<SessionPromptValue>>
   attachment(request: SessionAttachmentRequest): Promise<RemoteResult<SessionAttachmentValue>>
   updateQueue(request: SessionUpdateQueueRequest): Promise<RemoteResult<SessionUpdateQueueValue>>
@@ -246,6 +244,7 @@ function installControllers(
     ctx.provide('typert', {
       lookups: { configure: () => dispose },
       contexts: { configureHost: () => dispose },
+      resources: { register: () => dispose },
     } as never)
   }
   if (ctx.get('agentDefaultModel') === undefined) {
@@ -292,6 +291,7 @@ function installControllers(
     } as never)
   }
   installSessionReadTestServices(ctx)
+  if (ctx.get('remoteAccess') === undefined) new RemoteAccessService(ctx)
   const cwd = vi.spyOn(process, 'cwd').mockReturnValue(defaults.cwd)
   let controller: SessionController
   try {
@@ -367,7 +367,6 @@ export function createSessionTestRemote(
     modelCatalog: () => remoteResult(() => direct.modelCatalog()),
     rename: request => remoteResult(() => direct.rename(request)),
     fork: request => remoteResult(() => direct.fork(request)),
-    deleteFrom: request => remoteResult(() => direct.deleteFrom(request)),
     prompt: (request, signal = new AbortController().signal) => remoteResult(
       () => direct.prompt(request, signal),
       signal,

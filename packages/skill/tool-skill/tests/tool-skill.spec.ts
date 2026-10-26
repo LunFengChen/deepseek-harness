@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
+import { provideWorkingDirectoryFixture, unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
@@ -7,7 +8,7 @@ import { createUserMessage, ToolCallId, type Message } from '@x1a0f3n9/dsh-llm'
 import type { ContextFormed, MessageSource } from '@x1a0f3n9/dsh-llm'
 import { createScope, type Scope } from '@x1a0f3n9/dsh-scope'
 import {
-  SESSION_FORMAT_VERSION, Session, SessionId, SessionSeq, type SessionEvent, type UserMessage,
+  SESSION_FORMAT_VERSION, Session, SessionId, type SessionEvent, type UserMessage,
 } from '@x1a0f3n9/dsh-session'
 import SystemPrompt, { renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime, { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
@@ -15,7 +16,6 @@ import AgentRegistry, { agentEvents, type Agent, type PreStepDecision } from '@x
 import SkillRegistry from '@x1a0f3n9/dsh-skill'
 import * as SkillFileSystem from '@x1a0f3n9/dsh-skill-filesystem'
 import * as toolSkill from '@x1a0f3n9/dsh-tool-skill'
-import { unsupportedInbox } from '@x1a0f3n9/dsh-agent-loop-testkit'
 
 declare module '@x1a0f3n9/dsh-llm' {
   interface MessageSourceMap {
@@ -53,6 +53,7 @@ async function writeSkill(root: string, name: string, description: string, body:
 
 async function setup(home: string, config: toolSkill.Config = {}): Promise<Context> {
   const ctx = new Context()
+  provideWorkingDirectoryFixture(ctx, home)
   await ctx.plugin(SystemPrompt)
   await ctx.plugin(ToolRuntime)
   await ctx.plugin(AgentRegistry)
@@ -188,6 +189,7 @@ async function mintAgentScope(ctx: Context, subject: string | Agent): Promise<{ 
 describe('dsh-tool-skill', () => {
   it('registers the skill tool schema and removes it on dispose', async () => {
     const ctx = new Context()
+    provideWorkingDirectoryFixture(ctx)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(AgentRegistry)
@@ -626,33 +628,6 @@ describe('dsh-tool-skill', () => {
       .rejects.toThrow('skill catalog cannot read seq 1 below the current Session length')
   })
 
-  it('treats a released live prefix as unread catalog history instead of failing the step', async () => {
-    const home = await tempDir('tool-catalog-windowed-prefix')
-    const ctx = await setup(home)
-    ctx.skills.register({
-      name: 'live-skill',
-      description: 'Live skill',
-      source: 'runtime',
-      content: 'Live body.',
-    })
-    const session = Session.create(SessionId('catalog-windowed-prefix'))
-    const agent = sessionAgent(session)
-    openMessageTurn(session)
-    const liveBase = session.seq
-    const eventAt = session.eventAt.bind(session)
-    Object.defineProperty(session, 'liveBaseSeq', { configurable: true, get: () => liveBase })
-    Object.defineProperty(session, 'eventAt', {
-      configurable: true,
-      value: (seq: SessionSeq) => seq >= liveBase ? eventAt(seq) : undefined,
-    })
-
-    await expect(fireStep(ctx, agent, 1, 1)).resolves.toBeUndefined()
-
-    const published = catalogMessages(session)
-    expect(published).toHaveLength(1)
-    expect(JSON.stringify(published[0]?.data.content)).toContain('live-skill')
-  })
-
   it('re-establishes the current catalog after compaction hides its durable message', async () => {
     const home = await tempDir('tool-catalog-compaction')
     const ctx = await setup(home)
@@ -816,6 +791,7 @@ describe('dsh-tool-skill', () => {
   it('validates the catalog description cap', async () => {
     const home = await tempDir('tool-invalid-catalog-cap')
     const ctx = new Context()
+    provideWorkingDirectoryFixture(ctx, home)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
     await ctx.plugin(AgentRegistry)

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-time-context",
   "description": "Durable per-step context with the current time and elapsed time",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -18,28 +18,24 @@
       "types": "./lib/types/index.d.ts",
       "default": "./lib/index.js"
     },
-    "./invariant": {
-      "types": "./lib/types/invariant.d.ts",
-      "default": "./lib/invariant.js"
-    },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
-    "lib/invariant.js",
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
   "dependencies": {
     "@x1a0f3n9/dsh-util-values": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:~",
-    "zod": "^4.4.3"
+    "zod": "4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
     "@x1a0f3n9/dsh-agent": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-projection": "workspace:*"
@@ -51,7 +47,6 @@
     "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
     "@x1a0f3n9/dsh-app-boot": "workspace:*",
     "@x1a0f3n9/dsh-bash-local": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-loader-smoke": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",

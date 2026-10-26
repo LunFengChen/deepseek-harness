@@ -52,6 +52,8 @@ describe('Workspace Files Session scope lookup', () => {
       expect(lookup).toMatchObject({
         parameter: 'workspaceFileScope',
         wire: 'workspaceFileScopeId',
+        // A method taking a scope reads the scope's Session as its access-control resource.
+        resource: 'session',
         hostTypeSymbol: '@x1a0f3n9/dsh-api-workspace-files#WorkspaceFileScope',
         wireTypeSymbol: '@x1a0f3n9/dsh-session/types#SessionId',
       })

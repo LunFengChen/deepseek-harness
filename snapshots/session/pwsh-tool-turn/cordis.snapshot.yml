@@ -46,7 +46,7 @@
 - id: system-prompt
   name: '@x1a0f3n9/dsh-system-prompt'
   config:
-    personaPrefix: You are a concise snapshot agent working in {{cwd}}.
+    personaPrefix: You are a concise snapshot agent.
 
 - id: goal
   name: '@x1a0f3n9/dsh-goal'

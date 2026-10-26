@@ -372,6 +372,7 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
       expect(web.stderr).toBe('')
       expect(web.stdout).toContain('Usage: dsh --profile web')
       expect(web.stdout).toContain('--port <port>')
+      expect(web.stdout).toContain('--public-url <url>')
       expect(web.stdout).not.toContain('dsh web: http://')
 
       const wildcardHost = await runBuiltBin(['web', '--host', '0.0.0.0'], {
@@ -380,7 +381,6 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
       })
       expect(wildcardHost.code).toBe(1)
       expect(wildcardHost.stdout).toBe('')
-      expect(wildcardHost.stderr).toContain('--host 0.0.0.0 is intentionally not supported yet for safety: it would expose remote code execution to the network; use 127.0.0.1 instead')
       expect(wildcardHost.stderr).not.toContain('dsh web: http://')
 
       const headlessHelp = await runBuiltBin(['headless', '--help'], {
@@ -443,6 +443,9 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
   }, SPAWN_TIMEOUT_MS + 30_000)
 
   it('serves the SDK protocol with an absolute-path overlay plugin and exits after shutdown', async () => {
+    // On the official endpoint the route requests its model listing with this key;
+    // the loopback mock keeps the run offline and records any model call.
+    const server = await startMockLlmServer({ sequence: ['success'] })
     const home = mkdtempSync(join(tmpdir(), 'dsh-built-sdk-'))
     const pluginPath = join(home, 'plugin #100%.mjs')
     const marker = join(home, 'plugin-loaded')
@@ -465,6 +468,7 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
         DSH_HOME: home,
         DSH_TELEMETRY_DISABLED: '1',
         DEEPSEEK_API_KEY: 'built-sdk-profile-no-call',
+        DEEPSEEK_BASE_URL: server.baseURL,
       },
       extendEnv: false,
     })
@@ -504,10 +508,12 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
       expect(result.signal, stderr).toBeUndefined()
       expect(result.exitCode, stderr).toBe(0)
       expect(stderr).toBe('')
+      expect(server.requests).toEqual([])
       expect(readFileSync(marker, 'utf8')).toBe('loaded')
     } finally {
       child.kill('SIGKILL')
       await child
+      await server.close()
       rmSync(home, { recursive: true, force: true })
     }
   }, SPAWN_TIMEOUT_MS + 30_000)
@@ -666,7 +672,7 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
     }
   }, SPAWN_TIMEOUT_MS + 30_000)
 
-  it('creates a custom profile from the shipped web template before booting it', async () => {
+  it('creates and then replaces a custom profile from the shipped web template before booting it', async () => {
     const home = mkdtempSync(join(tmpdir(), 'dsh-from-default-profile-'))
     try {
       const created = await runBuiltBin(
@@ -689,14 +695,14 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
       expect(readFileSync(join(dir, 'cordis.patch.yml'), 'utf8')).toContain('[]')
       expect(readFileSync(join(dir, 'pnpm-workspace.yaml'), 'utf8')).toContain('nodeLinker: hoisted')
 
+      writeFileSync(join(dir, 'cordis.patch.yml'), '- id: local-change\n  disabled: true\n')
       const repeated = await runBuiltBin(
         ['rescue', '--from-default-profile', 'web', '--help'],
         { DSH_HOME: home, DSH_TELEMETRY_DISABLED: '1' },
       )
-      expect(repeated.code).toBe(1)
-      expect(repeated.stdout).toBe('')
-      expect(repeated.stderr).toContain('profile "rescue" already exists')
-      expect(repeated.stderr).toContain('omit --from-default-profile to use it')
+      expect(repeated.code).toBe(0)
+      expect(repeated.stderr).toBe('')
+      expect(readFileSync(join(dir, 'cordis.patch.yml'), 'utf8')).not.toContain('local-change')
 
       const reopened = await runBuiltBin(
         ['rescue', '--help'],
@@ -1227,9 +1233,9 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
       expect(code).toBe(0)
       expect(stderr).toBe('')
       expect(stdout).toContain("name: '@x1a0f3n9/dsh-headless'")
-      expect(stdout).not.toMatch(/name: '@x1a0f3n9\/dsh-host-/)
+      expect(stdout).not.toMatch(/name: '@deepseek-ai\/dsh-host-/)
       expect(stdout).not.toContain("name: '@x1a0f3n9/dsh-web-app'")
-      expect(stdout).not.toMatch(/name: '@x1a0f3n9\/dsh-client-/)
+      expect(stdout).not.toMatch(/name: '@deepseek-ai\/dsh-client-/)
     }, SPAWN_TIMEOUT_MS + 30_000)
 
     it('prints the exact standalone sdk-minimal tree without dsh-base', async () => {
@@ -1248,7 +1254,15 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
         ['plugin-package-inventory-deepseek', '@x1a0f3n9/dsh-plugin-package-inventory-deepseek'],
         ['llm-deepseek', '@x1a0f3n9/dsh-llm-deepseek-api-key'],
         ['sandbox', '@x1a0f3n9/dsh-sandbox-local'],
+        ['filesystem', '@x1a0f3n9/dsh-fs-local'],
+        ['attachment-local', '@x1a0f3n9/dsh-attachment-local'],
+        ['tool-fs', '@x1a0f3n9/dsh-tool-fs'],
+        ['working-directory', '@x1a0f3n9/dsh-working-directory'],
+        ['tool-working-directory', '@x1a0f3n9/dsh-tool-working-directory'],
         ['session-projection', '@x1a0f3n9/dsh-session-projection'],
+        ['token-meter', '@x1a0f3n9/dsh-token-meter'],
+        ['compaction-basic', '@x1a0f3n9/dsh-compaction-basic'],
+        ['image-offload', '@x1a0f3n9/dsh-compaction-image-offload'],
         ['sandbox-policy', '@x1a0f3n9/dsh-sandbox-policy'],
         ['subprocess', '@x1a0f3n9/dsh-subprocess-local'],
         ['pty', '@x1a0f3n9/dsh-terminal'],
@@ -1264,11 +1278,6 @@ describe.skipIf(!existsSync(dshBin))('dsh BUILT bin (node lib/bin.js, no tsx)', 
         ['agent', '@x1a0f3n9/dsh-agent'],
         ['llm-retry', '@x1a0f3n9/dsh-llm-retry'],
         ['jobs', '@x1a0f3n9/dsh-jobs-local'],
-        ['invariants', '@x1a0f3n9/dsh-invariants'],
-        ['session-invariant', '@x1a0f3n9/dsh-session/invariant'],
-        ['agent-invariant', '@x1a0f3n9/dsh-agent/invariant'],
-        ['scope-invariant', '@x1a0f3n9/dsh-scope/invariant'],
-        ['agent-loop-invariant', '@x1a0f3n9/dsh-agent-loop/invariant'],
         ['agent-loop', '@x1a0f3n9/dsh-agent-loop'],
         ['persistent-bash', '@x1a0f3n9/dsh-tool-bash-persistent'],
         ['persistent-pwsh', '@x1a0f3n9/dsh-tool-pwsh-persistent'],

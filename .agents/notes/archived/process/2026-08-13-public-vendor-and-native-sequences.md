@@ -40,7 +40,7 @@ Access is a property of the package, not of a version: the twelve packages alrea
 ## Consequences
 
 - **The twelve packages are public from their next publication onward, and that is not cleanly reversible.** Returning to a restricted scope requires a paid plan plus per-package `npm access set status=private`, and anything already downloaded or mirrored stays out.
-- **`@deepseek-ai/dsh` is still not installable from outside the organization.** Its manifests stay `restricted`; what changed is that its published dependencies no longer would be, so opening it later is a version decision rather than a dependency problem.
+- **`@x1a0f3n9/dsh` is still not installable from outside the organization.** Its manifests stay `restricted`; what changed is that its published dependencies no longer would be, so opening it later is a version decision rather than a dependency problem.
 - **What ships from the two public sequences is now world-readable, so their payload policy carries more weight.** `vendor/cordis` publishes `src` deliberately, because its export map declares `./src/*`; the Landlock entry publishes `src/main.c` as a documented audit surface.
 - **The private-packages plan is no longer required for these two sequences.** The `402 Payment Required` failure that blocked the first native publication cannot recur for a public package.
 - **An unauthenticated `npm view` becomes a usable check for the public sequences.** While every package was restricted, a machine without credentials received `E404` for a package that existed, which is indistinguishable from an absent version.

@@ -6,7 +6,7 @@
  * @module @x1a0f3n9/dsh-web
  */
 
-import { Context, Service } from '@deepseek-ai/cordis'
+import { Context, Service, type Volatile } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import type {
   WebFetchProvider,
@@ -38,24 +38,27 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
+/** Selection inputs for execution-time provider resolution. */
+interface Selection<P> {
+  /** The configured provider id for this capability, if any. */
+  readonly configuredId?: string
+  /** Providers registered for this capability kind. */
+  readonly providers: ReadonlyMap<string, P>
+}
+
 /**
  * Config for the web seam. `searchProvider` / `fetchProvider` pin which provider
- * wins for each capability. `searchProviderOrder` is an exclusive search allowlist
- * when search is not pinned; all fields are optional (a single registered usable
- * provider auto-selects). Operational overrides such as environment variables
- * must feed these same fields rather than introduce a hidden priority chain.
+ * wins for each capability; both are optional (a single registered usable
+ * provider auto-selects). Each operation reads the current value, so a settings
+ * change applies to the next search or fetch without remounting the service.
+ * Operational overrides such as environment variables must feed these same
+ * fields rather than introduce a hidden priority chain.
  */
 export interface WebRuntimeConfig {
   /** Explicit search provider id. Omitted = auto-select when exactly one usable. */
-  readonly searchProvider?: string
-  /**
-   * Ordered search-provider ids used when no explicit provider is pinned.
-   * Unusable ids are skipped; if none of these are usable, search fails instead
-   * of selecting an unlisted provider such as `deepseek-official`.
-   */
-  readonly searchProviderOrder?: string[]
+  readonly searchProvider: Volatile<string | undefined>
   /** Explicit fetch provider id. Omitted = auto-select when exactly one usable. */
-  readonly fetchProvider?: string
+  readonly fetchProvider: Volatile<string | undefined>
 }
 
 /**
@@ -66,11 +69,8 @@ export interface WebRuntimeConfig {
  * - A configured id not registered → `WEB_PROVIDER_CONFIGURED_MISSING`.
  * - A configured id registered but unavailable →
  *   `WEB_PROVIDER_CONFIGURED_UNAVAILABLE`.
- * - No id configured, an ordered provider is registered and usable → the first such provider.
- * - No id configured, an order is set and none of those providers are usable →
- *   `WEB_PROVIDER_UNAVAILABLE`.
- * - No id configured, no order set, and exactly one usable provider → that provider.
- * - No id configured, no order set, and multiple usable providers → `WEB_PROVIDER_AMBIGUOUS`.
+ * - No id configured, exactly one registered usable provider → that provider.
+ * - No id configured, multiple usable providers → `WEB_PROVIDER_AMBIGUOUS`.
  * - No id configured, no usable provider → `WEB_PROVIDER_UNAVAILABLE`.
  */
 export class WebRuntime extends Service {
@@ -79,19 +79,20 @@ export class WebRuntime extends Service {
    * `$DSH_WEB_SEARCH_PROVIDER` / `$DSH_WEB_FETCH_PROVIDER` are equivalent to
    * `searchProvider` / `fetchProvider` and are NOT a hidden priority chain.
    */
-  static Config: z<WebRuntimeConfig> = z.object({
-    searchProvider: z.string(),
-    searchProviderOrder: z.array(z.string()),
-    fetchProvider: z.string(),
+  static Config = z.object({
+    searchProvider: z.string().volatile(),
+    fetchProvider: z.string().volatile(),
   })
 
   private searchProviders = new Map<string, WebSearchProvider>()
   private fetchProviders = new Map<string, WebFetchProvider>()
-  private currentConfig: () => WebRuntimeConfig
+  private readonly searchProviderEnv: string | undefined
+  private readonly fetchProviderEnv: string | undefined
 
-  constructor(ctx: Context, config: WebRuntimeConfig = {}) {
+  constructor(ctx: Context, private readonly config: WebRuntimeConfig) {
     super(ctx, 'web')
-    this.currentConfig = () => config
+    this.searchProviderEnv = process.env.DSH_WEB_SEARCH_PROVIDER
+    this.fetchProviderEnv = process.env.DSH_WEB_FETCH_PROVIDER
   }
 
   /**
@@ -139,12 +140,11 @@ export class WebRuntime extends Service {
    * @returns the provider's results, capped to `request.maxResults`.
    */
   async search(request: WebSearchRequest, signal?: AbortSignal): Promise<WebSearchResult> {
-    const config = this.currentConfig()
-    const selection: OrderedSelection<WebSearchProvider> = { providers: this.searchProviders }
-    const configuredId = config.searchProvider ?? process.env.DSH_WEB_SEARCH_PROVIDER
-    if (configuredId !== undefined) selection.configuredId = configuredId
-    if (config.searchProviderOrder !== undefined) selection.preferredIds = config.searchProviderOrder
-    const provider = resolveProvider(selection)
+    const configuredId = this.config.searchProvider.get() ?? this.searchProviderEnv
+    const provider = resolveProvider({
+      providers: this.searchProviders,
+      ...configuredId !== undefined ? { configuredId } : {},
+    })
     const result = await provider.search(request, signal)
     return capSources(result, request.maxResults)
   }
@@ -158,11 +158,11 @@ export class WebRuntime extends Service {
    * @returns the retrieval outcome; non-2xx responses resolve descriptively.
    */
   async fetch(request: WebFetchRequest, signal?: AbortSignal): Promise<WebFetchResult> {
-    const config = this.currentConfig()
-    const selection: OrderedSelection<WebFetchProvider> = { providers: this.fetchProviders }
-    const configuredId = config.fetchProvider ?? process.env.DSH_WEB_FETCH_PROVIDER
-    if (configuredId !== undefined) selection.configuredId = configuredId
-    const provider = resolveProvider(selection)
+    const configuredId = this.config.fetchProvider.get() ?? this.fetchProviderEnv
+    const provider = resolveProvider({
+      providers: this.fetchProviders,
+      ...configuredId !== undefined ? { configuredId } : {},
+    })
     return provider.fetch(request, signal)
   }
 }
@@ -172,18 +172,9 @@ interface ResolvableProvider {
   available(): boolean
 }
 
-interface OrderedSelection<P> {
-  /** Providers registered for this capability kind. */
-  readonly providers: ReadonlyMap<string, P>
-  /** Explicit provider id, when one is pinned. */
-  configuredId?: string
-  /** Exclusive ordered provider ids; omitted keeps unambiguous auto-select. */
-  preferredIds?: readonly string[]
-}
-
 /** Resolve the selected provider or throw the matching {@link WebError}. */
-function resolveProvider<P extends ResolvableProvider>(selection: OrderedSelection<P>): P {
-  const { configuredId, preferredIds, providers } = selection
+function resolveProvider<P extends ResolvableProvider>(selection: Selection<P>): P {
+  const { configuredId, providers } = selection
   if (configuredId !== undefined) {
     const provider = providers.get(configuredId)
     if (!provider) {
@@ -193,16 +184,6 @@ function resolveProvider<P extends ResolvableProvider>(selection: OrderedSelecti
       throw new WebError(`configured web provider "${configuredId}" is registered but unavailable`, 'WEB_PROVIDER_CONFIGURED_UNAVAILABLE')
     }
     return provider
-  }
-  if (preferredIds !== undefined && preferredIds.length > 0) {
-    for (const id of preferredIds) {
-      const provider = providers.get(id)
-      if (provider?.available()) return provider
-    }
-    throw new WebError(
-      `none of the ordered web providers are usable (${preferredIds.join(', ')})`,
-      'WEB_PROVIDER_UNAVAILABLE',
-    )
   }
   const usable = [...providers.values()].filter(provider => provider.available())
   const [single] = usable

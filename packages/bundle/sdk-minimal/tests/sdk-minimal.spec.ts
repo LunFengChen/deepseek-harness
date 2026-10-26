@@ -33,7 +33,15 @@ describe('dsh-sdk-minimal bundle', () => {
       ['plugin-package-inventory-deepseek', '@x1a0f3n9/dsh-plugin-package-inventory-deepseek'],
       ['llm-deepseek', '@x1a0f3n9/dsh-llm-deepseek-api-key'],
       ['sandbox', '@x1a0f3n9/dsh-sandbox-local'],
+      ['filesystem', '@x1a0f3n9/dsh-fs-local'],
+      ['attachment-local', '@x1a0f3n9/dsh-attachment-local'],
+      ['tool-fs', '@x1a0f3n9/dsh-tool-fs'],
+      ['working-directory', '@x1a0f3n9/dsh-working-directory'],
+      ['tool-working-directory', '@x1a0f3n9/dsh-tool-working-directory'],
       ['session-projection', '@x1a0f3n9/dsh-session-projection'],
+      ['token-meter', '@x1a0f3n9/dsh-token-meter'],
+      ['compaction-basic', '@x1a0f3n9/dsh-compaction-basic'],
+      ['image-offload', '@x1a0f3n9/dsh-compaction-image-offload'],
       ['sandbox-policy', '@x1a0f3n9/dsh-sandbox-policy'],
       ['subprocess', '@x1a0f3n9/dsh-subprocess-local'],
       ['pty', '@x1a0f3n9/dsh-terminal'],
@@ -49,11 +57,6 @@ describe('dsh-sdk-minimal bundle', () => {
       ['agent', '@x1a0f3n9/dsh-agent'],
       ['llm-retry', '@x1a0f3n9/dsh-llm-retry'],
       ['jobs', '@x1a0f3n9/dsh-jobs-local'],
-      ['invariants', '@x1a0f3n9/dsh-invariants'],
-      ['session-invariant', '@x1a0f3n9/dsh-session/invariant'],
-      ['agent-invariant', '@x1a0f3n9/dsh-agent/invariant'],
-      ['scope-invariant', '@x1a0f3n9/dsh-scope/invariant'],
-      ['agent-loop-invariant', '@x1a0f3n9/dsh-agent-loop/invariant'],
       ['agent-loop', '@x1a0f3n9/dsh-agent-loop'],
       ['persistent-bash', '@x1a0f3n9/dsh-tool-bash-persistent'],
       ['persistent-pwsh', '@x1a0f3n9/dsh-tool-pwsh-persistent'],
@@ -75,6 +78,8 @@ describe('dsh-sdk-minimal bundle', () => {
       personaPrefix: { __jsExpr: "process.env.DSH_SYSTEM_PROMPT ?? 'You are a helpful software engineer assistant.'" },
     })
     expect(rows.find(row => row.id === 'agent-loop')?.config).toEqual({ agents: [] })
+    expect(rows.find(row => row.id === 'tool-fs')?.config).toEqual({ read: false, readImage: true, write: false, edit: false })
+    expect(rows.find(row => row.id === 'compaction-basic')?.config).toBeUndefined()
     expect(rows.find(row => row.id === 'terminal-bash')).toMatchObject({
       disabled: { __jsExpr: "process.platform === 'win32'" },
     })

@@ -35,4 +35,4 @@ fork 出来的 xfdsh 预装包仍在用上游 npm 名：`dshmarket`、`dsh-reaso
 
 - Settings → xfdsh预置插件 显示 `@x1a0f3n9/...`，点进去打开 LunFengChen 的 GitHub 仓库。
 - `pnpm install` 解析这些 pin 之前，对应 npm 版本必须已经发布。
-- 官方 `@deepseek-ai/dsh` 不变。
+- 官方 `@x1a0f3n9/dsh` 不变。

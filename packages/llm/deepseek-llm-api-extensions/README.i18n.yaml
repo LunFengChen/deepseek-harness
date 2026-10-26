@@ -5,27 +5,27 @@
 /:
   en: 8805672f8507e16d
   zh: 07696ec60f8d86e8
-/x1a0f3n9-dsh-deepseek-llm-api-extensions:
-  en: f5d99c18cfce7e78
-  zh: c2ddbe9ea244840f
-/x1a0f3n9-dsh-deepseek-llm-api-extensions/summary:
+/deepseek-ai-dsh-deepseek-llm-api-extensions:
+  en: f49157e80e6436e6
+  zh: 7dd755bd83603393
+/deepseek-ai-dsh-deepseek-llm-api-extensions/summary:
   en: 2ee01d6439e60359
   zh: a1fb7c4c0d686895
-/x1a0f3n9-dsh-deepseek-llm-api-extensions/table-of-contents:
+/deepseek-ai-dsh-deepseek-llm-api-extensions/table-of-contents:
   en: 6b7f62c318c9aad6
   zh: 5e22d58884e60c87
-/x1a0f3n9-dsh-deepseek-llm-api-extensions/service:
-  en: 9dc1e749b06e358c
-  zh: 76eabb2bb523143a
-/x1a0f3n9-dsh-deepseek-llm-api-extensions/model-experience:
-  en: ac5b03e4658ec3f3
-  zh: 3d2832ac749f4fca
-/x1a0f3n9-dsh-deepseek-llm-api-extensions/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-deepseek-llm-api-extensions/service:
+  en: d9782207ffab7c50
+  zh: 22c2a10a5f0de61f
+/deepseek-ai-dsh-deepseek-llm-api-extensions/model-experience:
+  en: 88a785350ced5c14
+  zh: 755349be023a3f5c
+/deepseek-ai-dsh-deepseek-llm-api-extensions/model-experience/kv-cache-effect:
   en: 83eb7f1e6ce80b45
   zh: 516811171411ffca
-/x1a0f3n9-dsh-deepseek-llm-api-extensions/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-deepseek-llm-api-extensions/known-limitations-and-deferred-work:
   en: 440169524f1a1323
   zh: 935424afe40201b7
-/x1a0f3n9-dsh-deepseek-llm-api-extensions/known-limitations-and-deferred-work/dev-note:
-  en: 0718d089fcbe4223
-  zh: 5d6f73b7ecfe86ef
+/deepseek-ai-dsh-deepseek-llm-api-extensions/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: e88aeb617ffb74ea

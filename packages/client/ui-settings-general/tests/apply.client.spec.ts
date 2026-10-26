@@ -10,10 +10,12 @@ import type {} from '@x1a0f3n9/dsh-client-ui-renderer/client'
 import { ok, type RemoteMock } from '@x1a0f3n9/dsh-remote-mock'
 import type { SettingsNamespaceView } from '@x1a0f3n9/dsh-settings/types'
 import { createClientTest, type TestClient, webApp } from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/index.ts'
+import { graphFromRoster } from '@x1a0f3n9/dsh-client-test-runtime/src/assembly/roster.ts'
 import { resolveSlotLabel } from '@x1a0f3n9/dsh-client-ui-slots'
 import { LOCALE_SETTINGS_NAMESPACE, LocaleSettingsSchema } from '@x1a0f3n9/dsh-client-locale/src/locale-settings.ts'
 import { inject } from '../src/client/index.ts'
 import type { DeveloperToolsRowInjected } from '../src/client/DeveloperToolsRow.tsx'
+import { HostReleasePrompt, type HostReleasePromptInjected } from '../src/client/HostReleasePrompt.tsx'
 import { CloseLabel, HeaderContent, TriggerContent } from '../src/client/chrome.tsx'
 import { GeneralSection } from '../src/client/GeneralSection.tsx'
 import { SettingsDocumentAction } from '../src/client/SettingsDocumentAction.tsx'
@@ -71,6 +73,11 @@ function generalLabel(c: TestClient): string | undefined {
   return resolveSlotLabel(generalEntry(c).options.label)
 }
 
+function developerToolsRowOf(c: TestClient): DeveloperToolsRowInjected {
+  const developerRow = c.ctx.slots.entries('settings.general.item').find(row => row.options.id === 'developer-tools')!
+  return (developerRow.inject as unknown as () => DeveloperToolsRowInjected)()
+}
+
 function actionInjectedOf(c: TestClient): SettingsDocumentActionInjected {
   const entry = ownEntries(c, 'settings.action')[0]!
   return (entry.inject as unknown as () => SettingsDocumentActionInjected)()
@@ -89,7 +96,7 @@ function setPageUrl(url: string): void {
 
 describe('ui-settings-general apply', () => {
   it('declares the services it uses', () => {
-    expect(inject).toEqual(['slots', 'locale', 'connection', 'remote', 'remote.settings', 'configForms', 'shortcuts'])
+    expect(inject).toEqual(['slots', 'locale', 'connection', 'remote', 'remote.settings', 'configForms', 'shortcuts', 'modules'])
   })
 
   it('fills the five seats of the shell it declares, with the locale-following General label', async ({ mock, start }) => {
@@ -104,8 +111,7 @@ describe('ui-settings-general apply', () => {
     // The shared developer-tool control belongs to General; onboarding remains feature-owned.
     expect(c.ctx.slots.entries('settings.general.item').filter(row => row.locale === NS).map(row => row.options.id)).toEqual(['developer-tools', 'current-version'])
     expect(c.ctx.slots.entries('settings.onboarding').filter(row => row.locale === NS)).toEqual([])
-    const developerRow = c.ctx.slots.entries('settings.general.item').find(row => row.options.id === 'developer-tools')!
-    const developer = (developerRow.inject as unknown as () => DeveloperToolsRowInjected)()
+    const developer = developerToolsRowOf(c)
     expect(developer.hooks.developerTools).toBe(c.ctx.configForms.developerTools.enabled)
     expect(developer.hooks.developerTools.getSnapshot()).toBe(false)
     const setEnabled = vi.spyOn(c.ctx.configForms.developerTools, 'setEnabled').mockResolvedValue(undefined)
@@ -119,6 +125,62 @@ describe('ui-settings-general apply', () => {
       expect(c.ctx.slots.entries(name).find(row => row.component === component)!.locale).toBe(NS)
     }
   }, COLD_BOOT_TIMEOUT_MS)
+
+  it('reports a Coding Tools toggle only when a known value changes to the requested one', async ({ mock, start }) => {
+    const { c } = await client(mock, start)
+    const track = vi.fn()
+    c.ctx.provide('productAnalytics', { enabled: true, track } as never)
+    const form = c.ctx.configForms.get<{ enabled: boolean }>('ui-settings')
+    const snapshot = form.getSnapshot()
+    let value: { enabled: boolean } | undefined = { enabled: false }
+    let accepted = true
+    let now = 100
+    const reads = vi.spyOn(form, 'getSnapshot').mockImplementation(() => ({ ...snapshot, value }))
+    const clock = vi.spyOn(Date, 'now').mockImplementation(() => now)
+    const write = vi.spyOn(c.ctx.configForms.developerTools, 'setEnabled').mockImplementation(async (enabled) => {
+      now += 50
+      if (accepted) value = { enabled }
+    })
+    onTestFinished(() => {
+      reads.mockRestore()
+      clock.mockRestore()
+      write.mockRestore()
+    })
+    const row = developerToolsRowOf(c)
+
+    // The event carries the click time, before the write settles.
+    await row.setEnabled(true)
+    expect(track).toHaveBeenCalledExactlyOnceWith('code_work_view_toggle', { is_enabled: true }, 100)
+
+    // Requesting the current value writes but changes nothing.
+    await row.setEnabled(true)
+    expect(write).toHaveBeenCalledTimes(2)
+    expect(track).toHaveBeenCalledOnce()
+
+    // A write that settles without the requested value is not a toggle.
+    accepted = false
+    await row.setEnabled(false)
+    expect(value).toEqual({ enabled: true })
+    expect(track).toHaveBeenCalledOnce()
+
+    // A rejected write reports its failure and no toggle.
+    accepted = true
+    write.mockRejectedValueOnce(new Error('not accepted'))
+    await expect(row.setEnabled(false)).rejects.toThrow('not accepted')
+    expect(track).toHaveBeenCalledOnce()
+
+    // Without a known previous value the change cannot be attributed.
+    value = undefined
+    await row.setEnabled(false)
+    expect(value).toEqual({ enabled: false })
+    expect(track).toHaveBeenCalledOnce()
+
+    value = { enabled: true }
+    now = 300
+    await row.setEnabled(false)
+    expect(track).toHaveBeenCalledTimes(2)
+    expect(track).toHaveBeenLastCalledWith('code_work_view_toggle', { is_enabled: false }, 300)
+  })
 
   it('registers the zh/en settings dictionaries and frees the seats when its row unloads', async ({ mock, start }) => {
     const { c, settings } = await client(mock, start)
@@ -188,19 +250,57 @@ describe('ui-settings-general apply', () => {
     await vi.waitFor(() => { expect(c.mock.log.calls('settings/describe')).toHaveLength(3) })
   })
 
-  it('withholds the Host document action off-loopback', async ({ mock, start }) => {
+  it('keeps Host preferences off-loopback and withholds only the native document action', async ({ mock, start }) => {
     const loopbackUrl = location.href
     setPageUrl('http://198.51.100.7:3000/')
     onTestFinished(() => { setPageUrl(loopbackUrl) })
-    const { c } = await client(mock, start)
+    const { c, settings } = await client(mock, start)
     expect(c.connection.isLoopback).toBe(false)
+    // The stored Host locale applies off-loopback; only the native document
+    // action stays loopback-only.
+    expect(c.ctx.locale.getSnapshot().active).toBe('zh')
     expect(ownEntries(c, 'settings.action')).toEqual([])
-    // Off-loopback settings stay process-local: no describe read, so the browser language stands.
-    expect(c.mock.log.calls('settings/describe')).toEqual([])
-    expect(c.ctx.locale.getSnapshot().active).toBe('en')
+    const english = localeView('en', 1)
+    settings.mutate.mockResolvedValueOnce(ok(english))
+    c.ctx.locale.setLocale('en')
+    await vi.waitFor(() => {
+      expect(settings.mutate.mock.calls).toEqual([
+        [LOCALE_SETTINGS_NAMESPACE, [{ op: 'set', path: ['preference'], value: 'en' }], 0],
+      ])
+    })
     await c.unload(SELF)
     await c.flush()
     for (const [name] of SEATS) expect(ownEntries(c, name)).toEqual([])
+  })
+
+  it('updates remote locale consumers after Host commits and reconnects', async ({ mock, start }) => {
+    const originalUrl = location.href
+    setPageUrl('http://198.51.100.7:3000/')
+    onTestFinished(() => { setPageUrl(originalUrl) })
+    const { c, settings } = await client(mock, start)
+    expect(c.connection.isLoopback).toBe(false)
+    expect(c.ctx.locale.getSnapshot().active).toBe('zh')
+    settings.describe.mockResolvedValue(ok({
+      writable: true, hasDocument: false, namespaces: [localeView('en', 1)],
+    }))
+    await c.mock.streams.opened('$events', 1)
+    c.mock.streams.push('$events', {
+      type: 'emit', event: 'settings/document-updated', args: [LOCALE_SETTINGS_NAMESPACE, 1],
+    })
+    await vi.waitFor(() => {
+      expect(c.ctx.locale.getSnapshot().active).toBe('en')
+      expect(generalLabel(c)).toBe('General')
+    })
+    settings.describe.mockResolvedValue(ok({
+      writable: true, hasDocument: false, namespaces: [localeView('zh', 2)],
+    }))
+    c.connection.reconnect()
+    await c.mock.streams.opened('$events', 2)
+    await vi.waitFor(() => {
+      expect(c.ctx.locale.getSnapshot().active).toBe('zh')
+      expect(generalLabel(c)).toBe('通用设置')
+    })
+    expect(settings.mutate).not.toHaveBeenCalled()
   })
 
   it('re-registers after a Loader rebuild of the declaring chain (stale disposers must not block)', async ({ mock, start }) => {
@@ -239,5 +339,34 @@ describe('ui-settings-general apply', () => {
     for (const [name] of SEATS) expect(ownEntries(c, name)).toHaveLength(0)
     expect(c.ctx.slots.entries('settings.general.item').filter(row => row.locale === NS)).toEqual([])
     expect(c.ctx.slots.spec('settings.general.item')).toBeUndefined()
+  })
+
+  it('asks about another Host release in the shell overlay and stops asking once dismissed', async ({ mock, start }) => {
+    const { c } = await client(mock, start)
+    const overlay = () => c.ctx.slots.entries('shell.overlay').find(row => row.options.id === 'host-release-change')
+    expect(overlay()?.component).toBe(HostReleasePrompt)
+    expect(overlay()?.locale).toBe(NS)
+    const face = overlay()!.inject!()
+    const { dismissRelease, reloadPage, hooks } = face
+    if (typeof dismissRelease !== 'function' || typeof reloadPage !== 'function' || typeof hooks !== 'object' || hooks === null) {
+      throw new TypeError('host-release-change inject face is incomplete')
+    }
+    const injected = { dismissRelease, reloadPage, hooks } as HostReleasePromptInjected
+    expect(injected.hooks.releaseChange).toBe(c.ctx.modules.entries.releaseChange)
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const release = { version: '2.0.0' }
+    await c.ctx.modules.entries.sync({ ...graphFromRoster(webApp.rows), release })
+    expect(injected.hooks.releaseChange.getSnapshot()).toEqual({ page: undefined, previous: undefined, host: release })
+    expect(warn).toHaveBeenCalledOnce()
+    injected.dismissRelease()
+    expect(injected.hooks.releaseChange.getSnapshot()).toBeUndefined()
+    const reload = vi.fn()
+    vi.stubGlobal('location', { reload })
+    onTestFinished(() => { vi.unstubAllGlobals() })
+    injected.reloadPage()
+    expect(reload).toHaveBeenCalledOnce()
+    await c.unload(SELF)
+    await c.flush()
+    expect(overlay()).toBeUndefined()
   })
 })

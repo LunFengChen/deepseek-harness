@@ -5,36 +5,36 @@
 /:
   en: be11314755d8f4f9
   zh: dd75b03074eea543
-/x1a0f3n9-dsh-client-ui-open-in-app:
-  en: 3badb34183eebc02
-  zh: bf17cfb585bd9e63
-/x1a0f3n9-dsh-client-ui-open-in-app/summary:
+/deepseek-ai-dsh-client-ui-open-in-app:
+  en: 004b805ac638e884
+  zh: 6ac98df58affefcf
+/deepseek-ai-dsh-client-ui-open-in-app/summary:
   en: e69e4c6df4ddffa1
   zh: d1ef0a722f48e9bd
-/x1a0f3n9-dsh-client-ui-open-in-app/table-of-contents:
+/deepseek-ai-dsh-client-ui-open-in-app/table-of-contents:
   en: d152484eb41ac6b4
   zh: 725b47765ee8f30b
-/x1a0f3n9-dsh-client-ui-open-in-app/use-this-package:
+/deepseek-ai-dsh-client-ui-open-in-app/use-this-package:
   en: 056e2bd9e3c78dd8
   zh: be35d2ba53be0442
-/x1a0f3n9-dsh-client-ui-open-in-app/use-this-package/what-to-expect:
-  en: c93c175a3583820a
-  zh: fa812b70176d3d60
-/x1a0f3n9-dsh-client-ui-open-in-app/understand-the-implementation:
-  en: 29a43b3364190303
-  zh: d17052de73687c1f
-/x1a0f3n9-dsh-client-ui-open-in-app/further-exploration:
-  en: 9deb509f65b6edfd
-  zh: d6cd63b2abc3731b
-/x1a0f3n9-dsh-client-ui-open-in-app/model-experience:
+/deepseek-ai-dsh-client-ui-open-in-app/use-this-package/what-to-expect:
+  en: 42f7977b585f9c3a
+  zh: a13772312d52b97f
+/deepseek-ai-dsh-client-ui-open-in-app/understand-the-implementation:
+  en: a0304e1bd9b44370
+  zh: af0fdfd01c296dce
+/deepseek-ai-dsh-client-ui-open-in-app/further-exploration:
+  en: 562c58d589fb7afa
+  zh: 9ba88b381160cc96
+/deepseek-ai-dsh-client-ui-open-in-app/model-experience:
   en: 5f9e6e0fb0438628
   zh: fc9a81185ea6cb14
-/x1a0f3n9-dsh-client-ui-open-in-app/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-client-ui-open-in-app/model-experience/kv-cache-effect:
   en: ca75c51c89c2c9b0
   zh: c2241315dc0c89c9
-/x1a0f3n9-dsh-client-ui-open-in-app/known-limitations-and-deferred-work:
-  en: 3d77fca62d3c8e86
-  zh: 3125d32a158e690a
-/x1a0f3n9-dsh-client-ui-open-in-app/known-limitations-and-deferred-work/dev-note:
-  en: 739fd95270d14d0a
-  zh: d5a6b59133ac6b3f
+/deepseek-ai-dsh-client-ui-open-in-app/known-limitations-and-deferred-work:
+  en: 59c434b70679fc16
+  zh: 7fe9e52b0bb82df1
+/deepseek-ai-dsh-client-ui-open-in-app/known-limitations-and-deferred-work/dev-note:
+  en: 84f92568fc74adf1
+  zh: 286b47e6b5b1a556

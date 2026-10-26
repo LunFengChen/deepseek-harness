@@ -9,7 +9,7 @@ import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit
 import { createUserMessage, LlmAdapter } from '@x1a0f3n9/dsh-llm'
 import type { GenerateOptions, LlmResolvedModelInfo, StreamChunk } from '@x1a0f3n9/dsh-llm'
 import { SESSION_FORMAT_VERSION } from '@x1a0f3n9/dsh-session'
-import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import * as JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
 import { assertBuiltBenchmarkRuntime } from '../support/built-worker.ts'
 import { PARENT_ID, response, resultText, syntheticHistory, TIME_ZERO, WORKLOAD } from './workload.ts'

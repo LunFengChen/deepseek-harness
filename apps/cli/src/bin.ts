@@ -12,14 +12,18 @@ import { getDshRuntimeVersion, loadLayeredEnv, registerOfficialDshPackageResolve
 import { resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
 import { parseDshArgs } from './args.ts'
 import { reportStartupFailure } from './startup-diagnostics.ts'
+import type { RunProfileOptions } from './profile-boot.ts'
+
+/** Installation-owned dependencies supplied by a packaged CLI launcher. */
+export type RunCliOptions = Pick<RunProfileOptions, 'packageManager'> & {
+  /** Permit plugin commands for Desktop's existing profile; reserved for its installed carrier. */
+  manageDesktopProfile?: boolean
+}
 
 /**
  * Apply fork-only defaults without overriding explicit user configuration.
  * Profiles and plugins live under `~/.xfdsh`; durable session data remains in
  * the official `~/.dsh` location so both launchers can read the same history.
- * Unset `HINDSIGHT_SERVER_MODE` becomes `daemon` so Hindsight uses a local
- * embed instead of Hindsight Cloud. An explicit env value still wins; a
- * `serverMode` in `~/.hindsight/coding-agent.json` also still wins.
  * @param env - mutable process environment used by the launcher.
  */
 export function applyForkDefaults(env: Record<string, string | undefined> = process.env): void {
@@ -30,20 +34,19 @@ export function applyForkDefaults(env: Record<string, string | undefined> = proc
   if (env.DSH_WEB_DEFAULT_PORT === undefined || env.DSH_WEB_DEFAULT_PORT.trim().length === 0) {
     env.DSH_WEB_DEFAULT_PORT = '7777'
   }
-  if (env.HINDSIGHT_SERVER_MODE === undefined || env.HINDSIGHT_SERVER_MODE.trim().length === 0) {
-    env.HINDSIGHT_SERVER_MODE = 'daemon'
-  }
 }
 
 /**
  * Run the public dsh command-line interface.
+ * @param options - Package runtime and Desktop profile access supplied by the installation.
  * @returns a promise that settles when the selected command mode finishes.
  */
-export async function runCli(): Promise<void> {
-  const version = getDshRuntimeVersion()
-  const invocation = parseDshArgs(process.argv.slice(2), version)
+export async function runCli(options: RunCliOptions = {}): Promise<void> {
   applyForkDefaults()
   registerOfficialDshPackageResolve()
+  const version = getDshRuntimeVersion()
+  const { manageDesktopProfile, ...profileOptions } = options
+  const invocation = parseDshArgs(process.argv.slice(2), version, manageDesktopProfile)
 
   switch (invocation.mode) {
     case 'profile': {
@@ -55,6 +58,7 @@ export async function runCli(): Promise<void> {
           fromDefaultProfile: invocation.fromDefaultProfile,
           patchFiles: invocation.patches,
           args: invocation.args,
+          ...profileOptions,
         })
       } catch (error) {
         if (!(error instanceof StartupError)) throw error
@@ -65,7 +69,7 @@ export async function runCli(): Promise<void> {
     }
     case 'plugin': {
       const { runPlugin } = await import('./plugin.ts')
-      process.exit(await runPlugin(invocation.profile, invocation.args))
+      process.exit(await runPlugin(invocation.profile, invocation.args, options.packageManager))
       break
     }
     case 'dump-config': {
