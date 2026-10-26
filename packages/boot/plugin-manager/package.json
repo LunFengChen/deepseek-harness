@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-plugin-manager",
   "description": "Current-profile plugin and bundle management shared by dsh CLI, Web and agent tools",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -43,9 +43,13 @@
     "./tools": {
       "types": "./lib/types/tools.d.ts",
       "default": "./lib/types/tools.js"
-    }
+    },
+    "./tools/locale/*.json": "./locale/tools/*.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
+    "locale/tools/*.json",
     "lib/index.js",
     "lib/types/**/*.js",
     "lib/types/**/*.d.ts",
@@ -59,9 +63,9 @@
     "@x1a0f3n9/dsh-app-boot": "workspace:*",
     "@x1a0f3n9/dsh-atomic-write": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:~",
-    "execa": "^10.0.0",
+    "execa": "^10.0.1",
     "yaml": "^2.9.0",
-    "zod": "^4.4.3",
+    "zod": "4.4.3",
     "@x1a0f3n9/dsh-util-values": "workspace:*"
   },
   "peerDependencies": {
@@ -86,6 +90,7 @@
     }
   },
   "devDependencies": {
+    "chokidar": "^4.0.3",
     "@x1a0f3n9/dsh-package-manifest": "workspace:*",
     "@deepseek-ai/cordis": "workspace:~",
     "@deepseek-ai/cordis-plugin-loader": "workspace:~",

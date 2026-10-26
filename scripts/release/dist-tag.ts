@@ -11,7 +11,13 @@ import { setTimeout as sleep } from 'node:timers/promises'
 import { parseArgs } from 'node:util'
 import { releaseFamily } from './families.ts'
 import { attempt, attemptEchoed, isEntry } from './process.ts'
-import { PUBLISH_SPACING_MS, REGISTRY_PROBE_SPACING_MS, isRateLimited } from './publish.ts'
+
+const PUBLISH_SPACING_MS = 5_000
+const REGISTRY_PROBE_SPACING_MS = 1_000
+
+function isRateLimited(output: string): boolean {
+  return output.includes('code E429')
+}
 
 let lastRegistryCallAt = 0
 

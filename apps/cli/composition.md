@@ -30,6 +30,8 @@ flowchart LR
   cfg --> plugin_dsh_base_typert_loader
   plugin_dsh_base_typert_gateway["typert-gateway<br/>@x1a0f3n9/dsh-api-gateway"]
   cfg --> plugin_dsh_base_typert_gateway
+  plugin_dsh_base_remote_access["remote-access<br/>@x1a0f3n9/dsh-api-remote-access"]
+  cfg --> plugin_dsh_base_remote_access
   plugin_dsh_base_session_title["session-title<br/>@x1a0f3n9/dsh-session-title"]
   cfg --> plugin_dsh_base_session_title
   plugin_dsh_base_session_title_llm["session-title-llm<br/>@x1a0f3n9/dsh-session-title-first-prompt-llm"]
@@ -64,6 +66,10 @@ flowchart LR
   cfg --> plugin_dsh_base_attachment_local
   plugin_dsh_base_session_query_sqlite["session-query-sqlite<br/>@x1a0f3n9/dsh-session-query-sqlite"]
   cfg --> plugin_dsh_base_session_query_sqlite
+  plugin_dsh_base_working_directory["working-directory<br/>@x1a0f3n9/dsh-working-directory"]
+  cfg --> plugin_dsh_base_working_directory
+  plugin_dsh_base_tool_working_directory["tool-working-directory<br/>@x1a0f3n9/dsh-tool-working-directory"]
+  cfg --> plugin_dsh_base_tool_working_directory
   plugin_dsh_base_session_projection["session-projection<br/>@x1a0f3n9/dsh-session-projection"]
   cfg --> plugin_dsh_base_session_projection
   plugin_dsh_base_storage["storage<br/>@x1a0f3n9/dsh-storage"]
@@ -74,6 +80,8 @@ flowchart LR
   cfg --> plugin_dsh_base_storage_domain
   plugin_dsh_base_session_projection_cache["session-projection-cache<br/>@x1a0f3n9/dsh-session-projection-cache"]
   cfg --> plugin_dsh_base_session_projection_cache
+  plugin_dsh_base_otel["otel<br/>@x1a0f3n9/dsh-otel"]
+  cfg --> plugin_dsh_base_otel
   plugin_dsh_base_session_telemetry_otel["session-telemetry-otel<br/>@x1a0f3n9/dsh-session-telemetry-otel"]
   cfg --> plugin_dsh_base_session_telemetry_otel
   plugin_dsh_base_subprocess["subprocess<br/>@x1a0f3n9/dsh-subprocess-local"]
@@ -110,8 +118,6 @@ flowchart LR
   cfg --> plugin_dsh_base_skill
   plugin_dsh_base_skill_filesystem["skill-filesystem<br/>@x1a0f3n9/dsh-skill-filesystem"]
   cfg --> plugin_dsh_base_skill_filesystem
-  plugin_dsh_base_skill_badge["skill-badge<br/>@x1a0f3n9/dsh-skill-badge"]
-  cfg --> plugin_dsh_base_skill_badge
   plugin_dsh_base_tool_skill["tool-skill<br/>@x1a0f3n9/dsh-tool-skill"]
   cfg --> plugin_dsh_base_tool_skill
   plugin_dsh_base_commands["commands<br/>@x1a0f3n9/dsh-commands"]
@@ -168,14 +174,14 @@ flowchart LR
   cfg --> plugin_dsh_base_tool_todo
   plugin_dsh_base_tool_goal["tool-goal<br/>@x1a0f3n9/dsh-tool-goal"]
   cfg --> plugin_dsh_base_tool_goal
-  plugin_dsh_base_tool_ralph["tool-ralph<br/>@x1a0f3n9/dsh-tool-ralph"]
-  cfg --> plugin_dsh_base_tool_ralph
   plugin_dsh_base_repeat_tool_reminder["repeat-tool-reminder<br/>@x1a0f3n9/dsh-repeat-tool-reminder"]
   cfg --> plugin_dsh_base_repeat_tool_reminder
   plugin_dsh_base_web["web<br/>@x1a0f3n9/dsh-web"]
   cfg --> plugin_dsh_base_web
   plugin_dsh_base_web_search_deepseek["web-search-deepseek<br/>@x1a0f3n9/dsh-web-search-deepseek"]
   cfg --> plugin_dsh_base_web_search_deepseek
+  plugin_dsh_base_web_deepseek_api["web-deepseek-api<br/>@x1a0f3n9/dsh-web-deepseek-api"]
+  cfg --> plugin_dsh_base_web_deepseek_api
   plugin_dsh_base_web_fetch_http["web-fetch-http<br/>@x1a0f3n9/dsh-web-fetch-http"]
   cfg --> plugin_dsh_base_web_fetch_http
   plugin_dsh_base_tool_web["tool-web<br/>@x1a0f3n9/dsh-tool-web"]
@@ -209,6 +215,7 @@ flowchart LR
 | `typert` | `@x1a0f3n9/dsh-typert-registry` |
 | `typert-loader` | `@x1a0f3n9/dsh-typert-loader` |
 | `typert-gateway` | `@x1a0f3n9/dsh-api-gateway` |
+| `remote-access` | `@x1a0f3n9/dsh-api-remote-access` |
 | `session-title` | `@x1a0f3n9/dsh-session-title` |
 | `session-title-llm` | `@x1a0f3n9/dsh-session-title-first-prompt-llm` |
 | `user-questions` | `@x1a0f3n9/dsh-user-questions` |
@@ -226,11 +233,14 @@ flowchart LR
 | `session-persistence-jsonl` | `@x1a0f3n9/dsh-session-persistence-jsonl` |
 | `attachment-local` | `@x1a0f3n9/dsh-attachment-local` |
 | `session-query-sqlite` | `@x1a0f3n9/dsh-session-query-sqlite` |
+| `working-directory` | `@x1a0f3n9/dsh-working-directory` |
+| `tool-working-directory` | `@x1a0f3n9/dsh-tool-working-directory` |
 | `session-projection` | `@x1a0f3n9/dsh-session-projection` |
 | `storage` | `@x1a0f3n9/dsh-storage` |
 | `storage-json` | `@x1a0f3n9/dsh-storage-json` |
 | `storage-domain` | `@x1a0f3n9/dsh-storage-domain` |
 | `session-projection-cache` | `@x1a0f3n9/dsh-session-projection-cache` |
+| `otel` | `@x1a0f3n9/dsh-otel` |
 | `session-telemetry-otel` | `@x1a0f3n9/dsh-session-telemetry-otel` |
 | `subprocess` | `@x1a0f3n9/dsh-subprocess-local` |
 | `sandbox` | `@x1a0f3n9/dsh-sandbox-local` |
@@ -249,7 +259,6 @@ flowchart LR
 | `agent-instructions` | `@x1a0f3n9/dsh-agent-instructions` |
 | `skill` | `@x1a0f3n9/dsh-skill` |
 | `skill-filesystem` | `@x1a0f3n9/dsh-skill-filesystem` |
-| `skill-badge` | `@x1a0f3n9/dsh-skill-badge` |
 | `tool-skill` | `@x1a0f3n9/dsh-tool-skill` |
 | `commands` | `@x1a0f3n9/dsh-commands` |
 | `command-feedback` | `@x1a0f3n9/dsh-command-feedback` |
@@ -278,10 +287,10 @@ flowchart LR
 | `image-offload` | `@x1a0f3n9/dsh-compaction-image-offload` |
 | `tool-todo` | `@x1a0f3n9/dsh-tool-todo` |
 | `tool-goal` | `@x1a0f3n9/dsh-tool-goal` |
-| `tool-ralph` | `@x1a0f3n9/dsh-tool-ralph` |
 | `repeat-tool-reminder` | `@x1a0f3n9/dsh-repeat-tool-reminder` |
 | `web` | `@x1a0f3n9/dsh-web` |
 | `web-search-deepseek` | `@x1a0f3n9/dsh-web-search-deepseek` |
+| `web-deepseek-api` | `@x1a0f3n9/dsh-web-deepseek-api` |
 | `web-fetch-http` | `@x1a0f3n9/dsh-web-fetch-http` |
 | `tool-web` | `@x1a0f3n9/dsh-tool-web` |
 | `mcp-resources` | `@x1a0f3n9/dsh-mcp-resources` |

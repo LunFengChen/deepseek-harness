@@ -5,60 +5,60 @@
 /:
   en: 4f245200f5345e3c
   zh: 221e9996e8ce2963
-/x1a0f3n9-dsh-experimental-auto-review:
-  en: 823c9e30bcfd728e
-  zh: 0b66ac66d6eebf3f
-/x1a0f3n9-dsh-experimental-auto-review/summary:
+/deepseek-ai-dsh-experimental-auto-review:
+  en: 566562e610f1b52b
+  zh: 88796a19ab0b98b8
+/deepseek-ai-dsh-experimental-auto-review/summary:
   en: 1012423ee9084823
   zh: 7021aa4e0cd3adfc
-/x1a0f3n9-dsh-experimental-auto-review/table-of-contents:
+/deepseek-ai-dsh-experimental-auto-review/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-experimental-auto-review/use-this-package:
-  en: bbff250eba0f1b89
-  zh: 0a618f05cc88ee2b
-/x1a0f3n9-dsh-experimental-auto-review/use-this-package/install-into-a-profile:
-  en: 63f8f1baa0fb2655
-  zh: 6bc64160f6d02114
-/x1a0f3n9-dsh-experimental-auto-review/use-this-package/what-you-get:
+/deepseek-ai-dsh-experimental-auto-review/use-this-package:
+  en: 8f9e85817f05aa4d
+  zh: f60136fb39abcf29
+/deepseek-ai-dsh-experimental-auto-review/use-this-package/install-into-a-profile:
+  en: cf146a773e8c7010
+  zh: 57f7e9be7b257fcc
+/deepseek-ai-dsh-experimental-auto-review/use-this-package/what-you-get:
   en: 556e89c0055ae9cc
   zh: 75afbcb9a2af6467
-/x1a0f3n9-dsh-experimental-auto-review/understand-the-implementation:
-  en: e52dbe245aef6233
-  zh: e1cbde78676fc129
-/x1a0f3n9-dsh-experimental-auto-review/further-exploration:
+/deepseek-ai-dsh-experimental-auto-review/understand-the-implementation:
+  en: 36950514e3b99263
+  zh: 8d2b8252cdc8d75e
+/deepseek-ai-dsh-experimental-auto-review/further-exploration:
   en: 8b81d32ea370ecd3
   zh: dc53ff4da78232ac
-/x1a0f3n9-dsh-experimental-auto-review/model-experience:
+/deepseek-ai-dsh-experimental-auto-review/model-experience:
   en: 215e7ba838619b7b
   zh: a311da3843709f90
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/per-call-reviewer:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/per-call-reviewer:
   en: 7ec217b1012cd8fa
   zh: 6188796b4990f2ef
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/per-call-reviewer/what-the-model-sees:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/per-call-reviewer/what-the-model-sees:
   en: b3e50d879db13221
   zh: 81f9c8f2793bea0d
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/per-call-reviewer/token-effect:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/per-call-reviewer/token-effect:
   en: 9c3e575c061d53fe
   zh: 74db1c5a77b2d2a7
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/per-call-reviewer/kv-cache-effect:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/per-call-reviewer/kv-cache-effect:
   en: 67b73d97f22f3c75
   zh: 4dd263e571043cf4
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/tool-denial:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/tool-denial:
   en: f9b4d7b686f14fc5
   zh: a2fac9a8eaf5e2a3
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/tool-denial/what-the-model-sees:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/tool-denial/what-the-model-sees:
   en: a0b93e8eebc1b497
   zh: aec11cfbf6c1ec75
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/tool-denial/token-effect:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/tool-denial/token-effect:
   en: 679cb3d82e97022f
   zh: 15c98505e75ff881
-/x1a0f3n9-dsh-experimental-auto-review/model-experience/tool-denial/kv-cache-effect:
+/deepseek-ai-dsh-experimental-auto-review/model-experience/tool-denial/kv-cache-effect:
   en: 8da1089dee147f94
   zh: 87361347bfd10c6c
-/x1a0f3n9-dsh-experimental-auto-review/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-experimental-auto-review/known-limitations-and-deferred-work:
   en: 5682fe41fcc459ab
   zh: fa15b23a21d18ff4
-/x1a0f3n9-dsh-experimental-auto-review/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-experimental-auto-review/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 3bb0c20c93f16f98

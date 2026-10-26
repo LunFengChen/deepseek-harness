@@ -1,0 +1,84 @@
+# Minimal live counterpart for the persistent-pwsh-padded-completion snapshot composition.
+- id: llm-deepseek
+  name: '@x1a0f3n9/dsh-llm-deepseek-api-key'
+  config:
+    models:
+      - id: deepseek-v4-pro
+
+- id: sandbox-policy
+  name: '@x1a0f3n9/dsh-sandbox-policy'
+  config:
+    mode: danger-full-access
+    workspaceRoot: !!js process.cwd()
+
+- id: subprocess
+  name: '@x1a0f3n9/dsh-subprocess-local'
+
+- insert:
+    - id: terminal
+      name: '@x1a0f3n9/dsh-terminal'
+
+- insert:
+    - id: padded-pwsh-backend
+      name: './pwsh-snapshot-backend.mjs'
+
+- id: agent-default-model
+  name: '@x1a0f3n9/dsh-agent-default-model'
+  config:
+    provider: deepseek-official
+    model: deepseek-v4-pro
+
+- id: session-persistence-jsonl
+  name: '@x1a0f3n9/dsh-session-persistence-jsonl'
+  config:
+    root: !!js dshHomePath('sessions')
+    compression: !!js 'process.env.DSH_SNAPSHOT === undefined ? ''zstd'' : ''none'''
+
+- id: agent-instructions
+  name: '@x1a0f3n9/dsh-agent-instructions'
+  disabled: true
+
+- id: system-prompt
+  name: '@x1a0f3n9/dsh-system-prompt'
+  config:
+    personaPrefix: You are a concise snapshot agent.
+
+- id: tool-jobs
+  name: '@x1a0f3n9/dsh-tool-jobs'
+  disabled: true
+
+- id: goal
+  name: '@x1a0f3n9/dsh-goal'
+  disabled: true
+
+- id: goal-round-driver
+  name: '@x1a0f3n9/dsh-goal-round-driver'
+  disabled: true
+
+- id: command-goal
+  name: '@x1a0f3n9/dsh-command-goal'
+  disabled: true
+
+- id: tool-goal
+  name: '@x1a0f3n9/dsh-tool-goal'
+  disabled: true
+
+- id: skill
+  name: '@x1a0f3n9/dsh-skill'
+  disabled: true
+
+- id: skill-filesystem
+  name: '@x1a0f3n9/dsh-skill-filesystem'
+  disabled: true
+
+- id: tool-skill
+  name: '@x1a0f3n9/dsh-tool-skill'
+  disabled: true
+
+- id: tool-bash
+  name: '@x1a0f3n9/dsh-tool-bash'
+  disabled: true
+
+- insert:
+    - id: tool-pwsh-persistent
+      name: '@x1a0f3n9/dsh-tool-pwsh-persistent'

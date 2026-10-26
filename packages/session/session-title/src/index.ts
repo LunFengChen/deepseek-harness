@@ -99,6 +99,12 @@ export interface SessionTitleProviderRequest {
   readonly messages: readonly SessionTitleUserMessage[]
   /** Exact current logged main-request route, when one has been recorded. */
   readonly route?: SessionTitleModelIdentity
+  /**
+   * Latest accepted title captured at invocation, including an accepted
+   * fallback whose event may follow the last eligible message. Absent before
+   * any title is accepted. The provider decides whether and how to use it.
+   */
+  readonly currentTitle?: SessionTitleSnapshot
   /** Cancellation for supersession, disposal, timeout composition, or the explicit caller. */
   readonly signal: AbortSignal
 }
@@ -121,7 +127,7 @@ export interface SessionTitleProvider {
   readonly automatic: SessionTitleAutomaticMode
   /**
    * Produce one title revision.
-   * @param request - message snapshot, current route, session, and cancellation.
+   * @param request - message snapshot, current title, current route, session, and cancellation.
    * @returns proposed title plus exact input seqs and the optional provider/model route used to generate it.
    */
   generate(request: SessionTitleProviderRequest): Promise<SessionTitleProviderResult>
@@ -259,78 +265,20 @@ function collectSessionTitleMessages(
 
 const titleViewSchema: ZodType<string | null> = zod.string().min(1).nullable()
 
-const titleSourceSchema = zod.union([
-  zod.object({ kind: zod.literal('fallback') }).strict(),
-  zod.object({
-    kind: zod.literal('provider'),
-    provider: zod.string().min(1),
-    model: zod.object({
-      provider: zod.string().min(1),
-      model: zod.string().min(1),
-    }).strict().optional(),
-  }).strict(),
-  zod.object({ kind: zod.literal('user') }).strict(),
-]).transform((source): SessionTitleSource => {
-  if (source.kind === 'fallback') return { kind: 'fallback' }
-  if (source.kind === 'user') return { kind: 'user' }
-  return source.model === undefined
-    ? { kind: 'provider', provider: SessionTitleProviderId(source.provider) }
-    : {
-      kind: 'provider',
-      provider: SessionTitleProviderId(source.provider),
-      model: { provider: source.model.provider, model: source.model.model },
-    }
-})
-
-const titleRecordSchema: ZodType<SessionTitleSnapshot> = zod.object({
-  title: zod.string().min(1),
-  messageSeqs: zod.array(zod.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).transform(SessionSeq)),
-  source: titleSourceSchema,
-  eventSeq: zod.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER).transform(SessionSeq),
-  updatedAt: zod.number(),
-}).strict()
-
-const titleStateSchema: ZodType<SessionTitleSnapshot | null> = zod.union([
-  zod.string().min(1).transform((title): SessionTitleSnapshot => ({
-    title,
-    messageSeqs: [],
-    source: { kind: 'fallback' },
-    eventSeq: SessionSeq(0),
-    updatedAt: 0,
-  })),
-  titleRecordSchema,
-]).nullable()
-
-function titleSnapshotFromEvent(
-  event: Extract<SessionEvent, { type: 'session/title' }>,
-): SessionTitleSnapshot {
-  return {
-    title: event.data.title,
-    messageSeqs: event.data.messageSeqs,
-    source: event.data.source,
-    eventSeq: event.seq,
-    updatedAt: event.time,
-  }
-}
-
-function titleWireView(state: SessionTitleSnapshot | null): string | null {
-  return state === null ? null : state.title
-}
-
-/** Latest logged title snapshot and its client string view. */
+/** Latest logged title text and its client view. */
 export const titleProjectionDefinition = {
   key: 'title',
   stateVersion: 1,
-  stateSchema: titleStateSchema,
+  stateSchema: titleViewSchema,
   init: () => null,
   apply: (state, event) => (event.type === 'session/title'
-    ? titleSnapshotFromEvent(event)
+    ? event.data.title
     : state),
   wire: {
     viewSchema: titleViewSchema,
-    view: titleWireView,
+    view: state => state,
   },
-} satisfies ProjectionDefinition<'title', SessionTitleSnapshot | null>
+} satisfies ProjectionDefinition<'title', string | null>
 
 /**
  * Fold the latest logged title without consulting mutable metadata.
@@ -349,11 +297,7 @@ export function foldSessionTitle(events: readonly SessionEvent[]): SessionTitleS
   })
 }
 
-/**
- * Log-backed title fold plus asynchronous fallback generation.
- * A live truncation drops pending or active generation whose watermark is past
- * the retained log.
- */
+/** Log-backed title fold plus asynchronous fallback generation. */
 export class SessionTitleService extends Service {
   static inject = ['sessions', 'sessionProjections']
   static Config: z<Config> = z.object({
@@ -437,17 +381,6 @@ export class SessionTitleService extends Service {
       state.active?.controller.abort(new Error('session disposed during title generation'))
       this.work.delete(session)
     })
-    ctx.on('session/truncated', (session) => {
-      const state = this.work.get(session)
-      if (state === undefined) return
-      if (state.pending !== undefined && state.pending.throughSeq >= session.seq) {
-        delete state.pending
-      }
-      if (state.active !== undefined && state.active.throughSeq >= session.seq) {
-        state.active.controller.abort(new Error('session truncated during title generation'))
-        delete state.active
-      }
-    })
   }
 
   /**
@@ -456,11 +389,8 @@ export class SessionTitleService extends Service {
    * @returns latest title snapshot, or `undefined` before eligible input.
    */
   get(session: Session): SessionTitleSnapshot | undefined {
-    // session/title is log-only and drops out of the live RAM window; the
-    // projection cell is the fold that survives releaseLiveWindow.
-    const state = this.ctx.sessionProjections.stateOf(session, 'title')
-    if (state === undefined || state === null) return undefined
-    return titleSnapshotFromState(state)
+    // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
+    return foldSessionTitle(session.snapshotEvents())
   }
 
   /**
@@ -540,13 +470,14 @@ export class SessionTitleService extends Service {
 
   /**
    * Register the sole optional title provider. Disposal aborts its pending and
-   * active work before another provider may register.
+   * active work; a replacement may register once disposal has started, and the
+   * closing provider's late results never commit.
    * @param provider - provider identity, cadence, and generation function.
    * @returns exact Cordis effect disposer, which settles after active calls quiesce.
    */
   register(provider: SessionTitleProvider): () => Promise<void> {
     this.validateProvider(provider)
-    if (this.registration !== undefined) {
+    if (this.registration !== undefined && !this.registration.closing) {
       throw new Error(`session-title provider "${this.registration.provider.id}" is already registered`)
     }
     const registration: ProviderRegistration = {
@@ -621,7 +552,6 @@ export class SessionTitleService extends Service {
     const boundary = this.ctx.sessionProjections.stateOf(session, 'turnBoundary')?.lastStepBoundary
     const route = session.requestHeader()?.config
     if (boundary?.kind !== 'start'
-      || boundary.seq <= pending.throughSeq
       || route?.provider !== options.provider
       || route.model !== options.model) return
     this.startPending(session, state, pending, { provider: options.provider, model: options.model })
@@ -670,12 +600,17 @@ export class SessionTitleService extends Service {
       this.assertCurrent(session, work)
       await this.ensureFallback(session)
       this.assertCurrent(session, work)
+      // One snapshot supplies both inputs: messages stop at the scheduled
+      // watermark, while the current title is not bounded by that watermark.
       // oxlint-disable-next-line typescript/no-deprecated -- Existing Session history read; migration deferred.
-      const messages = collectSessionTitleMessages(session.snapshotEvents(), work.throughSeq)
+      const events = session.snapshotEvents()
+      const messages = collectSessionTitleMessages(events, work.throughSeq)
+      const currentTitle = foldSessionTitle(events)
       const result = await work.registration.provider.generate({
         session,
         messages,
         ...route === undefined ? {} : { route },
+        ...currentTitle === undefined ? {} : { currentTitle },
         signal: work.signal,
       })
       this.assertCurrent(session, work)

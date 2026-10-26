@@ -5,63 +5,63 @@
 /:
   en: 3d1caf01d90c7f34
   zh: 4fa615b905574d83
-/x1a0f3n9-dsh-session-query:
-  en: daacbb8bb998f749
-  zh: ec12cadcba79cf24
-/x1a0f3n9-dsh-session-query/summary:
+/deepseek-ai-dsh-session-query:
+  en: 6c0fafecee38533e
+  zh: d3dfe3058d8332c3
+/deepseek-ai-dsh-session-query/summary:
   en: 25e9ed4d6de7c4ac
   zh: 8b57631f7207b959
-/x1a0f3n9-dsh-session-query/table-of-contents:
+/deepseek-ai-dsh-session-query/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-session-query/use-this-package:
-  en: 61b01acfa7afadb6
-  zh: f0df61147f689421
-/x1a0f3n9-dsh-session-query/use-this-package/what-you-can-do:
-  en: 742b1358d97e56cc
-  zh: 00d75ce6e5769559
-/x1a0f3n9-dsh-session-query/use-this-package/filters:
+/deepseek-ai-dsh-session-query/use-this-package:
+  en: cc9eb8f214c57137
+  zh: 76723633d0faee5d
+/deepseek-ai-dsh-session-query/use-this-package/what-you-can-do:
+  en: 608cd6d4c5cf2c35
+  zh: 23d3c5a7374b5283
+/deepseek-ai-dsh-session-query/use-this-package/filters:
   en: 1b95403461947ca1
   zh: cffa21b03df9f0ad
-/x1a0f3n9-dsh-session-query/use-this-package/configuration:
+/deepseek-ai-dsh-session-query/use-this-package/configuration:
   en: bec9cedaa219e297
   zh: e9cd16c0589fab4d
-/x1a0f3n9-dsh-session-query/use-this-package/failures-and-recovery:
+/deepseek-ai-dsh-session-query/use-this-package/failures-and-recovery:
   en: fe410eb1234c1c45
   zh: d2a1be75eb841be0
-/x1a0f3n9-dsh-session-query/understand-the-implementation:
+/deepseek-ai-dsh-session-query/understand-the-implementation:
   en: 6a18034f1ccc247a
   zh: aecd49a7b846f913
-/x1a0f3n9-dsh-session-query/understand-the-implementation/design-philosophy:
+/deepseek-ai-dsh-session-query/understand-the-implementation/design-philosophy:
   en: b34fb0d209192ff4
   zh: 455bdb024d04f16a
-/x1a0f3n9-dsh-session-query/understand-the-implementation/source-map:
-  en: 7c546162fa3f75d4
-  zh: c6910bc53ae0ff71
-/x1a0f3n9-dsh-session-query/understand-the-implementation/corpus-resolution:
+/deepseek-ai-dsh-session-query/understand-the-implementation/source-map:
+  en: c58f4f086e3d0728
+  zh: 7d66b688c7f54c87
+/deepseek-ai-dsh-session-query/understand-the-implementation/corpus-resolution:
   en: efa560c55a869c71
   zh: 451eb107825856ac
-/x1a0f3n9-dsh-session-query/understand-the-implementation/observation-cache:
+/deepseek-ai-dsh-session-query/understand-the-implementation/observation-cache:
   en: abe122deb81566e5
   zh: 4c4f327f2ee1144e
-/x1a0f3n9-dsh-session-query/understand-the-implementation/reads-and-traces:
+/deepseek-ai-dsh-session-query/understand-the-implementation/reads-and-traces:
   en: 48922e284adddd1b
   zh: 9956dcc57e027d77
-/x1a0f3n9-dsh-session-query/further-exploration:
-  en: 40a0579a433d568e
-  zh: c34ff46da6cbd3e5
-/x1a0f3n9-dsh-session-query/model-experience:
+/deepseek-ai-dsh-session-query/further-exploration:
+  en: f88ce622ab36eb5b
+  zh: 413c57eed9e81422
+/deepseek-ai-dsh-session-query/model-experience:
   en: dff12da8d1e64e66
   zh: e054b0d54e29f899
-/x1a0f3n9-dsh-session-query/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-session-query/model-experience/kv-cache-effect:
   en: ca75c51c89c2c9b0
   zh: f57cc48a1b5cbfa9
-/x1a0f3n9-dsh-session-query/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-session-query/known-limitations-and-deferred-work:
   en: e70a64614189c09c
   zh: 88d2a6634385c501
-/x1a0f3n9-dsh-session-query/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-session-query/known-limitations-and-deferred-work/dev-note:
   en: d2f0d68fe29fb750
   zh: 323d21ee73a9e3f6
-/x1a0f3n9-dsh-session-query/known-limitations-and-deferred-work/dev-note/future-extractor-and-search-provider-registries:
-  en: 605a72e65297c6cf
-  zh: 87aa75ec62eccbde
+/deepseek-ai-dsh-session-query/known-limitations-and-deferred-work/dev-note/future-extractor-and-search-provider-registries:
+  en: a02f189af688d9ff
+  zh: 375df15a0652e872

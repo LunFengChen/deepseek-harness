@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-The context group provides plugins that add model-visible context to each request without defining any tool: workspace instruction files become guidance, `@file` mentions offer path completion, other sessions can be referenced as bounded snapshots, and the model can see the current time and the agent's tmux location. Only `agent-instructions` (`dsh-base`) and `time-context` (`dsh-web-app`) ship by default; the rest are opt-in. Context is durable: injected instructions and references enter session history as user-role messages, so they persist, replay, and compact like other conversation content. This page maps the group; each package README owns the per-package contract.
+The context group provides plugins that add model-visible context to each request without defining any tool: workspace instruction files become guidance, `@file` mentions offer path completion, other sessions can be referenced as bounded snapshots, and the model can see the current time and the agent's tmux location. Only `agent-instructions` (`dsh-base`) ships mounted by default; the rest are opt-in. Context is durable: injected instructions and references enter session history as user-role messages, so they persist, replay, and compact like other conversation content. This page maps the group; each package README owns the per-package contract.
 
 ## Table of Contents
 
@@ -30,6 +30,7 @@ The context group provides plugins that add model-visible context to each reques
 | [`file-reference-local/`](file-reference-local/README.md) | Local-workspace completion provider for `@file` mentions | — |
 | [`time-context/`](time-context/README.md) | Current time, browser zone, and elapsed time per step | — |
 | [`tmux-context/`](tmux-context/README.md) | The agent's tmux session, window, and pane location | — |
+| [`harness-dev-context/`](harness-dev-context/README.md) | The harness checkout and Web GUI URL as runtime context, keeping the system prompt stable across processes | — |
 
 -----
 

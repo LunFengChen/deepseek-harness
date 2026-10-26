@@ -1,0 +1,88 @@
+{
+  "name": "@x1a0f3n9/dsh-experimental-cua-macos",
+  "description": "macOS native provider for shared Computer Use application and window objects",
+  "version": "0.2.1-rc.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/experimental/cua-macos"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "native/bin",
+    "native/Package.swift",
+    "native/Sources",
+    "native/tests/swift",
+    "native/tests/test_swift.py",
+    "native/LICENSE.cua-driver",
+    "native/upstream.json",
+    "native/README.md",
+    "native/README.zh.md",
+    "native/protocol.schema.json",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-computer-use": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-user-questions": "workspace:*"
+  },
+  "dependencies": {
+    "zod": "^4.4.3",
+    "@x1a0f3n9/dsh-atomic-write": "workspace:*",
+    "@x1a0f3n9/dsh-cua": "workspace:*"
+  },
+  "devDependencies": {
+    "@x1a0f3n9/dsh-working-directory": "workspace:*",
+    "@deepseek-ai/cordis": "workspace:~",
+    "@deepseek-ai/cordis-plugin-include": "workspace:~",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
+    "@x1a0f3n9/dsh-attachment": "workspace:*",
+    "@x1a0f3n9/dsh-attachment-local": "workspace:*",
+    "@x1a0f3n9/dsh-computer-use": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-fs-local": "workspace:*",
+    "@x1a0f3n9/dsh-llm-deepseek": "workspace:*",
+    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "sharp": "^0.35.3",
+    "@x1a0f3n9/dsh-ptc-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-user-questions": "workspace:*",
+    "@x1a0f3n9/dsh-settings": "workspace:*",
+    "@x1a0f3n9/dsh-app-boot": "workspace:*",
+    "@x1a0f3n9/dsh-config-editor": "workspace:*",
+    "@x1a0f3n9/dsh-hmr": "workspace:*",
+    "@deepseek-ai/cordis-plugin-timer": "workspace:~"
+  },
+  "scripts": {
+    "build:native": "swift build --package-path native --configuration release"
+  }
+}

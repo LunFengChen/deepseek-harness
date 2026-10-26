@@ -3,35 +3,35 @@
 # After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/client/ui-settings-web-search/README.md
 /:
-  en: e262010771f02430
-  zh: 5fbff0286b858486
-/x1a0f3n9-dsh-client-ui-settings-web-search:
-  en: 628c4270d0b333af
-  zh: 14ab93f9d4e1af10
-/x1a0f3n9-dsh-client-ui-settings-web-search/summary:
-  en: c84451c5b4641b9f
-  zh: 3197ee34071fcb27
-/x1a0f3n9-dsh-client-ui-settings-web-search/table-of-contents:
+  en: 88147277504a84c5
+  zh: 7262e02458f31515
+/deepseek-ai-dsh-client-ui-settings-web-search:
+  en: 968c0f6ba2415331
+  zh: aaf9e2aa22eafc98
+/deepseek-ai-dsh-client-ui-settings-web-search/summary:
+  en: f0f8d6a8f0f74de3
+  zh: 1926ea7e173eea51
+/deepseek-ai-dsh-client-ui-settings-web-search/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-client-ui-settings-web-search/use-this-package:
-  en: b9c740855d0886d8
-  zh: f6e14f6bd01ffd23
-/x1a0f3n9-dsh-client-ui-settings-web-search/understand-the-implementation:
-  en: 90a3d55da6722763
-  zh: 8fc0463c6543f100
-/x1a0f3n9-dsh-client-ui-settings-web-search/further-exploration:
-  en: 0514f11276497599
-  zh: 044c633542332cd4
-/x1a0f3n9-dsh-client-ui-settings-web-search/model-experience:
+/deepseek-ai-dsh-client-ui-settings-web-search/use-this-package:
+  en: ba0053e60d4a5e9e
+  zh: 1e79aad162155e9c
+/deepseek-ai-dsh-client-ui-settings-web-search/understand-the-implementation:
+  en: 4695da9b39a614a3
+  zh: 5ebe668df937e12e
+/deepseek-ai-dsh-client-ui-settings-web-search/further-exploration:
+  en: 72585c993e443510
+  zh: 90cf6894ccfe8588
+/deepseek-ai-dsh-client-ui-settings-web-search/model-experience:
   en: 6b7c6f82ab6c8435
   zh: 4517689c899abcbe
-/x1a0f3n9-dsh-client-ui-settings-web-search/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-client-ui-settings-web-search/model-experience/kv-cache-effect:
   en: ca75c51c89c2c9b0
   zh: 6e1c9a8fdde89577
-/x1a0f3n9-dsh-client-ui-settings-web-search/known-limitations-and-deferred-work:
-  en: 3fb1d37ebc9bf37a
-  zh: d6ac7929cb19ff55
-/x1a0f3n9-dsh-client-ui-settings-web-search/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-client-ui-settings-web-search/known-limitations-and-deferred-work:
+  en: 2f7f093f506401cd
+  zh: a9b748ae7d4c64e4
+/deepseek-ai-dsh-client-ui-settings-web-search/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: e88aeb617ffb74ea

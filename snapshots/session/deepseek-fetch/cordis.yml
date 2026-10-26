@@ -1,0 +1,20 @@
+- insert:
+    - id: deepseek-fetch-fixture
+      name: './deepseek-fetch-fixture.mjs'
+
+- id: web
+  name: '@x1a0f3n9/dsh-web'
+  config:
+    searchProvider: deepseek-official
+    fetchProvider: deepseek-fetch-api
+
+- id: web-deepseek-api
+  name: '@x1a0f3n9/dsh-web-deepseek-api'
+  config:
+    apiKey: snapshot-key
+    baseURL: http://127.0.0.1:43118/api/v1/tools
+
+- id: tool-web
+  name: '@x1a0f3n9/dsh-tool-web'
+  config:
+    search: false

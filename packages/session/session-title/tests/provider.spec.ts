@@ -1,8 +1,8 @@
 import { Context } from '@deepseek-ai/cordis'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, onTestFinished, vi } from 'vitest'
 import LlmRuntime, { createUserMessage, markAgentLoopRequest } from '@x1a0f3n9/dsh-llm'
 import { deepFreeze } from '@x1a0f3n9/dsh-util-values'
-import SessionStore, { SessionId, SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionStore, { SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { turnBoundaryProjectionDefinition } from '@x1a0f3n9/dsh-agent-loop'
 import SessionTitleService, {
@@ -10,6 +10,7 @@ import SessionTitleService, {
   type SessionTitleProvider,
   type SessionTitleProviderRequest,
   type SessionTitleProviderResult,
+  type SessionTitleSnapshot,
 } from '@x1a0f3n9/dsh-session-title'
 
 const CONFIG = {
@@ -152,6 +153,13 @@ describe('SessionTitleService Provider lifecycle', () => {
       messages: [{ seq: first.seq, text: 'Explain asynchronous title generation' }],
       route: { provider: 'main-route', model: 'chat-model' },
     })
+    // The service captures the fallback it ensured immediately before the
+    // provider call, and that fallback event can follow the source message.
+    expect(requests[0]?.currentTitle).toMatchObject({
+      source: { kind: 'fallback' },
+      messageSeqs: [first.seq],
+    })
+    expect(requests[0]?.currentTitle?.eventSeq).toBeGreaterThan(first.seq)
     expect(ctx.sessionTitle.get(session)).toMatchObject({
       title: 'A model-generated title',
       messageSeqs: [first.seq],
@@ -170,6 +178,77 @@ describe('SessionTitleService Provider lifecycle', () => {
     await ctx.sessionTitle.refresh(session)
     expect(requests).toHaveLength(2)
     expect(requests[1]?.messages.map(message => message.seq)).toEqual([first.seq, second.seq])
+  })
+
+  it('omits currentTitle when a one-byte cap makes the fallback underivable from a multibyte message', async () => {
+    const ctx = new Context()
+    onTestFinished(() => ctx.fiber.dispose())
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(SessionTitleService, { fallbackMaxWords: 5, fallbackMaxBytes: 1, maxTitleBytes: 24 })
+    const currentTitles: (SessionTitleSnapshot | undefined)[] = []
+    ctx.sessionTitle.register({
+      id: SessionTitleProviderId('absent-current'),
+      automatic: 'all-prompts',
+      async generate(request) {
+        currentTitles.push(request.currentTitle)
+        return { title: 'Provided title', messageSeqs: request.messages.map(message => message.seq) }
+      },
+    })
+    const session = ctx.sessions.create(SessionId('underivable-fallback'))
+    session.append('turn/start', { turn: 1 })
+    appendHumanPrompt(session, '番')
+    await settle()
+    appendRoute(session)
+    await settle()
+
+    expect(currentTitles).toEqual([undefined])
+    expect(ctx.sessionTitle.get(session)).toMatchObject({
+      title: 'Provided title',
+      source: { kind: 'provider', provider: SessionTitleProviderId('absent-current') },
+    })
+  })
+
+  it('passes the latest accepted title snapshot to each provider revision', async () => {
+    const ctx = new Context()
+    onTestFinished(() => ctx.fiber.dispose())
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(SessionTitleService, CONFIG)
+    const currentTitles: (SessionTitleSnapshot | undefined)[] = []
+    ctx.sessionTitle.register({
+      id: SessionTitleProviderId('current-title'),
+      automatic: 'all-prompts',
+      async generate(request) {
+        currentTitles.push(request.currentTitle)
+        return {
+          title: `Revision ${String(currentTitles.length)}`,
+          messageSeqs: request.messages.map(message => message.seq),
+        }
+      },
+    })
+    const session = ctx.sessions.create(SessionId('current-title-snapshot'))
+    session.append('turn/start', { turn: 1 })
+    const first = appendHumanPrompt(session, 'First prompt')
+    await settle()
+    appendRoute(session)
+    await settle()
+
+    expect(currentTitles[0]).toMatchObject({
+      source: { kind: 'fallback' },
+      messageSeqs: [first.seq],
+    })
+
+    appendHumanPrompt(session, 'Second prompt')
+    appendRoute(session, 'change')
+    await settle()
+
+    expect(currentTitles[1]).toMatchObject({
+      title: 'Revision 1',
+      messageSeqs: [first.seq],
+      source: { kind: 'provider', provider: SessionTitleProviderId('current-title') },
+    })
+    expect(Object.isFrozen(currentTitles[1])).toBe(true)
   })
 
   it('preserves provider input order across bounded title-input chunks', async () => {
@@ -289,6 +368,41 @@ describe('SessionTitleService Provider lifecycle', () => {
     await disposeReplacement()
   })
 
+  it('accepts a replacement while the previous provider drains and discards its late result', async () => {
+    const ctx = new Context()
+    await ctx.plugin(SessionStore)
+    await ctx.plugin(SessionProjectionRegistry)
+    await ctx.plugin(SessionTitleService, CONFIG)
+    const pending = deferred<SessionTitleProviderResult>()
+    const dispose = ctx.sessionTitle.register({
+      id: SessionTitleProviderId('retiring'),
+      automatic: 'all-prompts',
+      generate: () => pending.promise,
+    })
+    const session = ctx.sessions.create(SessionId('replace-while-draining'))
+    session.append('turn/start', { turn: 1 })
+    const message = appendHumanPrompt(session, 'Generate this title')
+    await settle()
+    appendRoute(session)
+    await settle()
+
+    const disposal = dispose()
+    const disposeReplacement = ctx.sessionTitle.register({
+      id: SessionTitleProviderId('replacement'),
+      automatic: 'all-prompts',
+      generate: async () => ({ title: 'replacement', messageSeqs: [message.seq] }),
+    })
+    expect(() => ctx.sessionTitle.register({
+      id: SessionTitleProviderId('duplicate'),
+      automatic: 'first-prompt',
+      generate: async () => ({ title: 'duplicate', messageSeqs: [message.seq] }),
+    })).toThrow(/"replacement" is already registered/)
+    pending.resolve({ title: 'stale provider result', messageSeqs: [message.seq] })
+    await disposal
+    expect(ctx.sessionTitle.get(session)?.title).not.toBe('stale provider result')
+    await disposeReplacement()
+  })
+
   it('supersedes an older all-messages revision and cannot commit an ignored abort', async () => {
     const ctx = new Context()
     await ctx.plugin(SessionStore)
@@ -334,6 +448,7 @@ describe('SessionTitleService Provider lifecycle', () => {
 
   it('runs an all-messages revision when the next main request reuses its logged header', async () => {
     const ctx = new Context()
+    onTestFinished(() => ctx.fiber.dispose())
     await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
     await ctx.plugin(SessionProjectionRegistry)
@@ -355,9 +470,9 @@ describe('SessionTitleService Provider lifecycle', () => {
     session.append('turn/start', {
       turn: 1,
     })
+    session.append('step/start', { turn: 1, step: 1 })
     const first = appendHumanPrompt(session, 'First routed prompt')
     await settle()
-    session.append('step/start', { turn: 1, step: 1 })
     appendRoute(session)
     await settle()
     session.append('step/end', { turn: 1, step: 1 })
@@ -366,9 +481,9 @@ describe('SessionTitleService Provider lifecycle', () => {
     session.append('turn/start', {
       turn: 2,
     })
+    session.append('step/start', { turn: 2, step: 1 })
     const second = appendHumanPrompt(session, 'Second prompt on the same route')
     await settle()
-    session.append('step/start', { turn: 2, step: 1 })
     void ctx.llm.stream(markAgentLoopRequest(deepFreeze({
       provider: 'main-route',
       model: 'chat-model',
@@ -447,71 +562,5 @@ describe('SessionTitleService Provider lifecycle', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('automatic title generation failed'))
     await expect(ctx.sessionTitle.refresh(session)).rejects.toThrow('title backend failed')
     warn.mockRestore()
-  })
-
-  it('aborts in-flight generation whose watermark is past a truncated log', async () => {
-    const ctx = new Context()
-    await ctx.plugin(SessionStore)
-    await ctx.plugin(SessionProjectionRegistry)
-    await ctx.plugin(SessionTitleService, CONFIG)
-    const pending = deferred<SessionTitleProviderResult>()
-    let observedSignal: AbortSignal | undefined
-    ctx.sessionTitle.register({
-      id: SessionTitleProviderId('truncate-active'),
-      automatic: 'all-prompts',
-      generate(request) {
-        observedSignal = request.signal
-        return pending.promise
-      },
-    })
-    const session = ctx.sessions.create(SessionId('truncate-title'))
-    session.append('turn/start', { turn: 1 })
-    const message = appendHumanPrompt(session, 'Generate this title')
-    await settle()
-    appendRoute(session)
-    await settle()
-    expect(observedSignal?.aborted).toBe(false)
-
-    session.truncate(SessionLogOffset(message.seq))
-    expect(observedSignal?.aborted).toBe(true)
-    pending.resolve({ title: 'stale truncated title', messageSeqs: [message.seq] })
-    await settle()
-    expect(ctx.sessionTitle.get(session)).toBeUndefined()
-  })
-
-  it('drops pending generation whose watermark is past a truncated log', async () => {
-    const ctx = new Context()
-    await ctx.plugin(SessionStore)
-    await ctx.plugin(SessionProjectionRegistry)
-    await ctx.plugin(SessionTitleService, CONFIG)
-    const generate = vi.fn(async () => ({ title: 'should not run', messageSeqs: [SessionSeq(0)] }))
-    ctx.sessionTitle.register({
-      id: SessionTitleProviderId('truncate-pending'),
-      automatic: 'all-prompts',
-      generate,
-    })
-    const session = ctx.sessions.create(SessionId('truncate-pending-title'))
-    session.append('turn/start', { turn: 1 })
-    const message = appendHumanPrompt(session, 'Pending title prompt')
-    await settle()
-    session.truncate(SessionLogOffset(message.seq))
-    appendRoute(session)
-    await settle()
-    expect(generate).not.toHaveBeenCalled()
-  })
-
-  it('ignores truncation on a session with no title work', async () => {
-    const ctx = new Context()
-    await ctx.plugin(SessionStore)
-    await ctx.plugin(SessionProjectionRegistry)
-    await ctx.plugin(SessionTitleService, CONFIG)
-    const session = ctx.sessions.create(SessionId('truncate-idle-title'))
-    session.append('turn/start', { turn: 1 })
-    session.append('user/message', createUserMessage({
-      content: [{ type: 'text', text: 'later' }],
-      source: { kind: 'user' },
-    }), { surfaceOp: 'append' })
-    expect(() => session.truncate(SessionLogOffset(1))).not.toThrow()
-    expect(ctx.sessionTitle.get(session)).toBeUndefined()
   })
 })

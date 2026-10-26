@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-tool-subagent",
   "description": "Model-facing subagent delegation tool over the ctx.subagents seam",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -22,41 +22,44 @@
       "types": "./lib/types/model-selection-settings.d.ts",
       "default": "./lib/model-selection-settings.js"
     },
-    "./invariant": {
-      "types": "./lib/types/invariant.d.ts",
-      "default": "./lib/invariant.js"
-    },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json",
+    "./model-selection-settings/locale/*.json": "./locale/model-selection-settings/*.json"
   },
   "files": [
+    "locale/*.json",
+    "locale/model-selection-settings/*.json",
     "lib/index.js",
-    "lib/invariant.js",
     "lib/model-selection-settings.js",
     "lib/types/**/*.d.ts"
   ],
   "license": "MIT",
   "peerDependencies": {
     "@x1a0f3n9/dsh-agent": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
+    "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-projection": "workspace:*",
     "@x1a0f3n9/dsh-scope": "workspace:*",
     "@x1a0f3n9/dsh-subagent": "workspace:*",
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
-    "@x1a0f3n9/dsh-jobs": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
     "@deepseek-ai/cordis": "workspace:~"
   },
+  "peerDependenciesMeta": {
+    "@x1a0f3n9/dsh-agent-preset-registry": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:~",
-    "zod": "^4.4.3"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "workspace:~",
     "@x1a0f3n9/dsh-agent": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
+    "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-scope": "workspace:*",
@@ -65,9 +68,6 @@
     "@x1a0f3n9/dsh-subagent": "workspace:*",
     "@x1a0f3n9/dsh-subagent-spawn-in-process": "workspace:*",
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
-    "@x1a0f3n9/dsh-jobs": "workspace:*",
-    "@x1a0f3n9/dsh-jobs-local": "workspace:*",
-    "@x1a0f3n9/dsh-tool-jobs": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
     "@deepseek-ai/cordis": "workspace:~",
     "@x1a0f3n9/dsh-session-projection": "workspace:*"

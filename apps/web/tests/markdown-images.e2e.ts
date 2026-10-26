@@ -23,7 +23,7 @@ import {
   webSnapshotMode,
   type WebScaffold,
 } from './scaffold.ts'
-import { newEnglishPage, saveFailureShot } from './support.ts'
+import { newEnglishPage, pinBrowserClock, saveFailureShot, WEB_FIXTURE_TIME } from './support.ts'
 
 const SNAPSHOT_DIR = fileURLToPath(new URL('./expected/markdown-images', import.meta.url))
 const UI_EXPECTED = fileURLToPath(new URL('./expected/markdown-images/ui.expected.md', import.meta.url))
@@ -80,7 +80,7 @@ async function stopServer(server: Server): Promise<void> {
   })
 }
 
-/** Build one closed, invariant-checked session fixture with remote and local image Markdown. */
+/** Build one closed session fixture with remote and local image Markdown. */
 function markdownImageFixture(remoteUrl: string, outsidePath: string): string {
   const session = Session.create(SessionId('markdown-image-source'))
   const eventTimeOrigin = new Date().setHours(12, 0, 0, 0)
@@ -186,9 +186,11 @@ describe('web e2e: Markdown image rendering', () => {
     const outsidePath = join(scaffold.persistenceRoot, 'outside.png')
     await writeFile(outsidePath, PNG)
     await writeFile(join(scaffold.workspaceCwd, 'active.html'), '<p>File preview</p><script>document.body.dataset.scriptRan = "yes"</script>')
-    await seedSession(scaffold, markdownImageFixture(imageOrigin.url, outsidePath), SEED_ID)
+    await seedSession(scaffold, markdownImageFixture(imageOrigin.url, outsidePath), SEED_ID, undefined,
+      { createdAt: WEB_FIXTURE_TIME - 60_000 })
     browser = await chromium.launch()
     page = await newEnglishPage(browser)
+    await pinBrowserClock(page)
     tripwire = watchConsole(page)
     page.on('response', (response) => {
       const url = new URL(response.url())
@@ -285,7 +287,18 @@ describe('web e2e: Markdown image rendering', () => {
     await page.getByRole('button', { name: `View full image: ${WORKSPACE_ALT}`, exact: true }).click()
     const lightbox = page.getByRole('dialog', { name: 'Image preview', exact: true })
     await lightbox.waitFor()
-    await lightbox.getByRole('button', { name: 'Close image preview' }).click()
+    const lightboxMask = lightbox.locator(':scope > div > [aria-hidden="true"]')
+    const lightboxClose = lightbox.getByRole('button', { name: 'Close image preview' })
+    for (const windows of [true, false]) {
+      await page.evaluate((value) => {
+        document.documentElement.toggleAttribute('data-windows-titlebar', value)
+        document.documentElement.style.setProperty('--dsh-windows-titlebar-height', value ? '40px' : '')
+      }, windows)
+      // The Windows caption stays unpainted and the close control sits below it.
+      expect((await lightboxMask.boundingBox())?.y).toBe(windows ? 40 : 0)
+      expect((await lightboxClose.boundingBox())?.y).toBe(windows ? 60 : 20)
+    }
+    await lightboxClose.click()
     await lightbox.waitFor({ state: 'detached' })
     const link = page.getByRole('button', { name: 'View comparison', exact: true })
     await link.hover()

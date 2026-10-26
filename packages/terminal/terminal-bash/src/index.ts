@@ -4,6 +4,7 @@
  * @module @x1a0f3n9/dsh-terminal-bash
  */
 
+import type {} from '@x1a0f3n9/dsh-working-directory'
 import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
 import type { Session, SessionEvent } from '@x1a0f3n9/dsh-session'
@@ -24,7 +25,7 @@ export type { Config as TerminalLocalConfig } from './config.ts'
 /** Cordis plugin name. */
 export const name = 'terminal-bash'
 /** Required services: terminal registry, shared confinement policy, projection registry, and process substrate. */
-export const inject = ['terminals', 'sandboxPolicy', 'sessionProjections', 'subprocess']
+export const inject = ['terminals', 'sandboxPolicy', 'sessionProjections', 'subprocess', 'workingDirectory']
 
 interface SandboxModeFenceState {
   pty: Context['terminals']
@@ -207,7 +208,7 @@ export class BashTerminalBackend implements TerminalBackend {
     if (argv[0] === undefined) throw new Error('terminal-bash: sandbox returned empty argv')
     const terminal = await this.spawnTerminal({
       argv,
-      cwd: spec.cwd ?? policy.workspaceRoot,
+      cwd: spec.cwd ?? await this.ctx.workingDirectory.ensure(spec.owner, spec.signal),
       env: childEnvironment(spec, this.config.shellDialect),
       rows: this.config.rows,
       cols: this.config.cols,

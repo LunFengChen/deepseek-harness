@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-settings-account",
   "description": "Manage DeepSeek login and open Platform billing pages",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -23,7 +23,8 @@
       "default": "./lib/client.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "dsh": {
     "client": {
@@ -61,17 +62,17 @@
     "@x1a0f3n9/dsh-client-ui-theme": "workspace:*",
     "@x1a0f3n9/dsh-deepseek-account": "workspace:*",
     "@x1a0f3n9/dsh-settings": "workspace:*",
-    "@testing-library/react": "^16.1.0",
+    "@testing-library/react": "^16.3.3",
     "@types/big.js": "^6.2.2",
-    "@types/react": "~18.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "@x1a0f3n9/dsh-client-ui-settings-models": "workspace:*",
-    "@types/react-dom": "~18.3.0",
     "@x1a0f3n9/dsh-host-webserver": "workspace:*",
-    "big.js": "^7.0.1"
+    "big.js": "^7.0.1",
+    "@x1a0f3n9/dsh-client-product-analytics": "workspace:*"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/client.js",
     "lib/types/**/*.d.ts"

@@ -110,10 +110,7 @@ export class SystemPromptProjection {
   }
 }
 
-/**
- * Tracks the last retained runtime-context snapshot without owning its commit.
- * A store-attached truncation restores that snapshot from the remaining surface.
- */
+/** Tracks the last retained runtime-context snapshot without owning its commit. */
 export class RuntimeContextProjection {
   /** `undefined` means no snapshot ever existed; `null` means none is retained. */
   private retained: { seq: SessionSeq; text: string | undefined } | null | undefined
@@ -124,7 +121,15 @@ export class RuntimeContextProjection {
    * @param session - session receiving projected messages.
    */
   constructor(ctx: Context, session: Session) {
-    this.restore(session)
+    const surface = new Set(session.surface.nodes)
+    for (const event of eventsNewestFirst(session)) {
+      if (event.type !== 'user/message' || !isOwned(event.data)) continue
+      this.retained ??= null
+      if (surface.has(event.seq)) {
+        this.retained = { seq: event.seq, text: textOf(event.data) }
+        break
+      }
+    }
 
     ctx.on('session/event', (subject, event) => {
       if (subject !== session) return
@@ -136,24 +141,6 @@ export class RuntimeContextProjection {
         this.retained = null
       }
     })
-    ctx.on('session/truncated', (subject) => {
-      if (subject !== session) return
-      this.restore(session)
-    })
-  }
-
-  /** Rebuild `retained` from the current surface and remaining owned snapshots. */
-  private restore(session: Session): void {
-    this.retained = undefined
-    const surface = new Set(session.surface.nodes)
-    for (const event of eventsNewestFirst(session)) {
-      if (event.type !== 'user/message' || !isOwned(event.data)) continue
-      this.retained ??= null
-      if (surface.has(event.seq)) {
-        this.retained = { seq: event.seq, text: textOf(event.data) }
-        break
-      }
-    }
   }
 
   /**

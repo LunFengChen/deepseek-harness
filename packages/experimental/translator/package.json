@@ -1,0 +1,68 @@
+{
+  "name": "@x1a0f3n9/dsh-experimental-translator",
+  "description": "Machine translation with reusable Session results",
+  "version": "0.2.1-rc.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/experimental/translator"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./src/*": "./src/*",
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "default": "./lib/types/types.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/types/**/*.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@deepseek-ai/schemastery": "workspace:~"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-timeout": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:*",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:~",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-credentials": "workspace:*",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-app-boot": "workspace:*",
+    "@x1a0f3n9/dsh-timeout": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:~",
+    "@x1a0f3n9/dsh-credentials": "workspace:*",
+    "@x1a0f3n9/dsh-launch-environment": "workspace:*",
+    "@x1a0f3n9/dsh-llm-deepseek": "workspace:*",
+    "@x1a0f3n9/dsh-llm-deepseek-api-key": "workspace:*",
+    "@x1a0f3n9/dsh-llm-deepseek-account": "workspace:*",
+    "@x1a0f3n9/dsh-deepseek-account": "workspace:*",
+    "@x1a0f3n9/dsh-deepseek-llm-api-extensions": "workspace:*",
+    "@x1a0f3n9/dsh-session-log-deepseek": "workspace:*",
+    "@x1a0f3n9/dsh-session-query-sqlite": "workspace:*"
+  }
+}

@@ -47,7 +47,7 @@ GitHub 默认分支是 `dev-x1a0f3n9`，不带 `-b` 克隆也会落到这里。�
 官方 DeepSeek Harness 是 [DeepSeek AI](https://deepseek.com) 的另一套产品。
 
 ```sh
-npm install --global @deepseek-ai/dsh
+npm install --global @x1a0f3n9/dsh
 dsh web
 ```
 
@@ -67,15 +67,14 @@ dsh web
 
 | 插件 | 包 | 做什么 |
 | --- | --- | --- |
-| Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2` | 回退、删除、重新生成，以及输入框压缩按钮。 |
-| 插件市场 | `@x1a0f3n9/dshmarket@1.45.2` | 浏览社区插件。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 |
-| 思考强度 | `@x1a0f3n9/dsh-reasoning-effort@0.7.3` | Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。之后输入框才能选思考强度。 |
-| 上下文面板 | `@x1a0f3n9/dsh-context@0.49.7` | Context 页和 `/context` 能看组成、压缩和 token 用量。版本探测读本 fork。 |
-| Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.19.3` | 文件、终端、Git 和子代理都在侧边栏工作台里。 |
-| Hindsight 记忆 | `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4` | 默认打开。走本机 daemon，不走 Cloud。Cloud 或自建 URL 仍可写在 `~/.hindsight/coding-agent.json`。 |
-| 故障转移队列 | `@x1a0f3n9/dsh-failover-queue@0.1.12` | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3。503 / 超时 / 传输错误会跳过 `llm-retry`，立刻切下一档。P1 恢复后会探活切回。 |
-| 技能管理 | `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1` | 加载、开关、创建并导入本机 Agent 技能。卡片打开时出现 Settings → 技能。 |
-| Web 搜索池 | `@x1a0f3n9/dsh-web-search-pool` | 默认顺序是搜索池，然后是 Perplexity、Exa 和无需密钥的 Bing/DuckDuckGo。DeepSeek 搜索仍可选手动选择。任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。 |
+| Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.6` | 回退、删除、重新生成，以及输入框压缩按钮。 |
+| 插件市场 | `@x1a0f3n9/dshmarket@1.45.4` | 浏览社区插件。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 |
+| 思考强度 | `@x1a0f3n9/dsh-reasoning-effort@0.7.7` | Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。之后输入框才能选思考强度。 |
+| 上下文面板 | `@x1a0f3n9/dsh-context@0.49.9` | Context 页和 `/context` 能看组成、压缩和 token 用量。版本探测读本 fork。 |
+| Better sidebar | `dsh-better-sidebar@0.28.0` | 文件、终端、Git 和子代理都在侧边栏工作台里。需要宿主 0.2.1-rc.1+。 |
+| 故障转移队列 | `@x1a0f3n9/dsh-failover-queue@0.1.13` | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3。503 / 超时 / 传输错误会跳过 `llm-retry`，立刻切下一档。P1 恢复后会探活切回。 |
+| 技能管理 | `@x1a0f3n9/dsh-skills-manager@0.1.54` | 加载、开关、创建并导入本机 Agent 技能。卡片打开时出现 Settings → 技能。 |
+| Web 搜索池 | `@x1a0f3n9/dsh-web-search-pool` | 默认 `searchProvider` 是 `search-pool`。DeepSeek 官方搜索仍可选手动选择。任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。 |
 
 ### 其他改动
 
@@ -115,19 +114,17 @@ DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来
 
 - 通过 [GitHub Discussions](https://github.com/LunFengChen/deepseek-harness/discussions) 提交反馈或 bug 报告。
 - 为你的插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) 话题，便于被发现。
-- 欢迎加入 DeepSeek Harness 企微群：扫码添加企微小助手并填写入群问卷，完成后小助手会邀请你入群。
+- 欢迎加入 DeepSeek Harness 企微群！扫描下方二维码填写入群问卷，小助手会定期发送入群邀请。
 
 <table>
   <thead>
     <tr>
-      <th align="center">企微小助手</th>
       <th align="center">入群问卷</th>
       <th align="center">微信公众号</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td align="center"><img src="https://cdn.deepseek.com/harness/readme/community-wecom-assistant.png" alt="DeepSeek Harness 企微小助手二维码" width="180" height="180"></td>
       <td align="center"><a href="https://trtgsjkv6r.feishu.cn/share/base/form/shrcnIt5twSVdLGD52KJBckGCgg"><img src="https://cdn.deepseek.com/harness/readme/community-wecom-survey.png" alt="DeepSeek Harness 入群问卷二维码" width="180" height="180"></a></td>
       <td align="center"><img src="https://cdn.deepseek.com/harness/readme/community-wechat-official-account.png" alt="DeepSeek Harness 团队微信公众号二维码" width="180" height="180"></td>
     </tr>

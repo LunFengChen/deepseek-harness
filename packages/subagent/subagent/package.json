@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-subagent",
   "description": "Abstract subagent seam (ctx.subagents): named-provider registry for delegating to child agents",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -22,10 +22,6 @@
       "types": "./lib/types/internal.d.ts",
       "default": "./lib/types/internal.js"
     },
-    "./invariant": {
-      "types": "./lib/types/invariant.d.ts",
-      "default": "./lib/invariant.js"
-    },
     "./client": {
       "types": "./lib/types/client.d.ts",
       "default": "./lib/types/client.js"
@@ -39,11 +35,12 @@
       "default": "./lib/typert.remote-client.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
-    "lib/invariant.js",
     "lib/types/**/*.js",
     "lib/types/**/*.d.ts",
     "lib/typert.host.js",
@@ -57,15 +54,13 @@
     "@x1a0f3n9/dsh-chunked-list": "workspace:*",
     "@x1a0f3n9/dsh-util-values": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:~",
-    "zod": "^4.4.3"
+    "zod": "4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
     "@x1a0f3n9/dsh-agent": "workspace:*",
     "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
     "@x1a0f3n9/dsh-attachment": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
-    "@x1a0f3n9/dsh-jobs": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-sandbox": "workspace:*",
     "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
@@ -80,7 +75,8 @@
     "@x1a0f3n9/dsh-user-approval": "workspace:*",
     "@x1a0f3n9/dsh-util-time": "workspace:*",
     "@x1a0f3n9/dsh-permission-presets": "workspace:*",
-    "@x1a0f3n9/dsh-workspace": "workspace:*"
+    "@x1a0f3n9/dsh-workspace": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   },
   "peerDependenciesMeta": {
     "@x1a0f3n9/dsh-agent-preset-registry": {
@@ -107,13 +103,7 @@
     "@x1a0f3n9/dsh-workspace": {
       "optional": true
     },
-    "@x1a0f3n9/dsh-jobs": {
-      "optional": true
-    },
     "@x1a0f3n9/dsh-user-approval": {
-      "optional": true
-    },
-    "@x1a0f3n9/dsh-settings": {
       "optional": true
     }
   },
@@ -122,26 +112,28 @@
     "@x1a0f3n9/dsh-agent": "workspace:*",
     "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
     "@x1a0f3n9/dsh-attachment": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
-    "@x1a0f3n9/dsh-jobs": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-sandbox": "workspace:*",
     "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
-    "@x1a0f3n9/dsh-schedule": "workspace:*",
     "@x1a0f3n9/dsh-scope": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-persistence": "workspace:*",
     "@x1a0f3n9/dsh-session-projection": "workspace:*",
     "@x1a0f3n9/dsh-session-query": "workspace:*",
-    "@x1a0f3n9/dsh-storage": "workspace:*",
-    "@x1a0f3n9/dsh-storage-domain": "workspace:*",
-    "@x1a0f3n9/dsh-storage-json": "workspace:*",
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
     "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
     "@x1a0f3n9/dsh-user-approval": "workspace:*",
     "@x1a0f3n9/dsh-util-time": "workspace:*",
     "@x1a0f3n9/dsh-permission-presets": "workspace:*",
-    "@x1a0f3n9/dsh-workspace": "workspace:*"
+    "@x1a0f3n9/dsh-workspace": "workspace:*",
+    "@deepseek-ai/cordis-plugin-include": "workspace:~",
+    "@deepseek-ai/cordis-plugin-loader": "workspace:~",
+    "@x1a0f3n9/dsh-agent-loop": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
+    "@x1a0f3n9/dsh-fs-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-tool-fs": "workspace:*",
+    "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   }
 }

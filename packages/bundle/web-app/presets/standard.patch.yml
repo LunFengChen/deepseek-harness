@@ -11,12 +11,13 @@
           - id: persona
             name: '@x1a0f3n9/dsh-persona'
             config:
-              suffix: Your working directory is {{cwd}}.
               prefix: You are a coding agent powered by the {{model}} model.
           - id: agent-instructions
             name: '@x1a0f3n9/dsh-agent-instructions'
             config:
               maxBytes: 65536
+          - id: time-context
+            name: '@x1a0f3n9/dsh-time-context'
           - id: tool-bash
             name: '@x1a0f3n9/dsh-tool-bash'
             disabled: !!js process.platform === 'win32'
@@ -31,6 +32,8 @@
               sampleOverCapGlobResults: false
           - id: tool-jobs
             name: '@x1a0f3n9/dsh-tool-jobs'
+          - id: tool-schedule
+            name: '@x1a0f3n9/dsh-tool-schedule'
           - id: skill-filesystem
             name: '@x1a0f3n9/dsh-skill-filesystem'
           - id: tool-skill
@@ -49,7 +52,7 @@
                 name: '@x1a0f3n9/dsh-plan-mode'
                 config:
                   section: |
-                    You are in plan mode. Stay in plan mode until exit_plan_mode succeeds or the user switches the session mode. Imperative language to implement changes means plan the implementation, not execute it. A user's conversational agreement — including an answer confirming something you asked — approves nothing and does not end plan mode; fold the confirmed decision into the plan and submit it through exit_plan_mode.
+                    You are in plan mode. Stay in plan mode until the user approves your plan through exit_plan_mode or switches the session mode. Imperative language to implement changes means plan the implementation, not execute it. A user's conversational agreement — including an answer confirming something you asked — approves nothing and does not end plan mode; fold the confirmed decision into the plan and submit it through exit_plan_mode.
 
                     Explore first. Use non-mutating reads, searches, static analysis, and checks to ground the plan in the actual repository. Do not edit or write files, change configuration, run formatters or code generation that rewrites tracked files, commit, or otherwise carry out the plan. Prefer existing functions and patterns over new machinery.
 
@@ -93,41 +96,17 @@
                   provider: spawn
                   toolName: subagent
                   modelSelectionSettings: true
-                  backgroundMode: continuable
               - id: tool-subagent-fork
                 name: '@x1a0f3n9/dsh-tool-subagent'
                 config:
                   provider: fork
                   toolName: subagent_fork
-                  backgroundMode: continuable
-              - id: tool-subagent-codex
-                name: '@x1a0f3n9/dsh-tool-subagent'
-                disabled: true
-                config:
-                  provider: codex
-                  toolName: subagent_codex
-                  backgroundMode: one-shot
-                  maxDepth: provider-managed
-              - id: tool-subagent-claude-code
-                name: '@x1a0f3n9/dsh-tool-subagent'
-                disabled: true
-                config:
-                  provider: claude-code
-                  toolName: subagent_claude_code
-                  backgroundMode: one-shot
-                  maxDepth: provider-managed
               - id: workflow-ptc
                 name: '@x1a0f3n9/dsh-workflow-ptc'
                 config:
                   provider: spawn
               - id: tool-workflow
                 name: '@x1a0f3n9/dsh-tool-workflow'
-              - id: tool-ralph
-                name: '@x1a0f3n9/dsh-tool-ralph'
-                disabled: true
-                config:
-                  subagentProvider: spawn
-                  maxRounds: 64
           - id: tool-ask-user
             name: '@x1a0f3n9/dsh-tool-ask-user'
           - id: tool-todo
@@ -143,4 +122,7 @@
             name: '@x1a0f3n9/dsh-tool-present'
           - id: tool-plugin-manager
             name: '@x1a0f3n9/dsh-plugin-manager/tools'
+            disabled: true
+          - id: tool-plugin-market
+            name: '@x1a0f3n9/dsh-plugin-market/tools'
             disabled: true

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-sidebar-documentpreview",
   "description": "Extensible Sidebar previews for Office documents, spreadsheets, Markdown, code, images, PDF, HTML, and plain text",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -23,7 +23,8 @@
       "default": "./lib/client.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "dsh": {
     "client": {
@@ -67,27 +68,26 @@
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
     "@x1a0f3n9/dsh-office-to-pdf": "workspace:*",
     "@x1a0f3n9/dsh-host-webserver": "workspace:*",
-    "@x1a0f3n9/dsh-office-to-pdf": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-util-workspace-path": "workspace:*",
     "@fortune-sheet/core": "1.0.4",
     "@fortune-sheet/react": "1.0.4",
-    "@testing-library/react": "^16.1.0",
+    "@testing-library/react": "^16.3.3",
     "@types/papaparse": "^5.3.16",
-    "@types/react": "~18.3.1",
-    "@types/react-dom": "~18.3.0",
     "clsx": "^2.0.0",
-    "dompurify": "^3.4.11",
+    "dompurify": "^3.4.16",
     "exceljs": "4.4.0",
     "fast-xml-parser": "5.11.1",
     "fflate": "^0.8.3",
-    "papaparse": "5.5.3",
+    "papaparse": "5.7.0",
     "pdfjs-dist": "6.3.289",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "yaml": "^2.9.0"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/client.js",
     "lib/client.*.js",

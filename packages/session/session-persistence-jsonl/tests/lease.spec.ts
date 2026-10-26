@@ -25,7 +25,7 @@ import {
   SessionPersistenceNotFoundError,
 } from '@x1a0f3n9/dsh-session-persistence'
 import type { SessionPersistence } from '@x1a0f3n9/dsh-session-persistence'
-import JsonlSessionPersistence from '../src/index.ts'
+import * as JsonlSessionPersistence from '../src/index.ts'
 import { LEASE_FILENAME, SessionWriteLease } from '../src/lease.ts'
 import type { JsonlSessionHandle } from '../src/storage.ts'
 import { sessionDir } from '../src/format.ts'

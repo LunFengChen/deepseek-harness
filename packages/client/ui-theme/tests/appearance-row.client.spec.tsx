@@ -5,7 +5,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import type { SessionListState } from '@x1a0f3n9/dsh-api-session-controller/client'
 import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
 import { createSnapshotStore } from '@x1a0f3n9/dsh-client-store'
-import { bindSnapshotSelector } from '@x1a0f3n9/dsh-client-test-runtime'
+import { allowAllAccess, bindSnapshotSelector } from '@x1a0f3n9/dsh-client-test-runtime'
 import { AppearanceRow } from '../src/client/AppearanceRow.tsx'
 import type { AppearanceRowComponentProps } from '../src/client/AppearanceRow.tsx'
 import { createAppearanceRowStore } from '../src/client/settings-store.ts'
@@ -50,6 +50,7 @@ function mount(preference: ThemePreference = 'system') {
     useSessionStatus,
     usePanelInfo, useSessionRetainInfo: () => undefined, useResource,
     useWorkspaces: emptyWorkspaces(),
+    ...allowAllAccess,
     useStore: bindSnapshotSelector(store),
     actions: store.actions,
     t: (key: string) => COPY[key] ?? key,

@@ -6,6 +6,7 @@
   - tablist:
     - tab "Chat" [selected]
     - tab "Trajectory"
+  - button "More conversation views"
 - navigation "Turn navigation":
   - button "Jump to turn 1"
   - button "Jump to turn 2"
@@ -14,8 +15,8 @@
 - button "Continuing goal {{clock}}":
   - text: Continuing goal
   - time: {{clock}}
-- status: Worked
-- button "Took {{duration}}"
+- status: Completed
+- button "Completed in {{duration}}"
 - paragraph:
   - strong: Turn 1 / 2
   - text: — 随机选中的包：
@@ -38,8 +39,8 @@
 - button "Continuing goal {{clock}}":
   - text: Continuing goal
   - time: {{clock}}
-- status: Worked
-- button "Took {{duration}}"
+- status: Completed
+- button "Completed in {{duration}}"
 - paragraph: 两个 turn 都完成了 ✅
 - paragraph:
   - strong: 总结：
@@ -94,7 +95,6 @@
 - button "Good response"
 - button "Bad response"
 - button "Branch into a new conversation"
-- tooltip "Branch into a new conversation"
 - text: {{clock}}
 - textbox "Message or run a task, / commands, @ files or sessions"
 - button "Add files or run commands"

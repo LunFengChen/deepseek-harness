@@ -296,7 +296,7 @@ describe.skipIf(!builtArtifactsExist)('dsh Web profile best-effort startup', () 
       expect(result.stderr).toContain('Failed plugins (1):')
       expect(result.stderr).toContain('  webserver (required)\n    Package: @x1a0f3n9/dsh-host-webserver')
       expect(result.stderr).toContain('Plugins waiting for services (')
-      expect(result.stderr).toMatch(/connection \(required\) +webRuntime/u)
+      expect(result.stderr).toMatch(/web-runtime \(required\) +webServer/u)
       expect(result.stderr).toContain('at Server.setupListenHandle')
       const summary = result.stderr.split(/\n\n(?:Full diagnostics:|dsh: warning:)/u)[0]!
       expect(summary.match(/EADDRINUSE/gu)).toHaveLength(1)
@@ -319,7 +319,7 @@ describe.skipIf(!builtArtifactsExist)('dsh Web profile best-effort startup', () 
       expect(report).toContain('configurationPath:')
       expect(report).toContain("code: 'EADDRINUSE'")
       expect(report).toContain(`port: ${String(address.port)}`)
-      expect(report).toContain("module: '@x1a0f3n9/dsh-client-connection'")
+      expect(report).toContain("module: '@x1a0f3n9/dsh-web-app'")
       expect(report).toContain('at auditStartupEntries')
     } finally {
       await new Promise<void>((resolve, reject) => {

@@ -5,63 +5,66 @@
 /:
   en: 0abe764a4bc3e3db
   zh: 280ff3a1c1a8bc5c
-/x1a0f3n9-dsh-jobs-local:
-  en: 5cdcf992a6c0f26b
-  zh: d89efa1beca94537
-/x1a0f3n9-dsh-jobs-local/summary:
+/deepseek-ai-dsh-jobs-local:
+  en: 20bc108b32378c74
+  zh: 8d1121f0a70f454a
+/deepseek-ai-dsh-jobs-local/summary:
   en: b76227a7ed290b11
   zh: 866fd04f48303a89
-/x1a0f3n9-dsh-jobs-local/table-of-contents:
+/deepseek-ai-dsh-jobs-local/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-jobs-local/use-this-package:
+/deepseek-ai-dsh-jobs-local/use-this-package:
   en: e0e242161dda0c28
   zh: 30c058b5a3d1cc56
-/x1a0f3n9-dsh-jobs-local/use-this-package/when-to-choose-it:
+/deepseek-ai-dsh-jobs-local/use-this-package/when-to-choose-it:
   en: 17479310883edc0a
   zh: f1cea41c704dabe2
-/x1a0f3n9-dsh-jobs-local/use-this-package/minimal-configuration:
+/deepseek-ai-dsh-jobs-local/use-this-package/minimal-configuration:
   en: 5861bb20182aef3b
   zh: 23d595dad299b6c8
-/x1a0f3n9-dsh-jobs-local/use-this-package/what-each-owner-gets:
+/deepseek-ai-dsh-jobs-local/use-this-package/what-each-owner-gets:
   en: 9ab66aa770694092
   zh: 38de930bcfbc132c
-/x1a0f3n9-dsh-jobs-local/use-this-package/lifecycle:
+/deepseek-ai-dsh-jobs-local/use-this-package/lifecycle:
   en: 91dd372f742dcdb8
   zh: 58eeee0254d33cd1
-/x1a0f3n9-dsh-jobs-local/use-this-package/what-can-go-wrong:
-  en: dcf5bc26dbc018e5
-  zh: 3dbe65c2df463ec0
-/x1a0f3n9-dsh-jobs-local/understand-the-implementation:
+/deepseek-ai-dsh-jobs-local/use-this-package/session-timing-records:
+  en: ae926795d8aaa88f
+  zh: 0e6ec0265eefccf7
+/deepseek-ai-dsh-jobs-local/use-this-package/what-can-go-wrong:
+  en: e1f4511c458dff3b
+  zh: bea247c2a365a646
+/deepseek-ai-dsh-jobs-local/understand-the-implementation:
   en: f782557ca8da3138
   zh: e8f0082b9692cacc
-/x1a0f3n9-dsh-jobs-local/understand-the-implementation/design-philosophy:
+/deepseek-ai-dsh-jobs-local/understand-the-implementation/design-philosophy:
   en: b92e6e5415553e2e
   zh: c3e0be579af4c7fb
-/x1a0f3n9-dsh-jobs-local/understand-the-implementation/source-map:
-  en: a6c6d252ec2aa661
-  zh: 5423f9150285004b
-/x1a0f3n9-dsh-jobs-local/understand-the-implementation/scope-layers:
+/deepseek-ai-dsh-jobs-local/understand-the-implementation/source-map:
+  en: cf99103141ed9f13
+  zh: 3a650aa8c4019156
+/deepseek-ai-dsh-jobs-local/understand-the-implementation/scope-layers:
   en: 2c53e11a60965985
   zh: 63adc1628c71e62e
-/x1a0f3n9-dsh-jobs-local/understand-the-implementation/admission-and-settlement:
+/deepseek-ai-dsh-jobs-local/understand-the-implementation/admission-and-settlement:
   en: b9634939c81b46cb
   zh: a18f90caf7c61e87
-/x1a0f3n9-dsh-jobs-local/understand-the-implementation/teardown:
+/deepseek-ai-dsh-jobs-local/understand-the-implementation/teardown:
   en: 49e8bd5e2c1f6ffd
   zh: ad3e1aa712fd59b3
-/x1a0f3n9-dsh-jobs-local/further-exploration:
-  en: d91bf997352940be
-  zh: 98540d56253fb950
-/x1a0f3n9-dsh-jobs-local/model-experience:
+/deepseek-ai-dsh-jobs-local/further-exploration:
+  en: bb0334d20bfb0b5f
+  zh: 1b02ec08f9618bef
+/deepseek-ai-dsh-jobs-local/model-experience:
   en: 873ef364fc8d6f2f
   zh: 4d0bb38a9c9639c0
-/x1a0f3n9-dsh-jobs-local/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-jobs-local/model-experience/kv-cache-effect:
   en: e290ccc9b3c92c08
   zh: d75d48f485447a74
-/x1a0f3n9-dsh-jobs-local/known-limitations-and-deferred-work:
-  en: 5284107cbd22e3dd
-  zh: 9aa0048908c94e25
-/x1a0f3n9-dsh-jobs-local/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-jobs-local/known-limitations-and-deferred-work:
+  en: 8b3e2d5505caf2cd
+  zh: 46435d6a6b3c9aff
+/deepseek-ai-dsh-jobs-local/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 3bb0c20c93f16f98

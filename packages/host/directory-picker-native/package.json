@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-host-directory-picker-native",
   "description": "Native-OS-chooser backend of the directory-picker seam for the DeepSeek Harness web GUI host",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -23,9 +23,11 @@
       "default": "./lib/worker.cjs"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/worker.cjs",
     "lib/types/**/*.d.ts"
@@ -34,13 +36,13 @@
   "dependencies": {
     "@x1a0f3n9/dsh-host-directory-picker": "workspace:*",
     "@x1a0f3n9/dsh-native-command": "workspace:*",
-    "koffi": "^3.1.0"
+    "koffi": "3.1.1"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
-    "tsx": "^4.19.2"
+    "tsx": "^4.23.13"
   }
 }

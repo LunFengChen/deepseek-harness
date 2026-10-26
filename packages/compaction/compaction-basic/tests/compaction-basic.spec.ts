@@ -25,7 +25,7 @@ import type {
   StreamChunk,
   TokenUsage,
 } from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SESSION_LIVE_WINDOW_EVENTS, Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
+import SessionStore, { Session, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import TokenMeter from '@x1a0f3n9/dsh-token-meter'
 import { agentEvents, type Agent, type RequestErrorAction } from '@x1a0f3n9/dsh-agent'
@@ -2498,40 +2498,10 @@ describe('automatic listener and loader composition', () => {
     expect(checkpoint).toBeDefined()
   })
 
-  it('recovers overflow on a windowed Session without token-meter ingest', async () => {
+  it('recovers overflow on a Session without token-meter ingest', async () => {
     const ctx = createContext()
     void new TestCompactionEngine(ctx)
-    const session = Session.create(SessionId('windowed-overflow'))
-    const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 6) + 8
-    for (let turn = 1; turn <= turns; turn += 1) {
-      session.append('turn/start', { turn })
-      session.append('user/message', createUserMessage({
-        content: [{ type: 'text', text: `hello ${turn}` }],
-        source: { kind: 'user' },
-      }), { surfaceOp: 'append' })
-      session.append('step/start', { turn, step: 1 })
-      if (turn === 1) {
-        session.append('request/header', {
-          header: { config: { provider: MODEL, model: MODEL } },
-          reason: 'initial',
-        })
-      }
-      session.append('assistant/message', {
-        stream: [],
-        turn,
-        step: 1,
-        message: createMessage({
-          role: 'assistant',
-          content: [{ type: 'text', text: `ok ${turn}` }],
-          source: { kind: 'model', provider: MODEL, model: MODEL },
-        }),
-      }, { surfaceOp: 'append' })
-      session.append('step/end', { turn, step: 1 })
-      session.append('turn/end', { turn, reason: { kind: 'completed' } })
-    }
-    session.append('turn/start', { turn: turns + 1 })
-    session.releaseLiveWindow()
-    expect(session.liveBaseSeq).toBeGreaterThan(0)
+    const session = conversation(8)
 
     expect(await recover(ctx, agent(session, MODEL), overflow())).toBe(true)
     expect(session.snapshotEvents().some(event => event.type === 'compaction/summary')).toBe(true)

@@ -47,7 +47,7 @@ GitHub's default branch is `dev-x1a0f3n9`, so a clone without `-b` also lands he
 Official DeepSeek Harness is a separate product from [DeepSeek AI](https://deepseek.com).
 
 ```sh
-npm install --global @deepseek-ai/dsh
+npm install --global @x1a0f3n9/dsh
 dsh web
 ```
 
@@ -67,15 +67,14 @@ Prebundled extras live on **Settings → xfdsh preset plugins**. Cards show the 
 
 | Plugin | Package | What it does |
 | --- | --- | --- |
-| Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.5-xfdsh.2` | Rewind, delete, regenerate, and a composer compact button. |
-| Plugin market | `@x1a0f3n9/dshmarket@1.45.2` | Browse community plugins. Official `@deepseek-ai/dsh-*` plugins remap into this runtime. |
-| Reasoning effort | `@x1a0f3n9/dsh-reasoning-effort@0.7.3` | Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. The composer can then pick thinking strength. |
-| Context dashboard | `@x1a0f3n9/dsh-context@0.49.7` | A Context tab and `/context` show composition, compaction, and token use. Version detection reads this fork. |
-| Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.19.3` | Files, terminal, Git, and subagents in the sidebar workbench. |
-| Hindsight memory | `@x1a0f3n9/hindsight-coding-agents@0.5.2-xfdsh.4` | On by default. Uses a local daemon, not Cloud. Cloud or a self-hosted URL remains optional in `~/.hindsight/coding-agent.json`. |
-| Failover queue | `@x1a0f3n9/dsh-failover-queue@0.1.12` | Composer chip plus Settings → Failover for P1/P2/P3. A 503 / timeout / transport error skips `llm-retry` and jumps to the next P. Recovered P1 is probed and selected again. |
-| Skills manager | `@x1a0f3n9/dsh-skills-manager@0.1.53-xfdsh.1` | Load, toggle, create, and import local Agent skills. Settings → Skills appears when the card is on. |
-| Web search pool | `@x1a0f3n9/dsh-web-search-pool` | Default order is the search pool, then Perplexity, Exa, and keyless Bing/DuckDuckGo. DeepSeek search remains selectable. Every chat model can `web_search` without a DeepSeek search key. |
+| Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.6` | Rewind, delete, regenerate, and a composer compact button. |
+| Plugin market | `@x1a0f3n9/dshmarket@1.45.4` | Browse community plugins. Official `@deepseek-ai/dsh-*` plugins remap into this runtime. |
+| Reasoning effort | `@x1a0f3n9/dsh-reasoning-effort@0.7.7` | Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. The composer can then pick thinking strength. |
+| Context dashboard | `@x1a0f3n9/dsh-context@0.49.9` | A Context tab and `/context` show composition, compaction, and token use. Version detection reads this fork. |
+| Better sidebar | `dsh-better-sidebar@0.28.0` | Files, terminal, Git, and subagents in the sidebar workbench. Needs host 0.2.1-rc.1+. |
+| Failover queue | `@x1a0f3n9/dsh-failover-queue@0.1.13` | Composer chip plus Settings → Failover for P1/P2/P3. A 503 / timeout / transport error skips `llm-retry` and jumps to the next P. Recovered P1 is probed and selected again. |
+| Skills manager | `@x1a0f3n9/dsh-skills-manager@0.1.54` | Load, toggle, create, and import local Agent skills. Settings → Skills appears when the card is on. |
+| Web search pool | `@x1a0f3n9/dsh-web-search-pool` | Default `searchProvider` is `search-pool`. DeepSeek official search remains selectable. Every chat model can `web_search` without a DeepSeek search key. |
 
 ### Other changes
 
@@ -115,7 +114,7 @@ DeepSeek Harness is in _developer preview_ and iterating rapidly. **THERE WILL B
 
 - Submit feedback or bug reports through [GitHub Discussions](https://github.com/LunFengChen/deepseek-harness/discussions).
 - Add the [`dsh-plugin`](https://github.com/topics/dsh-plugin) topic to your plugin repository for discoverability.
-- Join <a href="https://discord.gg/Ycq5dCaS4">DeepSeek Harness Discord community</a>.
+- Join <a href="https://discord.gg/4MrtZUhpxg">DeepSeek Harness Discord community</a>.
 
 ## Contributing
 

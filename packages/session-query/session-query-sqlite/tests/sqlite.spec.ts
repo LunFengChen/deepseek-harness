@@ -22,7 +22,7 @@ import type {
   SessionPersistenceListOptions,
   SessionPersistenceSnapshot,
 } from '@x1a0f3n9/dsh-session-persistence'
-import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import * as JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import SqliteSessionQueryEngine, {
   SESSION_QUERY_SQLITE_SCHEMA_VERSION,
 } from '@x1a0f3n9/dsh-session-query-sqlite'

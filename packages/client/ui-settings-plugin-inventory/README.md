@@ -1,5 +1,5 @@
 ---
-description: "Web Plugins settings tabs for the dsh web client: a scope-grouped plugin inventory and a sibling xfdsh preset-plugins catalog."
+description: "Scope-grouped read-only plugin inventory tab in Web Plugins settings for the dsh web client: agent-preset compositions first, the global plane behind a disclosure, search across both."
 kind: "package-reference"
 ---
 
@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-The **Plugin list** tab lets Web users inspect plugins without changing their configuration. It lists agent presets, then the global inventory; both start collapsed and open on demand or during a search. Prebundled xfdsh plugins are not listed there; they have a sibling **xfdsh preset plugins** tab. Cards show localized titles and descriptions when available, identify instances by stable entry id, and expose enablement, source details, runtime status, disabled conditions, and discovery failures; preset-provided global entries name their presets. Search covers both groups and points to matches in other presets. The tab handles loading, empty, no-match, failure, and retry states without exposing transport details, and still shows the global inventory without a preset roster.
+The **Plugin list** tab lets Web users inspect plugins without changing their configuration. It lists agent presets, open by default, then the collapsed global inventory; a search opens both. Cards show localized titles and descriptions when available, identify instances by stable entry id, and expose enablement, source details, runtime status, disabled conditions, and discovery failures; preset-provided global entries name their presets. Search covers both groups and points to matches in other presets. The tab handles loading, empty, no-match, failure, and retry states without exposing transport details, and still shows the global inventory without a preset roster.
 
 ## Table of Contents
 
@@ -25,19 +25,15 @@ The **Plugin list** tab lets Web users inspect plugins without changing their co
 <a id="use-this-package"></a>
 ## Use this package
 
-Open the Plugins section in Settings and select the **Plugin list** tab to inspect the Host's plugin inventory, or **xfdsh preset plugins** to enable or disable the profile's prebundled features. The tab reads no Remote during plugin activation — selecting it for the first time mounts the component and lazily calls `ctx.remote.pluginInventory.list()` through `api-remotes`.
+Open the Plugins section in Settings and select the **Plugin list** tab to inspect the Host's plugin inventory. The tab reads no Remote during plugin activation — selecting it for the first time mounts the component and lazily calls `ctx.remote.pluginInventory.list()` through `api-remotes`.
 
 A failed installation with pending pnpm build permissions offers **Allow these scripts and retry**. The action displays the exact package names and persistent permission scope, then retries the original package spec and activation choice. One click approves the entire displayed group, which can include pending packages from earlier attempts. Closing the page grants no permission.
 
 ### Reading a card
 
-Each collapsed card uses the plugin's localized title and description when available. Settings shortens literal package-name or module-name fallbacks by removing the npm scope and the `cordis:`, `cordis-plugin-`, or `dsh-`/`dsh-host-`/`dsh-client-` prefix; locale titles remain unchanged. The Host supplies locale and package-field fallbacks in `meta`; the Client selects the current language. Full module specifiers remain available in details and search. Missing descriptions are omitted, and metadata diagnostics appear with the card. This compact naming applies only to Settings, not the sidebar's Plugins page.
+Each collapsed card uses the plugin's localized title and description when available; a description shows at most two lines until its card is expanded. Settings shortens literal package-name or module-name fallbacks by removing the npm scope and the `cordis:`, `cordis-plugin-`, or `dsh-`/`dsh-host-`/`dsh-client-` prefix; locale titles remain unchanged. The Host supplies locale and package-field fallbacks in `meta`; the Client selects the current language. Full module specifiers remain available in details and search. Missing descriptions are omitted, and metadata diagnostics appear with the card. This compact naming applies only to Settings, not the sidebar's Plugins page.
 
-The stable entry id appears underneath the title, alongside a small enablement tag; a colored root-fiber status dot marks only the phases the tag cannot state: `pending` maps to idle, while `loading` and `unloading` map to ongoing. An `active` or `failed` fiber shows its tag without a dot. A composition-generated subtitle omits its leading `include:` marker, while hover, search, the accessible name, and expanded details retain the complete id. Long entry ids truncate in the row and remain available on hover. Expanding one card reveals the declared entry id, the full module specifier, and the state facts: a preset row names the preset it comes from, its runtime status when the composition is live, and its disable condition when it carries one; a preset-provided global row explains that agent presets provide it per session, names the presets that enable it, and offers a jump into the preset group. Preset names resolve through the shared `presetDisplayText` fold (`dsh-agent-preset-registry/display`) over [`ui-agent-preset`](../ui-agent-preset/README.md)'s dictionaries: shipped presets follow the active locale while user-authored ones keep their own metadata, so an English surface never echoes the preset declarations' Chinese names. Search filters both groups by localized title and description, module name, and entry id.
-
-### xfdsh preset plugins
-
-The **xfdsh preset plugins** tab lists the profile's prebundled features as cards with an enable switch. Each card shows the package name under the title, and the resolved package version when the Host snapshot includes one. When the catalog declares a GitHub homepage, that package name is a new-tab link to it. Cards without a homepage keep the package name as plain text and do not invent an npm registry URL or add an extra author line. An empty catalog hides the section rather than rendering a blank group. The Plugin list omits the same packages from its global inventory.
+A small enablement tag marks only the states that differ from plainly enabled: disabled, conditional, provided by presets, and failed; a plainly enabled row carries no tag. A colored root-fiber status dot marks the live phases no tag states: `pending` maps to idle, while `loading` and `unloading` map to ongoing; an `active` or `failed` fiber shows no dot. The stable entry id appears in a code chip at the card's bottom-left, in line with the title, only when it differs from the title: a composition-generated id drops its leading `include:` marker there, and an id that then repeats the title is omitted. Whenever the chip shows, its hover text and the card's accessible name carry the complete id; search and expanded details always retain it. Long entry ids truncate in the chip and remain available on hover. Expanding one card reveals its full description, the declared entry id, the full module specifier, and the state facts: a preset row names the preset it comes from, its runtime status when the composition is live, and its disable condition when it carries one; a preset-provided global row explains that agent presets provide it per session, names the presets that enable it. Preset names resolve through the shared `presetDisplayText` fold (`dsh-agent-preset-registry/display`) over [`ui-agent-preset`](../ui-agent-preset/README.md)'s dictionaries: shipped presets follow the active locale while user-authored ones keep their own metadata, so an English surface never echoes the preset declarations' Chinese names. Search filters both groups by localized title and description, module name, and entry id.
 
 ### The preset switcher
 
@@ -45,7 +41,7 @@ The switcher is the same selector-pill-plus-menu control the General settings ro
 
 ### Retrying a failed read
 
-A failed read renders the shared error marker inside the tab; loading and current-page synchronization use the shared ongoing loader. Retrying re-runs the lazy `list()` call without exposing transport details.
+A failed read renders the shared error marker inside the tab. Loading shows skeleton cards in the card grid, and current-page synchronization uses the shared ongoing loader. Retrying re-runs the lazy `list()` call without exposing transport details.
 
 The Plugin list also shows synchronization failures on the current page. Its retry reapplies the latest client graph without changing Host enablement or refreshing the page.
 
@@ -57,15 +53,15 @@ The Plugin list also shows synchronization failures on the current page. Its ret
 <details>
 <summary>Implementation internals — click to expand</summary>
 
-Plugin list is a read-only projection of a Host-owned snapshot; xfdsh preset plugins writes enablement through the same snapshot. Neither tab performs a Remote read during plugin activation; each takes the snapshot on first selection.
+The tab is a read-only projection of a Host-owned snapshot; it performs no Remote read during plugin activation and takes the snapshot on first selection.
 
 ### Registration
 
-The browser plugin registers two localized `settings.plugins.tab` contributions (`all` and `xfdsh-presets`); the Plugins section owns the navigation entry and tab chrome. Registration uses `ctx.slots.inject()`, so it follows late tab declaration, redeclaration, locale changes, and teardown without importing the section owner.
+The browser plugin registers one localized `settings.plugins.tab` contribution with id `all`; the Plugins section owns the navigation entry and tab chrome. Registration uses `ctx.slots.inject()`, so it follows late tab declaration, redeclaration, locale changes, and teardown without importing the section owner.
 
 ### Rendering
 
-Row keys are scope-qualified (`global:`, `preset:<id>:<index>`), so one module appearing in both scopes keeps distinct disclosure state; a declared entry id appears in expanded details and supplies the collapsed subtitle after removal of a leading composition `include:` marker, while a row without one stays unlabeled. The preset-provided marking is derived client-side: a global entry carries it when it is disabled there while at least one preset row for the same module specifier is actually enabled, so a module every preset gates off (or declares only conditionally) stays plainly disabled rather than over-claiming provision.
+Row keys are scope-qualified (`global:`, `preset:<id>:<index>`), so one module appearing in both scopes keeps distinct disclosure state; a declared entry id appears in expanded details and, after removal of a leading composition `include:` marker, supplies the collapsed id chip when the result differs from the title, while a row without one stays unlabeled. The preset-provided marking is derived client-side: a global entry carries it when it is disabled there while at least one preset row for the same module specifier is actually enabled, so a module every preset gates off (or declares only conditionally) stays plainly disabled rather than over-claiming provision.
 
 </details>
 
@@ -100,7 +96,7 @@ None; this package neither assembles nor sends a provider request.
 These limits define the freshness and reach of the inventory view; they are current package constraints.
 
 - **One snapshot per Settings mount or retry** — the tab does not subscribe to Loader changes or automatically refetch after reconnect; switching tabs preserves the current snapshot, while reopening Settings obtains a new one.
-- **Inventory stays read-only** — Plugin list shows global and preset enablement but mutates neither. The xfdsh preset plugins tab writes profile enablement. Enable/disable controls that write a custom preset's own composition file are deliberate follow-up work.
+- **Read-only in both planes** — the tab shows global and preset enablement but mutates neither; enable/disable controls that write a custom preset's own composition file are deliberate follow-up work.
 
 <a id="dev-note"></a>
 ### Dev Note
@@ -111,5 +107,3 @@ These limits define the freshness and reach of the inventory view; they are curr
 None.
 
 </details>
-
-**Runtime invariant:** No companion is published. This package owns Settings contributions for inventory and preset-plugin enablement.

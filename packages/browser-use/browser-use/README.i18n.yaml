@@ -5,33 +5,33 @@
 /:
   en: f40b34f771caa863
   zh: f61d7ce73e0720e2
-/x1a0f3n9-dsh-browser-use:
-  en: 8397a71f028ee7a2
-  zh: d8c753302f2add43
-/x1a0f3n9-dsh-browser-use/summary:
+/deepseek-ai-dsh-browser-use:
+  en: 2dbab261a3c343cc
+  zh: f2cf8d237182cef1
+/deepseek-ai-dsh-browser-use/summary:
   en: 3e2c0d4aad911b93
   zh: 3e3903754a46de8e
-/x1a0f3n9-dsh-browser-use/table-of-contents:
+/deepseek-ai-dsh-browser-use/table-of-contents:
   en: d152484eb41ac6b4
   zh: f14f34fce35a8d90
-/x1a0f3n9-dsh-browser-use/use-this-package:
-  en: d2ea219b1d3f2e00
-  zh: 0cfbd7afb08fe227
-/x1a0f3n9-dsh-browser-use/understand-the-implementation:
-  en: e8421af75ba37792
-  zh: 3dbc5e6ff5291972
-/x1a0f3n9-dsh-browser-use/further-exploration:
+/deepseek-ai-dsh-browser-use/use-this-package:
+  en: d0c5ace058c0572a
+  zh: 2bbfa786c1f9ba53
+/deepseek-ai-dsh-browser-use/understand-the-implementation:
+  en: c4d9ec0df22a30ea
+  zh: 06057e2a56cebbb9
+/deepseek-ai-dsh-browser-use/further-exploration:
   en: 5ae59b1b38304607
   zh: 429171c1a3fb914c
-/x1a0f3n9-dsh-browser-use/model-experience:
+/deepseek-ai-dsh-browser-use/model-experience:
   en: 8780c250dfaefaaa
   zh: f1fd94f7531b60a1
-/x1a0f3n9-dsh-browser-use/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-browser-use/model-experience/kv-cache-effect:
   en: 0cc866a67a19d08b
   zh: c6a46b147b042cff
-/x1a0f3n9-dsh-browser-use/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-browser-use/known-limitations-and-deferred-work:
   en: 43952e97817e9e32
   zh: a5e494860a71fc71
-/x1a0f3n9-dsh-browser-use/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-browser-use/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 8ec3e73528ddb1a6

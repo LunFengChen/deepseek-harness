@@ -1,0 +1,58 @@
+{
+  "name": "@x1a0f3n9/dsh-experimental-worktree",
+  "description": "Creates a named Git worktree and changes the calling Session working directory",
+  "version": "0.2.1-rc.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/experimental/worktree"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "workspace:~",
+    "@x1a0f3n9/dsh-timeout": "workspace:*"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-fs-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
+  }
+}

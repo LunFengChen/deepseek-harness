@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-cordis-host-runner",
   "description": "Dynamic package definition registry, host-half sandbox lifecycle, and invoke handler table for model-mounted dual-half packages",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -31,9 +31,11 @@
       "default": "./lib/typert.remote-client.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/types/**/*.js",
     "lib/types/**/*.d.ts",
@@ -46,7 +48,7 @@
   "dependencies": {
     "@x1a0f3n9/dsh-util-values": "workspace:*",
     "@deepseek-ai/schemastery": "workspace:~",
-    "zod": "^4.4.3"
+    "zod": "4.4.3"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
@@ -62,6 +64,8 @@
     "@deepseek-ai/cordis": "workspace:~",
     "@deepseek-ai/cordis-plugin-timer": "workspace:~",
     "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-api-gateway": "workspace:*",
+    "@x1a0f3n9/dsh-api-remote-access": "workspace:*",
     "@x1a0f3n9/dsh-brand": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-scope": "workspace:*",

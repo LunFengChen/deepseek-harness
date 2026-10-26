@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-llm-retry",
   "description": "Provider-routed LLM request retry policy for the DeepSeek Harness",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -18,19 +18,16 @@
       "types": "./lib/types/index.d.ts",
       "default": "./lib/index.js"
     },
-    "./invariant": {
-      "types": "./lib/types/invariant.d.ts",
-      "default": "./lib/invariant.js"
-    },
     "./types": {
       "types": "./lib/types/types.d.ts",
       "default": "./lib/types/types.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
-    "lib/invariant.js",
     "lib/types/**/*.js",
     "lib/types/**/*.d.ts"
   ],
@@ -38,7 +35,6 @@
   "peerDependencies": {
     "@x1a0f3n9/dsh-brand": "workspace:*",
     "@x1a0f3n9/dsh-agent": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
@@ -47,7 +43,7 @@
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:~",
-    "zod": "^4.4.3"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@x1a0f3n9/dsh-brand": "workspace:*",
@@ -56,7 +52,6 @@
     "@x1a0f3n9/dsh-agent": "workspace:*",
     "@x1a0f3n9/dsh-agent-loop": "workspace:*",
     "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
-    "@x1a0f3n9/dsh-invariants": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-llm-deepseek": "workspace:*",
     "@x1a0f3n9/dsh-llm-deepseek-api-key": "workspace:*",
@@ -67,7 +62,6 @@
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
-    "@deepseek-ai/cordis": "workspace:~",
-    "@x1a0f3n9/dsh-session-projection": "workspace:*"
+    "@deepseek-ai/cordis": "workspace:~"
   }
 }

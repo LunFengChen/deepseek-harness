@@ -35,7 +35,7 @@ describe('webApp (the real web profile)', () => {
     const names = webApp.rows.map(row => row.name)
     expect(names).toContain('@x1a0f3n9/dsh-client-ui-settings-general')
     expect(names).not.toContain('@x1a0f3n9/dsh-llm') // Host only
-    expect(names).not.toContain('@x1a0f3n9/dsh-client-ui-schedule')
+    expect(names).toContain('@x1a0f3n9/dsh-client-ui-schedule')
     expect(names).not.toContain('@x1a0f3n9/dsh-web-app') // Host runtime glue, its `/startup` row is a subpath
   })
 })

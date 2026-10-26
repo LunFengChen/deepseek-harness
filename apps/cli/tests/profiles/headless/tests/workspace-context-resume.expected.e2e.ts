@@ -23,7 +23,7 @@ import {
   type SessionEvent,
   type SessionHeader,
 } from '@x1a0f3n9/dsh-session'
-import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import * as JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import { logPath } from '../../../../../../packages/session/session-persistence-jsonl/src/format.ts'
 import { renderAgentInstructions } from '@x1a0f3n9/dsh-agent-instructions'
 import { resolveConfig, workspaceBaselineIdentity } from '@x1a0f3n9/dsh-agent-instructions/src/config.ts'
@@ -79,7 +79,6 @@ async function seedVisibleBaseline(
     content: file.content,
   })), { maxBytes: 65536 })
   const config = resolveConfig({
-    dshHome: join(cwd, '.dsh'),
     maxBytes: 65536,
     ...options.instructionFileCandidates === undefined
       ? {}

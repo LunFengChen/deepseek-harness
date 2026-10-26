@@ -2,7 +2,7 @@ import { createServer, type Server } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { installProxyFromEnvironment } from '@x1a0f3n9/dsh-http-proxy'
-import { FreeSearchProvider } from '../src/provider.ts'
+import { FreeSearchProvider } from '@x1a0f3n9/dsh-web-search-free'
 
 let seen: string[] = []
 let proxy: Server

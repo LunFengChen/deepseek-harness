@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-sdk-jsonrpc-server",
   "description": "Stdio JSON-RPC server plugin for out-of-process DeepSeek Harness SDK clients",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -39,7 +39,8 @@
     "@x1a0f3n9/dsh-scope": "workspace:*",
     "@x1a0f3n9/dsh-sdk-protocol": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
-    "@x1a0f3n9/dsh-subagent": "workspace:*"
+    "@x1a0f3n9/dsh-subagent": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
@@ -55,6 +56,7 @@
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-persistence-jsonl": "workspace:*",
     "@x1a0f3n9/dsh-session-projection": "workspace:*",
-    "@x1a0f3n9/dsh-subagent": "workspace:*"
+    "@x1a0f3n9/dsh-subagent": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   }
 }

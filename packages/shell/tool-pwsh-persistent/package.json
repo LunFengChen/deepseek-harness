@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-tool-pwsh-persistent",
   "description": "Model-facing owner-scoped persistent PowerShell tool backed by the Harness PTY service",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -18,9 +18,11 @@
       "types": "./lib/types/index.d.ts",
       "default": "./lib/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/types/**/*.d.ts"
   ],
@@ -31,7 +33,8 @@
     "@x1a0f3n9/dsh-terminal": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
-    "@deepseek-ai/cordis": "workspace:~"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "workspace:~"
@@ -54,6 +57,7 @@
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
-    "@deepseek-ai/cordis": "workspace:~"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   }
 }

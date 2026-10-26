@@ -27,17 +27,11 @@ import { basename, dirname, join, relative, resolve, sep } from 'node:path'
 import type { EntryOptions } from '@deepseek-ai/cordis-plugin-loader'
 import { applyEntryPatches, type PatchOptions } from '@deepseek-ai/cordis-plugin-include'
 import { resolveDshHome } from '@x1a0f3n9/dsh-home-paths'
-import type {
-  DshBundleManifest,
-  DshPackageManifest,
-  DshPluginCatalogEntry,
-} from '@x1a0f3n9/dsh-package-manifest'
+import type { DshBundleManifest, DshPackageManifest, DshPluginCatalogEntry } from '@x1a0f3n9/dsh-package-manifest'
 import { evaluatePluginCompatibility, pluginCompatibilityWarning } from './plugin-compatibility.ts'
 import { readProfileVersionExemptions } from './profile-compatibility.ts'
 import { loadOverlayPatches } from './index.ts'
 import { realModuleDirectory } from './profile-resolution/legacy-links.ts'
-
-export type { DshPluginCatalogEntry } from '@x1a0f3n9/dsh-package-manifest'
 
 /** Directory under the Harness home holding every profile. */
 export const PROFILES_DIR = 'profiles'
@@ -53,6 +47,7 @@ export interface ProfileTemplate {
 
 /** Package metadata accepted by the profile reader; local profiles need no published identity. */
 export type ProfileManifest = Partial<DshPackageManifest>
+export type { DshPluginCatalogEntry }
 
 /** The upstream product package namespace accepted by profile plugins. */
 export const OFFICIAL_DSH_PACKAGE_PREFIX = '@deepseek-ai/dsh-'
@@ -138,6 +133,7 @@ export function ensureProfilePnpmfile(dir: string): void {
   if (current.startsWith('const OFFICIAL_PREFIX =')) writeFileSync(path, PROFILE_PNPMFILE)
 }
 
+
 /**
  * The patch files a bundle declares, as written: one file for a string
  * `patch`, the listed files in order for an array.
@@ -206,7 +202,7 @@ export interface Profile {
   skippedBundles: SkippedBundle[]
 }
 
-/** A selected bundle the profile could not load, or whose own DSH peers the profile does not exempt. */
+/** A selected bundle the profile could not load, or whose own DSH requirements the profile does not exempt. */
 export interface SkippedBundle {
   /** The bundle's package name from `dsh.profile.bundles`. */
   packageName: string
@@ -303,6 +299,16 @@ const INSTALLATION_OWNED_PROFILE_TUPLES: Record<string, readonly string[]> = {
   headless: ['@x1a0f3n9/dsh-base', '@x1a0f3n9/dsh-web-app', '@x1a0f3n9/dsh-headless'],
 }
 
+/**
+ * Bundles an earlier release shipped and the installation no longer carries;
+ * {@link loadProfileDirectory} removes them from the profile's bundle list.
+ */
+const RETIRED_BUNDLES: ReadonlySet<string> = new Set([
+  // The Web composition mounts Schedule itself
+  // ([upgrade guide](../../../../docs/upgrade-guide/v0.2.0-rc.2/schedule-bundle-retired/guide.md)).
+  '@x1a0f3n9/dsh-experimental-schedule-bundle',
+])
+
 /** The bundle list a `dsh plugin` init uses for a name with no shipped template. */
 export const DEFAULT_PROFILE_BUNDLES: readonly string[] = ['@x1a0f3n9/dsh-base']
 
@@ -315,9 +321,18 @@ export const DEFAULT_PROFILE_BUNDLES: readonly string[] = ['@x1a0f3n9/dsh-base']
  * [admission](../../../../.agents/notes/implemented/architecture/2026-09-21-experimental-capabilities-as-optional-bundles.md)).
  */
 export const OPTIONAL_BUNDLES: readonly string[] = [
+  '@x1a0f3n9/dsh-experimental-session-search',
+  '@x1a0f3n9/dsh-experimental-ralph-bundle',
+  '@x1a0f3n9/dsh-experimental-terminal-bundle',
+  '@x1a0f3n9/dsh-experimental-badge-skill-bundle',
+  '@x1a0f3n9/dsh-experimental-session-titles-bundle',
   '@x1a0f3n9/dsh-experimental-agent-team-profile',
   '@x1a0f3n9/dsh-experimental-voice-input-bundle',
+  '@x1a0f3n9/dsh-experimental-cot-translation-bundle',
   '@x1a0f3n9/dsh-experimental-auto-review',
+  '@x1a0f3n9/dsh-experimental-inspector-profile',
+  '@x1a0f3n9/dsh-experimental-plugin-market-bundle',
+  '@x1a0f3n9/dsh-experimental-tool-worktree',
 ]
 
 const PROFILE_PATCH_TEMPLATE = `# Your patch layer for this dsh profile, applied after every bundle layer:
@@ -534,7 +549,7 @@ export interface RuntimeResolutionOptions {
  */
 export async function createRuntimeResolution(
   options: RuntimeResolutionOptions,
-): Promise<RuntimeResolution> {
+): Promise<ProfileRuntimeResolution> {
   const { installAnchor, profile, home = resolveDshHome() } = options
   const profilesDir = join(home, PROFILES_DIR)
   const manifest = readOptionalProfileManifest(profile)
@@ -549,7 +564,7 @@ export async function createRuntimeResolution(
     : collectProfileScopePackages(profile, packageNames, profileDeclarers, profileVersions)
   const linkedRoots = profile === undefined ? [] : linkedProfileRoots(profile, profilesDir)
   // The Promise return type is the pre-stable API; construction has no asynchronous step.
-  return await Promise.resolve(Object.freeze({
+  return await Promise.resolve(new ProfileRuntimeResolution({ installAnchor, profileDir: profile?.dir, home }, {
     profilesDir,
     profileDir: profile?.dir,
     localPackageNames: Object.freeze(localPackageNames),
@@ -565,6 +580,54 @@ export async function createRuntimeResolution(
       })),
     ]),
   }))
+}
+
+/** Inputs a {@link ProfileRuntimeResolution} reuses to compute its successor. */
+interface ResolutionSource {
+  installAnchor: string
+  home: string
+  profileDir: string | undefined
+}
+
+/**
+ * A runtime resolution that remembers the inputs it was computed from. Worker environment data carries only its
+ * fields; the inputs stay private to the thread that computed it.
+ */
+export class ProfileRuntimeResolution implements RuntimeResolution {
+  readonly profilesDir: string
+  readonly profileDir: string | undefined
+  readonly localPackageNames: readonly string[]
+  readonly entries: readonly RuntimeResolutionEntry[]
+  readonly linkedRoots: readonly LinkedRoot[]
+  readonly #source: ResolutionSource
+
+  /**
+   * @param source - inputs of {@link createRuntimeResolution}, reused by {@link computeLatestResolution}.
+   * @param table - the computed package table.
+   */
+  constructor(source: ResolutionSource, table: RuntimeResolution) {
+    this.#source = source
+    this.profilesDir = table.profilesDir
+    this.profileDir = table.profileDir
+    this.localPackageNames = table.localPackageNames
+    this.entries = table.entries
+    this.linkedRoots = table.linkedRoots
+    Object.freeze(this)
+  }
+
+  /**
+   * Compute the latest generation from the same installation, profile directory, and Harness home, rereading the
+   * profile's manifest, bundle selection, and installed packages from disk, without retaining synthetic layers.
+   * With no profile directory, only installation packages are recomputed. This instance is unchanged.
+   * @returns a new resolution for the latest generation.
+   */
+  computeLatestResolution(): Promise<ProfileRuntimeResolution> {
+    const { installAnchor, home, profileDir } = this.#source
+    return createRuntimeResolution({
+      installAnchor, home,
+      ...profileDir === undefined ? {} : { profile: loadProfileDirectory('dsh', profileDir, installAnchor) },
+    })
+  }
 }
 
 /** Synthetic profiles used by direct callers may have no on-disk manifest. */
@@ -703,6 +766,20 @@ function sameBundles(left: readonly string[], right: readonly string[]): boolean
   return left.length === right.length && left.every((value, index) => value === right[index])
 }
 
+/** Return `manifest` with `dsh.profile.bundles` replaced, preserving all other fields. */
+function withBundles(manifest: ProfileManifest, bundles: readonly string[]): ProfileManifest {
+  return {
+    ...manifest,
+    dsh: {
+      ...manifest.dsh,
+      profile: {
+        ...manifest.dsh?.profile,
+        bundles: [...bundles],
+      },
+    },
+  }
+}
+
 /**
  * Normalize an exact installation-owned bundle tuple to its shipped template,
  * preserving all other manifest fields. Other bundle lists remain untouched.
@@ -714,16 +791,20 @@ function normalizeShippedProfile(name: string, dir: string, manifest: ProfileMan
   if (template === undefined || bundles === undefined) return manifest
   const isRetiredTuple = installationOwned !== undefined && sameBundles(bundles, installationOwned)
   if (!isRetiredTuple) return manifest
-  const normalized: ProfileManifest = {
-    ...manifest,
-    dsh: {
-      ...manifest.dsh,
-      profile: {
-        ...manifest.dsh?.profile,
-        bundles: [...template.bundles],
-      },
-    },
-  }
+  const normalized = withBundles(manifest, template.bundles)
+  writeProfileManifest(dir, normalized)
+  return normalized
+}
+
+/**
+ * Remove {@link RETIRED_BUNDLES} from a profile's bundle list, writing the
+ * manifest back only when it listed one.
+ */
+function dropRetiredBundles(dir: string, manifest: ProfileManifest): ProfileManifest {
+  const bundles = manifest.dsh?.profile?.bundles ?? []
+  const kept = bundles.filter(bundle => !RETIRED_BUNDLES.has(bundle))
+  if (kept.length === bundles.length) return manifest
+  const normalized = withBundles(manifest, kept)
   writeProfileManifest(dir, normalized)
   return normalized
 }
@@ -775,7 +856,8 @@ export function resolveBundleDir(
  * Load an already initialized profile directory without resolving it through
  * the shared Harness home. This is used by application-owned profiles whose
  * package project and lifecycle belong to that application.
- * Unreadable bundles, and bundles whose own dsh peers the profile does not exempt, are skipped
+ * Retired bundles are removed from the stored bundle list first, rewriting the
+ * manifest when it listed one. Unreadable bundles, and bundles whose own dsh requirements the profile does not exempt, are skipped
  * without changing the manifest and listed in `skippedBundles`; nothing is printed.
  * @param binName - the diagnostic prefix on thrown errors.
  * @param dir - absolute profile package directory.
@@ -783,6 +865,63 @@ export function resolveBundleDir(
  * @param options - `userLayer: false` skips reading `cordis.patch.yml`.
  * @returns the successfully loaded bundle layers and optional user patch layer.
  */
+export function loadProfileDirectory(
+  binName: string,
+  dir: string,
+  installAnchor: string,
+  options: { userLayer?: boolean } = {},
+): Profile {
+  ensureProfilePnpmfile(dir)
+  const manifest = dropRetiredBundles(dir, readProfileManifest(binName, dir))
+  const bundles = manifest.dsh?.profile?.bundles ?? []
+  const pluginOverrides = parsePluginOverrides(binName, dir, manifest.dsh?.profile?.pluginOverrides)
+  const layers: ProfileLayer[] = []
+  const skippedBundles: SkippedBundle[] = []
+  const exemptions = bundles.length === 0 ? {} : readProfileVersionExemptions(dir)
+  for (const packageName of bundles) {
+    try {
+      const packageDir = resolveBundleDir(binName, packageName, installAnchor, dir)
+      const bundleManifest = readProfileManifest(binName, packageDir)
+      const bundle = bundleManifest.dsh?.bundle
+      if (bundle === undefined) {
+        throw new Error(`${binName}: profile bundle ${JSON.stringify(packageName)} declares no dsh.bundle in its package.json`)
+      }
+      // A bundle is not a plugin row, so row admission never reads its own dsh requirements.
+      const issue = evaluatePluginCompatibility(bundleManifest, exemptions)
+      if (issue !== undefined && !issue.exempted) throw new Error(pluginCompatibilityWarning(issue))
+      const patchPaths = bundlePatchPaths(packageDir, bundle)
+      const patches = patchPaths.flatMap(patchPath => loadOverlayPatches(binName, patchPath))
+      const plugins = parsePluginCatalog(binName, packageName, bundle.plugins)
+      layers.push({ packageName, packageDir, patchPaths, plugins, patches })
+    } catch (error) {
+      skippedBundles.push({ packageName, reason: String(error) })
+    }
+  }
+  const catalogIds = new Set<string>()
+  const catalogEntryIds = new Set<string>()
+  for (const layer of layers) {
+    for (const plugin of layer.plugins ?? []) {
+      if (catalogIds.has(plugin.id) || catalogEntryIds.has(plugin.entryId)) {
+        throw new Error(`${binName}: profile bundles contain duplicate plugin catalog id or entry id ${JSON.stringify(plugin.id)}`)
+      }
+      catalogIds.add(plugin.id)
+      catalogEntryIds.add(plugin.entryId)
+    }
+  }
+  if (catalogEntryIds.size > 0) {
+    for (const entryId of Object.keys(pluginOverrides)) {
+      if (!catalogEntryIds.has(entryId)) {
+        throw new Error(`${binName}: profile manifest ${join(dir, 'package.json')} dsh.profile.pluginOverrides references unknown prebundled plugin ${JSON.stringify(entryId)}`)
+      }
+    }
+  }
+  const patchPath = join(dir, PROFILE_PATCH_FILENAME)
+  const patches = options.userLayer !== false && existsSync(patchPath)
+    ? loadOverlayPatches(binName, patchPath)
+    : []
+  return { name: basename(dir), dir, layers, pluginOverrides, patchPath, patches, skippedBundles }
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
 }
@@ -876,71 +1015,6 @@ function parsePluginOverrides(binName: string, dir: string, raw: unknown): Recor
   return result
 }
 
-/**
- * Load an already initialized profile directory without resolving it through
- * the shared Harness home. This is used by application-owned profiles whose
- * package project and lifecycle belong to that application.
- * @param binName - the diagnostic prefix on thrown errors.
- * @param dir - absolute profile package directory.
- * @param installAnchor - absolute path of the owning dsh app's package.json.
- * @param options - `userLayer: false` skips reading `cordis.patch.yml`.
- * @returns the resolved bundle layers and optional user patch layer.
- */
-export function loadProfileDirectory(
-  binName: string,
-  dir: string,
-  installAnchor: string,
-  options: { userLayer?: boolean } = {},
-): Profile {
-  ensureProfilePnpmfile(dir)
-  const manifest = readProfileManifest(binName, dir)
-  const bundles = manifest.dsh?.profile?.bundles ?? []
-  const pluginOverrides = parsePluginOverrides(binName, dir, manifest.dsh?.profile?.pluginOverrides)
-  const layers: ProfileLayer[] = []
-  const skippedBundles: SkippedBundle[] = []
-  const exemptions = bundles.length === 0 ? {} : readProfileVersionExemptions(dir)
-  for (const packageName of bundles) {
-    try {
-      const packageDir = resolveBundleDir(binName, packageName, installAnchor, dir)
-      const bundleManifest = readProfileManifest(binName, packageDir)
-      const bundle = bundleManifest.dsh?.bundle
-      if (bundle === undefined) {
-        throw new Error(`${binName}: profile bundle ${JSON.stringify(packageName)} declares no dsh.bundle in its package.json`)
-      }
-      const issue = evaluatePluginCompatibility(bundleManifest, exemptions)
-      if (issue !== undefined && !issue.exempted) throw new Error(pluginCompatibilityWarning(issue))
-      const patchPaths = bundlePatchPaths(packageDir, bundle)
-      const patches = patchPaths.flatMap(patchPath => loadOverlayPatches(binName, patchPath))
-      const plugins = parsePluginCatalog(binName, packageName, bundle.plugins)
-      layers.push({ packageName, packageDir, patchPaths, plugins, patches })
-    } catch (error) {
-      skippedBundles.push({ packageName, reason: String(error) })
-    }
-  }
-  const catalogIds = new Set<string>()
-  const catalogEntryIds = new Set<string>()
-  for (const layer of layers) {
-    for (const plugin of layer.plugins ?? []) {
-      if (catalogIds.has(plugin.id) || catalogEntryIds.has(plugin.entryId)) {
-        throw new Error(`${binName}: profile bundles contain duplicate plugin catalog id or entry id ${JSON.stringify(plugin.id)}`)
-      }
-      catalogIds.add(plugin.id)
-      catalogEntryIds.add(plugin.entryId)
-    }
-  }
-  if (catalogEntryIds.size > 0) {
-    for (const entryId of Object.keys(pluginOverrides)) {
-      if (!catalogEntryIds.has(entryId)) {
-        throw new Error(`${binName}: profile manifest ${join(dir, 'package.json')} dsh.profile.pluginOverrides references unknown prebundled plugin ${JSON.stringify(entryId)}`)
-      }
-    }
-  }
-  const patchPath = join(dir, PROFILE_PATCH_FILENAME)
-  const patches = options.userLayer !== false && existsSync(patchPath)
-    ? loadOverlayPatches(binName, patchPath)
-    : []
-  return { name: basename(dir), dir, layers, pluginOverrides, patchPath, patches, skippedBundles }
-}
 
 /**
  * Load a profile: resolve every `dsh.profile.bundles` entry to its patch

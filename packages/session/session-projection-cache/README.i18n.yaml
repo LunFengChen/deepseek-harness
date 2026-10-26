@@ -5,57 +5,57 @@
 /:
   en: 5701298a1670d9ec
   zh: 7bb42d5f715e481c
-/x1a0f3n9-dsh-session-projection-cache:
-  en: a1df422676c5f79b
-  zh: 859bcfebe4418a1a
-/x1a0f3n9-dsh-session-projection-cache/summary:
+/deepseek-ai-dsh-session-projection-cache:
+  en: 88c785e7f9d6e4be
+  zh: 95b5f979bf471d34
+/deepseek-ai-dsh-session-projection-cache/summary:
   en: bf8d9303afdc56ad
   zh: b6d54b39b6411be5
-/x1a0f3n9-dsh-session-projection-cache/table-of-contents:
+/deepseek-ai-dsh-session-projection-cache/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-session-projection-cache/use-this-package:
+/deepseek-ai-dsh-session-projection-cache/use-this-package:
   en: 99e629888eec55e5
   zh: 3520f8f0cc64795d
-/x1a0f3n9-dsh-session-projection-cache/use-this-package/when-to-choose-it:
+/deepseek-ai-dsh-session-projection-cache/use-this-package/when-to-choose-it:
   en: 96aa72949587ad79
   zh: 8e8727d59d3768c1
-/x1a0f3n9-dsh-session-projection-cache/use-this-package/minimal-configuration:
+/deepseek-ai-dsh-session-projection-cache/use-this-package/minimal-configuration:
   en: 0ff4aa70ebfe918f
   zh: 9235f115502717b7
-/x1a0f3n9-dsh-session-projection-cache/use-this-package/how-checkpoints-are-written:
+/deepseek-ai-dsh-session-projection-cache/use-this-package/how-checkpoints-are-written:
   en: bae62224d0008bc0
   zh: 0daf92dab3314913
-/x1a0f3n9-dsh-session-projection-cache/use-this-package/reading-cached-values:
+/deepseek-ai-dsh-session-projection-cache/use-this-package/reading-cached-values:
   en: e8dc676fbfe97c5b
   zh: 686837459289fd41
-/x1a0f3n9-dsh-session-projection-cache/use-this-package/what-the-cache-guarantees:
+/deepseek-ai-dsh-session-projection-cache/use-this-package/what-the-cache-guarantees:
   en: 6e4878de28ea113e
   zh: 6f940a2220585b5e
-/x1a0f3n9-dsh-session-projection-cache/understand-the-implementation:
+/deepseek-ai-dsh-session-projection-cache/understand-the-implementation:
   en: d3845f1edb97db3e
   zh: 26d4e54a4f6c2b7b
-/x1a0f3n9-dsh-session-projection-cache/understand-the-implementation/design-concept:
+/deepseek-ai-dsh-session-projection-cache/understand-the-implementation/design-concept:
   en: fbc54d6055d5772a
   zh: ebfa186b3702635f
-/x1a0f3n9-dsh-session-projection-cache/understand-the-implementation/read-and-write-ownership:
+/deepseek-ai-dsh-session-projection-cache/understand-the-implementation/read-and-write-ownership:
   en: 8be14e573e0b3acf
   zh: be96a2859be64e95
-/x1a0f3n9-dsh-session-projection-cache/understand-the-implementation/source-map:
-  en: 546d7d0ff03b92c1
-  zh: f3d56e81a738ce56
-/x1a0f3n9-dsh-session-projection-cache/further-exploration:
+/deepseek-ai-dsh-session-projection-cache/understand-the-implementation/source-map:
+  en: 1087255b9f80e381
+  zh: 08ee0c5c0e04498d
+/deepseek-ai-dsh-session-projection-cache/further-exploration:
   en: 63e7495d8853b368
   zh: 754db26cb2b0bfba
-/x1a0f3n9-dsh-session-projection-cache/model-experience:
+/deepseek-ai-dsh-session-projection-cache/model-experience:
   en: 25c9652e94565a76
   zh: efd5ca7105d8a561
-/x1a0f3n9-dsh-session-projection-cache/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-session-projection-cache/model-experience/kv-cache-effect:
   en: d483aa4968fa1955
   zh: 90f8c38f978123d2
-/x1a0f3n9-dsh-session-projection-cache/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-session-projection-cache/known-limitations-and-deferred-work:
   en: 1c4efba49a67f7b9
   zh: 494f1a6fa4207c3a
-/x1a0f3n9-dsh-session-projection-cache/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-session-projection-cache/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 3bb0c20c93f16f98

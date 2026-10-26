@@ -5,51 +5,51 @@
 /:
   en: 21c486a1839068f4
   zh: 0333ad7c4f984794
-/x1a0f3n9-dsh-file-reference:
-  en: ef08ad1a032bcfb9
-  zh: bd224e79fe749bc0
-/x1a0f3n9-dsh-file-reference/summary:
-  en: 3b541adf3b8e5536
-  zh: 2b280a5f97a63cb2
-/x1a0f3n9-dsh-file-reference/table-of-contents:
+/deepseek-ai-dsh-file-reference:
+  en: 304654061fc0503d
+  zh: dab669557b3c261f
+/deepseek-ai-dsh-file-reference/summary:
+  en: a6ce5c696182da3b
+  zh: 274f9c9613f9df0b
+/deepseek-ai-dsh-file-reference/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-file-reference/use-this-package:
+/deepseek-ai-dsh-file-reference/use-this-package:
   en: e37b5d4bf0020063
   zh: 2eb37494ea43228f
-/x1a0f3n9-dsh-file-reference/use-this-package/mention-grammar:
+/deepseek-ai-dsh-file-reference/use-this-package/mention-grammar:
   en: efbe0e9233f402a4
   zh: e3ec7c6ae2335a41
-/x1a0f3n9-dsh-file-reference/use-this-package/getting-candidates:
+/deepseek-ai-dsh-file-reference/use-this-package/getting-candidates:
   en: 4dc2d6289f532225
   zh: af06ce75299f23e5
-/x1a0f3n9-dsh-file-reference/use-this-package/pairing-with-a-provider:
-  en: e2000d7e7cf3fb44
-  zh: d9a7386e26fda52d
-/x1a0f3n9-dsh-file-reference/understand-the-implementation:
+/deepseek-ai-dsh-file-reference/use-this-package/pairing-with-a-provider:
+  en: 2d443c98aca75438
+  zh: 2299ced5c4e315c1
+/deepseek-ai-dsh-file-reference/understand-the-implementation:
   en: 92049fb7a6c345c3
   zh: 86efc4d17127f97f
-/x1a0f3n9-dsh-file-reference/understand-the-implementation/design-concept:
+/deepseek-ai-dsh-file-reference/understand-the-implementation/design-concept:
   en: 191332951f81b136
   zh: 8336659a9ffa20f1
-/x1a0f3n9-dsh-file-reference/understand-the-implementation/source-map:
-  en: c4abf9f6f86cf29f
-  zh: 60d15ef1acd20b93
-/x1a0f3n9-dsh-file-reference/understand-the-implementation/main-flow:
+/deepseek-ai-dsh-file-reference/understand-the-implementation/source-map:
+  en: 7ca26c752fab5c46
+  zh: 961bc4283792155d
+/deepseek-ai-dsh-file-reference/understand-the-implementation/main-flow:
   en: fd65f309c940de96
   zh: c1517e592d646d6c
-/x1a0f3n9-dsh-file-reference/further-exploration:
+/deepseek-ai-dsh-file-reference/further-exploration:
   en: 90447bd5ebd2c47f
   zh: dae6d0005ab9779d
-/x1a0f3n9-dsh-file-reference/model-experience:
+/deepseek-ai-dsh-file-reference/model-experience:
   en: ab69d93c10a1572c
   zh: b63720b1e6182805
-/x1a0f3n9-dsh-file-reference/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-file-reference/model-experience/kv-cache-effect:
   en: 0aba47b2a2828b78
   zh: 83a1af441dac3074
-/x1a0f3n9-dsh-file-reference/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-file-reference/known-limitations-and-deferred-work:
   en: cc83a00bd7d4ccc9
   zh: 130ba16bb567db5a
-/x1a0f3n9-dsh-file-reference/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-file-reference/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 3bb0c20c93f16f98

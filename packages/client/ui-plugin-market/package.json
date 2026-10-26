@@ -1,0 +1,70 @@
+{
+  "name": "@x1a0f3n9/dsh-client-ui-plugin-market",
+  "description": "Discover tab of the dsh web Plugins page: browse configured plugin market indexes and install their bundles",
+  "version": "0.2.1-rc.3",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepseek-ai/deepseek-harness.git",
+    "directory": "packages/client/ui-plugin-market"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "client": {
+      "inject": [
+        "@x1a0f3n9/dsh-api-remotes",
+        "@x1a0f3n9/dsh-client-locale",
+        "@x1a0f3n9/dsh-client-ui-plugin-manager"
+      ],
+      "platform": "web"
+    }
+  },
+  "scripts": {
+    "bundle": "tsdown",
+    "watch": "tsdown --watch"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:~"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-api-remotes": "workspace:*",
+    "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-store": "workspace:*",
+    "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-plugin-manager": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-package-manifest": "workspace:*",
+    "@x1a0f3n9/dsh-plugin-manager": "workspace:*",
+    "@x1a0f3n9/dsh-plugin-market": "workspace:*",
+    "@x1a0f3n9/dsh-plugin-market-index": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@testing-library/react": "^16.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ]
+}

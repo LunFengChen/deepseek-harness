@@ -5,42 +5,42 @@
 /:
   en: d0d9e1665b0ea874
   zh: 6a8366be71b5d6d9
-/x1a0f3n9-dsh-deque:
-  en: 9da8f4194582420c
-  zh: c18fdbaa9197827f
-/x1a0f3n9-dsh-deque/summary:
+/deepseek-ai-dsh-deque:
+  en: b495ce86332048e5
+  zh: 141499abfe5ddc03
+/deepseek-ai-dsh-deque/summary:
   en: 321f05cea32f6f72
   zh: c47b11b14c151ae0
-/x1a0f3n9-dsh-deque/table-of-contents:
+/deepseek-ai-dsh-deque/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-deque/use-this-package:
+/deepseek-ai-dsh-deque/use-this-package:
   en: bbff250eba0f1b89
   zh: 0a618f05cc88ee2b
-/x1a0f3n9-dsh-deque/use-this-package/when-to-use-it:
+/deepseek-ai-dsh-deque/use-this-package/when-to-use-it:
   en: e9c6c998f8d0542a
   zh: edc2133eaf273054
-/x1a0f3n9-dsh-deque/use-this-package/entry-point:
+/deepseek-ai-dsh-deque/use-this-package/entry-point:
   en: 3e3fca15c9656d45
   zh: 43e70c7381fc21f9
-/x1a0f3n9-dsh-deque/understand-the-implementation:
+/deepseek-ai-dsh-deque/understand-the-implementation:
   en: 1439df275cf4305f
   zh: 09fb7ae6048c065c
-/x1a0f3n9-dsh-deque/understand-the-implementation/source-map:
-  en: f3f22e80f9919ff5
-  zh: 839ed17098fdfee9
-/x1a0f3n9-dsh-deque/further-exploration:
+/deepseek-ai-dsh-deque/understand-the-implementation/source-map:
+  en: 6444d79a894f4251
+  zh: e13d851b2f691f6c
+/deepseek-ai-dsh-deque/further-exploration:
   en: 0b3c7ebb1012b51a
   zh: f35eb5cebe4ddeba
-/x1a0f3n9-dsh-deque/model-experience:
+/deepseek-ai-dsh-deque/model-experience:
   en: 8347ed3429dab61e
   zh: c634a286fa463342
-/x1a0f3n9-dsh-deque/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-deque/model-experience/kv-cache-effect:
   en: e7ba08477bf22c4e
   zh: f365439c69beb722
-/x1a0f3n9-dsh-deque/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-deque/known-limitations-and-deferred-work:
   en: ade2165d7c740ba7
   zh: 05296ebd057e9beb
-/x1a0f3n9-dsh-deque/known-limitations-and-deferred-work/dev-note:
+/deepseek-ai-dsh-deque/known-limitations-and-deferred-work/dev-note:
   en: e67f633dc6fe7773
   zh: 3bb0c20c93f16f98

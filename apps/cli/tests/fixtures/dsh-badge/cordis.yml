@@ -1,5 +1,6 @@
-- id: skill-badge
-  disabled: false
+- insert:
+    - id: skill-badge
+      name: '@x1a0f3n9/dsh-skill-badge'
 
 - id: skill-filesystem
   config:

@@ -8,10 +8,6 @@ import { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
-import InvariantRegistry from '@x1a0f3n9/dsh-invariants'
-import * as SessionInvariant from '@x1a0f3n9/dsh-session/invariant'
-import * as AgentInvariant from '@x1a0f3n9/dsh-agent/invariant'
-import * as AgentLoopInvariant from '@x1a0f3n9/dsh-agent-loop/invariant'
 import { BasicCompactionEngine } from '@x1a0f3n9/dsh-compaction-basic'
 import TokenMeter from '@x1a0f3n9/dsh-token-meter'
 import * as LlmRetry from '@x1a0f3n9/dsh-llm-retry'
@@ -139,17 +135,9 @@ class OverflowRecoveryAdapter extends LlmAdapter {
   }
 }
 
-async function mountInvariants(ctx: Context): Promise<void> {
-  await ctx.plugin(InvariantRegistry)
-  await ctx.plugin(SessionInvariant)
-  await ctx.plugin(AgentInvariant)
-  await ctx.plugin(AgentLoopInvariant)
-}
-
 async function harness(toolSteps: number): Promise<{ ctx: Context; compact: ReproCompactionEngine }> {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
-  await mountInvariants(ctx)
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(TokenMeter)
   ctx.llm.registerAdapter(['mock'], new StepwiseToolAdapter(toolSteps))
@@ -389,7 +377,6 @@ describe('context-overflow recovery across the real loop and compaction-basic', 
       const ctx = new Context()
       const adapter = new OverflowRecoveryAdapter(delivery)
       await mountAgentLoopTestDependencies(ctx)
-      await mountInvariants(ctx)
       await ctx.plugin(AgentLoop, { agents: [] })
       await ctx.plugin(TokenMeter)
       ctx.llm.registerAdapter(['mock'], adapter)
@@ -468,7 +455,6 @@ describe('context-overflow recovery across the real loop and compaction-basic', 
     const ctx = new Context()
     const adapter = new OverflowRecoveryAdapter('thrown', true)
     await mountAgentLoopTestDependencies(ctx)
-    await mountInvariants(ctx)
     await ctx.plugin(LlmRetry)
     await ctx.plugin(AgentLoop, { agents: [] })
     await ctx.plugin(TokenMeter)

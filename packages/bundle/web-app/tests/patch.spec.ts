@@ -12,7 +12,7 @@ import * as yaml from 'js-yaml'
 import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
 
 describe('dsh-web-app bundle', () => {
-  it('mounts search-pool as an xfdsh prebundled plugin and overlays the web search order', () => {
+  it('mounts search-pool as an xfdsh prebundled plugin and overlays the web search provider', () => {
     const root = fileURLToPath(new URL('..', import.meta.url))
     const manifest = JSON.parse(
       readFileSync(resolve(root, 'package.json'), 'utf8'),
@@ -45,21 +45,23 @@ describe('dsh-web-app bundle', () => {
     expect(Array.isArray(parsed)).toBe(true)
     const overlays = (parsed as { id?: string; config?: Record<string, unknown> }[])
     expect(overlays.find(row => row.id === 'web')?.config).toMatchObject({
-      searchProviderOrder: ['search-pool', 'perplexity', 'exa', 'free'],
+      searchProvider: 'search-pool',
       fetchProvider: 'http',
     })
     const inserts = (parsed as { insert?: { id?: string; name?: string }[] }[]).flatMap(
       patch => patch.insert ?? [],
     )
     expect(inserts.find(row => row.id === 'web-search-pool')).toBeDefined()
+    expect(inserts.find(row => row.id === 'hindsight')).toBeUndefined()
 
     const scopedPins = [
       { id: 'dsh-market', packageName: '@x1a0f3n9/dshmarket' },
       { id: 'reasoning-effort', packageName: '@x1a0f3n9/dsh-reasoning-effort' },
       { id: 'dsh-context', packageName: '@x1a0f3n9/dsh-context' },
-      { id: 'better-sidebar', packageName: '@x1a0f3n9/dsh-better-sidebar' },
-      { id: 'hindsight', packageName: '@x1a0f3n9/hindsight-coding-agents', loader: '@x1a0f3n9/hindsight-coding-agents/dsh' },
+      { id: 'better-sidebar', packageName: 'dsh-better-sidebar' },
       { id: 'skills-manager', packageName: '@x1a0f3n9/dsh-skills-manager' },
+      { id: 'dsh-failover-queue', packageName: '@x1a0f3n9/dsh-failover-queue' },
+      { id: 'dsh-session-timeline', packageName: '@x1a0f3n9/dsh-session-timeline' },
     ]
     for (const pin of scopedPins) {
       expect(manifest.dependencies).toHaveProperty(pin.packageName)
@@ -71,7 +73,7 @@ describe('dsh-web-app bundle', () => {
         ]),
       )
       expect(inserts.find(row => row.id === pin.id)).toMatchObject({
-        name: pin.loader ?? pin.packageName,
+        name: pin.packageName,
       })
     }
   })

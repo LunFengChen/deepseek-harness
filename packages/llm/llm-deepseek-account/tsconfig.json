@@ -25,6 +25,12 @@
     },
     {
       "path": "../../../vendor/loader"
+    },
+    {
+      "path": "../../../vendor/cosmokit"
+    },
+    {
+      "path": "../../../vendor/schemastery"
     }
   ]
 }

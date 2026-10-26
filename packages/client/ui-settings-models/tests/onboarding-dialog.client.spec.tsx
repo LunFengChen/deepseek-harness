@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import Schema from '@deepseek-ai/schemastery'
 import type { SettingsNamespaceView } from '@x1a0f3n9/dsh-api-remotes/client'
 import type { JsonValue } from '@x1a0f3n9/dsh-util-values'
-import { bindSnapshotSelector, RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
+import { allowAllAccess, bindSnapshotSelector, RemoteError } from '@x1a0f3n9/dsh-client-test-runtime'
 import { DeepSeekOnboardingDialog } from '../src/client/DeepSeekOnboardingDialog.tsx'
 import type { DeepSeekOnboardingDialogProps } from '../src/client/DeepSeekOnboardingDialog.tsx'
 import { SettingsDescribeMirror } from '@x1a0f3n9/dsh-client-ui-settings/src/client/settings-mirror.ts'
@@ -152,6 +152,7 @@ function harness(options: {
     useSessionStatus,
     usePanelInfo, useSessionRetainInfo: () => undefined, useResource,
     useWorkspaces: unusedHook,
+    ...allowAllAccess,
     controller,
     useModels: bindSnapshotSelector(controller.store),
     operations,

@@ -48,12 +48,6 @@ export interface JsonlHandleStorage {
   persistHeader(header: SessionHeader, inheritedEventCount: SessionLogOffset): Promise<void>
   /** Truncate a torn physical tail before the first new append lands. */
   truncateTornTail(header: SessionHeader, truncateTo: number): Promise<void>
-  /** Rewrite the current generation with an earlier contiguous event prefix. */
-  rewrite(
-    header: SessionHeader,
-    inheritedEventCount: SessionLogOffset,
-    events: readonly SessionEvent[],
-  ): Promise<void>
   /** Resolve the current-generation artifact path, or `undefined` when absent. */
   resolveCurrentLog(id: SessionId, signal?: AbortSignal): Promise<string | undefined>
   /** Read and validate the stored log at `path`, including its established event aliasing state. */
@@ -202,46 +196,6 @@ export class JsonlSessionHandle implements SessionHandle {
   }
 
   /**
-   * Replace the current generation with an earlier contiguous prefix.
-   * Routed live events at or past `length` are dropped after the rewrite.
-   * @param length - number of events to retain.
-   * @returns resolution after the rewritten prefix is durable.
-   */
-  async truncate(length: SessionLogOffset): Promise<void> {
-    return this.run('truncate', async () => {
-      if (this.access !== 'write') throw new SessionReadOnlyError(this.id, 'truncate')
-      if (!Number.isSafeInteger(length) || length < 0) {
-        throw new TypeError(`truncate length must be a non-negative safe integer, got ${String(length)}`)
-      }
-      if (length < this.state.inheritedEventCount || length > this.state.cursor) {
-        throw new RangeError(`session truncation length ${String(length)} is outside the writable log prefix`)
-      }
-      if (length === this.state.cursor) return
-      let source: SessionHandleReadResult
-      if (this.state.primed !== undefined) {
-        source = this.state.primed
-      } else if (!this.state.materialized) {
-        source = { eventState: 'detached', events: [] }
-      } else {
-        const path = await this.storage.resolveCurrentLog(this.id)
-        if (path === undefined) throw new SessionPersistenceNotFoundError(this.id)
-        source = await this.storage.readStoredLog(path, this.id)
-      }
-      if (source.events.length !== this.state.cursor) {
-        throw new Error(`session "${this.id}": stored log length changed while destructive deletion was preparing`)
-      }
-      await this.storage.rewrite(this.header, this.state.inheritedEventCount, source.events.slice(0, length))
-      this.state.cursor = length
-      this.state.materialized = true
-      this.state.primed = { eventState: source.eventState, events: source.events.slice(0, length) }
-      this.state.tornTruncateTo = undefined
-      this.state.recoveredTail = undefined
-      this.observedLength = length
-      this.discardLiveFrom(length)
-    })
-  }
-
-  /**
    * Durability barrier; materializes the artifact when nothing has been
    * appended yet, so an explicitly flushed empty session survives this process.
    * @param options - optional cancellation observed before the barrier starts.
@@ -311,22 +265,6 @@ export class JsonlSessionHandle implements SessionHandle {
   }
 
   /**
-   * Drop routed live events at or past `length`. They belong to a discarded
-   * tail after destructive truncation; keeping them poisons the next drain
-   * with an append seq mismatch.
-   * @param length - retained event-prefix length, matching the new cursor.
-   */
-  discardLiveFrom(length: number): void {
-    if (this.buffered.length === 0) return
-    this.buffered = this.buffered.filter(event => event.seq < length)
-    if (this.buffered.length > 0) return
-    this.drainPaused = false
-    if (this.batchTimer === undefined) return
-    clearTimeout(this.batchTimer)
-    this.batchTimer = undefined
-  }
-
-  /**
    * Buffer one published live session event and arm the bounded batching
    * window when it is idle. The routing installer is the only caller.
    * @param event - the live event, retained as a persistence-owned copy.
@@ -369,12 +307,8 @@ export class JsonlSessionHandle implements SessionHandle {
         try {
           await this.persistContiguous(materializeAppendBatch(batch))
         } catch (error: unknown) {
-          const merged = batch.concat(this.buffered)
-          const start = merged.findIndex(event => event.seq === this.state.cursor)
-          this.buffered = start === -1
-            ? merged.filter(event => event.seq < this.state.cursor)
-            : merged.slice(start)
-          this.drainPaused = this.buffered.length > 0
+          this.buffered = batch.concat(this.buffered)
+          this.drainPaused = true
           throw error
         }
       })
@@ -524,16 +458,6 @@ export class JsonlBackendTracker {
   }
 
   /**
-   * Return the active writer for one session, if this process owns it.
-   * @param id - the session to resolve.
-   * @returns the active writer, or undefined while no writer is open.
-   */
-  writerOf(id: SessionId): JsonlSessionHandle | undefined {
-    const writer = this.writers.get(id)
-    return writer === null ? undefined : writer
-  }
-
-  /**
    * Iterate the pending sessions for listing.
    * @returns the pending entries, keyed by session id.
    */
@@ -604,43 +528,44 @@ export class JsonlBackendTracker {
    * sessions' events by id; the teardown effect closes every open handle —
    * close drains the routed buffer — and aggregates failures. This provider
    * owns no separate storage connection, so closing handles is the complete
-   * teardown. Registrations are effects of the current fiber.
-   * @param ctx - the backend's context.
+   * teardown. The returned effect removes listeners before closing handles.
+   * @param ctx - the backend's resource-owning context.
+   * @returns the disposer to run after persistence consumers finish unloading.
    */
-  install(ctx: Context): void {
-    ctx.on('session/event', (session: Session, event) => {
-      this.writers.get(session.id)?.enqueueLive(event, (error) => {
-        ctx.logger.warn(`session-persistence: background write for session "${session.id}" failed (buffered events retained): ${String(error)}`)
-      })
-    })
-    ctx.on('session/truncated', (session: Session) => {
-      this.writers.get(session.id)?.discardLiveFrom(session.seq)
-    })
-    ctx.on('session/flush', (session: Session) => {
-      const writer = this.writers.get(session.id)
-      if (writer === null || writer === undefined) return undefined
-      return (async () => {
-        await writer.drainLive()
-        await writer.flush()
-      })()
-    })
-    ctx.on('session/disposed', (session: Session) => {
-      const writer = this.writers.get(session.id)
-      if (writer === null || writer === undefined) return
-      writer.close().catch((error: unknown) => {
-        ctx.logger.warn(`session-persistence: final drain for session "${session.id}" failed: ${String(error)}`)
-      })
-    })
-    ctx.effect(() => async () => {
-      const errors: unknown[] = []
-      for (const handle of [...this.openHandles]) {
-        try {
-          await handle.close()
-        } catch (error: unknown) {
-          errors.push(error)
+  install(ctx: Context): () => Promise<void> {
+    const { writers, openHandles, name } = this
+    return ctx.effect(function* () {
+      yield async () => {
+        const errors: unknown[] = []
+        for (const handle of [...openHandles]) {
+          try {
+            await handle.close()
+          } catch (error: unknown) {
+            errors.push(error)
+          }
         }
+        if (errors.length > 0) throw new AggregateError(errors, `${name} dispose failed`)
       }
-      if (errors.length > 0) throw new AggregateError(errors, `${this.name} dispose failed`)
-    }, `${this.name} open handles`)
+      yield ctx.on('session/event', (session: Session, event) => {
+        writers.get(session.id)?.enqueueLive(event, (error) => {
+          ctx.logger.warn(`session-persistence: background write for session "${session.id}" failed (buffered events retained): ${String(error)}`)
+        })
+      })
+      yield ctx.on('session/flush', (session: Session) => {
+        const writer = writers.get(session.id)
+        if (writer === null || writer === undefined) return undefined
+        return (async () => {
+          await writer.drainLive()
+          await writer.flush()
+        })()
+      })
+      yield ctx.on('session/disposed', (session: Session) => {
+        const writer = writers.get(session.id)
+        if (writer === null || writer === undefined) return
+        writer.close().catch((error: unknown) => {
+          ctx.logger.warn(`session-persistence: final drain for session "${session.id}" failed: ${String(error)}`)
+        })
+      })
+    }, `${this.name} live routing and open handles`)
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-session-snapshot",
   "description": "Session-log snapshot core with an ACP protocol adapter, expected-output normalization, and fixture invariants",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,8 +32,8 @@
     "@x1a0f3n9/dsh-llm-replay": "workspace:*",
     "@x1a0f3n9/dsh-loader-smoke": "workspace:*",
     "@x1a0f3n9/dsh-session-format": "workspace:*",
-    "js-yaml": "^4.2.0",
-    "vitest": "^4.1.8"
+    "js-yaml": "^4.3.2",
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
@@ -44,7 +44,9 @@
     "@deepseek-ai/cordis": "workspace:~",
     "@x1a0f3n9/dsh-agent": "workspace:*",
     "@x1a0f3n9/dsh-agent-loop": "workspace:*",
+    "@x1a0f3n9/dsh-agent-preset-registry": "workspace:*",
     "@x1a0f3n9/dsh-compaction": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-sandbox": "workspace:*",
     "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",

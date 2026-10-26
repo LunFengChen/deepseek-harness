@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Context } from '@deepseek-ai/cordis'
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
-import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import * as JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
 import { SessionId } from '@x1a0f3n9/dsh-session'
 import { defineContentToolFixture } from '@x1a0f3n9/dsh-tools'
@@ -35,7 +35,7 @@ afterEach(async () => {
 async function core(persistenceRoot?: string) {
   const ctx = new Context()
   contexts.push(ctx)
-  await mountAgentLoopTestDependencies(ctx)
+  await mountAgentLoopTestDependencies(ctx, { workingDirectory: true })
   if (persistenceRoot !== undefined) await ctx.plugin(JsonlSessionPersistence, { root: persistenceRoot, compression: 'none' })
   await ctx.plugin(AgentLoop, { agents: [] })
   return ctx
@@ -107,7 +107,7 @@ describe('serial creation listener integrations', () => {
     await ctx.plugin(SubagentRuntime)
     await ctx.plugin(SubagentSpawn, { providerName: 'spawn' })
     const preset = createScope(ctx, { preset: 'review' })
-    await preset.ctx.plugin(SubagentTool, { provider: 'spawn', modelSelectionSettings: true, backgroundMode: 'continuable' })
+    await preset.ctx.plugin(SubagentTool, { provider: 'spawn', modelSelectionSettings: true })
     try {
       await expect(ctx.agents.create({
         sessionId: SessionId('review-tool'),

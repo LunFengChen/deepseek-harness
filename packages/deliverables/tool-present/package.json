@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-tool-present",
   "description": "Explicit workspace file delivery declarations for the DeepSeek Harness",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -23,10 +23,12 @@
       "default": "./lib/types/types.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "license": "MIT",
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/types/**/*.js",
     "lib/types/**/*.d.ts"
@@ -41,7 +43,8 @@
     "@x1a0f3n9/dsh-llm": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
     "@x1a0f3n9/dsh-session-projection": "workspace:*",
-    "@x1a0f3n9/dsh-tools": "workspace:*"
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
@@ -55,6 +58,7 @@
     "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*",
     "@x1a0f3n9/dsh-fs-local": "workspace:*",
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
-    "@x1a0f3n9/dsh-scope": "workspace:*"
+    "@x1a0f3n9/dsh-scope": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   }
 }

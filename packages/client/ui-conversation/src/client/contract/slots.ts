@@ -3,6 +3,7 @@ import type { ReactNode, RefObject } from 'react'
 import type { FileAttachmentRef, ImageAttachmentRef } from '@x1a0f3n9/dsh-attachment'
 import type { SessionSnapshot } from '@x1a0f3n9/dsh-api-session-controller/client'
 import type { FileUploadReceiptId } from '@x1a0f3n9/dsh-client-file-upload/client'
+import type { ImageLightboxLabels } from '@x1a0f3n9/dsh-client-ui-primitives'
 import type { WorkspaceSnapshot } from '@x1a0f3n9/dsh-api-workspace-controller/client'
 import type {
   MaybeSnapshotSelectorHook, ObservableSnapshot, SnapshotSelectorHook,
@@ -17,11 +18,12 @@ import type { SessionId } from '@x1a0f3n9/dsh-session/types'
 import type { WorkspaceId } from '@x1a0f3n9/dsh-workspace/types'
 import type { ComposerBlock } from './composer-blocks.ts'
 import type { DraftAttachmentId, InputActions, InputNotice, InputState } from './input.ts'
-import type { ComposerKeyboard, EditSelection } from './draft-editor.ts'
+import type { ComposerKeyboard, DraftSnapshot, EditSelection } from './draft-editor.ts'
 import type { createConversationStore } from '../stores.ts'
 import type { BusyEnterBehavior } from './composer-submission.ts'
 import type { ConversationSnapshot } from './snapshot.ts'
 import type { ViewTab } from './views.ts'
+import type { UserTextDocumentInput, UserTextEvaluator, UserTextId, UserTextNode } from './user-text.ts'
 
 /** Browser-owned draft attachment that has not crossed the durable Host boundary. */
 export type ComposerAttachment = ComposerImageAttachment | ComposerFileAttachment
@@ -117,8 +119,53 @@ export interface MessageImagesOwnerProps {
   thumbnail?: boolean
 }
 
-/** Slot-backed renderer used by Conversation targets without importing an attachment implementation. */
-export type RenderMessageImages = (owner: Omit<MessageImagesOwnerProps, 'loadImage'>) => ReactNode
+/** Message-image strings the owner resolves from its own locale namespace. */
+export interface MessageImageLabels {
+  /** Fallback display name for an unnamed image. */
+  image: string
+  /** Thumbnail tooltip inviting the original-image preview. */
+  open: string
+  /** Accessible thumbnail label; receives the image's display name. */
+  openNamed: (label: string) => string
+  /** Loading placeholder shown until bytes resolve. */
+  loading: string
+  /** Retry-control label shown when the load fails. */
+  loadFailed: string
+  /** Lightbox strings forwarded to the opened preview. */
+  lightbox: ImageLightboxLabels
+}
+
+/** Root-scoped image gallery input with explicit reading authority and optional caller copy. */
+export interface MessageImagesContentInput extends MessageImagesOwnerProps {
+  readonly labels?: MessageImageLabels
+}
+
+/** Transform inputs and independently controlled rendering behavior. */
+export interface UserTextInput extends UserTextDocumentInput {
+  /** Enable renderer-owned reference actions; omitted values keep references read-only. */
+  readonly interactive?: boolean
+  /** Use CSS single-line overflow ellipsis without shortening source text. */
+  readonly ellipsis?: boolean
+}
+
+/** Rule invalidation and document evaluation supplied by the data layer. */
+export interface UserTextInjected {
+  hooks: { userTextRevision: ObservableSnapshot<number> }
+  /** Each invocation creates a caller-owned data-layer cache without registry subscriptions. */
+  createUserTextEvaluator: () => UserTextEvaluator
+  /** Report a failed rule while the original text remains visible. */
+  reportTransformFailure: (error: unknown) => void
+}
+
+/** JSON-only owner data common to every business text node. */
+export interface UserTextNodeOwnerProps {
+  readonly raw: string
+  readonly interactive: boolean
+}
+
+/** Complete props for the selected business node, including its Session scope. */
+export type UserTextNodeProps<Id extends UserTextId = UserTextId> =
+  PropsRuntime<'conversation.user.text.node', Id>
 
 /** Selector hook over the current Session's assembled Conversation. */
 export type UseConversation = SnapshotSelectorHook<ConversationSnapshot>
@@ -126,7 +173,33 @@ export type UseConversation = SnapshotSelectorHook<ConversationSnapshot>
 export type UseConversationViews = SnapshotSelectorHook<readonly ViewTab[]>
 
 declare module '@x1a0f3n9/dsh-client-ui-slots' {
+  interface SlotFactoryMap {
+    /** Parse one original text and render its business nodes through the owned keyed Slot. */
+    'conversation.user.text': {
+      scope: 'session'
+      props: UserTextInput
+      inject: UserTextInjected
+      children: {
+        'conversation.user.text.node': { kind: 'keyed'; scope: 'session'; inline: true }
+      }
+    }
+    /** Official reusable gallery, with explicit authorized loading and optional caller copy. */
+    'conversation.images.content': {
+      scope: 'root'
+      props: MessageImagesContentInput
+      locale: 'conversation'
+    }
+  }
+
   interface SlotMap {
+    /** One business-owned inline renderer for a pure JSON text node. */
+    'conversation.user.text.node': {
+      kind: 'keyed'
+      scope: 'session'
+      inline: true
+      owner: UserTextNodeOwnerProps
+      keyProps: { [Id in UserTextId]: { node: UserTextNode<Id> } }
+    }
     /** Conversation shell beneath its root-scoped main-panel entry. */
     'main.conversation': { kind: 'single'; scope: 'session-maybe' }
     /** Strict per-Session Conversation body. */
@@ -181,6 +254,8 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
       scope: 'session'
       owner: ConversationHeaderCornerOwnerProps
     }
+    /** Rows of the View tab row's More menu; the header shows More only while this list has registrations. */
+    'conversation.session.header.views.actions': { kind: 'list'; scope: 'root'; owner: ConversationViewActionsOwnerProps }
     /** Registered Conversation target Views, rendered one at a time. */
     'conversation.view': { kind: 'list'; scope: 'session'; owner: ConvViewOwnerProps }
     /** Selector-routed replacements for the current Session's resident composer. */
@@ -191,6 +266,8 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
     'conversation.hero.brand.mark': { kind: 'single'; scope: 'root'; owner: HeroBrandMarkOwnerProps }
     /** Agent-preset control staged for a New Session. */
     'conversation.hero.agentPreset': { kind: 'single'; scope: 'session-maybe'; owner: HeroAgentPresetOwnerProps }
+    /** Compact options right-aligned in the New Session row after the workspace and preset controls; rendered only with a Session. */
+    'conversation.hero.options': { kind: 'list'; scope: 'session' }
     /** Full-width entries above the composer card. */
     'conversation.input.dock': { kind: 'list'; scope: 'session'; owner: InputZone }
     /** Floating entries rendered inside the resident composer card. */
@@ -236,6 +313,7 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
         'conversation.hero.brand.mark': { kind: 'single'; scope: 'root' }
         'conversation.hero.workspace': { kind: 'single'; scope: 'root' }
         'conversation.hero.agentPreset': { kind: 'single'; scope: 'session-maybe' }
+        'conversation.hero.options': { kind: 'list'; scope: 'session' }
       }
       inject: ConversationInjected
       locale: 'conversation'
@@ -341,15 +419,58 @@ export interface ConversationSessionInjected {
     readonly inspectCall: ObservableSnapshot<ConvViewOwnerProps['inspectCall']>
   }
   /** Bind input draft persistence to the Session-owned store instance. */
-  bindDraftMirror: (write: (text: string) => void) => () => void
+  bindDraftPersistence: (write: (draft: DraftSnapshot) => void) => () => void
   /** Select and activate one View while addressing an opaque focus request to it. */
   openView: (view: string, focus: string) => void
+}
+
+/** One customizable View tab listed in the More menu. */
+export interface ConversationViewActionEntry {
+  /** View id. */
+  readonly id: string
+  /** Resolved View label. */
+  readonly label: string
+  /** False while the View is manually unpinned. A pinned View still enters More when the header's width budget cannot hold it. */
+  readonly pinned: boolean
+  /** Whether this View is selected in this Session, independently of its pin state. */
+  readonly active?: boolean
+}
+
+/** Owner share of the View tab row's More menu rows. */
+export interface ConversationViewActionsOwnerProps {
+  /** Views outside the header in registration order. */
+  readonly entries: readonly ConversationViewActionEntry[]
+  /**
+   * Select a View in this Session without changing its pin state.
+   * @param id - Listed View id.
+   */
+  readonly onOpen: (id: string) => void
+  /**
+   * Pin or unpin a View in every Session.
+   * @param id - Listed View id.
+   * @param pinned - Whether the View is manually pinned; the width budget can still fold it into More.
+   */
+  readonly onPinnedChange: (id: string, pinned: boolean) => void
+  /** Close the More menu. */
+  readonly onDismiss: () => void
 }
 
 /** Business callbacks injected into the strict Session header. */
 export interface ConversationSessionHeaderInjected {
   /** Package-owned View roster source bound only for the Conversation header. */
-  readonly hooks: { readonly conversationViews: ObservableSnapshot<readonly ViewTab[]> }
+  readonly hooks: {
+    readonly conversationViews: ObservableSnapshot<readonly ViewTab[]>
+    /** Ids of unpinned View tabs held in memory and shared by every Session until plugin reload. */
+    readonly entryPins: ObservableSnapshot<readonly string[]>
+    /** Whether `conversation.session.header.views.actions` has registrations. */
+    readonly entryActions: ObservableSnapshot<boolean>
+  }
+  /**
+   * Pin or unpin one View tab in every Session; Chat is ignored.
+   * @param id - View id.
+   * @param pinned - Whether the View is manually pinned; the width budget can still fold it into More.
+   */
+  setPinned: (id: string, pinned: boolean) => void
   /** Select a Session through the Session Controller. */
   open: (sessionId: SessionId) => void
   /** Select and activate one registered Conversation View. */
@@ -503,6 +624,7 @@ export type ConversationSessionHeaderSlotProps =
     | 'conversation.session.header.actions'
     | 'conversation.session.header.utilities'
     | 'conversation.session.header.corner'
+    | 'conversation.session.header.views.actions'
   >
   & PropsStore<ConversationStore>
   & InjectFace<ConversationSessionHeaderInjected>

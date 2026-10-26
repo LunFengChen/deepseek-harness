@@ -26,6 +26,7 @@
  * @module @x1a0f3n9/dsh-tool-fs-search
  */
 
+import type {} from '@x1a0f3n9/dsh-working-directory'
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { MAX_TIMER_DELAY_MS } from '@x1a0f3n9/dsh-timeout'
@@ -67,7 +68,7 @@ export type { GrepMatch, RipgrepRun, SearchErrorCode } from './search-core.ts'
 export const name = 'tool-fs-search'
 
 /** Services required by the search tool suite (`spillStore` is optional, read via `ctx.get()`). */
-export const inject = ['tools', 'systemPrompt', 'subprocess']
+export const inject = ['tools', 'systemPrompt', 'subprocess', 'workingDirectory']
 
 /** Plugin config; over-cap glob sampling is an explicit deployment choice and the remaining fields have defaults. */
 export interface Config {

@@ -24,6 +24,14 @@ const PACKAGE_NAME_CONTINUE = /[A-Za-z0-9._~-]/u
  * @param toScope - scope the rewritten tarballs must declare.
  * @returns Old name to new name, longest names first when iterated as keys.
  */
+function packageScopeOf(members: readonly { name: string }[]): string {
+  const name = members[0]?.name
+  if (name === undefined) throw new Error('release family has no members')
+  const slash = name.indexOf('/')
+  if (!name.startsWith('@') || slash <= 1) throw new Error(`${name} is not a scoped package`)
+  return name.slice(0, slash)
+}
+
 export function publishScopeMapping(
   names: readonly string[],
   fromScope: string,
@@ -176,7 +184,7 @@ export function rewritePackedFamilyDirectory(
   toScope: string,
 ): string[] {
   const members = family.members(root)
-  const mapping = publishScopeMapping(members.map(member => member.name), family.packageScope, toScope)
+  const mapping = publishScopeMapping(members.map(member => member.name), packageScopeOf(members), toScope)
   const order = readPublishOrder(fromDir)
   rmSync(outDir, { recursive: true, force: true })
   mkdirSync(outDir, { recursive: true })
@@ -212,9 +220,10 @@ function main(): void {
   const fromDir = resolve(root, values.from)
   const outDir = resolve(root, values.out)
   const rewritten = rewritePackedFamilyDirectory(family, root, fromDir, outDir, values['to-scope'])
+  const fromScope = packageScopeOf(family.members(root))
   console.log(
     `release rewrite-scope: family ${family.id}, ${String(rewritten.length)} tarball(s)`
-    + ` ${family.packageScope} -> ${values['to-scope']} in ${values.out}`,
+    + ` ${fromScope} -> ${values['to-scope']} in ${values.out}`,
   )
 }
 

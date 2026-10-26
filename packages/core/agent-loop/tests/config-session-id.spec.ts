@@ -13,7 +13,7 @@ import ToolRuntime from '@x1a0f3n9/dsh-tools'
 import AgentRegistry, { type Agent } from '@x1a0f3n9/dsh-agent'
 import type { SessionHandle } from '@x1a0f3n9/dsh-session-persistence'
 
-import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import * as JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import AgentLoop, { CONFIGURED_AGENT_IDENTITIES_KEY } from '@x1a0f3n9/dsh-agent-loop'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import { MockAdapter, textResponse } from './mock-adapter.ts'

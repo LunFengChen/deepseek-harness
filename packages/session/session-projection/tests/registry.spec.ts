@@ -7,13 +7,11 @@
  * and effect-tied removal of registrations and change listeners (HMR safety).
  */
 
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, onTestFinished, vi } from 'vitest'
 import { Context } from '@deepseek-ai/cordis'
 import { z } from 'zod'
-import { createSystemMessage, createUserMessage } from '@x1a0f3n9/dsh-llm'
 import SessionStore, {
   SESSION_FORMAT_VERSION,
-  SESSION_LIVE_WINDOW_EVENTS,
   Session,
   SessionId,
   SessionLogOffset,
@@ -162,49 +160,6 @@ function sequenceName(sequence: readonly number[], prefix: string): string {
   return sequence.map(value => `${prefix}${String(value + 1)}`).join(',')
 }
 
-
-function fillPastLiveWindow(session: Session): void {
-  const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 2) + 10
-  for (let turn = 1; turn <= turns; turn++) {
-    session.append('turn/start', { turn })
-    session.append('turn/end', { turn, reason: { kind: 'completed' } })
-  }
-}
-
-function restoreWindowedSession(id: string): Session {
-  const donor = Session.create(SessionId(`${id}-donor`))
-  const first = donor.append('system/message', {
-    turn: 1,
-    step: 1,
-    message: createSystemMessage('You are terse.'),
-  }, { surfaceOp: 'append' }).seq
-  const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 3) + 10
-  for (let turn = 1; turn <= turns; turn++) {
-    donor.append('turn/start', { turn })
-    donor.append('user/message', createUserMessage({
-      content: [{ type: 'text', text: `hello ${turn}` }],
-      source: { kind: 'user' },
-    }), { surfaceOp: 'append' })
-    donor.append('turn/end', { turn, reason: { kind: 'completed' } })
-  }
-  donor.append('system/message', {
-    turn: 1,
-    step: 1,
-    message: createSystemMessage('You are terse and answer in one line.'),
-  }, { surfaceOp: { op: 'replace', startSeq: first, endSeq: first }, sourceEventSeqs: [first] })
-  const events = donor.snapshotEvents()
-  const header = {
-    version: SESSION_FORMAT_VERSION,
-    id: SessionId(id),
-    createdAt: 1,
-    isSeeded: false,
-  }
-  const restored = Session.beginPersistedRestore(header.id, header as SessionHeader)
-  for (const event of events) restored.adoptRestoredEvent(event)
-  restored.finishPersistedRestore(SessionLogOffset(0))
-  return restored
-}
-
 describe('SessionProjectionRegistry drive', () => {
   it('supplies the exact inherited cut to live, restored, and hydrated projection initialization', async () => {
     const ctx = new Context()
@@ -253,30 +208,6 @@ describe('SessionProjectionRegistry drive', () => {
     const snapshot = ctx.sessionProjections.snapshot(session)
     expect(snapshot.values['test/marks']).toEqual({ marks: ['a', 'b'] })
     expect(snapshot.asOfSeq).toBe(session.seq - 1)
-  })
-
-  it('rebuilds unit cells after the live session log is truncated', async () => {
-    const { ctx, session } = await harness()
-    ctx.sessionProjections.register(countUnit())
-    ctx.sessionProjections.register(marksUnit())
-    session.append('turn/start', { turn: 1 })
-    mark(session, ['keep'])
-    session.append('turn/end', { turn: 1, reason: { kind: 'completed' } })
-    session.append('turn/start', { turn: 2 })
-    mark(session, ['drop'])
-    expect(ctx.sessionProjections.stateOf(session, 'test/count')).toBe(5)
-    expect(ctx.sessionProjections.snapshot(session).values['test/marks']).toEqual({ marks: ['drop'] })
-    ctx.on('session/truncated', (truncated) => {
-      expect(ctx.sessionProjections.snapshot(truncated).values['test/marks']).toEqual({ marks: ['keep'] })
-    }, { prepend: true })
-    session.truncate(SessionLogOffset(3))
-    expect(ctx.sessionProjections.stateOf(session, 'test/count')).toBe(3)
-    expect(ctx.sessionProjections.snapshot(session).values['test/marks']).toEqual({ marks: ['keep'] })
-    expect(ctx.sessionProjections.snapshot(session).asOfSeq).toBe(2)
-    mark(session, ['after'])
-    expect(ctx.sessionProjections.stateOf(session, 'test/count')).toBe(4)
-    expect(ctx.sessionProjections.snapshot(session).values['test/marks']).toEqual({ marks: ['after'] })
-    await ctx.fiber.dispose()
   })
 
   it('builds the cell lazily from the full log for a unit registered after events flowed', async () => {
@@ -594,6 +525,22 @@ describe('SessionProjectionRegistry drive', () => {
     expect(ctx.sessionProjections.snapshot(session).values).toEqual({})
   })
 
+  it('keeps a yielded registration live until the composite finishes using it', async () => {
+    const { ctx, session } = await harness()
+    onTestFinished(async () => { await ctx.fiber.dispose() })
+    let observed: MarksState | undefined
+    const fiber = await ctx.plugin(Object.assign((inner: Context) => {
+      inner.effect(function* () {
+        yield inner.sessionProjections.register(marksUnit())
+        yield () => { observed = inner.sessionProjections.stateOf(session, 'test/marks') }
+      })
+    }, { inject: ['sessionProjections'] }))
+    mark(session, ['live'])
+    await fiber.dispose()
+    expect(observed).toEqual({ marks: ['live'] })
+    expect(ctx.sessionProjections.stateOf(session, 'test/marks')).toBeUndefined()
+  })
+
   it('snapshot serves client views and excludes host-only state', async () => {
     const { ctx, session } = await harness()
     ctx.sessionProjections.register(marksUnit())
@@ -843,109 +790,4 @@ describe('SessionProjectionRegistry drive', () => {
     })
     expect(() => ctx.sessionProjections.snapshot(session)).toThrow()
   })
-  it('ingests restored events so a windowed Session can snapshot without rebuilding the tail', async () => {
-    const ctx = new Context()
-    await ctx.plugin(SessionStore)
-    await ctx.plugin(SessionProjectionRegistry)
-    ctx.sessionProjections.register(countUnit())
-    const donor = Session.create(SessionId('window-restore-donor'))
-    fillPastLiveWindow(donor)
-    const events = donor.snapshotEvents()
-
-    const id = SessionId('window-restore')
-    const header = {
-      version: SESSION_FORMAT_VERSION,
-      id,
-      createdAt: 1,
-      isSeeded: false,
-    }
-    const cold = Session.beginPersistedRestore(id, header as SessionHeader)
-    for (const event of events) cold.adoptRestoredEvent(event)
-    cold.finishPersistedRestore(SessionLogOffset(0))
-    expect(cold.liveBaseSeq).toBeGreaterThan(0)
-    expect(ctx.sessionProjections.stateOf(cold, 'test/count')).toBe(cold.snapshotEvents().length)
-
-    const restored = Session.beginPersistedRestore(id, header as SessionHeader)
-    for (const event of events) {
-      restored.adoptRestoredEvent(event)
-      ctx.sessionProjections.ingestRestoredEvent(restored, event)
-    }
-    restored.finishPersistedRestore(SessionLogOffset(0))
-    expect(restored.liveBaseSeq).toBeGreaterThan(0)
-    expect(ctx.sessionProjections.stateOf(restored, 'test/count')).toBe(restored.seq)
-  })
-
-  it('seeds inheritedEventCount before ingest when the restore caller already knows the cut', async () => {
-    const ctx = new Context()
-    await ctx.plugin(SessionStore)
-    await ctx.plugin(SessionProjectionRegistry)
-    ctx.sessionProjections.register(cutUnit())
-    const inherited: SessionEvent[] = [
-      { type: 'turn/start', seq: SessionSeq(0), time: 1, data: { turn: 1 } },
-      { type: 'turn/end', seq: SessionSeq(1), time: 2, data: { turn: 1, reason: { kind: 'completed' } } },
-    ]
-    const id = SessionId('window-restore-cut')
-    const restored = Session.beginPersistedRestore(id, {
-      version: SESSION_FORMAT_VERSION,
-      id,
-      createdAt: 1,
-      isSeeded: true,
-      parentSession: SessionId('window-restore-parent'),
-    } as SessionHeader, SessionLogOffset(inherited.length))
-    for (const event of inherited) {
-      restored.adoptRestoredEvent(event)
-      ctx.sessionProjections.ingestRestoredEvent(restored, event)
-    }
-    restored.finishPersistedRestore(SessionLogOffset(inherited.length))
-    expect(ctx.sessionProjections.stateOf(restored, 'test/cut')).toBe(inherited.length)
-  })
-
-  it('bootstraps windowed units from the current Session instead of folding the live tail', async () => {
-    const ctx = new Context()
-    await ctx.plugin(SessionStore)
-    await ctx.plugin(SessionProjectionRegistry)
-    const heard: string[] = []
-    ctx.sessionProjections.register({
-      ...marksUnit(),
-      bootstrapWindowed: session => ({ marks: [`nodes:${String(session.surface.nodes.length)}`] }),
-    })
-    ctx.sessionProjections.register({
-      ...countUnit(),
-      bootstrapWindowed: session => session.surface.nodes.length,
-    })
-    const stop = ctx.sessionProjections.onChanged((_session, key, value) => {
-      heard.push(`${key}:${JSON.stringify(value)}`)
-    })
-
-    const snapshotted = restoreWindowedSession('window-bootstrap-snapshot')
-    expect(snapshotted.liveBaseSeq).toBeGreaterThan(0)
-    expect(ctx.sessionProjections.stateOf(snapshotted, 'test/count')).toBe(snapshotted.surface.nodes.length)
-    expect(ctx.sessionProjections.snapshot(snapshotted).values['test/marks'])
-      .toEqual({ marks: [`nodes:${String(snapshotted.surface.nodes.length)}`] })
-    expect(heard).toEqual([])
-
-    const driven = restoreWindowedSession('window-bootstrap-drive')
-    ctx.sessions.enter(driven)
-    ctx.sessions.announce(driven)
-    driven.append('user/message', createUserMessage({
-      content: [{ type: 'text', text: 'after restore' }],
-      source: { kind: 'user' },
-    }), { surfaceOp: 'append' })
-    expect(ctx.sessionProjections.stateOf(driven, 'test/count')).toBe(driven.surface.nodes.length)
-    expect(heard).toEqual([
-      `test/marks:${JSON.stringify({ marks: [`nodes:${String(driven.surface.nodes.length)}`] })}`,
-    ])
-
-    stop()
-    const quiet = restoreWindowedSession('window-bootstrap-quiet')
-    ctx.sessions.enter(quiet)
-    ctx.sessions.announce(quiet)
-    quiet.append('user/message', createUserMessage({
-      content: [{ type: 'text', text: 'quiet' }],
-      source: { kind: 'user' },
-    }), { surfaceOp: 'append' })
-    expect(ctx.sessionProjections.stateOf(quiet, 'test/count')).toBe(quiet.surface.nodes.length)
-    expect(heard).toHaveLength(1)
-  })
-
 })

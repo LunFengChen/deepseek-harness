@@ -5,10 +5,11 @@
   - tablist:
     - tab "Chat" [selected]
     - tab "Trajectory"
+  - button "More conversation views"
 - text: Render adjacent CJK strong emphasis. {{clock}}
 - button "Copy"
-- status: Worked
-- button "Took {{duration}}" [disabled]
+- status: Completed
+- button "Completed in {{duration}}" [disabled]
 - heading "CJK strong emphasis" [level=2]
 - paragraph:
   - strong: 注意：

@@ -3,6 +3,15 @@
 - id: system-prompt
   name: '@x1a0f3n9/dsh-system-prompt'
 
+- id: fs
+  name: '@x1a0f3n9/dsh-fs-local'
+
+- id: session-projections
+  name: '@x1a0f3n9/dsh-session-projection'
+
+- id: working-directory
+  name: '@x1a0f3n9/dsh-working-directory'
+
 - id: tools
   name: '@x1a0f3n9/dsh-tools'
 

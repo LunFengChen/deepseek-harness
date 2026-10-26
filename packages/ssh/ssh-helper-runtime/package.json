@@ -1,0 +1,64 @@
+{
+  "name": "@x1a0f3n9/dsh-ssh-helper-runtime",
+  "description": "Private executable carrier for the POSIX SSH helper and managed workers",
+  "version": "0.2.1-rc.3",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "workspace:~"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-app-boot": "workspace:*",
+    "@x1a0f3n9/dsh-fs-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-ssh": "workspace:*"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "workspace:~",
+    "@deepseek-ai/cosmokit": "workspace:~",
+    "@x1a0f3n9/dsh-agent": "workspace:*",
+    "@x1a0f3n9/dsh-brand": "workspace:*",
+    "@x1a0f3n9/dsh-fs": "workspace:*",
+    "@x1a0f3n9/dsh-fs-local": "workspace:*",
+    "@x1a0f3n9/dsh-fs-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-http-proxy": "workspace:*",
+    "@x1a0f3n9/dsh-lazy-require": "workspace:*",
+    "@x1a0f3n9/dsh-llm": "workspace:*",
+    "@x1a0f3n9/dsh-ptc-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-ptc-runtime-node": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-local": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-policy": "workspace:*",
+    "@x1a0f3n9/dsh-sandbox-windows-acl": "workspace:*",
+    "@x1a0f3n9/dsh-scope": "workspace:*",
+    "@x1a0f3n9/dsh-session": "workspace:*",
+    "@x1a0f3n9/dsh-session-projection": "workspace:*",
+    "@x1a0f3n9/dsh-skill": "workspace:*",
+    "@x1a0f3n9/dsh-ssh": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess": "workspace:*",
+    "@x1a0f3n9/dsh-subprocess-local": "workspace:*",
+    "@x1a0f3n9/dsh-system-prompt": "workspace:*",
+    "@x1a0f3n9/dsh-timeout": "workspace:*",
+    "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
+    "@x1a0f3n9/dsh-util-crypto": "workspace:*",
+    "@x1a0f3n9/dsh-util-values": "workspace:*",
+    "@x1a0f3n9/dsh-win32-process": "workspace:*",
+    "@deepseek-ai/node-addon-system": "workspace:~",
+    "@deepseek-ai/schemastery": "workspace:~"
+  }
+}

@@ -58,7 +58,7 @@ export const PAGE_ASSETS: readonly string[] = [
 ]
 
 /**
- * Image specifiers the worker assembly requires directly, beyond the composed
+ * Image specifiers the worker assembly requires directly, beyond the
  * roster: they are requested by worker-bundle code, so no image file
  * references them and the reachability sweep must seed them as roots. Keep in
  * step with the literal `require`/`resolve` calls in the runtime's
@@ -67,7 +67,6 @@ export const PAGE_ASSETS: readonly string[] = [
 export const IMAGE_ENTRY_SEEDS: readonly string[] = [
   '@x1a0f3n9/dsh-app-boot',
   '@x1a0f3n9/dsh-cmdline',
+  '@x1a0f3n9/dsh-launch-environment',
   '@deepseek-ai/cordis',
-  '@deepseek-ai/cordis-plugin-include',
-  'js-yaml',
 ]

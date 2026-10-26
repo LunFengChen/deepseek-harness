@@ -6,7 +6,7 @@ import { createSessionFormatCatalogWithChildren } from '@x1a0f3n9/dsh-session-fo
 import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import type { SessionFormatJsonObject } from '@x1a0f3n9/dsh-session-format'
 import { SessionFormatUnsupportedError, SessionPersistenceCorruptionError } from '@x1a0f3n9/dsh-session-persistence'
-import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import * as JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import { createHash } from 'node:crypto'
 import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'

@@ -138,7 +138,7 @@ describe('PluginInventoryGateway', () => {
     }
   })
 
-  it('publishes one direct list method under the pluginInventory namespace', async () => {
+  it('publishes list and setEnabled under the pluginInventory namespace', async () => {
     const { inventory } = await harness()
     expect(inventory.typertRemote).toMatchObject({
       serviceKey: 'pluginInventory',
@@ -146,6 +146,7 @@ describe('PluginInventoryGateway', () => {
     })
     expect(remoteMethods(inventory)).toEqual([
       { method: 'list', invocation: { kind: 'direct' } },
+      { method: 'setEnabled', invocation: { kind: 'direct' } },
     ])
   })
 

@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-subprocess-local",
   "description": "Local-subprocess implementation of the DeepSeek Harness subprocess seam",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -27,9 +27,11 @@
     "./output": {
       "types": "./lib/types/output.d.ts",
       "default": "./lib/output.js"
-    }
+    },
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/runner.js",
     "lib/runner-*.js",
@@ -49,7 +51,7 @@
   "dependencies": {
     "@x1a0f3n9/dsh-lazy-require": "workspace:*",
     "@x1a0f3n9/dsh-win32-process": "workspace:*",
-    "koffi": "^3.1.0",
+    "koffi": "3.1.1",
     "node-pty": "1.2.0-beta.15"
   },
   "devDependencies": {

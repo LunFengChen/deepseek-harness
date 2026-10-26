@@ -1,4 +1,5 @@
 import { Context } from '@deepseek-ai/cordis'
+import WorkingDirectory from '@x1a0f3n9/dsh-working-directory'
 import type { Agent } from '@x1a0f3n9/dsh-agent'
 import AgentLoop from '@x1a0f3n9/dsh-agent-loop'
 import { mountAgentLoopTestDependencies } from '@x1a0f3n9/dsh-agent-loop-testkit'
@@ -18,6 +19,7 @@ export async function fsHarness(fsCwd: string, persona = ''): Promise<Context> {
   await ctx.plugin(AgentLoop, { agents: [] })
   await ctx.plugin(LlmDeepSeek)
   await ctx.plugin(LocalFileSystem, { cwd: fsCwd })
+  await ctx.plugin(WorkingDirectory, { defaultDirectory: fsCwd })
   await ctx.plugin(FsPolicy)
   await ctx.plugin(ToolFs)
   return ctx

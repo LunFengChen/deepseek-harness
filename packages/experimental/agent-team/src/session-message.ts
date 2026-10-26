@@ -1,4 +1,4 @@
-/** Durable Session-message acceptance checks shared by provisioning and mailbox recovery. */
+/** Durable Session-message acceptance checks for teammate provisioning. */
 
 import type { UserMessage } from '@x1a0f3n9/dsh-llm'
 import type { SessionEvent } from '@x1a0f3n9/dsh-session'

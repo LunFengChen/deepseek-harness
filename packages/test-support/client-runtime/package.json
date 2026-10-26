@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-test-runtime",
   "description": "Browser test runtimes: a jsdom slot bench with test-owned Session and Workspace doubles, and a whole-client tier that boots the web roster through the production bootClient over an endpoint-named Remote mock",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -24,9 +24,9 @@
   "license": "MIT",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/react": "^16.3.2",
-    "js-yaml": "^4.2.0",
-    "vitest": "^4.1.8"
+    "@testing-library/react": "^16.3.3",
+    "js-yaml": "^4.3.2",
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",
@@ -59,6 +59,7 @@
     "@deepseek-ai/cordis-plugin-include": "workspace:~",
     "@deepseek-ai/cordis-plugin-loader": "workspace:~",
     "@x1a0f3n9/dsh-api-gateway": "workspace:*",
+    "@x1a0f3n9/dsh-api-remote-access": "workspace:*",
     "@x1a0f3n9/dsh-api-remotes": "workspace:*",
     "@x1a0f3n9/dsh-api-session-controller": "workspace:*",
     "@x1a0f3n9/dsh-api-workspace-controller": "workspace:*",
@@ -76,6 +77,7 @@
     "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-settings": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-workspace": "workspace:*",
     "@x1a0f3n9/dsh-client-web": "workspace:*",
     "@x1a0f3n9/dsh-remote-mock": "workspace:*",
     "@x1a0f3n9/dsh-session": "workspace:*",
@@ -84,8 +86,6 @@
     "@x1a0f3n9/dsh-typert-protocol": "workspace:*",
     "@x1a0f3n9/dsh-web-app": "workspace:*",
     "@types/js-yaml": "^4.0.9",
-    "@types/react": "~18.3.1",
-    "@types/react-dom": "~18.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

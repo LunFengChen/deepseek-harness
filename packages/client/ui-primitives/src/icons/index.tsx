@@ -450,9 +450,9 @@ export const IconEditOutlineMedium = (props: IconProps) => (
 
 const IconThinkOutlineArtwork = ({ size = 16, className, strokeWidth }: WeightedIconProps) => (
   <svg width={size} height={size} className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" strokeWidth={strokeWidth}>
-    <path d="M10.7554 5.24466C13.9891 8.4783 15.3769 12.3333 13.8552 13.8551C12.3335 15.3768 8.4785 13.989 5.24478 10.7553C2.01111 7.52165 0.623307 3.66664 2.14504 2.14491C3.66676 0.623189 7.52178 2.01099 10.7554 5.24466Z" stroke="currentColor" />
-    <path d="M10.7554 10.7553C7.52178 13.989 3.66676 15.3768 2.14504 13.8551C0.623307 12.3333 2.01111 8.4783 5.24478 5.24466C8.4785 2.01099 12.3335 0.623189 13.8552 2.14491C15.3769 3.66664 13.9891 7.52165 10.7554 10.7553Z" stroke="currentColor" />
-    <path d="M8.9587 8.00025C8.9587 8.52835 8.5306 8.95655 8.0024 8.95655C7.47429 8.95655 7.04614 8.52835 7.04614 8.00025C7.04614 7.47209 7.47429 7.04395 8.0024 7.04395C8.5306 7.04395 8.9587 7.47209 8.9587 8.00025Z" fill="currentColor" />
+    <path d="M10.2854 5.71481C12.9673 8.39663 14.1182 11.5938 12.8562 12.8559C11.5942 14.1179 8.39706 12.9669 5.71518 10.2851C3.03333 7.60323 1.88236 4.40608 3.14441 3.14403C4.40644 1.882 7.6036 3.03297 10.2854 5.71481Z" stroke="currentColor" />
+    <path d="M10.2854 10.2851C7.6036 12.9669 4.40644 14.1179 3.14441 12.8559C1.88236 11.5938 3.03333 8.39663 5.71518 5.71481C8.39706 3.03297 11.5942 1.882 12.8562 3.14403C14.1182 4.40608 12.9673 7.60323 10.2854 10.2851Z" stroke="currentColor" />
+    <path d="M8.86291 8.0002C8.86291 8.47549 8.47762 8.86087 8.00224 8.86087C7.52694 8.86087 7.1416 8.47549 7.1416 8.0002C7.1416 7.52485 7.52694 7.13953 8.00224 7.13953C8.47762 7.13953 8.86291 7.52485 8.86291 8.0002Z" fill="currentColor" />
   </svg>
 )
 
@@ -1657,38 +1657,30 @@ export const IconMicrophoneOutlineMedium = (props: IconProps) => (
   <IconMicrophoneOutlineArtwork {...props} strokeWidth={ICON_MEDIUM_STROKE} />
 )
 
-/**
- * DSH 0.1.5 plugins (better-sidebar 0.19.x) import size-suffixed names.
- * xfdsh glyphs are Regular/Medium; size is a prop. Keep the old names as
- * Regular aliases so those plugins do not render element type undefined.
- */
-export const IconApiOutline14 = IconApiOutlineRegular
-export const IconBranchOutline16 = IconBranchOutlineRegular
-export const IconBrowseOutline16 = IconBrowseOutlineRegular
-export const IconCheckOutline16 = IconCheckOutlineRegular
-export const IconChevronDownOutline14 = IconChevronDownOutlineRegular
-export const IconChevronLeftOutline14 = IconChevronLeftOutlineRegular
-export const IconChevronRightOutline14 = IconChevronRightOutlineRegular
-export const IconCloseFill14 = IconCloseFillRegular
-export const IconCloseOutline16 = IconCloseOutlineRegular
-export const IconCodeOutline16 = IconCodeOutlineRegular
-export const IconCopyOutline16 = IconCopyOutlineRegular
-export const IconDownloadOutline16 = IconDownloadOutlineRegular
-export const IconEditOutline16 = IconEditOutlineRegular
-export const IconFolderOpen16 = IconFolderOpenRegular
-export const IconLinkOutline14 = IconLinkOutlineRegular
-export const IconLinkOutline16 = IconLinkOutlineRegular
-export const IconListPenOutline16 = IconListPenOutlineRegular
-export const IconNewChatOutline16 = IconNewChatOutlineRegular
-export const IconPanelLeftOutline16 = IconPanelLeftOutlineRegular
-export const IconPlusOutline16 = IconPlusOutlineRegular
-export const IconRefreshOutline14 = IconRefreshOutlineRegular
-export const IconRefreshOutline16 = IconRefreshOutlineRegular
-export const IconRightUpOutline16 = IconRightUpOutlineRegular
-export const IconSearchOutline16 = IconSearchOutlineRegular
-export const IconSendOutline16 = IconSendOutlineRegular
-export const IconSettingsOutline16 = IconSettingsOutlineRegular
-export const IconSparkle16 = IconSparkleRegular
-export const IconStopFill16 = IconStopFillRegular
-export const IconTrashOutline16 = IconTrashOutlineRegular
-export const IconWarningOutline16 = IconWarningOutlineRegular
+/** `compact` moves the tiles 0.5px inward, for glyphs drawn at card size. */
+type AppsAddIconProps = IconProps & { readonly compact?: boolean | undefined }
+
+const IconAppsAddOutlineArtwork = ({ size = 16, className, strokeWidth, compact = false }: AppsAddIconProps & { strokeWidth: number }) => {
+  const near = compact ? 2.75 : 2.25
+  const far = compact ? 9.25 : 9.75
+  const plusX = far + 2
+  const plusY = near + 2
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" className={className} fill="none" stroke="currentColor" strokeWidth={strokeWidth} aria-hidden="true">
+      <rect x={near} y={near} width={4} height={4} rx={1} />
+      <rect x={near} y={far} width={4} height={4} rx={1} />
+      <rect x={far} y={far} width={4} height={4} rx={1} />
+      <path d={`M${plusX} ${plusY - 2.5}v5M${plusX - 2.5} ${plusY}h5`} />
+    </svg>
+  )
+}
+
+/** Three entry tiles and an add mark with one-pixel strokes. */
+export const IconAppsAddOutlineRegular = (props: AppsAddIconProps) => (
+  <IconAppsAddOutlineArtwork {...props} strokeWidth={ICON_REGULAR_STROKE} />
+)
+
+/** Three entry tiles and an add mark with 1.3px strokes. */
+export const IconAppsAddOutlineMedium = (props: AppsAddIconProps) => (
+  <IconAppsAddOutlineArtwork {...props} strokeWidth={ICON_MEDIUM_STROKE} />
+)

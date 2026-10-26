@@ -9,6 +9,7 @@ import { chromium } from 'playwright'
 import { expect, it, onTestFinished } from 'vitest'
 import { launchWebScaffold, captureStableAria, compareOrRefreshGolden, webSnapshotMode, watchConsole, type WebScaffold } from './scaffold.ts'
 import { ZH_BROWSER_LOCALE } from './support.ts'
+import { expectSelectableTerminalCommand } from './terminal-command-browser.ts'
 
 const MIRROR = 'https://registry.npmmirror.com/'
 
@@ -75,7 +76,7 @@ it.each(['https://registry.npmjs.org/', MIRROR])('selects the fastest responding
       expect(await page.getByRole('radio').count()).toBe(0)
       await registryToggle.click()
       const options = page.getByRole('group', { name: '从哪个 npm 源下载插件', exact: true })
-      const mirror = options.getByRole('radio', { name: '中国大陆镜像源（registry.npmmirror.com）', exact: true })
+      const mirror = options.getByRole('radio', { name: '中国大陆镜像源 registry.npmmirror.com', exact: true })
       await expect.poll(async () => (await readFile(requestLog, 'utf8')).trim().split('\n').filter(Boolean)).toHaveLength(2)
       const pingUrls = (await readFile(requestLog, 'utf8')).trim().split('\n').sort()
       expect(pingUrls).toEqual(['https://registry.npmjs.org/-/ping', 'https://registry.npmmirror.com/-/ping'].map(url => JSON.stringify(url)))
@@ -84,7 +85,7 @@ it.each(['https://registry.npmjs.org/', MIRROR])('selects the fastest responding
         await compareOrRefreshGolden(fileURLToPath(new URL('./expected/plugin-install-registry/fastest-default.expected.md', import.meta.url)),
           await captureStableAria(page, '[data-install-registry]', scaffold.workspaceCwd), webSnapshotMode())
       } else {
-        expect(await options.getByRole('radio', { name: 'npm 官方源（registry.npmjs.org）', exact: true }).isChecked()).toBe(true)
+        expect(await options.getByRole('radio', { name: 'npm 官方源 registry.npmjs.org', exact: true }).isChecked()).toBe(true)
         await compareOrRefreshGolden(fileURLToPath(new URL('./expected/plugin-install-registry/official-default.expected.md', import.meta.url)),
           await captureStableAria(page, '[data-install-registry]', scaffold.workspaceCwd), webSnapshotMode())
         await mirror.click()
@@ -117,6 +118,8 @@ it.each(['https://registry.npmjs.org/', MIRROR])('selects the fastest responding
       await dialog.getByText('Installed from the registry pnpm names', { exact: true }).waitFor()
       await dialog.getByText('第 1 次 · 中国大陆镜像源', { exact: true }).waitFor()
       await dialog.getByText('第 2 次 · npm 官方源', { exact: true }).waitFor()
+      await expectSelectableTerminalCommand(page, dialog.locator('[data-terminal]').first(),
+        `pnpm add mirrored-package --registry=${MIRROR}`, 380, '命令第 1 行')
       expect(JSON.parse(await readFile(manifestPath, 'utf8'))).toMatchObject({ dependencies: { 'mirrored-package': '2.0.0' } })
       const installed = (await captureStableAria(page, '[role="dialog"]', scaffold.workspaceCwd))
         .split(process.execPath).join('{{node}}')

@@ -1,4 +1,4 @@
-/** Blank New Session folding through the shipped Web composition. */
+/** Blank New Session folding and the session watermark through the shipped Web composition. */
 
 import { readFile } from 'node:fs/promises'
 import { basename, join } from 'node:path'
@@ -71,9 +71,15 @@ describe('web e2e: blank New Session folding quota', () => {
     const sidebar = page.getByRole('tree', { name: 'Sessions' })
     await expect.poll(() => sidebar.getByRole('treeitem').count(), { timeout: 15_000 }).toBe(7)
     expect(await sidebar.getByText('New Session', { exact: true }).count()).toBe(1)
-    expect(await sidebar.getByText(basename(scaffold.workspaceCwd), { exact: true }).count()).toBe(6)
+    expect(await sidebar.getByText('Untitled', { exact: true }).count()).toBe(5)
     const showMore = sidebar.getByRole('button', { name: 'Show 11 more sessions' })
     await showMore.waitFor({ timeout: 15_000 })
+    // The sidebar golden records its workspace row hovered, which reveals the
+    // row actions `.projectRow:hover` otherwise hides. Chromium does not
+    // recompute `:hover` when a re-render moves rows under a pointer that does
+    // not move, so the state is set rather than inherited from the New Session
+    // click above.
+    await sidebar.getByRole('treeitem').first().hover()
     await compareOrRefreshGolden(
       SIDEBAR_EXPECTED,
       await captureStableAria(page, '[role="tree"][aria-label="Sessions"]', scaffold.workspaceCwd),
@@ -82,7 +88,14 @@ describe('web e2e: blank New Session folding quota', () => {
 
     await showMore.click()
     await expect.poll(() => sidebar.getByRole('treeitem').count(), { timeout: 10_000 }).toBe(12)
-    expect(await sidebar.getByText(basename(scaffold.workspaceCwd), { exact: true }).count()).toBe(11)
+    expect(await sidebar.getByText('Untitled', { exact: true }).count()).toBe(10)
+    // `first-batch.expected.md` records the first row the batch reveals
+    // hovered — the sixth session, which takes the former Show-more button's
+    // position. Under `:hover` its trailing cell swaps the relative time for
+    // the row actions. The `showMore.click()` above reflows the list beneath a
+    // stationary pointer, so the row that ends up there follows the layout,
+    // not the scenario; hover the row the golden records instead.
+    await sidebar.getByRole('treeitem').nth(7).hover()
     await compareOrRefreshGolden(
       join(EXPECTED_DIR, 'first-batch.expected.md'),
       await captureStableAria(page, '[role="tree"][aria-label="Sessions"]', scaffold.workspaceCwd),
@@ -94,7 +107,42 @@ describe('web e2e: blank New Session folding quota', () => {
     await expect.poll(() => sidebar.getByRole('treeitem').count()).toBe(18)
     await sidebar.getByRole('button', { name: 'Show less' }).click()
     await expect.poll(() => sidebar.getByRole('treeitem').count()).toBe(7)
-    await assertFixtureInventory(EXPECTED_DIR, ['sidebar.expected.md', 'first-batch.expected.md'])
+    expect(tripwire.pageErrors).toEqual([])
+    expect(tripwire.warnings).toEqual([])
+  })
+
+  it('raises the watermark to the open session, keeps it after leaving, and resets it on fold', async () => {
+    onTestFailed(() => saveFailureShot(page, 'web-e2e-workspace-session-watermark'))
+    const sidebar = page.getByRole('tree', { name: 'Sessions' })
+    const workspaceTitle = basename(scaffold.workspaceCwd)
+    const sessions = () => sidebar.getByText('Untitled', { exact: true }).count()
+    await sidebar.getByRole('button', { name: 'Show 11 more sessions' }).click()
+    await expect.poll(sessions).toBe(10)
+    await sidebar.getByText('Untitled', { exact: true }).nth(8).click()
+    await sidebar.getByRole('button', { name: 'Show 6 more sessions' }).click()
+    await sidebar.getByRole('button', { name: 'Show 1 more sessions' }).click()
+    await expect.poll(sessions).toBe(16)
+    await sidebar.getByRole('button', { name: 'Show less' }).click()
+    await expect.poll(sessions).toBe(9)
+    await sidebar.getByRole('button', { name: 'Show 7 more sessions' }).waitFor()
+
+    const workspaceRow = sidebar.getByRole('treeitem').first()
+    await workspaceRow.hover()
+    await page.getByRole('button', { name: `New session in ${workspaceTitle}` }).click()
+    await sidebar.getByText('New Session', { exact: true }).waitFor()
+    expect(await sessions()).toBe(9)
+    await workspaceRow.hover()
+    await compareOrRefreshGolden(
+      join(EXPECTED_DIR, 'watermark-kept.expected.md'),
+      await captureStableAria(page, '[role="tree"][aria-label="Sessions"]', scaffold.workspaceCwd),
+      MODE,
+    )
+
+    await workspaceRow.click()
+    await workspaceRow.click()
+    await expect.poll(sessions).toBe(5)
+    await sidebar.getByRole('button', { name: 'Show 11 more sessions' }).waitFor()
+    await assertFixtureInventory(EXPECTED_DIR, ['sidebar.expected.md', 'first-batch.expected.md', 'watermark-kept.expected.md'])
     expect(tripwire.pageErrors).toEqual([])
     expect(tripwire.warnings).toEqual([])
   })

@@ -1,7 +1,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import { SessionId, type SessionHeader } from '@x1a0f3n9/dsh-session'
 import { SessionFormatUnsupportedError, SessionPersistenceCorruptionError } from '@x1a0f3n9/dsh-session-persistence'
-import JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
+import * as JsonlSessionPersistence from '@x1a0f3n9/dsh-session-persistence-jsonl'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'

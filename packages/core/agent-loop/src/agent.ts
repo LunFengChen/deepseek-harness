@@ -28,7 +28,7 @@ import { assertNever, deepFreeze } from '@x1a0f3n9/dsh-util-values'
 import type { Scope } from '@x1a0f3n9/dsh-scope'
 import { createScope } from '@x1a0f3n9/dsh-scope'
 import type { EpochHeader, RequestContext, Session, SessionId, SessionSeq, TurnEndReason, UserMessage } from '@x1a0f3n9/dsh-session'
-import { canonicalHeader, headerEquals } from '@x1a0f3n9/dsh-session'
+import { canonicalHeader, headerEquals, ToolCallRecovery } from '@x1a0f3n9/dsh-session'
 import { joinContextSections, renderContextSections, renderPrompt } from '@x1a0f3n9/dsh-system-prompt'
 import type { PromptAssembly } from '@x1a0f3n9/dsh-system-prompt'
 import type {} from '@x1a0f3n9/dsh-session-projection'
@@ -269,19 +269,18 @@ export class ReactLoopAgent implements Agent {
     if (this.phase.kind !== 'running') throw new Error(`agent "${this.id}": pre-step outside running phase`)
     const signal = this.phase.abort.signal
     const claimed = this.inbox.claim(target, position.turn)
-    // Flush running status and turn/start before assemble's synchronous prefix.
-    await new Promise<void>((resolve) => { setImmediate(resolve) })
-    signal.throwIfAborted()
     const assembly = await this.loopCtx.systemPrompt.assemble(assembleContextFor(this, signal))
     signal.throwIfAborted()
-    const sections = renderContextSections(assembly)
-    const context = this.runtimeContext.project(joinContextSections(sections), sections)
     const decision = await this.dispatch.waterfall(
       'agent/pre-step', { messages: claimed, ...position, signal },
-      (): Promise<PreStepDecision> => Promise.resolve<PreStepDecision>({
-        kind: 'enter',
-        messages: context === undefined ? claimed : [...claimed, context],
-      }),
+      (): Promise<PreStepDecision> => {
+        const sections = renderContextSections(assembly)
+        const context = this.runtimeContext.project(joinContextSections(sections), sections)
+        return Promise.resolve<PreStepDecision>({
+          kind: 'enter',
+          messages: context === undefined ? claimed : [...claimed, context],
+        })
+      },
     )
     signal.throwIfAborted()
     if (decision.kind === 'reject') return decision
@@ -331,6 +330,10 @@ export class ReactLoopAgent implements Agent {
         signal.throwIfAborted()
         this.session.append('step/start', { turn, step })
         phase.step = step
+        const toolRecovery = new ToolCallRecovery()
+        const stopRecovery = this.ctx.on('session/event', (session, event) => {
+          if (session === this.session) toolRecovery.observe(event)
+        })
         try {
           // max-tokens is sticky: once any step hits the ceiling, later steps
           // that complete normally must not downgrade the turn outcome.
@@ -338,7 +341,20 @@ export class ReactLoopAgent implements Agent {
           // max-tokens stays sticky: a later completed step must not
           // downgrade the turn outcome.
           if (turnEnds === null || turnEnds.kind !== 'max-tokens') turnEnds = stepEnd
+        } catch (error: unknown) {
+          try {
+            for (const event of toolRecovery.results()) {
+              this.session.append('tool/result', event.data, {
+                surfaceOp: 'append',
+                ...event.sourceEventSeqs === undefined ? {} : { sourceEventSeqs: event.sourceEventSeqs },
+              })
+            }
+          } catch (recoveryError: unknown) {
+            throw new AggregateError([error, recoveryError], 'Step failed and its pending tool results could not be recorded', { cause: error })
+          }
+          throw error
         } finally {
+          stopRecovery()
           this.session.append('step/end', { turn, step })
         }
         signal.throwIfAborted()
@@ -392,6 +408,10 @@ export class ReactLoopAgent implements Agent {
     let firstAttempt = true
     while (true) {
       const { config, preparedCall } = await this.prepareRequest(turn, step, signal)
+      const currentContext = this.loopCtx.systemPrompt.refreshContext(assembly, assembleContextFor(this, signal))
+      const sections = renderContextSections(currentContext)
+      const context = this.runtimeContext.project(joinContextSections(sections), sections)
+      signal.throwIfAborted()
       const startsRequestSeries = firstAttempt && decision.startsRequestSeries === true
       const commits = this.systemPrompt.project(renderedPrompt, {
         inHistory: preparedCall?.systemPromptUpdate === 'in-history',
@@ -402,10 +422,21 @@ export class ReactLoopAgent implements Agent {
       for (const { message, intent } of commits) {
         this.session.append('system/message', { turn, step, message }, intent)
       }
+      let contextAdmitted = false
       if (firstAttempt) {
         for (const message of decision.messages) {
-          this.session.append('user/message', message, { surfaceOp: 'append' })
+          if (message.source.kind === 'runtime-context') {
+            if (context !== undefined && !contextAdmitted) {
+              this.session.append('user/message', context, { surfaceOp: 'append' })
+              contextAdmitted = true
+            }
+          } else {
+            this.session.append('user/message', message, { surfaceOp: 'append' })
+          }
         }
+      }
+      if (context !== undefined && !contextAdmitted) {
+        this.session.append('user/message', context, { surfaceOp: 'append' })
       }
       firstAttempt = false
       const request = this.buildRequest(config, preparedCall, assembly.tools, { turn, step }, startsRequestSeries, signal)
@@ -540,10 +571,6 @@ export class ReactLoopAgent implements Agent {
     // A loop instance starts from its declared route, restoring only an explicit
     // effort owned by that exact model. Later steps re-resolve marked defaults.
     const persistedHeader = session.requestHeader()
-    // Truncation can drop the header this instance already logged.
-    if (this.requestHeaderLogged && persistedHeader === undefined) {
-      this.requestHeaderLogged = false
-    }
     const persistedConfig = persistedHeader?.config
     const route = { provider: this.options.provider ?? '', model: this.options.model ?? '' }
     const persistedReasoningEffort = persistedConfig?.provider === route.provider
@@ -554,8 +581,9 @@ export class ReactLoopAgent implements Agent {
     const reasoningEffort = this.options.reasoningEffort ?? persistedReasoningEffort
     const maxTokens = this.options.maxTokens
     const seedConfig = deepFreeze(structuredClone(
-      this.requestHeaderLogged && persistedHeader !== undefined
-        ? requestProposal(persistedHeader)
+      this.requestHeaderLogged
+        // oxlint-disable-next-line typescript/no-non-null-assertion -- the instance logged the header it now folds
+        ? requestProposal(persistedHeader!)
         : {
           ...route,
           ...reasoningEffort === undefined ? {} : { reasoningEffort },
@@ -570,25 +598,15 @@ export class ReactLoopAgent implements Agent {
     if (!proposedConfig.provider || !proposedConfig.model) {
       throw new Error(`agent "${this.id}" has no provider/model: set AgentOptions.provider and AgentOptions.model or supply both via the agent/request waterfall`)
     }
-    let requestConfig = proposedConfig
-    if (
-      (proposedConfig.provider !== seedConfig.provider || proposedConfig.model !== seedConfig.model)
-      && proposedConfig.reasoningEffort === seedConfig.reasoningEffort
-      && proposedConfig.reasoningEffort !== undefined
-    ) {
-      // Route-only overlays still carrying the seed effort inherited it; the new model did not choose it.
-      requestConfig = { ...proposedConfig }
-      delete requestConfig.reasoningEffort
-    }
     let config: LlmCallConfig
     let preparedCall: PreparedLlmCall | undefined
     try {
-      preparedCall = await this.loopCtx.llm.prepareCall(requestConfig, signal)
+      preparedCall = await this.loopCtx.llm.prepareCall(proposedConfig, signal)
       config = preparedCall.config
     } catch (error: unknown) {
       // Middleware may serve an unregistered route; terminal dispatch still requires an adapter.
       if (!(error instanceof LlmError) || error.code !== 'NO_ADAPTER') throw error
-      config = requestConfig
+      config = proposedConfig
     }
     signal.throwIfAborted()
     return { config, ...preparedCall === undefined ? {} : { preparedCall } }

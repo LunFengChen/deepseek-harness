@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-client-ui-settings-general",
   "description": "Settings ownerless-copy and product onboarding plugin: the General section, shell trigger/header chrome content, settings dictionaries, and the versioned welcome notice",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -26,7 +26,8 @@
       "types": "./lib/types/types.d.ts"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "dsh": {
     "client": {
@@ -36,7 +37,9 @@
         "@x1a0f3n9/dsh-client-connection",
         "@x1a0f3n9/dsh-api-remotes",
         "@x1a0f3n9/dsh-client-ui-sidebar",
-        "@x1a0f3n9/dsh-client-shortcuts"
+        "@x1a0f3n9/dsh-client-shortcuts",
+        "@x1a0f3n9/dsh-client-modules",
+        "@x1a0f3n9/dsh-client-ui-layout"
       ],
       "platform": "web"
     }
@@ -57,8 +60,11 @@
     "@x1a0f3n9/dsh-api-remotes": "workspace:*",
     "@x1a0f3n9/dsh-client-connection": "workspace:*",
     "@x1a0f3n9/dsh-client-locale": "workspace:*",
+    "@x1a0f3n9/dsh-client-modules": "workspace:*",
+    "@x1a0f3n9/dsh-client-product-analytics": "workspace:*",
     "@x1a0f3n9/dsh-client-store": "workspace:*",
     "@x1a0f3n9/dsh-client-test-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-layout": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-primitives": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-renderer": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-session": "workspace:*",
@@ -66,8 +72,6 @@
     "@x1a0f3n9/dsh-client-ui-sidebar": "workspace:*",
     "@x1a0f3n9/dsh-client-ui-slots": "workspace:*",
     "@x1a0f3n9/dsh-remote-mock": "workspace:*",
-    "@types/react": "~18.3.1",
-    "@types/react-dom": "~18.3.0",
     "clsx": "^2.0.0",
     "react": "^18.2.0",
     "@x1a0f3n9/dsh-settings": "workspace:*",
@@ -75,6 +79,7 @@
     "@x1a0f3n9/dsh-client-shortcuts": "workspace:*"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/client.js",
     "lib/types/**/*.d.ts"

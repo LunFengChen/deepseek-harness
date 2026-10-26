@@ -7,7 +7,7 @@ import {
   parseBingHtml,
   parseDdgHtml,
   visibleText,
-} from '../src/html.ts'
+} from '@x1a0f3n9/dsh-web-search-free'
 
 describe('HTML helpers', () => {
   it('accepts only absolute http(s) URLs', () => {

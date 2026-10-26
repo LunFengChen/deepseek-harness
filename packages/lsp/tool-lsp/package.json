@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-tool-lsp",
-  "description": "Model-facing lsp tool over the DeepSeek Harness LSP capability seam (ctx.lsp) — one read-only tool with goToDefinition/findReferences/goToImplementation/hover operations, one-based UTF-16 cursor coordinates, bounded location rendering, and hover normalization",
-  "version": "0.1.7-rc.4",
+  "description": "Model-facing lsp tool over the DeepSeek Harness LSP capability seam (ctx.lsp) \u2014 one read-only tool with goToDefinition/findReferences/goToImplementation/hover operations, one-based UTF-16 cursor coordinates, bounded location rendering, and hover normalization",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +32,8 @@
     "@x1a0f3n9/dsh-lsp": "workspace:*",
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
-    "@x1a0f3n9/dsh-tools": "workspace:*"
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   },
   "dependencies": {
     "@x1a0f3n9/dsh-util-values": "workspace:*",
@@ -50,6 +51,8 @@
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
     "@x1a0f3n9/dsh-timeout": "workspace:*",
     "@x1a0f3n9/dsh-tool-call-timeout-policy": "workspace:*",
-    "@x1a0f3n9/dsh-tools": "workspace:*"
+    "@x1a0f3n9/dsh-tools": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*",
+    "@x1a0f3n9/dsh-agent-loop-testkit": "workspace:*"
   }
 }

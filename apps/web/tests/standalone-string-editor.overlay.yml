@@ -1,0 +1,3 @@
+- insert:
+    - id: optional-tool-str-replace-editor
+      name: '@x1a0f3n9/dsh-tool-str-replace-editor'

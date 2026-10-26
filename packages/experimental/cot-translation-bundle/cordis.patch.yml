@@ -1,0 +1,8 @@
+- insert:
+    - id: translator
+      name: '@x1a0f3n9/dsh-experimental-translator'
+    - id: cot-translation
+      name: '@x1a0f3n9/dsh-experimental-client-ui-cot-translation'
+      config:
+        provider: bing
+        targetLanguage: auto

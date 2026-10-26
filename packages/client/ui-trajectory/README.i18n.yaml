@@ -5,45 +5,45 @@
 /:
   en: b9065ee3da8927c2
   zh: 36a38fa86d552b46
-/x1a0f3n9-dsh-client-ui-trajectory:
-  en: 3f5ca37e22daba7a
-  zh: 8e12fc6f3e5a26f7
-/x1a0f3n9-dsh-client-ui-trajectory/summary:
+/deepseek-ai-dsh-client-ui-trajectory:
+  en: 60e3cab036a4a8c6
+  zh: 2a400cd0efd99284
+/deepseek-ai-dsh-client-ui-trajectory/summary:
   en: dc75677138d05dc6
   zh: 6e11553a5caf4716
-/x1a0f3n9-dsh-client-ui-trajectory/table-of-contents:
+/deepseek-ai-dsh-client-ui-trajectory/table-of-contents:
   en: d152484eb41ac6b4
   zh: 09388d293f9be9cb
-/x1a0f3n9-dsh-client-ui-trajectory/use-this-package:
+/deepseek-ai-dsh-client-ui-trajectory/use-this-package:
   en: 4bd17d05b8385675
   zh: 5174e27f754f2a03
-/x1a0f3n9-dsh-client-ui-trajectory/use-this-package/inspecting-records:
-  en: 89758270607a5fd4
-  zh: 0efba26195ef1f80
-/x1a0f3n9-dsh-client-ui-trajectory/use-this-package/the-timing-overview:
-  en: 0331f90cbd904862
-  zh: bdc2d4ed1c3c1f5e
-/x1a0f3n9-dsh-client-ui-trajectory/understand-the-implementation:
-  en: 925abc8e4b092cb3
-  zh: ebe85c5acdbea3b1
-/x1a0f3n9-dsh-client-ui-trajectory/understand-the-implementation/virtual-rows:
+/deepseek-ai-dsh-client-ui-trajectory/use-this-package/inspecting-records:
+  en: 130d568589ae108e
+  zh: 2a52a19499e9c0a7
+/deepseek-ai-dsh-client-ui-trajectory/use-this-package/the-timing-overview:
+  en: 0f4ee2189324ac06
+  zh: 12e76fed22c09bc1
+/deepseek-ai-dsh-client-ui-trajectory/understand-the-implementation:
+  en: 74cc8fc87241da34
+  zh: cd72ff9c0fdd2575
+/deepseek-ai-dsh-client-ui-trajectory/understand-the-implementation/virtual-rows:
   en: c85e342bc7eee4e6
   zh: 9feab66ef1755b94
-/x1a0f3n9-dsh-client-ui-trajectory/understand-the-implementation/layout:
+/deepseek-ai-dsh-client-ui-trajectory/understand-the-implementation/layout:
   en: b9693a54b800d439
   zh: cd9b84382ae0b181
-/x1a0f3n9-dsh-client-ui-trajectory/further-exploration:
+/deepseek-ai-dsh-client-ui-trajectory/further-exploration:
   en: a324740cfbe62c1e
   zh: 53077c3ffc69b510
-/x1a0f3n9-dsh-client-ui-trajectory/model-experience:
+/deepseek-ai-dsh-client-ui-trajectory/model-experience:
   en: 3120df665299c634
   zh: 1d9f365d091d0d2a
-/x1a0f3n9-dsh-client-ui-trajectory/model-experience/kv-cache-effect:
+/deepseek-ai-dsh-client-ui-trajectory/model-experience/kv-cache-effect:
   en: ca75c51c89c2c9b0
   zh: de54f3467ef3b9be
-/x1a0f3n9-dsh-client-ui-trajectory/known-limitations-and-deferred-work:
+/deepseek-ai-dsh-client-ui-trajectory/known-limitations-and-deferred-work:
   en: d7da620f56eb3c65
   zh: fb030b68322b94cd
-/x1a0f3n9-dsh-client-ui-trajectory/known-limitations-and-deferred-work/dev-note:
-  en: f1893e3a6c69cc58
-  zh: b6e0dfe20567c35f
+/deepseek-ai-dsh-client-ui-trajectory/known-limitations-and-deferred-work/dev-note:
+  en: e67f633dc6fe7773
+  zh: 3bb0c20c93f16f98

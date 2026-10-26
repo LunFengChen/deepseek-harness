@@ -17,6 +17,7 @@ import type { SessionLiveEventEntry } from '@x1a0f3n9/dsh-api-session-controller
 import { createToolResultMessage, ToolCallId } from '@x1a0f3n9/dsh-llm'
 import type { SessionEvent } from '@x1a0f3n9/dsh-session/types'
 import type { ScheduleCatalogEntry, ScheduleId } from '@x1a0f3n9/dsh-schedule/client'
+import { PartialArguments } from '@x1a0f3n9/dsh-util-values'
 import { ScheduleTurnCard, type ScheduleTurnCardProps } from '../src/client/ScheduleTurnCard.tsx'
 import { zoneLabel } from '../src/client/schedule-format.ts'
 import {
@@ -160,6 +161,7 @@ function scheduleOf(value: ConversationNodeAssembler, turn = 1): Readonly<Schedu
 function settledBlock(task: unknown, callId = CALL): ToolResultNode {
   return {
     kind: 'tool-result', seq: 3, time: 3_000, callId,
+    name: 'schedule_create', args: PartialArguments.fromText(JSON.stringify(ARGS)),
     call: { name: 'schedule_create', argsRaw: JSON.stringify(ARGS) },
     callTime: 2_000,
     content: [{ type: 'text', text: JSON.stringify(task) }],

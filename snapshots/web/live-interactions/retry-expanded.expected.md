@@ -6,10 +6,11 @@
   - tablist:
     - tab "Chat" [selected]
     - tab "Trajectory"
+  - button "More conversation views"
 - text: Reply with a one-sentence description of event sourcing, then stop. {{clock}}
 - button "Copy"
-- status: Worked
-- button "Took {{duration}}" [expanded]
+- status: Completed
+- button "Completed in {{duration}}" [expanded]
 - group:
   - status: Retried model request (1/5) · {{duration}}
 - button "Analysis completed" [expanded]

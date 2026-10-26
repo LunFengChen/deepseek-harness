@@ -34,7 +34,7 @@ function fetchResult(marker: string): WebFetchResult {
 }
 
 /** Mount a WebRuntime on a fresh root context with the given config. */
-async function mountWeb(config: ConstructorParameters<typeof WebRuntime>[1] = {}): Promise<{ ctx: Context; web: WebRuntime }> {
+async function mountWeb(config: { searchProvider?: string; fetchProvider?: string } = {}): Promise<{ ctx: Context; web: WebRuntime }> {
   const ctx = new Context()
   await ctx.plugin(WebRuntime, config)
   return { ctx, web: ctx.web }
@@ -104,31 +104,6 @@ describe('WebRuntime execution resolution', () => {
     web.registerSearchProvider(makeSearchProvider('exa', available, () => Promise.resolve(searchResult('exa'))))
     web.registerSearchProvider(makeSearchProvider('perplexity', available, () => Promise.resolve(searchResult('perplexity'))))
     await expect(web.search({ query: 'q' })).rejects.toThrow(expect.objectContaining({ code: 'WEB_PROVIDER_AMBIGUOUS' }))
-  })
-
-  it('uses the configured provider order before ambiguity resolution', async () => {
-    const { web } = await mountWeb({ searchProviderOrder: ['perplexity', 'exa'] })
-    web.registerSearchProvider(makeSearchProvider('exa', available, () => Promise.resolve(searchResult('exa'))))
-    web.registerSearchProvider(makeSearchProvider('perplexity', available, () => Promise.resolve(searchResult('perplexity'))))
-    await expect(web.search({ query: 'q' })).resolves.toMatchObject({ content: 'perplexity' })
-  })
-
-  it('skips unavailable providers in the configured order', async () => {
-    const { web } = await mountWeb({ searchProviderOrder: ['perplexity', 'exa'] })
-    web.registerSearchProvider(makeSearchProvider('perplexity', unavailable, () => Promise.resolve(searchResult('perplexity'))))
-    web.registerSearchProvider(makeSearchProvider('exa', available, () => Promise.resolve(searchResult('exa'))))
-    await expect(web.search({ query: 'q' })).resolves.toMatchObject({ content: 'exa' })
-  })
-
-  it('does not fall through to an unlisted usable provider when the order misses', async () => {
-    const { web } = await mountWeb({ searchProviderOrder: ['perplexity', 'exa'] })
-    web.registerSearchProvider(makeSearchProvider('perplexity', unavailable, () => Promise.resolve(searchResult('perplexity'))))
-    web.registerSearchProvider(makeSearchProvider('exa', unavailable, () => Promise.resolve(searchResult('exa'))))
-    web.registerSearchProvider(makeSearchProvider('deepseek-official', available, () => Promise.resolve(searchResult('deepseek'))))
-    await expect(web.search({ query: 'q' })).rejects.toThrow(expect.objectContaining({
-      code: 'WEB_PROVIDER_UNAVAILABLE',
-      message: 'none of the ordered web providers are usable (perplexity, exa)',
-    }))
   })
 
   it('runs the configured provider even when another usable provider is registered', async () => {
@@ -236,5 +211,26 @@ describe('WebError', () => {
     const error = new WebError('boom', 'WEB_INVALID_URL')
     expect(error.code).toBe('WEB_INVALID_URL')
     expect(error.name).toBe('WebError')
+  })
+})
+
+describe('live provider selection', () => {
+  it('applies a saved search and fetch selection to the next operation without remounting', async () => {
+    const { liveConfig } = await import('../../../settings/settings/tests/live-config.ts')
+    const ctx = new Context()
+    try {
+      const live = await liveConfig(ctx, WebRuntime, { searchProvider: 'first', fetchProvider: 'first' })
+      const fiber = live.fiber
+      for (const id of ['first', 'second']) {
+        ctx.web.registerSearchProvider(makeSearchProvider(id, true, () => Promise.resolve(searchResult(id))))
+        ctx.web.registerFetchProvider(makeFetchProvider(id, true, fetchResult(id)))
+      }
+      await expect(ctx.web.search({ query: 'q' })).resolves.toMatchObject({ content: 'first' })
+      await expect(ctx.web.fetch({ url: 'https://example.com' })).resolves.toMatchObject({ body: { content: 'first' } })
+      await live.update({ searchProvider: 'second', fetchProvider: 'second' })
+      expect(Object.is(live.entry.fiber, fiber)).toBe(true)
+      await expect(ctx.web.search({ query: 'q' })).resolves.toMatchObject({ content: 'second' })
+      await expect(ctx.web.fetch({ url: 'https://example.com' })).resolves.toMatchObject({ body: { content: 'second' } })
+    } finally { await ctx.fiber.dispose() }
   })
 })

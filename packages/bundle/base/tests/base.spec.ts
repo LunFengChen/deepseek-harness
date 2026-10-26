@@ -42,7 +42,7 @@ describe('dsh-base bundle', () => {
     expect(rows.filter(row => row.id === 'subagent-codex')).toHaveLength(0)
     expect(rows.filter(row => row.id === 'subagent-claude-code')).toHaveLength(0)
     expect(rows.find(row => row.id === 'web')?.config).toMatchObject({
-      searchProviderOrder: ['perplexity', 'exa', 'free'],
+      searchProvider: 'deepseek-official',
       fetchProvider: 'http',
     })
     expect(rows.find(row => row.id === 'session-persistence-jsonl')?.config).toMatchObject({

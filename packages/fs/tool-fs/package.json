@@ -1,7 +1,7 @@
 {
   "name": "@x1a0f3n9/dsh-tool-fs",
   "description": "Model-facing filesystem tools (read, write, edit) over the DeepSeek Harness filesystem seam (ctx.fs)",
-  "version": "0.1.7-rc.4",
+  "version": "0.2.1-rc.3",
   "publishConfig": {
     "access": "public"
   },
@@ -19,9 +19,11 @@
       "default": "./lib/index.js"
     },
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
   },
   "files": [
+    "locale/*.json",
     "lib/index.js",
     "lib/types/**/*.d.ts"
   ],
@@ -41,7 +43,8 @@
     "@x1a0f3n9/dsh-system-prompt": "workspace:*",
     "@x1a0f3n9/dsh-tools": "workspace:*",
     "@x1a0f3n9/dsh-user-approval": "workspace:*",
-    "@deepseek-ai/cordis": "workspace:~"
+    "@deepseek-ai/cordis": "workspace:~",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   },
   "devDependencies": {
     "@x1a0f3n9/dsh-agent": "workspace:*",
@@ -63,6 +66,7 @@
     "@deepseek-ai/cordis": "workspace:~",
     "@x1a0f3n9/dsh-session-projection": "workspace:*",
     "@x1a0f3n9/dsh-scope": "workspace:*",
-    "@x1a0f3n9/dsh-ptc-runtime": "workspace:*"
+    "@x1a0f3n9/dsh-ptc-runtime": "workspace:*",
+    "@x1a0f3n9/dsh-working-directory": "workspace:*"
   }
 }

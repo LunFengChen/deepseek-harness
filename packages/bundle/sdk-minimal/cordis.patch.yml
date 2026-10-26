@@ -35,8 +35,37 @@
 
     # Shared projection registry: sandbox-policy and terminal-bash fold
     # sandbox-mode state through its units and require it as a hard injection.
+    - id: filesystem
+      name: '@x1a0f3n9/dsh-fs-local'
+
+    - id: attachment-local
+      name: '@x1a0f3n9/dsh-attachment-local'
+
+    - id: tool-fs
+      name: '@x1a0f3n9/dsh-tool-fs'
+      config:
+        read: false
+        readImage: true
+        write: false
+        edit: false
+
+    - id: working-directory
+      name: '@x1a0f3n9/dsh-working-directory'
+
+    - id: tool-working-directory
+      name: '@x1a0f3n9/dsh-tool-working-directory'
+
     - id: session-projection
       name: '@x1a0f3n9/dsh-session-projection'
+
+    - id: token-meter
+      name: '@x1a0f3n9/dsh-token-meter'
+
+    - id: compaction-basic
+      name: '@x1a0f3n9/dsh-compaction-basic'
+
+    - id: image-offload
+      name: '@x1a0f3n9/dsh-compaction-image-offload'
 
     - id: sandbox-policy
       name: '@x1a0f3n9/dsh-sandbox-policy'
@@ -103,21 +132,6 @@
     - id: jobs
       name: '@x1a0f3n9/dsh-jobs-local'
 
-    - id: invariants
-      name: '@x1a0f3n9/dsh-invariants'
-
-    - id: session-invariant
-      name: '@x1a0f3n9/dsh-session/invariant'
-
-    - id: agent-invariant
-      name: '@x1a0f3n9/dsh-agent/invariant'
-
-    - id: scope-invariant
-      name: '@x1a0f3n9/dsh-scope/invariant'
-
-    - id: agent-loop-invariant
-      name: '@x1a0f3n9/dsh-agent-loop/invariant'
-
     - id: agent-loop
       name: '@x1a0f3n9/dsh-agent-loop'
       config:
@@ -154,5 +168,5 @@
     - id: sessions
       name: '@x1a0f3n9/dsh-session-persistence-jsonl'
       config:
-        root: !!js dshSessionPath('sessions')
+        root: !!js dshHomePath('sessions')
         compression: none
