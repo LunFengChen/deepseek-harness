@@ -58,7 +58,7 @@ describe('dsh-web-app bundle', () => {
       { id: 'dsh-market', packageName: '@x1a0f3n9/dshmarket' },
       { id: 'reasoning-effort', packageName: '@x1a0f3n9/dsh-reasoning-effort' },
       { id: 'dsh-context', packageName: '@x1a0f3n9/dsh-context' },
-      { id: 'better-sidebar', packageName: 'dsh-better-sidebar' },
+      { id: 'better-sidebar', packageName: '@x1a0f3n9/dsh-better-sidebar' },
       { id: 'skills-manager', packageName: '@x1a0f3n9/dsh-skills-manager' },
       { id: 'dsh-failover-queue', packageName: '@x1a0f3n9/dsh-failover-queue' },
       { id: 'dsh-session-timeline', packageName: '@x1a0f3n9/dsh-session-timeline' },

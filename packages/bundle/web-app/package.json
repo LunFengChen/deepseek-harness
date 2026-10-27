@@ -96,11 +96,12 @@
         {
           "id": "better-sidebar",
           "entryId": "better-sidebar",
-          "packageName": "dsh-better-sidebar",
+          "packageName": "@x1a0f3n9/dsh-better-sidebar",
           "title": "Better sidebar",
           "description": "File, terminal, Git, and subagent workbench in the sidebar.",
           "defaultEnabled": true,
-          "homepage": "https://github.com/omdsh-dev/DSH-better-sidebar"
+          "author": "LunFengChen",
+          "homepage": "https://github.com/LunFengChen/DSH-better-sidebar"
         },
         {
           "id": "failover-queue",
@@ -271,12 +272,12 @@
     "@x1a0f3n9/dsh-client-ui-settings-session-log": "workspace:*",
     "@x1a0f3n9/dsh-harness-dev-context": "workspace:*",
     "@x1a0f3n9/dsh-session-timeline": "0.1.6",
-    "@x1a0f3n9/dshmarket": "1.45.4",
+    "@x1a0f3n9/dshmarket": "npm:dshmarket@1.71.1",
     "@x1a0f3n9/dsh-reasoning-effort": "0.7.7",
-    "@x1a0f3n9/dsh-context": "0.49.9",
-    "dsh-better-sidebar": "0.28.0",
+    "@x1a0f3n9/dsh-context": "npm:dsh-context@0.77.0",
+    "@x1a0f3n9/dsh-better-sidebar": "npm:dsh-better-sidebar@0.28.1",
     "@x1a0f3n9/dsh-failover-queue": "0.1.13",
-    "@x1a0f3n9/dsh-skills-manager": "0.1.54",
+    "@x1a0f3n9/dsh-skills-manager": "npm:@michengai/dsh-skills-manager@1.2.20",
     "@x1a0f3n9/dsh-web-search-pool": "workspace:^"
   },
   "peerDependencies": {

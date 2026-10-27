@@ -68,12 +68,12 @@ Prebundled extras live on **Settings → xfdsh preset plugins**. Cards show the 
 | Plugin | Package | What it does |
 | --- | --- | --- |
 | Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.6` | Rewind, delete, regenerate, and a composer compact button. |
-| Plugin market | `@x1a0f3n9/dshmarket@1.45.4` | Browse community plugins. Official `@deepseek-ai/dsh-*` plugins remap into this runtime. |
+| Plugin market | `@x1a0f3n9/dshmarket@1.71.1` | Browse community plugins. Official `@deepseek-ai/dsh-*` plugins remap into this runtime. |
 | Reasoning effort | `@x1a0f3n9/dsh-reasoning-effort@0.7.7` | Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. The composer can then pick thinking strength. |
-| Context dashboard | `@x1a0f3n9/dsh-context@0.49.9` | A Context tab and `/context` show composition, compaction, and token use. Version detection reads this fork. |
-| Better sidebar | `dsh-better-sidebar@0.28.0` | Files, terminal, Git, and subagents in the sidebar workbench. Needs host 0.2.1-rc.1+. |
+| Context dashboard | `@x1a0f3n9/dsh-context@0.77.0` | A Context tab and `/context` show composition, compaction, and token use. Version detection reads this fork. |
+| Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.28.1` | Files, terminal, Git, and subagents in the sidebar workbench. Needs host 0.2.1-rc.1+. |
 | Failover queue | `@x1a0f3n9/dsh-failover-queue@0.1.13` | Composer chip plus Settings → Failover for P1/P2/P3. A 503 / timeout / transport error skips `llm-retry` and jumps to the next P. Recovered P1 is probed and selected again. |
-| Skills manager | `@x1a0f3n9/dsh-skills-manager@0.1.54` | Load, toggle, create, and import local Agent skills. Settings → Skills appears when the card is on. |
+| Skills manager | `@x1a0f3n9/dsh-skills-manager@1.2.20` | Load, toggle, create, and import local Agent skills. Settings → Skills appears when the card is on. |
 | Web search pool | `@x1a0f3n9/dsh-web-search-pool` | Default `searchProvider` is `search-pool`. DeepSeek official search remains selectable. Every chat model can `web_search` without a DeepSeek search key. |
 
 ### Other changes

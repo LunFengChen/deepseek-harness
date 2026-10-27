@@ -517,32 +517,32 @@ describe('require resolution', () => {
   it('require of an official dsh package name answers the fork seed word', async () => {
     const primitives = { marker: 'primitives' }
     const b = bench([row('dsh-context')], {
-      'dsh-context': req => ({ dep: req('@x1a0f3n9/dsh-client-ui-primitives') }),
+      'dsh-context': req => ({ dep: req('@deepseek-ai/dsh-client-ui-primitives') }),
     }, { seed: { '@x1a0f3n9/dsh-client-ui-primitives': primitives } })
     const exports = await b.loader.import('dsh-context', '', {})
     expect((exports as { dep: unknown }).dep).toBe(primitives)
-    expect(await b.loader.import('@x1a0f3n9/dsh-client-ui-primitives', '', {})).toBe(primitives)
+    expect(await b.loader.import('@deepseek-ai/dsh-client-ui-primitives', '', {})).toBe(primitives)
   })
 
   it('require of an official dsh package name answers a fork graph module', async () => {
     const b = bench(
       [row('plugin'), row('@x1a0f3n9/dsh-client-locale')],
       {
-        plugin: req => ({ dep: req('@x1a0f3n9/dsh-client-locale') }),
+        plugin: req => ({ dep: req('@deepseek-ai/dsh-client-locale') }),
         '@x1a0f3n9/dsh-client-locale': () => ({ marker: 'locale' }),
       },
     )
     const locale = await b.loader.import('@x1a0f3n9/dsh-client-locale', '', {})
     const plugin = await b.loader.import('plugin', '', {})
     expect((plugin as { dep: unknown }).dep).toBe(locale)
-    expect(await b.loader.import('@x1a0f3n9/dsh-client-locale', '', {})).toBe(locale)
+    expect(await b.loader.import('@deepseek-ai/dsh-client-locale', '', {})).toBe(locale)
   })
 
   it('require of an official dsh package name materializes a registered fork factory', async () => {
     const b = bench(
       [row('plugin'), row('@x1a0f3n9/dsh-client-locale')],
       {
-        plugin: req => ({ dep: req('@x1a0f3n9/dsh-client-locale') }),
+        plugin: req => ({ dep: req('@deepseek-ai/dsh-client-locale') }),
         '@x1a0f3n9/dsh-client-locale': () => ({ marker: 'locale' }),
       },
     )
@@ -556,7 +556,7 @@ describe('require resolution', () => {
       [row('@x1a0f3n9/dsh-client-locale')],
       { '@x1a0f3n9/dsh-client-locale': () => ({ marker: 'locale' }) },
     )
-    const locale = await b.loader.import('@x1a0f3n9/dsh-client-locale', '', {})
+    const locale = await b.loader.import('@deepseek-ai/dsh-client-locale', '', {})
     expect((locale as { marker: string }).marker).toBe('locale')
     expect(b.loader.loadCache.has('@x1a0f3n9/dsh-client-locale')).toBe(true)
   })

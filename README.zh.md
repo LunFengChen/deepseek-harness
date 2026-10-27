@@ -68,12 +68,12 @@ dsh web
 | 插件 | 包 | 做什么 |
 | --- | --- | --- |
 | Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.6` | 回退、删除、重新生成，以及输入框压缩按钮。 |
-| 插件市场 | `@x1a0f3n9/dshmarket@1.45.4` | 浏览社区插件。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 |
+| 插件市场 | `@x1a0f3n9/dshmarket@1.71.1` | 浏览社区插件。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 |
 | 思考强度 | `@x1a0f3n9/dsh-reasoning-effort@0.7.7` | Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。之后输入框才能选思考强度。 |
-| 上下文面板 | `@x1a0f3n9/dsh-context@0.49.9` | Context 页和 `/context` 能看组成、压缩和 token 用量。版本探测读本 fork。 |
-| Better sidebar | `dsh-better-sidebar@0.28.0` | 文件、终端、Git 和子代理都在侧边栏工作台里。需要宿主 0.2.1-rc.1+。 |
+| 上下文面板 | `@x1a0f3n9/dsh-context@0.77.0` | Context 页和 `/context` 能看组成、压缩和 token 用量。版本探测读本 fork。 |
+| Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.28.1` | 文件、终端、Git 和子代理都在侧边栏工作台里。需要宿主 0.2.1-rc.1+。 |
 | 故障转移队列 | `@x1a0f3n9/dsh-failover-queue@0.1.13` | 输入框芯片，加上 Settings → 故障转移 里的 P1/P2/P3。503 / 超时 / 传输错误会跳过 `llm-retry`，立刻切下一档。P1 恢复后会探活切回。 |
-| 技能管理 | `@x1a0f3n9/dsh-skills-manager@0.1.54` | 加载、开关、创建并导入本机 Agent 技能。卡片打开时出现 Settings → 技能。 |
+| 技能管理 | `@x1a0f3n9/dsh-skills-manager@1.2.20` | 加载、开关、创建并导入本机 Agent 技能。卡片打开时出现 Settings → 技能。 |
 | Web 搜索池 | `@x1a0f3n9/dsh-web-search-pool` | 默认 `searchProvider` 是 `search-pool`。DeepSeek 官方搜索仍可选手动选择。任意聊天模型都能 `web_search`，不必再配 DeepSeek 搜索 key。 |
 
 ### 其他改动
