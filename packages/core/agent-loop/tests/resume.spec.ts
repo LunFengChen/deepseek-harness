@@ -6,7 +6,15 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import LlmRuntime from '@x1a0f3n9/dsh-llm'
 import type { ContextFormed } from '@x1a0f3n9/dsh-llm'
-import SessionStore, { SessionLogOffset, SessionSeq, Session, SessionId, TOOL_NOT_STARTED, TOOL_OUTCOME_UNKNOWN } from '@x1a0f3n9/dsh-session'
+import SessionStore, {
+  SESSION_LIVE_WINDOW_EVENTS,
+  SessionLogOffset,
+  SessionSeq,
+  Session,
+  SessionId,
+  TOOL_NOT_STARTED,
+  TOOL_OUTCOME_UNKNOWN,
+} from '@x1a0f3n9/dsh-session'
 import type { SessionEvent } from '@x1a0f3n9/dsh-session'
 import SystemPrompt from '@x1a0f3n9/dsh-system-prompt'
 import ToolRuntime, { defineContentToolFixture, TOOL_RUNTIME_SCHEDULER } from '@x1a0f3n9/dsh-tools'
@@ -1075,6 +1083,31 @@ describe('the session-persistence Agent Note: AgentLoop factory create/resume', 
     expect(allSeqs).toEqual(allSeqs.map((_, i) => i)) // 0..N contiguous, no duplicates
     const turnStarts = a2.session.snapshotEvents().filter(e => e.type === 'turn/start')
     expect(turnStarts.map(e => e.type === 'turn/start' && e.data.turn)).toEqual([1, 2])
+    await ctx2.fiber.dispose()
+  })
+
+  it('resume ingests windowed history so projections do not rebuild from the live tail', async () => {
+    const sessionId = SessionId('windowed-resume-fold')
+    const { ctx: ctx1, root } = await persistentHarness(new MockAdapter([]))
+    const events: SessionEvent[] = []
+    const turns = Math.floor(SESSION_LIVE_WINDOW_EVENTS / 2) + 10
+    for (let turn = 1; turn <= turns; turn++) {
+      events.push({ type: 'turn/start', seq: SessionSeq(events.length), time: events.length + 1, data: { turn } })
+      events.push({
+        type: 'turn/end',
+        seq: SessionSeq(events.length),
+        time: events.length + 1,
+        data: { turn, reason: { kind: 'completed' } },
+      })
+    }
+    await seedStoredSession(ctx1, sessionId, events)
+    await ctx1.fiber.dispose()
+
+    const ctx2 = await mountPersistentHarness(root, new MockAdapter([]))
+    const handle = await ctx2.agents.resume({ resumeSessionId: sessionId })
+    expect(handle.agent.session.liveBaseSeq).toBeGreaterThan(0)
+    expect(() => ctx2.sessionProjections.snapshot(handle.agent.session)).not.toThrow()
+    expect(ctx2.sessionProjections.stateOf(handle.agent.session, 'turnBoundary')?.lastTurn).toBe(turns)
     await ctx2.fiber.dispose()
   })
 

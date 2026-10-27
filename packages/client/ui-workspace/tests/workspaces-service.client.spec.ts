@@ -447,9 +447,12 @@ describe('UiWorkspaceService', () => {
 
     await expect(b.uiWorkspace.openWorkspace(wid('a'), () => { throw failure })).rejects.toBe(failure)
 
-    expect(b.sessions.retained.map(item => item.reference.sessionId)).toEqual([sid('current'), sid('created-a')])
+    expect(b.sessions.retained.map(item => item.reference.sessionId)).toEqual([
+      sid('current'), sid('current'), sid('created-a'),
+    ])
     expect(b.sessions.retained[0]!.release).not.toHaveBeenCalled()
-    expect(b.sessions.retained[1]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[1]!.release).not.toHaveBeenCalled()
+    expect(b.sessions.retained[2]!.release).toHaveBeenCalledOnce()
   })
 
   it('opens only the latest Workspace when creation finishes out of order', async () => {
@@ -823,10 +826,11 @@ describe('UiWorkspaceService', () => {
       b.selectPanel.mockClear()
       b.sessions.create.mockResolvedValueOnce(sid('actual-target'))
       b.requestDraftInitialization.mockImplementation((binding) => {
-        const target = b.sessions.retained[1]!
-        expect(binding).toBe(target.reference.binding)
+        const target = b.sessions.retained.find(item => item.reference.sessionId === sid('actual-target'))
+        expect(target).toBeDefined()
+        expect(binding).toBe(target!.reference.binding)
         expect(binding.sessionId).toBe(sid('actual-target'))
-        expect(target.release).not.toHaveBeenCalled()
+        expect(target!.release).not.toHaveBeenCalled()
         expect(previous.release).not.toHaveBeenCalled()
         expect(JSON.parse(backing.get('dsh.sessions.current')!)).toEqual({ sessionId: sid('previous') })
         expect(b.selectPanel).not.toHaveBeenCalled()
@@ -836,10 +840,12 @@ describe('UiWorkspaceService', () => {
       b.uiWorkspace.startSession(wid('a'), options)
       await lastOpening(opening)
 
-      expect(b.requestDraftInitialization).toHaveBeenCalledExactlyOnceWith(b.sessions.retained[1]!.reference.binding, options)
+      const opened = b.sessions.retained.find(item => item.reference.sessionId === sid('actual-target'))
+      expect(opened).toBeDefined()
+      expect(b.requestDraftInitialization).toHaveBeenCalledExactlyOnceWith(opened!.reference.binding, options)
       expect(b.sessions.binding).toHaveBeenCalledExactlyOnceWith(sid('actual-target'))
       expect(previous.release).toHaveBeenCalledOnce()
-      expect(b.sessions.retained[1]!.release).not.toHaveBeenCalled()
+      expect(opened!.release).not.toHaveBeenCalled()
       expect(JSON.parse(backing.get('dsh.sessions.current')!)).toEqual({ sessionId: sid('actual-target') })
       expect(b.notify).not.toHaveBeenCalled()
     })
@@ -870,11 +876,13 @@ describe('UiWorkspaceService', () => {
       b.uiWorkspace.startSession(wid('a'), { prompt: 'keep the existing draft' })
       await lastOpening(opening)
 
+      const opened = b.sessions.retained.find(item => item.reference.sessionId === sid('created-a'))
+      expect(opened).toBeDefined()
       expect(b.requestDraftInitialization).toHaveBeenCalledExactlyOnceWith(
-        b.sessions.retained[1]!.reference.binding, { prompt: 'keep the existing draft' },
+        opened!.reference.binding, { prompt: 'keep the existing draft' },
       )
-      expect(b.sessions.retained[0]!.release).toHaveBeenCalledOnce()
-      expect(b.sessions.retained[1]!.release).not.toHaveBeenCalled()
+      expect(b.sessions.retained.find(item => item.reference.sessionId === sid('previous'))!.release).toHaveBeenCalledOnce()
+      expect(opened!.release).not.toHaveBeenCalled()
       expect(JSON.parse(backing.get('dsh.sessions.current')!)).toEqual({ sessionId: sid('created-a') })
       expect(b.notify).not.toHaveBeenCalled()
     })
@@ -954,8 +962,8 @@ describe('UiWorkspaceService', () => {
           kind: 'createFailed', message: 'Could not fill the draft. Please try again shortly.',
         })
         expect(warning).toHaveBeenCalledExactlyOnceWith('new session failed:', expect.any(Error))
-        expect(b.sessions.retained[0]!.release).not.toHaveBeenCalled()
-        expect(b.sessions.retained[1]!.release).toHaveBeenCalledOnce()
+        expect(b.sessions.retained.find(item => item.reference.sessionId === sid('previous'))!.release).not.toHaveBeenCalled()
+        expect(b.sessions.retained.find(item => item.reference.sessionId === sid('created-a'))!.release).toHaveBeenCalledOnce()
         expect(b.sessions.binding(sid('created-a'))).toBeUndefined()
         expect(JSON.parse(backing.get('dsh.sessions.current')!)).toEqual({ sessionId: sid('previous') })
         expect(b.selectPanel).not.toHaveBeenCalled()
@@ -1476,6 +1484,92 @@ describe('UiWorkspaceService', () => {
 
     expect(b.sessions.retained[0]!.release).toHaveBeenCalledOnce()
     expect(b.selectPanel).toHaveBeenCalledTimes(2)
+  })
+
+  it('moves the unique mainView retain when switching Sessions and parks a cache retain', () => {
+    const b = bench()
+    b.uiWorkspace.openSession(sid('one'))
+    b.uiWorkspace.openSession(sid('two'))
+    expect(b.sessions.retain.mock.calls).toEqual([
+      [sid('one'), { source: 'mainView' }],
+      [sid('one'), { source: 'mainViewCache' }],
+      [sid('two'), { source: 'mainView' }],
+    ])
+    expect(b.sessions.retained[0]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[1]!.release).not.toHaveBeenCalled()
+    expect(b.sessions.retained[2]!.release).not.toHaveBeenCalled()
+  })
+
+  it('takes a new mainView retain when returning to a cached Session', () => {
+    const b = bench()
+    b.uiWorkspace.openSession(sid('one'))
+    b.uiWorkspace.openSession(sid('two'))
+    b.uiWorkspace.openSession(sid('one'))
+    expect(b.sessions.retain.mock.calls).toEqual([
+      [sid('one'), { source: 'mainView' }],
+      [sid('one'), { source: 'mainViewCache' }],
+      [sid('two'), { source: 'mainView' }],
+      [sid('two'), { source: 'mainViewCache' }],
+      [sid('one'), { source: 'mainView' }],
+    ])
+    expect(b.sessions.retained[0]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[1]!.release).not.toHaveBeenCalled()
+    expect(b.sessions.retained[2]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[3]!.release).not.toHaveBeenCalled()
+    expect(b.sessions.retained[4]!.release).not.toHaveBeenCalled()
+  })
+
+  it('evicts the oldest parked cache retain once five live scopes are held', () => {
+    const b = bench()
+    const ids = ['a', 'b', 'c', 'd', 'e', 'f'].map(sid)
+    for (const id of ids) b.uiWorkspace.openSession(id)
+    expect(b.sessions.retain.mock.calls).toEqual([
+      [sid('a'), { source: 'mainView' }],
+      [sid('a'), { source: 'mainViewCache' }],
+      [sid('b'), { source: 'mainView' }],
+      [sid('b'), { source: 'mainViewCache' }],
+      [sid('c'), { source: 'mainView' }],
+      [sid('c'), { source: 'mainViewCache' }],
+      [sid('d'), { source: 'mainView' }],
+      [sid('d'), { source: 'mainViewCache' }],
+      [sid('e'), { source: 'mainView' }],
+      [sid('e'), { source: 'mainViewCache' }],
+      [sid('f'), { source: 'mainView' }],
+    ])
+    expect(b.sessions.retained.map(item => item.release.mock.calls.length)).toEqual([
+      1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0,
+    ])
+  })
+
+  it('releases a parked Session when it is archived while another is selected', async () => {
+    const b = bench()
+    b.workspaces.onArchive = async () => {}
+    b.uiWorkspace.openSession(sid('parked'))
+    b.uiWorkspace.openSession(sid('current'))
+    await b.uiWorkspace.archiveSession(sid('parked'))
+    expect(b.sessions.retained[0]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[1]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[2]!.release).not.toHaveBeenCalled()
+  })
+
+  it('releases a parked Session when an archive snapshot arrives for it', () => {
+    const b = bench()
+    b.uiWorkspace.openSession(sid('parked'))
+    b.uiWorkspace.openSession(sid('current'))
+    b.workspaces.list.set(workspaceState([], [sid('parked')]))
+    expect(b.sessions.retained[0]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[1]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[2]!.release).not.toHaveBeenCalled()
+  })
+
+  it('releases every parked cache retain and the current mainView on disposal', async () => {
+    const b = bench()
+    b.uiWorkspace.openSession(sid('one'))
+    b.uiWorkspace.openSession(sid('two'))
+    await b.ctx.fiber.dispose()
+    expect(b.sessions.retained[0]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[1]!.release).toHaveBeenCalledOnce()
+    expect(b.sessions.retained[2]!.release).toHaveBeenCalledOnce()
   })
 
   it('forwards archive commands and preserves failures', async () => {

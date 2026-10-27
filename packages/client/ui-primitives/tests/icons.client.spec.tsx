@@ -18,6 +18,12 @@ const icons = Object.fromEntries(
 const iconNames = Object.keys(icons)
 
 describe('product icon set', () => {
+  it('aliases 0.1.5 size-suffixed names onto Regular glyphs', () => {
+    expect(primitives.IconApiOutline14).toBe(primitives.IconApiOutlineRegular)
+    expect(primitives.IconSearchOutline16).toBe(primitives.IconSearchOutlineRegular)
+    expect(primitives.IconNewChatOutline16).toBe(primitives.IconNewChatOutlineRegular)
+  })
+
   it('exports regular and medium variants for all 95 public glyphs', () => {
     expect(iconNames.length).toBe(190)
     expect(iconNames.some(name => /\d+$/.test(name))).toBe(false)

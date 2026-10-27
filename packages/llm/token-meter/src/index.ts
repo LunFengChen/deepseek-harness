@@ -18,6 +18,7 @@ import type {
 } from '@x1a0f3n9/dsh-session'
 import {
   canonicalHeader,
+  deriveEventMessage,
   headerEquals,
   isSurfaceEvent,
   SessionLogOffset,
@@ -33,7 +34,7 @@ import type {
 import { contextBreakdownProjectionDefinition } from './breakdown-projection.ts'
 import { contextPressureProjectionDefinition, tokenUsageProjectionDefinition } from './usage-projection.ts'
 import { estimateContent, estimateMessage, estimateToolsTokens, ROLE_OVERHEAD } from './estimate.ts'
-import { commitSurfaceTokens, planSurfaceTokens } from './surface-fold.ts'
+import { commitSurfaceTokens, planSurfaceTokens, priceCurrentSurfaceNode } from './surface-fold.ts'
 import type { MeterSurfaceNode } from './surface-fold.ts'
 import { priceSurface } from './route-pricing.ts'
 
@@ -97,6 +98,19 @@ declare module '@deepseek-ai/cordis' {
   }
 }
 
+
+/** Open step in the live tail; the window never splits an in-flight turn. */
+function openStepStart(session: Session): { turn: number; step: number } | undefined {
+  const events = session.snapshotEvents()
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index]
+    if (event === undefined) continue
+    if (event.type === 'step/end') return undefined
+    if (event.type === 'step/start') return { ...event.data }
+  }
+  return undefined
+}
+
 /** Replay owner for one service-wide estimator and isolated per-session folds. */
 export class TokenMeter extends Service {
   // Schemastery preserves untrusted loader keys on an empty object schema;
@@ -120,6 +134,42 @@ export class TokenMeter extends Service {
     ctx.on('session/event', (session) => {
       if (this.states.has(session)) this._sync(session)
     })
+    ctx.on('session/truncated', (session) => {
+      this.states.delete(session)
+    })
+  }
+
+  /**
+   * Fold one restored event into this session's replay state without waiting
+   * for `session/event`. Persisted restore does not publish that feed, and
+   * the live tail cannot replay dropped replace ranges after the window drops.
+   * @param session - the Session currently accepting restored events.
+   * @param event - the event just adopted; its seq must continue from the
+   *   replay cursor.
+   */
+  ingestRestoredEvent(session: Session, event: SessionEvent): void {
+    let state = this.states.get(session)
+    if (state !== undefined && state.consumedEvents > session.seq) {
+      this.states.delete(session)
+      state = undefined
+    }
+    if (state === undefined) {
+      state = {
+        consumedEvents: SessionLogOffset(0),
+        header: undefined,
+        surface: [],
+        stepStart: undefined,
+        anchor: undefined,
+      }
+      this.states.set(session, state)
+    }
+    if (SessionSeq(state.consumedEvents) !== event.seq) {
+      throw new Error(
+        `token meter cannot ingest seq ${String(event.seq)} after consumed seq ${String(state.consumedEvents)}`,
+      )
+    }
+    this._foldEvent(state, event)
+    state.consumedEvents = SessionLogOffset(state.consumedEvents + 1)
   }
 
   /**
@@ -215,23 +265,57 @@ export class TokenMeter extends Service {
     return estimateMessage(message)
   }
 
+  /**
+   * Snapshot the current surface when resume ingest never ran.
+   * Current surface nodes remain in the live tail or prefixHot; dropped
+   * replace ranges are already collapsed, so this fold does not need them.
+   * Usage anchors from the dropped prefix are not recovered.
+   * @param session - windowed Session whose live tail cannot replay seq 0.
+   * @returns replay state aligned to the current durable tail.
+   */
+  private _bootstrapWindowed(session: Session): ReplayState {
+    const surface: MeterSurfaceNode[] = []
+    for (const seq of session.surface.nodes) {
+      const event = session.eventAt(seq)
+      if (event === undefined || !isSurfaceEvent(event)) {
+        throw new Error(
+          `token meter cannot price surface node ${String(seq)} missing from the live window`,
+        )
+      }
+      surface.push(priceCurrentSurfaceNode(seq, deriveEventMessage(event)))
+    }
+    return {
+      consumedEvents: session.seq,
+      header: session.requestHeader(),
+      surface,
+      stepStart: openStepStart(session),
+      anchor: undefined,
+    }
+  }
+
   /** Catch one session's fold up to the current durable tail. */
   private _sync(session: Session): ReplayState {
     let state = this.states.get(session)
-    if (state === undefined) {
-      state = {
-        consumedEvents: SessionLogOffset(0),
-        header: undefined,
-        surface: [],
-        stepStart: undefined,
-        anchor: undefined,
-      }
+    if (state !== undefined && state.consumedEvents > session.seq) {
+      this.states.delete(session)
+      state = undefined
+    }
+    if (state === undefined || state.consumedEvents < session.liveBaseSeq) {
+      state = session.liveBaseSeq > 0
+        ? this._bootstrapWindowed(session)
+        : {
+          consumedEvents: SessionLogOffset(0),
+          header: undefined,
+          surface: [],
+          stepStart: undefined,
+          anchor: undefined,
+        }
       this.states.set(session, state)
     }
 
     while (state.consumedEvents < session.seq) {
       // Contiguous session seqs index the durable log; existing Session history read, migration deferred.
-      // oxlint-disable-next-line typescript/no-non-null-assertion, typescript/no-deprecated
+      // oxlint-disable-next-line typescript/no-non-null-assertion
       const event = session.eventAt(SessionSeq(state.consumedEvents))!
       this._foldEvent(state, event)
       state.consumedEvents = SessionLogOffset(state.consumedEvents + 1)

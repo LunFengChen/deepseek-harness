@@ -43,6 +43,8 @@ import type {
   SessionControlFrame,
   SessionCreateRequest,
   SessionCreateValue,
+  SessionDeleteFromRequest,
+  SessionDeleteFromValue,
   SessionFollowFrame,
   SessionFollowRequest,
   SessionForkRequest,
@@ -450,6 +452,16 @@ export class SessionController extends TypertRemoteService {
       }
     }
     return this.commands.fork(request)
+  }
+
+  /**
+   * Rewrite one live Session to the prefix before the selected turn.
+   * @param request - Session identity and event sequence inside the turn to remove.
+   * @returns acknowledgement after durable and in-memory logs agree.
+   */
+  @Remote('deleteFrom')
+  deleteFrom(request: SessionDeleteFromRequest): Promise<SessionDeleteFromValue> {
+    return this.commands.deleteFrom(request)
   }
 
   /**

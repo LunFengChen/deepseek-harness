@@ -18,7 +18,9 @@ import type { MessageSource } from '@x1a0f3n9/dsh-llm'
 import { buildForkSeed } from '@x1a0f3n9/dsh-session/fork'
 import { SessionLogOffset, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type { SessionEvent, SessionHeader, SessionId, UserMessage } from '@x1a0f3n9/dsh-session'
+import type { SessionHandle } from '@x1a0f3n9/dsh-session-persistence'
 import { SessionQueryError, type SessionObservation } from '@x1a0f3n9/dsh-session-query'
+import type {} from '@x1a0f3n9/dsh-commands'
 import { SessionTitleInvalidError } from '@x1a0f3n9/dsh-session-title'
 import { assertNever } from '@x1a0f3n9/dsh-util-values'
 import { RemoteError, remoteErrorOf } from '@x1a0f3n9/dsh-typert-protocol'
@@ -49,10 +51,17 @@ import type {
   SessionRenameValue,
   SessionSelectModelRequest,
   SessionSelectModelValue,
+  SessionDeleteFromRequest,
+  SessionDeleteFromValue,
   SessionUpdateQueueRequest,
   SessionUpdateQueueValue,
   SessionRequestId,
 } from './types.ts'
+
+type SessionPersistenceForDeletion = {
+  truncate(id: SessionId, length: SessionLogOffset): Promise<void>
+  open?(id: SessionId, access: 'read' | 'write'): Promise<SessionHandle>
+}
 
 interface SessionReadState {
   readonly id: SessionId
@@ -63,6 +72,29 @@ interface SessionReadState {
 type PromptContentCandidate =
   | SessionPromptRequest['content'][number]
   | Extract<SessionUpdateQueueRequest['action'], { readonly kind: 'edit' }>['content'][number]
+
+/**
+ * Wait until an Agent reaches quiescence, or the deadline hits.
+ * @param agent - Agent whose activity promise is awaited.
+ * @param timeoutMs - maximum wait before treating the Agent as still busy.
+ * @returns whether the Agent became idle in time.
+ */
+async function waitForAgentIdle(agent: Agent, timeoutMs = 15_000): Promise<boolean> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    await Promise.race([
+      agent.whenIdle(),
+      new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => reject(new Error('deleteFrom idle wait timed out')), timeoutMs)
+      }),
+    ])
+    return true
+  } catch {
+    return false
+  } finally {
+    if (timer !== undefined) clearTimeout(timer)
+  }
+}
 
 /**
  * Whether prompt content carries non-whitespace text or an attachment.
@@ -248,17 +280,18 @@ export class SessionCommandController {
       )
     }
     using source = observed
-    const boundary = atSeq ?? latestCompletedPrefixBoundary(source.events)
-    if (boundary === undefined || source.events[boundary]?.seq !== boundary) {
+    const events = await this.forkSourceEvents(request.sessionId, source.events)
+    const boundary = atSeq ?? latestCompletedPrefixBoundary(events)
+    if (boundary === undefined || events[boundary]?.seq !== boundary) {
       throw new RemoteError(
         'session/fork-unavailable',
         request.atSeq === undefined
           ? `session "${request.sessionId}" has no completed turn to fork from`
-          : `event ${String(request.atSeq)} does not exist in session "${request.sessionId}" (last seq: ${String(source.events.at(-1)?.seq ?? 'none')})`,
+          : `event ${String(request.atSeq)} does not exist in session "${request.sessionId}" (last seq: ${String(events.at(-1)?.seq ?? 'none')})`,
         { sessionId: request.sessionId },
       )
     }
-    const seed = buildForkSeed(source.events, boundary)
+    const seed = buildForkSeed(events, boundary)
     let workspace: Workspace | undefined
     try {
       workspace = await this.forkWorkspace(source.header)
@@ -510,6 +543,140 @@ export class SessionCommandController {
     return { accepted: true }
   }
 
+  /**
+   * Rewrite one live Session to the prefix before the selected turn.
+   * A live turn is cancelled first so delete/rewind/regenerate can finish
+   * instead of leaving the UI blocked on an executing command card.
+   * @param request - Session identity and event sequence inside the turn to remove.
+   * @returns acknowledgement after durable and in-memory logs agree.
+   */
+  async deleteFrom(request: SessionDeleteFromRequest): Promise<SessionDeleteFromValue> {
+    const agent = await this.resolveAgent(request.sessionId)
+    if (hasApiSessionSubagentOwner(this.ctx, agent.session, agent)) {
+      throw apiSessionSubagentOwnershipError(request.sessionId)
+    }
+    if (agent.status === 'running') {
+      agent.cancel({ kind: 'user' }, { keepInbox: true })
+      this.ctx.get('commands')?.abortInflight(agent)
+      const stopped = await waitForAgentIdle(agent)
+      if (!stopped || agent.status === 'running') {
+        throw new RemoteError(
+          'session/agent-busy',
+          'cannot delete conversation history while the session is running',
+          { reason: 'DELETE_ACTIVE_TURN' },
+        )
+      }
+    }
+    let sequence: SessionSeq
+    try {
+      sequence = SessionSeq(request.fromSeq)
+    } catch (error: unknown) {
+      throw new RemoteError(
+        'gateway/bad-request',
+        `invalid deletion sequence: ${error instanceof Error ? error.message : String(error)}`,
+        {},
+      )
+    }
+    let length: SessionLogOffset
+    try {
+      length = retainedLengthWithoutWakeSplices(
+        agent.session.deletionStart(sequence),
+        agent.session.inheritedEventCount,
+        seq => agent.session.eventAt(SessionSeq(seq))?.type,
+      )
+    } catch (error: unknown) {
+      throw new RemoteError(
+        'gateway/bad-request',
+        error instanceof Error ? error.message : String(error),
+        {},
+      )
+    }
+    const persistence = this.ctx.get('sessionPersistence') as SessionPersistenceForDeletion | undefined
+    if (persistence === undefined) {
+      throw new RemoteError(
+        'gateway/internal',
+        'session persistence is unavailable; cannot delete conversation history',
+        {},
+      )
+    }
+    await agent.runMaintenance(async () => {
+      await persistence.truncate(agent.session.id, length)
+      if (agent.session.liveBaseSeq === 0) {
+        agent.session.truncate(length)
+      } else {
+        let prefix = await this.readPersistedPrefix(persistence, agent.session.id, length)
+        const stripped = retainedLengthWithoutWakeSplices(
+          SessionLogOffset(prefix.length),
+          agent.session.inheritedEventCount,
+          seq => prefix[seq]?.type,
+        )
+        if (stripped < prefix.length) {
+          length = stripped
+          await persistence.truncate(agent.session.id, length)
+          prefix = prefix.slice(0, Number(stripped))
+        }
+        agent.session.replacePersistedPrefix(prefix)
+      }
+      agent.inbox.clear()
+    })
+    return { accepted: true }
+  }
+
+  /**
+   * Prefer the live log when it still starts at seq 0; otherwise reread the stored prefix.
+   * @param sessionId - source Session identity.
+   * @param observed - events from the opening observation.
+   * @returns a complete prefix suitable for fork seed.
+   */
+  private async forkSourceEvents(
+    sessionId: SessionId,
+    observed: readonly SessionEvent[],
+  ): Promise<readonly SessionEvent[]> {
+    const live = this.ctx.sessions.get(sessionId)
+    if (live === undefined || live.liveBaseSeq === 0) return observed
+    const persistence = this.ctx.get('sessionPersistence') as SessionPersistenceForDeletion | undefined
+    const handle = await persistence?.open?.(sessionId, 'read')
+    if (handle === undefined) {
+      throw new RemoteError(
+        'gateway/internal',
+        `fork source for session "${sessionId}" is outside the live RAM window`,
+        {},
+      )
+    }
+    try {
+      return (await handle.read(0)).events
+    } finally {
+      await handle.close().catch(() => {})
+    }
+  }
+
+  /**
+   * Reread the retained prefix after a durable truncate of a windowed live Session.
+   * @param persistence - backend that already rewrote the artifact.
+   * @param sessionId - Session identity.
+   * @param length - retained event count.
+   * @returns events `[0, length)`.
+   */
+  private async readPersistedPrefix(
+    persistence: SessionPersistenceForDeletion,
+    sessionId: SessionId,
+    length: SessionLogOffset,
+  ): Promise<readonly SessionEvent[]> {
+    const handle = await persistence.open?.(sessionId, 'read')
+    if (handle === undefined) {
+      throw new RemoteError(
+        'gateway/internal',
+        `session persistence cannot reread session "${sessionId}" after deletion`,
+        {},
+      )
+    }
+    try {
+      return (await handle.read(0, length)).events
+    } finally {
+      await handle.close().catch(() => {})
+    }
+  }
+
   private async resolveAgent(sessionId: SessionId): Promise<Agent> {
     const found = await this.agents.resolveAgent(sessionId)
     if ('error' in found) throw found.error
@@ -670,4 +837,25 @@ function referencedImage(
     if (found !== undefined) return found
   }
   return undefined
+}
+
+/**
+ * Move a turn-granular deletion offset back past contiguous pre-turn inbox splices.
+ * @param length - retained prefix length from {@link Session.deletionStart}.
+ * @param inheritedEventCount - fork-inherited prefix that deletion must keep.
+ * @param eventTypeAt - event type at one seq, or undefined when that seq is not loaded.
+ * @returns `length`, or the first seq after the last retained non-splice event.
+ */
+function retainedLengthWithoutWakeSplices(
+  length: SessionLogOffset,
+  inheritedEventCount: SessionLogOffset,
+  eventTypeAt: (seq: number) => SessionEvent['type'] | undefined,
+): SessionLogOffset {
+  let next = Number(length)
+  const inherited = Number(inheritedEventCount)
+  while (next > inherited) {
+    if (eventTypeAt(next - 1) !== 'agent/inbox/spliced') break
+    next -= 1
+  }
+  return SessionLogOffset(next)
 }

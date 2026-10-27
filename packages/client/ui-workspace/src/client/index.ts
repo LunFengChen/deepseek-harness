@@ -85,6 +85,11 @@ declare module '@x1a0f3n9/dsh-client-ui-slots' {
 declare module '@x1a0f3n9/dsh-api-session-controller/client' {
   interface SessionReferenceSourceMap {
     workspaceOperation: unknown
+    /**
+     * Recently viewed Conversation scopes kept after the unique `mainView`
+     * retain moves on. Sidebar and Conversation treat `mainView` as current.
+     */
+    mainViewCache: unknown
   }
 }
 

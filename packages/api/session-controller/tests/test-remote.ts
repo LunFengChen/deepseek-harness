@@ -42,6 +42,8 @@ import type {
   SessionControlFrame,
   SessionCreateRequest,
   SessionCreateValue,
+  SessionDeleteFromRequest,
+  SessionDeleteFromValue,
   SessionForkRequest,
   SessionForkValue,
   SessionFollowFrame,
@@ -79,6 +81,7 @@ export interface TestSessionRemote {
   modelCatalog(): Promise<RemoteResult<ModelCatalog>>
   rename(request: SessionRenameRequest): Promise<RemoteResult<SessionRenameValue>>
   fork(request: SessionForkRequest): Promise<RemoteResult<SessionForkValue>>
+  deleteFrom(request: SessionDeleteFromRequest): Promise<RemoteResult<SessionDeleteFromValue>>
   prompt(request: SessionPromptRequest, signal?: AbortSignal): Promise<RemoteResult<SessionPromptValue>>
   attachment(request: SessionAttachmentRequest): Promise<RemoteResult<SessionAttachmentValue>>
   updateQueue(request: SessionUpdateQueueRequest): Promise<RemoteResult<SessionUpdateQueueValue>>
@@ -104,6 +107,8 @@ export interface TestSessionRemoteDefaults {
   readonly openFileApplication?: SessionControllerInternals['openFileApplication']
   readonly revealPath?: (path: string, signal: AbortSignal) => Promise<void>
   readonly canOpenPath?: () => boolean
+  /** Skip the default attachments stub so `imageLimits` stays unregistered. */
+  readonly provideAttachments?: boolean
 }
 
 const installed = new WeakMap<Context, SessionController>()
@@ -267,7 +272,7 @@ function installControllers(
       },
     } as never)
   }
-  if (ctx.get('attachments') === undefined) {
+  if (defaults.provideAttachments !== false && ctx.get('attachments') === undefined) {
     ctx.provide('attachments', {
       imageLimits: TEST_IMAGE_LIMITS,
       admitPromptContent: async (
@@ -367,6 +372,7 @@ export function createSessionTestRemote(
     modelCatalog: () => remoteResult(() => direct.modelCatalog()),
     rename: request => remoteResult(() => direct.rename(request)),
     fork: request => remoteResult(() => direct.fork(request)),
+    deleteFrom: request => remoteResult(() => direct.deleteFrom(request)),
     prompt: (request, signal = new AbortController().signal) => remoteResult(
       () => direct.prompt(request, signal),
       signal,

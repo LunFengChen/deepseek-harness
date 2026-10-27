@@ -369,9 +369,17 @@ export class Session implements SessionFace {
    * @param title - raw title text (the host normalizes acceptance).
    * @returns the rename result (normalized accepted title + title event seq).
    */
+  async rename(title: string): Promise<RemoteResult<{ title: string; seq: SessionSeq }>> {
+    const result = await this.remote.session.rename({ sessionId: this.sessionId, title })
+    if (!result.ok) return result
+    const seq = SessionSeq(result.value.seq)
+    this.projections.apply('title', result.value.title, seq)
+    return { ok: true, value: { title: result.value.title, seq } }
+  }
+
   /**
-   * Permanently remove the selected turn and all later history, then rebuild
-   * this client's journal window so the next prompt uses the rewritten prefix.
+   * Permanently remove the turn containing `fromSeq` and every later event, then
+   * rebuild this client's journal window so the next prompt uses the rewritten prefix.
    * @param fromSeq - visible event sequence in the turn to remove.
    * @returns acceptance after the local history window is resynchronized.
    */
@@ -387,14 +395,6 @@ export class Session implements SessionFace {
     }
     await this.resync()
     return result
-  }
-
-  async rename(title: string): Promise<RemoteResult<{ title: string; seq: SessionSeq }>> {
-    const result = await this.remote.session.rename({ sessionId: this.sessionId, title })
-    if (!result.ok) return result
-    const seq = SessionSeq(result.value.seq)
-    this.projections.apply('title', result.value.title, seq)
-    return { ok: true, value: { title: result.value.title, seq } }
   }
 
   /**

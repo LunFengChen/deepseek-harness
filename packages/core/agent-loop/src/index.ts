@@ -23,8 +23,8 @@ import type {
   TurnBoundaryProjection,
 } from '@x1a0f3n9/dsh-agent'
 import { errorChain, ReasoningEffortId } from '@x1a0f3n9/dsh-llm'
-import { interruptedTurnClosers, SessionLogOffset, SessionPreparation, SessionSeq } from '@x1a0f3n9/dsh-session'
-import type { Session, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
+import { interruptedTurnClosers, Session, SessionLogOffset, SessionPreparation, SessionSeq } from '@x1a0f3n9/dsh-session'
+import type { SessionEvent, SessionHeader, SessionId } from '@x1a0f3n9/dsh-session'
 import type {} from '@x1a0f3n9/dsh-system-prompt'
 import type {} from '@x1a0f3n9/dsh-tools'
 import type {} from '@x1a0f3n9/dsh-session-projection'
@@ -697,6 +697,7 @@ export class AgentLoop extends Service implements AgentFactory {
     }
     return (await this.initializeAgent(prepared, async () => {
       await this.appendUnstoredSuffix(stored, preparation.session)
+      if (stored !== undefined) preparation.session.releaseLiveWindow()
       return await prepared.publish('startup')
     })).agent
   }
@@ -811,6 +812,7 @@ export class AgentLoop extends Service implements AgentFactory {
       const setupCommit = await raceAbort(setup?.(prepared.agent.ctx, prepared.agent), prepared.signal, id)
       setupCommit?.commit()
       await this.appendUnstoredSuffix(stored, session)
+      if (stored !== undefined) session.releaseLiveWindow()
       return await prepared.publish(source)
     })
   }
@@ -873,31 +875,55 @@ export class AgentLoop extends Service implements AgentFactory {
       let preparation: SessionPreparation | undefined
       try {
         try {
-          // Taking write ownership FIRST excludes a concurrent resume of the
-          // same id (in this process, a live agent's handle holds the claim).
+          // Header is required before write-open so adoptEvent can feed the
+          // session during the scan. Write ownership still starts at open and
+          // excludes a concurrent resume of the same id.
+          const snapshot = await raceAbortCall(
+            () => persistence.stat(id, { signal: fused }),
+            fused,
+            id,
+          )
+          if (snapshot === undefined) throw new SessionPersistenceNotFoundError(id)
+          const session = Session.beginPersistedRestore(id, structuredClone(snapshot.header))
+          const projections = this.runtime.ctx.sessionProjections
+          const tokenMeter = this.runtime.ctx.get('tokenMeter' as never) as {
+            ingestRestoredEvent(session: Session, event: SessionEvent): void
+          } | undefined
+          const adopt = (event: SessionEvent): void => {
+            session.adoptRestoredEvent(event)
+            projections.ingestRestoredEvent(session, event)
+            tokenMeter?.ingestRestoredEvent(session, event)
+          }
           handle = await raceAbortCall(
-            () => persistence.open(id, 'write', { signal: fused }),
+            () => persistence.open(id, 'write', {
+              signal: fused,
+              adoptEvent: adopt,
+            }),
             fused,
             id,
             (abandoned) => { void abandoned.close() },
           )
+          // Backends that cannot stream ignore adoptEvent; an empty log also
+          // leaves seq at 0. Fall back to a full read and adopt into the window.
+          if (session.seq === 0) {
+            const coldRead = await handle.read(0, undefined, { signal: fused })
+            fused.throwIfAborted()
+            for (const event of coldRead.events) adopt(event)
+          }
           // Semantic crash repair is the agent layer's job: persistence hands
           // back the physically valid log; an interrupted final turn receives
           // synthetic closers (missing tool errors, step/end, turn/end) that
           // are appended through the same handle as an ordinary batch.
-          const coldRead = await handle.read(0, undefined, { signal: fused })
-          fused.throwIfAborted()
-          const persisted = coldRead.events
-          const closers = interruptedTurnClosers(persisted)
-          if (closers.length > 0) await handle.append(closers)
-          preparation = SessionPreparation.create(this.runtime.ctx.sessions.prepare(id, {
-            seed: [...persisted, ...closers],
-            meta: structuredClone(handle.header),
-            inheritedEventCount: handle.inheritedEventCount,
-            eventState: coldRead.eventState,
-          }))
-          stored = { handle, storedCount: persisted.length + closers.length }
-          await this.appendUnstoredSuffix(stored, preparation.session)
+          const closers = interruptedTurnClosers(session.snapshotEvents())
+          if (closers.length > 0) {
+            await handle.append(closers)
+            for (const closer of closers) adopt(closer)
+          }
+          const persistedCount = session.seq
+          session.finishPersistedRestore(handle.inheritedEventCount)
+          preparation = SessionPreparation.create(session)
+          stored = { handle, storedCount: persistedCount }
+          await this.appendUnstoredSuffix(stored, session)
         } finally {
           await unfollowOwner()
         }

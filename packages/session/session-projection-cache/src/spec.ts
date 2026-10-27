@@ -88,7 +88,7 @@ export type CheckpointRecord = z.infer<typeof checkpointRecord>
  * current fold semantics cannot vouch for.
  *
  * A lifecycle-matching predecessor may still expose its version-compatible
- * title through `cachedListedHint`; this never relaxes the format requirement
+ * title through `cachedPredecessorTitle`; this never relaxes the format requirement
  * for hydration or another fold shortcut. Seeded listing uses the stored
  * inherited cut after createdAt/cwd/seeded lineage match, and never cut 0.
  *

@@ -82,7 +82,7 @@ Prebundled extras live on **Settings → xfdsh preset plugins**. Cards show the 
 | --- | --- | --- |
 | Hindsight git stderr | The LunFengChen fork pipes `git` stderr. | Opening a session whose cwd is not a git repository no longer prints `fatal: not a git repository`. |
 | Session utilities | Workspace rows can copy the session id. | Session ids are easier to share and debug. |
-| Memory and continuation | Session persistence bounds in-memory reads; context overflow triggers compaction and retry. A large-to-small model switch prices pressure against the pending picker before the next request. | Long sessions are less likely to stall. Truncated nonempty summaries still replace the compacted span. |
+| Memory and continuation | After persist, RAM keeps a 4096-event live tail plus hot prefix (`SESSION_LIVE_WINDOW_EVENTS`). Host `deleteFrom` rewinds a turn and drains the inbox. Idle ordinary Agents keep an LRU of 5. Navigation parks five `mainView` Conversations. Context overflow still compact-and-retries. | Long sessions stay responsive. Truncated nonempty summaries still replace the compacted span. |
 | Text-only models | Historical and new images become stable text placeholders on text-only routes. | Switching models does not strand a session that already contains images. |
 | Multi-answer / session git graph | Not implemented. Follow-up work on `dsh-session-timeline` after the rewind UI is done. | Documented and deferred. |
 

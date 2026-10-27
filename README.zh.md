@@ -82,7 +82,7 @@ dsh web
 | --- | --- | --- |
 | Hindsight git 报错 | LunFengChen fork 把 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
-| 内存与续跑 | 会话持久化限制内存读取；context overflow 会压缩并重试。从大模型切到小模型时，会按待选模型先计价压力再发下一次请求。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |
+| 内存与续跑 | 持久化之后 RAM 只留 4096 条 live 尾和热前缀（`SESSION_LIVE_WINDOW_EVENTS`）。Host `deleteFrom` 会回退一轮并清空 inbox。空闲普通 Agent 用 LRU 5。导航会停放 5 个 `mainView` Conversation。context overflow 仍会压缩并重试。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |
 | 纯文本模型 | 历史图片和新图片会变成稳定文本占位符。 | 切到不支持图片的模型不会让会话停摆。 |
 | 多回答 / session git graph | 还没做。等 timeline 回退 UI 完成后再扩展。 | 只记在文档里，本轮不做。 |
 

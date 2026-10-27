@@ -31,7 +31,12 @@ import {
   mountAgentLoopTestDependencies,
   mountAgentLoopTestHarness,
 } from '@x1a0f3n9/dsh-agent-loop-testkit'
-import { createSessionTestRemote, testSessionPersistence, type TestSessionRemote } from './test-remote.ts'
+import {
+  createSessionTestRemote,
+  testSessionPersistence,
+  type TestSessionRemote,
+  type TestSessionRemoteDefaults,
+} from './test-remote.ts'
 
 const ownedContexts = new Set<Context>()
 afterEach(async () => {
@@ -160,7 +165,12 @@ function seedMessages(session: Session, count: number): void {
   }
 }
 
-const remote = (ctx: Context) => createSessionTestRemote(ctx, { defaultModelSelection: () => ({ provider: 'p', model: 'm' }), cwd: '/tmp' })
+const remote = (ctx: Context, extras?: Pick<TestSessionRemoteDefaults, 'provideAttachments'>) =>
+  createSessionTestRemote(ctx, {
+    defaultModelSelection: () => ({ provider: 'p', model: 'm' }),
+    cwd: '/tmp',
+    ...extras,
+  })
 
 describe('session.history projections block', () => {
   it('keeps the v0 numeric seed cut on the wire while logical headers expose only lineage', async () => {
@@ -380,7 +390,7 @@ describe('session.history projections block', () => {
   it('leaves the imageLimits key absent while no attachment service is composed', async () => {
     const { ctx, session } = await harness(true)
     seedMessages(session, 1)
-    const snapshot = await opening(remote(ctx), session.id)
+    const snapshot = await opening(remote(ctx, { provideAttachments: false }), session.id)
     expect('imageLimits' in snapshot.projections.values).toBe(false)
   })
 
@@ -543,7 +553,7 @@ describe('session.list projections column', () => {
     }) as never)
     ctx.provide('sessionProjectionCache', {
       // The carrier hands the listed header through as the identity witness.
-      cachedListedHint: (meta: { id: unknown; createdAt: number }) =>
+      cachedSnapshot: (meta: { id: unknown; createdAt: number }) =>
         (meta.id === coldId && meta.createdAt === 5
           ? {
             asOfSeq: SessionSeq(7),

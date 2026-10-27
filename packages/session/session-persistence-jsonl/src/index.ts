@@ -31,6 +31,7 @@ import {
   type SessionPersistenceListOptions, type SessionPersistenceOpenOptions,
   type SessionPersistenceSnapshot, type SessionPersistenceStatOptions,
   type SessionPersistenceRevision as PersistenceRevision,
+  type SessionHistorySuffix, type SessionHistorySuffixOptions,
 } from '@x1a0f3n9/dsh-session-persistence'
 import { JsonlBackendTracker, JsonlSessionHandle, type StorageHandleState } from './storage.ts'
 import { SessionWriteLease } from './lease.ts'
@@ -44,6 +45,7 @@ import {
 import {
   compressZstdFrame, createZstdFrameDecoder, decompressZstdFrame, decompressZstdPrefix, scanZstdFrames,
 } from './zstd.ts'
+import { readJsonlHistorySuffixFromPath } from './history-suffix.ts'
 import { ensureDurableDirectoryWin32, publishNewFileWin32 } from './win32.ts'
 import { verifyCurrentGenerationInWorker } from './migration-verifier.ts'
 import { prepareCatalogFacts } from './catalog-migration.ts'
@@ -471,6 +473,42 @@ class JsonlSessionPersistence extends SessionPersistence {
    */
   flush(): Promise<void> {
     return this.tracker.flushAll()
+  }
+
+  /**
+   * Read a contiguous tail covering one history page without restoring the
+   * whole log.
+   * @param id - the stored session to read.
+   * @param options - page bounds and cancellation.
+   * @returns the covering suffix, or `undefined` when the selected generation
+   *   is older than this build.
+   */
+  override async readHistorySuffix(
+    id: SessionId,
+    options: SessionHistorySuffixOptions,
+  ): Promise<SessionHistorySuffix | undefined> {
+    options.signal?.throwIfAborted()
+    await this.ensureRootEncoding()
+    options.signal?.throwIfAborted()
+    const pending = this.tracker.pendingOf(id)
+    if (pending !== undefined) {
+      return {
+        header: pending.header,
+        inheritedEventCount: pending.inheritedEventCount,
+        events: [],
+        cursor: -1,
+      }
+    }
+    const selected = await this.findLog(id, options.signal)
+    if (selected === undefined) throw new SessionPersistenceNotFoundError(id)
+    if (selected.sourceVersion < SESSION_FORMAT_VERSION) return undefined
+    if (selected.sourceVersion > SESSION_FORMAT_VERSION) {
+      throw new SessionFormatUnsupportedError(
+        `${sessionFormatVersionRefusal(id, selected.sourceVersion)} (raw log: ${selected.sourcePath})`,
+        { kind: 'jsonl', path: selected.sourcePath },
+      )
+    }
+    return readJsonlHistorySuffixFromPath(selected.sourcePath, this.compression, options)
   }
 
   /**

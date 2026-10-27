@@ -1684,3 +1684,39 @@ export const IconAppsAddOutlineRegular = (props: AppsAddIconProps) => (
 export const IconAppsAddOutlineMedium = (props: AppsAddIconProps) => (
   <IconAppsAddOutlineArtwork {...props} strokeWidth={ICON_MEDIUM_STROKE} />
 )
+
+/**
+ * DSH 0.1.5 plugins (better-sidebar 0.19.x) import size-suffixed names.
+ * xfdsh glyphs are Regular/Medium; size is a prop. Keep the old names as
+ * Regular aliases so those plugins do not render element type undefined.
+ */
+export const IconApiOutline14 = IconApiOutlineRegular
+export const IconBranchOutline16 = IconBranchOutlineRegular
+export const IconBrowseOutline16 = IconBrowseOutlineRegular
+export const IconCheckOutline16 = IconCheckOutlineRegular
+export const IconChevronDownOutline14 = IconChevronDownOutlineRegular
+export const IconChevronLeftOutline14 = IconChevronLeftOutlineRegular
+export const IconChevronRightOutline14 = IconChevronRightOutlineRegular
+export const IconCloseFill14 = IconCloseFillRegular
+export const IconCloseOutline16 = IconCloseOutlineRegular
+export const IconCodeOutline16 = IconCodeOutlineRegular
+export const IconCopyOutline16 = IconCopyOutlineRegular
+export const IconDownloadOutline16 = IconDownloadOutlineRegular
+export const IconEditOutline16 = IconEditOutlineRegular
+export const IconFolderOpen16 = IconFolderOpenRegular
+export const IconLinkOutline14 = IconLinkOutlineRegular
+export const IconLinkOutline16 = IconLinkOutlineRegular
+export const IconListPenOutline16 = IconListPenOutlineRegular
+export const IconNewChatOutline16 = IconNewChatOutlineRegular
+export const IconPanelLeftOutline16 = IconPanelLeftOutlineRegular
+export const IconPlusOutline16 = IconPlusOutlineRegular
+export const IconRefreshOutline14 = IconRefreshOutlineRegular
+export const IconRefreshOutline16 = IconRefreshOutlineRegular
+export const IconRightUpOutline16 = IconRightUpOutlineRegular
+export const IconSearchOutline16 = IconSearchOutlineRegular
+export const IconSendOutline16 = IconSendOutlineRegular
+export const IconSettingsOutline16 = IconSettingsOutlineRegular
+export const IconSparkle16 = IconSparkleRegular
+export const IconStopFill16 = IconStopFillRegular
+export const IconTrashOutline16 = IconTrashOutlineRegular
+export const IconWarningOutline16 = IconWarningOutlineRegular
