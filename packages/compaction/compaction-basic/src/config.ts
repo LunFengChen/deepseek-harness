@@ -147,7 +147,7 @@ export function resolveTargetPolicy(
  * output cap still pulls the threshold down.
  *
  * @param contextWindow - configured occupancy envelope for the routed model.
- * @param reservedCompletionTokens - envelope or adapter output cap.
+ * @param reservedCompletionTokens - user or adapter output cap.
  * @param headroomTokens - extra pressure headroom deducted after the reservation.
  * @param thresholdRatio - occupancy fraction that should remain the trigger.
  * @returns the original pair when it still leaves a pressure budget; otherwise

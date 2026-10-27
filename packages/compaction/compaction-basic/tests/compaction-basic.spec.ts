@@ -90,10 +90,13 @@ function createContext(contextWindow = 1_000): Context {
   return ctx
 }
 
-function agent(session: Session, model?: string): Agent {
+function agent(session: Session, model?: string, extras: { maxTokens?: number } = {}): Agent {
   return {
     session,
-    options: model === undefined ? {} : { provider: model, model },
+    options: {
+      ...model === undefined ? {} : { provider: model, model },
+      ...extras,
+    },
   } as Agent
 }
 
@@ -707,7 +710,7 @@ describe('pressure measurement and retention', () => {
     await expect(compactIfNeeded(compact, session)).resolves.not.toBeNull()
   })
 
-  it('gates pressure on the reserve the routed envelope records', async () => {
+  it('gates pressure on the AgentOptions output cap', async () => {
     const ctx = createContext(1_000)
     const compact = service({ auto: false, thresholdRatio: 0.8, retainRatio: 0.1 }, ctx)
     const session = conversation(4)
@@ -718,13 +721,34 @@ describe('pressure measurement and retention', () => {
     expect(measured).toBeLessThan(800)
     await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
 
-    // The output reservation lowers the threshold below the measured history.
+    // The user output reservation lowers the threshold below the measured history.
     const maxTokens = 1_000 - measured + 1
+    await expect(compact.compactIfNeeded(
+      agent(session, MODEL, { maxTokens }),
+      'pressure',
+      SIGNAL,
+    )).resolves.not.toBeNull()
+  })
+
+  it('does not treat occupancy remaining on a prior envelope as the output reservation', async () => {
+    const ctx = createContext(200_000)
+    const compact = service({ auto: false, thresholdRatio: 0.8, retainRatio: 0.16 }, ctx)
+    const session = conversation(4)
+    vi.spyOn(ctx.llm, 'resolveModelInfo').mockImplementation((provider, model) => Promise.resolve({
+      provider,
+      id: model,
+      name: model,
+      context: { contextWindow: 200_000 },
+      defaultMaxTokens: 256_000,
+    }))
+    const occupancy = ctx.tokenMeter.measure(session).totalTokens
+    expect(occupancy).toBeLessThan(160_000)
     session.append('request/header', {
-      header: { config: { provider: MODEL, model: MODEL, maxTokens } },
+      header: { config: { provider: MODEL, model: MODEL, maxTokens: 200_000 - occupancy } },
       reason: 'change',
     })
-    await expect(compactIfNeeded(compact, session)).resolves.not.toBeNull()
+    await expect(compactIfNeeded(compact, session)).resolves.toBeNull()
+    expect(compact.calls).toHaveLength(0)
   })
 
   it('falls back to the adapter request cap when the envelope records no reserve', async () => {

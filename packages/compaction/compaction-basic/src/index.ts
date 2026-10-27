@@ -60,14 +60,19 @@ function routedTarget(
 }
 
 /**
- * Output tokens the routed request reserves, which the provider charges to the
- * same window as the prompt. The effective envelope's own cap wins; otherwise
- * the adapter's per-request default, which the adapter materializes when that
- * envelope omits one. No declared cap means no reservation.
+ * User/adapter output budget charged against the same window as the prompt.
+ * Occupancy remaining written into a prior request header is not this value —
+ * same source as the request occupancy cap.
  */
+function requestedOutputCap(
+  agent: Agent,
+  defaultMaxTokens: number | undefined,
+): number | undefined {
+  return agent.options.maxTokens ?? defaultMaxTokens
+}
+
 function reservedCompletionTokens(agent: Agent, defaultMaxTokens: number | undefined): number {
-  const configured = agent.session.requestHeader()?.config.maxTokens
-  return configured ?? defaultMaxTokens ?? 0
+  return requestedOutputCap(agent, defaultMaxTokens) ?? 0
 }
 
 /** Newly aged-out history, excluding a leading compact-checkpoint prefix. */
@@ -646,7 +651,7 @@ export class BasicCompactionEngine extends CompactionEngine {
     if (occupancyWindow === undefined) return config
     const remaining = occupancyWindow - this.ctx.tokenMeter.measure(agent.session).totalTokens
     if (remaining <= 0) return config
-    const requested = agent.options.maxTokens ?? info.defaultMaxTokens ?? config.maxTokens
+    const requested = requestedOutputCap(agent, info.defaultMaxTokens) ?? config.maxTokens
     if (requested === undefined) return config
     const maxTokens = Math.min(requested, remaining)
     if (maxTokens === config.maxTokens) return config
