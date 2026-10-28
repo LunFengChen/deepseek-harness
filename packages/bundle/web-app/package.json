@@ -268,7 +268,7 @@
     "@x1a0f3n9/dsh-better-sidebar": "npm:dsh-better-sidebar@0.28.1",
     "@x1a0f3n9/dsh-failover-queue": "0.1.13",
     "@x1a0f3n9/dsh-skills-manager": "npm:@michengai/dsh-skills-manager@1.2.20",
-    "@x1a0f3n9/dsh-web-search-pool": "workspace:^"
+    "@x1a0f3n9/dsh-web-search-pool": "workspace:*"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "workspace:~",

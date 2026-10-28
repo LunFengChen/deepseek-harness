@@ -3452,7 +3452,7 @@ importers:
         specifier: workspace:*
         version: link:../../../apps/web
       '@x1a0f3n9/dsh-web-search-pool':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../web/web-search-pool
       '@x1a0f3n9/dsh-workflow-ptc':
         specifier: workspace:*
