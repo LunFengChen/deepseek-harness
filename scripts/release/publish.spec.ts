@@ -114,7 +114,7 @@ describe('release publication channels', () => {
     ['dsh', '0.2.1', undefined],
     ['dsh', '0.2.1-alpha.1', 'alpha'],
     ['dsh', '0.2.1-canary.1', 'canary'],
-    ['dsh', '0.2.1-rc.1', 'next'],
+    ['dsh', '0.2.1-rc.1', undefined],
   ] as const)('uses the default %s channel for %s when no override is supplied', async (family, version, tag) => {
     const fixture = packedRelease([version])
     const [entry] = fixture.packages
@@ -125,7 +125,7 @@ describe('release publication channels', () => {
 
     expect(attempt).toHaveBeenCalledExactlyOnceWith('npm', ['view', `${entry!.name}@${version}`, 'dist.integrity', '--json'])
     expect(attemptEchoed).toHaveBeenCalledExactlyOnceWith('npm', [
-      'publish', entry!.path, ...tag === undefined ? [] : ['--tag', tag],
+      'publish', entry!.path, '--tag', tag ?? 'latest',
     ])
   })
 
