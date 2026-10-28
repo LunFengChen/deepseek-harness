@@ -68,7 +68,6 @@ Prebundled extras live on **Settings → xfdsh preset plugins**. Cards show the 
 | Plugin | Package | What it does |
 | --- | --- | --- |
 | Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.6` | Rewind, delete, regenerate, and a composer compact button. |
-| Plugin market | `@x1a0f3n9/dshmarket@1.71.1` | Browse community plugins. Official `@deepseek-ai/dsh-*` plugins remap into this runtime. |
 | Reasoning effort | `@x1a0f3n9/dsh-reasoning-effort@0.7.7` | Settings → Models lets each custom model choose Default (none) or Custom `reasoningEfforts`. The composer can then pick thinking strength. |
 | Context dashboard | `@x1a0f3n9/dsh-context@0.77.0` | A Context tab and `/context` show composition, compaction, and token use. Version detection reads this fork. |
 | Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.28.1` | Files, terminal, Git, and subagents in the sidebar workbench. Needs host 0.2.1-rc.1+. |
@@ -80,6 +79,7 @@ Prebundled extras live on **Settings → xfdsh preset plugins**. Cards show the 
 
 | Area | What changed | Result |
 | --- | --- | --- |
+| Discover indexes | Web mounts the official Discover tab and pre-fills three community indexes: `https://dshmarket.com/index.json`, `https://dshopen.org/index.json`, and `https://bruc3van.com/dsh-plugins/index.json`. The old `dshmarket` preset is gone. | Plugins → Discover can switch among the full catalog, Open Plugin Market, and Bruce's picks. |
 | Hindsight git stderr | The LunFengChen fork pipes `git` stderr. | Opening a session whose cwd is not a git repository no longer prints `fatal: not a git repository`. |
 | Session utilities | Workspace rows can copy the session id. | Session ids are easier to share and debug. |
 | Memory and continuation | After persist, RAM keeps a 4096-event live tail plus hot prefix (`SESSION_LIVE_WINDOW_EVENTS`). Host `deleteFrom` rewinds a turn and drains the inbox. Idle ordinary Agents keep an LRU of 5. Navigation parks five `mainView` Conversations. Context overflow still compact-and-retries. | Long sessions stay responsive. Truncated nonempty summaries still replace the compacted span. |

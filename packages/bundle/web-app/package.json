@@ -64,16 +64,6 @@
           "homepage": "https://github.com/LunFengChen/dsh-session-timeline"
         },
         {
-          "id": "plugin-market",
-          "entryId": "dsh-market",
-          "packageName": "@x1a0f3n9/dshmarket",
-          "title": "Plugin market",
-          "description": "Browse and install community dsh plugins.",
-          "defaultEnabled": true,
-          "author": "LunFengChen",
-          "homepage": "https://github.com/LunFengChen/dsh-market"
-        },
-        {
           "id": "reasoning-effort",
           "entryId": "reasoning-effort",
           "packageName": "@x1a0f3n9/dsh-reasoning-effort",
@@ -228,6 +218,7 @@
     "@x1a0f3n9/dsh-plan-mode": "workspace:*",
     "@x1a0f3n9/dsh-plugin-manager": "workspace:*",
     "@x1a0f3n9/dsh-plugin-market": "workspace:*",
+    "@x1a0f3n9/dsh-client-ui-plugin-market": "workspace:*",
     "@x1a0f3n9/dsh-schedule": "workspace:*",
     "@x1a0f3n9/dsh-session-log-export": "workspace:*",
     "@x1a0f3n9/dsh-session-reference": "workspace:*",
@@ -272,7 +263,6 @@
     "@x1a0f3n9/dsh-client-ui-settings-session-log": "workspace:*",
     "@x1a0f3n9/dsh-harness-dev-context": "workspace:*",
     "@x1a0f3n9/dsh-session-timeline": "0.1.6",
-    "@x1a0f3n9/dshmarket": "npm:dshmarket@1.71.1",
     "@x1a0f3n9/dsh-reasoning-effort": "0.7.7",
     "@x1a0f3n9/dsh-context": "npm:dsh-context@0.77.0",
     "@x1a0f3n9/dsh-better-sidebar": "npm:dsh-better-sidebar@0.28.1",

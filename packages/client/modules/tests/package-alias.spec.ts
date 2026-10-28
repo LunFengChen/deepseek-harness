@@ -7,8 +7,6 @@ describe('dsh package name aliases', () => {
     expect(alternateDshPackageName('@x1a0f3n9/dsh-client-locale/client')).toBe('@deepseek-ai/dsh-client-locale/client')
     expect(alternateDshPackageName('@deepseek-ai/dsh')).toBeUndefined()
     expect(alternateDshPackageName('@deepseek-ai/cordis')).toBeUndefined()
-    expect(alternateDshPackageName('dshmarket')).toBe('@x1a0f3n9/dshmarket')
-    expect(alternateDshPackageName('@x1a0f3n9/dshmarket')).toBe('dshmarket')
     expect(alternateDshPackageName('dsh-better-sidebar/client')).toBe('@x1a0f3n9/dsh-better-sidebar/client')
     expect(alternateDshPackageName('@michengai/dsh-skills-manager')).toBe('@x1a0f3n9/dsh-skills-manager')
   })

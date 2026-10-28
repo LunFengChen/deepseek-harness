@@ -73,7 +73,6 @@ External packages installed for runtime use or distributed inside the prebuilt b
 | [`@x1a0f3n9/dsh-reasoning-effort`](https://github.com/LunFengChen/dsh-reasoning-effort) | MIT |
 | [`@x1a0f3n9/dsh-session-timeline`](https://github.com/LunFengChen/dsh-session-timeline) | MIT |
 | [`@x1a0f3n9/dsh-skills-manager`](https://github.com/LunFengChen/dsh-skills-manager) | Apache-2.0 |
-| [`@x1a0f3n9/dshmarket`](https://github.com/LunFengChen/dsh-market) | MIT |
 | [`@x1a0f3n9/hindsight-coding-agents`](https://github.com/LunFengChen/hindsight-coding-agents) | MIT |
 | [`@xterm/addon-fit`](https://github.com/xtermjs/xterm.js/tree/master/addons/addon-fit) | MIT |
 | [`@xterm/addon-serialize`](https://github.com/xtermjs/xterm.js/tree/master/addons/addon-serialize) | MIT |

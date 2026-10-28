@@ -92,12 +92,10 @@ function officialDshAlias(name: string): string | undefined {
 }
 
 const PREINSTALLED_PLUGIN_PACKAGES = new Set([
-  'dshmarket',
   'dsh-reasoning-effort',
   'dsh-context',
   'dsh-better-sidebar',
   '@vectorize-io/hindsight-coding-agents',
-  '@x1a0f3n9/dshmarket',
   '@x1a0f3n9/dsh-reasoning-effort',
   '@x1a0f3n9/dsh-session-timeline',
   '@x1a0f3n9/dsh-context',

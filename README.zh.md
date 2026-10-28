@@ -68,7 +68,6 @@ dsh web
 | 插件 | 包 | 做什么 |
 | --- | --- | --- |
 | Session timeline | `@x1a0f3n9/dsh-session-timeline@0.1.6` | 回退、删除、重新生成，以及输入框压缩按钮。 |
-| 插件市场 | `@x1a0f3n9/dshmarket@1.71.1` | 浏览社区插件。官方 `@deepseek-ai/dsh-*` 插件会 remap 进这一套运行时。 |
 | 思考强度 | `@x1a0f3n9/dsh-reasoning-effort@0.7.7` | Settings → Models 里每个自定义模型可选默认（无）或自定义 `reasoningEfforts`。之后输入框才能选思考强度。 |
 | 上下文面板 | `@x1a0f3n9/dsh-context@0.77.0` | Context 页和 `/context` 能看组成、压缩和 token 用量。版本探测读本 fork。 |
 | Better sidebar | `@x1a0f3n9/dsh-better-sidebar@0.28.1` | 文件、终端、Git 和子代理都在侧边栏工作台里。需要宿主 0.2.1-rc.1+。 |
@@ -80,6 +79,7 @@ dsh web
 
 | 领域 | 改动 | 结果 |
 | --- | --- | --- |
+| Discover 索引 | Web 挂上官方 Discover 标签，并预填三份社区索引：`https://dshmarket.com/index.json`、`https://dshopen.org/index.json`、`https://bruc3van.com/dsh-plugins/index.json`。旧的 `dshmarket` 预置已去掉。 | Plugins → Discover 能在全量目录、开放插件市场和 Bruce 精选之间切换。 |
 | Hindsight git 报错 | LunFengChen fork 把 `git` stderr 接到 pipe。 | 打开工作区不是 git 仓库的会话时，不再打印 `fatal: not a git repository`。 |
 | 会话工具 | 工作区列表可以复制 session id。 | 方便分享和排障。 |
 | 内存与续跑 | 持久化之后 RAM 只留 4096 条 live 尾和热前缀（`SESSION_LIVE_WINDOW_EVENTS`）。Host `deleteFrom` 会回退一轮并清空 inbox。空闲普通 Agent 用 LRU 5。导航会停放 5 个 `mainView` Conversation。context overflow 仍会压缩并重试。 | 长会话更不容易卡住。非空但被截断的摘要仍会替换被压缩的区间。 |

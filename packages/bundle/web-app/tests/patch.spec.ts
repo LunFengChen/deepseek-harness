@@ -53,9 +53,29 @@ describe('dsh-web-app bundle', () => {
     )
     expect(inserts.find(row => row.id === 'web-search-pool')).toBeDefined()
     expect(inserts.find(row => row.id === 'hindsight')).toBeUndefined()
+    expect(inserts.find(row => row.id === 'dsh-market')).toBeUndefined()
+    expect(manifest.dependencies).not.toHaveProperty('@x1a0f3n9/dshmarket')
+    expect(manifest.dsh?.bundle?.plugins).toEqual(
+      expect.not.arrayContaining([
+        expect.objectContaining({ packageName: '@x1a0f3n9/dshmarket' }),
+      ]),
+    )
+    expect(inserts.find(row => row.id === 'plugin-market')).toMatchObject({
+      name: '@x1a0f3n9/dsh-plugin-market',
+      config: {
+        indexes: [
+          'https://dshmarket.com/index.json',
+          'https://dshopen.org/index.json',
+          'https://bruc3van.com/dsh-plugins/index.json',
+        ],
+      },
+    })
+    expect(inserts.find(row => row.id === 'ui-plugin-market')).toMatchObject({
+      name: '@x1a0f3n9/dsh-client-ui-plugin-market',
+    })
+    expect(manifest.dependencies).toHaveProperty('@x1a0f3n9/dsh-client-ui-plugin-market')
 
     const scopedPins = [
-      { id: 'dsh-market', packageName: '@x1a0f3n9/dshmarket' },
       { id: 'reasoning-effort', packageName: '@x1a0f3n9/dsh-reasoning-effort' },
       { id: 'dsh-context', packageName: '@x1a0f3n9/dsh-context' },
       { id: 'better-sidebar', packageName: '@x1a0f3n9/dsh-better-sidebar' },

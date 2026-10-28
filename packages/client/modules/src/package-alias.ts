@@ -8,7 +8,6 @@ const FORK_PREFIX = '@x1a0f3n9/dsh-'
 
 /** Community preset plugins whose upstream npm name is not `@deepseek-ai/dsh-*`. */
 const COMMUNITY_ALIAS_ROOTS = [
-  ['dshmarket', '@x1a0f3n9/dshmarket'],
   ['dsh-context', '@x1a0f3n9/dsh-context'],
   ['dsh-better-sidebar', '@x1a0f3n9/dsh-better-sidebar'],
   ['@michengai/dsh-skills-manager', '@x1a0f3n9/dsh-skills-manager'],

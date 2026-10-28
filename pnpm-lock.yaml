@@ -3178,6 +3178,9 @@ importers:
       '@x1a0f3n9/dsh-client-ui-plugin-manager':
         specifier: workspace:*
         version: link:../../client/ui-plugin-manager
+      '@x1a0f3n9/dsh-client-ui-plugin-market':
+        specifier: workspace:*
+        version: link:../../client/ui-plugin-market
       '@x1a0f3n9/dsh-client-ui-reference':
         specifier: workspace:*
         version: link:../../client/ui-reference
@@ -3460,9 +3463,6 @@ importers:
       '@x1a0f3n9/dsh-workspace-changes':
         specifier: workspace:*
         version: link:../../deliverables/workspace-changes
-      '@x1a0f3n9/dshmarket':
-        specifier: npm:dshmarket@1.71.1
-        version: dshmarket@1.71.1(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery)
       commander:
         specifier: ^15.0.0
         version: 15.0.0
@@ -21131,18 +21131,6 @@ packages:
       react-dom:
         optional: true
 
-  dshmarket@1.71.1:
-    resolution: {integrity: sha512-5dRBdbM9FYsNWYi3zanv0LXM046LgYyiY1gMJ7DjzJBMKmt6lEZ4qZjmpi/maYxx5takbhFksr4S+4pX0AdBBQ==}
-    peerDependencies:
-      '@deepseek-ai/cordis': ^4.0.1
-      '@deepseek-ai/dsh-settings': workspace:@x1a0f3n9/dsh-settings@*
-      '@deepseek-ai/schemastery': ^3.18.1
-    peerDependenciesMeta:
-      '@deepseek-ai/dsh-settings':
-        optional: true
-      '@deepseek-ai/schemastery':
-        optional: true
-
   dts-resolver@3.0.0:
     resolution: {integrity: sha512-1T1f+z+4tl9XD+m+0HBgWoL/nm0bOIffyWaUuUSBlFg/86IWvfx+wjNaO/ybU0AJzG9/Mi5hBUgGV6zCmWEN7Q==}
     engines: {node: ^22.18.0 || >=24.0.0}
@@ -28959,14 +28947,6 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-
-  dshmarket@1.71.1(@deepseek-ai/cordis@vendor+cordis)(@deepseek-ai/schemastery@vendor+schemastery):
-    dependencies:
-      '@deepseek-ai/cordis': link:vendor/cordis
-      js-yaml: 4.3.2
-      undici: 7.29.1
-    optionalDependencies:
-      '@deepseek-ai/schemastery': link:vendor/schemastery
 
   dts-resolver@3.0.0(oxc-resolver@11.20.0):
     optionalDependencies:

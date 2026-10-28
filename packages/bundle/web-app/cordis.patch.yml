@@ -323,6 +323,19 @@
     - id: ui-plugin-manager
       name: '@x1a0f3n9/dsh-client-ui-plugin-manager'
 
+    # Fork: Discover tab plus a community index. Official DSH ships no source.
+    - id: plugin-market
+      name: '@x1a0f3n9/dsh-plugin-market'
+      disabled: !!js "!ctx.get('profileContext')"
+      config:
+        indexes:
+          - https://dshmarket.com/index.json
+          - https://dshopen.org/index.json
+          - https://bruc3van.com/dsh-plugins/index.json
+
+    - id: ui-plugin-market
+      name: '@x1a0f3n9/dsh-client-ui-plugin-market'
+
     # Read-only Plugin list tab in the Settings Plugins section; the built-in
     # bundles the sidebar page leaves out are inspected here.
     - id: ui-settings-plugin-inventory
@@ -472,9 +485,6 @@
       name: '@x1a0f3n9/dsh-session-timeline'
       config:
         dshHome: !!js dshSessionPath()
-
-    - id: dsh-market
-      name: '@x1a0f3n9/dshmarket'
 
     - id: reasoning-effort
       name: '@x1a0f3n9/dsh-reasoning-effort'
