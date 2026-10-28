@@ -413,14 +413,24 @@ class DshFamily extends ReleaseFamily {
     return member.name === '@x1a0f3n9/dsh' ? ON_DEMAND_BUNDLES : []
   }
 
-  /** Require the packed DSH runtime graph to stay on the shared exact release version. */
+  /**
+   * Require packed workspace DSH edges to stay on the shared exact release
+   * version. Overlay community aliases (`npm:` or a pinned foreign version)
+   * keep their own version line.
+   */
   override validatePackedManifest(member: ReleaseMember, manifest: Readonly<Record<string, unknown>>): void {
     super.validatePackedManifest(member, manifest)
     for (const section of ['dependencies', 'optionalDependencies', 'peerDependencies']) {
       const dependencies = manifest[section]
       if (dependencies === null || typeof dependencies !== 'object' || Array.isArray(dependencies)) continue
+      const sourceSection = member.manifest[section]
+      const sourceDependencies = sourceSection !== null && typeof sourceSection === 'object' && !Array.isArray(sourceSection)
+        ? sourceSection as Record<string, unknown>
+        : {}
       for (const [name, range] of Object.entries(dependencies)) {
         if (name !== '@x1a0f3n9/dsh' && !name.startsWith('@x1a0f3n9/dsh-')) continue
+        const sourceRange = sourceDependencies[name]
+        if (typeof sourceRange === 'string' && !sourceRange.startsWith('workspace:')) continue
         if (range !== member.version) {
           throw new Error(`${member.name}: packed ${section}.${name} must equal ${member.version}, got ${String(range)}`)
         }

@@ -268,7 +268,9 @@ describe('release families', () => {
 
   it.each(['dependencies', 'optionalDependencies', 'peerDependencies'])(
     'requires exact packed DSH %s while preserving external ranges', (section) => {
-      const pkg = member('packages/example/provider', '@x1a0f3n9/dsh-provider')
+      const pkg = member('packages/example/provider', '@x1a0f3n9/dsh-provider', {
+        [section]: { '@x1a0f3n9/dsh-tools': 'workspace:*' },
+      })
       const family = releaseFamily('dsh')
       const manifest = { name: pkg.name, version: pkg.version, [section]: { '@x1a0f3n9/dsh-tools': pkg.version, external: '^4.0.0' } }
       expect(() => { family.validatePackedManifest(pkg, manifest) }).not.toThrow()
@@ -278,6 +280,28 @@ describe('release families', () => {
       }
     },
   )
+
+  it('lets packed overlay community aliases keep their own versions', () => {
+    const pkg = member('packages/bundle/web-app', '@x1a0f3n9/dsh-web-app', {
+      dependencies: {
+        '@x1a0f3n9/dsh-session-timeline': '0.1.6',
+        '@x1a0f3n9/dsh-context': 'npm:dsh-context@0.77.0',
+        '@x1a0f3n9/dsh-tools': 'workspace:*',
+      },
+    })
+    const family = releaseFamily('dsh')
+    expect(() => {
+      family.validatePackedManifest(pkg, {
+        name: pkg.name,
+        version: pkg.version,
+        dependencies: {
+          '@x1a0f3n9/dsh-session-timeline': '0.1.6',
+          '@x1a0f3n9/dsh-context': 'npm:dsh-context@0.77.0',
+          '@x1a0f3n9/dsh-tools': pkg.version,
+        },
+      })
+    }).not.toThrow()
+  })
 
   it('checks packed identities and preserves independent vendor versions', () => {
     const pkg = member('vendor/example', '@deepseek-ai/example')
