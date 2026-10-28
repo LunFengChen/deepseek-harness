@@ -33,6 +33,7 @@ import {
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
 } from '@x1a0f3n9/dsh-storage-domain'
+import type { SessionTitleSnapshot } from '@x1a0f3n9/dsh-session-title'
 import SessionProjectionCache from '../src/index.ts'
 import { checkpointRecord, projectionCacheDomainSpec } from '../src/spec.ts'
 import type { CheckpointRecord } from '../src/spec.ts'
@@ -45,7 +46,6 @@ declare module '@x1a0f3n9/dsh-session-projection/types' {
     'cache-test/count': number
     'cache-test/secret': string
     'cache-test/marks3': MarksState
-    title: string | null
   }
   interface SessionProjectionMap {
     'cache-test/marks': { marks: string[] }
@@ -110,15 +110,41 @@ const secondaryMarksUnit = {
   stateVersion: 1,
 } satisfies ProjectionDefinition<'cache-test/secondary-marks', MarksState>
 
-/** Mirrors the shipped title unit's storage face (stateVersion 1, bare-string state). */
+/** Mirrors the shipped title unit: snapshot state, string checkpoints lift, string wire. */
 const titleUnit = {
-  key: 'title',
-  stateSchema: z.string().nullable(),
+  key: 'title' as const,
+  stateSchema: z.union([
+    z.string().min(1).transform((title): SessionTitleSnapshot => ({
+      title,
+      messageSeqs: [],
+      source: { kind: 'fallback' },
+      eventSeq: SessionSeq(0),
+      updatedAt: 0,
+    })),
+    z.object({
+      title: z.string().min(1),
+      messageSeqs: z.array(z.number().int().nonnegative().transform(SessionSeq)),
+      source: z.union([
+        z.object({ kind: z.literal('fallback') }),
+        z.object({ kind: z.literal('user') }),
+        z.object({
+          kind: z.literal('provider'),
+          provider: z.string().min(1),
+          model: z.object({
+            provider: z.string().min(1),
+            model: z.string().min(1),
+          }).optional(),
+        }),
+      ]),
+      eventSeq: z.number().int().nonnegative().transform(SessionSeq),
+      updatedAt: z.number(),
+    }),
+  ]).nullable() as z.ZodType<SessionTitleSnapshot | null>,
   init: () => null,
-  apply: state => state,
-  wire: { viewSchema: z.string().nullable(), view: state => state },
+  apply: (state: SessionTitleSnapshot | null) => state,
+  wire: { viewSchema: z.string().nullable(), view: (state: SessionTitleSnapshot | null) => state === null ? null : state.title },
   stateVersion: 1,
-} satisfies ProjectionDefinition<'title', string | null>
+} satisfies ProjectionDefinition<'title', SessionTitleSnapshot | null>
 
 /** One session's record document on the per-record medium. */
 const recordPath = (root: string, id: Session['id']): string =>

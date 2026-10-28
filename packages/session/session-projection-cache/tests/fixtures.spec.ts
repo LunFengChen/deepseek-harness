@@ -20,7 +20,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Context } from '@deepseek-ai/cordis'
 import { z } from 'zod'
-import SessionStore, { SESSION_FORMAT_VERSION, SessionId } from '@x1a0f3n9/dsh-session'
+import SessionStore, { SESSION_FORMAT_VERSION, SessionId, SessionSeq } from '@x1a0f3n9/dsh-session'
 import type { SessionHeader } from '@x1a0f3n9/dsh-session'
 import SessionProjectionRegistry from '@x1a0f3n9/dsh-session-projection'
 import type { ProjectionDefinition } from '@x1a0f3n9/dsh-session-projection'
@@ -31,15 +31,12 @@ import {
 import {
   apply as storageDomainApply, Config as storageDomainConfig, inject as storageDomainInject, name as storageDomainName,
 } from '@x1a0f3n9/dsh-storage-domain'
+import type { SessionTitleSnapshot } from '@x1a0f3n9/dsh-session-title'
 import SessionProjectionCache from '../src/index.ts'
 import { checkpointRow, projectionCacheDomainSpec } from '../src/spec.ts'
 
-// Declarations must match the shipped title unit's exactly (the repo-wide
-// compile face sees both).
+// Wire face matches the shipped title unit; host state comes from session-title.
 declare module '@x1a0f3n9/dsh-session-projection/types' {
-  interface SessionProjectionStateMap {
-    title: string | null
-  }
   interface SessionProjectionMap {
     title: string | null
   }
@@ -55,17 +52,51 @@ declare module '@x1a0f3n9/dsh-session/types' {
   }
 }
 
-// Mirrors the shipped title unit's storage face: stateVersion 1, bare-string
-// state (the fixture rows carry exactly this shape in every archived
-// version), folding a test event so the rewrite path has fresh data.
+// Mirrors the shipped title unit: snapshot state, string checkpoints lift
+// (archived fixture rows stay bare strings), folding a test event so the
+// rewrite path has fresh data.
 const titleUnit = {
-  key: 'title',
-  stateSchema: z.string().nullable(),
+  key: 'title' as const,
+  stateSchema: z.union([
+    z.string().min(1).transform((title): SessionTitleSnapshot => ({
+      title,
+      messageSeqs: [],
+      source: { kind: 'fallback' },
+      eventSeq: SessionSeq(0),
+      updatedAt: 0,
+    })),
+    z.object({
+      title: z.string().min(1),
+      messageSeqs: z.array(z.number().int().nonnegative().transform(SessionSeq)),
+      source: z.union([
+        z.object({ kind: z.literal('fallback') }),
+        z.object({ kind: z.literal('user') }),
+        z.object({
+          kind: z.literal('provider'),
+          provider: z.string().min(1),
+          model: z.object({
+            provider: z.string().min(1),
+            model: z.string().min(1),
+          }).optional(),
+        }),
+      ]),
+      eventSeq: z.number().int().nonnegative().transform(SessionSeq),
+      updatedAt: z.number(),
+    }),
+  ]).nullable() as z.ZodType<SessionTitleSnapshot | null>,
   init: () => null,
-  apply: (state, event) => (event.type === 'fixtures-test/set-title' ? event.data.title : state),
-  wire: { viewSchema: z.string().nullable(), view: state => state },
+  apply: (state: SessionTitleSnapshot | null, event) => (event.type === 'fixtures-test/set-title'
+    ? {
+      title: event.data.title,
+      messageSeqs: [],
+      source: { kind: 'fallback' as const },
+      eventSeq: event.seq,
+      updatedAt: event.time,
+    }
+    : state),
+  wire: { viewSchema: z.string().nullable(), view: (state: SessionTitleSnapshot | null) => state === null ? null : state.title },
   stateVersion: 1,
-} satisfies ProjectionDefinition<'title', string | null>
+} satisfies ProjectionDefinition<'title', SessionTitleSnapshot | null>
 
 const FIXTURES = fileURLToPath(new URL('./fixtures/', import.meta.url))
 
@@ -140,7 +171,7 @@ async function assertRewrite(ctx: Context, root: string, id: SessionId): Promise
     isSeeded: false,
     inheritedEventCount: 0,
   })
-  expect(doc.record.rows['title']?.val).toBe('重写标题')
+  expect(doc.record.rows['title']?.val).toEqual(expect.objectContaining({ title: '重写标题' }))
 }
 
 afterEach(async () => {

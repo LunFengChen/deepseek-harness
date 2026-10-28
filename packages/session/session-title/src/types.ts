@@ -78,8 +78,12 @@ export interface TitleInputState {
 
 declare module '@x1a0f3n9/dsh-session-projection/types' {
   interface SessionProjectionStateMap {
-    /** Latest logged title text, or null. */
-    title: string | null
+    /**
+     * Latest logged title snapshot, or null. The host fold keeps envelope
+     * facts so `get()` survives `releaseLiveWindow` after `session/title`
+     * leaves the live tail.
+     */
+    title: SessionTitleSnapshot | null
     /** Eligible human title input. */
     titleInput: TitleInputState
   }
