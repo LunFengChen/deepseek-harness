@@ -32,6 +32,11 @@ const CHANNEL = 'dsh-0-2-1-alpha-1'
 const ABSENT: CommandResult = { status: 1, stdout: '', stderr: 'npm error code E404' }
 const SUCCESS: CommandResult = { status: 0, stdout: '', stderr: '' }
 const CONFLICT: CommandResult = { status: 1, stdout: '', stderr: 'npm error code E409 Failed to save packument' }
+const STAGED: CommandResult = {
+  status: 1,
+  stdout: '',
+  stderr: 'npm error code E409\nnpm error 409 Conflict - Cannot publish over previously staged version "1.0.6-alpha.1".',
+}
 
 interface PackedFixture {
   readonly name: string
@@ -272,6 +277,24 @@ describe('release publication channels', () => {
       ['npm', ['publish', entry.path, '--tag', CHANNEL]],
     ])
     expect(sleep).toHaveBeenCalledExactlyOnceWith(2_000)
+  })
+
+  it('unpublishes a staged reservation then republishes the same version', async () => {
+    const fixture = packedRelease(['1.0.6-alpha.1'])
+    const entry = fixture.packages[0]!
+    registry(new Map([[entry.name, { latest: '1.0.5', next: '1.0.5-rc.1' }]]))
+    vi.mocked(attemptEchoed)
+      .mockReturnValueOnce(STAGED)
+      .mockReturnValueOnce(SUCCESS)
+      .mockReturnValueOnce(SUCCESS)
+
+    await publishRelease('vendor', fixture.directory, CHANNEL)
+
+    expect(vi.mocked(attemptEchoed).mock.calls).toEqual([
+      ['npm', ['publish', entry.path, '--tag', CHANNEL]],
+      ['npm', ['unpublish', `${entry.name}@${entry.version}`]],
+      ['npm', ['publish', entry.path, '--tag', CHANNEL]],
+    ])
   })
 
   it('keeps the explicit channel when an E409 publication already landed', async () => {

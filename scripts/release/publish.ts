@@ -168,6 +168,20 @@ async function publishTarball(
       console.log(`release publish: ${name}@${version} landed despite a reported failure, continuing`)
       return
     }
+    // A PUT that npm accepted into staging without writing the packument leaves
+    // `npm view` absent and every later publish at `previously staged version`.
+    // Clearing that reservation is the only write that unblocks the same version.
+    if (output.includes('previously staged version') && settled.kind === 'absent') {
+      const cleared = attemptEchoed('npm', ['unpublish', `${name}@${version}`])
+      if (cleared.status === 0) {
+        console.log(`release publish: ${name}@${version} unpublished a staged reservation`)
+      } else {
+        console.log(
+          `release publish: ${name}@${version} staged unpublish did not land:\n`
+          + `${cleared.stdout}${cleared.stderr}`,
+        )
+      }
+    }
     if (tries === PUBLISH_ATTEMPTS || !isTransientFailure(output)) {
       throw new Error(`npm publish ${name}@${version} failed:\n${output}`)
     }
